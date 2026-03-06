@@ -6,6 +6,7 @@
 pccs-lens/                          リポジトリルート
 ├── app/                            SvelteKitアプリケーション本体
 ├── data/                           PCCSマスターデータ（CSV）
+├── scripts/                        ユーティリティスクリプト
 ├── docs/                           永続的ドキュメント
 ├── .steering/                      作業単位のステアリングファイル
 ├── CLAUDE.md                       Claude向けプロジェクトメモリ
@@ -22,20 +23,30 @@ PCCSカラーデータのマスターCSVファイルを管理する。
 ```
 data/
 ├── pccs_colors.csv         新配色カード199収録色（有彩色は偶数色相のみ＋無彩色）
-└── pccs_colors_full.csv    全色相（24色相×全トーン＋無彩色）
+├── pccs_colors_full.csv    全色相（24色相×全トーン＋無彩色）
+└── jis_colors.csv          JIS慣用色名データ
 ```
 
-**CSVフォーマット：** `[PCCS表記],[HEXコード]`（例：`v2,#EE0026`）
+**pccs_colors / pccs_colors_full のCSVフォーマット：** `[PCCS表記],[HEXコード]`（例：`v2,#EE0026`）
 
-将来追加予定：
-```
-data/
-└── jis_colors.csv          JIS慣用色名データ（列構成は後日定義）
-```
+**jis_colors のCSVフォーマット：** `[慣用色名],[読み],[HEXコード],[出題級]`（例：`桜色,さくらいろ,#fdeeef,3`）
 
 ---
 
-## 3. `app/` ディレクトリ
+## 3. `scripts/` ディレクトリ
+
+ユーティリティスクリプトを管理する。Node.js で直接実行する単独ファイルを配置し、外部依存は持たない。
+
+```
+scripts/
+└── convert-csv-to-json.mjs    data/*.csv → app/src/lib/data/*.json 変換
+```
+
+実行方法・詳細は `docs/architecture.md` のセクション3を参照。
+
+---
+
+## 4. `app/` ディレクトリ
 
 SvelteKitプロジェクトのルート。
 
@@ -54,7 +65,8 @@ app/
 │   │   ├── data/                   JSONデータファイルと型定義
 │   │   │   ├── types.ts            共通型定義（PCCSColor、ColorEntry等）
 │   │   │   ├── pccs_colors.json    新配色カード199の色データ
-│   │   │   └── pccs_colors_full.json  全色相の色データ
+│   │   │   ├── pccs_colors_full.json  全色相の色データ
+│   │   │   └── jis_colors.json     JIS慣用色名データ
 │   │   └── components/             共通UIコンポーネント
 │   │       ├── ColorPicker.svelte  カラーピッカー＋HEX入力欄
 │   │       ├── HueWheel.svelte     PCCS色相環（SVG）
@@ -72,7 +84,7 @@ app/
 ├── static/                         静的アセット（ビルド時にそのままコピー）
 │   └── favicon.png
 ├── tests/                          ブラウザ統合テスト（Playwright）
-├── .eslintrc.js                    ESLint設定
+├── .eslint.config.js                    ESLint設定
 ├── .prettierrc                     Prettier設定
 ├── package.json
 ├── svelte.config.js
@@ -82,7 +94,7 @@ app/
 
 ---
 
-## 4. `docs/` ディレクトリ
+## 5. `docs/` ディレクトリ
 
 アプリケーション全体の「何を作るか」「どう作るか」を定義する永続的ドキュメント。
 基本設計が変わらない限り更新されない。
@@ -95,14 +107,14 @@ docs/
 ├── repository-structure.md     リポジトリ構造定義書（本ファイル）
 ├── development-guidelines.md   開発ガイドライン
 ├── glossary.md                 ユビキタス言語定義
-├── color-analysis-rules.md     色分析ルール定義書（PCCS判定ロジック）
+├── color-analysis-rules.md     色分析ルール定義書（PCCS判定ロジック詳細）
 └── ideas/                      初期アイデア・検討資料（参照用）
     └── initial-requirements.md
 ```
 
 ---
 
-## 5. `.steering/` ディレクトリ
+## 6. `.steering/` ディレクトリ
 
 特定の開発作業における「今回何をするか」を定義する作業単位のドキュメント。
 作業ごとに新しいディレクトリを作成し、完了後も履歴として保持する。
@@ -117,7 +129,7 @@ docs/
 
 ---
 
-## 6. ファイル配置ルール
+## 7. ファイル配置ルール
 
 ### ロジックとUIの分離
 

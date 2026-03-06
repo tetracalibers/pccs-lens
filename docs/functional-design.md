@@ -10,10 +10,10 @@ PCCS Lens はすべての処理をクライアントサイドで完結させるS
 ├── SvelteKit（フロントエンド）
 │   ├── ページ（F1・F2）
 │   └── 色距離計算ロジック（CIEDE2000）
-└── データ（CSVファイル → アプリ起動時に読み込み）
-    ├── data/pccs_colors.csv
-    ├── data/pccs_colors_full.csv
-    └── data/jis_colors.csv
+└── データ（JSONファイル・静的インポート）
+    ├── app/src/lib/data/pccs_colors.json      (data/pccs_colors.csv から生成)
+    ├── app/src/lib/data/pccs_colors_full.json (data/pccs_colors_full.csv から生成)
+    └── app/src/lib/data/jis_colors.json       (data/jis_colors.csv から生成)
 ```
 
 ---
@@ -27,7 +27,8 @@ PCCS Lens はすべての処理をクライアントサイドで完結させるS
 ```
 
 - ナビゲーションバーで各機能ページに遷移できる
-- 機能1の結果から機能2へ色を受け渡す際は `/analyze` に遷移し、色が自動セットされる
+- 機能1の結果から機能2へ色を受け渡す際は `/analyze?color=RRGGBB` に遷移し、色が自動セットされる
+  - `color` パラメータは `#` なしの6桁HEXコード（例：`/analyze?color=EE0026`）
 
 ---
 
@@ -52,7 +53,7 @@ type AchromaticBucket = 'W' | 'ltGy' | 'mGy' | 'dkGy' | 'Bk';
 
 ### JISColor
 
-`data/jis_colors.csv` から読み込んだ1件のJIS慣用色を表す。
+`jis_colors.json` から静的インポートした1件のJIS慣用色を表す。
 
 | フィールド | 型 | 説明 |
 |---|---|---|
@@ -81,6 +82,37 @@ type AchromaticBucket = 'W' | 'ltGy' | 'mGy' | 'dkGy' | 'Bk';
 | `harmony` | `Harmony \| null` | ハーモニー（2色時のみ） |
 | `toneTechniques` | `ToneTechnique[]` | 当てはまる色相・トーン軸の配色技法（0件以上） |
 | `hueTechniques` | `HueTechnique[]` | 当てはまる色相環分割の配色技法（0件以上） |
+
+```typescript
+// 色相関係（color-analysis-rules.md §6 より）
+type HueRelation = 'same' | 'adjacent' | 'similar' | 'intermediate' | 'contrasting' | 'complementary';
+
+// トーン関係（color-analysis-rules.md §7 より）
+type ToneRelation = 'same' | 'similar' | 'contrasting';
+
+// ハーモニー（color-analysis-rules.md §9 より）
+type Harmony = 'natural' | 'complex';
+
+// 色相・トーン軸の配色技法（color-analysis-rules.md §8-1 より）
+type ToneTechnique =
+  | 'dominantColor'
+  | 'dominantTone'
+  | 'toneOnTone'
+  | 'tonal'
+  | 'camaieu'
+  | 'fauxtCamaieu'
+  | 'bicolor'
+  | 'tricolor';
+
+// 色相環分割による配色技法（color-analysis-rules.md §8-2 より）
+type HueTechnique =
+  | 'dyad'
+  | 'triad'
+  | 'splitComplementary'
+  | 'tetrad'
+  | 'pentad'
+  | 'hexad';
+```
 
 ---
 
@@ -138,9 +170,9 @@ ApproximatePage
 1. ユーザーがカラーピッカーまたはHEX入力で色を指定する
 2. 選択中のPCCSデータソースCSVを参照し、全PCCS色とのΔE₀₀を計算する
 3. ΔE₀₀の小さい順に上位8件をPCCS近似結果として表示する
-4. 選択中のJIS慣用色フィルタに基づき `data/jis_colors.csv` から対象色を絞り込む
+4. 選択中のJIS慣用色フィルタに基づき `jis_colors.json` から対象色を絞り込む
 5. 絞り込んだJIS慣用色とのΔE₀₀を計算し、上位4件をJIS慣用色近似結果として表示する
-6. 「F2に送る」ボタン押下で `/analyze` に遷移し、該当色をセットする
+6. 「F2に送る」ボタン押下で `/analyze?color=RRGGBB`（入力色の6桁HEX）に遷移する
 
 ---
 
@@ -197,7 +229,6 @@ AnalyzePage
 - 各セクターは対応するPCCS代表色で塗りつぶす
 - 色相番号と色相名（例：`1:pR`）を外周に表示する
 - 入力色のPCCS近似値の色相に対応するセクターをハイライト表示する
-  - 複数色が同じ色相に近似された場合は重ねてハイライトする
   - 無彩色に近似された入力色はハイライトしない
 - 調整対象の色が選択されている状態でセクターをクリックすると、その色の色相が変わる
 
@@ -205,7 +236,7 @@ AnalyzePage
 
 - 有彩色トーンをグリッド状に配置したSVGで描画する
 - 各セルは対応するトーンの代表色（または複数色のグラデーション）で塗りつぶし、トーン記号を表示する
-- 無彩色（W/ltGy/mGy/dkGy/Bk）は概念図の端（左列）に配置する
+- 無彩色（W/ltGy/mGy/dkGy/Bk）は概念図の左端の列に配置する
 - 入力色のPCCS近似値のトーンに対応するセルをハイライト表示する
 - 調整対象の色が選択されている状態でセルをクリックすると、その色のトーンが変わる
 
@@ -220,5 +251,16 @@ AnalyzePage
 ### 処理フロー（初期表示）
 
 1. ユーザーがカラーピッカーで色を追加する（最大6色）
-2. 追加のたびに `pccs_colors.csv` を参照してΔE₀₀で最近傍PCCS値を決定する
+2. 追加のたびに `pccs_colors.json` を参照してΔE₀₀で最近傍PCCS値を決定する
 3. 色相環・トーン概念図・分析セクションをすべて更新する
+
+### 処理フロー（F1からの遷移）
+
+機能1の「F2に送る」ボタン経由で遷移した場合の初期化フロー。
+
+1. ページマウント時に `$page.url.searchParams.get('color')` で `color` パラメータを読み取る
+2. 値が存在し有効な6桁HEXコードであれば、先頭に `#` を付与して `ColorEntry` を1件生成する
+3. `pccs_colors.json` を参照してΔE₀₀で最近傍PCCS値を決定し、`closestPCCS` にセットする
+4. `history.replaceState` でURLから `color` パラメータを除去する（URL汚染を防ぐ）
+5. 色相環・トーン概念図・分析セクションを更新する
+6. `color` パラメータが存在しない・不正値の場合は通常の空状態で表示する（エラー表示なし）
