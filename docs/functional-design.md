@@ -12,7 +12,8 @@ PCCS Lens はすべての処理をクライアントサイドで完結させるS
 │   └── 色距離計算ロジック（CIEDE2000）
 └── データ（CSVファイル → アプリ起動時に読み込み）
     ├── data/pccs_colors.csv
-    └── data/pccs_colors_full.csv
+    ├── data/pccs_colors_full.csv
+    └── data/jis_colors.csv
 ```
 
 ---
@@ -49,6 +50,19 @@ CSVから読み込んだ1件のPCCS色を表す。
 type AchromaticBucket = 'W' | 'ltGy' | 'mGy' | 'dkGy' | 'Bk';
 ```
 
+### JISColor
+
+`data/jis_colors.csv` から読み込んだ1件のJIS慣用色を表す。
+
+| フィールド | 型 | 説明 |
+|---|---|---|
+| `name` | `string` | 慣用色名（例：`朱色`、`バーミリオン`） |
+| `reading` | `string` | 読み（和色名はふりがな、外来色名は英語名） |
+| `hex` | `string` | HEXコード（例：`#e94709`） |
+| `examLevel` | `2 \| 3 \| null` | 出題級（3：3級、2：2級、null：出題級なし） |
+
+---
+
 ### ColorEntry（機能2の入力色1件）
 
 | フィールド | 型 | 説明 |
@@ -77,9 +91,12 @@ type AchromaticBucket = 'W' | 'ltGy' | 'mGy' | 'dkGy' | 'Bk';
 ```
 ApproximatePage
 ├── ColorPickerInput        カラーピッカー＋HEX入力欄
-├── DataSourceFilter        検索対象フィルタ（ラジオボタン）
-└── PCCSResultList
-    └── PCCSResultCard × N  色スウォッチ・PCCS表記・「F2に送る」ボタン
+├── PCCSDataSourceFilter    PCCSデータソースフィルタ（ラジオボタン）
+├── PCCSResultList
+│   └── PCCSResultCard × N  色スウォッチ・PCCS表記・「F2に送る」ボタン
+├── JISColorFilter          JIS慣用色フィルタ（ラジオボタン）
+└── JISColorResultList
+    └── JISColorResultCard × N  色スウォッチ・慣用色名・読み・出題級
 ```
 
 ### ワイヤフレーム
@@ -93,14 +110,24 @@ ApproximatePage
 │  │      │  ──────────────           │
 │  └──────┘  カラーピッカー            │
 │                                      │
-│  検索対象                             │
+│  PCCSデータソース                     │
 │  ● 新配色カード199  ○ すべての色     │
 │                                      │
-│  近似結果                             │
+│  PCCS近似結果（上位8件）              │
 │  ┌──────────────────────────────┐   │
-│  │ ■■  v2       [F2に送る]      │   │
-│  │ ■■  b2       [F2に送る]      │   │
-│  │ ■■  dp2      [F2に送る]      │   │
+│  │ ■  v2       [F2に送る]       │   │
+│  │ ■  b2       [F2に送る]       │   │
+│  │ ■  dp2      [F2に送る]       │   │
+│  │  ...                          │   │
+│  └──────────────────────────────┘   │
+│                                      │
+│  JIS慣用色名                         │
+│  ● 3級  ○ 2級  ○ すべて           │
+│                                      │
+│  JIS慣用色近似結果（上位4件）         │
+│  ┌──────────────────────────────┐   │
+│  │ ■  朱色  しゅいろ     [3級]  │   │
+│  │ ■  バーミリオン  vermilion    │   │
 │  │  ...                          │   │
 │  └──────────────────────────────┘   │
 └─────────────────────────────────────┘
@@ -109,9 +136,11 @@ ApproximatePage
 ### 処理フロー
 
 1. ユーザーがカラーピッカーまたはHEX入力で色を指定する
-2. 選択中のデータソースCSVを参照し、全PCCS色とのΔE₀₀を計算する
-3. ΔE₀₀の小さい順に上位N件（暫定8件）を表示する
-4. 「F2に送る」ボタン押下で `/analyze` に遷移し、該当色をセットする
+2. 選択中のPCCSデータソースCSVを参照し、全PCCS色とのΔE₀₀を計算する
+3. ΔE₀₀の小さい順に上位8件をPCCS近似結果として表示する
+4. 選択中のJIS慣用色フィルタに基づき `data/jis_colors.csv` から対象色を絞り込む
+5. 絞り込んだJIS慣用色とのΔE₀₀を計算し、上位4件をJIS慣用色近似結果として表示する
+6. 「F2に送る」ボタン押下で `/analyze` に遷移し、該当色をセットする
 
 ---
 

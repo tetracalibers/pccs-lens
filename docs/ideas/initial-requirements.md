@@ -26,10 +26,10 @@ PCCS（Practical Color Co-ordinate System：日本色研配色体系）は、日
 - 検索対象となるPCCS値のフィルタリングオプション
   - 「新配色カード199にある色」：`data/pccs_colors.csv`から検索
   - 「すべての色」：`data/pccs_colors_full.csv`から検索
-- 検索対象となるJIS慣用色のフィルタリングオプション
-  - 「色彩検定3級に出題される色」：`data/jis_colors_aft_grade-3.csv`から検索
-  - 「色彩検定2~3級に出題される色」：`data/jis_colors_aft.csv`から検索
-  - 「すべてのJIS慣用色名」：`data/jis_colors.csv`から検索
+- 検索対象となるJIS慣用色のフィルタリングオプション（`data/jis_colors.csv`から検索）
+  - 「色彩検定3級に出題される色」
+  - 「色彩検定2級に出題される色」
+  - 「色彩検定で出題されるすべての色」
 
 ### 機能2. 配色の分析とインタラクティブな調整
 
