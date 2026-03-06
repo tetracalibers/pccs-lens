@@ -37,21 +37,21 @@ PCCS（Practical Color Co-ordinate System：日本色研配色体系）は、日
   - 近さの計算にはCIEDE2000（知覚的色差）を使用する
   - 各結果には色スウォッチとPCCS表記（例：`v2`）を表示する
 - 検索対象のPCCSデータソースをフィルタリングできる
-  - 「新配色カード199にある色」：`data/pccs_colors.csv`
-  - 「すべての色」：`data/pccs_colors_full.csv`
+  - 「新配色カード199にある色」：`app/src/lib/data/pccs_colors.json`
+  - 「すべての色」：`app/src/lib/data/pccs_colors_full.json`
 - 入力色に近いJIS慣用色名を上位4件表示する
   - 近さの計算にはCIEDE2000（知覚的色差）を使用する
   - 各結果には色スウォッチ・慣用色名・読み（ふりがなまたは英語名）・出題級を表示する
 - 検索対象のJIS慣用色をフィルタリングできる
-  - 「3級に出題される色」：出題級が3の色のみ
-  - 「2級に出題される色」：出題級が2の色のみ
-  - 「すべての色」：全慣用色名（出題級なし含む）
+  - 「3級に出題される色」：`app/src/lib/data/jis_colors.json`より、`examLevel`が3の色のみ
+  - 「2級に出題される色」：`app/src/lib/data/jis_colors.json`より、`examLevel`が2の色のみ
+  - 「すべての色」：`app/src/lib/data/jis_colors.json`の全データ
 - F1の結果からF2へ色を受け渡すことができる
 
 ### F2：配色の分析と調整
 
 - ユーザーは最大6色のカラーコードをカラーピッカーで入力できる
-- 入力された各色について、`data/pccs_colors.csv` を基にCIEDE2000で最近傍PCCS値を1つ決定する
+- 入力された各色について、`app/src/lib/data/pccs_colors.json` を基にCIEDE2000で最近傍PCCS値を1つ決定する
 - 以下の視覚的表示を行う
   - 各色のPCCS近似値と色スウォッチ
   - PCCS色相環（無彩色に近似された色は除外してハイライト）

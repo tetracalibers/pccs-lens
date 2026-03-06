@@ -12,17 +12,30 @@
  *   node scripts/convert-csv-to-json.mjs
  */
 
-import { readFileSync, writeFileSync, mkdirSync } from 'fs';
-import { resolve, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { readFileSync, writeFileSync, mkdirSync } from 'fs'
+import { resolve, dirname } from 'path'
+import { fileURLToPath } from 'url'
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const ROOT = resolve(__dirname, '..');
-const DATA_DIR = resolve(ROOT, 'data');
-const OUT_DIR = resolve(ROOT, 'app', 'src', 'lib', 'data');
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const ROOT = resolve(__dirname, '..')
+const DATA_DIR = resolve(ROOT, 'data')
+const OUT_DIR = resolve(ROOT, 'app', 'src', 'lib', 'data')
 
 // トーン記号（長いものを先に並べて前方一致の誤判定を防ぐ）
-const TONE_SYMBOLS = ['ltg', 'dkg', 'dp', 'sf', 'dk', 'lt', 'b', 'd', 'g', 'p', 'v'];
+const TONE_SYMBOLS = [
+  'ltg',
+  'dkg',
+  'dp',
+  'sf',
+  'dk',
+  'lt',
+  'b',
+  'd',
+  'g',
+  'p',
+  'v',
+  's',
+]
 
 /**
  * PCCS表記から無彩色のバケット区分を返す。
@@ -31,14 +44,14 @@ const TONE_SYMBOLS = ['ltg', 'dkg', 'dp', 'sf', 'dk', 'lt', 'b', 'd', 'g', 'p', 
  * @returns {'W' | 'ltGy' | 'mGy' | 'dkGy' | 'Bk'}
  */
 function getAchromaticBucket(notation) {
-  if (notation === 'W') return 'W';
-  if (notation === 'Bk') return 'Bk';
-  const match = notation.match(/^Gy-(\d+\.?\d*)$/);
-  if (!match) throw new Error(`Unknown neutral notation: ${notation}`);
-  const value = parseFloat(match[1]);
-  if (value >= 7.0) return 'ltGy';
-  if (value >= 4.0) return 'mGy';
-  return 'dkGy';
+  if (notation === 'W') return 'W'
+  if (notation === 'Bk') return 'Bk'
+  const match = notation.match(/^Gy-(\d+\.?\d*)$/)
+  if (!match) throw new Error(`Unknown neutral notation: ${notation}`)
+  const value = parseFloat(match[1])
+  if (value >= 7.0) return 'ltGy'
+  if (value >= 4.0) return 'mGy'
+  return 'dkGy'
 }
 
 /**
@@ -53,25 +66,25 @@ function parsePccsNotation(notation) {
       hueNumber: null,
       isNeutral: true,
       achromaticBucket: getAchromaticBucket(notation),
-    };
+    }
   }
 
   // 有彩色: [トーン記号][色相番号]
   for (const tone of TONE_SYMBOLS) {
     if (notation.startsWith(tone)) {
-      const hueNumber = parseInt(notation.slice(tone.length), 10);
+      const hueNumber = parseInt(notation.slice(tone.length), 10)
       if (!isNaN(hueNumber) && hueNumber >= 1 && hueNumber <= 24) {
         return {
           toneSymbol: tone,
           hueNumber,
           isNeutral: false,
           achromaticBucket: null,
-        };
+        }
       }
     }
   }
 
-  throw new Error(`Cannot parse PCCS notation: ${notation}`);
+  throw new Error(`Cannot parse PCCS notation: ${notation}`)
 }
 
 /**
@@ -83,14 +96,14 @@ function convertPccsCsv(filename) {
   const lines = readFileSync(resolve(DATA_DIR, filename), 'utf-8')
     .split('\n')
     .map((l) => l.trim())
-    .filter((l) => l.length > 0);
+    .filter((l) => l.length > 0)
 
   return lines.map((line) => {
-    const commaIdx = line.indexOf(',');
-    const notation = line.slice(0, commaIdx);
-    const hex = line.slice(commaIdx + 1);
-    return { notation, hex, ...parsePccsNotation(notation) };
-  });
+    const commaIdx = line.indexOf(',')
+    const notation = line.slice(0, commaIdx)
+    const hex = line.slice(commaIdx + 1)
+    return { notation, hex, ...parsePccsNotation(notation) }
+  })
 }
 
 /**
@@ -103,17 +116,17 @@ function convertJisCsv() {
     .split('\n')
     .map((l) => l.trim())
     .filter((l) => l.length > 0)
-    .slice(1); // ヘッダー行をスキップ
+    .slice(1) // ヘッダー行をスキップ
 
   return lines.map((line) => {
-    const parts = line.split(',');
-    const name = parts[0];
-    const reading = parts[1];
-    const hex = parts[2];
-    const examLevelStr = parts[3];
-    const examLevel = examLevelStr === '3' ? 3 : examLevelStr === '2' ? 2 : null;
-    return { name, reading, hex, examLevel };
-  });
+    const parts = line.split(',')
+    const name = parts[0]
+    const reading = parts[1]
+    const hex = parts[2]
+    const examLevelStr = parts[3]
+    const examLevel = examLevelStr === '3' ? 3 : examLevelStr === '2' ? 2 : null
+    return { name, reading, hex, examLevel }
+  })
 }
 
 /**
@@ -122,13 +135,17 @@ function convertJisCsv() {
  * @param {unknown[]} data
  */
 function writeJson(filename, data) {
-  mkdirSync(OUT_DIR, { recursive: true });
-  writeFileSync(resolve(OUT_DIR, filename), JSON.stringify(data, null, 2) + '\n', 'utf-8');
-  console.log(`  ${filename} (${data.length} entries)`);
+  mkdirSync(OUT_DIR, { recursive: true })
+  writeFileSync(
+    resolve(OUT_DIR, filename),
+    JSON.stringify(data, null, 2) + '\n',
+    'utf-8',
+  )
+  console.log(`  ${filename} (${data.length} entries)`)
 }
 
-console.log('Converting CSV to JSON...');
-writeJson('pccs_colors.json', convertPccsCsv('pccs_colors.csv'));
-writeJson('pccs_colors_full.json', convertPccsCsv('pccs_colors_full.csv'));
-writeJson('jis_colors.json', convertJisCsv());
-console.log('Done.');
+console.log('Converting CSV to JSON...')
+writeJson('pccs_colors.json', convertPccsCsv('pccs_colors.csv'))
+writeJson('pccs_colors_full.json', convertPccsCsv('pccs_colors_full.csv'))
+writeJson('jis_colors.json', convertJisCsv())
+console.log('Done.')
