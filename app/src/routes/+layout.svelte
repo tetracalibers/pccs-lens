@@ -1,7 +1,6 @@
 <script lang="ts">
   import favicon from "$lib/assets/favicon.svg"
-  import { page } from "$app/stores"
-  import { base } from "$app/paths"
+  import { page } from "$app/state"
 
   let { children } = $props()
 </script>
@@ -12,18 +11,15 @@
 
 <header>
   <nav>
-    <a href="{base}/" class="brand">PCCS Lens</a>
+    <a href="/" class="brand">PCCS Lens</a>
     <ul>
       <li>
-        <a
-          href="{base}/approximate"
-          class:active={($page.url.pathname as string) === "/approximate"}>近似</a
+        <a href="/approximate" class:active={(page.url.pathname as string) === "/approximate"}
+          >近似</a
         >
       </li>
       <li>
-        <a href="{base}/analyze" class:active={($page.url.pathname as string) === "/analyze"}
-          >配色分析</a
-        >
+        <a href="/analyze" class:active={(page.url.pathname as string) === "/analyze"}>配色分析</a>
       </li>
     </ul>
   </nav>

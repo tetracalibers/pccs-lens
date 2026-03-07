@@ -1,7 +1,3 @@
-<script lang="ts">
-  import { base } from "$app/paths"
-</script>
-
 <svelte:head>
   <title>PCCS Lens</title>
 </svelte:head>
@@ -10,11 +6,11 @@
   <h1>PCCS Lens</h1>
   <p>色をPCCSというレンズを通して見る</p>
   <nav class="feature-nav">
-    <a href="{base}/approximate" class="feature-card">
+    <a href="/approximate" class="feature-card">
       <span class="feature-title">色のPCCS近似</span>
       <span class="feature-desc">入力した色に最も近いPCCS値を表示する</span>
     </a>
-    <a href="{base}/analyze" class="feature-card">
+    <a href="/analyze" class="feature-card">
       <span class="feature-title">配色の分析と調整</span>
       <span class="feature-desc">複数の色をPCCSで分析・インタラクティブに調整する</span>
     </a>
