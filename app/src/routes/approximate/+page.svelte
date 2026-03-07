@@ -1,0 +1,109 @@
+<script lang="ts">
+	import ColorPicker from '$lib/components/ColorPicker.svelte';
+	import { findClosestPccs } from '$lib/color/approximate';
+	import pccsColors from '$lib/data/pccs_colors.json';
+	import type { PCCSColor, ApproximateResult } from '$lib/data/types';
+
+	const colors = pccsColors as PCCSColor[];
+	const TOP_N = 8;
+
+	let inputColor = $state('#EE0026');
+	let results: ApproximateResult[] = $derived(findClosestPccs(inputColor, colors, TOP_N));
+</script>
+
+<svelte:head>
+	<title>色のPCCS近似 - PCCS Lens</title>
+</svelte:head>
+
+<main>
+	<h1>色のPCCS近似</h1>
+
+	<section class="input-section">
+		<h2>色を入力</h2>
+		<ColorPicker bind:value={inputColor} />
+	</section>
+
+	<section class="results-section">
+		<h2>PCCS近似結果（上位{TOP_N}件）</h2>
+		{#if results.length > 0}
+			<ul class="result-list">
+				{#each results as result (result.color.notation)}
+					<li class="result-card">
+						<span
+							class="swatch"
+							style="background-color: {result.color.hex}"
+							aria-label={result.color.hex}
+						></span>
+						<span class="notation">{result.color.notation}</span>
+						<span class="delta-e">ΔE₀₀: {result.deltaE.toFixed(2)}</span>
+					</li>
+				{/each}
+			</ul>
+		{/if}
+	</section>
+</main>
+
+<style>
+	main {
+		max-width: 600px;
+		margin: 0 auto;
+		padding: 1.5rem 1rem;
+	}
+
+	h1 {
+		font-size: 1.5rem;
+		margin: 0 0 1.5rem;
+	}
+
+	section {
+		margin-bottom: 2rem;
+	}
+
+	h2 {
+		font-size: 1rem;
+		font-weight: 600;
+		margin: 0 0 0.75rem;
+		color: var(--color-text-secondary, #555);
+	}
+
+	.result-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.result-card {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.625rem 0.75rem;
+		border: 1px solid var(--color-border, #ddd);
+		border-radius: 0.375rem;
+		background: var(--color-surface, #fff);
+	}
+
+	.swatch {
+		display: inline-block;
+		width: 2rem;
+		height: 2rem;
+		border-radius: 0.25rem;
+		border: 1px solid rgba(0, 0, 0, 0.1);
+		flex-shrink: 0;
+	}
+
+	.notation {
+		font-family: monospace;
+		font-size: 1rem;
+		font-weight: 600;
+		min-width: 5rem;
+	}
+
+	.delta-e {
+		font-size: 0.8rem;
+		color: var(--color-text-secondary, #777);
+		margin-left: auto;
+	}
+</style>
