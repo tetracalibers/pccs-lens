@@ -10,13 +10,26 @@
     ApproximateResult,
     JISApproximateResult
   } from "$lib/data/types"
+  import { page } from "$app/stores"
+  import { replaceState } from "$app/navigation"
 
   const colors = pccsColors as PCCSColor[]
   const jisColorList = jisColors as JISColor[]
   const TOP_N = 6
   const JIS_TOP_N = 6
 
-  let inputColor = $state("#EE0026")
+  const isValidHex6 = (v: string | null): v is string => /^[0-9A-Fa-f]{6}$/.test(v ?? "")
+
+  const urlColor = $page.url.searchParams.get("color")
+  let inputColor = $state(isValidHex6(urlColor) ? `#${urlColor.toUpperCase()}` : "#EE0026")
+
+  $effect(() => {
+    if (/^#[0-9A-Fa-f]{6}$/.test(inputColor)) {
+      const url = new URL($page.url)
+      url.searchParams.set("color", inputColor.slice(1).toUpperCase())
+      replaceState(url, {})
+    }
+  })
   let results: ApproximateResult[] = $derived(findClosestPccs(inputColor, colors, TOP_N))
   let jisResults: JISApproximateResult[] = $derived(
     findClosestJis(inputColor, jisColorList, JIS_TOP_N)
