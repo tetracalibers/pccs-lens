@@ -1,776 +1,776 @@
 [
-	{
-		"name": "桜色",
-		"reading": "さくらいろ",
-		"hex": "#fdeeef",
-		"examLevel": 3
-	},
-	{
-		"name": "紅梅色",
-		"reading": "こうばいいろ",
-		"hex": "#f3a7a5",
-		"examLevel": 3
-	},
-	{
-		"name": "鴇色",
-		"reading": "ときいろ",
-		"hex": "#f4b3c2",
-		"examLevel": 2
-	},
-	{
-		"name": "珊瑚色",
-		"reading": "さんごいろ",
-		"hex": "#f4ada3",
-		"examLevel": 3
-	},
-	{
-		"name": "ローズピンク",
-		"reading": "rose pink",
-		"hex": "#f29c9f",
-		"examLevel": 2
-	},
-	{
-		"name": "オールドローズ",
-		"reading": "old rose",
-		"hex": "#da8d93",
-		"examLevel": 2
-	},
-	{
-		"name": "ベビーピンク",
-		"reading": "baby pink",
-		"hex": "#fadbda",
-		"examLevel": 3
-	},
-	{
-		"name": "サーモンピンク",
-		"reading": "salmon pink",
-		"hex": "#f4a583",
-		"examLevel": 3
-	},
-	{
-		"name": "韓紅色",
-		"reading": "からくれないいろ",
-		"hex": "#e95464",
-		"examLevel": 2
-	},
-	{
-		"name": "朱色",
-		"reading": "しゅいろ",
-		"hex": "#e94709",
-		"examLevel": 3
-	},
-	{
-		"name": "牡丹色",
-		"reading": "ぼたんいろ",
-		"hex": "#e55a9b",
-		"examLevel": 3
-	},
-	{
-		"name": "バーミリオン",
-		"reading": "vermilion",
-		"hex": "#eb613b",
-		"examLevel": 3
-	},
-	{
-		"name": "カーマイン",
-		"reading": "carmine",
-		"hex": "#d7003a",
-		"examLevel": 3
-	},
-	{
-		"name": "スカーレット",
-		"reading": "scarlet",
-		"hex": "#ea5539",
-		"examLevel": 3
-	},
-	{
-		"name": "茜色",
-		"reading": "あかねいろ",
-		"hex": "#b7282d",
-		"examLevel": 3
-	},
-	{
-		"name": "蘇芳",
-		"reading": "すおう",
-		"hex": "#9e3d3e",
-		"examLevel": 2
-	},
-	{
-		"name": "ポピーレッド",
-		"reading": "poppy red",
-		"hex": "#e9474d",
-		"examLevel": 2
-	},
-	{
-		"name": "ワインレッド",
-		"reading": "wine red",
-		"hex": "#932e44",
-		"examLevel": 3
-	},
-	{
-		"name": "ボルドー",
-		"reading": "bordeaux",
-		"hex": "#600f18",
-		"examLevel": 3
-	},
-	{
-		"name": "バーガンディー",
-		"reading": "burgundy",
-		"hex": "#561620",
-		"examLevel": 2
-	},
-	{
-		"name": "黄丹",
-		"reading": "おうに",
-		"hex": "#ee7948",
-		"examLevel": 2
-	},
-	{
-		"name": "柑子色",
-		"reading": "こうじいろ",
-		"hex": "#f6ad48",
-		"examLevel": 2
-	},
-	{
-		"name": "山吹色",
-		"reading": "やまぶきいろ",
-		"hex": "#f8b500",
-		"examLevel": 3
-	},
-	{
-		"name": "ピーチ",
-		"reading": "peach",
-		"hex": "#fbd8b5",
-		"examLevel": 3
-	},
-	{
-		"name": "マリーゴールド",
-		"reading": "marigold",
-		"hex": "#f39800",
-		"examLevel": 3
-	},
-	{
-		"name": "オリーブ",
-		"reading": "olive",
-		"hex": "#72640a",
-		"examLevel": 3
-	},
-	{
-		"name": "刈安色",
-		"reading": "かりやすいろ",
-		"hex": "#f5e56b",
-		"examLevel": 2
-	},
-	{
-		"name": "黄蘗色",
-		"reading": "きはだいろ",
-		"hex": "#fef263",
-		"examLevel": 2
-	},
-	{
-		"name": "鬱金色",
-		"reading": "うこんいろ",
-		"hex": "#fabf13",
-		"examLevel": 2
-	},
-	{
-		"name": "芥子色",
-		"reading": "からしいろ",
-		"hex": "#d2b74e",
-		"examLevel": 3
-	},
-	{
-		"name": "ゴールデンイエロー",
-		"reading": "golden yellow",
-		"hex": "#f8b856",
-		"examLevel": 2
-	},
-	{
-		"name": "ネープルスイエロー",
-		"reading": "naples yellow",
-		"hex": "#fdd75c",
-		"examLevel": 2
-	},
-	{
-		"name": "ジョンブリアン",
-		"reading": "jaune brillant",
-		"hex": "#ffdc00",
-		"examLevel": 2
-	},
-	{
-		"name": "レモンイエロー",
-		"reading": "lemon yellow",
-		"hex": "#fff33f",
-		"examLevel": 3
-	},
-	{
-		"name": "カナリヤ",
-		"reading": "canary yellow",
-		"hex": "#fff262",
-		"examLevel": 3
-	},
-	{
-		"name": "クリームイエロー",
-		"reading": "cream yellow",
-		"hex": "#fff2b8",
-		"examLevel": 3
-	},
-	{
-		"name": "ブロンド",
-		"reading": "blond",
-		"hex": "#f7dc8d",
-		"examLevel": 3
-	},
-	{
-		"name": "萌黄",
-		"reading": "もえぎ",
-		"hex": "#afd147",
-		"examLevel": 3
-	},
-	{
-		"name": "若竹色",
-		"reading": "わかたけいろ",
-		"hex": "#67be8d",
-		"examLevel": 3
-	},
-	{
-		"name": "海松色",
-		"reading": "みるいろ",
-		"hex": "#726d3f",
-		"examLevel": 2
-	},
-	{
-		"name": "常磐色",
-		"reading": "ときわいろ",
-		"hex": "#007c45",
-		"examLevel": 2
-	},
-	{
-		"name": "松葉色",
-		"reading": "まつばいろ",
-		"hex": "#839a5c",
-		"examLevel": 3
-	},
-	{
-		"name": "青磁色",
-		"reading": "せいじいろ",
-		"hex": "#68b7a1",
-		"examLevel": 3
-	},
-	{
-		"name": "緑青色",
-		"reading": "ろくしょういろ",
-		"hex": "#4f8a5d",
-		"examLevel": 2
-	},
-	{
-		"name": "鶯色",
-		"reading": "うぐいすいろ",
-		"hex": "#9d973b",
-		"examLevel": 3
-	},
-	{
-		"name": "鶸色",
-		"reading": "ひわいろ",
-		"hex": "#d7cf3a",
-		"examLevel": 2
-	},
-	{
-		"name": "リーフグリーン",
-		"reading": "leaf green",
-		"hex": "#9dc04c",
-		"examLevel": 2
-	},
-	{
-		"name": "グラスグリーン",
-		"reading": "grass green",
-		"hex": "#7b8d41",
-		"examLevel": 2
-	},
-	{
-		"name": "アップルグリーン",
-		"reading": "apple green",
-		"hex": "#a2cc89",
-		"examLevel": 2
-	},
-	{
-		"name": "オリーブグリーン",
-		"reading": "olive green",
-		"hex": "#5f651e",
-		"examLevel": 3
-	},
-	{
-		"name": "マラカイトグリーン",
-		"reading": "malachite green",
-		"hex": "#009854",
-		"examLevel": 2
-	},
-	{
-		"name": "コバルトグリーン",
-		"reading": "cobalt green",
-		"hex": "#3ab483",
-		"examLevel": 3
-	},
-	{
-		"name": "ビリジアン",
-		"reading": "viridian",
-		"hex": "#008969",
-		"examLevel": 3
-	},
-	{
-		"name": "エメラルドグリーン",
-		"reading": "emerald green",
-		"hex": "#00aa6e",
-		"examLevel": 3
-	},
-	{
-		"name": "シャルトルーズグリーン",
-		"reading": "chartreuse green",
-		"hex": "#d9e367",
-		"examLevel": 2
-	},
-	{
-		"name": "ミントグリーン",
-		"reading": "mint green",
-		"hex": "#98ce97",
-		"examLevel": 2
-	},
-	{
-		"name": "ボトルグリーン",
-		"reading": "bottle green",
-		"hex": "#005635",
-		"examLevel": 2
-	},
-	{
-		"name": "ピーコックグリーン",
-		"reading": "peacock green",
-		"hex": "#00a496",
-		"examLevel": 2
-	},
-	{
-		"name": "空色",
-		"reading": "そらいろ",
-		"hex": "#a0d8ef",
-		"examLevel": 3
-	},
-	{
-		"name": "瑠璃色",
-		"reading": "るりいろ",
-		"hex": "#1d50a2",
-		"examLevel": 3
-	},
-	{
-		"name": "群青色",
-		"reading": "ぐんじょういろ",
-		"hex": "#4e67b0",
-		"examLevel": 3
-	},
-	{
-		"name": "藍色",
-		"reading": "あいいろ",
-		"hex": "#0f5779",
-		"examLevel": 3
-	},
-	{
-		"name": "甕覗き",
-		"reading": "かめのぞき",
-		"hex": "#a2d7dd",
-		"examLevel": 2
-	},
-	{
-		"name": "縹色",
-		"reading": "はなだいろ",
-		"hex": "#2980af",
-		"examLevel": 2
-	},
-	{
-		"name": "納戸色",
-		"reading": "なんどいろ",
-		"hex": "#007d92",
-		"examLevel": 2
-	},
-	{
-		"name": "鉄色",
-		"reading": "てついろ",
-		"hex": "#005242",
-		"examLevel": 2
-	},
-	{
-		"name": "浅葱色",
-		"reading": "あさぎいろ",
-		"hex": "#00a1ae",
-		"examLevel": 3
-	},
-	{
-		"name": "新橋色",
-		"reading": "しんばしいろ",
-		"hex": "#64bcc7",
-		"examLevel": 2
-	},
-	{
-		"name": "スカイブルー",
-		"reading": "sky blue",
-		"hex": "#a0d8ef",
-		"examLevel": 3
-	},
-	{
-		"name": "ミッドナイトブルー",
-		"reading": "midnight blue",
-		"hex": "#001d42",
-		"examLevel": 2
-	},
-	{
-		"name": "ウルトラマリンブルー",
-		"reading": "ultramarine blue",
-		"hex": "#4052a2",
-		"examLevel": 3
-	},
-	{
-		"name": "ターコイズブルー",
-		"reading": "turquoise blue",
-		"hex": "#00afcc",
-		"examLevel": 3
-	},
-	{
-		"name": "ベビーブルー",
-		"reading": "baby blue",
-		"hex": "#bbe2f1",
-		"examLevel": 3
-	},
-	{
-		"name": "コバルトブルー",
-		"reading": "cobalt blue",
-		"hex": "#0068b7",
-		"examLevel": 3
-	},
-	{
-		"name": "セルリアンブルー",
-		"reading": "cerulean blue",
-		"hex": "#008db7",
-		"examLevel": 2
-	},
-	{
-		"name": "シアン",
-		"reading": "cyan",
-		"hex": "#00a0e9",
-		"examLevel": 3
-	},
-	{
-		"name": "マリンブルー",
-		"reading": "marine blue",
-		"hex": "#006788",
-		"examLevel": 3
-	},
-	{
-		"name": "ネイビーブルー",
-		"reading": "navy blue",
-		"hex": "#1f2e55",
-		"examLevel": 3
-	},
-	{
-		"name": "サックスブルー",
-		"reading": "saxe blue",
-		"hex": "#3a8daa",
-		"examLevel": 2
-	},
-	{
-		"name": "ナイルブルー",
-		"reading": "nile blue",
-		"hex": "#259f94",
-		"examLevel": 2
-	},
-	{
-		"name": "ピーコックブルー",
-		"reading": "peacock blue",
-		"hex": "#009aa3",
-		"examLevel": null
-	},
-	{
-		"name": "マゼンタ",
-		"reading": "magenta",
-		"hex": "#e4007f",
-		"examLevel": 3
-	},
-	{
-		"name": "江戸紫",
-		"reading": "えどむらさき",
-		"hex": "#734e95",
-		"examLevel": 2
-	},
-	{
-		"name": "古代紫",
-		"reading": "こだいむらさき",
-		"hex": "#895687",
-		"examLevel": 2
-	},
-	{
-		"name": "藤色",
-		"reading": "ふじいろ",
-		"hex": "#bbb7da",
-		"examLevel": 2
-	},
-	{
-		"name": "桔梗色",
-		"reading": "ききょういろ",
-		"hex": "#5654a2",
-		"examLevel": 3
-	},
-	{
-		"name": "杜若色",
-		"reading": "かきつばたいろ",
-		"hex": "#4d4398",
-		"examLevel": 3
-	},
-	{
-		"name": "菖蒲色",
-		"reading": "あやめいろ",
-		"hex": "#cc7db1",
-		"examLevel": 3
-	},
-	{
-		"name": "茄子紺",
-		"reading": "なすこん",
-		"hex": "#4b1a47",
-		"examLevel": 3
-	},
-	{
-		"name": "モーブ",
-		"reading": "mauve",
-		"hex": "#915da3",
-		"examLevel": 3
-	},
-	{
-		"name": "バイオレット",
-		"reading": "violet",
-		"hex": "#714f9d",
-		"examLevel": 3
-	},
-	{
-		"name": "パープル",
-		"reading": "purple",
-		"hex": "#9b68a9",
-		"examLevel": 3
-	},
-	{
-		"name": "ライラック",
-		"reading": "lilac",
-		"hex": "#d1bada",
-		"examLevel": 2
-	},
-	{
-		"name": "ウイスタリア",
-		"reading": "wistaria",
-		"hex": "#8e8bc2",
-		"examLevel": 2
-	},
-	{
-		"name": "ラベンダー",
-		"reading": "lavender",
-		"hex": "#c5b3d3",
-		"examLevel": 3
-	},
-	{
-		"name": "モーヴ",
-		"reading": "Mauve",
-		"hex": "#a05695",
-		"examLevel": null
-	},
-	{
-		"name": "黄土色",
-		"reading": "おうどいろ",
-		"hex": "#c39043",
-		"examLevel": 3
-	},
-	{
-		"name": "代赭",
-		"reading": "たいしゃ",
-		"hex": "#bb541f",
-		"examLevel": 2
-	},
-	{
-		"name": "弁柄色",
-		"reading": "べんがらいろ",
-		"hex": "#8f2d12",
-		"examLevel": 2
-	},
-	{
-		"name": "朽葉色",
-		"reading": "くちばいろ",
-		"hex": "#917347",
-		"examLevel": 2
-	},
-	{
-		"name": "煤竹色",
-		"reading": "すすたけいろ",
-		"hex": "#6b5146",
-		"examLevel": 2
-	},
-	{
-		"name": "檜皮色",
-		"reading": "ひわだいろ",
-		"hex": "#965036",
-		"examLevel": 2
-	},
-	{
-		"name": "栗色",
-		"reading": "くりいろ",
-		"hex": "#762e05",
-		"examLevel": 3
-	},
-	{
-		"name": "海老茶",
-		"reading": "えびちゃ",
-		"hex": "#814336",
-		"examLevel": 2
-	},
-	{
-		"name": "鳶色",
-		"reading": "とびいろ",
-		"hex": "#8b4239",
-		"examLevel": 2
-	},
-	{
-		"name": "琥珀色",
-		"reading": "こはくいろ",
-		"hex": "#bf7834",
-		"examLevel": 2
-	},
-	{
-		"name": "煉瓦色",
-		"reading": "れんがいろ",
-		"hex": "#a2482b",
-		"examLevel": 3
-	},
-	{
-		"name": "ローシェンナ",
-		"reading": "raw sienna",
-		"hex": "#d98032",
-		"examLevel": 2
-	},
-	{
-		"name": "バーントシェンナ",
-		"reading": "burnt sienna",
-		"hex": "#b25532",
-		"examLevel": 2
-	},
-	{
-		"name": "ローアンバー",
-		"reading": "raw umber",
-		"hex": "#916f24",
-		"examLevel": 2
-	},
-	{
-		"name": "バーントアンバー",
-		"reading": "burnt umber",
-		"hex": "#7a5e3d",
-		"examLevel": 2
-	},
-	{
-		"name": "セピア",
-		"reading": "sepia",
-		"hex": "#6f4e27",
-		"examLevel": 3
-	},
-	{
-		"name": "カーキー",
-		"reading": "khaki",
-		"hex": "#bb9855",
-		"examLevel": 3
-	},
-	{
-		"name": "ベージュ",
-		"reading": "beige",
-		"hex": "#eedcb3",
-		"examLevel": 3
-	},
-	{
-		"name": "エクルベージュ",
-		"reading": "ecru beige",
-		"hex": "#f8eacf",
-		"examLevel": 2
-	},
-	{
-		"name": "タン",
-		"reading": "tan",
-		"hex": "#c1813f",
-		"examLevel": 2
-	},
-	{
-		"name": "マルーン",
-		"reading": "maroon",
-		"hex": "#6a1816",
-		"examLevel": 2
-	},
-	{
-		"name": "テラコッタ",
-		"reading": "terracotta",
-		"hex": "#be6d55",
-		"examLevel": 2
-	},
-	{
-		"name": "チョコレート",
-		"reading": "chocholate",
-		"hex": "#612c16",
-		"examLevel": 3
-	},
-	{
-		"name": "アンバー",
-		"reading": "amber",
-		"hex": "#c28953",
-		"examLevel": 2
-	},
-	{
-		"name": "生成り色",
-		"reading": "きなりいろ",
-		"hex": "#fbfaf3",
-		"examLevel": 3
-	},
-	{
-		"name": "茶鼠",
-		"reading": "ちゃねず",
-		"hex": "#a99e93",
-		"examLevel": 2
-	},
-	{
-		"name": "銀鼠",
-		"reading": "ぎんねず",
-		"hex": "#afafb0",
-		"examLevel": 2
-	},
-	{
-		"name": "利休鼠",
-		"reading": "りきゅうねず",
-		"hex": "#7b8174",
-		"examLevel": 2
-	},
-	{
-		"name": "アイボリー",
-		"reading": "ivory",
-		"hex": "#f8f5e3",
-		"examLevel": 3
-	},
-	{
-		"name": "シルバーグレー",
-		"reading": "silver grey",
-		"hex": "#afafb0",
-		"examLevel": 3
-	},
-	{
-		"name": "スレートグレー",
-		"reading": "slate grey",
-		"hex": "#636062",
-		"examLevel": 2
-	},
-	{
-		"name": "チャコールグレー",
-		"reading": "charcoal grey",
-		"hex": "#4e4449",
-		"examLevel": 3
-	},
-	{
-		"name": "ランプブラック",
-		"reading": "lamp black",
-		"hex": "#24130d",
-		"examLevel": 2
-	}
+  {
+    "name": "桜色",
+    "reading": "さくらいろ",
+    "hex": "#fdeeef",
+    "examLevel": 3
+  },
+  {
+    "name": "紅梅色",
+    "reading": "こうばいいろ",
+    "hex": "#f3a7a5",
+    "examLevel": 3
+  },
+  {
+    "name": "鴇色",
+    "reading": "ときいろ",
+    "hex": "#f4b3c2",
+    "examLevel": 2
+  },
+  {
+    "name": "珊瑚色",
+    "reading": "さんごいろ",
+    "hex": "#f4ada3",
+    "examLevel": 3
+  },
+  {
+    "name": "ローズピンク",
+    "reading": "rose pink",
+    "hex": "#f29c9f",
+    "examLevel": 2
+  },
+  {
+    "name": "オールドローズ",
+    "reading": "old rose",
+    "hex": "#da8d93",
+    "examLevel": 2
+  },
+  {
+    "name": "ベビーピンク",
+    "reading": "baby pink",
+    "hex": "#fadbda",
+    "examLevel": 3
+  },
+  {
+    "name": "サーモンピンク",
+    "reading": "salmon pink",
+    "hex": "#f4a583",
+    "examLevel": 3
+  },
+  {
+    "name": "韓紅色",
+    "reading": "からくれないいろ",
+    "hex": "#e95464",
+    "examLevel": 2
+  },
+  {
+    "name": "朱色",
+    "reading": "しゅいろ",
+    "hex": "#e94709",
+    "examLevel": 3
+  },
+  {
+    "name": "牡丹色",
+    "reading": "ぼたんいろ",
+    "hex": "#e55a9b",
+    "examLevel": 3
+  },
+  {
+    "name": "バーミリオン",
+    "reading": "vermilion",
+    "hex": "#eb613b",
+    "examLevel": 3
+  },
+  {
+    "name": "カーマイン",
+    "reading": "carmine",
+    "hex": "#d7003a",
+    "examLevel": 3
+  },
+  {
+    "name": "スカーレット",
+    "reading": "scarlet",
+    "hex": "#ea5539",
+    "examLevel": 3
+  },
+  {
+    "name": "茜色",
+    "reading": "あかねいろ",
+    "hex": "#b7282d",
+    "examLevel": 3
+  },
+  {
+    "name": "蘇芳",
+    "reading": "すおう",
+    "hex": "#9e3d3e",
+    "examLevel": 2
+  },
+  {
+    "name": "ポピーレッド",
+    "reading": "poppy red",
+    "hex": "#e9474d",
+    "examLevel": 2
+  },
+  {
+    "name": "ワインレッド",
+    "reading": "wine red",
+    "hex": "#932e44",
+    "examLevel": 3
+  },
+  {
+    "name": "ボルドー",
+    "reading": "bordeaux",
+    "hex": "#600f18",
+    "examLevel": 3
+  },
+  {
+    "name": "バーガンディー",
+    "reading": "burgundy",
+    "hex": "#561620",
+    "examLevel": 2
+  },
+  {
+    "name": "黄丹",
+    "reading": "おうに",
+    "hex": "#ee7948",
+    "examLevel": 2
+  },
+  {
+    "name": "柑子色",
+    "reading": "こうじいろ",
+    "hex": "#f6ad48",
+    "examLevel": 2
+  },
+  {
+    "name": "山吹色",
+    "reading": "やまぶきいろ",
+    "hex": "#f8b500",
+    "examLevel": 3
+  },
+  {
+    "name": "ピーチ",
+    "reading": "peach",
+    "hex": "#fbd8b5",
+    "examLevel": 3
+  },
+  {
+    "name": "マリーゴールド",
+    "reading": "marigold",
+    "hex": "#f39800",
+    "examLevel": 3
+  },
+  {
+    "name": "オリーブ",
+    "reading": "olive",
+    "hex": "#72640a",
+    "examLevel": 3
+  },
+  {
+    "name": "刈安色",
+    "reading": "かりやすいろ",
+    "hex": "#f5e56b",
+    "examLevel": 2
+  },
+  {
+    "name": "黄蘗色",
+    "reading": "きはだいろ",
+    "hex": "#fef263",
+    "examLevel": 2
+  },
+  {
+    "name": "鬱金色",
+    "reading": "うこんいろ",
+    "hex": "#fabf13",
+    "examLevel": 2
+  },
+  {
+    "name": "芥子色",
+    "reading": "からしいろ",
+    "hex": "#d2b74e",
+    "examLevel": 3
+  },
+  {
+    "name": "ゴールデンイエロー",
+    "reading": "golden yellow",
+    "hex": "#f8b856",
+    "examLevel": 2
+  },
+  {
+    "name": "ネープルスイエロー",
+    "reading": "naples yellow",
+    "hex": "#fdd75c",
+    "examLevel": 2
+  },
+  {
+    "name": "ジョンブリアン",
+    "reading": "jaune brillant",
+    "hex": "#ffdc00",
+    "examLevel": 2
+  },
+  {
+    "name": "レモンイエロー",
+    "reading": "lemon yellow",
+    "hex": "#fff33f",
+    "examLevel": 3
+  },
+  {
+    "name": "カナリヤ",
+    "reading": "canary yellow",
+    "hex": "#fff262",
+    "examLevel": 3
+  },
+  {
+    "name": "クリームイエロー",
+    "reading": "cream yellow",
+    "hex": "#fff2b8",
+    "examLevel": 3
+  },
+  {
+    "name": "ブロンド",
+    "reading": "blond",
+    "hex": "#f7dc8d",
+    "examLevel": 3
+  },
+  {
+    "name": "萌黄",
+    "reading": "もえぎ",
+    "hex": "#afd147",
+    "examLevel": 3
+  },
+  {
+    "name": "若竹色",
+    "reading": "わかたけいろ",
+    "hex": "#67be8d",
+    "examLevel": 3
+  },
+  {
+    "name": "海松色",
+    "reading": "みるいろ",
+    "hex": "#726d3f",
+    "examLevel": 2
+  },
+  {
+    "name": "常磐色",
+    "reading": "ときわいろ",
+    "hex": "#007c45",
+    "examLevel": 2
+  },
+  {
+    "name": "松葉色",
+    "reading": "まつばいろ",
+    "hex": "#839a5c",
+    "examLevel": 3
+  },
+  {
+    "name": "青磁色",
+    "reading": "せいじいろ",
+    "hex": "#68b7a1",
+    "examLevel": 3
+  },
+  {
+    "name": "緑青色",
+    "reading": "ろくしょういろ",
+    "hex": "#4f8a5d",
+    "examLevel": 2
+  },
+  {
+    "name": "鶯色",
+    "reading": "うぐいすいろ",
+    "hex": "#9d973b",
+    "examLevel": 3
+  },
+  {
+    "name": "鶸色",
+    "reading": "ひわいろ",
+    "hex": "#d7cf3a",
+    "examLevel": 2
+  },
+  {
+    "name": "リーフグリーン",
+    "reading": "leaf green",
+    "hex": "#9dc04c",
+    "examLevel": 2
+  },
+  {
+    "name": "グラスグリーン",
+    "reading": "grass green",
+    "hex": "#7b8d41",
+    "examLevel": 2
+  },
+  {
+    "name": "アップルグリーン",
+    "reading": "apple green",
+    "hex": "#a2cc89",
+    "examLevel": 2
+  },
+  {
+    "name": "オリーブグリーン",
+    "reading": "olive green",
+    "hex": "#5f651e",
+    "examLevel": 3
+  },
+  {
+    "name": "マラカイトグリーン",
+    "reading": "malachite green",
+    "hex": "#009854",
+    "examLevel": 2
+  },
+  {
+    "name": "コバルトグリーン",
+    "reading": "cobalt green",
+    "hex": "#3ab483",
+    "examLevel": 3
+  },
+  {
+    "name": "ビリジアン",
+    "reading": "viridian",
+    "hex": "#008969",
+    "examLevel": 3
+  },
+  {
+    "name": "エメラルドグリーン",
+    "reading": "emerald green",
+    "hex": "#00aa6e",
+    "examLevel": 3
+  },
+  {
+    "name": "シャルトルーズグリーン",
+    "reading": "chartreuse green",
+    "hex": "#d9e367",
+    "examLevel": 2
+  },
+  {
+    "name": "ミントグリーン",
+    "reading": "mint green",
+    "hex": "#98ce97",
+    "examLevel": 2
+  },
+  {
+    "name": "ボトルグリーン",
+    "reading": "bottle green",
+    "hex": "#005635",
+    "examLevel": 2
+  },
+  {
+    "name": "ピーコックグリーン",
+    "reading": "peacock green",
+    "hex": "#00a496",
+    "examLevel": 2
+  },
+  {
+    "name": "空色",
+    "reading": "そらいろ",
+    "hex": "#a0d8ef",
+    "examLevel": 3
+  },
+  {
+    "name": "瑠璃色",
+    "reading": "るりいろ",
+    "hex": "#1d50a2",
+    "examLevel": 3
+  },
+  {
+    "name": "群青色",
+    "reading": "ぐんじょういろ",
+    "hex": "#4e67b0",
+    "examLevel": 3
+  },
+  {
+    "name": "藍色",
+    "reading": "あいいろ",
+    "hex": "#0f5779",
+    "examLevel": 3
+  },
+  {
+    "name": "甕覗き",
+    "reading": "かめのぞき",
+    "hex": "#a2d7dd",
+    "examLevel": 2
+  },
+  {
+    "name": "縹色",
+    "reading": "はなだいろ",
+    "hex": "#2980af",
+    "examLevel": 2
+  },
+  {
+    "name": "納戸色",
+    "reading": "なんどいろ",
+    "hex": "#007d92",
+    "examLevel": 2
+  },
+  {
+    "name": "鉄色",
+    "reading": "てついろ",
+    "hex": "#005242",
+    "examLevel": 2
+  },
+  {
+    "name": "浅葱色",
+    "reading": "あさぎいろ",
+    "hex": "#00a1ae",
+    "examLevel": 3
+  },
+  {
+    "name": "新橋色",
+    "reading": "しんばしいろ",
+    "hex": "#64bcc7",
+    "examLevel": 2
+  },
+  {
+    "name": "スカイブルー",
+    "reading": "sky blue",
+    "hex": "#a0d8ef",
+    "examLevel": 3
+  },
+  {
+    "name": "ミッドナイトブルー",
+    "reading": "midnight blue",
+    "hex": "#001d42",
+    "examLevel": 2
+  },
+  {
+    "name": "ウルトラマリンブルー",
+    "reading": "ultramarine blue",
+    "hex": "#4052a2",
+    "examLevel": 3
+  },
+  {
+    "name": "ターコイズブルー",
+    "reading": "turquoise blue",
+    "hex": "#00afcc",
+    "examLevel": 3
+  },
+  {
+    "name": "ベビーブルー",
+    "reading": "baby blue",
+    "hex": "#bbe2f1",
+    "examLevel": 3
+  },
+  {
+    "name": "コバルトブルー",
+    "reading": "cobalt blue",
+    "hex": "#0068b7",
+    "examLevel": 3
+  },
+  {
+    "name": "セルリアンブルー",
+    "reading": "cerulean blue",
+    "hex": "#008db7",
+    "examLevel": 2
+  },
+  {
+    "name": "シアン",
+    "reading": "cyan",
+    "hex": "#00a0e9",
+    "examLevel": 3
+  },
+  {
+    "name": "マリンブルー",
+    "reading": "marine blue",
+    "hex": "#006788",
+    "examLevel": 3
+  },
+  {
+    "name": "ネイビーブルー",
+    "reading": "navy blue",
+    "hex": "#1f2e55",
+    "examLevel": 3
+  },
+  {
+    "name": "サックスブルー",
+    "reading": "saxe blue",
+    "hex": "#3a8daa",
+    "examLevel": 2
+  },
+  {
+    "name": "ナイルブルー",
+    "reading": "nile blue",
+    "hex": "#259f94",
+    "examLevel": 2
+  },
+  {
+    "name": "ピーコックブルー",
+    "reading": "peacock blue",
+    "hex": "#009aa3",
+    "examLevel": null
+  },
+  {
+    "name": "マゼンタ",
+    "reading": "magenta",
+    "hex": "#e4007f",
+    "examLevel": 3
+  },
+  {
+    "name": "江戸紫",
+    "reading": "えどむらさき",
+    "hex": "#734e95",
+    "examLevel": 2
+  },
+  {
+    "name": "古代紫",
+    "reading": "こだいむらさき",
+    "hex": "#895687",
+    "examLevel": 2
+  },
+  {
+    "name": "藤色",
+    "reading": "ふじいろ",
+    "hex": "#bbb7da",
+    "examLevel": 2
+  },
+  {
+    "name": "桔梗色",
+    "reading": "ききょういろ",
+    "hex": "#5654a2",
+    "examLevel": 3
+  },
+  {
+    "name": "杜若色",
+    "reading": "かきつばたいろ",
+    "hex": "#4d4398",
+    "examLevel": 3
+  },
+  {
+    "name": "菖蒲色",
+    "reading": "あやめいろ",
+    "hex": "#cc7db1",
+    "examLevel": 3
+  },
+  {
+    "name": "茄子紺",
+    "reading": "なすこん",
+    "hex": "#4b1a47",
+    "examLevel": 3
+  },
+  {
+    "name": "モーブ",
+    "reading": "mauve",
+    "hex": "#915da3",
+    "examLevel": 3
+  },
+  {
+    "name": "バイオレット",
+    "reading": "violet",
+    "hex": "#714f9d",
+    "examLevel": 3
+  },
+  {
+    "name": "パープル",
+    "reading": "purple",
+    "hex": "#9b68a9",
+    "examLevel": 3
+  },
+  {
+    "name": "ライラック",
+    "reading": "lilac",
+    "hex": "#d1bada",
+    "examLevel": 2
+  },
+  {
+    "name": "ウイスタリア",
+    "reading": "wistaria",
+    "hex": "#8e8bc2",
+    "examLevel": 2
+  },
+  {
+    "name": "ラベンダー",
+    "reading": "lavender",
+    "hex": "#c5b3d3",
+    "examLevel": 3
+  },
+  {
+    "name": "モーヴ",
+    "reading": "Mauve",
+    "hex": "#a05695",
+    "examLevel": null
+  },
+  {
+    "name": "黄土色",
+    "reading": "おうどいろ",
+    "hex": "#c39043",
+    "examLevel": 3
+  },
+  {
+    "name": "代赭",
+    "reading": "たいしゃ",
+    "hex": "#bb541f",
+    "examLevel": 2
+  },
+  {
+    "name": "弁柄色",
+    "reading": "べんがらいろ",
+    "hex": "#8f2d12",
+    "examLevel": 2
+  },
+  {
+    "name": "朽葉色",
+    "reading": "くちばいろ",
+    "hex": "#917347",
+    "examLevel": 2
+  },
+  {
+    "name": "煤竹色",
+    "reading": "すすたけいろ",
+    "hex": "#6b5146",
+    "examLevel": 2
+  },
+  {
+    "name": "檜皮色",
+    "reading": "ひわだいろ",
+    "hex": "#965036",
+    "examLevel": 2
+  },
+  {
+    "name": "栗色",
+    "reading": "くりいろ",
+    "hex": "#762e05",
+    "examLevel": 3
+  },
+  {
+    "name": "海老茶",
+    "reading": "えびちゃ",
+    "hex": "#814336",
+    "examLevel": 2
+  },
+  {
+    "name": "鳶色",
+    "reading": "とびいろ",
+    "hex": "#8b4239",
+    "examLevel": 2
+  },
+  {
+    "name": "琥珀色",
+    "reading": "こはくいろ",
+    "hex": "#bf7834",
+    "examLevel": 2
+  },
+  {
+    "name": "煉瓦色",
+    "reading": "れんがいろ",
+    "hex": "#a2482b",
+    "examLevel": 3
+  },
+  {
+    "name": "ローシェンナ",
+    "reading": "raw sienna",
+    "hex": "#d98032",
+    "examLevel": 2
+  },
+  {
+    "name": "バーントシェンナ",
+    "reading": "burnt sienna",
+    "hex": "#b25532",
+    "examLevel": 2
+  },
+  {
+    "name": "ローアンバー",
+    "reading": "raw umber",
+    "hex": "#916f24",
+    "examLevel": 2
+  },
+  {
+    "name": "バーントアンバー",
+    "reading": "burnt umber",
+    "hex": "#7a5e3d",
+    "examLevel": 2
+  },
+  {
+    "name": "セピア",
+    "reading": "sepia",
+    "hex": "#6f4e27",
+    "examLevel": 3
+  },
+  {
+    "name": "カーキー",
+    "reading": "khaki",
+    "hex": "#bb9855",
+    "examLevel": 3
+  },
+  {
+    "name": "ベージュ",
+    "reading": "beige",
+    "hex": "#eedcb3",
+    "examLevel": 3
+  },
+  {
+    "name": "エクルベージュ",
+    "reading": "ecru beige",
+    "hex": "#f8eacf",
+    "examLevel": 2
+  },
+  {
+    "name": "タン",
+    "reading": "tan",
+    "hex": "#c1813f",
+    "examLevel": 2
+  },
+  {
+    "name": "マルーン",
+    "reading": "maroon",
+    "hex": "#6a1816",
+    "examLevel": 2
+  },
+  {
+    "name": "テラコッタ",
+    "reading": "terracotta",
+    "hex": "#be6d55",
+    "examLevel": 2
+  },
+  {
+    "name": "チョコレート",
+    "reading": "chocholate",
+    "hex": "#612c16",
+    "examLevel": 3
+  },
+  {
+    "name": "アンバー",
+    "reading": "amber",
+    "hex": "#c28953",
+    "examLevel": 2
+  },
+  {
+    "name": "生成り色",
+    "reading": "きなりいろ",
+    "hex": "#fbfaf3",
+    "examLevel": 3
+  },
+  {
+    "name": "茶鼠",
+    "reading": "ちゃねず",
+    "hex": "#a99e93",
+    "examLevel": 2
+  },
+  {
+    "name": "銀鼠",
+    "reading": "ぎんねず",
+    "hex": "#afafb0",
+    "examLevel": 2
+  },
+  {
+    "name": "利休鼠",
+    "reading": "りきゅうねず",
+    "hex": "#7b8174",
+    "examLevel": 2
+  },
+  {
+    "name": "アイボリー",
+    "reading": "ivory",
+    "hex": "#f8f5e3",
+    "examLevel": 3
+  },
+  {
+    "name": "シルバーグレー",
+    "reading": "silver grey",
+    "hex": "#afafb0",
+    "examLevel": 3
+  },
+  {
+    "name": "スレートグレー",
+    "reading": "slate grey",
+    "hex": "#636062",
+    "examLevel": 2
+  },
+  {
+    "name": "チャコールグレー",
+    "reading": "charcoal grey",
+    "hex": "#4e4449",
+    "examLevel": 3
+  },
+  {
+    "name": "ランプブラック",
+    "reading": "lamp black",
+    "hex": "#24130d",
+    "examLevel": 2
+  }
 ]
