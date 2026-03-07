@@ -56,7 +56,7 @@
   </section>
 
   <section class="results-section">
-    <h2>JIS慣用色名 近似結果（上位{JIS_TOP_N}件）</h2>
+    <h2>似ている慣用色（上位{JIS_TOP_N}件）</h2>
     {#if jisResults.length > 0}
       <ul class="result-list">
         {#each jisResults as result (result.color.name)}
