@@ -125,7 +125,7 @@ ApproximatePage
 ├── ColorPickerInput        カラーピッカー＋HEX入力欄
 ├── PCCSDataSourceFilter    PCCSデータソースフィルタ（ラジオボタン）
 ├── PCCSResultList
-│   └── PCCSResultCard × N  色スウォッチ・PCCS表記・「F2に送る」ボタン
+│   └── PCCSResultCard × N  色スウォッチ・PCCS表記・HEXコード・コピーボタン・「F2に送る」ボタン
 ├── JISColorFilter          JIS慣用色フィルタ（ラジオボタン）
 └── JISColorResultList
     └── JISColorResultCard × N  色スウォッチ・慣用色名・読み・出題級

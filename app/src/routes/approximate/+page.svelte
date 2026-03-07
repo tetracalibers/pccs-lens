@@ -1,5 +1,6 @@
 <script lang="ts">
   import ColorPicker from "$lib/components/ColorPicker.svelte"
+  import CopyButton from "$lib/components/CopyButton.svelte"
   import { findClosestPccs } from "$lib/color/approximate"
   import pccsColors from "$lib/data/pccs_colors.json"
   import type { PCCSColor, ApproximateResult } from "$lib/data/types"
@@ -35,7 +36,8 @@
               aria-label={result.color.hex}
             ></span>
             <span class="notation">{result.color.notation}</span>
-            <span class="delta-e">ΔE₀₀: {result.deltaE.toFixed(2)}</span>
+            <span class="hex-code">{result.color.hex}</span>
+            <CopyButton text={result.color.hex} />
           </li>
         {/each}
       </ul>
@@ -101,7 +103,8 @@
     min-width: 5rem;
   }
 
-  .delta-e {
+  .hex-code {
+    font-family: monospace;
     font-size: 0.8rem;
     color: var(--color-text-secondary, #777);
     margin-left: auto;
