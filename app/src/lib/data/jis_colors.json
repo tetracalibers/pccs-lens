@@ -480,12 +480,6 @@
     "examLevel": 2
   },
   {
-    "name": "ピーコックブルー",
-    "reading": "peacock blue",
-    "hex": "#009aa3",
-    "examLevel": null
-  },
-  {
     "name": "マゼンタ",
     "reading": "magenta",
     "hex": "#e4007f",
@@ -568,12 +562,6 @@
     "reading": "lavender",
     "hex": "#c5b3d3",
     "examLevel": 3
-  },
-  {
-    "name": "モーヴ",
-    "reading": "Mauve",
-    "hex": "#a05695",
-    "examLevel": null
   },
   {
     "name": "黄土色",

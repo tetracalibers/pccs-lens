@@ -21,6 +21,11 @@ export type ApproximateResult = {
   deltaE: number
 }
 
+export type JISApproximateResult = {
+  color: JISColor
+  deltaE: number
+}
+
 export type Lab = {
   L: number
   a: number

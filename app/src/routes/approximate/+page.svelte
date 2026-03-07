@@ -1,15 +1,26 @@
 <script lang="ts">
   import ColorPicker from "$lib/components/ColorPicker.svelte"
   import CopyButton from "$lib/components/CopyButton.svelte"
-  import { findClosestPccs } from "$lib/color/approximate"
+  import { findClosestPccs, findClosestJis } from "$lib/color/approximate"
   import pccsColors from "$lib/data/pccs_colors.json"
-  import type { PCCSColor, ApproximateResult } from "$lib/data/types"
+  import jisColors from "$lib/data/jis_colors.json"
+  import type {
+    PCCSColor,
+    JISColor,
+    ApproximateResult,
+    JISApproximateResult
+  } from "$lib/data/types"
 
   const colors = pccsColors as PCCSColor[]
-  const TOP_N = 8
+  const jisColorList = jisColors as JISColor[]
+  const TOP_N = 6
+  const JIS_TOP_N = 6
 
   let inputColor = $state("#EE0026")
   let results: ApproximateResult[] = $derived(findClosestPccs(inputColor, colors, TOP_N))
+  let jisResults: JISApproximateResult[] = $derived(
+    findClosestJis(inputColor, jisColorList, JIS_TOP_N)
+  )
 </script>
 
 <svelte:head>
@@ -36,6 +47,30 @@
               aria-label={result.color.hex}
             ></span>
             <span class="notation">{result.color.notation}</span>
+            <span class="hex-code">{result.color.hex}</span>
+            <CopyButton text={result.color.hex} />
+          </li>
+        {/each}
+      </ul>
+    {/if}
+  </section>
+
+  <section class="results-section">
+    <h2>似ている慣用色（上位{JIS_TOP_N}件）</h2>
+    {#if jisResults.length > 0}
+      <ul class="result-list">
+        {#each jisResults as result (result.color.name)}
+          <li class="result-card">
+            <span
+              class="swatch"
+              style="background-color: {result.color.hex}"
+              aria-label={result.color.hex}
+            ></span>
+            <span class="jis-name">{result.color.name}</span>
+            <span class="jis-reading">{result.color.reading}</span>
+            {#if result.color.examLevel !== null}
+              <span class="exam-level">{result.color.examLevel}級</span>
+            {/if}
             <span class="hex-code">{result.color.hex}</span>
             <CopyButton text={result.color.hex} />
           </li>
@@ -108,5 +143,29 @@
     font-size: 0.8rem;
     color: var(--color-text-secondary, #777);
     margin-left: auto;
+  }
+
+  .jis-name {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .jis-reading {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary, #777);
+  }
+
+  .exam-level {
+    margin-left: auto;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    background: var(--color-border, #ddd);
+    color: var(--color-text-secondary, #555);
+  }
+
+  .exam-level + .hex-code {
+    margin-left: 0;
   }
 </style>
