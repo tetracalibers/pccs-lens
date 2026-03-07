@@ -27,8 +27,6 @@ PCCS Lens はすべての処理をクライアントサイドで完結させるS
 ```
 
 - ナビゲーションバーで各機能ページに遷移できる
-- 機能1の結果から機能2へ色を受け渡す際は `/analyze?color=RRGGBB` に遷移し、色が自動セットされる
-  - `color` パラメータは `#` なしの6桁HEXコード（例：`/analyze?color=EE0026`）
 
 ---
 
@@ -125,8 +123,7 @@ ApproximatePage
 ├── ColorPickerInput        カラーピッカー＋HEX入力欄
 ├── PCCSDataSourceFilter    PCCSデータソースフィルタ（ラジオボタン）
 ├── PCCSResultList
-│   └── PCCSResultCard × N  色スウォッチ・PCCS表記・HEXコード・コピーボタン・「F2に送る」ボタン
-├── JISColorFilter          JIS慣用色フィルタ（ラジオボタン）
+│   └── PCCSResultCard × N  色スウォッチ・PCCS表記・HEXコード・コピーボタン
 └── JISColorResultList
     └── JISColorResultCard × N  色スウォッチ・慣用色名・読み・出題級
 ```
@@ -147,14 +144,11 @@ ApproximatePage
 │                                      │
 │  PCCS近似結果（上位8件）              │
 │  ┌──────────────────────────────┐   │
-│  │ ■  v2       [F2に送る]       │   │
-│  │ ■  b2       [F2に送る]       │   │
-│  │ ■  dp2      [F2に送る]       │   │
+│  │ ■  v2                        │   │
+│  │ ■  b2                        │   │
+│  │ ■  dp2                       │   │
 │  │  ...                          │   │
 │  └──────────────────────────────┘   │
-│                                      │
-│  JIS慣用色名                         │
-│  ● 3級  ○ 2級  ○ すべて           │
 │                                      │
 │  JIS慣用色近似結果（上位4件）         │
 │  ┌──────────────────────────────┐   │
@@ -170,9 +164,7 @@ ApproximatePage
 1. ユーザーがカラーピッカーまたはHEX入力で色を指定する
 2. 選択中のPCCSデータソースCSVを参照し、全PCCS色とのΔE₀₀を計算する
 3. ΔE₀₀の小さい順に上位8件をPCCS近似結果として表示する
-4. 選択中のJIS慣用色フィルタに基づき `jis_colors.json` から対象色を絞り込む
-5. 絞り込んだJIS慣用色とのΔE₀₀を計算し、上位4件をJIS慣用色近似結果として表示する
-6. 「F2に送る」ボタン押下で `/analyze?color=RRGGBB`（入力色の6桁HEX）に遷移する
+4. `jis_colors.json` の全JIS慣用色とのΔE₀₀を計算し、上位4件をJIS慣用色近似結果として表示する
 
 ---
 
@@ -254,13 +246,3 @@ AnalyzePage
 2. 追加のたびに `pccs_colors.json` を参照してΔE₀₀で最近傍PCCS値を決定する
 3. 色相環・トーン概念図・分析セクションをすべて更新する
 
-### 処理フロー（F1からの遷移）
-
-機能1の「F2に送る」ボタン経由で遷移した場合の初期化フロー。
-
-1. ページマウント時に `$page.url.searchParams.get('color')` で `color` パラメータを読み取る
-2. 値が存在し有効な6桁HEXコードであれば、先頭に `#` を付与して `ColorEntry` を1件生成する
-3. `pccs_colors.json` を参照してΔE₀₀で最近傍PCCS値を決定し、`closestPCCS` にセットする
-4. `history.replaceState` でURLから `color` パラメータを除去する（URL汚染を防ぐ）
-5. 色相環・トーン概念図・分析セクションを更新する
-6. `color` パラメータが存在しない・不正値の場合は通常の空状態で表示する（エラー表示なし）

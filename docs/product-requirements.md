@@ -42,11 +42,6 @@ PCCS（Practical Color Co-ordinate System：日本色研配色体系）は、日
 4. 入力色に近いJIS慣用色名を上位6件表示する
   - 近さの計算にはCIEDE2000（知覚的色差）を使用する
   - 各結果には色スウォッチ・慣用色名・読み（ふりがなまたは英語名）・出題級を表示する
-5. 検索対象のJIS慣用色をフィルタリングできる
-  - 「3級に出題される色」：`app/src/lib/data/jis_colors.json`より、`examLevel`が3の色のみ
-  - 「2級に出題される色」：`app/src/lib/data/jis_colors.json`より、`examLevel`が2の色のみ
-  - 「すべての色」：`app/src/lib/data/jis_colors.json`の全データ
-6. F1の結果からF2へ色を受け渡すことができる
 
 ### F2：配色の分析と調整
 
