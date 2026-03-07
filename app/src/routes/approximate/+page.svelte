@@ -71,6 +71,8 @@
             {#if result.color.examLevel !== null}
               <span class="exam-level">{result.color.examLevel}級</span>
             {/if}
+            <span class="hex-code">{result.color.hex}</span>
+            <CopyButton text={result.color.hex} />
           </li>
         {/each}
       </ul>
@@ -161,5 +163,9 @@
     border-radius: 0.25rem;
     background: var(--color-border, #ddd);
     color: var(--color-text-secondary, #555);
+  }
+
+  .exam-level + .hex-code {
+    margin-left: 0;
   }
 </style>
