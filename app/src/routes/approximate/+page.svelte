@@ -25,9 +25,9 @@
 
   $effect(() => {
     if (/^#[0-9A-Fa-f]{6}$/.test(inputColor)) {
-      const url = new URL($page.url)
+      const url = new URL(window.location.href)
       url.searchParams.set("color", inputColor.slice(1).toUpperCase())
-      replaceState(url, {})
+      replaceState(url, history.state)
     }
   })
   let results: ApproximateResult[] = $derived(findClosestPccs(inputColor, colors, TOP_N))
