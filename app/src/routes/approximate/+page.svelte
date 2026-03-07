@@ -13,8 +13,8 @@
 
   const colors = pccsColors as PCCSColor[]
   const jisColorList = jisColors as JISColor[]
-  const TOP_N = 8
-  const JIS_TOP_N = 4
+  const TOP_N = 6
+  const JIS_TOP_N = 6
 
   let inputColor = $state("#EE0026")
   let results: ApproximateResult[] = $derived(findClosestPccs(inputColor, colors, TOP_N))
