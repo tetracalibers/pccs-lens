@@ -10,7 +10,7 @@
     ApproximateResult,
     JISApproximateResult
   } from "$lib/data/types"
-  import { page } from "$app/stores"
+  import { page } from "$app/state"
   import { replaceState } from "$app/navigation"
 
   const colors = pccsColors as PCCSColor[]
@@ -20,7 +20,7 @@
 
   const isValidHex6 = (v: string | null): v is string => /^[0-9A-Fa-f]{6}$/.test(v ?? "")
 
-  const urlColor = $page.url.searchParams.get("color")
+  const urlColor = page.url.searchParams.get("color")
   let inputColor = $state(isValidHex6(urlColor) ? `#${urlColor.toUpperCase()}` : "#EE0026")
 
   $effect(() => {
