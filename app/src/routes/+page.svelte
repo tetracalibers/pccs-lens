@@ -8,7 +8,7 @@
 
 <main>
   <h1>PCCS Lens</h1>
-  <p>世界の色をPCCSというレンズを通して見る</p>
+  <p>色をPCCSというレンズを通して見る</p>
   <nav class="feature-nav">
     <a href="{base}/approximate" class="feature-card">
       <span class="feature-title">色のPCCS近似</span>
