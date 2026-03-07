@@ -12,6 +12,7 @@
   } from "$lib/data/types"
   import { page } from "$app/state"
   import { replaceState } from "$app/navigation"
+  import { tick } from "svelte"
 
   const colors = pccsColors as PCCSColor[]
   const jisColorList = jisColors as JISColor[]
@@ -27,7 +28,9 @@
     if (/^#[0-9A-Fa-f]{6}$/.test(inputColor)) {
       const url = new URL(window.location.href)
       url.searchParams.set("color", inputColor.slice(1).toUpperCase())
-      replaceState(url, history.state)
+      // 次のエラーを解消するため、tick() を使用：
+      // Cannot call replaceState(...) before router is initialized
+      tick().then(() => replaceState(url, history.state))
     }
   })
   let results: ApproximateResult[] = $derived(findClosestPccs(inputColor, colors, TOP_N))
