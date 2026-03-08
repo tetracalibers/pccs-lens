@@ -29,13 +29,13 @@
     {/if}
   </div>
   <div class="approx-row">
+    <span class="label">PCCS近似</span>
     <div class="approx-badge">
       <span class="swatch swatch--main" aria-label={selectedPCCS.hex}>
         <span class="swatch-bg"></span>
         <span class="swatch-preview" style="background-color: {selectedPCCS.hex}"></span>
       </span>
       <span class="notation">{selectedPCCS.notation}</span>
-      <span class="label">近似</span>
     </div>
     <div class="alternates">
       {#each alternatePCCS as alt (alt.notation)}
@@ -92,16 +92,15 @@
   }
 
   .approx-row {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-areas: "label ." "badge alternates";
   }
 
   .approx-badge {
+    grid-area: badge;
     display: flex;
     align-items: center;
-    gap: 0.375rem;
+    gap: 0.5rem;
   }
 
   .swatch--main {
@@ -129,32 +128,31 @@
   }
 
   .label {
+    grid-area: label;
     font-size: 0.7rem;
     color: var(--color-text-secondary, #777);
   }
 
   .alternates {
+    grid-area: alternates;
     display: flex;
     gap: 0.375rem;
     align-items: center;
+    justify-content: flex-end;
   }
 
   .alt-swatch {
+    appearance: none;
     width: 1.5rem;
     height: 1.5rem;
     border-radius: 0.25rem;
-    border: 1px solid var(--color-border, #ccc);
+    border: 0;
     cursor: pointer;
     padding: 0;
-    opacity: 0.75;
-    transition:
-      opacity 0.15s,
-      transform 0.1s;
+    transition: transform 0.1s;
   }
 
   .alt-swatch:hover {
-    opacity: 1;
     transform: scale(1.1);
-    border-color: var(--color-text, #111);
   }
 </style>
