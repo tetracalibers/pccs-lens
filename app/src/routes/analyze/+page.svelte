@@ -54,9 +54,7 @@
   function onHexChange(id: string, hex: string) {
     entries = entries.map((e) => {
       if (e.id !== id) return e
-      return makeEntry(hex) satisfies ColorEntry
-        ? { ...makeEntry(hex), id }
-        : e
+      return (makeEntry(hex) satisfies ColorEntry) ? { ...makeEntry(hex), id } : e
     })
   }
 
