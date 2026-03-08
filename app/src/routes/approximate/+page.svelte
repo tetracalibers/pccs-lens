@@ -13,16 +13,16 @@
   import { page } from "$app/state"
   import { replaceState } from "$app/navigation"
   import { tick } from "svelte"
+  import { isValidHexColor } from "$lib/color/validate"
 
   const colors = pccsColors as PCCSColor[]
   const jisColorList = jisColors as JISColor[]
   const TOP_N = 6
   const JIS_TOP_N = 6
 
-  const isValidHex6 = (v: string | null): v is string => /^[0-9A-Fa-f]{6}$/.test(v ?? "")
-
   const urlColor = page.url.searchParams.get("color")
-  let inputColor = $state(isValidHex6(urlColor) ? `#${urlColor.toUpperCase()}` : "#EE0026")
+  const urlColorWithHash = urlColor ? `#${urlColor}` : null
+  let inputColor = $state(isValidHexColor(urlColorWithHash) ? urlColorWithHash.toUpperCase() : "#EE0026")
 
   $effect(() => {
     if (/^#[0-9A-Fa-f]{6}$/.test(inputColor)) {
