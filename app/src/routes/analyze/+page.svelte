@@ -84,7 +84,7 @@
   <h1>配色の分析と調整</h1>
 
   <section class="approximation-section">
-    <h2>カラーコード入力とPCCS近似色</h2>
+    <h2>配色に使う色</h2>
     <ul class="entry-list">
       {#each entries as entry (entry.id)}
         <ColorEntryItem

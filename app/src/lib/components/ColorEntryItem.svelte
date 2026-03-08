@@ -31,7 +31,7 @@
     {/if}
   </div>
   <div class="approx-row">
-    <span class="label">PCCS近似</span>
+    <span class="label badge-label">PCCS近似</span>
     <div class="approx-badge">
       <span class="swatch swatch--main" aria-label={selectedPCCS.hex}>
         <span class="swatch-bg"></span>
@@ -39,6 +39,7 @@
       </span>
       <span class="notation">{selectedPCCS.notation}</span>
     </div>
+    <span class="label alternates-label">他の近似候補</span>
     <div class="alternates">
       {#each alternatePCCS as alt (alt.notation)}
         <button
@@ -92,7 +93,7 @@
 
   .approx-row {
     display: grid;
-    grid-template-areas: "label ." "badge alternates";
+    grid-template-areas: "badge-label alternates-label" "badge alternates";
   }
 
   .approx-badge {
@@ -127,9 +128,17 @@
   }
 
   .label {
-    grid-area: label;
-    font-size: 0.7rem;
     color: var(--color-text-secondary, #777);
+  }
+  .badge-label {
+    grid-area: badge-label;
+    font-size: 0.7rem;
+  }
+  .alternates-label {
+    grid-area: alternates-label;
+    justify-self: end;
+    align-self: end;
+    font-size: 0.6rem;
   }
 
   .alternates {
