@@ -30,11 +30,10 @@
   </div>
   <div class="approx-row">
     <div class="approx-badge">
-      <span
-        class="swatch swatch--main"
-        style="background-color: {selectedPCCS.hex}"
-        aria-label={selectedPCCS.hex}
-      ></span>
+      <span class="swatch swatch--main" aria-label={selectedPCCS.hex}>
+        <span class="swatch-bg"></span>
+        <span class="swatch-preview" style="background-color: {selectedPCCS.hex}"></span>
+      </span>
       <span class="notation">{selectedPCCS.notation}</span>
       <span class="label">近似</span>
     </div>
@@ -106,12 +105,21 @@
   }
 
   .swatch--main {
+    display: grid;
+    place-items: center;
+  }
+  .swatch-preview {
     display: inline-block;
     width: 1.75rem;
     height: 1.75rem;
     border-radius: 0.25rem;
-    border: 2px solid var(--color-text, #111);
-    flex-shrink: 0;
+    grid-area: 1 / 1;
+  }
+  .swatch-bg {
+    width: 2.5rem;
+    height: 2.5rem;
+    grid-area: 1 / 1;
+    box-sizing: border-box;
   }
 
   .notation {
