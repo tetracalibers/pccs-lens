@@ -94,10 +94,14 @@
 |---|---|---|
 | 入力色 | colorEntry | ユーザーが機能2に入力した1色分のデータ |
 | 近似結果 | approximationResult | 入力色に対してΔE₀₀が小さい順に並んだPCCS値のリスト |
-| 最近傍PCCS値 | closestPCCS | 1色に対して決定された最もΔE₀₀が小さいPCCS値 |
+| 最近傍PCCS値（不変） | approximatedPCCS | 入力HEXに対してCIEDE2000で1番目に近いPCCS値。入力HEX変更時のみ再計算される |
+| 代替候補PCCS値 | alternatePCCS | 入力HEXに対してCIEDE2000で2〜3番目に近いPCCS値のペア。入力HEX変更時にリセットされる |
+| 選択済みPCCS値 | selectedPCCS | ApproximationSectionでの代替候補選択後のPCCS値。デフォルトは `approximatedPCCS` |
+| 表示用PCCS値 | displayedPCCS | VisualizationSection・AnalysisSectionの分析・プレビューに使われる最終的なPCCS値。`selectedPCCS` にAdjustmentSectionの調整を適用した結果 |
+| 履歴エントリ | historyEntry | 特定操作時点の `inputHexList`・`displayedPCCSList`・`summary` をまとめた1件の履歴データ |
+| 履歴スタック | historyStack | `historyEntry` を最大20件保持するスタック構造のデータ |
 | 色距離 | colorDifference / deltaE | CIEDE2000で計算した知覚的色差（ΔE₀₀） |
 | 配色分析 | colorSchemeAnalysis | 入力色群の色相関係・トーン関係・ハーモニー・技法を判定した結果 |
-| 調整対象色 | selectedEntry | 機能2のインタラクティブ調整で操作対象として選択中の入力色 |
 | データソース | dataSource | PCCS近似の検索対象となるデータセット（`card199` / `full`） |
 
 ---
@@ -106,8 +110,13 @@
 
 | 画面上の表示 | コード上の命名 | 定義 |
 |---|---|---|
-| 色相環 | HueWheel | PCCS 24色相を円形に配置したSVG図 |
-| トーン概念図 | ToneDiagram | PCCSトーンをグリッド状に配置したSVG図 |
+| 色相環 | HueWheel | PCCS 24色相を円形に配置したSVG図（VisualizationSection内・read-only） |
+| トーン概念図 | ToneDiagram | PCCSトーンをグリッド状に配置したSVG図（VisualizationSection内・read-only） |
+| 小型色相環 | MiniHueWheel | AdjustmentSectionの個別調整内に配置する小型のPCCS色相環SVG。セクターをクリックして色相を選択する |
+| 代替候補エリア | AlternateCandidates | ApproximationSectionの各色入力UIに表示するPCCS代替候補スウォッチ×2のエリア |
+| 配色プレビュー | ColorSchemePreview | VisualizationSectionの「入力色」「PCCS近似色」2行の色スウォッチ列 |
+| 履歴サイドバー | HistorySidebar | 全セクションの左に設置する開閉可能な配色履歴の一覧パネル |
+| 分析カード | AnalysisCard | AnalysisSectionの配色特徴・技法をカードUIとして表示するコンポーネント（タイトル・解説・カテゴリタグ） |
 | 色スウォッチ | colorSwatch | 色を視覚的に示す正方形の色見本 |
 | カラーピッカー | ColorPicker | 色を選択するUI（`input[type=color]`＋HEX入力欄） |
 | 近似ページ | ApproximatePage | 機能1のページ（`/approximate`） |
