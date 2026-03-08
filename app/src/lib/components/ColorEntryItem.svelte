@@ -24,6 +24,8 @@
 <li class="color-entry">
   <div class="input-row">
     <ColorPicker bind:value={inputHex} oninput={onHexChange} />
+  </div>
+  <div class="remove-col">
     {#if showRemove}
       <button class="remove-btn" onclick={onRemove} aria-label="この色を削除">×</button>
     {/if}
@@ -53,9 +55,10 @@
 
 <style>
   .color-entry {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    display: grid;
+    grid-template-areas: "input remove-btn";
+    align-items: center;
+    row-gap: 0.5rem;
     padding: 0.75rem;
     border: 1px solid var(--color-border, #ddd);
     border-radius: 0.5rem;
@@ -63,9 +66,11 @@
     min-width: 0;
   }
 
+  .remove-col {
+    grid-area: remove-btn;
+  }
   .remove-btn {
-    margin-left: auto;
-    flex-shrink: 0;
+    margin-inline-start: 0.5rem;
     width: 1.75rem;
     height: 1.75rem;
     border: 1px solid var(--color-border, #ddd);
