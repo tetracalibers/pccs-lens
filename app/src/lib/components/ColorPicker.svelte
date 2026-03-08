@@ -1,7 +1,10 @@
 <script lang="ts">
   import { isValidHexColor } from "$lib/color/validate"
 
-  let { value = $bindable("#EE0026") }: { value: string } = $props()
+  let {
+    value = $bindable("#EE0026"),
+    oninput
+  }: { value: string; oninput?: (hex: string) => void } = $props()
 
   let textInput = $state(value)
   let error = $state("")
@@ -11,6 +14,7 @@
     value = v
     textInput = v
     error = ""
+    oninput?.(v)
   }
 
   function onTextInput(e: Event) {
@@ -22,6 +26,7 @@
       value = normalized
       textInput = normalized
       error = ""
+      oninput?.(normalized)
     } else {
       error = "有効な6桁HEXコードを入力してください（例：#EE0026）"
     }
