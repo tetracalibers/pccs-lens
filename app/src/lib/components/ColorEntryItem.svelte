@@ -149,4 +149,16 @@
   .alt-swatch:hover {
     transform: scale(1.1);
   }
+  .alt-swatch:hover::after {
+    content: attr(title);
+    position: absolute;
+    background: var(--color-text, #111);
+    color: #fff;
+    padding: 0.25rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    transform: translate(-50%, -165%);
+    pointer-events: none;
+  }
 </style>
