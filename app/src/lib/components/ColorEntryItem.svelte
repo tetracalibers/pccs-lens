@@ -94,7 +94,7 @@
     grid-area: badge;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.375rem;
   }
 
   .swatch--main {
