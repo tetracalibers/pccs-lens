@@ -22,7 +22,9 @@
 
   const urlColor = page.url.searchParams.get("color")
   const urlColorWithHash = urlColor ? `#${urlColor}` : null
-  let inputColor = $state(isValidHexColor(urlColorWithHash) ? urlColorWithHash.toUpperCase() : "#EE0026")
+  let inputColor = $state(
+    isValidHexColor(urlColorWithHash) ? urlColorWithHash.toUpperCase() : "#EE0026"
+  )
 
   $effect(() => {
     if (/^#[0-9A-Fa-f]{6}$/.test(inputColor)) {
