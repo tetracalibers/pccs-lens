@@ -63,12 +63,6 @@
     min-width: 0;
   }
 
-  .input-row {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
   .remove-btn {
     margin-left: auto;
     flex-shrink: 0;
