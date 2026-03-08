@@ -10,13 +10,31 @@
     ApproximateResult,
     JISApproximateResult
   } from "$lib/data/types"
+  import { page } from "$app/state"
+  import { replaceState } from "$app/navigation"
+  import { tick } from "svelte"
+  import { isValidHexColor } from "$lib/color/validate"
 
   const colors = pccsColors as PCCSColor[]
   const jisColorList = jisColors as JISColor[]
   const TOP_N = 6
   const JIS_TOP_N = 6
 
-  let inputColor = $state("#EE0026")
+  const urlColor = page.url.searchParams.get("color")
+  const urlColorWithHash = urlColor ? `#${urlColor}` : null
+  let inputColor = $state(
+    isValidHexColor(urlColorWithHash) ? urlColorWithHash.toUpperCase() : "#EE0026"
+  )
+
+  $effect(() => {
+    if (/^#[0-9A-Fa-f]{6}$/.test(inputColor)) {
+      const url = new URL(window.location.href)
+      url.searchParams.set("color", inputColor.slice(1).toUpperCase())
+      // 次のエラーを解消するため、tick() を使用：
+      // Cannot call replaceState(...) before router is initialized
+      tick().then(() => replaceState(url, history.state))
+    }
+  })
   let results: ApproximateResult[] = $derived(findClosestPccs(inputColor, colors, TOP_N))
   let jisResults: JISApproximateResult[] = $derived(
     findClosestJis(inputColor, jisColorList, JIS_TOP_N)

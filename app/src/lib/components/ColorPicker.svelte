@@ -1,5 +1,5 @@
 <script lang="ts">
-  const HEX_PATTERN = /^#[0-9A-Fa-f]{6}$/
+  import { isValidHexColor } from "$lib/color/validate"
 
   let { value = $bindable("#EE0026") }: { value: string } = $props()
 
@@ -18,7 +18,7 @@
     textInput = raw
 
     const normalized = raw.startsWith("#") ? raw : "#" + raw
-    if (HEX_PATTERN.test(normalized)) {
+    if (isValidHexColor(normalized)) {
       value = normalized
       textInput = normalized
       error = ""
