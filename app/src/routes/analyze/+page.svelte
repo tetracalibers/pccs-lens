@@ -5,6 +5,7 @@
   import { hexToLab } from "$lib/color/convert"
   import pccsColors from "$lib/data/pccs_colors.json"
   import type { PCCSColor } from "$lib/data/types"
+  import randomColor from "randomcolor"
 
   const colors = pccsColors as PCCSColor[]
   const TOP_N = 3
@@ -19,10 +20,7 @@
   }
 
   function randomHex(): string {
-    const r = Math.floor(Math.random() * 256)
-    const g = Math.floor(Math.random() * 256)
-    const b = Math.floor(Math.random() * 256)
-    return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`.toUpperCase()
+    return randomColor({ luminosity: "light" })
   }
 
   function makeEntry(hex: string): ColorEntry {
