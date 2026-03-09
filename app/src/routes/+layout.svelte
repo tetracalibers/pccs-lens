@@ -15,7 +15,7 @@
     <ul>
       <li>
         <a href="/approximate" class:active={(page.url.pathname as string) === "/approximate"}
-          >近似</a
+          >色の近似</a
         >
       </li>
       <li>

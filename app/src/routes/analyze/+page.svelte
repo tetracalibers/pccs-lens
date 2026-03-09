@@ -3,6 +3,7 @@
   import ColorSchemePreview from "$lib/components/ColorSchemePreview.svelte"
   import HueWheel from "$lib/components/HueWheel.svelte"
   import ToneDiagram from "$lib/components/ToneDiagram.svelte"
+  import ColorAnalysisResults from "$lib/components/ColorAnalysisResults.svelte"
   import { findClosestPccs } from "$lib/color/approximate"
   import { deltaE2000 } from "$lib/color/ciede2000"
   import { hexToLab } from "$lib/color/convert"
@@ -120,6 +121,8 @@
       <ToneDiagram {displayedPCCSList} isCard199={true} />
     </div>
   </section>
+
+  <ColorAnalysisResults {displayedPCCSList} />
 </main>
 
 <style>
