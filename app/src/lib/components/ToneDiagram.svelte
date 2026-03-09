@@ -143,7 +143,7 @@
         patternUnits="userSpaceOnUse"
         patternTransform="rotate(45)"
       >
-        <line x1="0" y1="0" x2="0" y2="8" stroke="#bbb" stroke-width="2" />
+        <line x1="0" y1="0" x2="0" y2="8" stroke="#bbb" stroke-width="1" />
       </pattern>
     </defs>
 
