@@ -220,7 +220,6 @@
         <div class="tooltip-row">
           <span class="tooltip-swatch" style="background: {c.hex};"></span>
           <span class="tooltip-notation">{c.notation}</span>
-          <span class="tooltip-hex">{c.hex}</span>
         </div>
       {/each}
     </div>
@@ -261,8 +260,7 @@
   }
 
   .tooltip-row {
-    display: grid;
-    grid-template-columns: auto auto 1fr;
+    display: flex;
     align-items: center;
     gap: 6px;
   }
@@ -279,11 +277,5 @@
   .tooltip-notation {
     font-family: monospace;
     font-weight: 600;
-  }
-
-  .tooltip-hex {
-    color: rgba(255, 255, 255, 0.7);
-    font-family: monospace;
-    text-align: end;
   }
 </style>
