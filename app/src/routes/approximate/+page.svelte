@@ -14,6 +14,11 @@
   import { replaceState } from "$app/navigation"
   import { tick } from "svelte"
   import { isValidHexColor } from "$lib/color/validate"
+  import randomColor from "randomcolor"
+
+  function randomHex(): string {
+    return randomColor()
+  }
 
   const colors = pccsColors as PCCSColor[]
   const jisColorList = jisColors as JISColor[]
@@ -23,7 +28,7 @@
   const urlColor = page.url.searchParams.get("color")
   const urlColorWithHash = urlColor ? `#${urlColor}` : null
   let inputColor = $state(
-    isValidHexColor(urlColorWithHash) ? urlColorWithHash.toUpperCase() : "#EE0026"
+    isValidHexColor(urlColorWithHash) ? urlColorWithHash.toUpperCase() : randomHex()
   )
 
   $effect(() => {
