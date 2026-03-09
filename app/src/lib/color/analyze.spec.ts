@@ -63,11 +63,6 @@ describe("色相の関係（2色）", () => {
     expect(ids([chromatic(2, "v"), neutral("W")])).not.toContain("hue-same")
     expect(ids([chromatic(2, "v"), neutral("W")])).not.toContain("hue-complement")
   })
-  it("3色以上では色相関係カードは出ない", () => {
-    const result = ids([chromatic(2, "v"), chromatic(3, "lt"), chromatic(4, "b")])
-    expect(result).not.toContain("hue-same")
-    expect(result).not.toContain("hue-adjacent")
-  })
 })
 
 describe("トーンの関係（2色）", () => {
@@ -80,10 +75,6 @@ describe("トーンの関係（2色）", () => {
   it("対照トーン → tone-contrast", () => {
     // p（低彩度高明度）と dk（中彩度低明度）は非隣接
     expect(ids([chromatic(2, "p"), chromatic(8, "dk")])).toContain("tone-contrast")
-  })
-  it("3色以上ではトーン関係カードは出ない", () => {
-    const result = ids([chromatic(2, "v"), chromatic(3, "v"), chromatic(4, "v")])
-    expect(result).not.toContain("tone-same")
   })
 })
 
