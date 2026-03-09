@@ -146,7 +146,7 @@
       {@const showHatch = isSCell && isCard199 && !isUsed}
       {@const fillColor = isUsed ? cell.usedColors[0].hex : showHatch ? "url(#hatch)" : "white"}
       {@const strokeColor = isUsed ? "#6d6d6d" : "#ccc"}
-      {@const strokeWidth = isUsed ? 2 : 1}
+      {@const strokeWidth = isUsed ? 1.5 : 1}
       {@const labelFill = isUsed
         ? isLightColor(cell.usedColors[0].hex)
           ? "#333"
@@ -195,7 +195,7 @@
           y={cell.cy}
           text-anchor="middle"
           dominant-baseline="central"
-          font-size="9"
+          font-size="10"
           fill={labelFill}
           style="pointer-events: none; user-select: none;">{cell.label}</text
         >

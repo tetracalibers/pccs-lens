@@ -166,7 +166,7 @@
       y={pos.y.toFixed(3)}
       text-anchor="middle"
       dominant-baseline="central"
-      font-size="8.5"
+      font-size="10"
       fill="#444">{h}:{HUE_NAMES[h]}</text
     >
   {/each}
