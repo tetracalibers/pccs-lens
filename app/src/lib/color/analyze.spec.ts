@@ -202,9 +202,9 @@ describe("ビコロール", () => {
     expect(ids([chromatic(2, "v"), chromatic(14, "lt")])).not.toContain("tech-bicolor")
   })
   it("3色 → 非該当", () => {
-    expect(
-      ids([chromatic(2, "v"), chromatic(14, "v"), chromatic(8, "v")])
-    ).not.toContain("tech-bicolor")
+    expect(ids([chromatic(2, "v"), chromatic(14, "v"), chromatic(8, "v")])).not.toContain(
+      "tech-bicolor"
+    )
   })
 })
 
@@ -238,27 +238,27 @@ describe("ダイアード", () => {
 
 describe("トライアド", () => {
   it("3色が等間隔（差8,8,8） → 該当", () => {
-    expect(
-      ids([chromatic(2, "lt"), chromatic(10, "lt"), chromatic(18, "lt")])
-    ).toContain("div-triad")
+    expect(ids([chromatic(2, "lt"), chromatic(10, "lt"), chromatic(18, "lt")])).toContain(
+      "div-triad"
+    )
   })
   it("差が範囲外 → 非該当", () => {
-    expect(
-      ids([chromatic(2, "lt"), chromatic(4, "lt"), chromatic(20, "lt")])
-    ).not.toContain("div-triad")
+    expect(ids([chromatic(2, "lt"), chromatic(4, "lt"), chromatic(20, "lt")])).not.toContain(
+      "div-triad"
+    )
   })
 })
 
 describe("スプリットコンプリメンタリー", () => {
   it("主色2の補色14の両隣(13,15) → 該当", () => {
-    expect(
-      ids([chromatic(2, "lt"), chromatic(13, "lt"), chromatic(15, "lt")])
-    ).toContain("div-split-comp")
+    expect(ids([chromatic(2, "lt"), chromatic(13, "lt"), chromatic(15, "lt")])).toContain(
+      "div-split-comp"
+    )
   })
   it("副色が補色から3離れている → 非該当", () => {
-    expect(
-      ids([chromatic(2, "lt"), chromatic(11, "lt"), chromatic(17, "lt")])
-    ).not.toContain("div-split-comp")
+    expect(ids([chromatic(2, "lt"), chromatic(11, "lt"), chromatic(17, "lt")])).not.toContain(
+      "div-split-comp"
+    )
   })
 })
 
@@ -290,13 +290,7 @@ describe("ペンタード", () => {
   })
   it("有彩色3色（トライアド）＋W＋Bk → 該当", () => {
     expect(
-      ids([
-        chromatic(2, "v"),
-        chromatic(10, "v"),
-        chromatic(18, "v"),
-        neutral("W"),
-        neutral("Bk")
-      ])
+      ids([chromatic(2, "v"), chromatic(10, "v"), chromatic(18, "v"), neutral("W"), neutral("Bk")])
     ).toContain("div-pentad")
   })
 })

@@ -392,7 +392,8 @@ export function analyzeColors(colors: PCCSColor[]): AnalysisCard[] {
       id: "tech-dominant-color",
       title: "ドミナントカラー",
       category: "配色技法",
-      description: "全色が同一・隣接・類似色相（色相差0〜3）。共通の色相でまとめ、統一感を生む配色技法。"
+      description:
+        "全色が同一・隣接・類似色相（色相差0〜3）。共通の色相でまとめ、統一感を生む配色技法。"
     })
   if (checkDominantTone(colors))
     cards.push({
@@ -423,7 +424,8 @@ export function analyzeColors(colors: PCCSColor[]): AnalysisCard[] {
       id: "tech-camaieu",
       title: "カマイユ",
       category: "配色技法",
-      description: "同一・隣接色相かつ隣接トーン。ほぼ同一に見える微妙な差をつけた、繊細な単色調の配色。"
+      description:
+        "同一・隣接色相かつ隣接トーン。ほぼ同一に見える微妙な差をつけた、繊細な単色調の配色。"
     })
   if (checkFauxCamaieu(colors))
     cards.push({
