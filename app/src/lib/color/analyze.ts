@@ -111,13 +111,17 @@ function allHueDiffs(chromatics: PCCSColor[]): number[] {
   return diffs
 }
 
-// ===== 2色専用カード生成 =====
+// ===== 色相・トーン関係カード生成 =====
+// 有彩色のユニーク色相数、またはユニークトーン数が2以下のときに適用
 
 function getHueRelationCard(colors: PCCSColor[]): AnalysisCard | null {
-  if (colors.length !== 2) return null
   const chromatics = colors.filter((c) => !c.isNeutral && c.hueNumber !== null)
-  if (chromatics.length !== 2) return null
-  const diff = hueDiff(chromatics[0].hueNumber!, chromatics[1].hueNumber!)
+  if (chromatics.length < 2) return null
+  const uniqueHues = [...new Set(chromatics.map((c) => c.hueNumber!))]
+  if (uniqueHues.length > 2) return null
+  const h1 = uniqueHues[0]
+  const h2 = uniqueHues.length === 1 ? uniqueHues[0] : uniqueHues[1]
+  const diff = hueDiff(h1, h2)
   if (diff === 0)
     return {
       id: "hue-same",
@@ -162,8 +166,13 @@ function getHueRelationCard(colors: PCCSColor[]): AnalysisCard | null {
 }
 
 function getToneRelationCard(colors: PCCSColor[]): AnalysisCard | null {
-  if (colors.length !== 2) return null
-  const rel = toneRelation(colors[0], colors[1])
+  const toneKeys = colors.map((c) => getToneKey(c)).filter((k): k is string => k !== null)
+  if (toneKeys.length < 2) return null
+  const uniqueTones = [...new Set(toneKeys)]
+  if (uniqueTones.length > 2) return null
+  const c1 = colors.find((c) => getToneKey(c) === uniqueTones[0])!
+  const c2 = colors.find((c) => getToneKey(c) === (uniqueTones.length === 1 ? uniqueTones[0] : uniqueTones[1]))!
+  const rel = toneRelation(c1, c2)
   if (rel === "same")
     return {
       id: "tone-same",
@@ -186,6 +195,7 @@ function getToneRelationCard(colors: PCCSColor[]): AnalysisCard | null {
   }
 }
 
+// 2色限定：黄・紫側の明暗関係による調和判定
 function getHarmonyCards(colors: PCCSColor[]): AnalysisCard[] {
   if (colors.length !== 2) return []
   const chromatics = colors.filter((c) => !c.isNeutral && c.hueNumber !== null)
