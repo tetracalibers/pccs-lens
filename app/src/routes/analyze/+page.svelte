@@ -86,11 +86,11 @@
 </script>
 
 <svelte:head>
-  <title>配色の分析と調整 - PCCS Lens</title>
+  <title>PCCSによる配色の分析 - PCCS Lens</title>
 </svelte:head>
 
 <main>
-  <h1>配色の分析と調整</h1>
+  <h1>PCCSによる配色の分析</h1>
 
   <section class="approximation-section">
     <h2>配色に使う色</h2>
