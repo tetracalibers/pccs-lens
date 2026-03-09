@@ -14,7 +14,7 @@
   <div class="row">
     <span class="label">入力色</span>
     <div class="swatches">
-      {#each inputHexList as hex (hex)}
+      {#each inputHexList as hex, i (i)}
         <span class="swatch" style="background-color: {hex}" title={hex}></span>
       {/each}
     </div>
@@ -22,7 +22,7 @@
   <div class="row">
     <span class="label">PCCS近似色</span>
     <div class="swatches">
-      {#each displayedPCCSList as color (color.notation)}
+      {#each displayedPCCSList as color, i (i)}
         <span
           class="swatch"
           style="background-color: {color.hex}"

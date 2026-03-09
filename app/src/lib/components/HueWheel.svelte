@@ -145,7 +145,7 @@
   {/each}
 
   <!-- Direction lines for highlighted hues -->
-  {#each highlightedEntries as color (color.notation)}
+  {#each highlightedEntries as color, i (i)}
     {@const mid = sectorMidDeg(color.hueNumber!)}
     {@const end = polar(R_LINE, mid)}
     <line

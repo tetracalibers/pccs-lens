@@ -218,7 +218,7 @@
       style="left: {tooltip.anchorX}px; top: {tooltip.anchorY}px;"
       role="tooltip"
     >
-      {#each tooltip.colors as c (c.notation)}
+      {#each tooltip.colors as c, i (i)}
         <div class="tooltip-row">
           <span class="tooltip-swatch" style="background: {c.hex};"></span>
           <span class="tooltip-notation">{c.notation}</span>
