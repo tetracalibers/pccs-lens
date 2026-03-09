@@ -16,6 +16,7 @@
   const R_INNER = 28
   const R_LINE = 105
   const R_LABEL = 130
+  const R_LABEL_HIGHLIGHTED = 140
 
   const HUE_COLORS: Record<number, string> = {
     1: "#D40045",
@@ -163,16 +164,21 @@
   <!-- Center dot -->
   <circle cx={CX} cy={CY} r="3" fill="#878787" />
 
-  <!-- Labels (even hues only) -->
-  {#each Array.from({ length: 12 }, (_, i) => (i + 1) * 2) as h (h)}
-    {@const pos = polar(R_LABEL, sectorMidDeg(h))}
-    <text
-      x={pos.x.toFixed(3)}
-      y={pos.y.toFixed(3)}
-      text-anchor="middle"
-      dominant-baseline="central"
-      font-size="10"
-      fill="#444">{h}:{HUE_NAMES[h]}</text
-    >
+  <!-- Labels (even hues + highlighted hues) -->
+  {#each Array.from({ length: 24 }, (_, i) => i + 1) as h (h)}
+    {@const isHighlighted = highlightedHueSet.has(h)}
+    {#if isHighlighted || h % 2 === 0}
+      {@const pos = polar(isHighlighted ? R_LABEL_HIGHLIGHTED : R_LABEL, sectorMidDeg(h))}
+      <text
+        x={pos.x.toFixed(3)}
+        y={pos.y.toFixed(3)}
+        text-anchor="middle"
+        dominant-baseline="central"
+        font-size={isHighlighted ? 12 : 10}
+        font-weight={isHighlighted ? "bold" : "normal"}
+        fill={isHighlighted ? HUE_COLORS[h] : "#444"}
+        opacity={hasHighlights && !isHighlighted ? 0.45 : 1}>{h}:{HUE_NAMES[h]}</text
+      >
+    {/if}
   {/each}
 </svg>
