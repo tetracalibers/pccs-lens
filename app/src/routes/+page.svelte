@@ -8,11 +8,11 @@
   <nav class="feature-nav">
     <a href="/approximate" class="feature-card">
       <span class="feature-title">色のPCCS近似</span>
-      <span class="feature-desc">入力した色に最も近いPCCS値を表示する</span>
+      <span class="feature-desc">入力した色に近いPCCS値と慣用色名を検索する</span>
     </a>
     <a href="/analyze" class="feature-card">
-      <span class="feature-title">配色の分析と調整</span>
-      <span class="feature-desc">複数の色をPCCSで分析・インタラクティブに調整する</span>
+      <span class="feature-title">配色の分析</span>
+      <span class="feature-desc">配色をPCCSの色相・トーンに基づいて分析する</span>
     </a>
   </nav>
 </main>
