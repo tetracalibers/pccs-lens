@@ -153,7 +153,7 @@
       {@const showHatch = isSCell && isCard199 && !isUsed}
       {@const fillColor = isUsed ? cell.usedColors[0].hex : showHatch ? "url(#hatch)" : "white"}
       {@const strokeColor = isUsed
-        ? `oklch(from ${cell.usedColors[0].hex} calc(l * .95) c h)`
+        ? `oklch(from ${cell.usedColors[0].hex} calc(l * .85) c h)`
         : "#ccc"}
       {@const strokeWidth = isUsed ? 1.5 : 1}
       {@const labelFill = isUsed

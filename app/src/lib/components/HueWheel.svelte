@@ -135,7 +135,7 @@
       <path
         d={sectorPath(h)}
         fill="none"
-        stroke={HUE_COLORS[h]}
+        stroke={`oklch(from ${HUE_COLORS[h]} calc(l * .85) c h)`}
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"
