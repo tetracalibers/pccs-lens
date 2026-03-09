@@ -171,7 +171,9 @@ function getToneRelationCard(colors: PCCSColor[]): AnalysisCard | null {
   const uniqueTones = [...new Set(toneKeys)]
   if (uniqueTones.length > 2) return null
   const c1 = colors.find((c) => getToneKey(c) === uniqueTones[0])!
-  const c2 = colors.find((c) => getToneKey(c) === (uniqueTones.length === 1 ? uniqueTones[0] : uniqueTones[1]))!
+  const c2 = colors.find(
+    (c) => getToneKey(c) === (uniqueTones.length === 1 ? uniqueTones[0] : uniqueTones[1])
+  )!
   const rel = toneRelation(c1, c2)
   if (rel === "same")
     return {
