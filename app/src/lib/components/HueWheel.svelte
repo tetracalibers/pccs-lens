@@ -82,8 +82,12 @@
     }
   }
 
+  // hue 8:Y が真上 (-90°) になるオフセット
+  // hue 8 の中心 = (8-1)*15 + 7.5 = 112.5° → -90° にするには -202.5°
+  const ROTATION_OFFSET = -202.5
+
   function sectorPath(h: number): string {
-    const start = (h - 1) * 15 - 90
+    const start = (h - 1) * 15 + ROTATION_OFFSET
     const end = start + 15
     const o1 = polar(R, start)
     const o2 = polar(R, end)
@@ -99,7 +103,7 @@
   }
 
   function sectorMidDeg(h: number) {
-    return (h - 1) * 15 + 7.5 - 90
+    return (h - 1) * 15 + 7.5 + ROTATION_OFFSET
   }
 
   const highlightedEntries = $derived(
