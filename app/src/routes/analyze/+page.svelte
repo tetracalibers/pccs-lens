@@ -176,8 +176,10 @@
     margin-top: 1.25rem;
     display: flex;
     flex-wrap: wrap;
-    gap: 3rem;
+    column-gap: 3rem;
+    row-gap: 0.75rem;
     align-items: center;
+    justify-content: center;
   }
 
   .diagrams :global(svg) {
