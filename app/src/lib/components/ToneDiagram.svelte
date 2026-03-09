@@ -158,8 +158,8 @@
       {@const strokeWidth = isUsed ? 1.5 : 1}
       {@const labelFill = isUsed
         ? isLightColor(cell.usedColors[0].hex)
-          ? "#333"
-          : "#fff"
+          ? `oklch(from ${cell.usedColors[0].hex} calc(l - .60) c h)`
+          : `oklch(from ${cell.usedColors[0].hex} calc(l + .60) c h);`
         : isSCell && isCard199
           ? "#bbb"
           : "#aaa"}
@@ -204,9 +204,8 @@
           y={cell.cy}
           text-anchor="middle"
           dominant-baseline="central"
-          font-size="10"
-          fill={labelFill}
-          style="pointer-events: none; user-select: none;">{cell.label}</text
+          font-size={isUsed ? 11 : 10}
+          style={`pointer-events: none; user-select: none; fill: ${labelFill};`}>{cell.label}</text
         >
       </g>
     {/each}
