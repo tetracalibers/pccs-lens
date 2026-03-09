@@ -261,7 +261,8 @@
   }
 
   .tooltip-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto auto 1fr;
     align-items: center;
     gap: 6px;
   }
@@ -283,5 +284,6 @@
   .tooltip-hex {
     color: rgba(255, 255, 255, 0.7);
     font-family: monospace;
+    text-align: end;
   }
 </style>
