@@ -173,7 +173,7 @@
     margin-top: 1.25rem;
     display: flex;
     flex-wrap: wrap;
-    gap: 1.5rem;
+    gap: 3rem;
     align-items: center;
   }
 
