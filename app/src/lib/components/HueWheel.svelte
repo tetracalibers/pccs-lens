@@ -161,9 +161,6 @@
 
   <circle cx={CX} cy={CY} r={R_INNER + 1} fill="white" />
 
-  <!-- Center dot -->
-  <circle cx={CX} cy={CY} r="3" fill="#bbbbbb" />
-
   <!-- Labels (even hues + highlighted hues) -->
   {#each Array.from({ length: 24 }, (_, i) => i + 1) as h (h)}
     {@const isHighlighted = highlightedHueSet.has(h)}
