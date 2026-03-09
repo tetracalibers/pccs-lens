@@ -1,5 +1,8 @@
 <script lang="ts">
   import ColorEntryItem from "$lib/components/ColorEntryItem.svelte"
+  import ColorSchemePreview from "$lib/components/ColorSchemePreview.svelte"
+  import HueWheel from "$lib/components/HueWheel.svelte"
+  import ToneDiagram from "$lib/components/ToneDiagram.svelte"
   import { findClosestPccs } from "$lib/color/approximate"
   import { deltaE2000 } from "$lib/color/ciede2000"
   import { hexToLab } from "$lib/color/convert"
@@ -17,6 +20,7 @@
     inputHex: string
     selectedPCCS: PCCSColor
     alternatePCCS: [PCCSColor, PCCSColor]
+    displayedPCCS: PCCSColor
   }
 
   function randomHex(): string {
@@ -29,7 +33,8 @@
       id: crypto.randomUUID(),
       inputHex: hex,
       selectedPCCS: results[0].color,
-      alternatePCCS: [results[1].color, results[2].color]
+      alternatePCCS: [results[1].color, results[2].color],
+      displayedPCCS: results[0].color
     }
   }
 
@@ -38,6 +43,9 @@
   }
 
   let entries: ColorEntry[] = $state(initialEntries())
+
+  const inputHexList = $derived(entries.map((e) => e.inputHex))
+  const displayedPCCSList = $derived(entries.map((e) => e.displayedPCCS))
 
   function addEntry() {
     if (entries.length >= MAX_COLORS) return
@@ -70,18 +78,19 @@
       return {
         ...e,
         selectedPCCS: alternate,
-        alternatePCCS: [sorted[0], sorted[1]]
+        alternatePCCS: [sorted[0], sorted[1]],
+        displayedPCCS: alternate
       }
     })
   }
 </script>
 
 <svelte:head>
-  <title>配色の分析と調整 - PCCS Lens</title>
+  <title>PCCSによる配色の分析 - PCCS Lens</title>
 </svelte:head>
 
 <main>
-  <h1>配色の分析と調整</h1>
+  <h1>PCCSによる配色の分析</h1>
 
   <section class="approximation-section">
     <h2>配色に使う色</h2>
@@ -101,6 +110,15 @@
     {#if entries.length < MAX_COLORS}
       <button class="add-btn" onclick={addEntry}>＋ 色を追加</button>
     {/if}
+  </section>
+
+  <section class="visualization-section">
+    <h2>配色プレビュー</h2>
+    <ColorSchemePreview {inputHexList} {displayedPCCSList} />
+    <div class="diagrams">
+      <HueWheel {displayedPCCSList} />
+      <ToneDiagram {displayedPCCSList} isCard199={true} />
+    </div>
   </section>
 </main>
 
@@ -145,5 +163,23 @@
   .add-btn:hover {
     border-color: var(--color-text, #111);
     color: var(--color-text, #111);
+  }
+
+  .visualization-section {
+    margin-top: 2rem;
+  }
+
+  .diagrams {
+    margin-top: 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .diagrams :global(svg) {
+    width: 100%;
+    max-width: 320px;
+    height: auto;
   }
 </style>

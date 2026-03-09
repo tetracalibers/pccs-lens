@@ -1,6 +1,7 @@
 <script lang="ts">
   import ColorPicker from "$lib/components/ColorPicker.svelte"
   import type { PCCSColor } from "$lib/data/types"
+  import Icon from "@iconify/svelte"
 
   let {
     inputHex = $bindable(),
@@ -27,7 +28,9 @@
   </div>
   <div class="remove-col">
     {#if showRemove}
-      <button class="remove-btn" onclick={onRemove} aria-label="この色を削除">×</button>
+      <button class="remove-btn" onclick={onRemove} aria-label="この色を削除">
+        <Icon icon="lets-icons:trash-light" />
+      </button>
     {/if}
   </div>
   <div class="approx-row">
@@ -69,21 +72,26 @@
 
   .remove-col {
     grid-area: remove-btn;
+    align-self: start;
   }
   .remove-btn {
-    margin-inline-start: 0.5rem;
-    width: 1.75rem;
-    height: 1.75rem;
-    border: 1px solid var(--color-border, #ddd);
+    margin-inline-start: 0.3rem;
+    margin-inline-end: -0.5rem;
+    translate: 0 -0.5rem;
+    border: 0;
+    padding: 0.2rem;
     border-radius: 0.25rem;
     background: none;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 1.25rem;
     line-height: 1;
-    color: var(--color-text-secondary, #777);
+    color: var(--color-text-secondary, #a1a1a1);
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  .remove-btn :global(svg) {
+    stroke-width: 1.5;
   }
 
   .remove-btn:hover {
