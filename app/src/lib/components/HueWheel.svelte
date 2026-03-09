@@ -126,6 +126,11 @@
       stroke-width="0.5"
       opacity={hasHighlights && !isHighlighted ? 0.45 : 1}
     />
+  {/each}
+
+  <!-- Highlight borders -->
+  {#each Array.from({ length: 24 }, (_, i) => i + 1) as h (h)}
+    {@const isHighlighted = highlightedHueSet.has(h)}
     {#if isHighlighted}
       <path
         d={sectorPath(h)}
@@ -153,7 +158,7 @@
     />
   {/each}
 
-  <circle cx={CX} cy={CY} r={R_INNER} fill="white" />
+  <circle cx={CX} cy={CY} r={R_INNER + 1} fill="white" />
 
   <!-- Center dot -->
   <circle cx={CX} cy={CY} r="4" fill="#6d6d6d" />
