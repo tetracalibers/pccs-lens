@@ -58,7 +58,8 @@
   ]
 
   const CIRCLE_R = 20
-  const SQUARE_HALF = 18
+  const RECT_W = 45
+  const RECT_H = 36
 
   function getUsedColors(cell: ToneCell): PCCSColor[] {
     return displayedPCCSList.filter((c) => {
@@ -168,10 +169,10 @@
           />
         {:else}
           <rect
-            x={cell.cx - SQUARE_HALF}
-            y={cell.cy - SQUARE_HALF}
-            width={SQUARE_HALF * 2}
-            height={SQUARE_HALF * 2}
+            x={cell.cx - RECT_W / 2}
+            y={cell.cy - RECT_H / 2}
+            width={RECT_W}
+            height={RECT_H}
             fill={fillColor}
             stroke={strokeColor}
             stroke-width={strokeWidth}
