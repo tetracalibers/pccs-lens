@@ -135,7 +135,7 @@
       <path
         d={sectorPath(h)}
         fill="none"
-        stroke="#6d6d6d"
+        stroke={HUE_COLORS[h]}
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"
