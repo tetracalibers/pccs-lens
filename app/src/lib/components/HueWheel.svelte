@@ -16,7 +16,7 @@
   const R_INNER = 28
   const R_LINE = 105
   const R_LABEL = 130
-  const R_LABEL_HIGHLIGHTED = 140
+  const R_LABEL_HIGHLIGHTED = 135
 
   const HUE_COLORS: Record<number, string> = {
     1: "#D40045",
