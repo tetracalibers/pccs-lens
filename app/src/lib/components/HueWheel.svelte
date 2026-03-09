@@ -161,7 +161,7 @@
   <circle cx={CX} cy={CY} r={R_INNER + 1} fill="white" />
 
   <!-- Center dot -->
-  <circle cx={CX} cy={CY} r="4" fill="#6d6d6d" />
+  <circle cx={CX} cy={CY} r="3" fill="#878787" />
 
   <!-- Labels (even hues only) -->
   {#each Array.from({ length: 12 }, (_, i) => (i + 1) * 2) as h (h)}
