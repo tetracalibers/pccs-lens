@@ -127,7 +127,14 @@
       opacity={hasHighlights && !isHighlighted ? 0.45 : 1}
     />
     {#if isHighlighted}
-      <path d={sectorPath(h)} fill="none" stroke="#6d6d6d" stroke-width="2" />
+      <path
+        d={sectorPath(h)}
+        fill="none"
+        stroke="#6d6d6d"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
     {/if}
   {/each}
 
