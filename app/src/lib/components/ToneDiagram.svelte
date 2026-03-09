@@ -21,12 +21,12 @@
   }
 
   // --- セルサイズ ---
-  const CIRCLE_R = 22
+  const CIRCLE_R = 20
   const RECT_W = 45
   const RECT_H = 36
 
   // --- 間隔調整用定数 ---
-  const ROW_STEP = 52 // Col0 の隣接セル中心間の縦距離（縦の間隔）
+  const ROW_STEP = 46 // Col0 の隣接セル中心間の縦距離（縦の間隔）
   const COL_GAP = 8 // 有彩色列間のセル端-端の横距離（横の間隔）
   const COL_GAP_ACH = 12 // 無彩色列と有彩色1列目の端-端の横距離
 
