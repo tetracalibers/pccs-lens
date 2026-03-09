@@ -78,19 +78,25 @@
     {#if jisResults.length > 0}
       <ul class="result-list">
         {#each jisResults as result (result.color.name)}
-          <li class="result-card">
-            <span
-              class="swatch"
-              style="background-color: {result.color.hex}"
-              aria-label={result.color.hex}
-            ></span>
-            <span class="jis-name">{result.color.name}</span>
-            <span class="jis-reading">{result.color.reading}</span>
-            {#if result.color.examLevel !== null}
-              <span class="exam-level">{result.color.examLevel}級</span>
-            {/if}
-            <span class="hex-code">{result.color.hex}</span>
-            <CopyButton text={result.color.hex} />
+          <li class="result-card jis-card">
+            <div class="jis-card-inner jis-card-main">
+              <span
+                class="swatch"
+                style="background-color: {result.color.hex}"
+                aria-label={result.color.hex}
+              ></span>
+              <div class="jis-name-reading">
+                <span class="jis-name">{result.color.name}</span>
+                <span class="jis-reading">{result.color.reading}</span>
+              </div>
+            </div>
+            <div class="jis-card-inner jis-card-sub">
+              {#if result.color.examLevel !== null}
+                <span class="exam-level">{result.color.examLevel}級</span>
+              {/if}
+              <span class="hex-code">{result.color.hex}</span>
+              <CopyButton text={result.color.hex} />
+            </div>
           </li>
         {/each}
       </ul>
@@ -133,11 +139,25 @@
   .result-card {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    column-gap: 0.75rem;
     padding: 0.625rem 0.75rem;
     border: 1px solid var(--color-border, #ddd);
     border-radius: 0.375rem;
     background: var(--color-surface, #fff);
+  }
+  .jis-card {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .jis-card-inner {
+    flex: 1 1 250px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .jis-card-sub {
+    justify-content: flex-end;
   }
 
   .swatch {
@@ -163,18 +183,26 @@
     margin-left: auto;
   }
 
+  .jis-name-reading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 0.75rem;
+  }
+
   .jis-name {
     font-size: 1rem;
     font-weight: 600;
+    white-space: nowrap;
   }
 
   .jis-reading {
     font-size: 0.8rem;
     color: var(--color-text-secondary, #777);
+    white-space: nowrap;
   }
 
   .exam-level {
-    margin-left: auto;
     font-size: 0.75rem;
     font-weight: 600;
     padding: 0.125rem 0.375rem;
