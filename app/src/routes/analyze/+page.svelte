@@ -113,7 +113,7 @@
   </section>
 
   <section class="visualization-section">
-    <h2>配色の確認</h2>
+    <h2>配色プレビュー</h2>
     <ColorSchemePreview {inputHexList} {displayedPCCSList} />
     <div class="diagrams">
       <HueWheel {displayedPCCSList} />
@@ -174,7 +174,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 1.5rem;
-    align-items: flex-start;
+    align-items: center;
   }
 
   .diagrams :global(svg) {

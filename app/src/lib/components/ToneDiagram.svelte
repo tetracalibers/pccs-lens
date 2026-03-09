@@ -132,8 +132,8 @@
       {@const isSCell = cell.key === "s"}
       {@const showHatch = isSCell && isCard199 && !isUsed}
       {@const fillColor = isUsed ? cell.usedColors[0].hex : showHatch ? "url(#hatch)" : "white"}
-      {@const strokeColor = isUsed ? "#333" : "#ccc"}
-      {@const strokeWidth = isUsed ? 3 : 1}
+      {@const strokeColor = isUsed ? "#6d6d6d" : "#ccc"}
+      {@const strokeWidth = isUsed ? 2 : 1}
       {@const labelFill = isUsed
         ? isLightColor(cell.usedColors[0].hex)
           ? "#333"

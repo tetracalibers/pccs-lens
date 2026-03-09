@@ -123,7 +123,7 @@
       opacity={hasHighlights && !isHighlighted ? 0.45 : 1}
     />
     {#if isHighlighted}
-      <path d={sectorPath(h)} fill="none" stroke="#222" stroke-width="2.5" />
+      <path d={sectorPath(h)} fill="none" stroke="#6d6d6d" stroke-width="2" />
     {/if}
   {/each}
 
@@ -142,8 +142,10 @@
     />
   {/each}
 
+  <circle cx={CX} cy={CY} r={R_INNER} fill="white" />
+
   <!-- Center dot -->
-  <circle cx={CX} cy={CY} r="4" fill="#444" />
+  <circle cx={CX} cy={CY} r="4" fill="#6d6d6d" />
 
   <!-- Labels (even hues only) -->
   {#each Array.from({ length: 12 }, (_, i) => (i + 1) * 2) as h (h)}
