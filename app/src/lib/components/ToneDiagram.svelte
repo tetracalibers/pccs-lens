@@ -89,22 +89,29 @@
 
   type TooltipState = {
     visible: boolean
-    x: number
-    y: number
+    anchorX: number
+    anchorY: number
     colors: PCCSColor[]
   }
 
-  let tooltip: TooltipState = $state({ visible: false, x: 0, y: 0, colors: [] })
+  let tooltip: TooltipState = $state({ visible: false, anchorX: 0, anchorY: 0, colors: [] })
   let wrapperEl: HTMLDivElement | undefined = $state()
+  let svgEl: SVGSVGElement | undefined = $state()
 
-  function showTooltip(e: PointerEvent, cell: ToneCell) {
+  function showTooltip(_e: PointerEvent, cell: ToneCell) {
     const usedColors = getUsedColors(cell)
     if (usedColors.length === 0) return
-    const rect = wrapperEl!.getBoundingClientRect()
+    const wrapperRect = wrapperEl!.getBoundingClientRect()
+    const svgRect = svgEl!.getBoundingClientRect()
+    const scaleX = svgRect.width / SVG_W
+    const scaleY = svgRect.height / SVG_H
+    const cellTopSvg = cell.shape === "circle" ? cell.cy - CIRCLE_R : cell.cy - RECT_H / 2
+    const anchorX = svgRect.left - wrapperRect.left + cell.cx * scaleX
+    const anchorY = svgRect.top - wrapperRect.top + cellTopSvg * scaleY
     tooltip = {
       visible: true,
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
+      anchorX,
+      anchorY,
       colors: usedColors
     }
   }
@@ -127,7 +134,7 @@
 </script>
 
 <div class="diagram-wrapper" bind:this={wrapperEl}>
-  <svg viewBox="0 0 {SVG_W} {SVG_H}" role="img" aria-label="PCCSトーン概念図">
+  <svg viewBox="0 0 {SVG_W} {SVG_H}" role="img" aria-label="PCCSトーン概念図" bind:this={svgEl}>
     <defs>
       <pattern
         id="hatch"
@@ -204,9 +211,11 @@
   </svg>
 
   {#if tooltip.visible}
-    {@const tx = tooltip.x + 12}
-    {@const ty = tooltip.y - (tooltip.colors.length * 26 + 8) / 2}
-    <div class="tooltip" style="left: {tx}px; top: {ty}px;" role="tooltip">
+    <div
+      class="tooltip"
+      style="left: {tooltip.anchorX}px; top: {tooltip.anchorY}px;"
+      role="tooltip"
+    >
       {#each tooltip.colors as c (c.notation)}
         <div class="tooltip-row">
           <span class="tooltip-swatch" style="background: {c.hex};"></span>
@@ -237,6 +246,18 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
+    transform: translateX(-50%) translateY(calc(-100% - 8px));
+  }
+
+  .tooltip::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid var(--color-text, #111);
   }
 
   .tooltip-row {
