@@ -16,7 +16,7 @@
 </script>
 
 <section class="analysis-section">
-  <h2>配色の分析</h2>
+  <h2>配色の特徴</h2>
   {#if cards.length === 0}
     <p class="empty">該当なし</p>
   {:else}
