@@ -20,46 +20,58 @@
     shape: "circle" | "square"
   }
 
-  // Staggered midpoint layout
-  // Col0 (achromatic): y = 25, 75, 125, 175, 225  step=50
-  // Col1 (p/ltg/g/dkg): midpoints of Col0 pairs → y = 50, 100, 150, 200
-  // Col2 (lt/sf/d/dk): same as Col1 → y = 50, 100, 150, 200
-  // Col3 (b/s/dp): midpoints of Col1 pairs → y = 75, 125, 175
-  // Col4 (v): Col3[1] → y = 125
-  const X0 = 26
-  const X1 = 94
-  const X2 = 154
-  const X3 = 214
-  const X4 = 274
-
-  const CELLS: ToneCell[] = [
-    // Col0: achromatic squares
-    { key: "W", label: "W", cx: X0, cy: 25, shape: "square" },
-    { key: "ltGy", label: "ltGy", cx: X0, cy: 75, shape: "square" },
-    { key: "mGy", label: "mGy", cx: X0, cy: 125, shape: "square" },
-    { key: "dkGy", label: "dkGy", cx: X0, cy: 175, shape: "square" },
-    { key: "Bk", label: "Bk", cx: X0, cy: 225, shape: "square" },
-    // Col1: p/ltg/g/dkg
-    { key: "p", label: "p", cx: X1, cy: 50, shape: "circle" },
-    { key: "ltg", label: "ltg", cx: X1, cy: 100, shape: "circle" },
-    { key: "g", label: "g", cx: X1, cy: 150, shape: "circle" },
-    { key: "dkg", label: "dkg", cx: X1, cy: 200, shape: "circle" },
-    // Col2: lt/sf/d/dk
-    { key: "lt", label: "lt", cx: X2, cy: 50, shape: "circle" },
-    { key: "sf", label: "sf", cx: X2, cy: 100, shape: "circle" },
-    { key: "d", label: "d", cx: X2, cy: 150, shape: "circle" },
-    { key: "dk", label: "dk", cx: X2, cy: 200, shape: "circle" },
-    // Col3: b/s/dp
-    { key: "b", label: "b", cx: X3, cy: 75, shape: "circle" },
-    { key: "s", label: "s", cx: X3, cy: 125, shape: "circle" },
-    { key: "dp", label: "dp", cx: X3, cy: 175, shape: "circle" },
-    // Col4: v
-    { key: "v", label: "v", cx: X4, cy: 125, shape: "circle" }
-  ]
-
-  const CIRCLE_R = 20
+  // --- セルサイズ ---
+  const CIRCLE_R = 22
   const RECT_W = 45
   const RECT_H = 36
+
+  // --- 間隔調整用定数 ---
+  const ROW_STEP = 52 // Col0 の隣接セル中心間の縦距離（縦の間隔）
+  const COL_GAP = 8 // 有彩色列間のセル端-端の横距離（横の間隔）
+  const COL_GAP_ACH = 12 // 無彩色列と有彩色1列目の端-端の横距離
+
+  // --- 導出座標 ---
+  const PAD = 4
+  const X0 = PAD + RECT_W / 2
+  const X1 = X0 + RECT_W / 2 + COL_GAP_ACH + CIRCLE_R
+  const X2 = X1 + 2 * CIRCLE_R + COL_GAP
+  const X3 = X2 + 2 * CIRCLE_R + COL_GAP
+  const X4 = X3 + 2 * CIRCLE_R + COL_GAP
+  const Y0 = PAD + RECT_H / 2 // 最上段 Col0 セルの中心 y
+
+  const SVG_W = Math.ceil(X4 + CIRCLE_R + PAD)
+  const SVG_H = Math.ceil(Y0 + 4 * ROW_STEP + RECT_H / 2 + PAD)
+
+  // --- staggered midpoint 配置 ---
+  // Col0: Y0, Y0+S, Y0+2S, Y0+3S, Y0+4S
+  // Col1/2: midpoints of Col0 pairs → Y0+S/2, Y0+3S/2, Y0+5S/2, Y0+7S/2
+  // Col3: midpoints of Col1 pairs → Y0+S, Y0+2S, Y0+3S
+  // Col4: Y0+2S (same as Col3 middle)
+  const S = ROW_STEP
+  const CELLS: ToneCell[] = [
+    // Col0: achromatic squares
+    { key: "W", label: "W", cx: X0, cy: Y0 + S * 0, shape: "square" },
+    { key: "ltGy", label: "ltGy", cx: X0, cy: Y0 + S * 1, shape: "square" },
+    { key: "mGy", label: "mGy", cx: X0, cy: Y0 + S * 2, shape: "square" },
+    { key: "dkGy", label: "dkGy", cx: X0, cy: Y0 + S * 3, shape: "square" },
+    { key: "Bk", label: "Bk", cx: X0, cy: Y0 + S * 4, shape: "square" },
+    // Col1: p/ltg/g/dkg
+    { key: "p", label: "p", cx: X1, cy: Y0 + S * 0.5, shape: "circle" },
+    { key: "ltg", label: "ltg", cx: X1, cy: Y0 + S * 1.5, shape: "circle" },
+    { key: "g", label: "g", cx: X1, cy: Y0 + S * 2.5, shape: "circle" },
+    { key: "dkg", label: "dkg", cx: X1, cy: Y0 + S * 3.5, shape: "circle" },
+    // Col2: lt/sf/d/dk
+    { key: "lt", label: "lt", cx: X2, cy: Y0 + S * 0.5, shape: "circle" },
+    { key: "sf", label: "sf", cx: X2, cy: Y0 + S * 1.5, shape: "circle" },
+    { key: "d", label: "d", cx: X2, cy: Y0 + S * 2.5, shape: "circle" },
+    { key: "dk", label: "dk", cx: X2, cy: Y0 + S * 3.5, shape: "circle" },
+    // Col3: b/s/dp
+    { key: "b", label: "b", cx: X3, cy: Y0 + S * 1, shape: "circle" },
+    { key: "s", label: "s", cx: X3, cy: Y0 + S * 2, shape: "circle" },
+    { key: "dp", label: "dp", cx: X3, cy: Y0 + S * 3, shape: "circle" },
+    // Col4: v
+    { key: "v", label: "v", cx: X4, cy: Y0 + S * 2, shape: "circle" }
+  ]
 
   function getUsedColors(cell: ToneCell): PCCSColor[] {
     return displayedPCCSList.filter((c) => {
@@ -115,7 +127,7 @@
 </script>
 
 <div class="diagram-wrapper" bind:this={wrapperEl}>
-  <svg viewBox="0 0 300 250" role="img" aria-label="PCCSトーン概念図">
+  <svg viewBox="0 0 {SVG_W} {SVG_H}" role="img" aria-label="PCCSトーン概念図">
     <defs>
       <pattern
         id="hatch"
