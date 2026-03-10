@@ -174,8 +174,10 @@
         font-size={isHighlighted ? 12 : 10}
         font-weight={isHighlighted ? "bold" : "normal"}
         fill={isHighlighted ? HUE_COLORS[h] : "#444"}
-        opacity={hasHighlights && !isHighlighted ? 0.45 : 1}>{h}:{HUE_NAMES[h]}</text
+        opacity={hasHighlights && !isHighlighted ? 0.45 : 1}
       >
+        {h}:{HUE_NAMES[h]}
+      </text>
     {/if}
   {/each}
 </svg>

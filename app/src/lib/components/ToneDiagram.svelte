@@ -205,8 +205,10 @@
           text-anchor="middle"
           dominant-baseline="central"
           font-size={isUsed ? 11 : 10}
-          style={`pointer-events: none; user-select: none; fill: ${labelFill};`}>{cell.label}</text
+          style={`pointer-events: none; user-select: none; fill: ${labelFill};`}
         >
+          {cell.label}
+        </text>
       </g>
     {/each}
   </svg>

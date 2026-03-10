@@ -23,9 +23,12 @@
     <ul class="card-grid">
       {#each cards as card (card.id)}
         <li class="analysis-card">
-          <span class="category-tag" style="background: {CATEGORY_COLORS[card.category] ?? '#888'};"
-            >{card.category}</span
+          <span
+            class="category-tag"
+            style="background: {CATEGORY_COLORS[card.category] ?? '#888'};"
           >
+            {card.category}
+          </span>
           <h3>{card.title}</h3>
           <p>{card.description}</p>
         </li>
