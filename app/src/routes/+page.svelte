@@ -1,3 +1,7 @@
+<script lang="ts">
+  import { resolve } from "$app/paths"
+</script>
+
 <svelte:head>
   <title>PCCS Lens</title>
 </svelte:head>
@@ -6,11 +10,11 @@
   <h1>PCCS Lens</h1>
   <p>色をPCCSというレンズを通して見る</p>
   <nav class="feature-nav">
-    <a href="/approximate" class="feature-card">
+    <a href={resolve("/approximate")} class="feature-card">
       <span class="feature-title">色のPCCS近似</span>
       <span class="feature-desc">入力した色に近いPCCS値と慣用色名を検索する</span>
     </a>
-    <a href="/analyze" class="feature-card">
+    <a href={resolve("/analyze")} class="feature-card">
       <span class="feature-title">配色の分析</span>
       <span class="feature-desc">配色をPCCSの色相・トーンに基づいて分析する</span>
     </a>
