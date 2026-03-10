@@ -130,9 +130,8 @@
   }
 
   .notation {
-    font-family: monospace;
+    font-family: var(--font-mono);
     font-size: 0.9rem;
-    font-weight: 600;
   }
 
   .label {

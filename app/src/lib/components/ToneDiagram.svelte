@@ -204,6 +204,7 @@
           y={cell.cy}
           text-anchor="middle"
           dominant-baseline="central"
+          font-family="var(--font-mono)"
           font-size={isUsed ? 11 : 10}
           style={`pointer-events: none; user-select: none; fill: ${labelFill};`}
         >
@@ -278,7 +279,7 @@
   }
 
   .tooltip-notation {
-    font-family: monospace;
+    font-family: var(--font-mono);
     font-weight: 600;
   }
 </style>

@@ -152,17 +152,16 @@
   }
   .jis-card {
     flex-wrap: wrap;
-    gap: 0.25rem;
+    justify-content: end;
   }
 
   .jis-card-inner {
-    flex: 1 1 250px;
     display: flex;
     align-items: center;
     gap: 0.75rem;
   }
-  .jis-card-sub {
-    justify-content: flex-end;
+  .jis-card-main {
+    flex: 1 1 250px;
   }
 
   .swatch {
@@ -175,14 +174,13 @@
   }
 
   .notation {
-    font-family: monospace;
+    font-family: var(--font-mono);
     font-size: 1rem;
-    font-weight: 600;
     min-width: 5rem;
   }
 
   .hex-code {
-    font-family: monospace;
+    font-family: var(--font-mono);
     font-size: 0.8rem;
     color: var(--color-text-secondary, #777);
     margin-left: auto;

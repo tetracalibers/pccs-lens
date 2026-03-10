@@ -67,7 +67,7 @@
   }
 
   input[type="text"] {
-    font-family: monospace;
+    font-family: var(--font-mono);
     font-size: 1rem;
     padding: 0.375rem 0.5rem;
     border: 1px solid var(--color-border, #ccc);
