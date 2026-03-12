@@ -106,7 +106,7 @@
   </header>
 
   <section class="description">
-    <h2>配色のルール</h2>
+    <h2>配色の特徴</h2>
     <p>{theme.coloringDescription}</p>
   </section>
 
