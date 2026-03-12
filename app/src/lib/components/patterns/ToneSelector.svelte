@@ -72,8 +72,19 @@
     Bk: "#1a1a1a"
   }
 
-  // ツールチップ表示中のグレイキー
-  let hoveredGrayKey: string | null = $state(null)
+  // ツールチップを開いているグレイバケットキー
+  let openTooltipKey: string | null = $state(null)
+  let tooltipGroupEl: SVGGElement | null = $state(null)
+
+  $effect(() => {
+    if (!openTooltipKey) return
+    const close = (e: MouseEvent) => {
+      if (tooltipGroupEl?.contains(e.target as Node)) return
+      openTooltipKey = null
+    }
+    document.addEventListener("click", close)
+    return () => document.removeEventListener("click", close)
+  })
 
   // 現在のvalueがGy-X.X形式の場合、親バケットキーを特定
   function getGrayParentKey(tone: string): string | null {
@@ -185,10 +196,23 @@
       aria-pressed={selected}
       tabindex="0"
       style="cursor: pointer;"
-      onclick={() => onselect(cell.key)}
-      onkeydown={(e) => e.key === "Enter" && onselect(cell.key)}
-      onmouseenter={() => isGrayBucket && (hoveredGrayKey = cell.key)}
-      onmouseleave={() => isGrayBucket && hoveredGrayKey === cell.key && (hoveredGrayKey = null)}
+      onclick={(e) => {
+        if (isGrayBucket) {
+          e.stopPropagation()
+          openTooltipKey = openTooltipKey === cell.key ? null : cell.key
+        } else {
+          onselect(cell.key)
+        }
+      }}
+      onkeydown={(e) => {
+        if (e.key === "Enter") {
+          if (isGrayBucket) {
+            openTooltipKey = openTooltipKey === cell.key ? null : cell.key
+          } else {
+            onselect(cell.key)
+          }
+        }
+      }}
     >
       {#if cell.shape === "circle"}
         <circle
@@ -268,20 +292,19 @@
   {/each}
 
   <!-- グレイ細分ツールチップ -->
-  {#if hoveredGrayKey}
-    {@const hoverCell = CELLS.find((c) => c.key === hoveredGrayKey)}
+  {#if openTooltipKey}
+    {@const hoverCell = CELLS.find((c) => c.key === openTooltipKey)}
     {#if hoverCell}
-      {@const items = getTooltipItems(hoveredGrayKey)}
+      {@const items = getTooltipItems(openTooltipKey)}
       {@const tipX = getTooltipX(hoverCell)}
       {@const tipY = getTooltipY(hoverCell, items.length)}
       {@const tipH = items.length * TIP_ITEM_H + (items.length - 1) * TIP_GAP + TIP_PAD * 2}
       {@const tipW = TIP_ITEM_W + TIP_PAD * 2}
       <g
+        bind:this={tooltipGroupEl}
         role="group"
         aria-label="グレイ細分選択"
         style="cursor: default;"
-        onmouseenter={() => (hoveredGrayKey = hoveredGrayKey)}
-        onmouseleave={() => (hoveredGrayKey = null)}
       >
         <!-- 背景 -->
         <rect
@@ -308,6 +331,7 @@
             onclick={(e) => {
               e.stopPropagation()
               onselect(subTone.notation)
+              openTooltipKey = null
             }}
             onkeydown={(e) => e.key === "Enter" && onselect(subTone.notation)}
           >
