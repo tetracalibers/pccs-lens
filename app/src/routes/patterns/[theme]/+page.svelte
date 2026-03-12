@@ -201,13 +201,16 @@
 
   .theme-header {
     margin-bottom: 1.5rem;
+    display: grid;
+    gap: 0.6rem;
   }
 
   .theme-title {
     display: flex;
     align-items: baseline;
-    gap: 0.6rem;
-    margin-bottom: 0.35rem;
+    column-gap: 1rem;
+    row-gap: 2px;
+    flex-wrap: wrap;
   }
 
   h1 {
@@ -220,6 +223,7 @@
     font-family: var(--font-mono);
     font-size: 0.9rem;
     color: var(--color-text-secondary, #888);
+    text-indent: 0.2rem;
   }
 
   .theme-image {
