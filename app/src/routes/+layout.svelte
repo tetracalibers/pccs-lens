@@ -46,6 +46,7 @@
     --font-mono: "Reddit Mono", monospace;
 
     font-family: "SUSE Mono", "Zen Kaku Gothic Antique";
+    margin-block: 0;
   }
 
   header {
@@ -54,13 +55,13 @@
   }
 
   nav {
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 1rem;
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    height: 3rem;
+    justify-content: space-between;
   }
 
   .brand {
@@ -68,6 +69,7 @@
     font-size: 1.1rem;
     text-decoration: none;
     color: var(--color-text, #111);
+    flex-shrink: 0;
   }
 
   ul {
@@ -75,7 +77,10 @@
     margin: 0;
     padding: 0;
     display: flex;
-    gap: 1rem;
+    column-gap: 1rem;
+    row-gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
   }
 
   ul a {
@@ -83,7 +88,6 @@
     font-size: 0.9rem;
     color: var(--color-text-secondary, #555);
     padding: 0.25rem 0;
-    border-bottom: 2px solid transparent;
   }
 
   ul a:hover {
@@ -91,8 +95,11 @@
   }
 
   ul a.active {
+    text-decoration: underline;
+    text-decoration-style: solid;
+    text-decoration-color: #1a1a1a;
+    text-underline-offset: 0.3rem;
     color: var(--color-text, #111);
-    border-bottom-color: var(--color-primary, #1a1a1a);
     font-weight: 600;
   }
 </style>
