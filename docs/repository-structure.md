@@ -69,15 +69,22 @@ app/
 │   │   │   └── jis_colors.json     JIS慣用色名データ
 │   │   └── components/             共通UIコンポーネント
 │   │       ├── ColorPicker.svelte  カラーピッカー＋HEX入力欄
-│   │       ├── HueWheel.svelte     PCCS色相環（SVG）
-│   │       └── ToneDiagram.svelte  PCCSトーン概念図（SVG）
+│   │       ├── HueWheel.svelte     PCCS色相環（SVG・read-only）
+│   │       ├── ToneDiagram.svelte  PCCSトーン概念図（SVG・read-only）
+│   │       └── patterns/           F3専用UIコンポーネント
+│   │           ├── HueWheelInput.svelte   インタラクティブ色相選択UI
+│   │           └── ToneDiagramInput.svelte インタラクティブトーン選択UI
 │   ├── routes/                     ページコンポーネント（SvelteKitルーティング）
 │   │   ├── +layout.svelte          共通レイアウト（ナビゲーションバー）
 │   │   ├── +page.svelte            トップページ（/）
 │   │   ├── approximate/
 │   │   │   └── +page.svelte        機能1：色のPCCS近似（/approximate）
-│   │   └── analyze/
-│   │       └── +page.svelte        機能2：配色の分析と調整（/analyze）
+│   │   ├── analyze/
+│   │   │   └── +page.svelte        機能2：配色の分析と調整（/analyze）
+│   │   └── patterns/
+│   │       ├── +page.svelte        機能3：配色パターン一覧（/patterns）
+│   │       └── [theme]/
+│   │           └── +page.svelte    機能3：テーマ別シミュレーター（/patterns/[theme]）
 │   ├── app.css                     グローバルスタイル
 │   ├── app.d.ts                    SvelteKit型拡張
 │   └── app.html                    HTMLテンプレート
@@ -108,8 +115,10 @@ docs/
 ├── development-guidelines.md   開発ガイドライン
 ├── glossary.md                 ユビキタス言語定義
 ├── color-analysis-rules.md     色分析ルール定義書（PCCS判定ロジック詳細）
+├── image-based-color-rules.md  イメージ別配色ルール定義書（F3テーマ別サジェスト条件）
 └── ideas/                      初期アイデア・検討資料（参照用）
-    └── initial-requirements.md
+    ├── initial-requirements.md
+    └── f3-mood-palette-patterns.md
 ```
 
 ---
