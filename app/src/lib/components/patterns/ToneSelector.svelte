@@ -1,11 +1,16 @@
 <script lang="ts">
+  import { lookupPCCSColor, GRAY_SUB_TONES } from "$lib/patterns/lookup"
+  import type { PCCSColor } from "$lib/data/types"
+
   let {
     value,
+    selectedHue,
     suggestedTones,
     allowedTones,
     onselect
   }: {
     value: string
+    selectedHue: number | null
     suggestedTones: string[]
     allowedTones: string[]
     onselect: (tone: string) => void
@@ -58,7 +63,7 @@
     { key: "v", label: "v", cx: X4, cy: Y0 + S * 2, shape: "circle" }
   ]
 
-  // 無彩色セルのHEX（ライトネスから推定）
+  // 無彩色セルのHEX
   const ACHROMATIC_HEX: Record<string, string> = {
     W: "#ffffff",
     ltGy: "#c8c8c8",
@@ -67,32 +72,56 @@
     Bk: "#1a1a1a"
   }
 
+  // ツールチップ表示中のグレイキー
+  let hoveredGrayKey: string | null = $state(null)
+
+  // 現在のvalueがGy-X.X形式の場合、親バケットキーを特定
+  function getGrayParentKey(tone: string): string | null {
+    if (!tone.startsWith("Gy-")) return null
+    for (const [bucket, tones] of Object.entries(GRAY_SUB_TONES)) {
+      if (tones.some((t: PCCSColor) => t.notation === tone)) return bucket
+    }
+    return null
+  }
+
+  const selectedParentKey = $derived(getGrayParentKey(value))
+
   const suggestedSet = $derived(new Set(suggestedTones))
   const allowedSet = $derived(new Set(allowedTones))
 
   function getOpacity(key: string): number {
+    if (isSelected(key)) return 1
     if (suggestedSet.has(key)) return 1
     if (allowedSet.has(key)) return 0.55
     return 0.2
   }
 
   function isSelected(key: string): boolean {
-    return value === key
+    if (value === key) return true
+    // Gy-X.X選択時は親バケットセルを選択状態とする
+    if (selectedParentKey === key) return true
+    return false
   }
 
   function isSuggested(key: string): boolean {
     return suggestedSet.has(key)
   }
 
-  // セルの塗りつぶし色（選択中 or デフォルト）
+  // セルの塗りつぶし色
   function getFillColor(cell: ToneCell): string {
-    if (isSelected(cell.key)) {
-      return ACHROMATIC_HEX[cell.key] ?? "#cccccc"
+    // 無彩色セル
+    if (cell.key in ACHROMATIC_HEX) {
+      // Gy-X.X選択時は親セルにそのグレイの色を反映
+      if (selectedParentKey === cell.key) {
+        return lookupPCCSColor(null, value)?.hex ?? ACHROMATIC_HEX[cell.key]
+      }
+      return ACHROMATIC_HEX[cell.key]
     }
-    if (isSuggested(cell.key)) {
-      return ACHROMATIC_HEX[cell.key] ?? "#e0e0e0"
+    // 有彩色セル: selectedHue があればその色相の色を表示
+    if (selectedHue !== null) {
+      return lookupPCCSColor(selectedHue, cell.key)?.hex ?? "#e0e0e0"
     }
-    return ACHROMATIC_HEX[cell.key] ?? "white"
+    return "#e0e0e0"
   }
 
   function getStrokeColor(cell: ToneCell): string {
@@ -105,16 +134,36 @@
     return isSelected(cell.key) ? 2.5 : isSuggested(cell.key) ? 1.5 : 1
   }
 
+  function labelFillFromHex(hex: string): string {
+    const r = parseInt(hex.slice(1, 3), 16)
+    const g = parseInt(hex.slice(3, 5), 16)
+    const b = parseInt(hex.slice(5, 7), 16)
+    const brightness = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+    return brightness > 0.5 ? "#444" : "#ccc"
+  }
+
   function getLabelFill(cell: ToneCell): string {
-    const hex = ACHROMATIC_HEX[cell.key]
-    if (hex) {
-      const r = parseInt(hex.slice(1, 3), 16)
-      const g = parseInt(hex.slice(3, 5), 16)
-      const b = parseInt(hex.slice(5, 7), 16)
-      const brightness = (0.299 * r + 0.587 * g + 0.114 * b) / 255
-      return brightness > 0.5 ? "#444" : "#ccc"
-    }
-    return "#888"
+    return labelFillFromHex(getFillColor(cell))
+  }
+
+  // ツールチップのレイアウト定数
+  const TIP_ITEM_W = 48
+  const TIP_ITEM_H = 22
+  const TIP_GAP = 3
+  const TIP_PAD = 4
+  const TIP_OFFSET_X = 8 // セルとの水平間隔
+
+  function getTooltipItems(bucketKey: string): PCCSColor[] {
+    return GRAY_SUB_TONES[bucketKey] ?? []
+  }
+
+  function getTooltipX(cell: ToneCell): number {
+    return cell.cx - RECT_W / 2 - TIP_OFFSET_X - TIP_ITEM_W - TIP_PAD * 2
+  }
+
+  function getTooltipY(cell: ToneCell, itemCount: number): number {
+    const totalH = itemCount * TIP_ITEM_H + (itemCount - 1) * TIP_GAP + TIP_PAD * 2
+    return cell.cy - totalH / 2
   }
 </script>
 
@@ -128,6 +177,7 @@
     {@const opacity = getOpacity(cell.key)}
     {@const selected = isSelected(cell.key)}
     {@const suggested = isSuggested(cell.key)}
+    {@const isGrayBucket = cell.key === "ltGy" || cell.key === "mGy" || cell.key === "dkGy"}
     <g
       {opacity}
       role="button"
@@ -137,6 +187,8 @@
       style="cursor: pointer;"
       onclick={() => onselect(cell.key)}
       onkeydown={(e) => e.key === "Enter" && onselect(cell.key)}
+      onmouseenter={() => isGrayBucket && (hoveredGrayKey = cell.key)}
+      onmouseleave={() => isGrayBucket && hoveredGrayKey === cell.key && (hoveredGrayKey = null)}
     >
       {#if cell.shape === "circle"}
         <circle
@@ -189,7 +241,7 @@
         {/if}
       {/if}
 
-      <!-- サジェストスター -->
+      <!-- サジェストマーカー -->
       {#if suggested && !selected}
         <circle
           cx={cell.cx + (cell.shape === "circle" ? CIRCLE_R - 5 : RECT_W / 2 - 5)}
@@ -214,4 +266,90 @@
       </text>
     </g>
   {/each}
+
+  <!-- グレイ細分ツールチップ -->
+  {#if hoveredGrayKey}
+    {@const hoverCell = CELLS.find((c) => c.key === hoveredGrayKey)}
+    {#if hoverCell}
+      {@const items = getTooltipItems(hoveredGrayKey)}
+      {@const tipX = getTooltipX(hoverCell)}
+      {@const tipY = getTooltipY(hoverCell, items.length)}
+      {@const tipH = items.length * TIP_ITEM_H + (items.length - 1) * TIP_GAP + TIP_PAD * 2}
+      {@const tipW = TIP_ITEM_W + TIP_PAD * 2}
+      <g
+        role="group"
+        aria-label="グレイ細分選択"
+        style="cursor: default;"
+        onmouseenter={() => (hoveredGrayKey = hoveredGrayKey)}
+        onmouseleave={() => (hoveredGrayKey = null)}
+      >
+        <!-- 背景 -->
+        <rect
+          x={tipX}
+          y={tipY}
+          width={tipW}
+          height={tipH}
+          rx="4"
+          fill="white"
+          stroke="#ccc"
+          stroke-width="1"
+          filter="drop-shadow(0 1px 3px rgba(0,0,0,0.15))"
+        />
+        {#each items as subTone, i (subTone.notation)}
+          {@const itemY = tipY + TIP_PAD + i * (TIP_ITEM_H + TIP_GAP)}
+          {@const isSubSelected = value === subTone.notation}
+          {@const subLabelFill = labelFillFromHex(subTone.hex)}
+          <g
+            role="button"
+            aria-label={subTone.notation}
+            aria-pressed={isSubSelected}
+            tabindex="0"
+            style="cursor: pointer;"
+            onclick={(e) => {
+              e.stopPropagation()
+              onselect(subTone.notation)
+            }}
+            onkeydown={(e) => e.key === "Enter" && onselect(subTone.notation)}
+          >
+            <rect
+              x={tipX + TIP_PAD}
+              y={itemY}
+              width={TIP_ITEM_W}
+              height={TIP_ITEM_H}
+              rx="3"
+              fill={subTone.hex}
+              stroke={isSubSelected ? "#333" : "#ddd"}
+              stroke-width={isSubSelected ? 2 : 1}
+            />
+            {#if isSubSelected}
+              <rect
+                x={tipX + TIP_PAD - 2}
+                y={itemY - 2}
+                width={TIP_ITEM_W + 4}
+                height={TIP_ITEM_H + 4}
+                rx="4"
+                fill="none"
+                stroke="#333"
+                stroke-width="1.5"
+                stroke-dasharray="3 2"
+                style="pointer-events: none;"
+              />
+            {/if}
+            <text
+              x={tipX + TIP_PAD + TIP_ITEM_W / 2}
+              y={itemY + TIP_ITEM_H / 2}
+              text-anchor="middle"
+              dominant-baseline="central"
+              font-family="var(--font-mono)"
+              font-size="9"
+              font-weight={isSubSelected ? "bold" : "normal"}
+              style={`pointer-events: none; user-select: none; fill: ${subLabelFill};`}
+            >
+              {subTone.notation}
+            </text>
+          </g>
+        {/each}
+      </g>
+    {/if}
+  {/if}
 </svg>

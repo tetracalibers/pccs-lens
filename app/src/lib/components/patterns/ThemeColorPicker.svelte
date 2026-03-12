@@ -24,7 +24,9 @@
   const ACHROMATIC_TONES = new Set(["W", "ltGy", "mGy", "dkGy", "Bk"])
 
   const isAchromaticSelected = $derived(
-    selectedColor.hueNumber === null || ACHROMATIC_TONES.has(selectedColor.toneSymbol)
+    selectedColor.hueNumber === null ||
+      ACHROMATIC_TONES.has(selectedColor.toneSymbol) ||
+      /^Gy-/.test(selectedColor.toneSymbol)
   )
 
   function onHueSelect(hue: number) {
@@ -42,7 +44,7 @@
   }
 
   function onToneSelect(tone: string) {
-    if (ACHROMATIC_TONES.has(tone)) {
+    if (ACHROMATIC_TONES.has(tone) || /^Gy-/.test(tone)) {
       onchange({ hueNumber: null, toneSymbol: tone })
     } else {
       // 有彩色トーンを選択した場合、hueNumber が null なら最初のサジェスト色相を使う
@@ -69,6 +71,7 @@
           value={isAchromaticSelected ? null : selectedColor.hueNumber}
           suggestedHues={suggest.suggestedHues}
           {allowedHues}
+          selectedTone={selectedColor.toneSymbol}
           onselect={onHueSelect}
         />
       </div>
@@ -79,6 +82,7 @@
       <div class="tone-wrapper">
         <ToneSelector
           value={selectedColor.toneSymbol}
+          selectedHue={isAchromaticSelected ? null : selectedColor.hueNumber}
           suggestedTones={suggest.suggestedTones}
           {allowedTones}
           onselect={onToneSelect}

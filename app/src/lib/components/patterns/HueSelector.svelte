@@ -1,21 +1,27 @@
 <script lang="ts">
+  import { lookupPCCSColor, isAchromaticTone } from "$lib/patterns/lookup"
+
   let {
     value,
     suggestedHues,
     allowedHues,
+    selectedTone,
     onselect
   }: {
     value: number | null
     suggestedHues: number[]
     allowedHues: number[]
+    selectedTone: string
     onselect: (hue: number) => void
   } = $props()
 
-  const CX = 160
-  const CY = 160
+  const CX = 170
+  const CY = 170
   const R = 110
   const R_INNER = 28
-  const R_LABEL = 135
+  const R_LABEL = 122
+  const R_SWATCH = 146
+  const SWATCH_R = 10
   const ROTATION_OFFSET = -202.5
 
   const HUE_COLORS: Record<number, string> = {
@@ -43,33 +49,6 @@
     22: "#56007D",
     23: "#770071",
     24: "#AF0065"
-  }
-
-  const HUE_NAMES: Record<number, string> = {
-    1: "pR",
-    2: "R",
-    3: "yR",
-    4: "rO",
-    5: "O",
-    6: "yO",
-    7: "rY",
-    8: "Y",
-    9: "gY",
-    10: "YG",
-    11: "yG",
-    12: "G",
-    13: "bG",
-    14: "BG",
-    15: "GB",
-    16: "gB",
-    17: "B",
-    18: "B",
-    19: "pB",
-    20: "V",
-    21: "bP",
-    22: "P",
-    23: "rP",
-    24: "RP"
   }
 
   function toRad(deg: number) {
@@ -106,14 +85,50 @@
   const suggestedSet = $derived(new Set(suggestedHues))
   const allowedSet = $derived(new Set(allowedHues))
 
-  // value === null のとき（無彩色選択中）はハイライトなし
-  const isAchromaticSelected = $derived(value === null)
+  // 無彩色トーンが選択されているか
+  const isAchromaticSelected = $derived(isAchromaticTone(selectedTone))
 
-  function getOpacity(h: number): number {
+  // 各色相のトーン連動色
+  // 無彩色トーン選択時はデフォルト（HUE_COLORS）で表示
+  function getHueColor(h: number): string {
+    if (isAchromaticSelected) return HUE_COLORS[h]
+    return lookupPCCSColor(h, selectedTone)?.hex ?? HUE_COLORS[h]
+  }
+
+  // スウォッチの色（無彩色選択時は全スウォッチ同じグレイ）
+  const achromaticHex = $derived(
+    isAchromaticSelected ? (lookupPCCSColor(null, selectedTone)?.hex ?? "#aaaaaa") : null
+  )
+
+  function getSwatchColor(h: number): string {
+    return achromaticHex ?? getHueColor(h)
+  }
+
+  // 扇形に塗りつぶしを適用するか
+  // 無彩色選択時：全扇形をデフォルト（HUE_COLORS）で表示
+  // 有彩色選択時：サジェスト扇形のみ塗りつぶし
+  function hasSectorFill(h: number): boolean {
+    if (isAchromaticSelected) return true
+    return suggestedSet.has(h)
+  }
+
+  function getSectorFill(h: number): string {
+    if (isAchromaticSelected) return HUE_COLORS[h]
+    return getHueColor(h)
+  }
+
+  function getSectorOpacity(h: number): number {
     if (isAchromaticSelected) return 1
     if (suggestedSet.has(h)) return 1
-    if (allowedSet.has(h)) return 0.6
-    return 0.25
+    if (allowedSet.has(h)) return 0.5
+    return 0.2
+  }
+
+  function getSwatchOpacity(h: number): number {
+    if (isAchromaticSelected) return 1
+    if (suggestedSet.has(h)) return 1
+    if (allowedSet.has(h)) return 0.55
+    return 0.2
   }
 
   function isSelected(h: number): boolean {
@@ -123,26 +138,43 @@
   const HUES = Array.from({ length: 24 }, (_, i) => i + 1)
 </script>
 
-<svg viewBox="0 0 320 320" role="group" aria-label="色相選択" style="width: 100%; cursor: pointer;">
-  <!-- Sectors -->
+<svg viewBox="0 0 340 340" role="group" aria-label="色相選択" style="width: 100%; cursor: pointer;">
+  <!-- 扇形（サジェストのみ塗りつぶし、その他は区切り線のみ） -->
   {#each HUES as h (h)}
-    <path
-      d={sectorPath(h)}
-      fill={HUE_COLORS[h]}
-      stroke="white"
-      stroke-width="0.5"
-      opacity={getOpacity(h)}
-      role="button"
-      aria-label="{h}:{HUE_NAMES[h]}"
-      aria-pressed={isSelected(h)}
-      tabindex="0"
-      style="cursor: pointer;"
-      onclick={() => onselect(h)}
-      onkeydown={(e) => e.key === "Enter" && onselect(h)}
-    />
+    {#if hasSectorFill(h)}
+      <path
+        d={sectorPath(h)}
+        fill={getSectorFill(h)}
+        stroke="white"
+        stroke-width="0.5"
+        opacity={getSectorOpacity(h)}
+        role="button"
+        aria-label="色相{h}"
+        aria-pressed={isSelected(h)}
+        tabindex="0"
+        style="cursor: pointer;"
+        onclick={() => onselect(h)}
+        onkeydown={(e) => e.key === "Enter" && onselect(h)}
+      />
+    {:else}
+      <!-- 塗りなし：区切り線のみ -->
+      <path
+        d={sectorPath(h)}
+        fill="transparent"
+        stroke="white"
+        stroke-width="0.5"
+        opacity={getSectorOpacity(h)}
+        role="button"
+        aria-label="色相{h}"
+        tabindex="0"
+        style="cursor: pointer;"
+        onclick={() => onselect(h)}
+        onkeydown={(e) => e.key === "Enter" && onselect(h)}
+      />
+    {/if}
   {/each}
 
-  <!-- Selected border -->
+  <!-- 選択中扇形の強調枠 -->
   {#each HUES as h (h)}
     {#if isSelected(h)}
       <path
@@ -162,27 +194,61 @@
     {/if}
   {/each}
 
+  <!-- 中心の白い円 -->
   <circle cx={CX} cy={CY} r={R_INNER + 1} fill="white" style="pointer-events: none;" />
 
-  <!-- Labels (suggested hues + even hues) -->
+  <!-- 色相番号ラベル（全24色相） -->
   {#each HUES as h (h)}
-    {@const isSuggested = !isAchromaticSelected && suggestedSet.has(h)}
-    {#if isSuggested || h % 2 === 0}
-      {@const pos = polar(R_LABEL, sectorMidDeg(h))}
-      <text
-        x={pos.x.toFixed(3)}
-        y={pos.y.toFixed(3)}
-        text-anchor="middle"
-        dominant-baseline="central"
-        font-family="var(--font-mono)"
-        font-size={isSuggested ? 13 : 11}
-        font-weight={isSuggested ? "bold" : "normal"}
-        fill={isSuggested ? HUE_COLORS[h] : "#555"}
-        opacity={getOpacity(h)}
-        style="pointer-events: none; user-select: none;"
-      >
-        {h}
-      </text>
+    {@const pos = polar(R_LABEL, sectorMidDeg(h))}
+    {@const suggested = !isAchromaticSelected && suggestedSet.has(h)}
+    <text
+      x={pos.x.toFixed(3)}
+      y={pos.y.toFixed(3)}
+      text-anchor="middle"
+      dominant-baseline="central"
+      font-family="var(--font-mono)"
+      font-size={suggested ? 11 : 9}
+      font-weight={suggested ? "bold" : "normal"}
+      fill={suggested ? getHueColor(h) : "#666"}
+      opacity={getSectorOpacity(h)}
+      style="pointer-events: none; user-select: none;"
+    >
+      {h}
+    </text>
+  {/each}
+
+  <!-- 円形色スウォッチ（円周外）：クリックで色相選択 -->
+  {#each HUES as h (h)}
+    {@const pos = polar(R_SWATCH, sectorMidDeg(h))}
+    {@const selected = isSelected(h)}
+    {@const swatchColor = getSwatchColor(h)}
+    <circle
+      cx={pos.x.toFixed(3)}
+      cy={pos.y.toFixed(3)}
+      r={SWATCH_R}
+      fill={swatchColor}
+      stroke={selected ? "#333" : "rgba(0,0,0,0.15)"}
+      stroke-width={selected ? 2.5 : 1}
+      opacity={getSwatchOpacity(h)}
+      role="button"
+      aria-label="色相{h}を選択"
+      aria-pressed={selected}
+      tabindex="0"
+      style="cursor: pointer;"
+      onclick={() => onselect(h)}
+      onkeydown={(e) => e.key === "Enter" && onselect(h)}
+    />
+    {#if selected}
+      <!-- 選択中スウォッチの外枠 -->
+      <circle
+        cx={pos.x.toFixed(3)}
+        cy={pos.y.toFixed(3)}
+        r={SWATCH_R + 3}
+        fill="none"
+        stroke={HUE_COLORS[h]}
+        stroke-width="1.5"
+        style="pointer-events: none;"
+      />
     {/if}
   {/each}
 </svg>

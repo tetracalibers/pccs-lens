@@ -1,5 +1,6 @@
 import type { SuggestInput, SuggestOutput, SelectedColor, ThemeDef } from "./types"
 import { getThemeOrThrow } from "./themes"
+import { isAchromaticTone } from "./lookup"
 
 // ===== ユーティリティ =====
 
@@ -24,10 +25,8 @@ function getOneStepMoreChromatic(tone: string): string | null {
   return ONE_STEP_MORE_CHROMATIC[tone] ?? null
 }
 
-const ACHROMATIC_TONES = new Set(["W", "ltGy", "mGy", "dkGy", "Bk"])
-
 function isAchromatic(color: SelectedColor): boolean {
-  return color.hueNumber === null || ACHROMATIC_TONES.has(color.toneSymbol)
+  return color.hueNumber === null || isAchromaticTone(color.toneSymbol)
 }
 
 function fallback(theme: ThemeDef): SuggestOutput {

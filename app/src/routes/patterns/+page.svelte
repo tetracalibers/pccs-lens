@@ -4,21 +4,33 @@
   import { computeSuggest } from "$lib/patterns/suggest"
   import { pickRandomSuggest, lookupPCCSColor } from "$lib/patterns/lookup"
 
-  // 各テーマのベースカラー初期サジェストから代表色を1色取得する（カードのアクセント用）
-  function getRepresentativeHex(themeId: string): string {
+  // 各テーマのベース・アソートカラーをサジェストからランダム選択
+  function getCheckerboardColors(themeId: string): { base: string; assort: string } {
     const theme = THEMES.find((t) => t.id === themeId)
-    if (!theme) return "#cccccc"
-    const suggest = computeSuggest({ theme: theme.id, role: "base" })
-    const picked = pickRandomSuggest(suggest)
-    if (!picked) return "#cccccc"
-    const color = lookupPCCSColor(picked.hueNumber, picked.toneSymbol)
-    return color?.hex ?? "#cccccc"
+    if (!theme) return { base: "#cccccc", assort: "#aaaaaa" }
+
+    const baseSuggest = computeSuggest({ theme: theme.id, role: "base" })
+    const basePicked = pickRandomSuggest(baseSuggest)
+    const baseHex = basePicked
+      ? (lookupPCCSColor(basePicked.hueNumber, basePicked.toneSymbol)?.hex ?? "#cccccc")
+      : "#cccccc"
+
+    const assortSuggest = computeSuggest({
+      theme: theme.id,
+      role: "assort",
+      baseColor: basePicked ?? undefined
+    })
+    const assortPicked = pickRandomSuggest(assortSuggest)
+    const assortHex = assortPicked
+      ? (lookupPCCSColor(assortPicked.hueNumber, assortPicked.toneSymbol)?.hex ?? "#aaaaaa")
+      : "#aaaaaa"
+
+    return { base: baseHex, assort: assortHex }
   }
 
-  // SSR非対応（CSR完結）なので onMount 等は不要。$derived でリアクティブに取得。
-  const themeColors = THEMES.map((t) => ({
+  const themeCards = THEMES.map((t) => ({
     theme: t,
-    hex: getRepresentativeHex(t.id)
+    colors: getCheckerboardColors(t.id)
   }))
 </script>
 
@@ -35,9 +47,14 @@
   </div>
 
   <div class="grid">
-    {#each themeColors as { theme, hex } (theme.id)}
+    {#each themeCards as { theme, colors } (theme.id)}
       <a href={resolve(`/patterns/${theme.id}`)} class="card">
-        <div class="card-accent" style="background-color: {hex};"></div>
+        <div class="card-checker">
+          <span class="checker-cell" style="background-color: {colors.base};"></span>
+          <span class="checker-cell" style="background-color: {colors.assort};"></span>
+          <span class="checker-cell" style="background-color: {colors.assort};"></span>
+          <span class="checker-cell" style="background-color: {colors.base};"></span>
+        </div>
         <div class="card-body">
           <div class="card-title">
             <span class="label-ja">{theme.labelJa}</span>
@@ -75,13 +92,13 @@
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 1rem;
   }
 
   .card {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     text-decoration: none;
     color: inherit;
     border: 1px solid var(--color-border, #ddd);
@@ -97,22 +114,32 @@
     transform: translateY(-2px);
   }
 
-  .card-accent {
-    height: 6px;
+  .card-checker {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
     flex-shrink: 0;
+    width: 72px;
+    min-height: 72px;
+  }
+
+  .checker-cell {
+    display: block;
   }
 
   .card-body {
-    padding: 0.85rem 1rem 1rem;
+    padding: 0.75rem 0.85rem 0.85rem;
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: 0.3rem;
+    justify-content: center;
   }
 
   .card-title {
     display: flex;
     align-items: baseline;
     gap: 0.4rem;
+    flex-wrap: wrap;
   }
 
   .label-ja {
@@ -127,7 +154,7 @@
   }
 
   .card-desc {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     color: var(--color-text-secondary, #666);
     margin: 0;
     line-height: 1.5;
