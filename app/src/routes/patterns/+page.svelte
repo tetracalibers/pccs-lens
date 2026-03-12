@@ -41,9 +41,7 @@
 <main>
   <div class="header">
     <h1>配色シミュレータ</h1>
-    <p class="subtitle">
-      イメージ（テーマ）を選んで、配色ルールに沿った色の組み合わせを試してみましょう。
-    </p>
+    <p class="subtitle">イメージを選んで、配色ルールに沿った色の組み合わせを試してみよう</p>
   </div>
 
   <div class="grid">
