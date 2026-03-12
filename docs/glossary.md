@@ -90,6 +90,20 @@
 
 ## 3. アプリケーション用語
 
+### F3：イメージ別配色シミュレータ
+
+| 日本語 | 英語（コード上の命名） | 定義 |
+|---|---|---|
+| テーマ | theme | イメージ別配色シミュレータにおける配色の雰囲気・方向性の区分（例：`elegant`, `casual`）。10種類定義済み（詳細は `image-based-color-rules.md §2`） |
+| ベースカラー | baseColor | 配色の主体となる色。面積比率の最大を占める（通常70%相当） |
+| アソートカラー | assortColor | ベースカラーに対する第2の色。面積比率は25%相当 |
+| アクセントカラー | accentColor | 配色に変化・強調を与える第3の色。任意追加で面積比率は5%相当 |
+| サジェスト | suggest | テーマのルールに基づき、推奨する色相・トーンを視覚的に示すガイド機能。選択の制限ではなくハイライト表示 |
+| バウハウス・パターン | bauhausPattern | 幾何パターンのうちバウハウスデザインを模したSVG画像（`proto/geo-pattern-generator/src/bauhaus.ts` 準拠） |
+| ジオメトリック・パターン | geometricPattern | 幾何パターンのうちジオメトリックデザインを模したSVG画像（`proto/geo-pattern-generator/src/geometric.ts` 準拠） |
+
+### F1/F2 共通
+
 | 日本語 | 英語（コード上の命名） | 定義 |
 |---|---|---|
 | 入力色 | colorEntry | ユーザーが機能2に入力した1色分のデータ |
@@ -112,15 +126,19 @@
 |---|---|---|
 | 色相環 | HueWheel | PCCS 24色相を円形に配置したSVG図（VisualizationSection内・read-only） |
 | トーン概念図 | ToneDiagram | PCCSトーンをグリッド状に配置したSVG図（VisualizationSection内・read-only） |
+| 色相選択UI | HueWheelInput | F3のテーマ別シミュレーターで色相をインタラクティブに選択するコンポーネント。サジェストハイライトと選択状態を持つ |
+| トーン選択UI | ToneDiagramInput | F3のテーマ別シミュレーターでトーンをインタラクティブに選択するコンポーネント。サジェストハイライトと選択状態を持つ |
 | 小型色相環 | MiniHueWheel | AdjustmentSectionの個別調整内に配置する小型のPCCS色相環SVG。セクターをクリックして色相を選択する |
 | 代替候補エリア | AlternateCandidates | ApproximationSectionの各色入力UIに表示するPCCS代替候補スウォッチ×2のエリア |
-| 配色プレビュー | ColorSchemePreview | VisualizationSectionの「入力色」「PCCS近似色」2行の色スウォッチ列 |
+| 配色プレビュー | ColorSchemePreview | VisualizationSectionの「入力色」「PCCS近似色」2行の色スウォッチ列（F2）、またはF3の面積比率に応じた色スウォッチ列 |
 | 履歴サイドバー | HistorySidebar | 全セクションの左に設置する開閉可能な配色履歴の一覧パネル |
 | 分析カード | AnalysisCard | AnalysisSectionの配色特徴・技法をカードUIとして表示するコンポーネント（タイトル・解説・カテゴリタグ） |
 | 色スウォッチ | colorSwatch | 色を視覚的に示す正方形の色見本 |
 | カラーピッカー | ColorPicker | 色を選択するUI（`input[type=color]`＋HEX入力欄） |
 | 近似ページ | ApproximatePage | 機能1のページ（`/approximate`） |
 | 分析ページ | AnalyzePage | 機能2のページ（`/analyze`） |
+| 配色パターン一覧ページ | PatternsPage | 機能3のテーマ一覧ページ（`/patterns`） |
+| テーマ別シミュレーターページ | PatternSimulatorPage | 機能3の各テーマページ（`/patterns/[theme]`） |
 
 ---
 
