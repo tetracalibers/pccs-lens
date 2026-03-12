@@ -30,6 +30,13 @@ export type SuggestOutput = {
   suggestedTones: string[] // 推奨トーン記号（有彩色・無彩色バケット混在可）
 }
 
+export type BaseRule = () => SuggestOutput
+export type AssortRule = (base: SelectedColor | undefined) => SuggestOutput
+export type AccentRule = (
+  base: SelectedColor | undefined,
+  assort: SelectedColor | undefined
+) => SuggestOutput
+
 export type ThemeDef = {
   id: ThemeId
   labelJa: string
@@ -40,4 +47,9 @@ export type ThemeDef = {
   allowedTones: string[]
   isDynamic: boolean
   roleDescriptions: Record<ColorRole, string>
+  rules: {
+    base: BaseRule
+    assort: AssortRule
+    accent: AccentRule
+  }
 }
