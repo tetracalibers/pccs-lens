@@ -70,6 +70,7 @@
         <HueSelector
           value={isAchromaticSelected ? null : selectedColor.hueNumber}
           suggestedHues={suggest.suggestedHues}
+          allowedHues={allowedHues}
           selectedTone={selectedColor.toneSymbol}
           onselect={onHueSelect}
         />

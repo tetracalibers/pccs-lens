@@ -4,11 +4,13 @@
   let {
     value,
     suggestedHues,
+    allowedHues,
     selectedTone,
     onselect
   }: {
     value: number | null
     suggestedHues: number[]
+    allowedHues: number[]
     selectedTone: string
     onselect: (hue: number) => void
   } = $props()
@@ -81,6 +83,7 @@
   }
 
   const suggestedSet = $derived(new Set(suggestedHues))
+  const allowedSet = $derived(new Set(allowedHues))
 
   // 無彩色トーンが選択されているか
   const isAchromaticSelected = $derived(isAchromaticTone(selectedTone))
@@ -92,13 +95,8 @@
     return lookupPCCSColor(h, selectedTone)?.hex ?? HUE_COLORS[h]
   }
 
-  // スウォッチの色（無彩色選択時は全スウォッチ同じグレイ）
-  const achromaticHex = $derived(
-    isAchromaticSelected ? (lookupPCCSColor(null, selectedTone)?.hex ?? "#aaaaaa") : null
-  )
-
   function getSwatchColor(h: number): string {
-    return achromaticHex ?? getHueColor(h)
+    return getHueColor(h)
   }
 
   function getSectorFill(h: number): string {
@@ -107,13 +105,13 @@
   }
 
   function getSectorOpacity(h: number): number {
-    if (isAchromaticSelected) return 1
+    if (isAchromaticSelected) return allowedSet.has(h) ? 1 : 0.2
     if (suggestedSet.has(h)) return 1
     return 0.2
   }
 
   function getSwatchOpacity(h: number): number {
-    if (isAchromaticSelected) return 1
+    if (isAchromaticSelected) return allowedSet.has(h) ? 1 : 0.2
     if (suggestedSet.has(h)) return 1
     return 0.2
   }
@@ -180,7 +178,7 @@
   <!-- 色相番号ラベル（全24色相） -->
   {#each HUES as h (h)}
     {@const pos = polar(R_LABEL, sectorMidDeg(h))}
-    {@const suggested = !isAchromaticSelected && suggestedSet.has(h)}
+    {@const suggested = isAchromaticSelected ? allowedSet.has(h) : suggestedSet.has(h)}
     <text
       x={pos.x.toFixed(3)}
       y={pos.y.toFixed(3)}
