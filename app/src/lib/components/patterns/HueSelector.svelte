@@ -123,7 +123,7 @@
   const HUES = Array.from({ length: 24 }, (_, i) => i + 1)
 </script>
 
-<svg viewBox="0 0 320 320" role="group" aria-label="色相選択" style="cursor: pointer;">
+<svg viewBox="0 0 320 320" role="group" aria-label="色相選択" style="width: 100%; cursor: pointer;">
   <!-- Sectors -->
   {#each HUES as h (h)}
     <path

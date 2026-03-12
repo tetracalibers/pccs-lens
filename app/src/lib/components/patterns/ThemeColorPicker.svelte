@@ -123,6 +123,8 @@
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
+    flex: 1;
+    min-width: 200px;
   }
 
   .selector-title {
@@ -133,12 +135,8 @@
     text-transform: uppercase;
   }
 
-  .hue-wrapper {
-    width: 160px;
-  }
-
-  .tone-wrapper {
-    /* ToneSelector の SVG サイズに合わせて幅を抑える */
-    max-width: 220px;
+  .selectors :global(svg) {
+    width: 100%;
+    max-width: 320px;
   }
 </style>

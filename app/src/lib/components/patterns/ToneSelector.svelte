@@ -122,7 +122,7 @@
   viewBox="0 0 {SVG_W} {SVG_H}"
   role="group"
   aria-label="トーン選択"
-  style="cursor: pointer; overflow: visible;"
+  style="width: 100%; cursor: pointer; overflow: visible;"
 >
   {#each CELLS as cell (cell.key)}
     {@const opacity = getOpacity(cell.key)}
