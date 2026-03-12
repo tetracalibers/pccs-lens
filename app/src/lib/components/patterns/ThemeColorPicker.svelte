@@ -70,7 +70,7 @@
         <HueSelector
           value={isAchromaticSelected ? null : selectedColor.hueNumber}
           suggestedHues={suggest.suggestedHues}
-          allowedHues={allowedHues}
+          {allowedHues}
           selectedTone={selectedColor.toneSymbol}
           onselect={onHueSelect}
         />
@@ -95,7 +95,7 @@
   .picker {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem;
   }
 
   .picker-header {
@@ -117,7 +117,7 @@
 
   .selectors {
     display: flex;
-    gap: 1.5rem;
+    column-gap: 1.5rem;
     align-items: flex-start;
     flex-wrap: wrap;
   }

@@ -268,7 +268,7 @@
   }
 
   .add-accent-row {
-    margin-top: 1.25rem;
+    margin-top: 1.75rem;
   }
 
   .add-accent {
