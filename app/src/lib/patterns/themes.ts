@@ -199,7 +199,10 @@ export const THEMES: ThemeDef[] = [
       assort: (base): SuggestOutput => {
         const hues = [20, 21, 22, 23, 24, 1, 2, 3, 8, 9, 10, 11, 12, 13, 14, 15, 16]
         if (!base)
-          return { suggestedHues: hues, suggestedTones: ["dkg", "dk", "ltg", "g", "Bk", "dkGy", "mGy"] }
+          return {
+            suggestedHues: hues,
+            suggestedTones: ["dkg", "dk", "ltg", "g", "Bk", "dkGy", "mGy"]
+          }
         const tones = isAchromatic(base) ? ["dkg", "dk", "ltg", "g"] : ["Bk", "dkGy", "mGy"]
         return { suggestedHues: hues, suggestedTones: tones }
       },
@@ -225,9 +228,18 @@ export const THEMES: ThemeDef[] = [
     },
     rules: {
       // 3色すべて同一条件
-      base: (): SuggestOutput => ({ suggestedHues: [2, 5, 8, 12, 18], suggestedTones: ["Bk", "b", "s", "v"] }),
-      assort: (): SuggestOutput => ({ suggestedHues: [2, 5, 8, 12, 18], suggestedTones: ["Bk", "b", "s", "v"] }),
-      accent: (): SuggestOutput => ({ suggestedHues: [2, 5, 8, 12, 18], suggestedTones: ["Bk", "b", "s", "v"] })
+      base: (): SuggestOutput => ({
+        suggestedHues: [2, 5, 8, 12, 18],
+        suggestedTones: ["Bk", "b", "s", "v"]
+      }),
+      assort: (): SuggestOutput => ({
+        suggestedHues: [2, 5, 8, 12, 18],
+        suggestedTones: ["Bk", "b", "s", "v"]
+      }),
+      accent: (): SuggestOutput => ({
+        suggestedHues: [2, 5, 8, 12, 18],
+        suggestedTones: ["Bk", "b", "s", "v"]
+      })
     }
   },
   {
@@ -322,7 +334,10 @@ export const THEMES: ThemeDef[] = [
       accent: (_base, assort): SuggestOutput => {
         const hues = [16, 17, 18]
         if (!assort)
-          return { suggestedHues: hues, suggestedTones: ["sf", "d", "b", "s", "dp", "v", "mGy", "dkGy", "Bk"] }
+          return {
+            suggestedHues: hues,
+            suggestedTones: ["sf", "d", "b", "s", "dp", "v", "mGy", "dkGy", "Bk"]
+          }
         if (isAchromatic(assort)) {
           return { suggestedHues: hues, suggestedTones: ["sf", "d", "b", "s", "dp", "v"] }
         } else {
@@ -359,7 +374,8 @@ export const THEMES: ThemeDef[] = [
         if (isAchromatic(base)) return { suggestedHues: hues, suggestedTones: ["p", "lt"] }
         // base が有彩色（p）→ 色相差 0〜3 の類似色
         const baseHue = base.hueNumber
-        const similarHues = baseHue !== null ? hues.filter((h) => hueDistance(h, baseHue) <= 3) : hues
+        const similarHues =
+          baseHue !== null ? hues.filter((h) => hueDistance(h, baseHue) <= 3) : hues
         const result = similarHues.length > 0 ? similarHues : hues
         return { suggestedHues: result, suggestedTones: ["p", "lt", "W", "ltGy"] }
       },
@@ -368,7 +384,8 @@ export const THEMES: ThemeDef[] = [
         if (!base) return { suggestedHues: hues, suggestedTones: ["p", "lt", "W", "ltGy"] }
         if (isAchromatic(base)) return { suggestedHues: hues, suggestedTones: ["p", "lt"] }
         const baseHue = base.hueNumber
-        const similarHues = baseHue !== null ? hues.filter((h) => hueDistance(h, baseHue) <= 3) : hues
+        const similarHues =
+          baseHue !== null ? hues.filter((h) => hueDistance(h, baseHue) <= 3) : hues
         const result = similarHues.length > 0 ? similarHues : hues
         return { suggestedHues: result, suggestedTones: ["p", "lt", "W", "ltGy"] }
       }
