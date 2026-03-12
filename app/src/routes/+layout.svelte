@@ -9,7 +9,7 @@
 <svelte:head>
   <link rel="icon" href={favicon} />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
   <link
     href="https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&family=SUSE+Mono:ital@0;1&family=Zen+Kaku+Gothic+Antique&display=swap"
     rel="stylesheet"
@@ -28,6 +28,11 @@
       <li>
         <a href={resolve("/analyze")} class:active={page.url.pathname.endsWith("/analyze")}>
           配色分析
+        </a>
+      </li>
+      <li>
+        <a href={resolve("/patterns")} class:active={page.url.pathname.includes("/patterns")}>
+          配色シミュレータ
         </a>
       </li>
     </ul>
