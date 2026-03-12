@@ -123,6 +123,8 @@
   }
 
   const HUES = Array.from({ length: 24 }, (_, i) => i + 1)
+
+  let focusedHue: number | null = $state(null)
 </script>
 
 <svg viewBox="0 0 340 340" role="group" aria-label="色相選択" style="width: 100%;">
@@ -138,9 +140,11 @@
       aria-label="色相{h}"
       aria-pressed={isSelected(h)}
       tabindex="0"
-      style="cursor: pointer;"
+      style="cursor: pointer; outline: none;"
       onclick={() => onselect(h)}
       onkeydown={(e) => e.key === "Enter" && onselect(h)}
+      onfocus={() => (focusedHue = h)}
+      onblur={() => (focusedHue = null)}
     />
   {/each}
 
@@ -161,6 +165,12 @@
         stroke-width="1.5"
         style="pointer-events: none;"
       />
+    {/if}
+    {#if focusedHue === h && !isSelected(h)}
+      <path d={sectorPath(h)} fill="none" stroke="white" stroke-width="2"
+        stroke-dasharray="3 2" style="pointer-events: none;" />
+      <path d={sectorPath(h)} fill="none" stroke="#3b82f6" stroke-width="1.5"
+        stroke-dasharray="3 2" style="pointer-events: none;" />
     {/if}
   {/each}
 
@@ -204,9 +214,11 @@
       aria-label="色相{h}を選択"
       aria-pressed={selected}
       tabindex="0"
-      style="cursor: pointer;"
+      style="cursor: pointer; outline: none;"
       onclick={() => onselect(h)}
       onkeydown={(e) => e.key === "Enter" && onselect(h)}
+      onfocus={() => (focusedHue = h)}
+      onblur={() => (focusedHue = null)}
     />
     {#if selected}
       <!-- 選択中スウォッチの外枠 -->
@@ -219,6 +231,12 @@
         stroke-width="1.5"
         style="pointer-events: none;"
       />
+    {/if}
+    {#if focusedHue === h && !selected}
+      <circle cx={pos.x.toFixed(3)} cy={pos.y.toFixed(3)} r={SWATCH_R + 3}
+        fill="none" stroke="white" stroke-width="2" style="pointer-events: none;" />
+      <circle cx={pos.x.toFixed(3)} cy={pos.y.toFixed(3)} r={SWATCH_R + 3}
+        fill="none" stroke="#3b82f6" stroke-width="1.5" style="pointer-events: none;" />
     {/if}
   {/each}
 </svg>

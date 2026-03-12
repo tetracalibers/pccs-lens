@@ -97,6 +97,9 @@
 
   const suggestedSet = $derived(new Set(suggestedTones))
 
+  let focusedKey: string | null = $state(null)
+  let focusedSubTone: string | null = $state(null)
+
   function getOpacity(key: string): number {
     if (isSelected(key)) return 1
     if (suggestedSet.has(key)) return 1
@@ -191,7 +194,9 @@
       aria-label={cell.label}
       aria-pressed={selected}
       tabindex="0"
-      style="cursor: pointer;"
+      style="cursor: pointer; outline: none;"
+      onfocus={() => (focusedKey = cell.key)}
+      onblur={() => (focusedKey = null)}
       onclick={(e) => {
         if (isGrayBucket) {
           e.stopPropagation()
@@ -261,6 +266,57 @@
         {/if}
       {/if}
 
+      <!-- フォーカスインジケータ -->
+      {#if focusedKey === cell.key && !selected}
+        {#if cell.shape === "circle"}
+          <circle
+            cx={cell.cx}
+            cy={cell.cy}
+            r={CIRCLE_R + 4}
+            fill="none"
+            stroke="white"
+            stroke-width="2"
+            stroke-dasharray="3 2"
+            style="pointer-events: none;"
+          />
+          <circle
+            cx={cell.cx}
+            cy={cell.cy}
+            r={CIRCLE_R + 4}
+            fill="none"
+            stroke="#3b82f6"
+            stroke-width="1.5"
+            stroke-dasharray="3 2"
+            style="pointer-events: none;"
+          />
+        {:else}
+          <rect
+            x={cell.cx - RECT_W / 2 - 4}
+            y={cell.cy - RECT_H / 2 - 4}
+            width={RECT_W + 8}
+            height={RECT_H + 8}
+            rx="5"
+            fill="none"
+            stroke="white"
+            stroke-width="2"
+            stroke-dasharray="3 2"
+            style="pointer-events: none;"
+          />
+          <rect
+            x={cell.cx - RECT_W / 2 - 4}
+            y={cell.cy - RECT_H / 2 - 4}
+            width={RECT_W + 8}
+            height={RECT_H + 8}
+            rx="5"
+            fill="none"
+            stroke="#3b82f6"
+            stroke-width="1.5"
+            stroke-dasharray="3 2"
+            style="pointer-events: none;"
+          />
+        {/if}
+      {/if}
+
       <!-- サジェストマーカー -->
       {#if suggested && !selected}
         <circle
@@ -323,7 +379,9 @@
             aria-label={subTone.notation}
             aria-pressed={isSubSelected}
             tabindex="0"
-            style="cursor: pointer;"
+            style="cursor: pointer; outline: none;"
+            onfocus={() => (focusedSubTone = subTone.notation)}
+            onblur={() => (focusedSubTone = null)}
             onclick={(e) => {
               e.stopPropagation()
               onselect(subTone.notation)
@@ -350,6 +408,32 @@
                 rx="4"
                 fill="none"
                 stroke="#333"
+                stroke-width="1.5"
+                stroke-dasharray="3 2"
+                style="pointer-events: none;"
+              />
+            {/if}
+            {#if focusedSubTone === subTone.notation && !isSubSelected}
+              <rect
+                x={tipX + TIP_PAD - 2}
+                y={itemY - 2}
+                width={TIP_ITEM_W + 4}
+                height={TIP_ITEM_H + 4}
+                rx="4"
+                fill="none"
+                stroke="white"
+                stroke-width="2"
+                stroke-dasharray="3 2"
+                style="pointer-events: none;"
+              />
+              <rect
+                x={tipX + TIP_PAD - 2}
+                y={itemY - 2}
+                width={TIP_ITEM_W + 4}
+                height={TIP_ITEM_H + 4}
+                rx="4"
+                fill="none"
+                stroke="#3b82f6"
                 stroke-width="1.5"
                 stroke-dasharray="3 2"
                 style="pointer-events: none;"
