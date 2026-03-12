@@ -153,7 +153,7 @@
         </div>
       {:else}
         <div class="add-accent-row">
-          <button class="add-accent" onclick={addAccent}>+ アクセントカラーを追加する</button>
+          <button class="add-accent" onclick={addAccent}>＋ アクセントカラーを追加する</button>
         </div>
       {/if}
     </div>
