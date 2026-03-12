@@ -6,13 +6,11 @@
     value,
     selectedHue,
     suggestedTones,
-    allowedTones,
     onselect
   }: {
     value: string
     selectedHue: number | null
     suggestedTones: string[]
-    allowedTones: string[]
     onselect: (tone: string) => void
   } = $props()
 
@@ -98,12 +96,10 @@
   const selectedParentKey = $derived(getGrayParentKey(value))
 
   const suggestedSet = $derived(new Set(suggestedTones))
-  const allowedSet = $derived(new Set(allowedTones))
 
   function getOpacity(key: string): number {
     if (isSelected(key)) return 1
     if (suggestedSet.has(key)) return 1
-    if (allowedSet.has(key)) return 0.55
     return 0.2
   }
 

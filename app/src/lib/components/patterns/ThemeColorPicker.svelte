@@ -70,7 +70,6 @@
         <HueSelector
           value={isAchromaticSelected ? null : selectedColor.hueNumber}
           suggestedHues={suggest.suggestedHues}
-          {allowedHues}
           selectedTone={selectedColor.toneSymbol}
           onselect={onHueSelect}
         />
@@ -84,7 +83,6 @@
           value={selectedColor.toneSymbol}
           selectedHue={isAchromaticSelected ? null : selectedColor.hueNumber}
           suggestedTones={suggest.suggestedTones}
-          {allowedTones}
           onselect={onToneSelect}
         />
       </div>

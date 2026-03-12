@@ -4,13 +4,11 @@
   let {
     value,
     suggestedHues,
-    allowedHues,
     selectedTone,
     onselect
   }: {
     value: number | null
     suggestedHues: number[]
-    allowedHues: number[]
     selectedTone: string
     onselect: (hue: number) => void
   } = $props()
@@ -83,7 +81,6 @@
   }
 
   const suggestedSet = $derived(new Set(suggestedHues))
-  const allowedSet = $derived(new Set(allowedHues))
 
   // 無彩色トーンが選択されているか
   const isAchromaticSelected = $derived(isAchromaticTone(selectedTone))
@@ -112,14 +109,12 @@
   function getSectorOpacity(h: number): number {
     if (isAchromaticSelected) return 1
     if (suggestedSet.has(h)) return 1
-    if (allowedSet.has(h)) return 0.5
     return 0.2
   }
 
   function getSwatchOpacity(h: number): number {
     if (isAchromaticSelected) return 1
     if (suggestedSet.has(h)) return 1
-    if (allowedSet.has(h)) return 0.55
     return 0.2
   }
 
