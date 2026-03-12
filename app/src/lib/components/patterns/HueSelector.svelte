@@ -138,7 +138,7 @@
   const HUES = Array.from({ length: 24 }, (_, i) => i + 1)
 </script>
 
-<svg viewBox="0 0 340 340" role="group" aria-label="色相選択" style="width: 100%; cursor: pointer;">
+<svg viewBox="0 0 340 340" role="group" aria-label="色相選択" style="width: 100%;">
   <!-- 扇形（サジェストのみ塗りつぶし、その他は区切り線のみ） -->
   {#each HUES as h (h)}
     {#if hasSectorFill(h)}
