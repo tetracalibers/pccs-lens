@@ -104,14 +104,6 @@
     return achromaticHex ?? getHueColor(h)
   }
 
-  // 扇形に塗りつぶしを適用するか
-  // 無彩色選択時：全扇形をデフォルト（HUE_COLORS）で表示
-  // 有彩色選択時：サジェスト扇形のみ塗りつぶし
-  function hasSectorFill(h: number): boolean {
-    if (isAchromaticSelected) return true
-    return suggestedSet.has(h)
-  }
-
   function getSectorFill(h: number): string {
     if (isAchromaticSelected) return HUE_COLORS[h]
     return getHueColor(h)
@@ -139,39 +131,22 @@
 </script>
 
 <svg viewBox="0 0 340 340" role="group" aria-label="色相選択" style="width: 100%;">
-  <!-- 扇形（サジェストのみ塗りつぶし、その他は区切り線のみ） -->
+  <!-- 扇形（全色相塗りつぶし、サジェスト外は不透明度を下げて薄く表示） -->
   {#each HUES as h (h)}
-    {#if hasSectorFill(h)}
-      <path
-        d={sectorPath(h)}
-        fill={getSectorFill(h)}
-        stroke="white"
-        stroke-width="0.5"
-        opacity={getSectorOpacity(h)}
-        role="button"
-        aria-label="色相{h}"
-        aria-pressed={isSelected(h)}
-        tabindex="0"
-        style="cursor: pointer;"
-        onclick={() => onselect(h)}
-        onkeydown={(e) => e.key === "Enter" && onselect(h)}
-      />
-    {:else}
-      <!-- 塗りなし：区切り線のみ -->
-      <path
-        d={sectorPath(h)}
-        fill="transparent"
-        stroke="white"
-        stroke-width="0.5"
-        opacity={getSectorOpacity(h)}
-        role="button"
-        aria-label="色相{h}"
-        tabindex="0"
-        style="cursor: pointer;"
-        onclick={() => onselect(h)}
-        onkeydown={(e) => e.key === "Enter" && onselect(h)}
-      />
-    {/if}
+    <path
+      d={sectorPath(h)}
+      fill={getSectorFill(h)}
+      stroke="white"
+      stroke-width="0.5"
+      opacity={getSectorOpacity(h)}
+      role="button"
+      aria-label="色相{h}"
+      aria-pressed={isSelected(h)}
+      tabindex="0"
+      style="cursor: pointer;"
+      onclick={() => onselect(h)}
+      onkeydown={(e) => e.key === "Enter" && onselect(h)}
+    />
   {/each}
 
   <!-- 選択中扇形の強調枠 -->
