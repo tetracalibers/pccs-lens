@@ -51,7 +51,14 @@
         <span class="notation">{item.color.notation}</span>
         <div class="hex-row">
           <span class="hex">{item.color.hex}</span>
-          <CopyButton text={item.color.hex} />
+          <div class="hex-copy">
+            <CopyButton
+              text={item.color.hex}
+              color={light
+                ? `oklch(from ${item.color.hex} calc(l - .30) c h)`
+                : `oklch(from ${item.color.hex} calc(l + .30) c h)`}
+            />
+          </div>
         </div>
       </div>
     </div>

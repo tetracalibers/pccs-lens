@@ -1,9 +1,10 @@
 <script lang="ts">
   interface Props {
     text: string
+    color: string
   }
 
-  let { text }: Props = $props()
+  let { text, color }: Props = $props()
 
   let copied = $state(false)
 
@@ -16,7 +17,7 @@
   }
 </script>
 
-<span class="wrapper">
+<span class="wrapper" style={`--color-copybtn-base: ${color}`}>
   <button class="copy-btn" onclick={handleClick} aria-label="コードをコピー">
     {#if copied}
       <svg
@@ -70,10 +71,10 @@
     width: 1.75rem;
     height: 1.75rem;
     padding: 0;
-    border: 1px solid var(--color-border, #ddd);
+    border: 1px solid rgb(from var(--color-copybtn-base) r g b / 35%);
     border-radius: 0.25rem;
     background: transparent;
-    color: var(--color-text-secondary, #777);
+    color: var(--color-copybtn-base);
     cursor: pointer;
     transition:
       background 0.15s,
@@ -81,8 +82,8 @@
   }
 
   .copy-btn:hover {
-    background: var(--color-surface-hover, #f5f5f5);
-    color: var(--color-text, #333);
+    background: rgb(from var(--color-copybtn-base) r g b / 20%);
+    color: oklch(from currentColor calc(l * 0.75) c h);
   }
 
   .tooltip {

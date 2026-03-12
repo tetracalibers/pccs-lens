@@ -71,7 +71,7 @@
             ></span>
             <span class="notation">{result.color.notation}</span>
             <span class="hex-code">{result.color.hex}</span>
-            <CopyButton text={result.color.hex} />
+            <CopyButton text={result.color.hex} color="#777" />
           </li>
         {/each}
       </ul>
@@ -100,7 +100,7 @@
                 <span class="exam-level">{result.color.examLevel}級</span>
               {/if}
               <span class="hex-code">{result.color.hex}</span>
-              <CopyButton text={result.color.hex} />
+              <CopyButton text={result.color.hex} color="#777" />
             </div>
           </li>
         {/each}
