@@ -92,7 +92,7 @@
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1rem;
   }
 
@@ -107,6 +107,7 @@
     transition:
       box-shadow 0.15s,
       transform 0.15s;
+    min-height: 88px;
   }
 
   .card:hover {
@@ -119,8 +120,7 @@
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     flex-shrink: 0;
-    width: 72px;
-    min-height: 72px;
+    aspect-ratio: 1;
   }
 
   .checker-cell {
@@ -138,7 +138,8 @@
   .card-title {
     display: flex;
     align-items: baseline;
-    gap: 0.4rem;
+    column-gap: 0.6rem;
+    row-gap: 0.1rem;
     flex-wrap: wrap;
   }
 
