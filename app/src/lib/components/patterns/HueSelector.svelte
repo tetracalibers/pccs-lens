@@ -165,10 +165,22 @@
       />
     {/if}
     {#if focusedHue === h && !isSelected(h)}
-      <path d={sectorPath(h)} fill="none" stroke="white" stroke-width="2"
-        stroke-dasharray="3 2" style="pointer-events: none;" />
-      <path d={sectorPath(h)} fill="none" stroke="#3b82f6" stroke-width="1.5"
-        stroke-dasharray="3 2" style="pointer-events: none;" />
+      <path
+        d={sectorPath(h)}
+        fill="none"
+        stroke="white"
+        stroke-width="2"
+        stroke-dasharray="3 2"
+        style="pointer-events: none;"
+      />
+      <path
+        d={sectorPath(h)}
+        fill="none"
+        stroke="#3b82f6"
+        stroke-width="1.5"
+        stroke-dasharray="3 2"
+        style="pointer-events: none;"
+      />
     {/if}
   {/each}
 
@@ -231,10 +243,24 @@
       />
     {/if}
     {#if focusedHue === h && !selected}
-      <circle cx={pos.x.toFixed(3)} cy={pos.y.toFixed(3)} r={SWATCH_R + 3}
-        fill="none" stroke="white" stroke-width="2" style="pointer-events: none;" />
-      <circle cx={pos.x.toFixed(3)} cy={pos.y.toFixed(3)} r={SWATCH_R + 3}
-        fill="none" stroke="#3b82f6" stroke-width="1.5" style="pointer-events: none;" />
+      <circle
+        cx={pos.x.toFixed(3)}
+        cy={pos.y.toFixed(3)}
+        r={SWATCH_R + 3}
+        fill="none"
+        stroke="white"
+        stroke-width="2"
+        style="pointer-events: none;"
+      />
+      <circle
+        cx={pos.x.toFixed(3)}
+        cy={pos.y.toFixed(3)}
+        r={SWATCH_R + 3}
+        fill="none"
+        stroke="#3b82f6"
+        stroke-width="1.5"
+        style="pointer-events: none;"
+      />
     {/if}
   {/each}
 </svg>
