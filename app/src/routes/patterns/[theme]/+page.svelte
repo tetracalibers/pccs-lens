@@ -22,6 +22,7 @@
   }
 
   // ===== 初期値の設定（サジェスト内からランダム、data.theme で直接初期化） =====
+  // svelte-ignore state_referenced_locally
   const _t = data.theme
   const initBaseSuggest = computeSuggest({ theme: _t.id, role: "base" })
   const initBase = pickRandomSuggest(initBaseSuggest) ?? {
