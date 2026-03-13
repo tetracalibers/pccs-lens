@@ -116,6 +116,7 @@
     flex-shrink: 0;
     aspect-ratio: 1;
     min-width: 88px;
+    filter: contrast(1.1) saturate(1.1);
   }
 
   .checker-cell {
