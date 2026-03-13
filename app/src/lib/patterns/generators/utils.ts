@@ -1,7 +1,7 @@
 import { SVG, type Svg } from '@svgdotjs/svg.js'
 
 export function createCanvas(size: number): Svg {
-  return SVG().size(size, size)
+  return SVG().size(size, size).viewbox(0, 0, size, size)
 }
 
 export function rand(min: number, max: number): number {
