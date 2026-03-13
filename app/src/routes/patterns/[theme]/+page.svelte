@@ -71,7 +71,7 @@
   const geoColors = $derived<[string, string, string]>(
     showAccent && accentPCCS
       ? [basePCCS.hex, assortPCCS.hex, accentPCCS.hex]
-      : [basePCCS.hex, basePCCS.hex, assortPCCS.hex]
+      : [basePCCS.hex, assortPCCS.hex, assortPCCS.hex]
   )
 
   function addAccent() {
