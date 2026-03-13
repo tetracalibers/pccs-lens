@@ -63,7 +63,7 @@
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    justify-content: space-between;
+    justify-content: space-around;
   }
 
   .brand {

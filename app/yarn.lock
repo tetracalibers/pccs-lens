@@ -464,6 +464,11 @@
     obug "^2.1.0"
     vitefu "^1.1.1"
 
+"@svgdotjs/svg.js@^3.2.5":
+  version "3.2.5"
+  resolved "https://registry.yarnpkg.com/@svgdotjs/svg.js/-/svg.js-3.2.5.tgz#fbbc56728b2b565f3ae3e3713301ff82abbb45bd"
+  integrity sha512-/VNHWYhNu+BS7ktbYoVGrCmsXDh+chFMaONMwGNdIBcFHrWqk2jY8fNyr3DLdtQUIalvkPfM554ZSFa3dm3nxQ==
+
 "@testing-library/svelte-core@^1.0.0":
   version "1.0.0"
   resolved "https://registry.npmjs.org/@testing-library/svelte-core/-/svelte-core-1.0.0.tgz"
