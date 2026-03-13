@@ -75,7 +75,7 @@
   let tooltipGroupEl: HTMLElement | null = $state(null)
 
   // グレイバケットセルの <g> 要素への参照（フォーカス返却用）
-  let triggerEls: Record<string, SVGGElement | null> = {}
+  let triggerEls: Record<string, SVGGElement | null> = $state({})
 
   // ツールチップが開いたとき最初のボタンにフォーカス
   $effect(() => {
