@@ -71,6 +71,14 @@
     geometricLoading = false
   }
 
+  // ===== 表示用 data URI =====
+  const bauhausSrc = $derived(
+    bauhausSvg ? `data:image/svg+xml;charset=utf-8,${encodeURIComponent(bauhausSvg)}` : ''
+  )
+  const geometricSrc = $derived(
+    geometricSvg ? `data:image/svg+xml;charset=utf-8,${encodeURIComponent(geometricSvg)}` : ''
+  )
+
   // ===== PNG 保存 =====
   async function downloadPng(svgString: string, filename: string) {
     const blob = new Blob([svgString], { type: 'image/svg+xml' })
@@ -113,7 +121,9 @@
           </div>
         {/if}
         <div class="svg-wrapper">
-          {@html bauhausSvg}
+          {#if bauhausSrc}
+            <img src={bauhausSrc} alt="バウハウスパターン" />
+          {/if}
         </div>
       </div>
       <div class="pattern-actions">
@@ -144,7 +154,9 @@
           </div>
         {/if}
         <div class="svg-wrapper">
-          {@html geometricSvg}
+          {#if geometricSrc}
+            <img src={geometricSrc} alt="ジオメトリックパターン" />
+          {/if}
         </div>
       </div>
       <div class="pattern-actions">
@@ -224,7 +236,7 @@
     height: 100%;
   }
 
-  .svg-wrapper :global(svg) {
+  .svg-wrapper img {
     display: block;
     width: 100%;
     height: 100%;
