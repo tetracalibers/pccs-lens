@@ -20,7 +20,7 @@
     </a>
     <a href={resolve("/patterns")} class="feature-card">
       <span class="feature-title">配色シミュレータ</span>
-      <span class="feature-desc">配色イメージごとに色の組み合わせを実験する</span>
+      <span class="feature-desc">イメージごとに色の組み合わせを実験する</span>
     </a>
   </nav>
 </main>
