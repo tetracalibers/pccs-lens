@@ -1,4 +1,4 @@
-import { createCanvas, pick } from './utils.js'
+import { createCanvas, pick } from "./utils.js"
 
 const SIZE = 300
 const GRID = 10
@@ -16,7 +16,7 @@ export function generateGeometric(colors: [string, string, string]): string {
   const colorPool = [
     ...Array<string>(5).fill(c0), // 約 50%
     ...Array<string>(3).fill(c1), // 約 30%
-    ...Array<string>(2).fill(c2), // 約 20%
+    ...Array<string>(2).fill(c2) // 約 20%
   ]
 
   const canvas = createCanvas(SIZE)

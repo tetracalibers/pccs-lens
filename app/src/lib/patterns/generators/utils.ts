@@ -1,4 +1,4 @@
-import { SVG, type Svg } from '@svgdotjs/svg.js'
+import { SVG, type Svg } from "@svgdotjs/svg.js"
 
 export function createCanvas(size: number): Svg {
   return SVG().size(size, size).viewbox(0, 0, size, size)
@@ -19,7 +19,7 @@ export function pick<T>(arr: readonly T[]): T {
 export function updateSvgColors(
   svg: string,
   oldColors: [string, string, string],
-  newColors: [string, string, string],
+  newColors: [string, string, string]
 ): string {
   const map = new Map(oldColors.map((c, i) => [c.toLowerCase(), newColors[i].toLowerCase()]))
   return svg.replace(/#[0-9a-f]{6}/gi, (m) => map.get(m.toLowerCase()) ?? m)

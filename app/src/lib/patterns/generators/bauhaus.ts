@@ -1,5 +1,5 @@
-import { type Svg } from '@svgdotjs/svg.js'
-import { createCanvas, rand, pick } from './utils.js'
+import { type Svg } from "@svgdotjs/svg.js"
+import { createCanvas, rand, pick } from "./utils.js"
 
 const SIZE = 300
 const COLS = 6
@@ -8,24 +8,24 @@ const CELL = SIZE / COLS // 50px
 
 type Rotation = 0 | 90 | 180 | 270
 type ShapeType =
-  | 'rect'
-  | 'half-rect'
-  | 'circle'
-  | 'semicircle'
-  | 'quarter-circle'
-  | 'hline'
-  | 'vline'
+  | "rect"
+  | "half-rect"
+  | "circle"
+  | "semicircle"
+  | "quarter-circle"
+  | "hline"
+  | "vline"
 
 const ALL_SHAPES: ShapeType[] = [
-  'rect',
-  'half-rect',
-  'circle',
-  'semicircle',
-  'quarter-circle',
-  'hline',
-  'vline',
+  "rect",
+  "half-rect",
+  "circle",
+  "semicircle",
+  "quarter-circle",
+  "hline",
+  "vline"
 ]
-const LARGE_SHAPES: ShapeType[] = ['rect', 'circle', 'semicircle', 'quarter-circle']
+const LARGE_SHAPES: ShapeType[] = ["rect", "circle", "semicircle", "quarter-circle"]
 const ROTATIONS: Rotation[] = [0, 90, 180, 270]
 
 function drawShape(
@@ -36,7 +36,7 @@ function drawShape(
   h: number,
   color: string,
   shape: ShapeType,
-  rotation: Rotation,
+  rotation: Rotation
 ): void {
   const cx = x + w / 2
   const cy = y + h / 2
@@ -52,36 +52,44 @@ function drawShape(
   }
 
   switch (shape) {
-    case 'rect':
+    case "rect":
       g.rect(w, h).move(x, y).fill(color)
       break
 
-    case 'half-rect':
-      g.rect(w, h / 2).move(x, y).fill(color)
+    case "half-rect":
+      g.rect(w, h / 2)
+        .move(x, y)
+        .fill(color)
       break
 
-    case 'circle':
-      g.circle(r * 2).move(cx - r, cy - r).fill(color)
+    case "circle":
+      g.circle(r * 2)
+        .move(cx - r, cy - r)
+        .fill(color)
       break
 
-    case 'semicircle': {
+    case "semicircle": {
       const d = `M ${cx - r},${cy} A ${r},${r} 0 0,0 ${cx + r},${cy} Z`
       g.path(d).fill(color)
       break
     }
 
-    case 'quarter-circle': {
+    case "quarter-circle": {
       const d = `M ${x + w},${y} A ${w},${h} 0 0,0 ${x},${y + h} L ${x},${y} Z`
       g.path(d).fill(color)
       break
     }
 
-    case 'hline':
-      g.rect(w, h * 0.25).move(x, cy - h * 0.125).fill(color)
+    case "hline":
+      g.rect(w, h * 0.25)
+        .move(x, cy - h * 0.125)
+        .fill(color)
       break
 
-    case 'vline':
-      g.rect(w * 0.25, h).move(cx - w * 0.125, y).fill(color)
+    case "vline":
+      g.rect(w * 0.25, h)
+        .move(cx - w * 0.125, y)
+        .fill(color)
       break
   }
 }
@@ -106,12 +114,7 @@ export function generateBauhaus(colors: [string, string, string]): string {
   for (let attempt = 0; attempt < 50 && merged < mergeCount; attempt++) {
     const row = rand(0, ROWS - 2)
     const col = rand(0, COLS - 2)
-    const keys = [
-      key(row, col),
-      key(row, col + 1),
-      key(row + 1, col),
-      key(row + 1, col + 1),
-    ]
+    const keys = [key(row, col), key(row, col + 1), key(row + 1, col), key(row + 1, col + 1)]
     if (keys.every((k) => !occupied.has(k))) {
       keys.forEach((k) => occupied.add(k))
       const color = Math.random() < 0.6 ? c1 : c2
@@ -123,7 +126,7 @@ export function generateBauhaus(colors: [string, string, string]): string {
         CELL * 2,
         color,
         pick(LARGE_SHAPES),
-        pick(ROTATIONS),
+        pick(ROTATIONS)
       )
       merged++
     }
@@ -143,7 +146,7 @@ export function generateBauhaus(colors: [string, string, string]): string {
         CELL,
         color,
         pick(ALL_SHAPES),
-        pick(ROTATIONS),
+        pick(ROTATIONS)
       )
     }
   }

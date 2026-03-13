@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { browser } from '$app/environment'
-  import { tick } from 'svelte'
-  import { generateBauhaus } from '$lib/patterns/generators/bauhaus.js'
-  import { generateGeometric } from '$lib/patterns/generators/geometric.js'
-  import { updateSvgColors } from '$lib/patterns/generators/utils.js'
+  import { browser } from "$app/environment"
+  import { tick } from "svelte"
+  import { generateBauhaus } from "$lib/patterns/generators/bauhaus.js"
+  import { generateGeometric } from "$lib/patterns/generators/geometric.js"
+  import { updateSvgColors } from "$lib/patterns/generators/utils.js"
 
   interface Props {
     colors: [string, string, string]
@@ -14,16 +14,16 @@
   let { colors, themeId, accentActive }: Props = $props()
 
   // ===== 描画用（$state） =====
-  let bauhausSvg = $state('')
+  let bauhausSvg = $state("")
   let bauhausLoading = $state(false)
-  let geometricSvg = $state('')
+  let geometricSvg = $state("")
   let geometricLoading = $state(false)
 
   // ===== 内部追跡用（plain変数 — $effectの依存に含めない） =====
   // $state にすると $effect 内での読み書きが再トリガーを起こすため plain 変数で管理する
-  let _bauhausSvg = ''
+  let _bauhausSvg = ""
   let _bauhausColors: [string, string, string] | null = null
-  let _geometricSvg = ''
+  let _geometricSvg = ""
   let _geometricColors: [string, string, string] | null = null
   let _accentActive: boolean | null = null
 
@@ -82,15 +82,15 @@
 
   // ===== 表示用 data URI =====
   const bauhausSrc = $derived(
-    bauhausSvg ? `data:image/svg+xml;charset=utf-8,${encodeURIComponent(bauhausSvg)}` : ''
+    bauhausSvg ? `data:image/svg+xml;charset=utf-8,${encodeURIComponent(bauhausSvg)}` : ""
   )
   const geometricSrc = $derived(
-    geometricSvg ? `data:image/svg+xml;charset=utf-8,${encodeURIComponent(geometricSvg)}` : ''
+    geometricSvg ? `data:image/svg+xml;charset=utf-8,${encodeURIComponent(geometricSvg)}` : ""
   )
 
   // ===== PNG 保存 =====
   async function downloadPng(svgString: string, filename: string) {
-    const blob = new Blob([svgString], { type: 'image/svg+xml' })
+    const blob = new Blob([svgString], { type: "image/svg+xml" })
     const url = URL.createObjectURL(blob)
 
     const img = new Image()
@@ -99,27 +99,26 @@
       img.onload = () => resolve()
     })
 
-    const canvas = document.createElement('canvas')
+    const canvas = document.createElement("canvas")
     canvas.width = 300
     canvas.height = 300
-    canvas.getContext('2d')!.drawImage(img, 0, 0)
+    canvas.getContext("2d")!.drawImage(img, 0, 0)
     URL.revokeObjectURL(url)
 
     canvas.toBlob((pngBlob) => {
       if (!pngBlob) return
-      const a = document.createElement('a')
+      const a = document.createElement("a")
       a.href = URL.createObjectURL(pngBlob)
       a.download = filename
       a.click()
       URL.revokeObjectURL(a.href)
-    }, 'image/png')
+    }, "image/png")
   }
 </script>
 
 <section class="geo-patterns">
   <h2>幾何パターン</h2>
   <div class="patterns-grid">
-
     <!-- バウハウス -->
     <div class="pattern-card">
       <h3 class="pattern-label">バウハウス</h3>
@@ -136,11 +135,7 @@
         </div>
       </div>
       <div class="pattern-actions">
-        <button
-          class="btn-regen"
-          disabled={bauhausLoading}
-          onclick={regenerateBauhaus}
-        >
+        <button class="btn-regen" disabled={bauhausLoading} onclick={regenerateBauhaus}>
           画像を再生成
         </button>
         <button
@@ -169,11 +164,7 @@
         </div>
       </div>
       <div class="pattern-actions">
-        <button
-          class="btn-regen"
-          disabled={geometricLoading}
-          onclick={regenerateGeometric}
-        >
+        <button class="btn-regen" disabled={geometricLoading} onclick={regenerateGeometric}>
           画像を再生成
         </button>
         <button
@@ -185,7 +176,6 @@
         </button>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -271,7 +261,9 @@
   }
 
   @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   .pattern-actions {
