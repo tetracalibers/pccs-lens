@@ -129,7 +129,7 @@
   main {
     max-width: 800px;
     margin: 0 auto;
-    padding: 1.5rem 1rem;
+    padding: 1.5rem 1rem 3rem;
   }
 
   h1 {
