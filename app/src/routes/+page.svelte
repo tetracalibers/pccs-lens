@@ -12,11 +12,15 @@
   <nav class="feature-nav">
     <a href={resolve("/approximate")} class="feature-card">
       <span class="feature-title">色のPCCS近似</span>
-      <span class="feature-desc">入力した色に近いPCCS値と慣用色名を検索する</span>
+      <span class="feature-desc">入力した色に近いPCCS値と慣用色名を調べる</span>
     </a>
     <a href={resolve("/analyze")} class="feature-card">
       <span class="feature-title">配色の分析</span>
       <span class="feature-desc">配色をPCCSの色相・トーンに基づいて分析する</span>
+    </a>
+    <a href={resolve("/patterns")} class="feature-card">
+      <span class="feature-title">配色シミュレータ</span>
+      <span class="feature-desc">イメージごとに色の組み合わせを実験する</span>
     </a>
   </nav>
 </main>
