@@ -1,26 +1,22 @@
 <script lang="ts">
   import { resolve } from "$app/paths"
   import { THEMES } from "$lib/patterns/themes"
-  import { computeSuggest } from "$lib/patterns/suggest"
+  import { CHECKERBOARD_RULES } from "$lib/patterns/checkerboard-rules"
   import { pickRandomSuggest, lookupPCCSColor } from "$lib/patterns/lookup"
 
-  // 各テーマのベース・アソートカラーをサジェストからランダム選択
+  // 各テーマのベース・アソートカラーを市松模様専用ルールからランダム選択
   function getCheckerboardColors(themeId: string): { base: string; assort: string } {
     const theme = THEMES.find((t) => t.id === themeId)
     if (!theme) return { base: "#cccccc", assort: "#aaaaaa" }
 
-    const baseSuggest = computeSuggest({ theme: theme.id, role: "base" })
-    const basePicked = pickRandomSuggest(baseSuggest)
+    const rule = CHECKERBOARD_RULES[theme.id]
+
+    const basePicked = pickRandomSuggest(rule.base)
     const baseHex = basePicked
       ? (lookupPCCSColor(basePicked.hueNumber, basePicked.toneSymbol)?.hex ?? "#cccccc")
       : "#cccccc"
 
-    const assortSuggest = computeSuggest({
-      theme: theme.id,
-      role: "assort",
-      baseColor: basePicked ?? undefined
-    })
-    const assortPicked = pickRandomSuggest(assortSuggest)
+    const assortPicked = pickRandomSuggest(rule.assort)
     const assortHex = assortPicked
       ? (lookupPCCSColor(assortPicked.hueNumber, assortPicked.toneSymbol)?.hex ?? "#aaaaaa")
       : "#aaaaaa"
