@@ -74,6 +74,18 @@
   let openTooltipKey: string | null = $state(null)
   let tooltipGroupEl: HTMLElement | null = $state(null)
 
+  // グレイバケットセルの <g> 要素への参照（フォーカス返却用）
+  let triggerEls: Record<string, SVGGElement | null> = {}
+
+  // ツールチップが開いたとき最初のボタンにフォーカス
+  $effect(() => {
+    if (tooltipGroupEl) {
+      const firstBtn = tooltipGroupEl.querySelector("button") as HTMLElement | null
+      firstBtn?.focus()
+    }
+  })
+
+  // 外側クリックで閉じる（フォーカス返却なし）
   $effect(() => {
     if (!openTooltipKey) return
     const close = (e: MouseEvent) => {
@@ -83,6 +95,40 @@
     document.addEventListener("click", close)
     return () => document.removeEventListener("click", close)
   })
+
+  // Escape/Tab などキーボードでツールチップを閉じ、トリガーにフォーカスを戻す
+  function closeTooltipWithFocus() {
+    const key = openTooltipKey
+    openTooltipKey = null
+    if (key) triggerEls[key]?.focus()
+  }
+
+  // ツールチップ内のキーボードナビゲーション
+  function handleTooltipKeydown(e: KeyboardEvent) {
+    if (!tooltipGroupEl) return
+    const buttons = Array.from(tooltipGroupEl.querySelectorAll("button")) as HTMLElement[]
+    const currentIndex = buttons.findIndex((b) => b === document.activeElement)
+
+    switch (e.key) {
+      case "Escape":
+        e.preventDefault()
+        closeTooltipWithFocus()
+        break
+      case "ArrowDown":
+        e.preventDefault()
+        buttons[(currentIndex + 1) % buttons.length]?.focus()
+        break
+      case "ArrowUp":
+        e.preventDefault()
+        buttons[(currentIndex - 1 + buttons.length) % buttons.length]?.focus()
+        break
+      case "Tab":
+        // タブキーでツールチップを抜けるときはトリガーに戻す
+        e.preventDefault()
+        closeTooltipWithFocus()
+        break
+    }
+  }
 
   // 現在のvalueがGy-X.X形式の場合、親バケットキーを特定
   function getGrayParentKey(tone: string): string | null {
@@ -181,10 +227,13 @@
       {@const suggested = isSuggested(cell.key)}
       {@const isGrayBucket = cell.key === "ltGy" || cell.key === "mGy" || cell.key === "dkGy"}
       <g
+        bind:this={triggerEls[cell.key]}
         {opacity}
         role="button"
         aria-label={cell.label}
-        aria-pressed={selected}
+        aria-pressed={isGrayBucket ? undefined : selected}
+        aria-haspopup={isGrayBucket ? "menu" : undefined}
+        aria-expanded={isGrayBucket ? openTooltipKey === cell.key : undefined}
         tabindex="0"
         style="cursor: pointer; outline: none;"
         onfocus={() => (focusedKey = cell.key)}
@@ -199,6 +248,7 @@
         }}
         onkeydown={(e) => {
           if (e.key === "Enter") {
+            e.preventDefault()
             if (isGrayBucket) {
               openTooltipKey = openTooltipKey === cell.key ? null : cell.key
             } else {
@@ -359,8 +409,10 @@
       class="gray-subtone-tooltip"
       style="position-anchor: {getAnchorName(openTooltipKey)};"
       bind:this={tooltipGroupEl}
-      role="group"
+      role="menu"
+      tabindex="-1"
       aria-label="グレイ細分選択"
+      onkeydown={handleTooltipKeydown}
     >
       {#each items as subTone (subTone.notation)}
         {@const isSubSelected = value === subTone.notation}
@@ -368,13 +420,20 @@
           class="subtone-item"
           class:selected={isSubSelected}
           style="background-color: {subTone.hex}; color: {labelFillFromHex(subTone.hex)};"
-          aria-pressed={isSubSelected}
+          role="menuitemcheckbox"
+          aria-checked={isSubSelected}
           onclick={(e) => {
             e.stopPropagation()
             onselect(subTone.notation)
             openTooltipKey = null
           }}
-          onkeydown={(e) => e.key === "Enter" && onselect(subTone.notation)}
+          onkeydown={(e) => {
+            if (e.key === "Enter") {
+              e.stopPropagation()
+              onselect(subTone.notation)
+              openTooltipKey = null
+            }
+          }}
         >
           {subTone.notation}
         </button>
