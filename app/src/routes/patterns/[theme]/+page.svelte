@@ -6,6 +6,7 @@
   import { lookupPCCSColor, pickRandomSuggest } from "$lib/patterns/lookup"
   import ThemeColorPicker from "$lib/components/patterns/ThemeColorPicker.svelte"
   import ThemeColorSchemePreview from "$lib/components/patterns/ThemeColorSchemePreview.svelte"
+  import GeoPatternSection from "$lib/components/patterns/GeoPatternSection.svelte"
 
   let { data } = $props()
   const theme = $derived(data.theme)
@@ -64,6 +65,13 @@
     accentColor
       ? (lookupPCCSColor(accentColor.hueNumber, accentColor.toneSymbol) ?? FALLBACK)
       : null
+  )
+
+  // ===== ジェネレーター用カラー引数 =====
+  const geoColors = $derived<[string, string, string]>(
+    showAccent && accentPCCS
+      ? [basePCCS.hex, assortPCCS.hex, accentPCCS.hex]
+      : [basePCCS.hex, basePCCS.hex, assortPCCS.hex]
   )
 
   function addAccent() {
@@ -171,6 +179,8 @@
       ★ マークはサジェスト（推奨）の色相・トーンです。範囲外の色も自由に選べます。
     </p>
   </section>
+
+  <GeoPatternSection colors={geoColors} themeId={theme.id} />
 </main>
 
 <style>
