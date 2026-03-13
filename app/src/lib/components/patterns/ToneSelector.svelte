@@ -72,8 +72,20 @@
 
   // ツールチップを開いているグレイバケットキー
   let openTooltipKey: string | null = $state(null)
-  let tooltipGroupEl: SVGGElement | null = $state(null)
+  let tooltipGroupEl: HTMLElement | null = $state(null)
 
+  // グレイバケットセルの <g> 要素への参照（フォーカス返却用）
+  let triggerEls: Record<string, SVGGElement | null> = $state({})
+
+  // ツールチップが開いたとき最初のボタンにフォーカス
+  $effect(() => {
+    if (tooltipGroupEl) {
+      const firstBtn = tooltipGroupEl.querySelector("button") as HTMLElement | null
+      firstBtn?.focus()
+    }
+  })
+
+  // 外側クリックで閉じる（フォーカス返却なし）
   $effect(() => {
     if (!openTooltipKey) return
     const close = (e: MouseEvent) => {
@@ -83,6 +95,40 @@
     document.addEventListener("click", close)
     return () => document.removeEventListener("click", close)
   })
+
+  // Escape/Tab などキーボードでツールチップを閉じ、トリガーにフォーカスを戻す
+  function closeTooltipWithFocus() {
+    const key = openTooltipKey
+    openTooltipKey = null
+    if (key) triggerEls[key]?.focus()
+  }
+
+  // ツールチップ内のキーボードナビゲーション
+  function handleTooltipKeydown(e: KeyboardEvent) {
+    if (!tooltipGroupEl) return
+    const buttons = Array.from(tooltipGroupEl.querySelectorAll("button")) as HTMLElement[]
+    const currentIndex = buttons.findIndex((b) => b === document.activeElement)
+
+    switch (e.key) {
+      case "Escape":
+        e.preventDefault()
+        closeTooltipWithFocus()
+        break
+      case "ArrowDown":
+        e.preventDefault()
+        buttons[(currentIndex + 1) % buttons.length]?.focus()
+        break
+      case "ArrowUp":
+        e.preventDefault()
+        buttons[(currentIndex - 1 + buttons.length) % buttons.length]?.focus()
+        break
+      case "Tab":
+        // タブキーでツールチップを抜けるときはトリガーに戻す
+        e.preventDefault()
+        closeTooltipWithFocus()
+        break
+    }
+  }
 
   // 現在のvalueがGy-X.X形式の場合、親バケットキーを特定
   function getGrayParentKey(tone: string): string | null {
@@ -98,7 +144,6 @@
   const suggestedSet = $derived(new Set(suggestedTones))
 
   let focusedKey: string | null = $state(null)
-  let focusedSubTone: string | null = $state(null)
 
   function getOpacity(key: string): number {
     if (isSelected(key)) return 1
@@ -156,304 +201,320 @@
     return labelFillFromHex(getFillColor(cell))
   }
 
-  // ツールチップのレイアウト定数
-  const TIP_ITEM_W = 48
-  const TIP_ITEM_H = 22
-  const TIP_GAP = 3
-  const TIP_PAD = 4
-  const TIP_OFFSET_X = 8 // セルとの水平間隔
-
   function getTooltipItems(bucketKey: string): PCCSColor[] {
     return GRAY_SUB_TONES[bucketKey] ?? []
   }
 
-  function getTooltipX(cell: ToneCell): number {
-    return cell.cx - RECT_W / 2 - TIP_OFFSET_X - TIP_ITEM_W - TIP_PAD * 2
-  }
+  // インスタンスごとにユニークなIDを生成（複数配置時のアンカー名衝突を防ぐ）
+  const instanceId = Math.random().toString(36).slice(2, 8)
 
-  function getTooltipY(cell: ToneCell, itemCount: number): number {
-    const totalH = itemCount * TIP_ITEM_H + (itemCount - 1) * TIP_GAP + TIP_PAD * 2
-    return cell.cy - totalH / 2
+  // CSS Anchor Positioning 用のアンカー名を生成
+  function getAnchorName(key: string): string {
+    return `--tone-selector-${instanceId}-${key}`
   }
 </script>
 
-<svg
-  viewBox="0 0 {SVG_W} {SVG_H}"
-  role="group"
-  aria-label="トーン選択"
-  style="width: 100%; overflow: visible;"
->
-  {#each CELLS as cell (cell.key)}
-    {@const opacity = getOpacity(cell.key)}
-    {@const selected = isSelected(cell.key)}
-    {@const suggested = isSuggested(cell.key)}
-    {@const isGrayBucket = cell.key === "ltGy" || cell.key === "mGy" || cell.key === "dkGy"}
-    <g
-      {opacity}
-      role="button"
-      aria-label={cell.label}
-      aria-pressed={selected}
-      tabindex="0"
-      style="cursor: pointer; outline: none;"
-      onfocus={() => (focusedKey = cell.key)}
-      onblur={() => (focusedKey = null)}
-      onclick={(e) => {
-        if (isGrayBucket) {
-          e.stopPropagation()
-          openTooltipKey = openTooltipKey === cell.key ? null : cell.key
-        } else {
-          onselect(cell.key)
-        }
-      }}
-      onkeydown={(e) => {
-        if (e.key === "Enter") {
+<div class="tone-selector-root">
+  <svg
+    viewBox="0 0 {SVG_W} {SVG_H}"
+    role="group"
+    aria-label="トーン選択"
+    style="width: 100%; overflow: visible;"
+  >
+    {#each CELLS as cell (cell.key)}
+      {@const opacity = getOpacity(cell.key)}
+      {@const selected = isSelected(cell.key)}
+      {@const suggested = isSuggested(cell.key)}
+      {@const isGrayBucket = cell.key === "ltGy" || cell.key === "mGy" || cell.key === "dkGy"}
+      <g
+        bind:this={triggerEls[cell.key]}
+        {opacity}
+        role="button"
+        aria-label={cell.label}
+        aria-pressed={isGrayBucket ? undefined : selected}
+        aria-haspopup={isGrayBucket ? "menu" : undefined}
+        aria-expanded={isGrayBucket ? openTooltipKey === cell.key : undefined}
+        tabindex="0"
+        style="cursor: pointer; outline: none;"
+        onfocus={() => (focusedKey = cell.key)}
+        onblur={() => (focusedKey = null)}
+        onclick={(e) => {
           if (isGrayBucket) {
+            e.stopPropagation()
             openTooltipKey = openTooltipKey === cell.key ? null : cell.key
           } else {
             onselect(cell.key)
           }
-        }
-      }}
-    >
-      {#if cell.shape === "circle"}
-        <circle
-          cx={cell.cx}
-          cy={cell.cy}
-          r={CIRCLE_R}
-          fill={getFillColor(cell)}
-          stroke={getStrokeColor(cell)}
-          stroke-width={getStrokeWidth(cell)}
-        />
-      {:else}
-        <rect
-          x={cell.cx - RECT_W / 2}
-          y={cell.cy - RECT_H / 2}
-          width={RECT_W}
-          height={RECT_H}
-          rx="3"
-          fill={getFillColor(cell)}
-          stroke={getStrokeColor(cell)}
-          stroke-width={getStrokeWidth(cell)}
-        />
-      {/if}
-
-      <!-- 選択中インジケータ（外枠リング） -->
-      {#if selected}
-        {#if cell.shape === "circle"}
-          <circle
-            cx={cell.cx}
-            cy={cell.cy}
-            r={CIRCLE_R + 4}
-            fill="none"
-            stroke="#333"
-            stroke-width="1.5"
-            stroke-dasharray="3 2"
-            style="pointer-events: none;"
-          />
-        {:else}
-          <rect
-            x={cell.cx - RECT_W / 2 - 4}
-            y={cell.cy - RECT_H / 2 - 4}
-            width={RECT_W + 8}
-            height={RECT_H + 8}
-            rx="5"
-            fill="none"
-            stroke="#333"
-            stroke-width="1.5"
-            stroke-dasharray="3 2"
-            style="pointer-events: none;"
-          />
-        {/if}
-      {/if}
-
-      <!-- フォーカスインジケータ -->
-      {#if focusedKey === cell.key && !selected}
-        {#if cell.shape === "circle"}
-          <circle
-            cx={cell.cx}
-            cy={cell.cy}
-            r={CIRCLE_R + 4}
-            fill="none"
-            stroke="white"
-            stroke-width="2"
-            stroke-dasharray="3 2"
-            style="pointer-events: none;"
-          />
-          <circle
-            cx={cell.cx}
-            cy={cell.cy}
-            r={CIRCLE_R + 4}
-            fill="none"
-            stroke="#3b82f6"
-            stroke-width="1.5"
-            stroke-dasharray="3 2"
-            style="pointer-events: none;"
-          />
-        {:else}
-          <rect
-            x={cell.cx - RECT_W / 2 - 4}
-            y={cell.cy - RECT_H / 2 - 4}
-            width={RECT_W + 8}
-            height={RECT_H + 8}
-            rx="5"
-            fill="none"
-            stroke="white"
-            stroke-width="2"
-            stroke-dasharray="3 2"
-            style="pointer-events: none;"
-          />
-          <rect
-            x={cell.cx - RECT_W / 2 - 4}
-            y={cell.cy - RECT_H / 2 - 4}
-            width={RECT_W + 8}
-            height={RECT_H + 8}
-            rx="5"
-            fill="none"
-            stroke="#3b82f6"
-            stroke-width="1.5"
-            stroke-dasharray="3 2"
-            style="pointer-events: none;"
-          />
-        {/if}
-      {/if}
-
-      <!-- サジェストマーカー -->
-      {#if suggested && !selected}
-        <circle
-          cx={cell.cx + (cell.shape === "circle" ? CIRCLE_R - 5 : RECT_W / 2 - 5)}
-          cy={cell.cy - (cell.shape === "circle" ? CIRCLE_R - 5 : RECT_H / 2 - 5)}
-          r="4"
-          fill="#f59e0b"
-          style="pointer-events: none;"
-        />
-      {/if}
-
-      <text
-        x={cell.cx}
-        y={cell.cy}
-        text-anchor="middle"
-        dominant-baseline="central"
-        font-family="var(--font-mono)"
-        font-size={selected || suggested ? 11 : 10}
-        font-weight={selected ? "bold" : "normal"}
-        style={`pointer-events: none; user-select: none; fill: ${getLabelFill(cell)};`}
+        }}
+        onkeydown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault()
+            if (isGrayBucket) {
+              openTooltipKey = openTooltipKey === cell.key ? null : cell.key
+            } else {
+              onselect(cell.key)
+            }
+          }
+        }}
       >
-        {cell.label}
-      </text>
-    </g>
+        {#if cell.shape === "circle"}
+          <circle
+            cx={cell.cx}
+            cy={cell.cy}
+            r={CIRCLE_R}
+            fill={getFillColor(cell)}
+            stroke={getStrokeColor(cell)}
+            stroke-width={getStrokeWidth(cell)}
+          />
+        {:else}
+          <rect
+            x={cell.cx - RECT_W / 2}
+            y={cell.cy - RECT_H / 2}
+            width={RECT_W}
+            height={RECT_H}
+            rx="3"
+            fill={getFillColor(cell)}
+            stroke={getStrokeColor(cell)}
+            stroke-width={getStrokeWidth(cell)}
+          />
+        {/if}
+
+        <!-- 選択中インジケータ（外枠リング） -->
+        {#if selected}
+          {#if cell.shape === "circle"}
+            <circle
+              cx={cell.cx}
+              cy={cell.cy}
+              r={CIRCLE_R + 4}
+              fill="none"
+              stroke="#333"
+              stroke-width="1.5"
+              stroke-dasharray="3 2"
+              style="pointer-events: none;"
+            />
+          {:else}
+            <rect
+              x={cell.cx - RECT_W / 2 - 4}
+              y={cell.cy - RECT_H / 2 - 4}
+              width={RECT_W + 8}
+              height={RECT_H + 8}
+              rx="5"
+              fill="none"
+              stroke="#333"
+              stroke-width="1.5"
+              stroke-dasharray="3 2"
+              style="pointer-events: none;"
+            />
+          {/if}
+        {/if}
+
+        <!-- フォーカスインジケータ -->
+        {#if focusedKey === cell.key && !selected}
+          {#if cell.shape === "circle"}
+            <circle
+              cx={cell.cx}
+              cy={cell.cy}
+              r={CIRCLE_R + 4}
+              fill="none"
+              stroke="white"
+              stroke-width="2"
+              stroke-dasharray="3 2"
+              style="pointer-events: none;"
+            />
+            <circle
+              cx={cell.cx}
+              cy={cell.cy}
+              r={CIRCLE_R + 4}
+              fill="none"
+              stroke="#3b82f6"
+              stroke-width="1.5"
+              stroke-dasharray="3 2"
+              style="pointer-events: none;"
+            />
+          {:else}
+            <rect
+              x={cell.cx - RECT_W / 2 - 4}
+              y={cell.cy - RECT_H / 2 - 4}
+              width={RECT_W + 8}
+              height={RECT_H + 8}
+              rx="5"
+              fill="none"
+              stroke="white"
+              stroke-width="2"
+              stroke-dasharray="3 2"
+              style="pointer-events: none;"
+            />
+            <rect
+              x={cell.cx - RECT_W / 2 - 4}
+              y={cell.cy - RECT_H / 2 - 4}
+              width={RECT_W + 8}
+              height={RECT_H + 8}
+              rx="5"
+              fill="none"
+              stroke="#3b82f6"
+              stroke-width="1.5"
+              stroke-dasharray="3 2"
+              style="pointer-events: none;"
+            />
+          {/if}
+        {/if}
+
+        <!-- サジェストマーカー -->
+        {#if suggested && !selected}
+          <circle
+            cx={cell.cx + (cell.shape === "circle" ? CIRCLE_R - 5 : RECT_W / 2 - 5)}
+            cy={cell.cy - (cell.shape === "circle" ? CIRCLE_R - 5 : RECT_H / 2 - 5)}
+            r="4"
+            fill="#f59e0b"
+            style="pointer-events: none;"
+          />
+        {/if}
+
+        <text
+          x={cell.cx}
+          y={cell.cy}
+          text-anchor="middle"
+          dominant-baseline="central"
+          font-family="var(--font-mono)"
+          font-size={selected || suggested ? 11 : 10}
+          font-weight={selected ? "bold" : "normal"}
+          style={`pointer-events: none; user-select: none; fill: ${getLabelFill(cell)};`}
+        >
+          {cell.label}
+        </text>
+      </g>
+    {/each}
+  </svg>
+
+  <!-- SVG g は anchor-name 非対応のため、グレイバケットセルに重なる不可視HTMLアンカーを絶対配置で設置 -->
+  {#each CELLS as cell (cell.key)}
+    {#if cell.key === "ltGy" || cell.key === "mGy" || cell.key === "dkGy"}
+      <span
+        class="cell-anchor"
+        style="
+          left: {((cell.cx - RECT_W / 2) / SVG_W) * 100}%;
+          top: {((cell.cy - RECT_H / 2) / SVG_H) * 100}%;
+          width: {(RECT_W / SVG_W) * 100}%;
+          height: {(RECT_H / SVG_H) * 100}%;
+          anchor-name: {getAnchorName(cell.key)};
+        "
+      ></span>
+    {/if}
   {/each}
 
-  <!-- グレイ細分ツールチップ -->
+  <!-- グレイ細分ツールチップ（CSS Anchor Positioning で左右を自動切替） -->
   {#if openTooltipKey}
-    {@const hoverCell = CELLS.find((c) => c.key === openTooltipKey)}
-    {#if hoverCell}
-      {@const items = getTooltipItems(openTooltipKey)}
-      {@const tipX = getTooltipX(hoverCell)}
-      {@const tipY = getTooltipY(hoverCell, items.length)}
-      {@const tipH = items.length * TIP_ITEM_H + (items.length - 1) * TIP_GAP + TIP_PAD * 2}
-      {@const tipW = TIP_ITEM_W + TIP_PAD * 2}
-      <g
-        bind:this={tooltipGroupEl}
-        role="group"
-        aria-label="グレイ細分選択"
-        style="cursor: default;"
-      >
-        <!-- 背景 -->
-        <rect
-          x={tipX}
-          y={tipY}
-          width={tipW}
-          height={tipH}
-          rx="4"
-          fill="white"
-          stroke="#ccc"
-          stroke-width="1"
-          filter="drop-shadow(0 1px 3px rgba(0,0,0,0.15))"
-        />
-        {#each items as subTone, i (subTone.notation)}
-          {@const itemY = tipY + TIP_PAD + i * (TIP_ITEM_H + TIP_GAP)}
-          {@const isSubSelected = value === subTone.notation}
-          {@const subLabelFill = labelFillFromHex(subTone.hex)}
-          <g
-            role="button"
-            aria-label={subTone.notation}
-            aria-pressed={isSubSelected}
-            tabindex="0"
-            style="cursor: pointer; outline: none;"
-            onfocus={() => (focusedSubTone = subTone.notation)}
-            onblur={() => (focusedSubTone = null)}
-            onclick={(e) => {
+    {@const items = getTooltipItems(openTooltipKey)}
+    <div
+      class="gray-subtone-tooltip"
+      style="position-anchor: {getAnchorName(openTooltipKey)};"
+      bind:this={tooltipGroupEl}
+      role="menu"
+      tabindex="-1"
+      aria-label="グレイ細分選択"
+      onkeydown={handleTooltipKeydown}
+    >
+      {#each items as subTone (subTone.notation)}
+        {@const isSubSelected = value === subTone.notation}
+        <button
+          class="subtone-item"
+          class:selected={isSubSelected}
+          style="background-color: {subTone.hex}; color: {labelFillFromHex(subTone.hex)};"
+          role="menuitemcheckbox"
+          aria-checked={isSubSelected}
+          onclick={(e) => {
+            e.stopPropagation()
+            onselect(subTone.notation)
+            openTooltipKey = null
+          }}
+          onkeydown={(e) => {
+            if (e.key === "Enter") {
               e.stopPropagation()
               onselect(subTone.notation)
               openTooltipKey = null
-            }}
-            onkeydown={(e) => e.key === "Enter" && onselect(subTone.notation)}
-          >
-            <rect
-              x={tipX + TIP_PAD}
-              y={itemY}
-              width={TIP_ITEM_W}
-              height={TIP_ITEM_H}
-              rx="3"
-              fill={subTone.hex}
-              stroke={isSubSelected ? "#333" : "#ddd"}
-              stroke-width={isSubSelected ? 2 : 1}
-            />
-            {#if isSubSelected}
-              <rect
-                x={tipX + TIP_PAD - 2}
-                y={itemY - 2}
-                width={TIP_ITEM_W + 4}
-                height={TIP_ITEM_H + 4}
-                rx="4"
-                fill="none"
-                stroke="#333"
-                stroke-width="1.5"
-                stroke-dasharray="3 2"
-                style="pointer-events: none;"
-              />
-            {/if}
-            {#if focusedSubTone === subTone.notation && !isSubSelected}
-              <rect
-                x={tipX + TIP_PAD - 2}
-                y={itemY - 2}
-                width={TIP_ITEM_W + 4}
-                height={TIP_ITEM_H + 4}
-                rx="4"
-                fill="none"
-                stroke="white"
-                stroke-width="2"
-                stroke-dasharray="3 2"
-                style="pointer-events: none;"
-              />
-              <rect
-                x={tipX + TIP_PAD - 2}
-                y={itemY - 2}
-                width={TIP_ITEM_W + 4}
-                height={TIP_ITEM_H + 4}
-                rx="4"
-                fill="none"
-                stroke="#3b82f6"
-                stroke-width="1.5"
-                stroke-dasharray="3 2"
-                style="pointer-events: none;"
-              />
-            {/if}
-            <text
-              x={tipX + TIP_PAD + TIP_ITEM_W / 2}
-              y={itemY + TIP_ITEM_H / 2}
-              text-anchor="middle"
-              dominant-baseline="central"
-              font-family="var(--font-mono)"
-              font-size="9"
-              font-weight={isSubSelected ? "bold" : "normal"}
-              style={`pointer-events: none; user-select: none; fill: ${subLabelFill};`}
-            >
-              {subTone.notation}
-            </text>
-          </g>
-        {/each}
-      </g>
-    {/if}
+            }
+          }}
+        >
+          {subTone.notation}
+        </button>
+      {/each}
+    </div>
   {/if}
-</svg>
+</div>
+
+<style>
+  .tone-selector-root {
+    position: relative;
+    width: 100%;
+  }
+
+  /*
+   * グレイバケットセルに重なる不可視HTMLアンカー。
+   * SVG viewBox 座標をパーセンテージに変換して絶対配置。
+   */
+  .cell-anchor {
+    position: absolute;
+    pointer-events: none;
+  }
+
+  /*
+   * CSS Anchor Positioning を使用。
+   * デフォルト：アンカーの左側に表示（right: anchor(left)）
+   * フォールバック：左に収まらない場合は右側に表示（@position-try --tooltip-right）
+   * position: fixed にすることで SVG/HTML の境界を越えて機能する。
+   */
+  .gray-subtone-tooltip {
+    position: fixed;
+    position-try-fallbacks: --tooltip-right;
+    position-try-order: most-width;
+
+    /* デフォルト：アンカーの左側に配置 */
+    right: anchor(left);
+    margin-right: 8px;
+    top: anchor(center);
+    translate: 0 -50%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 4px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+  }
+
+  /* 右側フォールバック */
+  @position-try --tooltip-right {
+    right: unset;
+    left: anchor(right);
+    margin-right: 0;
+    margin-left: 8px;
+  }
+
+  .subtone-item {
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 0.4rem 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+  }
+
+  .subtone-item.selected {
+    border: 2px solid #333;
+    outline: 1.5px dashed #333;
+    outline-offset: 2px;
+  }
+
+  .subtone-item:focus-visible:not(.selected) {
+    outline: 2px dashed white;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3.5px #3b82f6;
+  }
+</style>
