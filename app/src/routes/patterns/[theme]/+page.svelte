@@ -180,7 +180,7 @@
     </p>
   </section>
 
-  <GeoPatternSection colors={geoColors} themeId={theme.id} />
+  <GeoPatternSection colors={geoColors} themeId={theme.id} accentActive={showAccent && !!accentPCCS} />
 </main>
 
 <style>

@@ -8,9 +8,10 @@
   interface Props {
     colors: [string, string, string]
     themeId: string
+    accentActive: boolean
   }
 
-  let { colors, themeId }: Props = $props()
+  let { colors, themeId, accentActive }: Props = $props()
 
   // ===== 描画用（$state） =====
   let bauhausSvg = $state('')
@@ -24,6 +25,7 @@
   let _bauhausColors: [string, string, string] | null = null
   let _geometricSvg = ''
   let _geometricColors: [string, string, string] | null = null
+  let _accentActive: boolean | null = null
 
   function setBauhaus(svg: string, c: [string, string, string]) {
     bauhausSvg = svg
@@ -38,22 +40,29 @@
   }
 
   // ===== 色変更の検知と更新 =====
-  // 依存: colors（変更検知）, bauhausLoading / geometricLoading（再生成完了後の色適用）
+  // 依存: colors（変更検知）, accentActive（追加・削除検知）,
+  //       bauhausLoading / geometricLoading（再生成完了後の色適用）
   $effect(() => {
     if (!browser) return
     const c = colors
+    const accent = accentActive
 
-    if (_bauhausColors === null) {
+    // アクセントの追加・削除は配色構造が変わるため再生成する
+    const accentChanged = _accentActive !== null && _accentActive !== accent
+
+    if (_bauhausColors === null || accentChanged) {
       setBauhaus(generateBauhaus(c), c)
     } else if (!bauhausLoading) {
       setBauhaus(updateSvgColors(_bauhausSvg, _bauhausColors, c), c)
     }
 
-    if (_geometricColors === null) {
+    if (_geometricColors === null || accentChanged) {
       setGeometric(generateGeometric(c), c)
     } else if (!geometricLoading) {
       setGeometric(updateSvgColors(_geometricSvg, _geometricColors, c), c)
     }
+
+    _accentActive = accent
   })
 
   // ===== 再生成 =====
