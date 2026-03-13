@@ -23,6 +23,7 @@
     "@sveltejs/adapter-static": "^3.0.10",
     "@sveltejs/kit": "^2.50.2",
     "@sveltejs/vite-plugin-svelte": "^6.2.4",
+    "@svgdotjs/svg.js": "^3.2.5",
     "@types/node": "^22",
     "@types/randomcolor": "^0.5.9",
     "@vitest/browser-playwright": "^4.0.18",
