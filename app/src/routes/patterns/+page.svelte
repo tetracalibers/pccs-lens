@@ -119,6 +119,7 @@
     grid-template-rows: 1fr 1fr;
     flex-shrink: 0;
     aspect-ratio: 1;
+    min-width: 88px;
   }
 
   .checker-cell {
