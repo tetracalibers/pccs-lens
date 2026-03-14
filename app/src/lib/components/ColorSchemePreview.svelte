@@ -43,7 +43,9 @@
   .row {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    column-gap: 0.75rem;
+    row-gap: 0.25rem;
+    flex-wrap: wrap;
   }
 
   .label {
@@ -56,7 +58,6 @@
   .swatches {
     display: flex;
     gap: 6px;
-    flex-wrap: wrap;
   }
 
   .swatch {

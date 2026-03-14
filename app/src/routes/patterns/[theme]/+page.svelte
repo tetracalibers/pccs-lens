@@ -7,6 +7,7 @@
   import ThemeColorPicker from "$lib/components/patterns/ThemeColorPicker.svelte"
   import ThemeColorSchemePreview from "$lib/components/patterns/ThemeColorSchemePreview.svelte"
   import GeoPatternSection from "$lib/components/patterns/GeoPatternSection.svelte"
+  import Icon from "@iconify/svelte"
 
   let { data } = $props()
   const theme = $derived(data.theme)
@@ -122,6 +123,14 @@
   <section class="color-pickers">
     <h2>色を選ぶ</h2>
 
+    <p class="pickers-hint">
+      <Icon
+        icon="boxicons:seal-check"
+        width={16}
+        height={16}
+      />マークは配色イメージに合う推奨トーンです。範囲外の色も自由に選べます。
+    </p>
+
     <div class="pickers-list">
       <ThemeColorPicker
         label="ベースカラー"
@@ -176,9 +185,6 @@
       accent={showAccent ? accentPCCS : null}
       isDynamic={theme.isDynamic}
     />
-    <p class="preview-hint">
-      ★ マークはサジェスト（推奨）の色相・トーンです。範囲外の色も自由に選べます。
-    </p>
   </section>
 
   <GeoPatternSection
@@ -323,9 +329,13 @@
     color: var(--color-text, #333);
   }
 
-  .preview-hint {
+  .pickers-hint {
     font-size: 0.78rem;
     color: var(--color-text-secondary, #999);
-    margin: 0.5rem 0 0;
+    margin: 0.5rem 0 1.5rem;
+  }
+
+  .pickers-hint :global(svg) {
+    vertical-align: bottom;
   }
 </style>

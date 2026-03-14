@@ -63,7 +63,7 @@
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    justify-content: space-around;
+    justify-content: space-between;
   }
 
   .brand {
@@ -82,7 +82,7 @@
     column-gap: 1rem;
     row-gap: 0.5rem;
     flex-wrap: wrap;
-    justify-content: space-evenly;
+    justify-content: space-around;
   }
 
   ul a {
