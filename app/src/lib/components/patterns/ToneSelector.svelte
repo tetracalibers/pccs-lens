@@ -1,6 +1,7 @@
 <script lang="ts">
   import { lookupPCCSColor, GRAY_SUB_TONES } from "$lib/patterns/lookup"
   import type { PCCSColor } from "$lib/data/types"
+  import Icon from "@iconify/svelte"
 
   let {
     value,
@@ -146,8 +147,8 @@
   let focusedKey: string | null = $state(null)
 
   function getOpacity(key: string): number {
-    if (isSelected(key)) return 1
     if (suggestedSet.has(key)) return 1
+    if (isSelected(key)) return 0.4
     return 0.2
   }
 
@@ -179,10 +180,17 @@
     return "#e0e0e0"
   }
 
-  function getStrokeColor(cell: ToneCell): string {
-    if (isSelected(cell.key)) return "#333"
-    if (isSuggested(cell.key)) return "#999"
-    return "#ddd"
+  function getCellStrokeColor(cell: ToneCell): string {
+    return `oklch(from ${getFillColor(cell)} calc(l * .85) c h)`
+  }
+
+  function getCellStrokeStyle(cell: ToneCell): string {
+    return `stroke: ${getCellStrokeColor(cell)};`
+  }
+
+  function getSelectedRingStrokeStyle(cell: ToneCell): string {
+    const fill = getFillColor(cell)
+    return `pointer-events: none; stroke: hsl(from ${fill} h calc(s * 1.2) l);`
   }
 
   function getStrokeWidth(cell: ToneCell): number {
@@ -263,8 +271,8 @@
             cy={cell.cy}
             r={CIRCLE_R}
             fill={getFillColor(cell)}
-            stroke={getStrokeColor(cell)}
             stroke-width={getStrokeWidth(cell)}
+            style={getCellStrokeStyle(cell)}
           />
         {:else}
           <rect
@@ -274,8 +282,8 @@
             height={RECT_H}
             rx="3"
             fill={getFillColor(cell)}
-            stroke={getStrokeColor(cell)}
             stroke-width={getStrokeWidth(cell)}
+            style={getCellStrokeStyle(cell)}
           />
         {/if}
 
@@ -287,10 +295,9 @@
               cy={cell.cy}
               r={CIRCLE_R + 4}
               fill="none"
-              stroke="#333"
               stroke-width="1.5"
               stroke-dasharray="3 2"
-              style="pointer-events: none;"
+              style={getSelectedRingStrokeStyle(cell)}
             />
           {:else}
             <rect
@@ -300,10 +307,9 @@
               height={RECT_H + 8}
               rx="5"
               fill="none"
-              stroke="#333"
               stroke-width="1.5"
               stroke-dasharray="3 2"
-              style="pointer-events: none;"
+              style={getSelectedRingStrokeStyle(cell)}
             />
           {/if}
         {/if}
@@ -360,14 +366,26 @@
         {/if}
 
         <!-- サジェストマーカー -->
-        {#if suggested && !selected}
-          <circle
-            cx={cell.cx + (cell.shape === "circle" ? CIRCLE_R - 5 : RECT_W / 2 - 5)}
-            cy={cell.cy - (cell.shape === "circle" ? CIRCLE_R - 5 : RECT_H / 2 - 5)}
-            r="4"
-            fill="#f59e0b"
+        {#if suggested}
+          {@const iconSize = 14}
+          {@const iconCx = cell.cx + (cell.shape === "circle" ? CIRCLE_R - 5 : RECT_W / 2 - 2.5)}
+          {@const iconCy = cell.cy - (cell.shape === "circle" ? CIRCLE_R - 5 : RECT_H / 2 - 2.5)}
+          <foreignObject
+            x={iconCx - iconSize / 2}
+            y={iconCy - iconSize / 2}
+            width={iconSize}
+            height={iconSize}
             style="pointer-events: none;"
-          />
+          >
+            <div
+              xmlns="http://www.w3.org/1999/xhtml"
+              style="width: {iconSize}px; height: {iconSize}px; display: flex; align-items: center; justify-content: center; background-color: rgba(255,255,255,0.75); border-radius: 50%; color: {getCellStrokeColor(
+                cell
+              )};"
+            >
+              <Icon icon="boxicons:seal-check" width={iconSize} height={iconSize} />
+            </div>
+          </foreignObject>
         {/if}
 
         <text
