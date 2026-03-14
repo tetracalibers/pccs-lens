@@ -332,7 +332,7 @@
   .pickers-hint {
     font-size: 0.78rem;
     color: var(--color-text-secondary, #999);
-    margin: 0.5rem 0 2rem;
+    margin: 0.5rem 0 1.5rem;
   }
 
   .pickers-hint :global(svg) {
