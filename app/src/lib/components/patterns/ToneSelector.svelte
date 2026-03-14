@@ -190,7 +190,7 @@
 
   function getSelectedRingStrokeStyle(cell: ToneCell): string {
     const fill = getFillColor(cell)
-    return `pointer-events: none; stroke: hsl(from ${fill} h calc(s * 1.2) l);`
+    return `pointer-events: none; stroke: oklch(from ${fill} calc(l - .10) c calc(h - 10));`
   }
 
   function getStrokeWidth(cell: ToneCell): number {
