@@ -1,6 +1,6 @@
 <script lang="ts">
   import { browser } from "$app/environment"
-  import { tick } from "svelte"
+  import { onMount, tick } from "svelte"
   import { generateBauhaus } from "$lib/patterns/generators/bauhaus.js"
   import { generateGeometric } from "$lib/patterns/generators/geometric.js"
   import { updateSvgColors } from "$lib/patterns/generators/utils.js"
@@ -8,10 +8,22 @@
   interface Props {
     colors: [string, string, string]
     themeId: string
+    themeName: string
     accentActive: boolean
   }
 
-  let { colors, themeId, accentActive }: Props = $props()
+  let { colors, themeId, themeName, accentActive }: Props = $props()
+
+  // ===== 端末判定 =====
+  let useShareApi = $state(false)
+
+  onMount(() => {
+    const isTouchPrimary = window.matchMedia("(pointer: coarse) and (hover: none)").matches
+    const dummyFile = new File([""], "test.png", { type: "image/png" })
+    const canShareFiles =
+      typeof navigator.canShare === "function" && navigator.canShare({ files: [dummyFile] })
+    useShareApi = isTouchPrimary && canShareFiles
+  })
 
   // ===== 描画用（$state） =====
   let bauhausSvg = $state("")
@@ -88,8 +100,8 @@
     geometricSvg ? `data:image/svg+xml;charset=utf-8,${encodeURIComponent(geometricSvg)}` : ""
   )
 
-  // ===== PNG 保存 =====
-  async function downloadPng(svgString: string, filename: string) {
+  // ===== PNG Blob 生成 =====
+  async function generatePngBlob(svgString: string): Promise<Blob> {
     const blob = new Blob([svgString], { type: "image/svg+xml" })
     const url = URL.createObjectURL(blob)
 
@@ -105,19 +117,41 @@
     canvas.getContext("2d")!.drawImage(img, 0, 0)
     URL.revokeObjectURL(url)
 
-    canvas.toBlob((pngBlob) => {
-      if (!pngBlob) return
-      const a = document.createElement("a")
-      a.href = URL.createObjectURL(pngBlob)
-      a.download = filename
-      a.click()
-      URL.revokeObjectURL(a.href)
-    }, "image/png")
+    return new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob((b) => {
+        if (b) resolve(b)
+        else reject(new Error("toBlob failed"))
+      }, "image/png")
+    })
+  }
+
+  // ===== PNG 保存 =====
+  async function downloadPng(svgString: string, filename: string) {
+    const pngBlob = await generatePngBlob(svgString)
+    const a = document.createElement("a")
+    a.href = URL.createObjectURL(pngBlob)
+    a.download = filename
+    a.click()
+    URL.revokeObjectURL(a.href)
+  }
+
+  // ===== PNG 共有 =====
+  async function sharePng(svgString: string, filename: string, title: string) {
+    try {
+      const pngBlob = await generatePngBlob(svgString)
+      const file = new File([pngBlob], filename, { type: "image/png" })
+      if (!navigator.canShare({ files: [file] })) return
+      await navigator.share({ files: [file], title })
+    } catch (e) {
+      if (e instanceof Error && e.name === "AbortError") return
+      console.error(e)
+    }
   }
 </script>
 
 <section class="geo-patterns">
   <h2>幾何パターン</h2>
+  <p class="touch-hint">画像を長押しすると保存できます</p>
   <div class="patterns-grid">
     <!-- バウハウス -->
     <div class="pattern-card">
@@ -140,10 +174,13 @@
         </button>
         <button
           class="btn-download"
-          disabled={!bauhausSvg}
-          onclick={() => downloadPng(bauhausSvg, `${themeId}-bauhaus.png`)}
+          disabled={!bauhausSvg || bauhausLoading}
+          onclick={() =>
+            useShareApi
+              ? sharePng(bauhausSvg, `${themeId}-bauhaus.png`, `${themeName}なバウハウス風パターン`)
+              : downloadPng(bauhausSvg, `${themeId}-bauhaus.png`)}
         >
-          PNG保存
+          {useShareApi ? "画像を共有" : "画像を保存"}
         </button>
       </div>
     </div>
@@ -169,10 +206,17 @@
         </button>
         <button
           class="btn-download"
-          disabled={!geometricSvg}
-          onclick={() => downloadPng(geometricSvg, `${themeId}-geometric.png`)}
+          disabled={!geometricSvg || geometricLoading}
+          onclick={() =>
+            useShareApi
+              ? sharePng(
+                  geometricSvg,
+                  `${themeId}-geometric.png`,
+                  `${themeName}なジオメトリックパターン`
+                )
+              : downloadPng(geometricSvg, `${themeId}-geometric.png`)}
         >
-          PNG保存
+          {useShareApi ? "画像を共有" : "画像を保存"}
         </button>
       </div>
     </div>
@@ -182,6 +226,19 @@
 <style>
   .geo-patterns {
     margin-bottom: 2rem;
+  }
+
+  .touch-hint {
+    display: none;
+    font-size: 0.78rem;
+    color: var(--color-text-secondary, #888);
+    margin: 0 0 0.75rem;
+  }
+
+  @media (any-pointer: coarse) {
+    .touch-hint {
+      display: block;
+    }
   }
 
   h2 {
