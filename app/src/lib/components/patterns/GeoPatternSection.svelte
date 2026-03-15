@@ -101,6 +101,8 @@
   )
 
   // ===== PNG Blob 生成 =====
+  const PNG_SIZE = 1200
+
   async function generatePngBlob(svgString: string): Promise<Blob> {
     const blob = new Blob([svgString], { type: "image/svg+xml" })
     const url = URL.createObjectURL(blob)
@@ -112,9 +114,9 @@
     })
 
     const canvas = document.createElement("canvas")
-    canvas.width = 300
-    canvas.height = 300
-    canvas.getContext("2d")!.drawImage(img, 0, 0)
+    canvas.width = PNG_SIZE
+    canvas.height = PNG_SIZE
+    canvas.getContext("2d")!.drawImage(img, 0, 0, PNG_SIZE, PNG_SIZE)
     URL.revokeObjectURL(url)
 
     return new Promise<Blob>((resolve, reject) => {
@@ -141,7 +143,7 @@
       const pngBlob = await generatePngBlob(svgString)
       const file = new File([pngBlob], filename, { type: "image/png" })
       if (!navigator.canShare({ files: [file] })) return
-      await navigator.share({ files: [file], url: page.url.href })
+      await navigator.share({ files: [file], text: page.url.href })
     } catch (e) {
       if (e instanceof Error && e.name === "AbortError") return
       console.error(e)
