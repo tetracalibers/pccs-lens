@@ -53,9 +53,10 @@
    - `canvas.toBlob` はPromise化し、`async/await` で整理する（後述のiOS Safari制約を参照）
 2. 「画像を共有」クリック時は次の手順で処理する：
    - `const blob = await generatePngBlob(svgString)` でBlob取得
-   - `const file = new File([blob], 'pattern.png', { type: 'image/png' })` でFileオブジェクトに変換
+   - `const file = new File([blob], '${themeId}-(bauhaus|geometric).png', { type: 'image/png' })` でFileオブジェクトに変換
    - `navigator.canShare({ files: [file] })` で共有可能か事前確認
-   - `await navigator.share({ files: [file], title: 'カラーパターン' })` を呼び出す
+   - `await navigator.share({ files: [file], title: '${themeName}な${patternName}' })` を呼び出す
+     - `title`の例：`シックなバウハウス風パターン`、`エレガントなジオメトリックパターン`
 
 **注意（iOS Safariのユーザーアクション制約）：**
 iOS Safariでは `navigator.share()` はユーザーアクションに直接紐づいたコールスタック内でのみ呼び出せる。`canvas.toBlob` をPromise化して `async/await` でつなぎ、クリックイベントハンドラから `await` のチェーンで処理することでコールスタックを維持する。コールバック方式のまま実装するとiOS Safariで「ユーザージェスチャが必要」エラーになる。
