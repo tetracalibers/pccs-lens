@@ -180,7 +180,7 @@
               ? sharePng(bauhausSvg, `${themeId}-bauhaus.png`, `${themeName}なバウハウス風パターン`)
               : downloadPng(bauhausSvg, `${themeId}-bauhaus.png`)}
         >
-          {useShareApi ? "画像を共有" : "画像を保存"}
+          {useShareApi ? "共有や保存" : "画像を保存"}
         </button>
       </div>
     </div>
@@ -216,7 +216,7 @@
                 )
               : downloadPng(geometricSvg, `${themeId}-geometric.png`)}
         >
-          {useShareApi ? "画像を共有" : "画像を保存"}
+          {useShareApi ? "共有や保存" : "画像を保存"}
         </button>
       </div>
     </div>
