@@ -1,5 +1,7 @@
 <script lang="ts">
-  import favicon from "$lib/assets/favicon.svg"
+  import favicon from "$lib/assets/favicon.ico"
+  import icon from "$lib/assets/icon.svg"
+  import appleTouchIcon from "$lib/assets/apple-touch-icon.png"
   import { page } from "$app/state"
   import { resolve } from "$app/paths"
 
@@ -8,6 +10,8 @@
 
 <svelte:head>
   <link rel="icon" href={favicon} />
+  <link rel="icon" href={icon} type="image/svg+xml" />
+  <link rel="apple-touch-icon" href={appleTouchIcon} />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
   <link
