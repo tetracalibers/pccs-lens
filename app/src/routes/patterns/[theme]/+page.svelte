@@ -190,7 +190,6 @@
   <GeoPatternSection
     colors={geoColors}
     themeId={theme.id}
-    themeName={theme.labelJa}
     accentActive={showAccent && !!accentPCCS}
   />
 </main>

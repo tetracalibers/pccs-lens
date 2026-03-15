@@ -4,15 +4,15 @@
   import { generateBauhaus } from "$lib/patterns/generators/bauhaus.js"
   import { generateGeometric } from "$lib/patterns/generators/geometric.js"
   import { updateSvgColors } from "$lib/patterns/generators/utils.js"
+  import { page } from "$app/state"
 
   interface Props {
     colors: [string, string, string]
     themeId: string
-    themeName: string
     accentActive: boolean
   }
 
-  let { colors, themeId, themeName, accentActive }: Props = $props()
+  let { colors, themeId, accentActive }: Props = $props()
 
   // ===== 端末判定 =====
   let useShareApi = $state(false)
@@ -136,12 +136,12 @@
   }
 
   // ===== PNG 共有 =====
-  async function sharePng(svgString: string, filename: string, title: string) {
+  async function sharePng(svgString: string, filename: string) {
     try {
       const pngBlob = await generatePngBlob(svgString)
       const file = new File([pngBlob], filename, { type: "image/png" })
       if (!navigator.canShare({ files: [file] })) return
-      await navigator.share({ files: [file], title })
+      await navigator.share({ files: [file], url: page.url.href })
     } catch (e) {
       if (e instanceof Error && e.name === "AbortError") return
       console.error(e)
@@ -177,7 +177,7 @@
           disabled={!bauhausSvg || bauhausLoading}
           onclick={() =>
             useShareApi
-              ? sharePng(bauhausSvg, `${themeId}-bauhaus.png`, `${themeName}なバウハウス風パターン`)
+              ? sharePng(bauhausSvg, `${themeId}-bauhaus.png`)
               : downloadPng(bauhausSvg, `${themeId}-bauhaus.png`)}
         >
           {useShareApi ? "共有や保存" : "画像を保存"}
@@ -209,11 +209,7 @@
           disabled={!geometricSvg || geometricLoading}
           onclick={() =>
             useShareApi
-              ? sharePng(
-                  geometricSvg,
-                  `${themeId}-geometric.png`,
-                  `${themeName}なジオメトリックパターン`
-                )
+              ? sharePng(geometricSvg, `${themeId}-geometric.png`)
               : downloadPng(geometricSvg, `${themeId}-geometric.png`)}
         >
           {useShareApi ? "共有や保存" : "画像を保存"}
