@@ -143,7 +143,7 @@
       const pngBlob = await generatePngBlob(svgString)
       const file = new File([pngBlob], filename, { type: "image/png" })
       if (!navigator.canShare({ files: [file] })) return
-      await navigator.share({ files: [file], url: page.url.href })
+      await navigator.share({ files: [file], text: page.url.href })
     } catch (e) {
       if (e instanceof Error && e.name === "AbortError") return
       console.error(e)
