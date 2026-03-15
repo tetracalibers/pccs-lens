@@ -1,5 +1,5 @@
 ---
-status: under_discussion
+status: superseded
 ---
 
 # レビュー: F3 幾何パターン画像保存ボタンの改良
