@@ -153,9 +153,9 @@
   <h2>幾何パターン</h2>
   <p class="touch-hint">※画像を長押しすると保存できます。</p>
   <div class="patterns-grid">
-    <!-- バウハウス -->
+    <!-- バウハウス風 -->
     <div class="pattern-card">
-      <h3 class="pattern-label">バウハウス</h3>
+      <h3 class="pattern-label">バウハウス風</h3>
       <div class="pattern-preview">
         {#if bauhausLoading}
           <div class="loading-overlay" aria-label="生成中">
@@ -164,7 +164,7 @@
         {/if}
         <div class="svg-wrapper">
           {#if bauhausSrc}
-            <img src={bauhausSrc} alt="バウハウスパターン" />
+            <img src={bauhausSrc} alt="バウハウス風パターン" />
           {/if}
         </div>
       </div>
