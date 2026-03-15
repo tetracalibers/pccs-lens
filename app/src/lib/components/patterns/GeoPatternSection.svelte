@@ -151,7 +151,7 @@
 
 <section class="geo-patterns">
   <h2>幾何パターン</h2>
-  <p class="touch-hint">画像を長押しすると保存できます</p>
+  <p class="touch-hint">※画像を長押しすると保存できます。</p>
   <div class="patterns-grid">
     <!-- バウハウス -->
     <div class="pattern-card">
@@ -232,7 +232,7 @@
     display: none;
     font-size: 0.78rem;
     color: var(--color-text-secondary, #888);
-    margin: 0 0 0.75rem;
+    margin: 0 0 1.5rem;
   }
 
   @media (any-pointer: coarse) {
