@@ -124,7 +124,7 @@
     <h2>色を選ぶ</h2>
 
     <p class="pickers-hint">
-      <Icon
+      Tips：<Icon
         icon="boxicons:seal-check"
         width={16}
         height={16}
@@ -333,6 +333,9 @@
     font-size: 0.78rem;
     color: var(--color-text-secondary, #999);
     margin: 0.5rem 0 1.5rem;
+    background-color: #f9f9f9;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
   }
 
   .pickers-hint :global(svg) {
