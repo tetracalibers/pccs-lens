@@ -101,6 +101,8 @@
   )
 
   // ===== PNG Blob 生成 =====
+  const PNG_SIZE = 1200
+
   async function generatePngBlob(svgString: string): Promise<Blob> {
     const blob = new Blob([svgString], { type: "image/svg+xml" })
     const url = URL.createObjectURL(blob)
@@ -112,9 +114,9 @@
     })
 
     const canvas = document.createElement("canvas")
-    canvas.width = 300
-    canvas.height = 300
-    canvas.getContext("2d")!.drawImage(img, 0, 0)
+    canvas.width = PNG_SIZE
+    canvas.height = PNG_SIZE
+    canvas.getContext("2d")!.drawImage(img, 0, 0, PNG_SIZE, PNG_SIZE)
     URL.revokeObjectURL(url)
 
     return new Promise<Blob>((resolve, reject) => {
