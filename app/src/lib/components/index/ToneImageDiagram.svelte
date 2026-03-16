@@ -275,6 +275,9 @@
         onkeydown={(e) => {
           if (e.key === "Enter" || e.key === " ") openTooltip(cell)
         }}
+        onblur={(e) => {
+          if (!tooltipEl?.contains(e.relatedTarget as Node)) closeTooltip()
+        }}
       >
         {#if cell.shape === "circle"}
           <!-- フォーカスリング（円形） -->
