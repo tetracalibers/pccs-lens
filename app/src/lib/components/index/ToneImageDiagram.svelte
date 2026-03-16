@@ -288,8 +288,8 @@
         {#if cell.shape === "circle"}
           <!-- ドーナツ型パイチャート -->
           {#each EVEN_HUES as hue, i (hue)}
-            {@const startDeg = -90 + i * 30}
-            {@const endDeg = -90 + (i + 1) * 30}
+            {@const startDeg = -195 + i * 30}
+            {@const endDeg = -195 + (i + 1) * 30}
             {@const hex = colorMap.get(`${cell.toneSymbol}:${hue}`) ?? "#ddd"}
             <path
               d={pieSlicePath(cell.cx, cell.cy, PIE_INNER_R, PIE_OUTER_R, startDeg, endDeg)}
@@ -300,7 +300,7 @@
           {/each}
           <!-- 外周の色相番号ラベル -->
           {#each EVEN_HUES as hue, i (hue)}
-            {@const midDeg = -90 + i * 30 + 15}
+            {@const midDeg = -195 + i * 30 + 15}
             {@const pos = labelPos(cell.cx, cell.cy, LABEL_R, midDeg)}
             <text
               x={pos.x}
