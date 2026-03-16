@@ -565,7 +565,8 @@
 
   /* ---- トーン名 ---- */
   .modal-tone-name {
-    font-size: 1.2rem;
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
     font-weight: bold;
     margin: 0 0 0.75rem;
     padding-right: 2rem;
