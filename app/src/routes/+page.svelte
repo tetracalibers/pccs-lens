@@ -74,8 +74,9 @@
     <p>
       たとえば、dトーンは明度が低めなのでやや暗く、彩度も中間くらいであまり鮮やかとはいえず、「くすんだ」というようなイメージになります。
     </p>
+    <p>PCCSでは、トーンを調整することで、色のイメージを調整することができます。</p>
 
-    <h2>色の分類</h2>
+    <h2>色の分類とトーンの位置関係</h2>
 
     <h3>純色</h3>
     <p>
@@ -83,8 +84,7 @@
       <span class="mark -brackets">純色</span>
       といいます。
       <br />
-      <code>v</code>
-      トーンは純色で、色みが最もわかりやすいです。
+      PCCSではvトーンが純色で、色みが最もわかりやすいです。
     </p>
     <div class="diagram-center">
       <ToneAreaDiagram highlights={["v"]} />
@@ -223,7 +223,6 @@
   }
 
   .pccs-guide .tips {
-    font-size: 0.78rem;
     margin: 1rem 0;
     padding: 0.5rem 0.75rem;
     border-radius: 4px;
