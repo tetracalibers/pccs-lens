@@ -230,7 +230,7 @@
   .pccs-guide .tips {
     margin: 1rem 0;
     padding: 0.5rem 0.75rem;
-    border-radius: 6px;
+    border-radius: 4px;
     border: 1px dashed lightgray;
     width: 100%;
     box-sizing: border-box;
@@ -293,7 +293,7 @@
     width: 100%;
     margin: 1rem 0;
     padding: 0.5rem 0.75rem;
-    border-radius: 6px;
+    border-radius: 4px;
     border: 1px dashed lightblue;
     box-sizing: border-box;
     line-height: 1.7;
