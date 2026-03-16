@@ -66,7 +66,7 @@
       同じトーンであれば、色相が違っても、似たイメージを演出することができます。
     </p>
 
-    <p class="tips">トーンにカーソルを合わせてイメージを確認してみよう</p>
+    <p class="tips">トーンをクリックしてイメージを確認してみよう</p>
     <div class="diagram-center">
       <ToneImageDiagram />
     </div>
