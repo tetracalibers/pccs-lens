@@ -264,6 +264,7 @@
       {@const tone = toneMap.get(cell.toneSymbol)}
       <g
         data-tone-cell
+        data-shape={cell.shape}
         role="button"
         aria-label={tone ? `${cell.key}トーンの詳細を表示` : cell.key}
         aria-expanded={activeCellKey === cell.key}
@@ -276,6 +277,15 @@
         }}
       >
         {#if cell.shape === "circle"}
+          <!-- フォーカスリング（円形） -->
+          <circle
+            class="focus-ring"
+            cx={cell.cx}
+            cy={cell.cy}
+            r={CELL_R + 2}
+            fill="none"
+            style="pointer-events: none;"
+          />
           <!-- ドーナツ型パイチャート -->
           {#each EVEN_HUES as hue, i (hue)}
             {@const startDeg = -195 + i * 30}
@@ -323,6 +333,16 @@
           <!-- 無彩色セル（矩形） -->
           {@const bg = ACHROMATIC_BG[cell.key] ?? "#999"}
           {@const textColor = isLightColor(bg) ? "#333" : "#fff"}
+          <!-- フォーカスリング（矩形） -->
+          <rect
+            class="focus-ring"
+            x={cell.cx - RECT_W / 2 - 4}
+            y={cell.cy - RECT_H / 2 - 4}
+            width={RECT_W + 8}
+            height={RECT_H + 8}
+            fill="none"
+            style="pointer-events: none;"
+          />
           <rect
             x={cell.cx - RECT_W / 2}
             y={cell.cy - RECT_H / 2}
@@ -609,5 +629,15 @@
   .categories li:not(:last-child)::after {
     content: "/";
     margin-left: 0.5rem;
+  }
+
+  /* ---- フォーカスリング ---- */
+  [data-tone-cell]:focus {
+    outline: none;
+  }
+
+  [data-tone-cell]:focus :global(.focus-ring) {
+    stroke: Highlight;
+    stroke-width: 3;
   }
 </style>
