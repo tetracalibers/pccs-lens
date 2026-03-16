@@ -385,6 +385,7 @@
   {#if tone}
     <div
       class="modal-backdrop"
+      class:closing={isClosing}
       role="presentation"
       onclick={closeModal}
       onkeydown={(e) => e.key === "Escape" && closeModal()}
@@ -473,6 +474,10 @@
     align-items: center;
     justify-content: center;
     z-index: 200;
+    animation: fade-in 0.3s ease-out both;
+  }
+  .modal-backdrop.closing {
+    animation: fade-out 0.2s ease-in both;
   }
 
   .tone-modal {
@@ -490,6 +495,24 @@
 
   .tone-modal.closing {
     animation: bubble-out 0.2s ease-in both;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
   }
 
   @keyframes bubble-in {
