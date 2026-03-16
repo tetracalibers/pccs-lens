@@ -15,7 +15,7 @@
   const COL_GAP_ACH = 20
 
   // --- 軸用パディング ---
-  const AXIS_PAD = 32
+  const AXIS_PAD = 52
   const PAD = 8
 
   // --- 座標導出 ---
@@ -178,29 +178,46 @@
     return ((cell.shape === "circle" ? 2 * CELL_R : RECT_H) / SVG_H) * 100
   }
 
-  // 軸座標
+  // セル群の境界座標
   const CELLS_LEFT = OX + X0 - RECT_W / 2
   const CELLS_RIGHT = OX + X4 + CELL_R
   const CELLS_TOP = OY + Y0 - RECT_H / 2
   const CELLS_BOTTOM = OY + Y0 + 4 * S + RECT_H / 2
 
-  const H_AXIS_Y = SVG_H - AXIS_PAD / 2
+  // --- 軸レイアウト定数 ---
+  const AXIS_GAP = 16 // セル境界 ↔ 軸線の隙間
+  const H_LABEL_GAP = 26 // 横軸線からラベルまでの距離（下方向）
+  const V_LABEL_GAP = 16 // 縦軸線から端ラベルまでの距離（左方向）
+  const V_TITLE_OFFSET = 26 // 縦軸線から「明度」タイトル中心までの距離（左方向）
+
+  // 軸線座標
+  const H_AXIS_Y = CELLS_BOTTOM + AXIS_GAP
   const H_AXIS_X1 = CELLS_LEFT
   const H_AXIS_X2 = CELLS_RIGHT
 
-  const V_AXIS_X = AXIS_PAD / 2
+  const V_AXIS_X = CELLS_LEFT - AXIS_GAP
   const V_AXIS_Y1 = CELLS_BOTTOM
   const V_AXIS_Y2 = CELLS_TOP
+
+  // ラベル座標
+  const H_LABEL_Y = H_AXIS_Y + H_LABEL_GAP
+  const V_LABEL_X = V_AXIS_X - V_LABEL_GAP
+  const V_TITLE_X = V_AXIS_X - V_TITLE_OFFSET
 </script>
 
 <div class="diagram-wrapper">
   <svg viewBox="0 0 {SVG_W} {SVG_H}" role="img" aria-label="PCCSトーン概念図">
     <defs>
-      <marker id="arr-h-img" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-        <path d="M0,0 L0,6 L6,3 z" fill="#aaa" />
-      </marker>
-      <marker id="arr-v-img" markerWidth="6" markerHeight="6" refX="3" refY="0" orient="auto">
-        <path d="M0,6 L6,6 L3,0 z" fill="#aaa" />
+      <marker
+        id="arr-axis-img"
+        markerWidth="12"
+        markerHeight="12"
+        refX="10"
+        refY="5.8"
+        orient="auto"
+        markerUnits="userSpaceOnUse"
+      >
+        <polyline points="0,0 10,5.8 0,11.6" fill="none" stroke="#aaa" stroke-width="1.5" />
       </marker>
     </defs>
 
@@ -211,38 +228,20 @@
       x2={H_AXIS_X2}
       y2={H_AXIS_Y}
       stroke="#aaa"
-      stroke-width="1"
-      marker-end="url(#arr-h-img)"
+      stroke-width="1.5"
+      marker-end="url(#arr-axis-img)"
     />
-    <text
-      x={H_AXIS_X1 - 2}
-      y={H_AXIS_Y}
-      text-anchor="end"
-      dominant-baseline="central"
-      font-size="10"
-      fill="#aaa"
-    >
-      薄い
-    </text>
+    <text x={H_AXIS_X1} y={H_LABEL_Y} text-anchor="start" font-size="11" fill="#aaa">薄い</text>
     <text
       x={(H_AXIS_X1 + H_AXIS_X2) / 2}
-      y={H_AXIS_Y + 12}
+      y={H_LABEL_Y}
       text-anchor="middle"
-      font-size="10"
+      font-size="14"
       fill="#aaa"
     >
       彩度
     </text>
-    <text
-      x={H_AXIS_X2 + 6}
-      y={H_AXIS_Y}
-      text-anchor="start"
-      dominant-baseline="central"
-      font-size="10"
-      fill="#aaa"
-    >
-      鮮やか
-    </text>
+    <text x={H_AXIS_X2} y={H_LABEL_Y} text-anchor="end" font-size="11" fill="#aaa">鮮やか</text>
 
     <!-- 縦軸（明度） -->
     <line
@@ -251,23 +250,36 @@
       x2={V_AXIS_X}
       y2={V_AXIS_Y2}
       stroke="#aaa"
-      stroke-width="1"
-      marker-end="url(#arr-v-img)"
+      stroke-width="1.5"
+      marker-end="url(#arr-axis-img)"
     />
-    <text x={V_AXIS_X} y={V_AXIS_Y1 + 12} text-anchor="middle" font-size="10" fill="#aaa">
+    <text
+      x={V_LABEL_X}
+      y={V_AXIS_Y1}
+      text-anchor="end"
+      dominant-baseline="central"
+      font-size="11"
+      fill="#aaa"
+    >
       暗い
     </text>
     <text
-      x={V_AXIS_X - 12}
+      x={V_TITLE_X}
       y={(V_AXIS_Y1 + V_AXIS_Y2) / 2}
       text-anchor="middle"
-      font-size="10"
+      font-size="14"
       fill="#aaa"
-      transform="rotate(-90, {V_AXIS_X - 12}, {(V_AXIS_Y1 + V_AXIS_Y2) / 2})"
     >
       明度
     </text>
-    <text x={V_AXIS_X} y={V_AXIS_Y2 - 10} text-anchor="middle" font-size="10" fill="#aaa">
+    <text
+      x={V_LABEL_X}
+      y={V_AXIS_Y2}
+      text-anchor="end"
+      dominant-baseline="central"
+      font-size="11"
+      fill="#aaa"
+    >
       明るい
     </text>
 
