@@ -229,7 +229,13 @@
       stroke-width="1.5"
       marker-end="url(#arr-axis-img)"
     />
-    <text x={(H_AXIS_X1 + H_AXIS_X2) / 2} y={H_LABEL_Y} text-anchor="middle" font-size="14" fill="#aaa">
+    <text
+      x={(H_AXIS_X1 + H_AXIS_X2) / 2}
+      y={H_LABEL_Y}
+      text-anchor="middle"
+      font-size="14"
+      fill="oklch(from #aaa calc(l * 0.75) c h)"
+    >
       彩度
     </text>
 
@@ -243,7 +249,13 @@
       stroke-width="1.5"
       marker-end="url(#arr-axis-img)"
     />
-    <text x={V_TITLE_X} y={(V_AXIS_Y1 + V_AXIS_Y2) / 2} text-anchor="middle" font-size="14" fill="#aaa">
+    <text
+      x={V_TITLE_X}
+      y={(V_AXIS_Y1 + V_AXIS_Y2) / 2}
+      text-anchor="middle"
+      font-size="14"
+      fill="oklch(from #aaa calc(l * 0.75) c h)"
+    >
       明度
     </text>
 
