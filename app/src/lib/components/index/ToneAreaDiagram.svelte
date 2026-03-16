@@ -90,7 +90,7 @@
     if (cell.shape === "square") {
       return ACHROMATIC_FILLS[cell.key] ?? "#999"
     }
-    const entry = colorsFullData.find((c) => c.toneSymbol === cell.key && c.hueNumber === 12)
+    const entry = colorsFullData.find((c) => c.toneSymbol === cell.key && c.hueNumber === 24)
     return entry?.hex ?? "#ccc"
   }
 
