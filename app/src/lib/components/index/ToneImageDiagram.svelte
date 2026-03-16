@@ -66,6 +66,8 @@
 
   // 偶数色相番号 (2, 4, ..., 24)
   const EVEN_HUES = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24]
+  const UPPER_HUES = [2, 4, 6, 8, 10, 12]
+  const LOWER_HUES = [14, 16, 18, 20, 22, 24]
 
   // toneSymbol × hueNumber → hex のマップ
   const colorMap = new SvelteMap<string, string>()
@@ -128,42 +130,48 @@
     return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) }
   }
 
-  // ツールチップ
-  type TooltipState = {
+  // モーダル
+  type ModalState = {
     visible: boolean
-    x: number
-    y: number
-    feelings: string[]
+    cellKey: string
+    toneSymbol: string
   }
 
-  let tooltip: TooltipState = $state({ visible: false, x: 0, y: 0, feelings: [] })
-  let wrapperEl: HTMLDivElement | undefined = $state()
-  let svgEl: SVGSVGElement | undefined = $state()
+  let modal: ModalState = $state({ visible: false, cellKey: "", toneSymbol: "" })
 
-  function showTooltip(e: PointerEvent, cell: ToneCell) {
-    const tone = toneMap.get(cell.toneSymbol)
-    if (!tone || !wrapperEl || !svgEl) return
-    const wrapperRect = wrapperEl.getBoundingClientRect()
-    const svgRect = svgEl.getBoundingClientRect()
-    const scaleX = svgRect.width / SVG_W
-    const scaleY = svgRect.height / SVG_H
-    const cellTopSvg = cell.shape === "circle" ? cell.cy - PIE_OUTER_R - 4 : cell.cy - RECT_H / 2
-    const anchorX = svgRect.left - wrapperRect.left + cell.cx * scaleX
-    const anchorY = svgRect.top - wrapperRect.top + cellTopSvg * scaleY
-    tooltip = { visible: true, x: anchorX, y: anchorY, feelings: tone.feelings }
+  let isClosing = $state(false)
+
+  function openModal(cell: ToneCell) {
+    isClosing = false
+    modal = { visible: true, cellKey: cell.key, toneSymbol: cell.toneSymbol }
   }
 
-  function hideTooltip() {
-    tooltip = { ...tooltip, visible: false }
+  function closeModal() {
+    if (isClosing) return
+    isClosing = true
+    setTimeout(() => {
+      modal = { ...modal, visible: false }
+      isClosing = false
+    }, 220)
   }
 
+  // feelings タグの背景色: トーンの偶数色相を均等に振り分ける
+  function feelingColor(toneSymbol: string, index: number, total: number): string {
+    if (["W", "Gy", "Bk"].includes(toneSymbol)) return ""
+    const hueIndex = total <= 1 ? 0 : Math.round((index / (total - 1)) * 11)
+    return colorMap.get(`${toneSymbol}:${EVEN_HUES[hueIndex]}`) ?? "#ddd"
+  }
+
+  const isAchromatic = (sym: string) => ["W", "Gy", "Bk"].includes(sym)
+
+  // Escキーでモーダルを閉じる
   $effect(() => {
-    if (!tooltip.visible) return
-    function onOutsidePointer(e: PointerEvent) {
-      if (wrapperEl && !wrapperEl.contains(e.target as Node)) hideTooltip()
+    if (!modal.visible) return
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") closeModal()
     }
-    document.addEventListener("pointerdown", onOutsidePointer)
-    return () => document.removeEventListener("pointerdown", onOutsidePointer)
+    document.addEventListener("keydown", onKeyDown)
+    return () => document.removeEventListener("keydown", onKeyDown)
   })
 
   // 軸座標
@@ -181,8 +189,8 @@
   const V_AXIS_Y2 = CELLS_TOP
 </script>
 
-<div class="diagram-wrapper" bind:this={wrapperEl}>
-  <svg viewBox="0 0 {SVG_W} {SVG_H}" role="img" aria-label="PCCSトーン概念図" bind:this={svgEl}>
+<div class="diagram-wrapper">
+  <svg viewBox="0 0 {SVG_W} {SVG_H}" role="img" aria-label="PCCSトーン概念図">
     <defs>
       <marker id="arr-h-img" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
         <path d="M0,0 L0,6 L6,3 z" fill="#aaa" />
@@ -263,12 +271,13 @@
     {#each CELLS as cell (cell.key)}
       {@const tone = toneMap.get(cell.toneSymbol)}
       <g
-        role="img"
-        aria-label={tone ? `${cell.toneSymbol}: ${tone.feelings.join(", ")}` : cell.toneSymbol}
-        style="touch-action: none; cursor: default;"
-        onpointerenter={(e) => showTooltip(e, cell)}
-        onpointerleave={(e) => {
-          if (e.pointerType === "mouse") hideTooltip()
+        role="button"
+        aria-label={tone ? `${cell.key}トーンの詳細を表示` : cell.key}
+        tabindex="0"
+        style="cursor: pointer;"
+        onclick={() => openModal(cell)}
+        onkeydown={(e) => {
+          if (e.key === "Enter" || e.key === " ") openModal(cell)
         }}
       >
         {#if cell.shape === "circle"}
@@ -368,13 +377,80 @@
       </g>
     {/each}
   </svg>
+</div>
 
-  {#if tooltip.visible}
-    <div class="tooltip" style="left: {tooltip.x}px; top: {tooltip.y}px;" role="tooltip">
-      {tooltip.feelings.join("、")}
+<!-- モーダル（diagram-wrapper の外に配置して fixed が効くようにする） -->
+{#if modal.visible}
+  {@const tone = toneMap.get(modal.toneSymbol)}
+  {#if tone}
+    <div
+      class="modal-backdrop"
+      role="presentation"
+      onclick={closeModal}
+      onkeydown={(e) => e.key === "Escape" && closeModal()}
+    >
+      <div
+        class="tone-modal"
+        class:closing={isClosing}
+        role="dialog"
+        aria-modal="true"
+        aria-label="{tone.toneNameEn}トーン詳細"
+        tabindex="-1"
+        onclick={(e) => e.stopPropagation()}
+        onkeydown={(e) => e.stopPropagation()}
+      >
+        <button class="modal-close" onclick={closeModal} aria-label="閉じる">×</button>
+
+        <!-- 上部スウォッチ（色相 2〜12） -->
+        {#if !isAchromatic(modal.toneSymbol)}
+          <div class="swatches-row" aria-hidden="true">
+            {#each UPPER_HUES as hue (hue)}
+              {@const hex = colorMap.get(`${modal.toneSymbol}:${hue}`) ?? "#ddd"}
+              <div class="swatch" style="background: {hex}" title="{modal.toneSymbol}{hue}"></div>
+            {/each}
+          </div>
+        {/if}
+
+        <!-- トーン名 -->
+        <h2 class="modal-tone-name">
+          <span class="tone-symbol-label">{modal.cellKey}</span>
+          {tone.toneNameEn}
+        </h2>
+
+        <!-- feelings タグクラウド -->
+        <div class="feelings-tags" aria-label="イメージワード">
+          {#each tone.feelings as feeling, i (i)}
+            {@const bg = feelingColor(modal.toneSymbol, i, tone.feelings.length)}
+            <span
+              class="feeling-tag"
+              class:feeling-tag--plain={!bg}
+              style={bg ? `background: ${bg}; color: ${isLightColor(bg) ? "#333" : "#fff"}` : ""}
+            >
+              {feeling}
+            </span>
+          {/each}
+        </div>
+
+        <!-- カテゴリ -->
+        <ul class="categories" aria-label="カテゴリ">
+          {#each tone.categories as cat (cat)}
+            <li>{cat}</li>
+          {/each}
+        </ul>
+
+        <!-- 下部スウォッチ（色相 14〜24） -->
+        {#if !isAchromatic(modal.toneSymbol)}
+          <div class="swatches-row" aria-hidden="true">
+            {#each LOWER_HUES as hue (hue)}
+              {@const hex = colorMap.get(`${modal.toneSymbol}:${hue}`) ?? "#ddd"}
+              <div class="swatch" style="background: {hex}" title="{modal.toneSymbol}{hue}"></div>
+            {/each}
+          </div>
+        {/if}
+      </div>
     </div>
   {/if}
-</div>
+{/if}
 
 <style>
   .diagram-wrapper {
@@ -389,27 +465,139 @@
     height: auto;
   }
 
-  .tooltip {
-    position: absolute;
-    background: var(--color-text, #111);
-    color: #fff;
-    border-radius: 6px;
-    padding: 5px 10px;
-    font-size: 0.8rem;
-    white-space: nowrap;
-    pointer-events: none;
-    z-index: 10;
-    transform: translateX(-50%) translateY(calc(-100% - 8px));
+  /* ---- モーダル ---- */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
   }
 
-  .tooltip::after {
-    content: "";
+  .tone-modal {
+    position: relative;
+    background: var(--color-surface, #fff);
+    color: var(--color-text, #111);
+    border-radius: 16px;
+    padding: 1.5rem;
+    width: min(360px, 90vw);
+    max-height: 90svh;
+    overflow-y: auto;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
+    animation: bubble-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  .tone-modal.closing {
+    animation: bubble-out 0.2s ease-in both;
+  }
+
+  @keyframes bubble-in {
+    from {
+      scale: 0.5;
+      opacity: 0;
+    }
+    to {
+      scale: 1;
+      opacity: 1;
+    }
+  }
+
+  @keyframes bubble-out {
+    from {
+      scale: 1;
+      opacity: 1;
+    }
+    to {
+      scale: 0.75;
+      opacity: 0;
+    }
+  }
+
+  .modal-close {
     position: absolute;
-    bottom: -6px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-top: 6px solid var(--color-text, #111);
+    top: 0.75rem;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    line-height: 1;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--color-text, #333);
+  }
+
+  .modal-close:hover {
+    background: rgba(128, 128, 128, 0.15);
+  }
+
+  /* ---- スウォッチ行 ---- */
+  .swatches-row {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 1rem;
+  }
+
+  .swatch {
+    flex: 1;
+    aspect-ratio: 1;
+    border-radius: 6px;
+  }
+
+  /* ---- トーン名 ---- */
+  .modal-tone-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0 0 0.75rem;
+    padding-right: 2rem;
+  }
+
+  .tone-symbol-label {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    opacity: 0.55;
+    margin-right: 0.4em;
+  }
+
+  /* ---- feelings タグクラウド ---- */
+  .feelings-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 0.75rem;
+  }
+
+  .feeling-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+  }
+
+  .feeling-tag--plain {
+    background: var(--color-muted, #eee);
+    color: var(--color-text, #333);
+  }
+
+  /* ---- カテゴリ ---- */
+  .categories {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.5rem;
+  }
+
+  .categories li {
+    font-size: 0.8rem;
+    color: var(--color-text-muted, #777);
+  }
+
+  .categories li:not(:last-child)::after {
+    content: "/";
+    margin-left: 0.5rem;
   }
 </style>
