@@ -312,7 +312,7 @@
           <!-- 中央テキスト -->
           <text
             x={cell.cx}
-            y={cell.cy - 5}
+            y={cell.cy}
             text-anchor="middle"
             dominant-baseline="central"
             font-family="var(--font-mono)"
@@ -322,18 +322,6 @@
             style="pointer-events: none; user-select: none;"
           >
             {cell.toneSymbol}
-          </text>
-          <text
-            x={cell.cx}
-            y={cell.cy + 6}
-            text-anchor="middle"
-            dominant-baseline="central"
-            font-family="var(--font-mono)"
-            font-size="8"
-            fill="#555"
-            style="pointer-events: none; user-select: none;"
-          >
-            {tone?.toneNameEn ?? ""}
           </text>
         {:else}
           <!-- 無彩色セル（矩形） -->
@@ -350,7 +338,7 @@
           />
           <text
             x={cell.cx}
-            y={cell.cy - 8}
+            y={cell.cy}
             text-anchor="middle"
             dominant-baseline="central"
             font-family="var(--font-mono)"
@@ -360,18 +348,6 @@
             style="pointer-events: none; user-select: none;"
           >
             {cell.toneSymbol === "Gy" ? cell.key : cell.toneSymbol}
-          </text>
-          <text
-            x={cell.cx}
-            y={cell.cy + 8}
-            text-anchor="middle"
-            dominant-baseline="central"
-            font-family="var(--font-mono)"
-            font-size="10"
-            fill={textColor}
-            style="pointer-events: none; user-select: none;"
-          >
-            {tone?.toneNameEn ?? cell.key}
           </text>
         {/if}
       </g>
