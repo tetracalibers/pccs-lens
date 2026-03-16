@@ -187,14 +187,10 @@
     <!-- トーンセル -->
     {#each CELLS as cell (cell.key)}
       {@const highlighted = isHighlighted(cell)}
-      {@const fillColor = highlighted ? getHighlightFill(cell) : "white"}
-      {@const strokeColor = highlighted ? "#bbb" : "#ccc"}
-      {@const cellOpacity = highlighted ? 1 : 0.25}
-      {@const labelFill = highlighted
-        ? isLightColor(getHighlightFill(cell))
-          ? "#333"
-          : "#fff"
-        : "#ccc"}
+      {@const fillColor = getHighlightFill(cell)}
+      {@const strokeColor = `oklch(from ${fillColor} calc(l * .85) c h)`}
+      {@const cellOpacity = highlighted ? 1 : 0.08}
+      {@const labelFill = isLightColor(fillColor) ? "#333" : "#fff"}
 
       <g opacity={cellOpacity}>
         {#if cell.shape === "circle"}
