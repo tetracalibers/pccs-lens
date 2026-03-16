@@ -130,29 +130,31 @@
     return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) }
   }
 
-  // モーダル
-  type ModalState = {
+  // ツールチップ
+  // ToneSelector と同様に、インスタンスごとにユニークなアンカー名を生成
+  const instanceId = Math.random().toString(36).slice(2, 8)
+  const ANCHOR_NAME = `--tone-diagram-${instanceId}`
+
+  type TooltipState = {
     visible: boolean
     cellKey: string
     toneSymbol: string
   }
 
-  let modal: ModalState = $state({ visible: false, cellKey: "", toneSymbol: "" })
+  let tooltip: TooltipState = $state({ visible: false, cellKey: "", toneSymbol: "" })
+  let tooltipEl: HTMLDivElement | null = $state(null)
 
-  let isClosing = $state(false)
+  // 現在アクティブなセル（アンカースパン描画用）
+  const activeCell = $derived(
+    tooltip.visible ? (CELLS.find((c) => c.key === tooltip.cellKey) ?? null) : null
+  )
 
-  function openModal(cell: ToneCell) {
-    isClosing = false
-    modal = { visible: true, cellKey: cell.key, toneSymbol: cell.toneSymbol }
+  function openTooltip(cell: ToneCell) {
+    tooltip = { visible: true, cellKey: cell.key, toneSymbol: cell.toneSymbol }
   }
 
-  function closeModal() {
-    if (isClosing) return
-    isClosing = true
-    setTimeout(() => {
-      modal = { ...modal, visible: false }
-      isClosing = false
-    }, 220)
+  function closeTooltip() {
+    tooltip = { ...tooltip, visible: false }
   }
 
   // feelings タグの背景色: トーンの偶数色相を均等に振り分ける
@@ -164,15 +166,54 @@
 
   const isAchromatic = (sym: string) => ["W", "Gy", "Bk"].includes(sym)
 
-  // Escキーでモーダルを閉じる
+  // Escキー・ツールチップ外クリック・スクロール・リサイズで閉じる
   $effect(() => {
-    if (!modal.visible) return
+    if (!tooltip.visible) return
+
     function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") closeModal()
+      if (e.key === "Escape") closeTooltip()
     }
+
+    function onPointerDown(e: PointerEvent) {
+      const target = e.target as Element
+      if (tooltipEl && !tooltipEl.contains(target) && !target.closest("[data-tone-cell]")) {
+        closeTooltip()
+      }
+    }
+
+    function onScrollOrResize() {
+      closeTooltip()
+    }
+
     document.addEventListener("keydown", onKeyDown)
-    return () => document.removeEventListener("keydown", onKeyDown)
+    document.addEventListener("pointerdown", onPointerDown)
+    window.addEventListener("scroll", onScrollOrResize, true)
+    window.addEventListener("resize", onScrollOrResize)
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown)
+      document.removeEventListener("pointerdown", onPointerDown)
+      window.removeEventListener("scroll", onScrollOrResize, true)
+      window.removeEventListener("resize", onScrollOrResize)
+    }
   })
+
+  // SVG viewBox 座標 → wrapper パーセンテージ変換
+  // ToneSelector と同様に position:absolute スパンを % で配置し anchor-name を付与する
+  function anchorLeft(cell: ToneCell): number {
+    const x = cell.shape === "circle" ? cell.cx - CELL_R : cell.cx - RECT_W / 2
+    return (x / SVG_W) * 100
+  }
+  function anchorTop(cell: ToneCell): number {
+    const y = cell.shape === "circle" ? cell.cy - CELL_R : cell.cy - RECT_H / 2
+    return (y / SVG_H) * 100
+  }
+  function anchorW(cell: ToneCell): number {
+    return ((cell.shape === "circle" ? 2 * CELL_R : RECT_W) / SVG_W) * 100
+  }
+  function anchorH(cell: ToneCell): number {
+    return ((cell.shape === "circle" ? 2 * CELL_R : RECT_H) / SVG_H) * 100
+  }
 
   // 軸座標
   const CELLS_LEFT = OX + X0 - RECT_W / 2
@@ -271,13 +312,16 @@
     {#each CELLS as cell (cell.key)}
       {@const tone = toneMap.get(cell.toneSymbol)}
       <g
+        data-tone-cell
         role="button"
         aria-label={tone ? `${cell.key}トーンの詳細を表示` : cell.key}
+        aria-expanded={tooltip.visible && tooltip.cellKey === cell.key}
+        aria-controls="tone-tooltip"
         tabindex="0"
         style="cursor: pointer;"
-        onclick={() => openModal(cell)}
+        onclick={() => openTooltip(cell)}
         onkeydown={(e) => {
-          if (e.key === "Enter" || e.key === " ") openModal(cell)
+          if (e.key === "Enter" || e.key === " ") openTooltip(cell)
         }}
       >
         {#if cell.shape === "circle"}
@@ -353,93 +397,99 @@
       </g>
     {/each}
   </svg>
+
+  <!--
+    SVG <g> は anchor-name 非対応のため、ToneSelector と同様に
+    アクティブなセルに重なる不可視 HTML スパンを % 座標で絶対配置し anchor-name を付与する
+  -->
+  {#if activeCell}
+    <span
+      class="cell-anchor"
+      style="
+        left: {anchorLeft(activeCell)}%;
+        top: {anchorTop(activeCell)}%;
+        width: {anchorW(activeCell)}%;
+        height: {anchorH(activeCell)}%;
+        anchor-name: {ANCHOR_NAME};
+      "
+    ></span>
+  {/if}
 </div>
 
-<!-- モーダル（diagram-wrapper の外に配置して fixed が効くようにする） -->
-{#if modal.visible}
-  {@const tone = toneMap.get(modal.toneSymbol)}
+<!-- ツールチップ（diagram-wrapper の外に配置して fixed が効くようにする） -->
+{#if tooltip.visible}
+  {@const tone = toneMap.get(tooltip.toneSymbol)}
   {#if tone}
     <div
-      class="modal-backdrop"
-      class:closing={isClosing}
-      role="presentation"
-      onclick={closeModal}
-      onkeydown={(e) => e.key === "Escape" && closeModal()}
+      class="tone-tooltip"
+      style="position-anchor: {ANCHOR_NAME};"
+      bind:this={tooltipEl}
+      role="tooltip"
+      id="tone-tooltip"
     >
-      <div
-        class="tone-modal"
-        class:closing={isClosing}
-        role="dialog"
-        aria-modal="true"
-        aria-label="{tone.toneNameEn}トーン詳細"
-        tabindex="-1"
-        onclick={(e) => e.stopPropagation()}
-        onkeydown={(e) => e.stopPropagation()}
-      >
-        <button class="modal-close" onclick={closeModal} aria-label="閉じる">×</button>
+      <button class="tooltip-close" onclick={closeTooltip} aria-label="閉じる">×</button>
 
-        <!-- 上部スウォッチ（色相 2〜12） -->
-        {#if !isAchromatic(modal.toneSymbol)}
-          <div class="swatches-row" aria-hidden="true">
-            {#each UPPER_HUES as hue (hue)}
-              {@const hex = colorMap.get(`${modal.toneSymbol}:${hue}`) ?? "#ddd"}
-              <div class="swatch" style="background: {hex}" title="{modal.toneSymbol}{hue}"></div>
-            {/each}
-          </div>
-        {:else}
-          <div class="swatches-row" aria-hidden="true">
-            <div
-              class="swatch"
-              style="background: {ACHROMATIC_BG[modal.toneSymbol] ?? '#999'}; height: 56px;"
-              title={modal.toneSymbol}
-            ></div>
-          </div>
-        {/if}
-
-        <!-- トーン名 -->
-        <h2 class="modal-tone-name">
-          {tone.toneNameEn}
-        </h2>
-
-        <!-- feelings タグクラウド -->
-        <div class="feelings-tags" aria-label="イメージワード">
-          {#each tone.feelings as feeling, i (i)}
-            {@const bg = feelingColor(modal.toneSymbol, i, tone.feelings.length)}
-            <span
-              class="feeling-tag"
-              class:feeling-tag--plain={!bg}
-              style={bg ? `background: ${bg}; color: ${isLightColor(bg) ? "#333" : "#fff"}` : ""}
-            >
-              {feeling}
-            </span>
+      <!-- 上部スウォッチ（色相 2〜12） -->
+      {#if !isAchromatic(tooltip.toneSymbol)}
+        <div class="swatches-row" aria-hidden="true">
+          {#each UPPER_HUES as hue (hue)}
+            {@const hex = colorMap.get(`${tooltip.toneSymbol}:${hue}`) ?? "#ddd"}
+            <div class="swatch" style="background: {hex}" title="{tooltip.toneSymbol}{hue}"></div>
           {/each}
         </div>
+      {:else}
+        <div class="swatches-row" aria-hidden="true">
+          <div
+            class="swatch"
+            style="background: {ACHROMATIC_BG[tooltip.toneSymbol] ?? '#999'}; height: 30px;"
+            title={tooltip.toneSymbol}
+          ></div>
+        </div>
+      {/if}
 
-        <!-- カテゴリ -->
-        <ul class="categories" aria-label="カテゴリ">
-          {#each tone.categories as cat (cat)}
-            <li>{cat}</li>
-          {/each}
-        </ul>
+      <!-- トーン名 -->
+      <h2 class="tooltip-tone-name">
+        {tone.toneNameEn}
+      </h2>
 
-        <!-- 下部スウォッチ（色相 14〜24） -->
-        {#if !isAchromatic(modal.toneSymbol)}
-          <div class="swatches-row" aria-hidden="true">
-            {#each LOWER_HUES as hue (hue)}
-              {@const hex = colorMap.get(`${modal.toneSymbol}:${hue}`) ?? "#ddd"}
-              <div class="swatch" style="background: {hex}" title="{modal.toneSymbol}{hue}"></div>
-            {/each}
-          </div>
-        {:else}
-          <div class="swatches-row" aria-hidden="true">
-            <div
-              class="swatch"
-              style="background: {ACHROMATIC_BG[modal.toneSymbol] ?? '#999'}; height: 56px;"
-              title={modal.toneSymbol}
-            ></div>
-          </div>
-        {/if}
+      <!-- feelings タグクラウド -->
+      <div class="feelings-tags" aria-label="イメージワード">
+        {#each tone.feelings as feeling, i (i)}
+          {@const bg = feelingColor(tooltip.toneSymbol, i, tone.feelings.length)}
+          <span
+            class="feeling-tag"
+            class:feeling-tag--plain={!bg}
+            style={bg ? `background: ${bg}; color: ${isLightColor(bg) ? "#333" : "#fff"}` : ""}
+          >
+            {feeling}
+          </span>
+        {/each}
       </div>
+
+      <!-- カテゴリ -->
+      <ul class="categories" aria-label="カテゴリ">
+        {#each tone.categories as cat (cat)}
+          <li>{cat}</li>
+        {/each}
+      </ul>
+
+      <!-- 下部スウォッチ（色相 14〜24） -->
+      {#if !isAchromatic(tooltip.toneSymbol)}
+        <div class="swatches-row" aria-hidden="true">
+          {#each LOWER_HUES as hue (hue)}
+            {@const hex = colorMap.get(`${tooltip.toneSymbol}:${hue}`) ?? "#ddd"}
+            <div class="swatch" style="background: {hex}" title="{tooltip.toneSymbol}{hue}"></div>
+          {/each}
+        </div>
+      {:else}
+        <div class="swatches-row" aria-hidden="true">
+          <div
+            class="swatch"
+            style="background: {ACHROMATIC_BG[tooltip.toneSymbol] ?? '#999'}; height: 30px;"
+            title={tooltip.toneSymbol}
+          ></div>
+        </div>
+      {/if}
     </div>
   {/if}
 {/if}
@@ -457,59 +507,49 @@
     height: auto;
   }
 
-  /* ---- モーダル ---- */
-  .modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.35);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 200;
-    animation: fade-in 0.3s ease-out both;
-  }
-  .modal-backdrop.closing {
-    animation: fade-out 0.2s ease-in both;
+  /*
+   * SVG <g> は anchor-name 非対応のため、ToneSelector と同様に
+   * SVG viewBox 座標をパーセンテージに変換して絶対配置した不可視スパンを使う。
+   */
+  .cell-anchor {
+    position: absolute;
+    pointer-events: none;
   }
 
-  .tone-modal {
-    position: relative;
+  /*
+   * CSS Anchor Positioning を使用。ToneSelector の .gray-subtone-tooltip と同パターン。
+   * position-anchor はインラインスタイルで動的に設定する。
+   * デフォルト：アンカーの右側に表示
+   * フォールバック：右に収まらなければ左→下→上の順で試みる
+   */
+  .tone-tooltip {
+    position: fixed;
+    margin-block: 8px;
+    position-area: bottom span-left;
+    position-try: flip-block flip-inline;
+
+    width: min(200px, 90vw);
+    max-height: 80svh;
+    overflow-y: auto;
     background: var(--color-surface, #fff);
     color: var(--color-text, #111);
     border-radius: 6px;
     padding: 1.5rem;
-    width: min(360px, 90vw);
-    max-height: 90svh;
-    overflow-y: auto;
     box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
-    animation: bubble-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    z-index: 200;
+    animation: tooltip-in 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   }
 
-  .tone-modal.closing {
-    animation: bubble-out 0.2s ease-in both;
+  @media (max-width: 640px) {
+    .tone-tooltip {
+      margin-inline: 8px;
+      position-area: bottom span-left;
+    }
   }
 
-  @keyframes fade-in {
+  @keyframes tooltip-in {
     from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  @keyframes fade-out {
-    from {
-      opacity: 1;
-    }
-    to {
-      opacity: 0;
-    }
-  }
-
-  @keyframes bubble-in {
-    from {
-      scale: 0.5;
+      scale: 0.85;
       opacity: 0;
     }
     to {
@@ -518,18 +558,8 @@
     }
   }
 
-  @keyframes bubble-out {
-    from {
-      scale: 1;
-      opacity: 1;
-    }
-    to {
-      scale: 0.75;
-      opacity: 0;
-    }
-  }
-
-  .modal-close {
+  /* ---- 閉じるボタン ---- */
+  .tooltip-close {
     position: absolute;
     top: 0;
     right: 0;
@@ -543,7 +573,7 @@
     color: var(--color-text, #333);
   }
 
-  .modal-close:hover {
+  .tooltip-close:hover {
     background: rgba(128, 128, 128, 0.15);
   }
 
@@ -564,9 +594,9 @@
   }
 
   /* ---- トーン名 ---- */
-  .modal-tone-name {
+  .tooltip-tone-name {
     font-family: var(--font-mono);
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: bold;
     margin: 0 0 0.75rem;
     padding-right: 2rem;
@@ -583,8 +613,8 @@
   .feeling-tag {
     display: inline-block;
     padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
+    border-radius: 15px;
+    font-size: 0.7rem;
   }
 
   .feeling-tag--plain {
@@ -603,7 +633,7 @@
   }
 
   .categories li {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--color-text-muted, #777);
   }
 
