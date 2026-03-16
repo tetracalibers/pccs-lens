@@ -111,7 +111,6 @@
   // --- 軸レイアウト定数 ---
   const AXIS_GAP = 12 // セル境界 ↔ 軸線の隙間
   const H_LABEL_GAP = 22 // 横軸線からラベルまでの距離（下方向）
-  const V_LABEL_GAP = 12 // 縦軸線から端ラベルまでの距離（左方向）
   const V_TITLE_OFFSET = 22 // 縦軸線から「明度」タイトル中心までの距離（左方向）
 
   // 軸線座標
@@ -125,7 +124,6 @@
 
   // ラベル座標
   const H_LABEL_Y = H_AXIS_Y + H_LABEL_GAP
-  const V_LABEL_X = V_AXIS_X - V_LABEL_GAP
   const V_TITLE_X = V_AXIS_X - V_TITLE_OFFSET
 </script>
 
@@ -156,17 +154,7 @@
       stroke-width="1.5"
       marker-end="url(#arr-axis-area)"
     />
-    <text x={H_AXIS_X1} y={H_LABEL_Y} text-anchor="start" font-size="10" fill="#aaa">薄い</text>
-    <text
-      x={(H_AXIS_X1 + H_AXIS_X2) / 2}
-      y={H_LABEL_Y}
-      text-anchor="middle"
-      font-size="12"
-      fill="#aaa"
-    >
-      彩度
-    </text>
-    <text x={H_AXIS_X2} y={H_LABEL_Y} text-anchor="end" font-size="10" fill="#aaa">鮮やか</text>
+    <text x={(H_AXIS_X1 + H_AXIS_X2) / 2} y={H_LABEL_Y} text-anchor="middle" font-size="12" fill="#aaa">彩度</text>
 
     <!-- 縦軸（明度） -->
     <line
@@ -178,35 +166,7 @@
       stroke-width="1.5"
       marker-end="url(#arr-axis-area)"
     />
-    <text
-      x={V_LABEL_X}
-      y={V_AXIS_Y1}
-      text-anchor="end"
-      dominant-baseline="central"
-      font-size="10"
-      fill="#aaa"
-    >
-      暗い
-    </text>
-    <text
-      x={V_TITLE_X}
-      y={(V_AXIS_Y1 + V_AXIS_Y2) / 2}
-      text-anchor="middle"
-      font-size="12"
-      fill="#aaa"
-    >
-      明度
-    </text>
-    <text
-      x={V_LABEL_X}
-      y={V_AXIS_Y2}
-      text-anchor="end"
-      dominant-baseline="central"
-      font-size="10"
-      fill="#aaa"
-    >
-      明るい
-    </text>
+    <text x={V_TITLE_X} y={(V_AXIS_Y1 + V_AXIS_Y2) / 2} text-anchor="middle" font-size="12" fill="#aaa">明度</text>
 
     <!-- トーンセル -->
     {#each CELLS as cell (cell.key)}
