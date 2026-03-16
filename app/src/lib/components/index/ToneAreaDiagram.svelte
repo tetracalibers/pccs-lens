@@ -154,7 +154,15 @@
       stroke-width="1.5"
       marker-end="url(#arr-axis-area)"
     />
-    <text x={(H_AXIS_X1 + H_AXIS_X2) / 2} y={H_LABEL_Y} text-anchor="middle" font-size="12" fill="#aaa">彩度</text>
+    <text
+      x={(H_AXIS_X1 + H_AXIS_X2) / 2}
+      y={H_LABEL_Y}
+      text-anchor="middle"
+      font-size="11"
+      fill="#aaa"
+    >
+      彩度
+    </text>
 
     <!-- 縦軸（明度） -->
     <line
@@ -166,7 +174,15 @@
       stroke-width="1.5"
       marker-end="url(#arr-axis-area)"
     />
-    <text x={V_TITLE_X} y={(V_AXIS_Y1 + V_AXIS_Y2) / 2} text-anchor="middle" font-size="12" fill="#aaa">明度</text>
+    <text
+      x={V_TITLE_X}
+      y={(V_AXIS_Y1 + V_AXIS_Y2) / 2}
+      text-anchor="middle"
+      font-size="11"
+      fill="#aaa"
+    >
+      明度
+    </text>
 
     <!-- トーンセル -->
     {#each CELLS as cell (cell.key)}
