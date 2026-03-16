@@ -31,20 +31,42 @@
 
     <p>
       PCCSは、色のイメージや配色を考えるときに便利な色の表し方です。
-      PCCSでは、1つの色を「色相」と「トーン」によって表します。（例：「v2」は、色相が2（赤）で、トーンがv（vivid）の色）
+      <br />
+      PCCSでは、1つの色を
+      <span class="mark -brackets">色相</span>
+      と
+      <span class="mark -brackets">トーン</span>
+      によって表します。
     </p>
 
     <ul>
-      <li>色相：赤・黄・緑・青・紫など、どの色みをもたせるか</li>
-      <li>トーン：どんなイメージをもたせるか</li>
+      <li>
+        <span class="mark -brackets">色相</span>
+        赤・黄・緑・青・紫など、どの色みをもたせるか
+      </li>
+      <li>
+        <span class="mark -brackets">トーン</span>
+        どんなイメージをもたせるか
+      </li>
     </ul>
+
+    <p class="example">
+      色相が
+      <code>2</code>
+      （赤）で、トーンが
+      <code>v</code>
+      （vivid）の色は
+      <span class="mark -brackets"><code>v2</code></span>
+      と表す
+    </p>
 
     <p>
       PCCSのトーンは、色のイメージごとに明度・彩度の領域をまとめたものです。
+      <br />
       同じトーンであれば、色相が違っても、似たイメージを演出することができます。
     </p>
 
-    <p class="tips">Tips：トーンにカーソルを合わせてイメージを確認してみよう</p>
+    <p class="tips">トーンにカーソルを合わせてイメージを確認してみよう</p>
     <div class="diagram-center">
       <ToneImageDiagram />
     </div>
@@ -57,8 +79,12 @@
 
     <h3>純色</h3>
     <p>
-      白も黒もグレイも混ざっていない純粋な色を「純色」といいます。
-      vトーンは純色で、色みが最もわかりやすいです。
+      白も黒もグレイも混ざっていない純粋な色を
+      <span class="mark -brackets">純色</span>
+      といいます。
+      <br />
+      <code>v</code>
+      トーンは純色で、色みが最もわかりやすいです。
     </p>
     <div class="diagram-center">
       <ToneAreaDiagram highlights={["v"]} />
@@ -66,7 +92,10 @@
 
     <h3>明清色</h3>
     <p>
-      純色に白を混ぜてできる色を「明清色」といいます。
+      純色に白を混ぜてできる色を
+      <span class="mark -brackets">明清色</span>
+      といいます。
+      <br />
       白を多く混ぜていくにつれ、だんだんと明度が高く、彩度は低くなっていきます。
     </p>
     <div class="diagram-center">
@@ -75,7 +104,10 @@
 
     <h3>暗清色</h3>
     <p>
-      純色に黒を混ぜてできる色を「暗清色」といいます。
+      純色に黒を混ぜてできる色を
+      <span class="mark -brackets">暗清色</span>
+      といいます。
+      <br />
       黒を多く混ぜていくにつれ、だんだんと明度が低く、彩度も低くなっていきます。
     </p>
     <div class="diagram-center">
@@ -84,15 +116,24 @@
 
     <h3>中間色（濁色）</h3>
     <p>
-      純色に白と黒の両方（＝グレイ）を混ぜてできる色を「中間色」といいます。
-      グレイを混ぜると濁った色になるため、「濁色」とも呼ばれます。
+      純色に白と黒の両方（＝グレイ）を混ぜてできる色を
+      <span class="mark -brackets">中間色</span>
+      といいます。
+      <br />
+      グレイを混ぜると濁った色になるため、
+      <span class="mark -brackets">濁色</span>
+      とも呼ばれます。
     </p>
     <div class="diagram-center">
       <ToneAreaDiagram highlights={["ltg", "g", "sf", "d", "s"]} />
     </div>
 
     <h3>無彩色</h3>
-    <p>白、黒、グレイは「無彩色」と呼ばれ、色相や彩度はもたず、明度の高さだけで区別します。</p>
+    <p>
+      白、黒、グレイは
+      <span class="mark -brackets">無彩色</span>
+      と呼ばれ、色相や彩度はもたず、明度の高さだけで区別します。
+    </p>
     <div class="diagram-center">
       <ToneAreaDiagram highlights={["W", "Gy", "Bk"]} />
     </div>
@@ -168,25 +209,65 @@
   .pccs-guide p {
     color: var(--color-text, #111);
     margin: 0.5rem 0;
-    font-size: 0.9rem;
-    line-height: 1.7;
+    font-size: 0.85rem;
+    line-height: 2;
   }
 
   .pccs-guide ul {
-    margin: 0.5rem 0 0.5rem 1.25rem;
+    margin: 0.85rem 0;
     font-size: 0.9rem;
-    line-height: 1.7;
+    line-height: 2;
+  }
+  .pccs-guide li {
+    padding: 0;
   }
 
-  .tips {
-    font-size: 0.8rem !important;
-    color: var(--color-text-secondary, #555) !important;
-    margin-top: 1rem !important;
+  .pccs-guide .tips {
+    font-size: 0.78rem;
+    margin: 1rem 0;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    border: 1px dashed lightgray;
+    width: 100%;
+    box-sizing: border-box;
+    line-height: 1.7;
+  }
+  .pccs-guide .tips::before {
+    content: "Tips: ";
+    color: oklch(from lightgray calc(l * 0.75) c h);
+    font-weight: 600;
   }
 
   .diagram-center {
     display: flex;
     justify-content: center;
     margin: 0.75rem 0;
+  }
+
+  .mark {
+    line-height: 1;
+    font-weight: 600;
+  }
+  .mark.-brackets::before {
+    content: "「";
+  }
+  .mark.-brackets::after {
+    content: "」";
+  }
+
+  .pccs-guide .example {
+    align-items: center;
+    width: 100%;
+    margin: 1rem 0;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    border: 1px dashed lightblue;
+    box-sizing: border-box;
+    line-height: 1.7;
+  }
+  .pccs-guide .example::before {
+    content: "Example: ";
+    color: oklch(from lightblue calc(l * 0.75) c h);
+    font-weight: 600;
   }
 </style>
