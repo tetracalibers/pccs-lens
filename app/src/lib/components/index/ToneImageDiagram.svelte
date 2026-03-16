@@ -413,7 +413,6 @@
 
         <!-- トーン名 -->
         <h2 class="modal-tone-name">
-          <span class="tone-symbol-label">{modal.cellKey}</span>
           {tone.toneNameEn}
         </h2>
 
@@ -480,7 +479,7 @@
     position: relative;
     background: var(--color-surface, #fff);
     color: var(--color-text, #111);
-    border-radius: 16px;
+    border-radius: 6px;
     padding: 1.5rem;
     width: min(360px, 90vw);
     max-height: 90svh;
@@ -517,8 +516,8 @@
 
   .modal-close {
     position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
+    top: 0;
+    right: 0;
     background: none;
     border: none;
     font-size: 1.25rem;
@@ -539,6 +538,9 @@
     gap: 4px;
     margin-bottom: 1rem;
   }
+  .swatches-row:last-child {
+    margin-bottom: 0;
+  }
 
   .swatch {
     flex: 1;
@@ -552,13 +554,6 @@
     font-weight: bold;
     margin: 0 0 0.75rem;
     padding-right: 2rem;
-  }
-
-  .tone-symbol-label {
-    font-family: var(--font-mono);
-    font-size: 0.85em;
-    opacity: 0.55;
-    margin-right: 0.4em;
   }
 
   /* ---- feelings タグクラウド ---- */
