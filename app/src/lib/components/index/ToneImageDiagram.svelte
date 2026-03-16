@@ -135,26 +135,19 @@
   const instanceId = Math.random().toString(36).slice(2, 8)
   const ANCHOR_NAME = `--tone-diagram-${instanceId}`
 
-  type TooltipState = {
-    visible: boolean
-    cellKey: string
-    toneSymbol: string
-  }
-
-  let tooltip: TooltipState = $state({ visible: false, cellKey: "", toneSymbol: "" })
+  let activeCellKey = $state<string | null>(null)
   let tooltipEl: HTMLDivElement | null = $state(null)
 
   // 現在アクティブなセル（アンカースパン描画用）
-  const activeCell = $derived(
-    tooltip.visible ? (CELLS.find((c) => c.key === tooltip.cellKey) ?? null) : null
-  )
+  const activeCell = $derived(activeCellKey ? (CELLS.find((c) => c.key === activeCellKey) ?? null) : null)
 
   function openTooltip(cell: ToneCell) {
-    tooltip = { visible: true, cellKey: cell.key, toneSymbol: cell.toneSymbol }
+    activeCellKey = cell.key
+    tooltipEl?.showPopover()
   }
 
   function closeTooltip() {
-    tooltip = { ...tooltip, visible: false }
+    tooltipEl?.hidePopover()
   }
 
   // feelings タグの背景色: トーンの偶数色相を均等に振り分ける
@@ -165,38 +158,6 @@
   }
 
   const isAchromatic = (sym: string) => ["W", "Gy", "Bk"].includes(sym)
-
-  // Escキー・ツールチップ外クリック・スクロール・リサイズで閉じる
-  $effect(() => {
-    if (!tooltip.visible) return
-
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") closeTooltip()
-    }
-
-    function onPointerDown(e: PointerEvent) {
-      const target = e.target as Element
-      if (tooltipEl && !tooltipEl.contains(target) && !target.closest("[data-tone-cell]")) {
-        closeTooltip()
-      }
-    }
-
-    function onScrollOrResize() {
-      closeTooltip()
-    }
-
-    document.addEventListener("keydown", onKeyDown)
-    document.addEventListener("pointerdown", onPointerDown)
-    window.addEventListener("scroll", onScrollOrResize, true)
-    window.addEventListener("resize", onScrollOrResize)
-
-    return () => {
-      document.removeEventListener("keydown", onKeyDown)
-      document.removeEventListener("pointerdown", onPointerDown)
-      window.removeEventListener("scroll", onScrollOrResize, true)
-      window.removeEventListener("resize", onScrollOrResize)
-    }
-  })
 
   // SVG viewBox 座標 → wrapper パーセンテージ変換
   // ToneSelector と同様に position:absolute スパンを % で配置し anchor-name を付与する
@@ -315,7 +276,7 @@
         data-tone-cell
         role="button"
         aria-label={tone ? `${cell.key}トーンの詳細を表示` : cell.key}
-        aria-expanded={tooltip.visible && tooltip.cellKey === cell.key}
+        aria-expanded={activeCellKey === cell.key}
         aria-controls="tone-tooltip"
         tabindex="0"
         style="cursor: pointer;"
@@ -417,32 +378,35 @@
 </div>
 
 <!-- ツールチップ（diagram-wrapper の外に配置して fixed が効くようにする） -->
-{#if tooltip.visible}
-  {@const tone = toneMap.get(tooltip.toneSymbol)}
-  {#if tone}
-    <div
-      class="tone-tooltip"
-      style="position-anchor: {ANCHOR_NAME};"
-      bind:this={tooltipEl}
-      role="tooltip"
-      id="tone-tooltip"
-    >
+<!-- popover="auto" により Escape・外側クリックの閉じる処理はブラウザが自動処理 -->
+<div
+  class="tone-tooltip"
+  style="position-anchor: {ANCHOR_NAME};"
+  bind:this={tooltipEl}
+  role="tooltip"
+  id="tone-tooltip"
+  popover="auto"
+  ontoggle={(e) => { if ((e as ToggleEvent).newState === "closed") activeCellKey = null }}
+>
+  {#if activeCell}
+    {@const tone = toneMap.get(activeCell.toneSymbol)}
+    {#if tone}
       <button class="tooltip-close" onclick={closeTooltip} aria-label="閉じる">×</button>
 
       <!-- 上部スウォッチ（色相 2〜12） -->
-      {#if !isAchromatic(tooltip.toneSymbol)}
+      {#if !isAchromatic(activeCell.toneSymbol)}
         <div class="swatches-row" aria-hidden="true">
           {#each UPPER_HUES as hue (hue)}
-            {@const hex = colorMap.get(`${tooltip.toneSymbol}:${hue}`) ?? "#ddd"}
-            <div class="swatch" style="background: {hex}" title="{tooltip.toneSymbol}{hue}"></div>
+            {@const hex = colorMap.get(`${activeCell.toneSymbol}:${hue}`) ?? "#ddd"}
+            <div class="swatch" style="background: {hex}" title="{activeCell.toneSymbol}{hue}"></div>
           {/each}
         </div>
       {:else}
         <div class="swatches-row" aria-hidden="true">
           <div
             class="swatch"
-            style="background: {ACHROMATIC_BG[tooltip.toneSymbol] ?? '#999'}; height: 30px;"
-            title={tooltip.toneSymbol}
+            style="background: {ACHROMATIC_BG[activeCell.key] ?? '#999'}; height: 30px;"
+            title={activeCell.toneSymbol}
           ></div>
         </div>
       {/if}
@@ -455,7 +419,7 @@
       <!-- feelings タグクラウド -->
       <div class="feelings-tags" aria-label="イメージワード">
         {#each tone.feelings as feeling, i (i)}
-          {@const bg = feelingColor(tooltip.toneSymbol, i, tone.feelings.length)}
+          {@const bg = feelingColor(activeCell.toneSymbol, i, tone.feelings.length)}
           <span
             class="feeling-tag"
             class:feeling-tag--plain={!bg}
@@ -474,25 +438,25 @@
       </ul>
 
       <!-- 下部スウォッチ（色相 14〜24） -->
-      {#if !isAchromatic(tooltip.toneSymbol)}
+      {#if !isAchromatic(activeCell.toneSymbol)}
         <div class="swatches-row" aria-hidden="true">
           {#each LOWER_HUES as hue (hue)}
-            {@const hex = colorMap.get(`${tooltip.toneSymbol}:${hue}`) ?? "#ddd"}
-            <div class="swatch" style="background: {hex}" title="{tooltip.toneSymbol}{hue}"></div>
+            {@const hex = colorMap.get(`${activeCell.toneSymbol}:${hue}`) ?? "#ddd"}
+            <div class="swatch" style="background: {hex}" title="{activeCell.toneSymbol}{hue}"></div>
           {/each}
         </div>
       {:else}
         <div class="swatches-row" aria-hidden="true">
           <div
             class="swatch"
-            style="background: {ACHROMATIC_BG[tooltip.toneSymbol] ?? '#999'}; height: 30px;"
-            title={tooltip.toneSymbol}
+            style="background: {ACHROMATIC_BG[activeCell.key] ?? '#999'}; height: 30px;"
+            title={activeCell.toneSymbol}
           ></div>
         </div>
       {/if}
-    </div>
+    {/if}
   {/if}
-{/if}
+</div>
 
 <style>
   .diagram-wrapper {
@@ -533,10 +497,14 @@
     overflow-y: auto;
     background: var(--color-surface, #fff);
     color: var(--color-text, #111);
+    border: none;
     border-radius: 6px;
     padding: 1.5rem;
     box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
     z-index: 200;
+  }
+
+  .tone-tooltip:popover-open {
     animation: tooltip-in 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   }
 
