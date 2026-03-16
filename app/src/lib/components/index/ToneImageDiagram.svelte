@@ -386,6 +386,14 @@
               <div class="swatch" style="background: {hex}" title="{modal.toneSymbol}{hue}"></div>
             {/each}
           </div>
+        {:else}
+          <div class="swatches-row" aria-hidden="true">
+            <div
+              class="swatch"
+              style="background: {ACHROMATIC_BG[modal.toneSymbol] ?? '#999'}; height: 56px;"
+              title={modal.toneSymbol}
+            ></div>
+          </div>
         {/if}
 
         <!-- トーン名 -->
@@ -421,6 +429,14 @@
               {@const hex = colorMap.get(`${modal.toneSymbol}:${hue}`) ?? "#ddd"}
               <div class="swatch" style="background: {hex}" title="{modal.toneSymbol}{hue}"></div>
             {/each}
+          </div>
+        {:else}
+          <div class="swatches-row" aria-hidden="true">
+            <div
+              class="swatch"
+              style="background: {ACHROMATIC_BG[modal.toneSymbol] ?? '#999'}; height: 56px;"
+              title={modal.toneSymbol}
+            ></div>
           </div>
         {/if}
       </div>
