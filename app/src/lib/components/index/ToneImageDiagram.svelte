@@ -139,7 +139,9 @@
   let tooltipEl: HTMLDivElement | null = $state(null)
 
   // 現在アクティブなセル（アンカースパン描画用）
-  const activeCell = $derived(activeCellKey ? (CELLS.find((c) => c.key === activeCellKey) ?? null) : null)
+  const activeCell = $derived(
+    activeCellKey ? (CELLS.find((c) => c.key === activeCellKey) ?? null) : null
+  )
 
   function openTooltip(cell: ToneCell) {
     activeCellKey = cell.key
@@ -291,6 +293,7 @@
             {@const startDeg = -195 + i * 30}
             {@const endDeg = -195 + (i + 1) * 30}
             {@const hex = colorMap.get(`${cell.toneSymbol}:${hue}`) ?? "#ddd"}
+            <circle cx={cell.cx} cy={cell.cy} r={PIE_INNER_R} fill="#fff" />
             <path
               d={pieSlicePath(cell.cx, cell.cy, PIE_INNER_R, PIE_OUTER_R, startDeg, endDeg)}
               fill={hex}
@@ -386,7 +389,9 @@
   role="tooltip"
   id="tone-tooltip"
   popover="auto"
-  ontoggle={(e) => { if ((e as ToggleEvent).newState === "closed") activeCellKey = null }}
+  ontoggle={(e) => {
+    if ((e as ToggleEvent).newState === "closed") activeCellKey = null
+  }}
 >
   {#if activeCell}
     {@const tone = toneMap.get(activeCell.toneSymbol)}
@@ -398,7 +403,11 @@
         <div class="swatches-row" aria-hidden="true">
           {#each UPPER_HUES as hue (hue)}
             {@const hex = colorMap.get(`${activeCell.toneSymbol}:${hue}`) ?? "#ddd"}
-            <div class="swatch" style="background: {hex}" title="{activeCell.toneSymbol}{hue}"></div>
+            <div
+              class="swatch"
+              style="background: {hex}"
+              title="{activeCell.toneSymbol}{hue}"
+            ></div>
           {/each}
         </div>
       {:else}
@@ -442,7 +451,11 @@
         <div class="swatches-row" aria-hidden="true">
           {#each LOWER_HUES as hue (hue)}
             {@const hex = colorMap.get(`${activeCell.toneSymbol}:${hue}`) ?? "#ddd"}
-            <div class="swatch" style="background: {hex}" title="{activeCell.toneSymbol}{hue}"></div>
+            <div
+              class="swatch"
+              style="background: {hex}"
+              title="{activeCell.toneSymbol}{hue}"
+            ></div>
           {/each}
         </div>
       {:else}
