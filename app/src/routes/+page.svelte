@@ -203,7 +203,7 @@
 
   .pccs-guide h2 {
     font-size: 1.25rem;
-    margin: 3rem 0 1.5rem;
+    margin: 2rem 0 1.5rem;
   }
 
   .pccs-guide h3 {
