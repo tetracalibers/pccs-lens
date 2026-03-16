@@ -231,7 +231,7 @@
 
 <style>
   .diagram-wrapper {
-    display: inline-block;
+    display: flex;
     width: 100%;
     max-width: 320px;
   }

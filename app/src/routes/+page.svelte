@@ -78,71 +78,75 @@
 
     <h2>色の分類とトーンの位置関係</h2>
 
-    <h3>純色</h3>
-    <p>
-      白も黒もグレイも混ざっていない純粋な色を
-      <span class="mark -brackets">純色</span>
-      といいます。
-      <br />
-      PCCSではvトーンが純色で、色みが最もわかりやすいです。
-    </p>
-    <div class="diagram-center">
-      <ToneAreaDiagram highlights={["v"]} />
-    </div>
+    <div class="color-type-grid">
+      <div class="color-type-card">
+        <h3>純色</h3>
+        <p>
+          白も黒もグレイも混ざっていない純粋な色を
+          <span class="mark -brackets">純色</span>
+          といいます。PCCSではvトーンが純色で、色みが最もわかりやすいです。
+        </p>
+        <div class="diagram-center">
+          <ToneAreaDiagram highlights={["v"]} />
+        </div>
+      </div>
 
-    <h3>明清色</h3>
-    <p>
-      純色に白を混ぜてできる色を
-      <span class="mark -brackets">明清色</span>
-      といいます。
-      <br />
-      白を多く混ぜていくにつれ、だんだんと明度が高く、彩度は低くなっていきます。
-    </p>
-    <div class="diagram-center">
-      <ToneAreaDiagram highlights={["p", "lt", "b"]} />
-    </div>
+      <div class="color-type-card">
+        <h3>明清色</h3>
+        <p>
+          純色に白を混ぜてできる色を
+          <span class="mark -brackets">明清色</span>
+          といいます。白を多く混ぜていくにつれ、だんだんと明度が高く、彩度は低くなっていきます。
+        </p>
+        <div class="diagram-center">
+          <ToneAreaDiagram highlights={["p", "lt", "b"]} />
+        </div>
+      </div>
 
-    <h3>暗清色</h3>
-    <p>
-      純色に黒を混ぜてできる色を
-      <span class="mark -brackets">暗清色</span>
-      といいます。
-      <br />
-      黒を多く混ぜていくにつれ、だんだんと明度が低く、彩度も低くなっていきます。
-    </p>
-    <div class="diagram-center">
-      <ToneAreaDiagram highlights={["dkg", "dk", "dp"]} />
-    </div>
+      <div class="color-type-card">
+        <h3>暗清色</h3>
+        <p>
+          純色に黒を混ぜてできる色を
+          <span class="mark -brackets">暗清色</span>
+          といいます。黒を多く混ぜていくにつれ、だんだんと明度が低く、彩度も低くなっていきます。
+        </p>
+        <div class="diagram-center">
+          <ToneAreaDiagram highlights={["dkg", "dk", "dp"]} />
+        </div>
+      </div>
 
-    <h3>中間色（濁色）</h3>
-    <p>
-      純色に白と黒の両方（＝グレイ）を混ぜてできる色を
-      <span class="mark -brackets">中間色</span>
-      といいます。
-      <br />
-      グレイを混ぜると濁った色になるため、
-      <span class="mark -brackets">濁色</span>
-      とも呼ばれます。
-    </p>
-    <div class="diagram-center">
-      <ToneAreaDiagram highlights={["ltg", "g", "sf", "d", "s"]} />
-    </div>
+      <div class="color-type-card">
+        <h3>中間色（濁色）</h3>
+        <p>
+          純色に白と黒の両方（＝グレイ）を混ぜてできる色を
+          <span class="mark -brackets">中間色</span>
+          といいます。グレイを混ぜると濁った色になるため、
+          <span class="mark -brackets">濁色</span>
+          とも呼ばれます。
+        </p>
+        <div class="diagram-center">
+          <ToneAreaDiagram highlights={["ltg", "g", "sf", "d", "s"]} />
+        </div>
+      </div>
 
-    <h3>無彩色</h3>
-    <p>
-      白、黒、グレイは
-      <span class="mark -brackets">無彩色</span>
-      と呼ばれ、色相や彩度はもたず、明度の高さだけで区別します。
-    </p>
-    <div class="diagram-center">
-      <ToneAreaDiagram highlights={["W", "Gy", "Bk"]} />
+      <div class="color-type-card">
+        <h3>無彩色</h3>
+        <p>
+          白、黒、グレイは
+          <span class="mark -brackets">無彩色</span>
+          と呼ばれ、色相や彩度はもたず、明度の高さだけで区別します。
+        </p>
+        <div class="diagram-center">
+          <ToneAreaDiagram highlights={["W", "Gy", "Bk"]} />
+        </div>
+      </div>
     </div>
   </section>
 </main>
 
 <style>
   main {
-    max-width: 600px;
+    max-width: 700px;
     margin: 3rem auto;
     padding: 0 1rem;
     text-align: center;
@@ -159,10 +163,11 @@
   }
 
   .feature-nav {
-    display: flex;
+    display: grid;
     flex-direction: column;
     gap: 1rem;
     text-align: left;
+    margin-inline: auto;
   }
 
   .feature-card {
@@ -225,7 +230,7 @@
   .pccs-guide .tips {
     margin: 1rem 0;
     padding: 0.5rem 0.75rem;
-    border-radius: 4px;
+    border-radius: 6px;
     border: 1px dashed lightgray;
     width: 100%;
     box-sizing: border-box;
@@ -237,10 +242,39 @@
     font-weight: 600;
   }
 
+  .color-type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+
+  .color-type-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+
+  .color-type-card {
+    padding: 1rem;
+    border: 1px solid var(--color-border, #ddd);
+    border-radius: 0.5rem;
+  }
+
+  .color-type-card h3 {
+    font-size: 0.95rem;
+    margin: 0 0 0.5rem;
+  }
+
+  .color-type-card p {
+    font-size: 0.8rem;
+    line-height: 1.8;
+    margin: 0 0 0.5rem;
+    color: var(--color-text, #111);
+  }
+
   .diagram-center {
     display: flex;
     justify-content: center;
-    margin: 0.75rem 0;
+    margin: 0.75rem 0 0;
   }
 
   .mark {
@@ -259,7 +293,7 @@
     width: 100%;
     margin: 1rem 0;
     padding: 0.5rem 0.75rem;
-    border-radius: 4px;
+    border-radius: 6px;
     border: 1px dashed lightblue;
     box-sizing: border-box;
     line-height: 1.7;
