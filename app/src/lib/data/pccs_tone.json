@@ -1,0 +1,107 @@
+[
+  {
+    "toneSymbol": "v",
+    "toneNameEn": "vivid",
+    "toneNameJa": "ビビッド",
+    "feelings": ["さえた", "鮮やかな", "派手な", "生き生きした", "目立つ"],
+    "categories": ["純色", "高彩度", "中明度"]
+  },
+  {
+    "toneSymbol": "b",
+    "toneNameEn": "bright",
+    "toneNameJa": "ブライト",
+    "feelings": ["明るい", "健康的な", "陽気な", "華やかな"],
+    "categories": ["明清色", "高彩度", "高明度"]
+  },
+  {
+    "toneSymbol": "s",
+    "toneNameEn": "strong",
+    "toneNameJa": "ストロング",
+    "feelings": ["強い", "くどい", "動的な", "情熱的な"],
+    "categories": ["中間色（濁色）", "高彩度", "中明度"]
+  },
+  {
+    "toneSymbol": "dp",
+    "toneNameEn": "deep",
+    "toneNameJa": "ディープ",
+    "feelings": ["濃い", "深い", "充実した", "伝統的な", "和風の"],
+    "categories": ["中間色（濁色）", "高彩度", "低明度"]
+  },
+  {
+    "toneSymbol": "lt",
+    "toneNameEn": "light",
+    "toneNameJa": "ライト",
+    "feelings": ["浅い", "澄んだ", "さわやかな", "子どもっぽい", "楽しい"],
+    "categories": ["明清色", "中彩度", "高明度"]
+  },
+  {
+    "toneSymbol": "sf",
+    "toneNameEn": "soft",
+    "toneNameJa": "ソフト",
+    "feelings": ["柔らかい", "穏やかな", "ぼんやりした"],
+    "categories": ["中間色（濁色）", "中彩度", "中明度"]
+  },
+  {
+    "toneSymbol": "d",
+    "toneNameEn": "dull",
+    "toneNameJa": "ダル",
+    "feelings": ["鈍い", "くすんだ"],
+    "categories": ["中間色（濁色）", "中彩度", "中明度"]
+  },
+  {
+    "toneSymbol": "dk",
+    "toneNameEn": "dark",
+    "toneNameJa": "ダーク",
+    "feelings": ["暗い", "大人っぽい", "丈夫な", "円熟した"],
+    "categories": ["暗清色", "中彩度", "低明度"]
+  },
+  {
+    "toneSymbol": "p",
+    "toneNameEn": "pale",
+    "toneNameJa": "ペール",
+    "feelings": ["薄い", "軽い", "あっさりした", "弱い", "優しい", "淡い", "かわいい"],
+    "categories": ["明清色", "低彩度", "高明度"]
+  },
+  {
+    "toneSymbol": "ltg",
+    "toneNameEn": "light grayish",
+    "toneNameJa": "ライトグレイッシュ",
+    "feelings": ["明るい灰みの", "落ち着いた", "渋い", "おとなしい"],
+    "categories": ["中間色（濁色）", "低彩度", "中明度"]
+  },
+  {
+    "toneSymbol": "g",
+    "toneNameEn": "grayish",
+    "toneNameJa": "グレイッシュ",
+    "feelings": ["灰みの", "濁った", "地味な"],
+    "categories": ["中間色（濁色）", "低彩度", "中明度"]
+  },
+  {
+    "toneSymbol": "dkg",
+    "toneNameEn": "dark grayish",
+    "toneNameJa": "ダークグレイッシュ",
+    "feelings": ["暗い灰みの", "陰気な", "重い", "固い"],
+    "categories": ["暗清色", "低彩度", "低明度"]
+  },
+  {
+    "toneSymbol": "W",
+    "toneNameEn": "white",
+    "toneNameJa": "ホワイト",
+    "feelings": ["清潔な", "冷たい", "新鮮な"],
+    "categories": ["無彩色", "高明度"]
+  },
+  {
+    "toneSymbol": "Gy",
+    "toneNameEn": "gray",
+    "toneNameJa": "グレイ",
+    "feelings": ["スモーキーな", "しゃれた", "寂しい"],
+    "categories": ["無彩色"]
+  },
+  {
+    "toneSymbol": "Bk",
+    "toneNameEn": "black",
+    "toneNameJa": "ブラック",
+    "feelings": ["高級な", "フォーマルな", "シックな", "締まった"],
+    "categories": ["無彩色", "低明度"]
+  }
+]
