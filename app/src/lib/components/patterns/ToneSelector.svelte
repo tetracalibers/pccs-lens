@@ -460,7 +460,7 @@
     margin: 0;
 
     position: fixed;
-    position-try-fallbacks: --tooltip-right;
+    position-try-fallbacks: flip-inline;
     position-try-order: most-width;
 
     /* デフォルト：アンカーの左側に配置 */
@@ -480,14 +480,6 @@
     display: flex;
     flex-direction: column;
     gap: 3px;
-  }
-
-  /* 右側フォールバック */
-  @position-try --tooltip-right {
-    right: unset;
-    left: anchor(right);
-    margin-right: 0;
-    margin-left: 8px;
   }
 
   .subtone-item {
