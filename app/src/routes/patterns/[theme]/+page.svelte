@@ -331,7 +331,7 @@
 
   .pickers-hint {
     font-size: 0.78rem;
-    color: var(--color-text-secondary, #999);
+    color: oklch(from #f9f9f9 calc(l * 0.6) c h);
     margin: 0.5rem 0 1.5rem;
     background-color: #f9f9f9;
     padding: 0.5rem 0.75rem;
