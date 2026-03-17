@@ -297,7 +297,7 @@
         {/if}
 
         <!-- フォーカスインジケータ -->
-        {#if (focusedKey === cell.key || (isGrayBucket && openPopovers[cell.key])) && !selected}
+        {#if focusedKey === cell.key || (isGrayBucket && openPopovers[cell.key])}
           {#if cell.shape === "circle"}
             <circle
               cx={cell.cx}
