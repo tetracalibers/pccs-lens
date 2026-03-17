@@ -505,8 +505,7 @@
   }
 
   .subtone-item:focus-visible:not(.selected) {
-    outline: 2px dashed white;
-    outline-offset: 2px;
-    box-shadow: 0 0 0 3.5px #3b82f6;
+    outline: 2px solid Highlight;
+    outline-offset: 1px;
   }
 </style>
