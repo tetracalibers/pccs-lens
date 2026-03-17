@@ -297,7 +297,7 @@
         {/if}
 
         <!-- フォーカスインジケータ -->
-        {#if focusedKey === cell.key || (isGrayBucket && openPopovers[cell.key])}
+        {#if (focusedKey === cell.key || (isGrayBucket && openPopovers[cell.key])) && !selected}
           {#if cell.shape === "circle"}
             <circle
               cx={cell.cx}
@@ -501,7 +501,7 @@
     outline-offset: 2px;
   }
 
-  .subtone-item:focus-visible:not(.selected) {
+  .subtone-item:focus-visible {
     outline: 2px solid Highlight;
     outline-offset: 1px;
   }
