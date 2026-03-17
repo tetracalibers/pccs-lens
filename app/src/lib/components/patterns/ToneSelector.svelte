@@ -71,50 +71,26 @@
     Bk: "#1a1a1a"
   }
 
-  // ツールチップを開いているグレイバケットキー
-  let openTooltipKey: string | null = $state(null)
-  let tooltipGroupEl: HTMLElement | null = $state(null)
+  const GRAY_BUCKET_KEYS = new Set(["ltGy", "mGy", "dkGy"])
+
+  // グレイバケットセルのポップオーバー要素への参照
+  let popoverEls: Record<string, HTMLElement | null> = $state({})
 
   // グレイバケットセルの <g> 要素への参照（フォーカス返却用）
   let triggerEls: Record<string, SVGGElement | null> = $state({})
 
-  // ツールチップが開いたとき最初のボタンにフォーカス
-  $effect(() => {
-    if (tooltipGroupEl) {
-      const firstBtn = tooltipGroupEl.querySelector("button") as HTMLElement | null
-      firstBtn?.focus()
-    }
-  })
+  // ポップオーバーの開閉状態（aria-expanded 用）
+  let openPopovers: Record<string, boolean> = $state({})
 
-  // 外側クリックで閉じる（フォーカス返却なし）
-  $effect(() => {
-    if (!openTooltipKey) return
-    const close = (e: MouseEvent) => {
-      if (tooltipGroupEl?.contains(e.target as Node)) return
-      openTooltipKey = null
-    }
-    document.addEventListener("click", close)
-    return () => document.removeEventListener("click", close)
-  })
-
-  // Escape/Tab などキーボードでツールチップを閉じ、トリガーにフォーカスを戻す
-  function closeTooltipWithFocus() {
-    const key = openTooltipKey
-    openTooltipKey = null
-    if (key) triggerEls[key]?.focus()
-  }
-
-  // ツールチップ内のキーボードナビゲーション
-  function handleTooltipKeydown(e: KeyboardEvent) {
-    if (!tooltipGroupEl) return
-    const buttons = Array.from(tooltipGroupEl.querySelectorAll("button")) as HTMLElement[]
+  // ポップオーバー内のキーボードナビゲーション
+  // Escape とライトディスミスは Popover API が自動処理するため不要
+  function handleTooltipKeydown(e: KeyboardEvent, bucketKey: string) {
+    const el = popoverEls[bucketKey]
+    if (!el) return
+    const buttons = Array.from(el.querySelectorAll("button")) as HTMLElement[]
     const currentIndex = buttons.findIndex((b) => b === document.activeElement)
 
     switch (e.key) {
-      case "Escape":
-        e.preventDefault()
-        closeTooltipWithFocus()
-        break
       case "ArrowDown":
         e.preventDefault()
         buttons[(currentIndex + 1) % buttons.length]?.focus()
@@ -122,11 +98,6 @@
       case "ArrowUp":
         e.preventDefault()
         buttons[(currentIndex - 1 + buttons.length) % buttons.length]?.focus()
-        break
-      case "Tab":
-        // タブキーでツールチップを抜けるときはトリガーに戻す
-        e.preventDefault()
-        closeTooltipWithFocus()
         break
     }
   }
@@ -213,12 +184,17 @@
     return GRAY_SUB_TONES[bucketKey] ?? []
   }
 
-  // インスタンスごとにユニークなIDを生成（複数配置時のアンカー名衝突を防ぐ）
+  // インスタンスごとにユニークなIDを生成（複数配置時のID衝突を防ぐ）
   const instanceId = Math.random().toString(36).slice(2, 8)
 
   // CSS Anchor Positioning 用のアンカー名を生成
   function getAnchorName(key: string): string {
     return `--tone-selector-${instanceId}-${key}`
+  }
+
+  // ポップオーバーのID（aria-controls との紐付けに使用）
+  function getPopoverId(key: string): string {
+    return `tone-selector-${instanceId}-${key}`
   }
 </script>
 
@@ -233,7 +209,7 @@
       {@const opacity = getOpacity(cell.key)}
       {@const selected = isSelected(cell.key)}
       {@const suggested = isSuggested(cell.key)}
-      {@const isGrayBucket = cell.key === "ltGy" || cell.key === "mGy" || cell.key === "dkGy"}
+      {@const isGrayBucket = GRAY_BUCKET_KEYS.has(cell.key)}
       <g
         bind:this={triggerEls[cell.key]}
         {opacity}
@@ -241,7 +217,8 @@
         aria-label={cell.label}
         aria-pressed={isGrayBucket ? undefined : selected}
         aria-haspopup={isGrayBucket ? "menu" : undefined}
-        aria-expanded={isGrayBucket ? openTooltipKey === cell.key : undefined}
+        aria-expanded={isGrayBucket ? (openPopovers[cell.key] ?? false) : undefined}
+        aria-controls={isGrayBucket ? getPopoverId(cell.key) : undefined}
         tabindex="0"
         style="cursor: pointer; outline: none;"
         onfocus={() => (focusedKey = cell.key)}
@@ -249,7 +226,7 @@
         onclick={(e) => {
           if (isGrayBucket) {
             e.stopPropagation()
-            openTooltipKey = openTooltipKey === cell.key ? null : cell.key
+            popoverEls[cell.key]?.togglePopover()
           } else {
             onselect(cell.key)
           }
@@ -258,7 +235,7 @@
           if (e.key === "Enter") {
             e.preventDefault()
             if (isGrayBucket) {
-              openTooltipKey = openTooltipKey === cell.key ? null : cell.key
+              popoverEls[cell.key]?.togglePopover()
             } else {
               onselect(cell.key)
             }
@@ -406,7 +383,7 @@
 
   <!-- SVG g は anchor-name 非対応のため、グレイバケットセルに重なる不可視HTMLアンカーを絶対配置で設置 -->
   {#each CELLS as cell (cell.key)}
-    {#if cell.key === "ltGy" || cell.key === "mGy" || cell.key === "dkGy"}
+    {#if GRAY_BUCKET_KEYS.has(cell.key)}
       <span
         class="cell-anchor"
         style="
@@ -420,44 +397,56 @@
     {/if}
   {/each}
 
-  <!-- グレイ細分ツールチップ（CSS Anchor Positioning で左右を自動切替） -->
-  {#if openTooltipKey}
-    {@const items = getTooltipItems(openTooltipKey)}
-    <div
-      class="gray-subtone-tooltip"
-      style="position-anchor: {getAnchorName(openTooltipKey)};"
-      bind:this={tooltipGroupEl}
-      role="menu"
-      tabindex="-1"
-      aria-label="グレイ細分選択"
-      onkeydown={handleTooltipKeydown}
-    >
-      {#each items as subTone (subTone.notation)}
-        {@const isSubSelected = value === subTone.notation}
-        <button
-          class="subtone-item"
-          class:selected={isSubSelected}
-          style="background-color: {subTone.hex}; color: {labelFillFromHex(subTone.hex)};"
-          role="menuitemcheckbox"
-          aria-checked={isSubSelected}
-          onclick={(e) => {
-            e.stopPropagation()
-            onselect(subTone.notation)
-            openTooltipKey = null
-          }}
-          onkeydown={(e) => {
-            if (e.key === "Enter") {
-              e.stopPropagation()
+  <!-- グレイ細分ポップオーバー（Popover API で表示制御）
+       常にDOMに存在し、showPopover/hidePopover/togglePopover で開閉する。
+       ライトディスミスと Escape はブラウザが自動処理する。 -->
+  {#each CELLS as cell (cell.key)}
+    {#if GRAY_BUCKET_KEYS.has(cell.key)}
+      {@const items = getTooltipItems(cell.key)}
+      <div
+        id={getPopoverId(cell.key)}
+        popover="auto"
+        bind:this={popoverEls[cell.key]}
+        class="gray-subtone-tooltip"
+        style="position-anchor: {getAnchorName(cell.key)};"
+        role="menu"
+        tabindex="-1"
+        aria-label="グレイ細分選択"
+        ontoggle={() => {
+          const el = popoverEls[cell.key]
+          const isOpen = el?.matches(":popover-open") ?? false
+          openPopovers[cell.key] = isOpen
+          if (isOpen) {
+            // 選択済みまたは最初のボタンにフォーカス
+            const selectedBtn = el?.querySelector(".selected") as HTMLElement | null
+            const firstBtn = el?.querySelector("button") as HTMLElement | null
+            ;(selectedBtn ?? firstBtn)?.focus()
+          } else if (document.activeElement === document.body || !document.activeElement) {
+            // Escape やライトディスミスでフォーカスが body に移った場合はトリガーに返す
+            triggerEls[cell.key]?.focus()
+          }
+        }}
+        onkeydown={(e) => handleTooltipKeydown(e, cell.key)}
+      >
+        {#each items as subTone (subTone.notation)}
+          {@const isSubSelected = value === subTone.notation}
+          <button
+            class="subtone-item"
+            class:selected={isSubSelected}
+            style="background-color: {subTone.hex}; color: {labelFillFromHex(subTone.hex)};"
+            role="menuitemcheckbox"
+            aria-checked={isSubSelected}
+            onclick={() => {
               onselect(subTone.notation)
-              openTooltipKey = null
-            }
-          }}
-        >
-          {subTone.notation}
-        </button>
-      {/each}
-    </div>
-  {/if}
+              popoverEls[cell.key]?.hidePopover()
+            }}
+          >
+            {subTone.notation}
+          </button>
+        {/each}
+      </div>
+    {/if}
+  {/each}
 </div>
 
 <style>
@@ -480,8 +469,15 @@
    * デフォルト：アンカーの左側に表示（right: anchor(left)）
    * フォールバック：左に収まらない場合は右側に表示（@position-try --tooltip-right）
    * position: fixed にすることで SVG/HTML の境界を越えて機能する。
+   *
+   * ブラウザのポップオーバーデフォルトスタイル（inset: 0, margin: auto）を
+   * inset: auto, margin: 0 でリセットしてアンカー配置を有効にする。
    */
   .gray-subtone-tooltip {
+    /* Popover API デフォルトスタイルのリセット */
+    inset: auto;
+    margin: 0;
+
     position: fixed;
     position-try-fallbacks: --tooltip-right;
     position-try-order: most-width;
@@ -492,15 +488,17 @@
     top: anchor(center);
     translate: 0 -50%;
 
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
     padding: 4px;
     background: white;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-    z-index: 100;
+  }
+
+  .gray-subtone-tooltip:popover-open {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
   }
 
   /* 右側フォールバック */
