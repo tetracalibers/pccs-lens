@@ -99,6 +99,11 @@
         e.preventDefault()
         buttons[(currentIndex - 1 + buttons.length) % buttons.length]?.focus()
         break
+      case "Tab":
+        e.preventDefault()
+        popoverEls[bucketKey]?.hidePopover()
+        triggerEls[bucketKey]?.focus()
+        break
     }
   }
 
