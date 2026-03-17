@@ -25,7 +25,7 @@
   }
 
   function randomHex(): string {
-    return randomColor({ luminosity: "light" })
+    return randomColor()
   }
 
   function makeEntry(hex: string): ColorEntry {
