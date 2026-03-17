@@ -99,6 +99,11 @@
         e.preventDefault()
         buttons[(currentIndex - 1 + buttons.length) % buttons.length]?.focus()
         break
+      case "Tab":
+        e.preventDefault()
+        popoverEls[bucketKey]?.hidePopover()
+        triggerEls[bucketKey]?.focus()
+        break
     }
   }
 
@@ -292,26 +297,15 @@
         {/if}
 
         <!-- フォーカスインジケータ -->
-        {#if focusedKey === cell.key && !selected}
+        {#if focusedKey === cell.key || (isGrayBucket && openPopovers[cell.key])}
           {#if cell.shape === "circle"}
             <circle
               cx={cell.cx}
               cy={cell.cy}
-              r={CIRCLE_R + 4}
+              r={CIRCLE_R + 2}
               fill="none"
-              stroke="white"
+              stroke="Highlight"
               stroke-width="2"
-              stroke-dasharray="3 2"
-              style="pointer-events: none;"
-            />
-            <circle
-              cx={cell.cx}
-              cy={cell.cy}
-              r={CIRCLE_R + 4}
-              fill="none"
-              stroke="#3b82f6"
-              stroke-width="1.5"
-              stroke-dasharray="3 2"
               style="pointer-events: none;"
             />
           {:else}
@@ -322,21 +316,8 @@
               height={RECT_H + 8}
               rx="5"
               fill="none"
-              stroke="white"
+              stroke="Highlight"
               stroke-width="2"
-              stroke-dasharray="3 2"
-              style="pointer-events: none;"
-            />
-            <rect
-              x={cell.cx - RECT_W / 2 - 4}
-              y={cell.cy - RECT_H / 2 - 4}
-              width={RECT_W + 8}
-              height={RECT_H + 8}
-              rx="5"
-              fill="none"
-              stroke="#3b82f6"
-              stroke-width="1.5"
-              stroke-dasharray="3 2"
               style="pointer-events: none;"
             />
           {/if}
@@ -479,7 +460,7 @@
     margin: 0;
 
     position: fixed;
-    position-try-fallbacks: --tooltip-right;
+    position-try-fallbacks: flip-inline;
     position-try-order: most-width;
 
     /* デフォルト：アンカーの左側に配置 */
@@ -499,14 +480,6 @@
     display: flex;
     flex-direction: column;
     gap: 3px;
-  }
-
-  /* 右側フォールバック */
-  @position-try --tooltip-right {
-    right: unset;
-    left: anchor(right);
-    margin-right: 0;
-    margin-left: 8px;
   }
 
   .subtone-item {
@@ -529,8 +502,7 @@
   }
 
   .subtone-item:focus-visible:not(.selected) {
-    outline: 2px dashed white;
-    outline-offset: 2px;
-    box-shadow: 0 0 0 3.5px #3b82f6;
+    outline: 2px solid Highlight;
+    outline-offset: 1px;
   }
 </style>
