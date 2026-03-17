@@ -297,21 +297,10 @@
             <circle
               cx={cell.cx}
               cy={cell.cy}
-              r={CIRCLE_R + 4}
+              r={CIRCLE_R + 2}
               fill="none"
-              stroke="white"
+              stroke="Highlight"
               stroke-width="2"
-              stroke-dasharray="3 2"
-              style="pointer-events: none;"
-            />
-            <circle
-              cx={cell.cx}
-              cy={cell.cy}
-              r={CIRCLE_R + 4}
-              fill="none"
-              stroke="#3b82f6"
-              stroke-width="1.5"
-              stroke-dasharray="3 2"
               style="pointer-events: none;"
             />
           {:else}
@@ -322,21 +311,8 @@
               height={RECT_H + 8}
               rx="5"
               fill="none"
-              stroke="white"
+              stroke="Highlight"
               stroke-width="2"
-              stroke-dasharray="3 2"
-              style="pointer-events: none;"
-            />
-            <rect
-              x={cell.cx - RECT_W / 2 - 4}
-              y={cell.cy - RECT_H / 2 - 4}
-              width={RECT_W + 8}
-              height={RECT_H + 8}
-              rx="5"
-              fill="none"
-              stroke="#3b82f6"
-              stroke-width="1.5"
-              stroke-dasharray="3 2"
               style="pointer-events: none;"
             />
           {/if}
