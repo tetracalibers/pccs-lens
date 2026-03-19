@@ -7,6 +7,9 @@ import type { Processor } from "unified"
 import type { Node } from "unist"
 
 export default function remarkDirective(this: Processor) {
+  // mdsvex bundles an old unified that only reads `this.Parser` (uppercase).
+  // Using `this.parser` (the non-deprecated form) breaks directive parsing
+  // because mdsvex never picks it up. Suppress the deprecation warning here.
   this.Parser = function (doc: string) {
     // fromMarkdown (CommonMark) cannot parse Svelte component attributes that
     // use {expr} syntax — it fails to recognize the tag as HTML and wraps it
