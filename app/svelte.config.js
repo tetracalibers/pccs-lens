@@ -1,6 +1,6 @@
 import adapter from "@sveltejs/adapter-static"
 
-const dev = process.env.NODE_ENV === "development"
+const isGithubPages = process.env.GITHUB_PAGES === "true"
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -9,7 +9,7 @@ const config = {
       fallback: "404.html"
     }),
     paths: {
-      base: dev ? "" : "/pccs-lens"
+      base: isGithubPages ? "/pccs-lens" : ""
     }
   }
 }
