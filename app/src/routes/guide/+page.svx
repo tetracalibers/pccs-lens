@@ -1,6 +1,6 @@
 ---
 layout: guide
-title: PCCSとは？ - PCCS Lens
+title: PCCSとは？
 ---
 
 <script lang="ts">

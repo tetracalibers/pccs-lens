@@ -1,11 +1,12 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
 
-  let { title = "PCCS Lens", children }: { title?: string; children: Snippet } = $props()
+  let { title, children }: { title?: string; children: Snippet } = $props()
+  const pageTitle = $derived(title ? `${title} - PCCS Lens` : "PCCS Lens")
 </script>
 
 <svelte:head>
-  <title>{title}</title>
+  <title>{pageTitle}</title>
 </svelte:head>
 
 <main>
