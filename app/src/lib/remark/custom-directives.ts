@@ -6,9 +6,11 @@ import type { Directives } from "mdast-util-directive"
  * remark plugin to transform custom directives into HTML elements with classes.
  *
  * Supported directives:
- *   :mark[text]          → <span class="mark -brackets">text</span>
- *   :::tips\n...\n:::    → <div class="tips">...</div>
- *   :::example\n...\n::: → <div class="example">...</div>
+ *   :mark[text]           → <span class="mark -brackets">text</span>
+ *   :::tips\n...\n:::     → <div class="tips">...</div>
+ *   :::example\n...\n:::  → <div class="example">...</div>
+ *   :::term-grid\n...\n::: → <div class="color-type-grid">...</div>
+ *   :::term-card\n...\n::: → <div class="color-type-card">...</div>
  */
 export default function remarkGuideDirectives() {
   return (tree: Root) => {
@@ -33,6 +35,12 @@ export default function remarkGuideDirectives() {
         }
         if (directive.name === "example") {
           directive.data = { hName: "div", hProperties: { class: "example" } }
+        }
+        if (directive.name === "term-grid") {
+          directive.data = { hName: "div", hProperties: { class: "term-grid" } }
+        }
+        if (directive.name === "term-card") {
+          directive.data = { hName: "div", hProperties: { class: "term-card" } }
         }
       }
     })

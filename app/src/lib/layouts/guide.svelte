@@ -66,6 +66,7 @@
     margin: 1rem 0;
     padding: 0.5rem 0.75rem;
     border-radius: 4px;
+    width: 100%;
     box-sizing: border-box;
     font-size: 0.85rem;
     line-height: 1.7;
@@ -101,29 +102,29 @@
     color: var(--color-text, #111);
   }
 
-  main :global(.color-type-grid) {
+  main :global(.term-grid) {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 1rem;
     margin: 1rem 0;
   }
 
-  main :global(.color-type-card:last-child:nth-child(odd)) {
+  main :global(.term-card:last-child:nth-child(odd)) {
     grid-column: 1 / -1;
   }
 
-  main :global(.color-type-card) {
+  main :global(.term-card) {
     padding: 1rem;
     border: 1px solid var(--color-border, #ddd);
     border-radius: 0.5rem;
   }
 
-  main :global(.color-type-card h3) {
+  main :global(.term-card h3) {
     font-size: 0.95rem;
     margin: 0 0 0.5rem;
   }
 
-  main :global(.color-type-card p) {
+  main :global(.term-card p) {
     font-size: 0.8rem;
     line-height: 1.8;
     margin: 0 0 0.5rem;
