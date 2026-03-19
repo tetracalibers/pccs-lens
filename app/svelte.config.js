@@ -2,7 +2,7 @@ import { mdsvex } from "mdsvex"
 import adapter from "@sveltejs/adapter-static"
 import { fileURLToPath } from "url"
 import remarkDirective from "./src/lib/remark/directive.ts"
-import { remarkGuideDirectives } from "./src/lib/remark/custom-directives.ts"
+import remarkGuideDirectives from "./src/lib/remark/custom-directives.ts"
 
 const isGithubPages = process.env.GITHUB_PAGES === "true"
 

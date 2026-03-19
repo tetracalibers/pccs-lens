@@ -10,7 +10,7 @@ import type { Directives } from "mdast-util-directive"
  *   :::tips\n...\n:::    → <div class="tips">...</div>
  *   :::example\n...\n::: → <div class="example">...</div>
  */
-export function remarkGuideDirectives() {
+export default function remarkGuideDirectives() {
   return (tree: Root) => {
     visit(tree, (node) => {
       if (
@@ -24,7 +24,7 @@ export function remarkGuideDirectives() {
       if (directive.type === "textDirective" && directive.name === "mark") {
         directive.data = {
           hName: "span",
-          hProperties: { class: "mark -brackets" },
+          hProperties: { class: "mark -brackets" }
         }
       }
       if (directive.type === "containerDirective" || directive.type === "leafDirective") {
