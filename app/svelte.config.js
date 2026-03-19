@@ -6,6 +6,21 @@ import remarkGuideDirectives from "./src/lib/remark/custom-directives.ts"
 
 const isGithubPages = process.env.GITHUB_PAGES === "true"
 
+/** @type {import('./src/lib/remark/custom-directives.ts').DirectiveConfigMap} */
+const guideDirectives = {
+  // :::Name[label]{props}\n children \n:::
+  container: [
+    { name: "tips", tag: "div", classes: ["tips"] },
+    { name: "example", tag: "div", classes: ["example"] },
+    { name: "term-grid", tag: "div", classes: ["term-grid"] },
+    { name: "term-card", tag: "div", classes: ["term-card"] }
+  ],
+  // ::Name[label]{props}
+  leaf: [],
+  // :Name[label]{props}
+  text: [{ name: "mark", tag: "span", classes: ["mark", "-brackets"] }]
+}
+
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   kit: {
@@ -17,7 +32,7 @@ const config = {
       layout: {
         guide: fileURLToPath(new URL("./src/lib/layouts/guide.svelte", import.meta.url))
       },
-      remarkPlugins: [remarkDirective, remarkGuideDirectives]
+      remarkPlugins: [remarkDirective, [remarkGuideDirectives, guideDirectives]]
     })
   ],
   extensions: [".svelte", ".svx"]
