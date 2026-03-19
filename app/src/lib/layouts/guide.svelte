@@ -1,3 +1,11 @@
+<script lang="ts">
+  let { title = "PCCS Lens" }: { title?: string } = $props()
+</script>
+
+<svelte:head>
+  <title>{title}</title>
+</svelte:head>
+
 <main>
   <slot />
 </main>
