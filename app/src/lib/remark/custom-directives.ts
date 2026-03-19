@@ -23,24 +23,34 @@ export default function remarkGuideDirectives() {
         return
       }
       const directive = node as unknown as Directives
+      const classes = directive.attributes?.class ? directive.attributes.class.split(" ") : []
       if (directive.type === "textDirective" && directive.name === "mark") {
         directive.data = {
           hName: "span",
-          hProperties: { class: "mark -brackets" }
+          hProperties: { class: ["mark", "-brackets", ...classes].join(" ") }
         }
       }
       if (directive.type === "containerDirective" || directive.type === "leafDirective") {
         if (directive.name === "tips") {
-          directive.data = { hName: "div", hProperties: { class: "tips" } }
+          directive.data = { hName: "div", hProperties: { class: ["tips", ...classes].join(" ") } }
         }
         if (directive.name === "example") {
-          directive.data = { hName: "div", hProperties: { class: "example" } }
+          directive.data = {
+            hName: "div",
+            hProperties: { class: ["example", ...classes].join(" ") }
+          }
         }
         if (directive.name === "term-grid") {
-          directive.data = { hName: "div", hProperties: { class: "term-grid" } }
+          directive.data = {
+            hName: "div",
+            hProperties: { class: ["term-grid", ...classes].join(" ") }
+          }
         }
         if (directive.name === "term-card") {
-          directive.data = { hName: "div", hProperties: { class: "term-card" } }
+          directive.data = {
+            hName: "div",
+            hProperties: { class: ["term-card", ...classes].join(" ") }
+          }
         }
       }
     })
