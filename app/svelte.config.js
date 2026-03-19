@@ -8,16 +8,13 @@ const isGithubPages = process.env.GITHUB_PAGES === "true"
 
 /** @type {import('./src/lib/remark/custom-directives.ts').DirectiveConfigMap} */
 const guideDirectives = {
-  // :::Name[label]{props}\n children \n:::
   container: [
     { name: "tips", tag: "div", classes: ["tips"] },
     { name: "example", tag: "div", classes: ["example"] },
     { name: "term-grid", tag: "div", classes: ["term-grid"] },
     { name: "term-card", tag: "div", classes: ["term-card"] }
   ],
-  // ::Name[label]{props}
   leaf: [],
-  // :Name[label]{props}
   text: [{ name: "mark", tag: "span", classes: ["mark", "-brackets"] }]
 }
 
