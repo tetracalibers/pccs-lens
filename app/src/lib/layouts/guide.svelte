@@ -49,4 +49,57 @@
   main :global(blockquote p) {
     margin: 0;
   }
+
+  main :global(.tips),
+  main :global(.example) {
+    margin: 1rem 0;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 0.85rem;
+    line-height: 1.7;
+  }
+
+  main :global(.tips) {
+    border: 1px dashed lightgray;
+  }
+
+  main :global(.tips)::before {
+    content: "Tips: ";
+    color: oklch(from lightgray calc(l * 0.75) c h);
+    font-weight: 600;
+  }
+
+  main :global(.example) {
+    border: 1px dashed lightblue;
+  }
+
+  main :global(.example)::before {
+    content: "Example: ";
+    color: oklch(from lightblue calc(l * 0.75) c h);
+    font-weight: 600;
+  }
+
+  /* container directive wraps content in <p>; display:inline makes it flow after ::before */
+  main :global(.tips > p),
+  main :global(.example > p) {
+    display: inline;
+    margin: 0;
+    font-size: inherit;
+    line-height: inherit;
+    color: var(--color-text, #111);
+  }
+
+  main :global(.mark.-brackets) {
+    line-height: 1;
+    font-weight: 600;
+  }
+
+  main :global(.mark.-brackets)::before {
+    content: "「";
+  }
+
+  main :global(.mark.-brackets)::after {
+    content: "」";
+  }
 </style>
