@@ -117,11 +117,18 @@
     padding: 1rem;
     border: 1px solid var(--color-border, #ddd);
     border-radius: 0.5rem;
+    display: grid;
+    justify-items: center;
+    gap: 0.5rem;
+  }
+
+  main :global(.term-card :is(p, h3)) {
+    justify-self: flex-start;
   }
 
   main :global(.term-card h3) {
     font-size: 0.95rem;
-    margin: 0 0 0.5rem;
+    margin: 0;
   }
 
   main :global(.term-card p) {
@@ -129,6 +136,10 @@
     line-height: 1.8;
     margin: 0 0 0.5rem;
     color: var(--color-text, #111);
+  }
+
+  main :global(.term-card.-items-centering) {
+    justify-items: center;
   }
 
   main :global(.mark.-brackets) {
