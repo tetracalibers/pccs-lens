@@ -1,5 +1,7 @@
 <script lang="ts">
-  let { title = "PCCS Lens" }: { title?: string } = $props()
+  import type { Snippet } from "svelte"
+
+  let { title = "PCCS Lens", children }: { title?: string; children: Snippet } = $props()
 </script>
 
 <svelte:head>
@@ -7,7 +9,7 @@
 </svelte:head>
 
 <main>
-  <slot />
+  {@render children()}
 </main>
 
 <style>

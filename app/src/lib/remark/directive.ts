@@ -38,7 +38,7 @@ export default function remarkDirective(this: Processor) {
 }
 
 function restore(node: Node, stash: string[]): void {
-  const n = node as Record<string, unknown>
+  const n = node as unknown as Record<string, unknown>
   if (n["type"] === "html" && typeof n["value"] === "string") {
     n["value"] = (n["value"] as string).replace(
       /<div data-svx="(\d+)"><\/div>/g,
