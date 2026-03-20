@@ -25,12 +25,12 @@
     <a href={resolve("/")} class="brand">PCCS Lens</a>
     <ul>
       <li>
-        <a href={resolve("/approximate")} class:active={page.url.pathname.endsWith("/approximate")}>
+        <a href={resolve("/approximate")} class:active={page.url.pathname.includes("/approximate")}>
           色の近似
         </a>
       </li>
       <li>
-        <a href={resolve("/analyze")} class:active={page.url.pathname.endsWith("/analyze")}>
+        <a href={resolve("/analyze")} class:active={page.url.pathname.includes("/analyze")}>
           配色分析
         </a>
       </li>
