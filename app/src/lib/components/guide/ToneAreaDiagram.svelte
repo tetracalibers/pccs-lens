@@ -33,14 +33,9 @@
   // 軸表示用の余白
   const AXIS_PAD = 48
 
-  const CELLS_SVG_W = Math.ceil(X4 + CIRCLE_R + PAD)
-  const CELLS_SVG_H = Math.ceil(Y0 + 4 * S + RECT_H / 2 + PAD)
-
-  // 軸を含む全体 SVG サイズ
-  const OX = AXIS_PAD // セル群の原点オフセット（x）
-  const OY = 0 // セル群の原点オフセット（y）
-  const SVG_W = CELLS_SVG_W + AXIS_PAD
-  const SVG_H = CELLS_SVG_H + AXIS_PAD
+  // セル群の原点オフセット
+  const OX = AXIS_PAD
+  const OY = 0
 
   const CELLS: ToneCell[] = [
     // Col0: achromatic squares
@@ -125,10 +120,21 @@
   // ラベル座標
   const H_LABEL_Y = H_AXIS_Y + H_LABEL_GAP
   const V_TITLE_X = V_AXIS_X - V_TITLE_OFFSET
+
+  // viewBox: 実際に描画される要素にフィットさせる
+  const FONT_SIZE = 11
+  const VIEW_X = Math.max(0, Math.floor(V_TITLE_X - FONT_SIZE)) // 「明度」ラベル左端
+  const VIEW_Y = 0
+  const VIEW_W = Math.ceil(CELLS_RIGHT + PAD) - VIEW_X
+  const VIEW_H = Math.ceil(H_LABEL_Y + FONT_SIZE / 4) // 「彩度」ラベル下端
 </script>
 
 <div class="diagram-wrapper">
-  <svg viewBox="0 0 {SVG_W} {SVG_H}" role="img" aria-label="PCCSトーン概念図（ハイライト付き）">
+  <svg
+    viewBox="{VIEW_X} {VIEW_Y} {VIEW_W} {VIEW_H}"
+    role="img"
+    aria-label="PCCSトーン概念図（ハイライト付き）"
+  >
     <!-- 軸（彩度・明度） -->
     <defs>
       <marker
