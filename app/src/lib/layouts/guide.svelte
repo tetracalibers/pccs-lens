@@ -16,8 +16,8 @@
 <style>
   main {
     max-width: 700px;
-    margin: 2.75rem auto;
-    padding: 0 1rem;
+    margin: 2.75rem auto 0;
+    padding: 0 1rem 3rem;
   }
 
   main :global(h2) {
