@@ -42,7 +42,7 @@
 
   <div class="grid">
     {#each themeCards as { theme, colors } (theme.id)}
-      <a href={resolve(`/patterns/${theme.id}`)} class="card">
+      <a href={resolve("/patterns/[theme]", { theme: theme.id })} class="card">
         <div class="card-checker">
           <span class="checker-cell" style="background-color: {colors.base};"></span>
           <span class="checker-cell" style="background-color: {colors.assort};"></span>
