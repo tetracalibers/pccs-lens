@@ -1,8 +1,12 @@
 import type { PCCSColor } from "$lib/data/types"
 import type { SelectedColor, SuggestOutput } from "./types"
-import pccsColorsFull from "$lib/data/pccs_colors_full.json"
+import pccsV24 from "$lib/data/pccs_v24.json"
+import pccsS12 from "$lib/data/pccs_s12.json"
+import pccsEven12 from "$lib/data/pccs_even12.json"
+import pccsOdd12 from "$lib/data/pccs_odd12.json"
+import pccsNeutral from "$lib/data/pccs_neutral.json"
 
-const COLORS = pccsColorsFull as PCCSColor[]
+const COLORS = [...pccsV24, ...pccsS12, ...pccsEven12, ...pccsOdd12, ...pccsNeutral] as PCCSColor[]
 
 export const ACHROMATIC_TONES = new Set(["W", "ltGy", "mGy", "dkGy", "Bk"])
 

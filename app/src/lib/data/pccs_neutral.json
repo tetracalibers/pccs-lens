@@ -1,0 +1,138 @@
+[
+  {
+    "notation": "W",
+    "hex": "#f1f1f1",
+    "toneSymbol": null,
+    "hueNumber": null,
+    "isNeutral": true,
+    "achromaticBucket": "W"
+  },
+  {
+    "notation": "Gy-9.0",
+    "hex": "#E3E3E3",
+    "toneSymbol": null,
+    "hueNumber": null,
+    "isNeutral": true,
+    "achromaticBucket": "ltGy"
+  },
+  {
+    "notation": "Gy-8.5",
+    "hex": "#D5D5D5",
+    "toneSymbol": null,
+    "hueNumber": null,
+    "isNeutral": true,
+    "achromaticBucket": "ltGy"
+  },
+  {
+    "notation": "Gy-8.0",
+    "hex": "#C8C8C8",
+    "toneSymbol": null,
+    "hueNumber": null,
+    "isNeutral": true,
+    "achromaticBucket": "ltGy"
+  },
+  {
+    "notation": "Gy-7.5",
+    "hex": "#BBBBBB",
+    "toneSymbol": null,
+    "hueNumber": null,
+    "isNeutral": true,
+    "achromaticBucket": "ltGy"
+  },
+  {
+    "notation": "Gy-7.0",
+    "hex": "#ADADAD",
+    "toneSymbol": null,
+    "hueNumber": null,
+    "isNeutral": true,
+    "achromaticBucket": "ltGy"
+  },
+  {
+    "notation": "Gy-6.5",
+    "hex": "#A0A0A0",
+    "toneSymbol": null,
+    "hueNumber": null,
+    "isNeutral": true,
+    "achromaticBucket": "mGy"
+  },
+  {
+    "notation": "Gy-6.0",
+    "hex": "#939393",
+    "toneSymbol": null,
+    "hueNumber": null,
+    "isNeutral": true,
+    "achromaticBucket": "mGy"
+  },
+  {
+    "notation": "Gy-5.5",
+    "hex": "#868686",
+    "toneSymbol": null,
+    "hueNumber": null,
+    "isNeutral": true,
+    "achromaticBucket": "mGy"
+  },
+  {
+    "notation": "Gy-5.0",
+    "hex": "#797979",
+    "toneSymbol": null,
+    "hueNumber": null,
+    "isNeutral": true,
+    "achromaticBucket": "mGy"
+  },
+  {
+    "notation": "Gy-4.5",
+    "hex": "#6D6D6D",
+    "toneSymbol": null,
+    "hueNumber": null,
+    "isNeutral": true,
+    "achromaticBucket": "mGy"
+  },
+  {
+    "notation": "Gy-4.0",
+    "hex": "#606060",
+    "toneSymbol": null,
+    "hueNumber": null,
+    "isNeutral": true,
+    "achromaticBucket": "mGy"
+  },
+  {
+    "notation": "Gy-3.5",
+    "hex": "#545454",
+    "toneSymbol": null,
+    "hueNumber": null,
+    "isNeutral": true,
+    "achromaticBucket": "dkGy"
+  },
+  {
+    "notation": "Gy-3.0",
+    "hex": "#484848",
+    "toneSymbol": null,
+    "hueNumber": null,
+    "isNeutral": true,
+    "achromaticBucket": "dkGy"
+  },
+  {
+    "notation": "Gy-2.5",
+    "hex": "#3C3C3C",
+    "toneSymbol": null,
+    "hueNumber": null,
+    "isNeutral": true,
+    "achromaticBucket": "dkGy"
+  },
+  {
+    "notation": "Gy-2.0",
+    "hex": "#313131",
+    "toneSymbol": null,
+    "hueNumber": null,
+    "isNeutral": true,
+    "achromaticBucket": "dkGy"
+  },
+  {
+    "notation": "Bk",
+    "hex": "#252525",
+    "toneSymbol": null,
+    "hueNumber": null,
+    "isNeutral": true,
+    "achromaticBucket": "Bk"
+  }
+]
