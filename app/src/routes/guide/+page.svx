@@ -4,8 +4,8 @@ title: PCCSとは？
 ---
 
 <script lang="ts">
-  import ToneImageDiagram from "$lib/components/index/ToneImageDiagram.svelte"
-  import ToneAreaDiagram from "$lib/components/index/ToneAreaDiagram.svelte"
+  import ToneImageDiagram from "$lib/components/guide/ToneImageDiagram.svelte"
+  import ToneAreaDiagram from "$lib/components/guide/ToneAreaDiagram.svelte"
 </script>
 
 ## PCCSとは？
