@@ -16,31 +16,36 @@
 <style>
   main {
     max-width: 700px;
-    margin: 3rem auto;
+    margin: 2.75rem auto;
     padding: 0 1rem;
   }
 
   main :global(h2) {
-    font-size: 1.25rem;
-    margin: 2rem 0 1.5rem;
+    font-size: 1.3rem;
+    margin: 2rem 0 1.6rem;
+  }
+
+  main :global(h2):first-of-type {
+    margin-block-start: 0;
   }
 
   main :global(h3) {
-    font-size: 1rem;
-    margin: 1.5rem 0 0.4rem;
+    font-size: 1.05rem;
+    margin: 1.6rem 0 0.45rem;
   }
 
   main :global(p) {
     color: var(--color-text, #111);
-    margin: 0.5rem 0;
-    font-size: 0.85rem;
+    margin: 0.55rem 0;
+    font-size: 0.9rem;
     line-height: 2;
   }
 
   main :global(ul) {
-    margin: 0.85rem 0;
-    font-size: 0.9rem;
+    margin: 0.9rem 0;
+    font-size: 0.95rem;
     line-height: 2;
+    padding-inline-start: 1.75rem;
   }
 
   main :global(li) {
@@ -48,12 +53,12 @@
   }
 
   main :global(blockquote) {
-    margin: 1rem 0;
-    padding: 0.5rem 0.75rem;
+    margin: 1.05rem 0;
+    padding: 0.55rem 0.8rem;
     border-radius: 4px;
     border: 1px dashed lightgray;
     box-sizing: border-box;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     line-height: 1.7;
   }
 
@@ -63,12 +68,12 @@
 
   main :global(.tips),
   main :global(.example) {
-    margin: 1rem 0;
-    padding: 0.5rem 0.75rem;
+    margin: 1.05rem 0;
+    padding: 0.55rem 0.8rem;
     border-radius: 4px;
     width: 100%;
     box-sizing: border-box;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     line-height: 1.7;
   }
 
@@ -102,11 +107,15 @@
     color: var(--color-text, #111);
   }
 
+  main :global(.tips > p) {
+    color: oklch(from lightgray calc(l * 0.6) c h);
+  }
+
   main :global(.term-grid) {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1rem;
-    margin: 1rem 0;
+    gap: 1.05rem;
+    margin: 1.05rem 0;
   }
 
   main :global(.term-card:last-child:nth-child(odd)) {
@@ -114,12 +123,11 @@
   }
 
   main :global(.term-card) {
-    padding: 1rem;
+    padding: 1.05rem;
     border: 1px solid var(--color-border, #ddd);
     border-radius: 0.5rem;
     display: grid;
-    justify-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
   }
 
   main :global(.term-card :is(p, h3)) {
@@ -127,14 +135,14 @@
   }
 
   main :global(.term-card h3) {
-    font-size: 0.95rem;
+    font-size: 1rem;
     margin: 0;
   }
 
   main :global(.term-card p) {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     line-height: 1.8;
-    margin: 0 0 0.5rem;
+    margin: 0 0 0.55rem;
     color: var(--color-text, #111);
   }
 
