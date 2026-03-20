@@ -4,12 +4,7 @@
   import { findClosestPccs, findClosestJis } from "$lib/color/approximate"
   import { PCCS_CARD_199 } from "$lib/data/pccs"
   import jisColors from "$lib/data/jis_colors.json"
-  import type {
-    PCCSColor,
-    JISColor,
-    ApproximateResult,
-    JISApproximateResult
-  } from "$lib/data/types"
+  import type { JISColor, ApproximateResult, JISApproximateResult } from "$lib/data/types"
   import { page } from "$app/state"
   import { replaceState } from "$app/navigation"
   import { tick } from "svelte"
