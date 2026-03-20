@@ -1,12 +1,12 @@
 import { mdsvex } from "mdsvex"
 import adapter from "@sveltejs/adapter-static"
 import { fileURLToPath } from "url"
-import remarkDirective from "./src/lib/remark/directive.ts"
-import remarkGuideDirectives from "./src/lib/remark/custom-directives.ts"
+import remarkDirective from "./src/lib/remark/directive.js"
+import remarkGuideDirectives from "./src/lib/remark/custom-directives.js"
 
 const isGithubPages = process.env.GITHUB_PAGES === "true"
 
-/** @type {import('./src/lib/remark/custom-directives.ts').DirectiveConfigMap} */
+/** @type {import('./src/lib/remark/custom-directives.js').DirectiveConfigMap} */
 const guideDirectives = {
   container: [
     { name: "tips", tag: "div", classes: ["tips"] },

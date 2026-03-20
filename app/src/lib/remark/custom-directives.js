@@ -1,23 +1,11 @@
 import { visit } from "unist-util-visit"
-import type { Root } from "mdast"
-import type { Directives } from "mdast-util-directive"
-
-export type DirectiveConfig = {
-  name: string
-  tag: string
-  classes: string[]
-}
-export type DirectiveConfigMap = {
-  container: DirectiveConfig[]
-  leaf: DirectiveConfig[]
-  text: DirectiveConfig[]
-}
 
 /**
  * remark plugin to transform custom directives into HTML elements with classes.
+ * @param {import('./custom-directives.js').DirectiveConfigMap} directives
  */
-export default function remarkGuideDirectives(directives: DirectiveConfigMap) {
-  return (tree: Root) => {
+export default function remarkGuideDirectives(directives) {
+  return (tree) => {
     visit(tree, (node) => {
       if (
         node.type !== "textDirective" &&
@@ -26,7 +14,7 @@ export default function remarkGuideDirectives(directives: DirectiveConfigMap) {
       ) {
         return
       }
-      const directive = node as unknown as Directives
+      const directive = node
       const classes = directive.attributes?.class ? directive.attributes.class.split(" ") : []
       const typeKey = (() => {
         switch (directive.type) {
