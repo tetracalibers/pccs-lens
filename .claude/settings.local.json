@@ -5,7 +5,8 @@
       "Bash(npm run:*)",
       "Bash(npx prettier:*)",
       "Bash(node:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(npx tsc:*)"
     ]
   }
 }
