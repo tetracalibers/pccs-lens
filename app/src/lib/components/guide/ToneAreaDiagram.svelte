@@ -1,10 +1,6 @@
 <script lang="ts">
-  import pccsV24 from "$lib/data/pccs_v24.json"
-  import pccsS12 from "$lib/data/pccs_s12.json"
-  import pccsEven12 from "$lib/data/pccs_even12.json"
-  import pccsOdd12 from "$lib/data/pccs_odd12.json"
-  import pccsNeutral from "$lib/data/pccs_neutral.json"
-  const colorsFullData = [...pccsV24, ...pccsS12, ...pccsEven12, ...pccsOdd12, ...pccsNeutral]
+  import { PCCS_ALL } from "$lib/data/pccs"
+  const colorsFullData = PCCS_ALL
 
   let { highlights = [] }: { highlights: string[] } = $props()
 
