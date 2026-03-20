@@ -2,14 +2,9 @@
   import ColorPicker from "$lib/components/ColorPicker.svelte"
   import CopyButton from "$lib/components/CopyButton.svelte"
   import { findClosestPccs, findClosestJis } from "$lib/color/approximate"
-  import pccsColors from "$lib/data/pccs_colors.json"
+  import { PCCS_CARD_199 } from "$lib/data/pccs"
   import jisColors from "$lib/data/jis_colors.json"
-  import type {
-    PCCSColor,
-    JISColor,
-    ApproximateResult,
-    JISApproximateResult
-  } from "$lib/data/types"
+  import type { JISColor, ApproximateResult, JISApproximateResult } from "$lib/data/types"
   import { page } from "$app/state"
   import { replaceState } from "$app/navigation"
   import { tick } from "svelte"
@@ -20,7 +15,7 @@
     return randomColor()
   }
 
-  const colors = pccsColors as PCCSColor[]
+  const colors = PCCS_CARD_199
   const jisColorList = jisColors as JISColor[]
   const TOP_N = 6
   const JIS_TOP_N = 6

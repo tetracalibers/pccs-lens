@@ -1,5 +1,6 @@
 <script lang="ts">
-  import colorsFullData from "$lib/data/pccs_colors_full.json"
+  import { PCCS_ALL } from "$lib/data/pccs"
+  const colorsFullData = PCCS_ALL
 
   let { highlights = [] }: { highlights: string[] } = $props()
 

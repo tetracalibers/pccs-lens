@@ -7,11 +7,11 @@
   import { findClosestPccs } from "$lib/color/approximate"
   import { deltaE2000 } from "$lib/color/ciede2000"
   import { hexToLab } from "$lib/color/convert"
-  import pccsColors from "$lib/data/pccs_colors.json"
+  import { PCCS_CARD_199 } from "$lib/data/pccs"
   import type { PCCSColor } from "$lib/data/types"
   import randomColor from "randomcolor"
 
-  const colors = pccsColors as PCCSColor[]
+  const colors = PCCS_CARD_199
   const TOP_N = 3
   const MIN_COLORS = 2
   const MAX_COLORS = 6

@@ -1,8 +1,8 @@
 import type { PCCSColor } from "$lib/data/types"
 import type { SelectedColor, SuggestOutput } from "./types"
-import pccsColorsFull from "$lib/data/pccs_colors_full.json"
+import { PCCS_ALL } from "$lib/data/pccs"
 
-const COLORS = pccsColorsFull as PCCSColor[]
+const COLORS = PCCS_ALL
 
 export const ACHROMATIC_TONES = new Set(["W", "ltGy", "mGy", "dkGy", "Bk"])
 
