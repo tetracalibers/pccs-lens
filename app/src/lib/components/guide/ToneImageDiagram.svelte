@@ -1,8 +1,9 @@
 <script lang="ts">
   import { SvelteMap } from "svelte/reactivity"
   import { PCCS_ALL } from "$lib/data/pccs"
-  const colorsFullData = PCCS_ALL
   import toneData from "$lib/data/pccs_tone.json"
+
+  const colorsFullData = PCCS_ALL
 
   // --- セルサイズ定数 ---
   const PIE_OUTER_R = 36
