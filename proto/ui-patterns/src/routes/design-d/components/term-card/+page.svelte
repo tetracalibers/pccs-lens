@@ -16,9 +16,9 @@
 <main class:light={theme.isLight}>
   <p class="page-title">Term Card デザイン案</p>
 
-  <!-- A: グラスモーフィズム（現行ベース） -->
+  <!-- A: フラットソリッドカード -->
   <section class="pattern">
-    <p class="pattern-label">A — グラスモーフィズム（現行ベース）</p>
+    <p class="pattern-label">A — フラットソリッド（背景色のみ）</p>
     <div class="term-card -a">
       <h3>明清色</h3>
       <p>
@@ -29,88 +29,82 @@
       </div>
     </div>
     <p class="pattern-note">
-      backdrop-blur + 薄白背景 + 細い白枠のグラスモーフィズムカード。現行デザインの基本スタイル。ダークモードのネオン世界観と自然に調和する
+      枠線もシャドウも角丸もなし。ページ背景と異なる塗りだけでカードを表現する。フラットデザイン的な潔さで、コンテンツに集中させる
     </p>
   </section>
 
-  <!-- B: フルブリード画像（画像下部・全幅） -->
+  <!-- B: 左グラデーションストライプ -->
   <section class="pattern">
-    <p class="pattern-label">B — フルブリード画像（画像下部・全幅）</p>
+    <p class="pattern-label">B — 左グラデーションストライプ</p>
     <div class="term-card -b">
-      <div class="tc-text">
-        <h3>明清色</h3>
-        <p>
-          純色に白を混ぜてできる色を明清色といいます。白を多く混ぜていくにつれ、だんだんと明度が高く、彩度は低くなっていきます。
-        </p>
-      </div>
+      <h3>明清色</h3>
+      <p>
+        純色に白を混ぜてできる色を明清色といいます。白を多く混ぜていくにつれ、だんだんと明度が高く、彩度は低くなっていきます。
+      </p>
       <div class="diagram-wrapper">
         <img src="https://placehold.jp/306x275.png" alt="ダミー画像" />
       </div>
     </div>
     <p class="pattern-note">
-      テキストに上パディング、画像はカード下部にパディングなしで全幅配置。ダイアグラムを大きく見せたいときに有効なマガジンライクなスタイル
+      左端に5pxのレインボーグラデーション帯を引き、背景に微量のウォームティントを添える。枠ではなく「軸」でカードを定義するスタイル
     </p>
   </section>
 
-  <!-- C: 横分割（テキスト左・図右） -->
+  <!-- C: クリップパス斜め角 -->
   <section class="pattern">
-    <p class="pattern-label">C — 横分割（テキスト左・図右）</p>
+    <p class="pattern-label">C — クリップパス斜め角</p>
     <div class="term-card -c">
-      <div class="tc-text">
-        <h3>明清色</h3>
-        <p>
-          純色に白を混ぜてできる色を明清色といいます。白を多く混ぜていくにつれ、だんだんと明度が高く、彩度は低くなっていきます。
-        </p>
-      </div>
+      <h3>明清色</h3>
+      <p>
+        純色に白を混ぜてできる色を明清色といいます。白を多く混ぜていくにつれ、だんだんと明度が高く、彩度は低くなっていきます。
+      </p>
       <div class="diagram-wrapper">
         <img src="https://placehold.jp/306x275.png" alt="ダミー画像" />
       </div>
     </div>
     <p class="pattern-note">
-      左カラムにテキスト、右カラムにダイアグラムを並べる2カラムレイアウト。図と説明の対応が視覚的にわかりやすく、縦の高さを抑えられる
+      右下の角を clip-path
+      で斜めにカット。非矩形のシルエット自体がカードの境界を明示する。角丸の「柔らかさ」とは逆の、鋭利で構築的な表現
     </p>
   </section>
 
-  <!-- D: 画像ファースト（画像上部・全幅） -->
+  <!-- D: 全幅セクションバンド -->
   <section class="pattern">
-    <p class="pattern-label">D — 画像ファースト（画像上部・全幅）</p>
+    <p class="pattern-label">D — 全幅セクションバンド</p>
     <div class="term-card -d">
+      <h3>明清色</h3>
+      <p>
+        純色に白を混ぜてできる色を明清色といいます。白を多く混ぜていくにつれ、だんだんと明度が高く、彩度は低くなっていきます。
+      </p>
       <div class="diagram-wrapper">
         <img src="https://placehold.jp/306x275.png" alt="ダミー画像" />
       </div>
-      <div class="tc-text">
-        <h3>明清色</h3>
-        <p>
-          純色に白を混ぜてできる色を明清色といいます。白を多く混ぜていくにつれ、だんだんと明度が高く、彩度は低くなっていきます。
-        </p>
-      </div>
     </div>
     <p class="pattern-note">
-      ダイアグラムを冒頭に全幅で見せ、続いてタイトル・説明を読ませる「図→言語」の流れ。視覚情報が先に来るため直感的に理解しやすい
+      ネガティブマージンでコラム幅いっぱいに背景を引き伸ばす。上下に細い罫線を引いて帯の範囲を示す。雑誌の「コラム引用」に近い面的な表現
     </p>
   </section>
 
-  <!-- E: ミニマル区切り線 -->
+  <!-- E: 上下ルールのみ -->
   <section class="pattern">
-    <p class="pattern-label">E — ミニマル区切り線</p>
+    <p class="pattern-label">E — 上下ルール（横罫2本）</p>
     <div class="term-card -e">
       <h3>明清色</h3>
       <p>
         純色に白を混ぜてできる色を明清色といいます。白を多く混ぜていくにつれ、だんだんと明度が高く、彩度は低くなっていきます。
       </p>
-      <div class="tc-divider" aria-hidden="true"></div>
       <div class="diagram-wrapper">
         <img src="https://placehold.jp/306x275.png" alt="ダミー画像" />
       </div>
     </div>
     <p class="pattern-note">
-      ボックス・背景なし。グラデーションのセパレーターラインでテキストと図を区切るだけのミニマルスタイル。本文に溶け込み、ページの流れを妨げない
+      背景色なし・側面ボーダーなし。上部に太い罫線、下部に細い罫線を引くだけでコンテンツを囲む。書籍や雑誌の引用ブロックに近いタイポグラフィ的表現
     </p>
   </section>
 
-  <!-- F: ネオングロー枠 -->
+  <!-- F: 方眼紙背景カード -->
   <section class="pattern">
-    <p class="pattern-label">F — ネオングロー枠</p>
+    <p class="pattern-label">F — 方眼紙背景</p>
     <div class="term-card -f">
       <h3>明清色</h3>
       <p>
@@ -121,11 +115,12 @@
       </div>
     </div>
     <p class="pattern-note">
-      青紫のネオングローを box-shadow で演出した枠付きカード。ダークモードでの存在感が強く、ページに点在させたときのアクセントとして機能する
+      CSS
+      グラデーションで方眼紙状のドットグリッドを背景に描画。明示的な枠なしで「特別な領域」を示す。スケッチや設計図を想起させるテクスチャ表現
     </p>
   </section>
 
-  <!-- G: 見出しストライプ -->
+  <!-- G: 見出しストライプ（現行維持） -->
   <section class="pattern">
     <p class="pattern-label">G — 見出しストライプ</p>
     <div class="term-card -g">
@@ -142,13 +137,14 @@
       </div>
     </div>
     <p class="pattern-note">
-      h3 を異なる背景色のヘッダー帯に分離したカード。タイトルの視認性が高く、複数カードをグリッド表示したとき各カードのラベルを素早く走査できる
+      h3
+      を異なる背景色のヘッダー帯に分離したカード。タイトルの視認性が高く、複数カードをグリッド表示したとき各カードのラベルを素早く走査できる
     </p>
   </section>
 
-  <!-- H: プレミアムシャドウ -->
+  <!-- H: 二重アウトライン（ダブルフレーム） -->
   <section class="pattern">
-    <p class="pattern-label">H — プレミアムシャドウ</p>
+    <p class="pattern-label">H — 二重アウトライン（ダブルフレーム）</p>
     <div class="term-card -h">
       <h3>明清色</h3>
       <p>
@@ -159,7 +155,8 @@
       </div>
     </div>
     <p class="pattern-note">
-      多層シャドウと上辺のハイライトラインで奥行きと光沢を演出。カードとしての存在感が強く、コンテンツの重要度を高く見せるプレミアムな仕上がり
+      border と outline
+      を重ねた二重フレーム。角丸なし・シャドウなし。額縁的な構造でコンテンツを格式高く囲む。グリッド表示時に整列の美しさが際立つ
     </p>
   </section>
 </main>
@@ -190,8 +187,8 @@
 
   /* ===== パターン共通ラッパー ===== */
   .pattern {
-    margin-bottom: 3rem;
-    padding-bottom: 2.5rem;
+    margin-bottom: 3.5rem;
+    padding-bottom: 3rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   }
 
@@ -227,7 +224,10 @@
     color: #8888aa;
   }
 
-  /* ===== 全バリアント共通：img ===== */
+  /* ===== 全バリアント共通 ===== */
+  .term-card {
+    max-width: 320px;
+  }
   .term-card img {
     display: block;
     width: 100%;
@@ -235,16 +235,13 @@
   }
 
   /* =====================================================
-     A: グラスモーフィズム（現行ベース）
-     - backdrop-blur + 薄白背景 + 細い白枠
-     - グリッドで縦積み、画像は中央寄せ
+     A: フラットソリッド
+     - 枠線・角丸・シャドウなし
+     - ページ背景と異なる塗りだけでカードを表現
      ===================================================== */
   .term-card.-a {
-    padding: 1.1rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.055);
+    padding: 1.2rem;
     display: grid;
     gap: 0.7rem;
   }
@@ -263,17 +260,8 @@
     color: #8080a0;
   }
 
-  .term-card.-a .diagram-wrapper img {
-    border-radius: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    opacity: 0.85;
-  }
-
   main.light .term-card.-a {
-    border-color: rgba(0, 0, 0, 0.1);
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: none;
-    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+    background: rgba(0, 0, 0, 0.04);
   }
 
   main.light .term-card.-a h3 {
@@ -284,29 +272,27 @@
     color: #556070;
   }
 
-  main.light .term-card.-a .diagram-wrapper img {
-    border-color: rgba(0, 0, 0, 0.08);
-    opacity: 1;
-  }
-
   /* =====================================================
-     B: フルブリード画像（画像下部・全幅）
-     - テキストに上パディング、画像はパディングなしで全幅
-     - ボーダーあり、角丸あり
+     B: 左グラデーションストライプ
+     - ::before でレインボー帯を描画
+     - 枠線・角丸・シャドウなし
      ===================================================== */
   .term-card.-b {
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.03);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    position: relative;
+    padding: 1rem 1.1rem 1rem 1.5rem;
+    background: rgba(255, 180, 100, 0.04);
+    display: grid;
+    gap: 0.65rem;
   }
 
-  .term-card.-b .tc-text {
-    padding: 1rem 1.1rem 0.8rem;
-    display: grid;
-    gap: 0.5rem;
+  .term-card.-b::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 5px;
+    background: linear-gradient(180deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #c77dff);
   }
 
   .term-card.-b h3 {
@@ -323,15 +309,8 @@
     color: #8080a0;
   }
 
-  .term-card.-b .diagram-wrapper {
-    margin-top: 0.6rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-  }
-
   main.light .term-card.-b {
-    border-color: rgba(0, 0, 0, 0.1);
-    background: #ffffff;
-    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+    background: rgba(200, 120, 0, 0.04);
   }
 
   main.light .term-card.-b h3 {
@@ -342,168 +321,106 @@
     color: #556070;
   }
 
-  main.light .term-card.-b .diagram-wrapper {
-    border-top-color: rgba(0, 0, 0, 0.07);
-  }
-
   /* =====================================================
-     C: 横分割（テキスト左・図右）
-     - flex row: テキスト列 + 画像列
-     - 画像列は固定幅、テキスト列はflexで残りを占有
+     C: クリップパス斜め角
+     - 右下角を clip-path で斜めカット
+     - シルエット自体がカードの境界を示す
      ===================================================== */
   .term-card.-c {
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(8px);
-    display: flex;
-    gap: 0;
-    overflow: hidden;
-    align-items: stretch;
-  }
-
-  .term-card.-c .tc-text {
-    flex: 1 1 0;
-    min-width: 0;
-    padding: 1rem 1.1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    justify-content: center;
+    background: rgba(107, 203, 119, 0.08);
+    padding: 1.2rem;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 32px), calc(100% - 32px) 100%, 0 100%);
+    display: grid;
+    gap: 0.7rem;
   }
 
   .term-card.-c h3 {
     font-size: 0.95rem;
     font-weight: 700;
     margin: 0;
-    color: #e0e0f0;
+    color: #b8f0c8;
   }
 
   .term-card.-c p {
     font-size: 0.83rem;
     line-height: 1.8;
     margin: 0;
-    color: #8080a0;
-  }
-
-  .term-card.-c .diagram-wrapper {
-    flex: 0 0 45%;
-    border-left: 1px solid rgba(255, 255, 255, 0.05);
-    display: flex;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.1);
-  }
-
-  .term-card.-c .diagram-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.85;
+    color: #70a880;
   }
 
   main.light .term-card.-c {
-    border-color: rgba(0, 0, 0, 0.1);
-    background: #ffffff;
-    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+    background: rgba(47, 158, 68, 0.07);
   }
 
   main.light .term-card.-c h3 {
-    color: #1a1a1a;
+    color: #1a4a28;
   }
 
   main.light .term-card.-c p {
-    color: #556070;
-  }
-
-  main.light .term-card.-c .diagram-wrapper {
-    border-left-color: rgba(0, 0, 0, 0.07);
-    background: rgba(0, 0, 0, 0.02);
-  }
-
-  main.light .term-card.-c .diagram-wrapper img {
-    opacity: 1;
+    color: #2e6040;
   }
 
   /* =====================================================
-     D: 画像ファースト（画像上部・全幅）
-     - 画像をカード上部に全幅配置、テキストは下に
+     D: 全幅セクションバンド
+     - ネガティブマージンでコラム幅いっぱいに広げる
+     - 上下に細い罫線だけで帯の範囲を示す
      ===================================================== */
   .term-card.-d {
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.03);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .term-card.-d .diagram-wrapper {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    background: rgba(0, 0, 0, 0.15);
-  }
-
-  .term-card.-d .diagram-wrapper img {
-    opacity: 0.85;
-  }
-
-  .term-card.-d .tc-text {
-    padding: 0.9rem 1.1rem 1rem;
+    margin-inline: -1rem;
+    padding: 1.1rem 1rem;
+    background: rgba(77, 150, 255, 0.06);
+    border-top: 1px solid rgba(77, 150, 255, 0.2);
+    border-bottom: 1px solid rgba(77, 150, 255, 0.1);
     display: grid;
-    gap: 0.45rem;
+    gap: 0.7rem;
   }
 
   .term-card.-d h3 {
     font-size: 0.95rem;
     font-weight: 700;
     margin: 0;
-    color: #e0e0f0;
+    color: #c8d8ff;
   }
 
   .term-card.-d p {
     font-size: 0.83rem;
     line-height: 1.8;
     margin: 0;
-    color: #8080a0;
+    color: #7090b8;
   }
 
   main.light .term-card.-d {
-    border-color: rgba(0, 0, 0, 0.1);
-    background: #ffffff;
-    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
-  }
-
-  main.light .term-card.-d .diagram-wrapper {
-    border-bottom-color: rgba(0, 0, 0, 0.07);
-    background: rgba(0, 0, 0, 0.02);
-  }
-
-  main.light .term-card.-d .diagram-wrapper img {
-    opacity: 1;
+    background: rgba(29, 113, 194, 0.05);
+    border-top-color: rgba(29, 113, 194, 0.2);
+    border-bottom-color: rgba(29, 113, 194, 0.1);
   }
 
   main.light .term-card.-d h3 {
-    color: #1a1a1a;
+    color: #1a3a6a;
   }
 
   main.light .term-card.-d p {
-    color: #556070;
+    color: #3a5575;
   }
 
   /* =====================================================
-     E: ミニマル区切り線
-     - ボックスなし・背景なし
-     - グラデーションのセパレーターで図と本文を区切る
+     E: 上下ルールのみ（横罫2本）
+     - 背景色なし・側面ボーダーなし
+     - 上部に太い罫線、下部に細い罫線
      ===================================================== */
   .term-card.-e {
+    padding: 1.1rem 0;
+    border-top: 2px solid rgba(255, 255, 255, 0.22);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
     display: grid;
-    gap: 0.65rem;
+    gap: 0.7rem;
   }
 
   .term-card.-e h3 {
     font-size: 0.95rem;
     font-weight: 700;
     margin: 0;
-    color: #c8c8e0;
+    color: #e8e8f8;
   }
 
   .term-card.-e p {
@@ -513,61 +430,31 @@
     color: #8080a0;
   }
 
-  .term-card.-e .tc-divider {
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.12) 20%,
-      rgba(255, 255, 255, 0.12) 80%,
-      transparent
-    );
-    margin: 0.2rem 0;
-  }
-
-  .term-card.-e .diagram-wrapper img {
-    border-radius: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    opacity: 0.85;
+  main.light .term-card.-e {
+    border-top-color: rgba(0, 0, 0, 0.2);
+    border-bottom-color: rgba(0, 0, 0, 0.07);
   }
 
   main.light .term-card.-e h3 {
-    color: #2d2d3a;
+    color: #1a1a1a;
   }
 
   main.light .term-card.-e p {
     color: #556070;
   }
 
-  main.light .term-card.-e .tc-divider {
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(0, 0, 0, 0.1) 20%,
-      rgba(0, 0, 0, 0.1) 80%,
-      transparent
-    );
-  }
-
-  main.light .term-card.-e .diagram-wrapper img {
-    border-color: rgba(0, 0, 0, 0.08);
-    opacity: 1;
-  }
-
   /* =====================================================
-     F: ネオングロー枠
-     - 青紫ネオンの box-shadow でカードを浮かび上がらせる
-     - 薄いボーダーと組み合わせた半透明背景
+     F: 方眼紙背景
+     - CSS グラデーションでドットグリッドを生成
+     - 明示的な枠なし
      ===================================================== */
   .term-card.-f {
-    padding: 1.1rem;
-    border: 1px solid rgba(77, 150, 255, 0.2);
-    border-radius: 8px;
-    background: rgba(77, 150, 255, 0.03);
-    box-shadow:
-      0 0 0 1px rgba(199, 125, 255, 0.06),
-      0 0 20px rgba(77, 150, 255, 0.1),
-      0 0 40px rgba(199, 125, 255, 0.06);
+    padding: 1.2rem;
+    background-color: rgba(255, 255, 255, 0.015);
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 22px 22px;
     display: grid;
     gap: 0.7rem;
   }
@@ -576,51 +463,37 @@
     font-size: 0.95rem;
     font-weight: 700;
     margin: 0;
-    color: #c8d8ff;
+    color: #e0e0f0;
   }
 
   .term-card.-f p {
     font-size: 0.83rem;
     line-height: 1.8;
     margin: 0;
-    color: #8090b8;
-  }
-
-  .term-card.-f .diagram-wrapper img {
-    border-radius: 4px;
-    border: 1px solid rgba(77, 150, 255, 0.15);
-    opacity: 0.85;
+    color: #8080a0;
   }
 
   main.light .term-card.-f {
-    border-color: rgba(29, 113, 194, 0.2);
-    background: rgba(77, 150, 255, 0.03);
-    box-shadow:
-      0 0 0 1px rgba(107, 35, 168, 0.04),
-      0 2px 16px rgba(29, 113, 194, 0.1);
+    background-color: rgba(0, 0, 0, 0.01);
+    background-image:
+      linear-gradient(rgba(0, 0, 0, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.07) 1px, transparent 1px);
   }
 
   main.light .term-card.-f h3 {
-    color: #1a3a6a;
+    color: #1a1a1a;
   }
 
   main.light .term-card.-f p {
-    color: #3a5070;
-  }
-
-  main.light .term-card.-f .diagram-wrapper img {
-    border-color: rgba(29, 113, 194, 0.15);
-    opacity: 1;
+    color: #556070;
   }
 
   /* =====================================================
-     G: 見出しストライプ
+     G: 見出しストライプ（現行維持）
      - h3 を別背景色のヘッダー帯に分離
-     - ヘッダー帯はレインボーグラデーションの薄いアクセント
+     - 上辺にレインボーグラデーションのアクセント
      ===================================================== */
   .term-card.-g {
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -630,12 +503,11 @@
     padding: 0.65rem 1rem;
     background: linear-gradient(
       90deg,
-      rgba(255, 107, 107, 0.08),
-      rgba(255, 217, 61, 0.06),
-      rgba(107, 203, 119, 0.06),
-      rgba(77, 150, 255, 0.08)
+      rgba(255, 107, 107, 0.16),
+      rgba(255, 217, 61, 0.12),
+      rgba(107, 203, 119, 0.12),
+      rgba(77, 150, 255, 0.16)
     );
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     position: relative;
   }
 
@@ -658,28 +530,42 @@
   }
 
   .term-card.-g .tc-body {
-    padding: 0.85rem 1rem 1rem;
-    background: rgba(255, 255, 255, 0.02);
+    padding: 0.8rlh 1rlh;
+
+    border-width: 2px;
+    border-style: solid;
+    border-image: linear-gradient(
+        90deg,
+        rgba(255, 107, 107, 0.2),
+        rgba(255, 217, 61, 0.1),
+        rgba(107, 203, 119, 0.1),
+        rgba(77, 150, 255, 0.2)
+      )
+      30;
+    border-block-start: 0;
+
+    background-image:
+      linear-gradient(rgba(112, 128, 144, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(112, 128, 144, 0.05) 1px, transparent 1px);
+    background-size: 0.9rlh 0.9rlh;
+    background-clip: padding-box;
+    background-position-x: center;
+    background-position-y: top;
+
     display: grid;
     gap: 0.65rem;
   }
 
   .term-card.-g p {
     font-size: 0.83rem;
-    line-height: 1.8;
+    line-height: 1rlh;
     margin: 0;
     color: #8080a0;
   }
 
   .term-card.-g .diagram-wrapper img {
-    border-radius: 3px;
     border: 1px solid rgba(255, 255, 255, 0.06);
     opacity: 0.85;
-  }
-
-  main.light .term-card.-g {
-    border-color: rgba(0, 0, 0, 0.1);
-    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
   }
 
   main.light .term-card.-g .tc-header {
@@ -690,7 +576,6 @@
       rgba(107, 203, 119, 0.05),
       rgba(77, 150, 255, 0.06)
     );
-    border-bottom-color: rgba(0, 0, 0, 0.07);
   }
 
   main.light .term-card.-g h3 {
@@ -698,7 +583,14 @@
   }
 
   main.light .term-card.-g .tc-body {
-    background: #ffffff;
+    border-image: linear-gradient(
+        90deg,
+        rgba(255, 107, 107, 0.1),
+        rgba(255, 217, 61, 0.05),
+        rgba(107, 203, 119, 0.05),
+        rgba(77, 150, 255, 0.1)
+      )
+      30;
   }
 
   main.light .term-card.-g p {
@@ -711,34 +603,25 @@
   }
 
   /* =====================================================
-     H: プレミアムシャドウ
-     - 多層シャドウ + 上辺ハイライトラインで奥行きと光沢を演出
-     - やや厚みのある背景色
+     H: 二重アウトライン（ダブルフレーム）
+     - border + outline を重ねた二重フレーム
+     - 角丸なし・シャドウなし
      ===================================================== */
   .term-card.-h {
-    padding: 1.1rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.05);
-    box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.06) inset,
-      0 4px 12px rgba(0, 0, 0, 0.4),
-      0 12px 32px rgba(0, 0, 0, 0.3),
-      0 1px 3px rgba(0, 0, 0, 0.5);
+    padding: 1.2rem;
+    border: 2px solid;
+    border-image: linear-gradient(
+        90deg,
+        rgba(255, 107, 107, 0.4),
+        rgba(255, 217, 61, 0.2),
+        rgba(107, 203, 119, 0.2),
+        rgba(77, 150, 255, 0.4)
+      )
+      30;
+    outline: 1px solid oklch(27.9% 0.041 260.031); /** slate-800 */
+    outline-offset: 5px;
     display: grid;
-    gap: 0.7rem;
-    position: relative;
-  }
-
-  .term-card.-h::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 12%;
-    right: 12%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    border-radius: 50%;
+    gap: 0.9rem;
   }
 
   .term-card.-h h3 {
@@ -752,28 +635,12 @@
     font-size: 0.83rem;
     line-height: 1.8;
     margin: 0;
-    color: #8888a8;
-  }
-
-  .term-card.-h .diagram-wrapper img {
-    border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    opacity: 0.88;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    color: #8080a0;
   }
 
   main.light .term-card.-h {
-    border-color: rgba(0, 0, 0, 0.1);
-    background: #ffffff;
-    box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.9) inset,
-      0 4px 12px rgba(0, 0, 0, 0.08),
-      0 12px 32px rgba(0, 0, 0, 0.06),
-      0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-
-  main.light .term-card.-h::before {
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), transparent);
+    border-color: rgba(0, 0, 0, 0.18);
+    outline-color: oklch(92.9% 0.013 255.508); /** slate-200 */
   }
 
   main.light .term-card.-h h3 {
@@ -782,11 +649,5 @@
 
   main.light .term-card.-h p {
     color: #556070;
-  }
-
-  main.light .term-card.-h .diagram-wrapper img {
-    border-color: rgba(0, 0, 0, 0.08);
-    opacity: 1;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 </style>
