@@ -3,13 +3,10 @@
 
   let {
     displayedPCCSList,
-    isCard199,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    techniqueHighlightTones = null
+    isCard199
   }: {
     displayedPCCSList: PCCSColor[]
     isCard199: boolean
-    techniqueHighlightTones?: string[] | null
   } = $props()
 
   type ToneCell = {

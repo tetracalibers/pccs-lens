@@ -2,12 +2,9 @@
   import type { PCCSColor } from "$lib/data/types"
 
   let {
-    displayedPCCSList,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    techniqueHighlightHues = null
+    displayedPCCSList
   }: {
     displayedPCCSList: PCCSColor[]
-    techniqueHighlightHues?: number[] | null
   } = $props()
 
   const CX = 160
