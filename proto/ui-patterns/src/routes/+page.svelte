@@ -142,6 +142,44 @@
         <p>パステルグラデーションのヒーローに2カラムレイアウトを組み合わせた、構造的なデザイン</p>
       </div>
     </a>
+
+    <a href={resolve("/design-g")} class="design-card">
+      <div class="preview preview-g">
+        <div class="blob-g blob-g1"></div>
+        <div class="blob-g blob-g2"></div>
+        <div class="blob-g blob-g3"></div>
+        <div class="preview-title-g">PCCS Lens</div>
+      </div>
+      <div class="design-info">
+        <span class="label">案G</span>
+        <h2>水彩画</h2>
+        <p>半透明のカラーブロブが滲む水彩タッチ。白背景にやわらかな色が広がるデザイン</p>
+      </div>
+    </a>
+
+    <a href={resolve("/design-h")} class="design-card">
+      <div class="preview preview-h">
+        <div class="drip-bar-h">
+          {#each ["#e63946","#f4a261","#e9c46a","#06d6a0","#118ab2","#9b5de5"] as c (c)}
+            <div class="dcol-h" style="background:{c}"></div>
+          {/each}
+        </div>
+        <div class="preview-title-h">
+          <span>PCCS</span>
+          <span class="h-lens">Lens</span>
+        </div>
+        <div class="swatch-row-h">
+          {#each ["#e63946","#f4a261","#e9c46a","#06d6a0","#118ab2","#9b5de5","#c77dff"] as c (c)}
+            <div class="sh" style="background:{c}"></div>
+          {/each}
+        </div>
+      </div>
+      <div class="design-info">
+        <span class="label">案H</span>
+        <h2>ペンキ</h2>
+        <p>ペンキの滴りとベタ塗りの配色バーが特徴的な、太く力強いグラフィックデザイン</p>
+      </div>
+    </a>
   </div>
 </main>
 
@@ -431,6 +469,85 @@
     font-size: 1.1rem;
     color: #2d1060;
     letter-spacing: 0.03em;
+  }
+
+  /* Preview G – 水彩 */
+  .preview-g {
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .blob-g {
+    position: absolute;
+    border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%;
+    filter: blur(20px);
+    opacity: 0.2;
+  }
+
+  .blob-g1 { width: 120px; height: 100px; background: #e63946; top: -20px; left: -20px; }
+  .blob-g2 { width: 90px;  height: 80px;  background: #2a9d8f; bottom: -10px; right: -10px; }
+  .blob-g3 { width: 80px;  height: 70px;  background: #9b5de5; top: 40%; left: 50%; }
+
+  .preview-title-g {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: #1a1a1a;
+    letter-spacing: 0.04em;
+    position: relative;
+  }
+
+  /* Preview H – ペンキ */
+  .preview-h {
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 0 14px;
+    justify-content: flex-start;
+  }
+
+  .drip-bar-h {
+    display: flex;
+    height: 6px;
+    width: 100%;
+  }
+
+  .dcol-h {
+    flex: 1;
+    height: 6px;
+  }
+
+  .preview-title-h {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: #1a1a1a;
+    padding: 6px 12px 0;
+    letter-spacing: -0.02em;
+  }
+
+  .h-lens {
+    background: linear-gradient(90deg, #e63946, #118ab2, #9b5de5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .swatch-row-h {
+    display: flex;
+    height: 14px;
+    margin: 0 12px;
+    border-radius: 2px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+
+  .sh {
+    flex: 1;
   }
 
   /* Design info */

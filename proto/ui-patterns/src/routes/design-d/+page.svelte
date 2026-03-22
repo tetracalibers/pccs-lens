@@ -75,8 +75,8 @@
         <span class="h1-pccs">PCCS</span>
         <span class="h1-lens">Lens</span>
       </h1>
-      <p class="tagline">すべての色に、名前をつけよう。</p>
-      <p class="subtitle">日本色彩研究所が開発したPCCSで色を分析・理解・実験する</p>
+      <p class="tagline">色をPCCSというレンズを通して見る</p>
+      <p class="subtitle">トーンのしくみから、配色の理論を直感的に学ぼう</p>
       <div class="hue-strip">
         {#each ["#e03131", "#f76707", "#f59f00", "#94d82d", "#2f9e44", "#0c8599", "#1971c2", "#3b5bdb", "#6741d9", "#9c36b5", "#c2255c", "#e84393"] as c (c)}
           <div class="hue-seg" style="background:{c}"></div>
@@ -90,7 +90,7 @@
         <div class="guide-card-inner">
           <div class="guide-visual">
             <div class="guide-orb-ring">
-              {#each ["#e03131", "#f59f00", "#2f9e44", "#1971c2", "#6741d9", "#c2255c"] as c, i (c)}
+              {#each ["#f59f00", "#2f9e44", "#1971c2", "#6741d9", "#c2255c", "#e03131"] as c, i (c)}
                 <div
                   class="ring-dot"
                   style="
@@ -106,8 +106,8 @@
           <div class="guide-body">
             <span class="glass-tag">学習</span>
             <h2>PCCSとは？</h2>
-            <p>色相とトーンで体系化された日本独自の色彩理論。まずここから。</p>
-            <span class="neon-cta">→ 学習を始める</span>
+            <p>色相とトーンで体系化された、色のイメージを反映する色彩のしくみ。まずはここから。</p>
+            <span class="neon-cta">学習を始める</span>
           </div>
         </div>
       </a>
@@ -145,7 +145,6 @@
   /* ===== BASE (DARK) ===== */
   :global(body) {
     margin: 0;
-    font-family: "Helvetica Neue", Arial, "Hiragino Sans", "Hiragino Kaku Gothic ProN", sans-serif;
   }
 
   .page {
@@ -336,7 +335,7 @@
     color: inherit;
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
+    /* border-radius: 16px; */
     backdrop-filter: blur(12px);
     transition:
       border-color 0.2s,
@@ -527,7 +526,7 @@
     flex-direction: column;
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 14px;
+    /* border-radius: 14px; */
     overflow: hidden;
     text-decoration: none;
     color: inherit;
