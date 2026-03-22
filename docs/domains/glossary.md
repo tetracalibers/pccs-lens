@@ -139,16 +139,3 @@
 | 分析ページ | AnalyzePage | 機能2のページ（`/analyze`） |
 | 配色パターン一覧ページ | PatternsPage | 機能3のテーマ一覧ページ（`/patterns`） |
 | テーマ別シミュレーターページ | PatternSimulatorPage | 機能3の各テーマページ（`/patterns/[theme]`） |
-
----
-
-## 5. ファイル・データ関連
-
-| 用語 | 定義 |
-|---|---|
-| `pccs_colors.csv` | 新配色カード199収録色のマスターCSV（有彩色は偶数色相のみ＋無彩色） |
-| `pccs_colors_full.csv` | 全色相（24色相×全トーン＋無彩色）のマスターCSV |
-| `jis_colors.csv` | JIS慣用色名のマスターCSV（慣用色名・読み・HEXコード・出題級） |
-| `pccs_colors.json` | `pccs_colors.csv` から生成したJSONデータ（アプリが使用） |
-| `pccs_colors_full.json` | `pccs_colors_full.csv` から生成したJSONデータ（アプリが使用） |
-| `jis_colors.json` | `jis_colors.csv` から生成したJSONデータ（アプリが使用） |

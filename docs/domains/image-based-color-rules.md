@@ -1,7 +1,7 @@
 # イメージ別配色ルール定義書
 
 本ドキュメントは、PCCS Lens F3「イメージ別配色シミュレータ」において各イメージ（テーマ）の配色サジェストを実装するためのルール定義書。
-`docs/color-analysis-rules.md` および `docs/glossary.md` の用語・定義を前提とする。
+`docs/domains/color-analysis-rules.md` および `docs/domains/glossary.md` の用語・定義を前提とする。
 
 ---
 
