@@ -2,17 +2,40 @@
   import { resolve } from "$app/paths"
 
   const contentLinks = [
-    { href: resolve("/guide"), title: "PCCSとは？", desc: "色相とトーンで体系化された色彩のしくみ。まずはここから。", featured: true },
+    {
+      href: resolve("/guide"),
+      title: "PCCSとは？",
+      desc: "色相とトーンで体系化された色彩のしくみ。まずはここから。",
+      featured: true
+    },
     { href: "#", title: "PCCSの色相", desc: "24色相の配置と色名の対応を理解する" },
     { href: "#", title: "PCCSのトーン", desc: "明度・彩度をまとめた17のトーン区分" },
     { href: "#", title: "配色の基本", desc: "類似色・補色など基本的な配色の関係" },
-    { href: "#", title: "色のイメージ", desc: "トーンごとの印象と感情的な効果" },
+    { href: "#", title: "色のイメージ", desc: "トーンごとの印象と感情的な効果" }
   ]
 
   const toolLinks = [
-    { href: resolve("/approximate"), title: "色のPCCS近似", desc: "入力した色のPCCS値と慣用色名を調べる", color: "#e63946", label: "近似" },
-    { href: resolve("/analyze"), title: "配色の分析", desc: "PCCSの色相・トーンに基づいて配色を分析する", color: "#118ab2", label: "分析" },
-    { href: resolve("/patterns"), title: "配色シミュレータ", desc: "イメージに合う色の組み合わせを実験する", color: "#06d6a0", label: "実験" },
+    {
+      href: resolve("/approximate"),
+      title: "色のPCCS近似",
+      desc: "入力した色のPCCS値と慣用色名を調べる",
+      color: "#e63946",
+      label: "近似"
+    },
+    {
+      href: resolve("/analyze"),
+      title: "配色の分析",
+      desc: "PCCSの色相・トーンに基づいて配色を分析する",
+      color: "#118ab2",
+      label: "分析"
+    },
+    {
+      href: resolve("/patterns"),
+      title: "配色シミュレータ",
+      desc: "イメージに合う色の組み合わせを実験する",
+      color: "#06d6a0",
+      label: "実験"
+    }
   ]
 
   const paintColors = ["#e63946", "#f4a261", "#e9c46a", "#06d6a0", "#118ab2", "#9b5de5", "#c77dff"]
@@ -23,17 +46,33 @@
 </svelte:head>
 
 <div class="page">
-  <!-- Paint drip decoration at top -->
-  <div class="drip-bar" aria-hidden="true">
-    {#each paintColors as color, i (color)}
-      <div class="drip-col" style="background:{color}">
-        <div class="drip" style="--dh:{28 + (i % 3) * 18}px; --dl:{(i * 37) % 70 + 15}%"></div>
-      </div>
-    {/each}
-  </div>
+  <!-- Site header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href={resolve("/")} class="site-name" aria-label="PCCS Lens トップへ">
+        <span class="site-name-pccs">PCCS</span>
+        <span class="site-name-lens">Lens</span>
+      </a>
+      <nav class="site-nav" aria-label="メインナビゲーション">
+        <a href="#content" class="nav-link" style="--nc:#e63946">コンテンツ</a>
+        <a href="#tools" class="nav-link" style="--nc:#118ab2">ツール</a>
+      </nav>
+    </div>
+    <!-- Paint drip bar at header bottom -->
+    <div class="header-drip-bar" aria-hidden="true">
+      {#each paintColors as color, i (color)}
+        <div class="hd-col" style="background:{color}">
+          <div
+            class="hd-drip"
+            style="--dh:{14 + (i % 3) * 10}px; --dl:{((i * 41) % 65) + 18}%"
+          ></div>
+        </div>
+      {/each}
+    </div>
+  </header>
 
   <main>
-    <!-- Hero -->
+    <!-- Hero (ヘッダー下のスペースを確保) -->
     <header class="hero">
       <h1>
         <span class="h1-block h1-pccs">PCCS</span>
@@ -51,7 +90,7 @@
     </header>
 
     <!-- Contents -->
-    <section class="section">
+    <section id="content" class="section">
       <div class="section-label">
         <div class="label-paint" style="background:#1a1a1a"></div>
         <span>コンテンツ</span>
@@ -77,7 +116,11 @@
 
       <div class="content-grid">
         {#each contentLinks.slice(1) as link, i (link.title)}
-          <a href={link.href} class="content-card" style="--accent:{paintColors[(i + 2) % paintColors.length]}">
+          <a
+            href={link.href}
+            class="content-card"
+            style="--accent:{paintColors[(i + 2) % paintColors.length]}"
+          >
             <div class="content-accent-bar"></div>
             <span class="content-title">{link.title}</span>
             <span class="content-desc">{link.desc}</span>
@@ -87,7 +130,7 @@
     </section>
 
     <!-- Tools -->
-    <section class="section">
+    <section id="tools" class="section">
       <div class="section-label">
         <div class="label-paint" style="background:#1a1a1a"></div>
         <span>ツール</span>
@@ -123,27 +166,131 @@
     background: #ffffff;
   }
 
-  /* Drip bar */
-  .drip-bar {
+  /* Site header */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #ffffff;
+  }
+
+  .header-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+    height: 52px;
     display: flex;
-    height: 10px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .site-name {
+    display: flex;
+    align-items: baseline;
+    gap: 1px;
+    text-decoration: none;
+    line-height: 1;
+  }
+
+  .site-name-pccs {
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: #1a1a1a;
+    letter-spacing: -0.03em;
+  }
+
+  .site-name-lens {
+    font-size: 1.1rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    background: linear-gradient(
+      90deg,
+      #e63946 0%,
+      #f4a261 30%,
+      #06d6a0 60%,
+      #118ab2 80%,
+      #9b5de5 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .site-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .nav-link {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    text-decoration: none;
+    padding: 6px 10px;
+    position: relative;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: 2px;
+    left: 10px;
+    right: 10px;
+    height: 2px;
+    background: var(--nc);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.15s;
+  }
+
+  .nav-link:hover::after {
+    transform: scaleX(1);
+  }
+
+  .nav-cta {
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: #ffffff;
+    text-decoration: none;
+    background: #1a1a1a;
+    padding: 6px 14px;
+    border-radius: 2px;
+    margin-left: 0.5rem;
+    letter-spacing: 0.04em;
+    transition:
+      background 0.15s,
+      transform 0.1s;
+  }
+
+  .nav-cta:hover {
+    background: #e63946;
+    transform: translateY(-1px);
+  }
+
+  /* Header drip bar */
+  .header-drip-bar {
+    display: flex;
+    height: 5px;
     position: relative;
   }
 
-  .drip-col {
+  .hd-col {
     flex: 1;
-    height: 10px;
+    height: 5px;
     position: relative;
   }
 
-  .drip {
+  .hd-drip {
     position: absolute;
     bottom: calc(-1 * var(--dh));
     left: var(--dl);
-    width: 10px;
-    height: calc(var(--dh) + 5px);
+    width: 6px;
+    height: calc(var(--dh) + 3px);
     background: inherit;
-    border-radius: 0 0 6px 6px;
+    border-radius: 0 0 4px 4px;
   }
 
   /* Layout */
@@ -179,7 +326,15 @@
     font-size: 4.5rem;
     font-weight: 900;
     letter-spacing: -0.04em;
-    background: linear-gradient(90deg, #e63946 0%, #f4a261 25%, #e9c46a 45%, #06d6a0 65%, #118ab2 82%, #9b5de5 100%);
+    background: linear-gradient(
+      90deg,
+      #e63946 0%,
+      #f4a261 25%,
+      #e9c46a 45%,
+      #06d6a0 65%,
+      #118ab2 82%,
+      #9b5de5 100%
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -209,7 +364,7 @@
     overflow: hidden;
     max-width: 320px;
     margin: 0 auto;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
   }
 
   .swatch {
@@ -249,7 +404,9 @@
     color: inherit;
     overflow: hidden;
     margin-bottom: 0.75rem;
-    transition: transform 0.15s, box-shadow 0.15s;
+    transition:
+      transform 0.15s,
+      box-shadow 0.15s;
   }
 
   .featured-card:hover {
@@ -259,7 +416,16 @@
 
   .featured-stripe {
     height: 6px;
-    background: linear-gradient(90deg, #e63946, #f4a261, #e9c46a, #06d6a0, #118ab2, #9b5de5, #c77dff);
+    background: linear-gradient(
+      90deg,
+      #e63946,
+      #f4a261,
+      #e9c46a,
+      #06d6a0,
+      #118ab2,
+      #9b5de5,
+      #c77dff
+    );
   }
 
   .featured-inner {
@@ -270,8 +436,12 @@
   }
 
   @media (max-width: 480px) {
-    .featured-inner { flex-direction: column; }
-    .featured-icon { display: none; }
+    .featured-inner {
+      flex-direction: column;
+    }
+    .featured-icon {
+      display: none;
+    }
   }
 
   .featured-icon {
@@ -288,21 +458,27 @@
   }
 
   .pc1 {
-    width: 52px; height: 52px;
+    width: 52px;
+    height: 52px;
     background: #e63946;
-    top: 0; left: 0;
+    top: 0;
+    left: 0;
   }
 
   .pc2 {
-    width: 40px; height: 40px;
+    width: 40px;
+    height: 40px;
     background: #118ab2;
-    bottom: 0; right: 0;
+    bottom: 0;
+    right: 0;
   }
 
   .pc3 {
-    width: 30px; height: 30px;
+    width: 30px;
+    height: 30px;
     background: #e9c46a;
-    top: 20px; right: 5px;
+    top: 20px;
+    right: 5px;
     mix-blend-mode: multiply;
   }
 
@@ -357,7 +533,9 @@
   }
 
   @media (max-width: 480px) {
-    .content-grid { grid-template-columns: 1fr; }
+    .content-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   .content-card {
@@ -371,7 +549,10 @@
     color: inherit;
     position: relative;
     overflow: hidden;
-    transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+    transition:
+      border-color 0.15s,
+      transform 0.15s,
+      box-shadow 0.15s;
   }
 
   .content-card:hover {
@@ -411,7 +592,9 @@
   }
 
   @media (max-width: 540px) {
-    .tools-grid { grid-template-columns: 1fr; }
+    .tools-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   .tool-card {
@@ -422,7 +605,10 @@
     overflow: hidden;
     text-decoration: none;
     color: inherit;
-    transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+    transition:
+      border-color 0.15s,
+      transform 0.15s,
+      box-shadow 0.15s;
   }
 
   .tool-card:hover {
