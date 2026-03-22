@@ -21,7 +21,6 @@
     inputHex: string
     selectedPCCS: PCCSColor
     alternatePCCS: [PCCSColor, PCCSColor]
-    displayedPCCS: PCCSColor
   }
 
   function randomHex(): string {
@@ -34,8 +33,7 @@
       id: crypto.randomUUID(),
       inputHex: hex,
       selectedPCCS: results[0].color,
-      alternatePCCS: [results[1].color, results[2].color],
-      displayedPCCS: results[0].color
+      alternatePCCS: [results[1].color, results[2].color]
     }
   }
 
@@ -46,7 +44,7 @@
   let entries: ColorEntry[] = $state(initialEntries())
 
   const inputHexList = $derived(entries.map((e) => e.inputHex))
-  const displayedPCCSList = $derived(entries.map((e) => e.displayedPCCS))
+  const displayedPCCSList = $derived(entries.map((e) => e.selectedPCCS))
 
   function addEntry() {
     if (entries.length >= MAX_COLORS) return
@@ -79,8 +77,7 @@
       return {
         ...e,
         selectedPCCS: alternate,
-        alternatePCCS: [sorted[0], sorted[1]],
-        displayedPCCS: alternate
+        alternatePCCS: [sorted[0], sorted[1]]
       }
     })
   }

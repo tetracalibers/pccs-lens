@@ -65,26 +65,13 @@ type AchromaticBucket = 'W' | 'ltGy' | 'mGy' | 'dkGy' | 'Bk';
 |---|---|---|
 | `id` | `string` | 識別用ID |
 | `inputHex` | `string` | ユーザーが入力したHEXコード |
-| `approximatedPCCS` | `PCCSColor` | CIEDE2000 1番目の近傍PCCS値（不変・入力HEX変更時のみ再計算） |
 | `alternatePCCS` | `[PCCSColor, PCCSColor]` | CIEDE2000 2〜3番目の代替候補（ΔE₀₀昇順・入力HEX変更時リセット） |
-| `selectedPCCS` | `PCCSColor` | セクション1での代替候補選択後のPCCS値（デフォルトは `approximatedPCCS`） |
-| `displayedPCCS` | `PCCSColor` | 分析・プレビューに使われる最終的なPCCS値（`selectedPCCS` にセクション4の調整を適用した結果） |
+| `selectedPCCS` | `PCCSColor` | 分析・プレビューに使われるPCCS値（デフォルトはCIEDE2000 1番目） |
 
-3段階の決定フロー：
+- 入力色（HEX）が変わると：CIEDE2000で再計算し、`selectedPCCS`・`alternatePCCS` をリセットする
+- 代替候補を選択すると：`selectedPCCS` を更新する
 
-```
-approximatedPCCS（CIEDE2000 1番目・不変）
-  ↓ セクション1での代替候補選択
-selectedPCCS（セクション1の選択結果）
-  ↓ セクション4の自動配色 → 個別調整 の順に適用
-displayedPCCS（分析・プレビューに使われる最終的なPCCS色）
-```
-
-- 入力色（HEX）が変わると：`approximatedPCCS`・`alternatePCCS` を再計算し、`selectedPCCS` をリセット、個別調整をクリアする
-- 代替候補を選択すると：`selectedPCCS` を更新し、個別調整をクリアする
-- 自動配色の調整は全色の `displayedPCCS` に一括適用する
-- 個別調整は対象の色の `displayedPCCS` にのみ適用する
-- 調整結果の `displayedPCCS` がデータセットに存在しない場合（hue×toneの組み合わせが存在しない）、その操作をUIでdisabledにする
+---
 
 ### AnalysisResult（機能2の分析結果）
 
@@ -129,22 +116,6 @@ type HueTechnique =
 
 ---
 
-### HistoryEntry（機能2の履歴スタック1件）
-
-| フィールド | 型 | 説明 |
-|---|---|---|
-| `inputHexList` | `string[]` | その時点の全入力色のHEXコード配列 |
-| `displayedPCCSList` | `PCCSColor[]` | その時点の全 `displayedPCCS` の配列 |
-| `summary` | `string` | 変更内容を示すサマリー文字列（例：「色1を変更」「色相を+3ずらす」「配色を復元」） |
-
-- 履歴スタックは最大20件保持し、超えた場合は最古のエントリを削除する
-- 以下の操作を行うごとに新しいエントリを積む：
-  - セクション1でのinputHex変更（入力欄からfocusが外れたタイミング）
-  - セクション1での代替候補によるPCCS近似色の変更（即時）
-  - セクション4での自動配色・個別調整（Angle SliderはfocusOff時、それ以外は即時）
-  - 履歴からの復元（サマリーは「配色を復元」）
-
----
 
 ## 4. 機能1：色のPCCS近似（/approximate）
 
@@ -175,8 +146,6 @@ ApproximatePage
 
 ```
 AnalyzePage
-├── HistorySidebar              開閉可能な履歴サイドバー
-│   └── HistoryCard × N        変更サマリー・色スウォッチプレビュー
 ├── ApproximationSection        カラーコード入力とPCCS近似色の編集
 │   ├── PCCSDataSourceFilter    データソースフィルタ（F1と共通）
 │   └── ColorEntryList          入力色リスト（2〜6色・横並び）
@@ -188,12 +157,8 @@ AnalyzePage
 │   ├── ColorSchemePreview      配色プレビュー（入力色・PCCS近似色の2行）
 │   ├── HueWheel                PCCS色相環（SVG・read-only）
 │   └── ToneDiagram             PCCSトーン概念図（SVG・read-only）
-├── AnalysisSection             配色分析結果
-│   └── AnalysisCard × N       タイトル・解説・カテゴリタグ
-└── AdjustmentSection           配色の調整
-    ├── AutoAdjustPanel         自動配色調整（Angle Slider・明暗ボタン）
-    └── IndividualAdjustPanel   個別調整（明度/彩度ボタン・MiniHueWheel）
-        └── MiniHueWheel        セクション4内の小型色相環（SVG）
+└── AnalysisSection             配色分析結果
+    └── AnalysisCard × N       タイトル・解説・カテゴリタグ
 ```
 
 ### HueWheel（色相環）の仕様
@@ -202,7 +167,7 @@ AnalyzePage
 - 各セクターは対応するPCCS代表色で塗りつぶす
 - 色相番号と色相名（例：`1:pR`）を外周に表示する
 - 有彩色の `displayedPCCS` の色相セクターに枠線を追加し彩度を高めた色で塗り直す。複数色は複数セクターを同時にハイライト。色相環の中心から各近似色の色相セクターへ方向線を描画する。無彩色の近似色はハイライトしない
-- インタラクションは持たない（read-only）。色相の変更はAdjustmentSectionのMiniHueWheelで行う
+- インタラクションは持たない（read-only）
 
 ### ToneDiagram（トーン概念図）の仕様
 
@@ -217,50 +182,23 @@ AnalyzePage
   - 各列の円・正方形は縦中央に寄せて配置する
 - `displayedPCCS` で使われているトーンのセルに枠線を追加し彩度を高めた色で塗り直す
 - sトーンの表示：「新配色カード199にある色」フィルタ選択時は低彩度・低不透明度＋斜線パターンで非収録であることを示す。「すべての色」フィルタ選択時は通常表示する
-- インタラクションは持たない（read-only）。トーンの変更はAdjustmentSectionの個別調整で行う
+- インタラクションは持たない（read-only）
 
 ### 状態管理フロー
 
 各入力色の `displayedPCCS` は以下の優先順で決定する：
 
 ```
-approximatedPCCS（CIEDE2000 1番目・入力HEX変更時のみ再計算）
+CIEDE2000 1番目（入力HEX変更時のみ再計算）
   ↓ ApproximationSectionでの代替候補選択
-selectedPCCS（代替候補選択後のPCCS値）
-  ↓ AdjustmentSectionの自動配色調整 → 個別調整 の順に適用
-displayedPCCS（VisualizationSection・AnalysisSectionに反映される最終値）
+selectedPCCS（VisualizationSection・AnalysisSectionに反映される最終値）
 ```
-
-### 自動配色調整フロー（AutoAdjustPanel）
-
-1. 色相シフト（Angle Slider）：全色の `displayedPCCS` の色相番号をn増減する
-   - スライダー操作中はリアルタイムにプレビューを更新し、focus離脱時に履歴スタックへ積む
-   - ApproximationSectionでPCCS近似色が変化した場合、スライダーをリセットする
-2. 明暗ボタン（「明るくする/穏やかにする/暗くする」）：全色の `displayedPCCS` のトーンを一括変更し、即時に履歴スタックへ積む
-
-### 個別調整フロー（IndividualAdjustPanel）
-
-1. 調整したい色を選択する
-2. 明度/彩度ボタン：対象色の `displayedPCCS` を更新し、即時に履歴スタックへ積む
-   - 操作結果がデータセットに存在しない場合、ボタンをdisabledにする
-3. MiniHueWheel（小型色相環SVG）：セクターをクリックして色相を選択する
-   - 現在の色相セクターをハイライト表示する
-   - データセットに存在しない hue×tone の組み合わせとなるセクターはdisabledにする
-   - 色相選択後、`displayedPCCS` を更新し、即時に履歴スタックへ積む
-   - ApproximationSectionでPCCS近似色が変化した場合、MiniHueWheelをリセットする
-
-### 履歴サイドバーフロー（HistorySidebar）
-
-1. 対象操作のたびに `HistoryEntry`（`inputHexList`・`displayedPCCSList`・`summary`）を履歴スタックに積む（最大20件、超過時は最古を削除）
-2. サイドバーに履歴スタックを新しい順で一覧表示する
-3. HistoryCardをクリックすると、そのエントリの `inputHexList`・`displayedPCCSList` を各セクションに復元し、復元操作を新たな `HistoryEntry` として積む
-   - 復元時、AdjustmentSectionの調整UIの状態はリセットする
 
 ### 処理フロー（初期表示）
 
 1. ユーザーがカラーピッカーで色を追加する（最大6色）
 2. 追加のたびに選択中のPCCSデータソースを参照してΔE₀₀で上位3件のPCCS近傍色を決定する
-3. 1番目を `approximatedPCCS`・`selectedPCCS`・`displayedPCCS` に設定し、2〜3番目を `alternatePCCS` に設定する
+3. 1番目を `selectedPCCS`・`displayedPCCS` に設定し、2〜3番目を `alternatePCCS` に設定する
 4. HueWheel・ToneDiagram・AnalysisSectionをすべて更新する
 
 ---
