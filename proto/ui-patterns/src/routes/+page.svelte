@@ -160,7 +160,7 @@
     <a href={resolve("/design-h")} class="design-card">
       <div class="preview preview-h">
         <div class="drip-bar-h">
-          {#each ["#e63946","#f4a261","#e9c46a","#06d6a0","#118ab2","#9b5de5"] as c (c)}
+          {#each ["#e63946", "#f4a261", "#e9c46a", "#06d6a0", "#118ab2", "#9b5de5"] as c (c)}
             <div class="dcol-h" style="background:{c}"></div>
           {/each}
         </div>
@@ -169,7 +169,7 @@
           <span class="h-lens">Lens</span>
         </div>
         <div class="swatch-row-h">
-          {#each ["#e63946","#f4a261","#e9c46a","#06d6a0","#118ab2","#9b5de5","#c77dff"] as c (c)}
+          {#each ["#e63946", "#f4a261", "#e9c46a", "#06d6a0", "#118ab2", "#9b5de5", "#c77dff"] as c (c)}
             <div class="sh" style="background:{c}"></div>
           {/each}
         </div>
@@ -486,9 +486,27 @@
     opacity: 0.2;
   }
 
-  .blob-g1 { width: 120px; height: 100px; background: #e63946; top: -20px; left: -20px; }
-  .blob-g2 { width: 90px;  height: 80px;  background: #2a9d8f; bottom: -10px; right: -10px; }
-  .blob-g3 { width: 80px;  height: 70px;  background: #9b5de5; top: 40%; left: 50%; }
+  .blob-g1 {
+    width: 120px;
+    height: 100px;
+    background: #e63946;
+    top: -20px;
+    left: -20px;
+  }
+  .blob-g2 {
+    width: 90px;
+    height: 80px;
+    background: #2a9d8f;
+    bottom: -10px;
+    right: -10px;
+  }
+  .blob-g3 {
+    width: 80px;
+    height: 70px;
+    background: #9b5de5;
+    top: 40%;
+    left: 50%;
+  }
 
   .preview-title-g {
     font-weight: 800;
@@ -543,7 +561,7 @@
     margin: 0 12px;
     border-radius: 2px;
     overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   }
 
   .sh {
