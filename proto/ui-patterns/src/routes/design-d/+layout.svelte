@@ -19,7 +19,8 @@
 <header class="site-header" class:light={isLight}>
   <div class="header-inner">
     <a href={resolve("/")} class="site-name" aria-label="PCCS Lens トップへ">
-      <span class="site-name-pccs">PCCS</span><span class="site-name-lens">Lens</span>
+      <span class="site-name-pccs">PCCS</span>
+      <span class="site-name-lens">Lens</span>
     </a>
     <nav class="site-nav" aria-label="メインナビゲーション">
       <button class="mode-toggle" onclick={() => (isLight = !isLight)}>
@@ -42,6 +43,10 @@
 <style>
   :global(body) {
     margin: 0;
+    background: #0c0c14;
+  }
+  :global(body:has(.light)) {
+    background: #ffffff;
   }
 
   /* Site header */
@@ -49,13 +54,8 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(12, 12, 20, 0.88);
     backdrop-filter: blur(14px);
     transition: background 0.4s;
-  }
-
-  .site-header.light {
-    background: rgba(245, 240, 255, 0.9);
   }
 
   .header-inner {
@@ -71,8 +71,7 @@
 
   .site-name {
     display: flex;
-    align-items: baseline;
-    gap: 1px;
+    gap: 0.4rem;
     text-decoration: none;
     line-height: 1;
   }
