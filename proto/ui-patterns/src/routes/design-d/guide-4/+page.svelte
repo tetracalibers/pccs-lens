@@ -87,7 +87,7 @@
 </main>
 
 <style>
-  /* ===== カラーブロックスタイル ===== */
+  /* ===== カラーブロックスタイル（静的グラデーション） ===== */
   main {
     max-width: 700px;
     margin: 2rem auto 0;
@@ -95,24 +95,16 @@
     transition: background 0.4s, color 0.4s;
   }
 
-  /* ===== 見出し：ネオンカラー背景バー ===== */
+  /* ===== 見出し：パステルグラデーションテキスト（静的） ===== */
   main h2 {
-    font-size: 1.1rem;
-    font-weight: 800;
+    font-size: 2.4rem;
+    font-weight: 900;
     margin: 2.75rem 0 1.25rem;
-    color: #0c0c14;
-    padding: 0.5rem 1rem;
-    display: inline-block;
-    background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #c77dff);
-    background-size: 200%;
-    animation: hue-shift 8s linear infinite;
-    border-radius: 2px;
-    transition: color 0.4s;
-  }
-
-  @keyframes hue-shift {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 200% 50%; }
+    background: linear-gradient(90deg, #fca5a5, #fde68a, #bbf7d0, #bfdbfe, #e9d5ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: opacity 0.4s;
   }
 
   main h2:first-of-type {
@@ -149,68 +141,79 @@
     padding: 0.1rem 0;
   }
 
-  /* ===== コード ===== */
+  /* ===== コード：パステルバイオレット ===== */
   main code {
     font-size: 0.88em;
-    color: #6bcb77;
-    background: rgba(107, 203, 119, 0.1);
-    border: 1px solid rgba(107, 203, 119, 0.2);
+    color: #c084fc;
+    background: rgba(192, 132, 252, 0.1);
+    border: 1px solid rgba(192, 132, 252, 0.2);
     border-radius: 3px;
     padding: 1px 5px;
   }
 
-  /* ===== .mark.-brackets：グロー強調 ===== */
+  /* ===== .mark.-brackets：パステルイエロー pill ===== */
   main .mark.-brackets {
-    font-weight: 700;
-    color: #ffd93d;
-    text-shadow: 0 0 8px rgba(255, 217, 61, 0.4);
-    transition: color 0.4s, text-shadow 0.4s;
+    font-weight: 800;
+    color: #92400e;
+    background: rgba(253, 224, 71, 0.25);
+    border-radius: 999px;
+    padding: 0.05em 0.6em;
+    display: inline-block;
+    transition: background 0.4s, color 0.4s;
   }
 
-  main .mark.-brackets::before {
-    content: "「";
-    opacity: 0.5;
-  }
-
-  main .mark.-brackets::after {
-    content: "」";
-    opacity: 0.5;
-  }
-
-  /* ===== .tips / .example：カラーブロック ===== */
-  main .tips,
+  /* ===== .example：ティール系パステルカード ===== */
   main .example {
     margin: 1.25rem 0;
     padding: 0.85rem 1.1rem;
     font-size: 0.88rem;
     line-height: 1.75;
-    border-radius: 4px;
-  }
-
-  main .tips {
-    background: rgba(255, 217, 61, 0.1);
-    border: 1px solid rgba(255, 217, 61, 0.3);
-  }
-
-  main .tips::before {
-    content: "💡 Tips: ";
-    font-weight: 800;
-    color: #ffd93d;
-  }
-
-  main .example {
-    background: rgba(77, 150, 255, 0.08);
-    border: 1px solid rgba(77, 150, 255, 0.3);
+    border-radius: 6px;
+    border: 1px solid rgba(94, 234, 212, 0.3);
+    background: rgba(94, 234, 212, 0.1);
   }
 
   main .example::before {
-    content: "▶ Example: ";
+    content: "Example";
+    display: block;
+    font-size: 0.68rem;
     font-weight: 800;
-    color: #4d96ff;
+    letter-spacing: 0.1em;
+    color: #5eead4;
+    margin-bottom: 0.35rem;
   }
 
-  main .tips > p,
   main .example > p {
+    display: inline;
+    margin: 0;
+    font-size: inherit;
+    line-height: inherit;
+    color: #9090b0;
+    transition: color 0.4s;
+  }
+
+  /* ===== .tips：ローズ系パステルカード ===== */
+  main .tips {
+    margin: 1.25rem 0;
+    padding: 0.85rem 1.1rem;
+    font-size: 0.88rem;
+    line-height: 1.75;
+    border-radius: 6px;
+    border: 1px solid rgba(253, 164, 175, 0.3);
+    background: rgba(253, 164, 175, 0.1);
+  }
+
+  main .tips::before {
+    content: "Tips";
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #fda4af;
+    margin-bottom: 0.35rem;
+  }
+
+  main .tips > p {
     display: inline;
     margin: 0;
     font-size: inherit;
@@ -223,33 +226,26 @@
   main img {
     max-width: 100%;
     border-radius: 4px;
-    opacity: 0.85;
+    opacity: 0.9;
     transition: opacity 0.4s;
   }
 
-  /* ===== .term-grid：2カラム ===== */
+  /* ===== .term-grid ===== */
   main .term-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
     margin: 1rem 0;
   }
 
-  @media (max-width: 480px) {
-    main .term-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  /* ===== .term-card：アクセントカラー付きカード ===== */
+  /* ===== .term-card：縦積み・画像フル幅 ===== */
   main .term-card {
+    display: grid;
+    gap: 0.7rem;
     padding: 0;
     border: 1px solid rgba(255, 255, 255, 0.07);
     border-radius: 6px;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
     transition: border-color 0.2s, transform 0.15s, box-shadow 0.15s;
   }
 
@@ -259,17 +255,13 @@
     box-shadow: 0 4px 20px color-mix(in srgb, var(--ac) 20%, transparent);
   }
 
-  main .term-card:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
-  }
-
   .card-header {
     display: flex;
     align-items: center;
     gap: 0.6rem;
     padding: 0.6rem 0.9rem;
     background: color-mix(in srgb, var(--ac) 12%, transparent);
-    border-bottom: 1px solid color-mix(in srgb, var(--ac) 25%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--ac) 20%, transparent);
   }
 
   .card-dot {
@@ -277,7 +269,7 @@
     height: 8px;
     border-radius: 50%;
     background: var(--ac);
-    box-shadow: 0 0 6px var(--ac);
+    opacity: 0.8;
     flex-shrink: 0;
   }
 
@@ -293,23 +285,24 @@
     line-height: 1.75;
     margin: 0;
     color: #7878a0;
-    padding: 0.75rem 0.9rem;
-    flex: 1;
+    padding: 0 0.9rem;
     transition: color 0.4s;
   }
 
   main .diagram-wrapper {
-    padding: 0 0.9rem 0.75rem;
+    padding: 0;
   }
 
   main .diagram-wrapper img {
     width: 100%;
     height: auto;
+    border-radius: 0;
+    opacity: 1;
   }
 
   /* ===== ライトモード ===== */
   main.light h2 {
-    color: #ffffff;
+    opacity: 0.85;
   }
 
   main.light p,
@@ -318,28 +311,39 @@
   }
 
   main.light code {
-    color: #1d7a2a;
-    background: rgba(29, 122, 42, 0.07);
-    border-color: rgba(29, 122, 42, 0.18);
+    color: #9333ea;
+    background: rgba(147, 51, 234, 0.06);
+    border-color: rgba(147, 51, 234, 0.15);
   }
 
   main.light .mark.-brackets {
-    color: #9a6200;
-    text-shadow: none;
-  }
-
-  main.light .tips {
-    background: rgba(255, 200, 20, 0.07);
-    border-color: rgba(180, 130, 0, 0.25);
+    color: #92400e;
+    background: rgba(253, 224, 71, 0.5);
   }
 
   main.light .example {
-    background: rgba(25, 113, 194, 0.05);
-    border-color: rgba(25, 113, 194, 0.22);
+    border-color: rgba(20, 184, 166, 0.3);
+    background: rgba(204, 251, 241, 0.5);
   }
 
-  main.light .tips > p,
+  main.light .example::before {
+    color: #0d9488;
+  }
+
   main.light .example > p {
+    color: #556070;
+  }
+
+  main.light .tips {
+    border-color: rgba(244, 63, 94, 0.2);
+    background: rgba(255, 228, 230, 0.6);
+  }
+
+  main.light .tips::before {
+    color: #e11d48;
+  }
+
+  main.light .tips > p {
     color: #556070;
   }
 

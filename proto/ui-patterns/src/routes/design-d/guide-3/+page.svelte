@@ -121,7 +121,7 @@
 </main>
 
 <style>
-  /* ===== コンパクト・ドキュメントスタイル ===== */
+  /* ===== グラデーションタイポグラフィスタイル（静的） ===== */
   main {
     max-width: 760px;
     margin: 1.75rem auto 0;
@@ -129,34 +129,27 @@
     transition: background 0.4s, color 0.4s;
   }
 
-  /* ===== 見出し：バッジ型 ===== */
+  /* ===== 見出し：パステル虹グラデーションテキスト + 区切り線 ===== */
   main h2 {
-    font-size: 0.72rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    margin: 2.25rem 0 0.9rem;
+    font-size: 2rem;
+    font-weight: 900;
+    margin: 2.75rem 0 1rem;
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    color: #666;
-    transition: color 0.4s;
-  }
-
-  main h2::before {
-    content: "";
-    display: block;
-    width: 18px;
-    height: 2px;
-    background: linear-gradient(90deg, #ff6b6b, #ffd93d);
-    flex-shrink: 0;
+    background: linear-gradient(90deg, #a5f3fc, #c4b5fd, #fbcfe8, #bef264);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: opacity 0.4s;
   }
 
   main h2::after {
     content: "";
     flex: 1;
     height: 1px;
-    background: rgba(255, 255, 255, 0.06);
+    background: linear-gradient(90deg, rgba(165, 243, 252, 0.3), transparent);
+    -webkit-text-fill-color: initial;
     transition: background 0.4s;
   }
 
@@ -165,9 +158,9 @@
   }
 
   main h3 {
-    font-size: 0.82rem;
+    font-size: 0.9rem;
     font-weight: 700;
-    margin: 0 0 0.3rem;
+    margin: 0 0 0.4rem;
     color: #c0c0d8;
     transition: color 0.4s;
   }
@@ -175,113 +168,99 @@
   /* ===== 本文・リスト ===== */
   main p {
     color: #8888a8;
-    margin: 0.5rem 0;
-    font-size: 0.85rem;
-    line-height: 1.85;
+    margin: 0.6rem 0;
+    font-size: 0.88rem;
+    line-height: 1.9;
     transition: color 0.4s;
   }
 
   main ul {
-    margin: 0.5rem 0;
+    margin: 0.6rem 0;
     padding-inline-start: 1.5rem;
     color: #8888a8;
-    font-size: 0.85rem;
-    line-height: 1.85;
+    font-size: 0.88rem;
+    line-height: 1.9;
     transition: color 0.4s;
   }
 
   main li {
-    padding: 0;
+    padding: 0.1rem 0;
   }
 
-  /* ===== コード ===== */
+  /* ===== コード：パステルミント ===== */
   main code {
     font-size: 0.85em;
-    color: #6bcb77;
-    background: rgba(107, 203, 119, 0.08);
-    border: 1px solid rgba(107, 203, 119, 0.15);
+    color: #6ee7b7;
+    background: rgba(110, 231, 183, 0.1);
+    border: 1px solid rgba(110, 231, 183, 0.2);
     border-radius: 3px;
     padding: 0 4px;
   }
 
-  /* ===== .mark.-brackets：小文字バッジ ===== */
+  /* ===== .mark.-brackets：ピーチアンダーライン ===== */
   main .mark.-brackets {
-    font-weight: 600;
-    color: #ffd93d;
-    font-size: 0.95em;
+    font-weight: 700;
+    color: #fdba74;
+    border-bottom: 2px solid rgba(253, 186, 116, 0.7);
+    padding-bottom: 1px;
+    transition: color 0.4s, border-color 0.4s;
+  }
+
+  /* ===== .example：丸みのあるピーチカード ===== */
+  main .example {
+    margin: 1.25rem 0;
+    padding: 0.85rem 1rem;
+    font-size: 0.88rem;
+    line-height: 1.75;
+    border: 1px solid rgba(253, 186, 116, 0.25);
+    background: rgba(253, 186, 116, 0.08);
+    border-radius: 8px;
+  }
+
+  main .example::before {
+    content: "Example";
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    color: #fdba74;
+    margin-bottom: 0.4rem;
+  }
+
+  main .example > p {
+    margin: 0;
+    font-size: inherit;
+    line-height: inherit;
+    color: #8888a8;
     transition: color 0.4s;
   }
 
-  main .mark.-brackets::before {
-    content: "「";
-    opacity: 0.4;
-  }
-
-  main .mark.-brackets::after {
-    content: "」";
-    opacity: 0.4;
-  }
-
-  /* ===== .tips / .example：インラインバッジ型 ===== */
-  main .tips,
-  main .example {
-    display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
-    margin: 0.9rem 0;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.83rem;
-    line-height: 1.7;
-    border-radius: 3px;
-  }
-
+  /* ===== .tips：丸みのあるラベンダーカード ===== */
   main .tips {
-    background: rgba(255, 217, 61, 0.05);
-    border: 1px solid rgba(255, 217, 61, 0.15);
+    margin: 1.25rem 0;
+    padding: 0.85rem 1rem;
+    font-size: 0.88rem;
+    line-height: 1.75;
+    border: 1px solid rgba(196, 181, 253, 0.25);
+    background: rgba(196, 181, 253, 0.08);
+    border-radius: 8px;
   }
 
   main .tips::before {
     content: "Tips";
-    font-size: 0.65rem;
+    display: block;
+    font-size: 0.7rem;
     font-weight: 800;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #ffd93d;
-    background: rgba(255, 217, 61, 0.15);
-    padding: 1px 6px;
-    border-radius: 2px;
-    flex-shrink: 0;
-    align-self: flex-start;
-    margin-top: 0.15rem;
+    letter-spacing: 0.08em;
+    color: #c4b5fd;
+    margin-bottom: 0.4rem;
   }
 
-  main .example {
-    background: rgba(77, 150, 255, 0.04);
-    border: 1px solid rgba(77, 150, 255, 0.15);
-  }
-
-  main .example::before {
-    content: "Ex";
-    font-size: 0.65rem;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #4d96ff;
-    background: rgba(77, 150, 255, 0.15);
-    padding: 1px 6px;
-    border-radius: 2px;
-    flex-shrink: 0;
-    align-self: flex-start;
-    margin-top: 0.15rem;
-  }
-
-  main .tips > p,
-  main .example > p {
-    display: inline;
+  main .tips > p {
     margin: 0;
     font-size: inherit;
     line-height: inherit;
-    color: #8080a0;
+    color: #8888a8;
     transition: color 0.4s;
   }
 
@@ -289,79 +268,64 @@
   main img {
     max-width: 100%;
     border-radius: 3px;
-    opacity: 0.8;
+    opacity: 0.85;
     transition: opacity 0.4s;
   }
 
-  /* ===== .term-grid：3カラムグリッド ===== */
+  /* ===== .term-grid ===== */
   main .term-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.6rem;
-    margin: 0.9rem 0;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
   }
 
-  @media (max-width: 600px) {
-    main .term-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (max-width: 400px) {
-    main .term-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  /* ===== .term-card：コンパクトカード ===== */
+  /* ===== .term-card ===== */
   main .term-card {
-    padding: 0.8rem 0.9rem;
-    border-top: 2px solid rgba(255, 255, 255, 0.08);
-    border-left: none;
-    border-right: none;
-    border-bottom: none;
+    display: grid;
+    gap: 0.7rem;
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 4px;
     background: rgba(255, 255, 255, 0.02);
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    transition: background 0.15s, border-color 0.4s;
+    transition: background 0.15s, border-color 0.2s;
   }
 
   main .term-card:hover {
     background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(165, 243, 252, 0.3);
   }
 
   main .term-card h3 {
-    font-size: 0.82rem;
+    font-size: 0.9rem;
     font-weight: 700;
     margin: 0;
     color: #d0d0e8;
+    transition: color 0.4s;
   }
 
   main .term-card p {
-    font-size: 0.76rem;
-    line-height: 1.7;
+    font-size: 0.82rem;
+    line-height: 1.75;
     margin: 0;
     color: #6868a0;
     transition: color 0.4s;
   }
 
-  /* 最後の1枚が奇数番目なら全幅 */
-  main .term-card:last-child:nth-child(3n + 1) {
-    grid-column: 1 / -1;
-  }
-
-  main .diagram-wrapper {
-    display: none;
+  main .diagram-wrapper img {
+    width: 100%;
+    height: auto;
+    border-radius: 3px;
+    opacity: 1;
   }
 
   /* ===== ライトモード ===== */
   main.light h2 {
-    color: #999;
+    opacity: 0.85;
   }
 
   main.light h2::after {
-    background: rgba(0, 0, 0, 0.08);
+    background: linear-gradient(90deg, rgba(8, 145, 178, 0.25), transparent);
   }
 
   main.light h3 {
@@ -374,37 +338,39 @@
   }
 
   main.light code {
-    color: #1d7a2a;
-    background: rgba(29, 122, 42, 0.07);
-    border-color: rgba(29, 122, 42, 0.15);
+    color: #059669;
+    background: rgba(5, 150, 105, 0.07);
+    border-color: rgba(5, 150, 105, 0.18);
   }
 
   main.light .mark.-brackets {
-    color: #9a6200;
-  }
-
-  main.light .tips {
-    background: rgba(255, 200, 20, 0.05);
-    border-color: rgba(180, 130, 0, 0.2);
-  }
-
-  main.light .tips::before {
-    color: #9a6200;
-    background: rgba(255, 200, 20, 0.15);
+    color: #ea580c;
+    border-bottom-color: rgba(234, 88, 12, 0.6);
   }
 
   main.light .example {
-    background: rgba(25, 113, 194, 0.04);
-    border-color: rgba(25, 113, 194, 0.2);
+    border-color: rgba(251, 146, 60, 0.35);
+    background: rgba(253, 186, 116, 0.12);
   }
 
   main.light .example::before {
-    color: #1971c2;
-    background: rgba(25, 113, 194, 0.12);
+    color: #ea580c;
   }
 
-  main.light .tips > p,
   main.light .example > p {
+    color: #556070;
+  }
+
+  main.light .tips {
+    border-color: rgba(139, 92, 246, 0.25);
+    background: rgba(196, 181, 253, 0.12);
+  }
+
+  main.light .tips::before {
+    color: #7c3aed;
+  }
+
+  main.light .tips > p {
     color: #556070;
   }
 
@@ -413,12 +379,13 @@
   }
 
   main.light .term-card {
-    border-top-color: rgba(0, 0, 0, 0.1);
-    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.01);
   }
 
   main.light .term-card:hover {
-    background: rgba(0, 0, 0, 0.04);
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(8, 145, 178, 0.25);
   }
 
   main.light .term-card h3 {
