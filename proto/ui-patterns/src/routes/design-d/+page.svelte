@@ -68,8 +68,6 @@
         <span class="site-name-lens">Lens</span>
       </a>
       <nav class="site-nav" aria-label="メインナビゲーション">
-        <a href="#content" class="nav-link" style="--nc:#ffd93d">コンテンツ</a>
-        <a href="#tools" class="nav-link" style="--nc:#6bcb77">ツール</a>
         <button class="mode-toggle" onclick={() => (isLight = !isLight)}>
           {isLight ? "🌙 ダーク" : "☀️ ライト"}
         </button>
@@ -127,7 +125,7 @@
           <div class="guide-body">
             <span class="glass-tag">学習</span>
             <h2>PCCSとは？</h2>
-            <p>色相とトーンで体系化された、色のイメージを反映する色彩のしくみ。まずはここから。</p>
+            <p>色相とトーンで体系化された、色のイメージを反映できる色の表し方。まずはここから。</p>
             <span class="neon-cta">学習を始める</span>
           </div>
         </div>
@@ -205,13 +203,13 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(12, 12, 20, 0.88);
+    background: rgba(245, 240, 255, 0.1);
     backdrop-filter: blur(14px);
     transition: background 0.4s;
   }
 
   .light .site-header {
-    background: rgba(245, 240, 255, 0.9);
+    background: rgba(245, 240, 255, 0.2);
   }
 
   .header-inner {
@@ -227,8 +225,7 @@
 
   .site-name {
     display: flex;
-    align-items: baseline;
-    gap: 1px;
+    gap: 0.4rem;
     text-decoration: none;
     line-height: 1;
   }
@@ -261,47 +258,6 @@
     display: flex;
     align-items: center;
     gap: 0.25rem;
-  }
-
-  .nav-link {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: #aaa;
-    text-decoration: none;
-    padding: 6px 10px;
-    position: relative;
-    letter-spacing: 0.02em;
-    transition: color 0.2s;
-  }
-
-  .nav-link:hover {
-    color: #f0f0f0;
-  }
-
-  .light .nav-link {
-    color: #555;
-  }
-
-  .light .nav-link:hover {
-    color: #1a1a1a;
-  }
-
-  .nav-link::after {
-    content: "";
-    position: absolute;
-    bottom: 2px;
-    left: 10px;
-    right: 10px;
-    height: 1px;
-    background: var(--nc);
-    box-shadow: 0 0 6px var(--nc);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.15s;
-  }
-
-  .nav-link:hover::after {
-    transform: scaleX(1);
   }
 
   .mode-toggle {
@@ -390,6 +346,9 @@
   }
 
   .hero h1 {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
     font-size: 4rem;
     font-weight: 900;
     margin: 0 0 1rem;
@@ -440,7 +399,7 @@
 
   .subtitle {
     font-size: 0.88rem;
-    color: #555;
+    color: #7b7b7b;
     margin: 0 0 1.5rem;
     line-height: 1.7;
     transition: color 0.4s;
@@ -777,7 +736,7 @@
 
   /* Light mode: page background */
   .light {
-    background: #f5f0ff;
+    background: #ffffff;
     color: #1a1a1a;
   }
 </style>
