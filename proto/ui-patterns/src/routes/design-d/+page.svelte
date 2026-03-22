@@ -60,12 +60,29 @@
     {/each}
   </div>
 
-  <!-- Mode toggle -->
-  <div class="mode-toggle-wrap">
-    <button class="mode-toggle" onclick={() => (isLight = !isLight)}>
-      {isLight ? "🌙 ダークモードへ" : "☀️ ライトモードへ"}
-    </button>
-  </div>
+  <!-- Site header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href={resolve("/")} class="site-name" aria-label="PCCS Lens トップへ">
+        <span class="site-name-pccs">PCCS</span><span class="site-name-lens">Lens</span>
+      </a>
+      <nav class="site-nav" aria-label="メインナビゲーション">
+        <a href="#content" class="nav-link" style="--nc:#ffd93d">コンテンツ</a>
+        <a href="#tools" class="nav-link" style="--nc:#6bcb77">ツール</a>
+        <button class="mode-toggle" onclick={() => (isLight = !isLight)}>
+          {isLight ? "🌙 ダーク" : "☀️ ライト"}
+        </button>
+      </nav>
+    </div>
+    <!-- Hue drip bar at header bottom -->
+    <div class="header-drip-bar" aria-hidden="true">
+      {#each ["#e03131","#f76707","#f59f00","#94d82d","#2f9e44","#0c8599","#1971c2","#3b5bdb","#6741d9","#9c36b5","#c2255c","#e84393"] as c, i (c)}
+        <div class="hd-col" style="background:{c}">
+          <div class="hd-drip" style="--dh:{14 + (i % 3) * 10}px; --dl:{((i * 41) % 65) + 18}%"></div>
+        </div>
+      {/each}
+    </div>
+  </header>
 
   <main>
     <!-- Hero -->
@@ -85,7 +102,7 @@
     </header>
 
     <!-- Guide -->
-    <section class="guide-section">
+    <section id="content" class="guide-section">
       <a href={resolve("/guide")} class="guide-card">
         <div class="guide-card-inner">
           <div class="guide-visual">
@@ -114,7 +131,7 @@
     </section>
 
     <!-- Tools -->
-    <section class="tools-section">
+    <section id="tools" class="tools-section">
       <div class="tools-header">
         <span class="tools-label">ツール</span>
         <div class="tools-divider"></div>
@@ -179,31 +196,124 @@
     opacity: 0.18;
   }
 
-  /* Toggle */
-  .mode-toggle-wrap {
-    position: relative;
-    z-index: 10;
-    display: flex;
-    justify-content: flex-end;
-    padding: 1rem 1.25rem 0;
+  /* Site header */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(12, 12, 20, 0.88);
+    backdrop-filter: blur(14px);
+    transition: background 0.4s;
+  }
+
+  .light .site-header {
+    background: rgba(245, 240, 255, 0.9);
+  }
+
+  .header-inner {
     max-width: 720px;
     margin: 0 auto;
+    padding: 0 1.25rem;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .site-name {
+    display: flex;
+    align-items: baseline;
+    gap: 1px;
+    text-decoration: none;
+    line-height: 1;
+  }
+
+  .site-name-pccs {
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: #f0f0f0;
+    letter-spacing: -0.03em;
+    transition: color 0.4s;
+  }
+
+  .light .site-name-pccs {
+    color: #1a1a1a;
+  }
+
+  .site-name-lens {
+    font-size: 1.05rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #c77dff, #ff6b6b);
+    background-size: 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: hue-shift 6s linear infinite;
+  }
+
+  .site-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .nav-link {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #aaa;
+    text-decoration: none;
+    padding: 6px 10px;
+    position: relative;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+
+  .nav-link:hover {
+    color: #f0f0f0;
+  }
+
+  .light .nav-link {
+    color: #555;
+  }
+
+  .light .nav-link:hover {
+    color: #1a1a1a;
+  }
+
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: 2px;
+    left: 10px;
+    right: 10px;
+    height: 1px;
+    background: var(--nc);
+    box-shadow: 0 0 6px var(--nc);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.15s;
+  }
+
+  .nav-link:hover::after {
+    transform: scaleX(1);
   }
 
   .mode-toggle {
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    padding: 6px 14px;
+    padding: 5px 12px;
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     background: rgba(255, 255, 255, 0.06);
     color: #aaa;
     cursor: pointer;
+    margin-left: 0.5rem;
     transition:
       background 0.2s,
       border-color 0.2s,
       color 0.2s;
-    backdrop-filter: blur(8px);
   }
 
   .mode-toggle:hover {
@@ -220,6 +330,31 @@
   .light .mode-toggle:hover {
     background: rgba(0, 0, 0, 0.08);
     color: #222;
+  }
+
+  /* Header drip bar */
+  .header-drip-bar {
+    display: flex;
+    height: 5px;
+    position: relative;
+  }
+
+  .hd-col {
+    flex: 1;
+    height: 5px;
+    position: relative;
+    opacity: 0.85;
+  }
+
+  .hd-drip {
+    position: absolute;
+    bottom: calc(-1 * var(--dh));
+    left: var(--dl);
+    width: 6px;
+    height: calc(var(--dh) + 3px);
+    background: inherit;
+    border-radius: 0 0 4px 4px;
+    opacity: 1;
   }
 
   /* Main */
