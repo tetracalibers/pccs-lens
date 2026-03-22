@@ -4,7 +4,7 @@
 
   let { children } = $props()
 
-  let isLight = $state(false)
+  let isLight = $state(true)
 
   setContext("designD", {
     get isLight() {
