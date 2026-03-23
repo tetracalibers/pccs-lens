@@ -32,6 +32,13 @@
       desc: "専門用語の定義や説明を表示するカード",
       glow: "#c77dff",
       gradient: "linear-gradient(135deg, #4d96ff, #c77dff)"
+    },
+    {
+      href: resolve("/design-d/components/ulist"),
+      title: "リスト",
+      desc: "ulリストのバレットスタイルパターン",
+      glow: "#67e8f9",
+      gradient: "linear-gradient(135deg, #c77dff, #67e8f9)"
     }
   ]
 </script>
