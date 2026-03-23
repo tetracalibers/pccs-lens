@@ -126,7 +126,9 @@
     max-width: 760px;
     margin: 1.75rem auto 0;
     padding: 0 1.25rem 4rem;
-    transition: background 0.4s, color 0.4s;
+    transition:
+      background 0.4s,
+      color 0.4s;
   }
 
   /* ===== 見出し：パステル虹グラデーションテキスト + 区切り線 ===== */
@@ -203,7 +205,9 @@
     color: #fdba74;
     border-bottom: 2px solid rgba(253, 186, 116, 0.7);
     padding-bottom: 1px;
-    transition: color 0.4s, border-color 0.4s;
+    transition:
+      color 0.4s,
+      border-color 0.4s;
   }
 
   /* ===== .example：丸みのあるピーチカード ===== */
@@ -288,7 +292,9 @@
     border: 1px solid rgba(255, 255, 255, 0.07);
     border-radius: 4px;
     background: rgba(255, 255, 255, 0.02);
-    transition: background 0.15s, border-color 0.2s;
+    transition:
+      background 0.15s,
+      border-color 0.2s;
   }
 
   main .term-card:hover {

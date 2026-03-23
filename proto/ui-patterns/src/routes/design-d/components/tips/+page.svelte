@@ -20,56 +20,75 @@
   <section class="pattern">
     <p class="pattern-label">A — 琥珀ネオン枠（現行案）</p>
     <div class="tips -a">トーンをクリックしてイメージを確認してみよう</div>
-    <p class="pattern-note">琥珀色の薄枠と背景で囲み、<code>::before</code>で「Tips: 」を前置する。ネオン世界観と調和したシンプルな案</p>
+    <p class="pattern-note">
+      琥珀色の薄枠と背景で囲み、
+      <code>::before</code>
+      で「Tips: 」を前置する。ネオン世界観と調和したシンプルな案
+    </p>
   </section>
 
   <!-- B: 左ボーダーライン -->
   <section class="pattern">
     <p class="pattern-label">B — 左アクセントライン</p>
     <div class="tips -b">トーンをクリックしてイメージを確認してみよう</div>
-    <p class="pattern-note">左に2pxの琥珀グラデーションライン。枠で囲まず、余白と線だけで区切る。テキスト主体のページに溶け込みやすい</p>
+    <p class="pattern-note">
+      左に2pxの琥珀グラデーションライン。枠で囲まず、余白と線だけで区切る。テキスト主体のページに溶け込みやすい
+    </p>
   </section>
 
   <!-- C: グラスモーフィズムカード -->
   <section class="pattern">
     <p class="pattern-label">C — グラスモーフィズムカード</p>
     <div class="tips -c">トーンをクリックしてイメージを確認してみよう</div>
-    <p class="pattern-note">backdrop-blurとガラス感のある背景でカード化。ラベルはカード上部に独立した行として表示</p>
+    <p class="pattern-note">
+      backdrop-blurとガラス感のある背景でカード化。ラベルはカード上部に独立した行として表示
+    </p>
   </section>
 
   <!-- D: レインボー上線 -->
   <section class="pattern">
     <p class="pattern-label">D — レインボー上線</p>
     <div class="tips -d">トーンをクリックしてイメージを確認してみよう</div>
-    <p class="pattern-note">上辺にレインボーグラデーションラインを引き、ブランドカラーを添える。背景は極めて薄く、本文に近い軽さを保つ</p>
+    <p class="pattern-note">
+      上辺にレインボーグラデーションラインを引き、ブランドカラーを添える。背景は極めて薄く、本文に近い軽さを保つ
+    </p>
   </section>
 
   <!-- E: ラベルタグ付きドット枠 -->
   <section class="pattern">
     <p class="pattern-label">E — ラベルタグ付きドット枠</p>
     <div class="tips -e">トーンをクリックしてイメージを確認してみよう</div>
-    <p class="pattern-note">点線の枠に角を重ねるようにラベルタグを配置。コード・端末を想起させるテクノロジー感のある表現</p>
+    <p class="pattern-note">
+      点線の枠に角を重ねるようにラベルタグを配置。コード・端末を想起させるテクノロジー感のある表現
+    </p>
   </section>
 
   <!-- F: チップ型インラインラベル -->
   <section class="pattern">
     <p class="pattern-label">F — チップ型インラインラベル</p>
     <div class="tips -f">トーンをクリックしてイメージを確認してみよう</div>
-    <p class="pattern-note">「Tips」をバッジ風のチップとして文頭に埋め込む。枠線なし、行ベースの読みやすいレイアウト</p>
+    <p class="pattern-note">
+      「Tips」をバッジ風のチップとして文頭に埋め込む。枠線なし、行ベースの読みやすいレイアウト
+    </p>
   </section>
 
   <!-- G: ネオングロー背景 -->
   <section class="pattern">
     <p class="pattern-label">G — ネオングロー背景</p>
     <div class="tips -g">トーンをクリックしてイメージを確認してみよう</div>
-    <p class="pattern-note">内側に青紫のグロー（box-shadow inset）を仕込んだ囲み。ネオン感が強く、インタラクティブな要素への誘導に向く</p>
+    <p class="pattern-note">
+      内側に青紫のグロー（box-shadow
+      inset）を仕込んだ囲み。ネオン感が強く、インタラクティブな要素への誘導に向く
+    </p>
   </section>
 
   <!-- H: 角括弧コーナー装飾 -->
   <section class="pattern">
     <p class="pattern-label">H — 角括弧コーナー装飾</p>
     <div class="tips -h">トーンをクリックしてイメージを確認してみよう</div>
-    <p class="pattern-note">四隅にL字のコーナーラインを擬似要素で描く。枠線なしで浮遊感を演出し、コードエディタ的な世界観を表現</p>
+    <p class="pattern-note">
+      四隅にL字のコーナーラインを擬似要素で描く。枠線なしで浮遊感を演出し、コードエディタ的な世界観を表現
+    </p>
   </section>
 </main>
 
@@ -422,14 +441,19 @@
     inset: 0;
     pointer-events: none;
     background:
-      /* 左上横 */ linear-gradient(#6bcb77, #6bcb77) top left / 12px 1px no-repeat,
+      /* 左上横 */
+      linear-gradient(#6bcb77, #6bcb77) top left / 12px 1px no-repeat,
       /* 左上縦 */ linear-gradient(#6bcb77, #6bcb77) top left / 1px 12px no-repeat,
       /* 右上横 */ linear-gradient(#6bcb77, #6bcb77) top right / 12px 1px no-repeat,
       /* 右上縦 */ linear-gradient(#6bcb77, #6bcb77) top right / 1px 12px no-repeat,
-      /* 左下横 */ linear-gradient(rgba(107, 203, 119, 0.35), rgba(107, 203, 119, 0.35)) bottom left / 12px 1px no-repeat,
-      /* 左下縦 */ linear-gradient(rgba(107, 203, 119, 0.35), rgba(107, 203, 119, 0.35)) bottom left / 1px 12px no-repeat,
-      /* 右下横 */ linear-gradient(rgba(107, 203, 119, 0.35), rgba(107, 203, 119, 0.35)) bottom right / 12px 1px no-repeat,
-      /* 右下縦 */ linear-gradient(rgba(107, 203, 119, 0.35), rgba(107, 203, 119, 0.35)) bottom right / 1px 12px no-repeat;
+      /* 左下横 */ linear-gradient(rgba(107, 203, 119, 0.35), rgba(107, 203, 119, 0.35)) bottom
+        left / 12px 1px no-repeat,
+      /* 左下縦 */ linear-gradient(rgba(107, 203, 119, 0.35), rgba(107, 203, 119, 0.35)) bottom
+        left / 1px 12px no-repeat,
+      /* 右下横 */ linear-gradient(rgba(107, 203, 119, 0.35), rgba(107, 203, 119, 0.35)) bottom
+        right / 12px 1px no-repeat,
+      /* 右下縦 */ linear-gradient(rgba(107, 203, 119, 0.35), rgba(107, 203, 119, 0.35)) bottom
+        right / 1px 12px no-repeat;
     opacity: 0.85;
   }
 
@@ -447,9 +471,13 @@
       linear-gradient(#2f9e44, #2f9e44) top left / 1px 12px no-repeat,
       linear-gradient(#2f9e44, #2f9e44) top right / 12px 1px no-repeat,
       linear-gradient(#2f9e44, #2f9e44) top right / 1px 12px no-repeat,
-      linear-gradient(rgba(47, 158, 68, 0.35), rgba(47, 158, 68, 0.35)) bottom left / 12px 1px no-repeat,
-      linear-gradient(rgba(47, 158, 68, 0.35), rgba(47, 158, 68, 0.35)) bottom left / 1px 12px no-repeat,
-      linear-gradient(rgba(47, 158, 68, 0.35), rgba(47, 158, 68, 0.35)) bottom right / 12px 1px no-repeat,
-      linear-gradient(rgba(47, 158, 68, 0.35), rgba(47, 158, 68, 0.35)) bottom right / 1px 12px no-repeat;
+      linear-gradient(rgba(47, 158, 68, 0.35), rgba(47, 158, 68, 0.35)) bottom left / 12px 1px
+        no-repeat,
+      linear-gradient(rgba(47, 158, 68, 0.35), rgba(47, 158, 68, 0.35)) bottom left / 1px 12px
+        no-repeat,
+      linear-gradient(rgba(47, 158, 68, 0.35), rgba(47, 158, 68, 0.35)) bottom right / 12px 1px
+        no-repeat,
+      linear-gradient(rgba(47, 158, 68, 0.35), rgba(47, 158, 68, 0.35)) bottom right / 1px 12px
+        no-repeat;
   }
 </style>

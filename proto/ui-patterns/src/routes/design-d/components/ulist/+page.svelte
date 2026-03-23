@@ -13,14 +13,46 @@
   })
 
   const patterns = [
-    { id: "a", label: "A — ダッシュ（—）", note: "エムダッシュを絶対配置で左端に置く。シンプルで読みやすく、本文との調和が高い" },
-    { id: "b", label: "B — グロウドット", note: "紫のグロー（box-shadow）付きの丸ドット。ネオン世界観と調和し、アクセントとして目を引く" },
-    { id: "c", label: "C — シェブロン（›）", note: "›（シェブロン）をアクセントカラーで表示。矢印的なニュアンスで「次へ進む」感を演出" },
-    { id: "d", label: "D — アクセントバー", note: "左ボーダーラインを各 li に引く。バレット文字なしで静かに区切り、コンテンツを際立たせる" },
-    { id: "e", label: "E — ゼロパディング番号", note: "01 / 02 形式の番号をアクセントカラーで前置。順序の意識がうまれ、手順系コンテンツにも転用できる" },
-    { id: "f", label: "F — ダイヤモンド（◆）", note: "小さなダイヤモンド形をバレットに。ダッシュより装飾性があり、用語解説のような改まった文脈に馴染む" },
-    { id: "g", label: "G — カラースクエア", note: "塗りつぶし正方形をバレットに。ドットより幾何学的で、グリッドレイアウトと相性がよい" },
-    { id: "h", label: "H — アンダーライン区切り", note: "バレットを持たず、各 li の下辺を薄いラインで区切る。最もテキスト優先なスタイル" },
+    {
+      id: "a",
+      label: "A — ダッシュ（—）",
+      note: "エムダッシュを絶対配置で左端に置く。シンプルで読みやすく、本文との調和が高い"
+    },
+    {
+      id: "b",
+      label: "B — グロウドット",
+      note: "紫のグロー（box-shadow）付きの丸ドット。ネオン世界観と調和し、アクセントとして目を引く"
+    },
+    {
+      id: "c",
+      label: "C — シェブロン（›）",
+      note: "›（シェブロン）をアクセントカラーで表示。矢印的なニュアンスで「次へ進む」感を演出"
+    },
+    {
+      id: "d",
+      label: "D — アクセントバー",
+      note: "左ボーダーラインを各 li に引く。バレット文字なしで静かに区切り、コンテンツを際立たせる"
+    },
+    {
+      id: "e",
+      label: "E — ゼロパディング番号",
+      note: "01 / 02 形式の番号をアクセントカラーで前置。順序の意識がうまれ、手順系コンテンツにも転用できる"
+    },
+    {
+      id: "f",
+      label: "F — ダイヤモンド（◆）",
+      note: "小さなダイヤモンド形をバレットに。ダッシュより装飾性があり、用語解説のような改まった文脈に馴染む"
+    },
+    {
+      id: "g",
+      label: "G — カラースクエア",
+      note: "塗りつぶし正方形をバレットに。ドットより幾何学的で、グリッドレイアウトと相性がよい"
+    },
+    {
+      id: "h",
+      label: "H — アンダーライン区切り",
+      note: "バレットを持たず、各 li の下辺を薄いラインで区切る。最もテキスト優先なスタイル"
+    }
   ]
 </script>
 
@@ -138,7 +170,9 @@
     border-radius: 999px;
     padding: 0.1em 0.65em;
     display: inline-block;
-    transition: color 0.4s, background 0.4s;
+    transition:
+      color 0.4s,
+      background 0.4s;
   }
 
   main.light .mark.-brackets {
@@ -206,7 +240,9 @@
     border-radius: 50%;
     background: #c4b5fd;
     box-shadow: 0 0 7px rgba(196, 181, 253, 0.7);
-    transition: background 0.4s, box-shadow 0.4s;
+    transition:
+      background 0.4s,
+      box-shadow 0.4s;
   }
 
   main.light .preview .ul-b li::before {
@@ -248,7 +284,9 @@
   .preview .ul-d li {
     padding-left: 0.85rem;
     border-left: 2px solid rgba(196, 181, 253, 0.45);
-    transition: color 0.4s, border-color 0.4s;
+    transition:
+      color 0.4s,
+      border-color 0.4s;
   }
 
   .preview .ul-d li::before {
@@ -348,7 +386,9 @@
   .preview .ul-h li {
     padding: 0.55rem 0 0.55rem 0.5rem;
     border-bottom: 1px solid rgba(196, 181, 253, 0.15);
-    transition: color 0.4s, border-color 0.4s;
+    transition:
+      color 0.4s,
+      border-color 0.4s;
   }
 
   .preview .ul-h li:last-child {

@@ -79,7 +79,9 @@
     min-height: 100vh;
     background: #0c0c14;
     color: #f0f0f0;
-    transition: background 0.4s, color 0.4s;
+    transition:
+      background 0.4s,
+      color 0.4s;
   }
 
   .light {

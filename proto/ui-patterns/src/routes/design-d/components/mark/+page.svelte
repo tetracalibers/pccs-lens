@@ -73,7 +73,9 @@
       <span class="mark -d">トーン</span>
       によって表します。
     </p>
-    <p class="pattern-note">linear-gradientで下半分だけ背景色を乗せる蛍光ペン風。padding不要で行高を保てる</p>
+    <p class="pattern-note">
+      linear-gradientで下半分だけ背景色を乗せる蛍光ペン風。padding不要で行高を保てる
+    </p>
   </section>
 
   <!-- E: グラデーション下線 -->
@@ -280,20 +282,12 @@
   .mark.-d {
     font-weight: 600;
     color: #ffe8a0;
-    background: linear-gradient(
-      to bottom,
-      transparent 50%,
-      rgba(255, 217, 61, 0.22) 50%
-    );
+    background: linear-gradient(to bottom, transparent 50%, rgba(255, 217, 61, 0.22) 50%);
   }
 
   main.light .mark.-d {
     color: #7a4800;
-    background: linear-gradient(
-      to bottom,
-      transparent 50%,
-      rgba(255, 200, 0, 0.28) 50%
-    );
+    background: linear-gradient(to bottom, transparent 50%, rgba(255, 200, 0, 0.28) 50%);
   }
 
   /* =====================
@@ -303,8 +297,7 @@
     font-weight: 600;
     color: #d0d0f0;
     padding-bottom: 2px;
-    background:
-      linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #c77dff) no-repeat
+    background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #c77dff) no-repeat
       bottom / 100% 1.5px;
   }
 

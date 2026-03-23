@@ -222,7 +222,14 @@
   .h2-e {
     font-size: 1.6rem;
     font-weight: 800;
-    background: linear-gradient(90deg, #ff6b6b 0%, #ffd93d 30%, #6bcb77 55%, #4d96ff 80%, #c77dff 100%);
+    background: linear-gradient(
+      90deg,
+      #ff6b6b 0%,
+      #ffd93d 30%,
+      #6bcb77 55%,
+      #4d96ff 80%,
+      #c77dff 100%
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

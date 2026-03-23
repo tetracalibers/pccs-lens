@@ -62,17 +62,8 @@
   <p>PCCSでは、トーンを調整することで、色のイメージを調整することができます。</p>
   <h2>色の分類とトーンの位置関係</h2>
   <div class="term-grid">
-    {#each [
-      { title: "純色", body: "白も黒もグレイも混ざっていない純粋な色を「純色」といいます。PCCSではvトーンが純色で、色みが最もわかりやすいです。" },
-      { title: "明清色", body: "純色に白を混ぜてできる色を「明清色」といいます。白を多く混ぜていくにつれ、だんだんと明度が高く、彩度は低くなっていきます。" },
-      { title: "暗清色", body: "純色に黒を混ぜてできる色を「暗清色」といいます。黒を多く混ぜていくにつれ、だんだんと明度が低く、彩度も低くなっていきます。" },
-      { title: "中間色（濁色）", body: "純色に白と黒の両方（＝グレイ）を混ぜてできる色を「中間色」といいます。グレイを混ぜると濁った色になるため「濁色」とも呼ばれます。" },
-      { title: "無彩色", body: "白、黒、グレイは「無彩色」と呼ばれ、色相や彩度はもたず、明度の高さだけで区別します。" },
-    ] as card, i (card.title)}
-      <div
-        class="term-card -items-centering"
-        style="--ac:{cardAccents[i % cardAccents.length]}"
-      >
+    {#each [{ title: "純色", body: "白も黒もグレイも混ざっていない純粋な色を「純色」といいます。PCCSではvトーンが純色で、色みが最もわかりやすいです。" }, { title: "明清色", body: "純色に白を混ぜてできる色を「明清色」といいます。白を多く混ぜていくにつれ、だんだんと明度が高く、彩度は低くなっていきます。" }, { title: "暗清色", body: "純色に黒を混ぜてできる色を「暗清色」といいます。黒を多く混ぜていくにつれ、だんだんと明度が低く、彩度も低くなっていきます。" }, { title: "中間色（濁色）", body: "純色に白と黒の両方（＝グレイ）を混ぜてできる色を「中間色」といいます。グレイを混ぜると濁った色になるため「濁色」とも呼ばれます。" }, { title: "無彩色", body: "白、黒、グレイは「無彩色」と呼ばれ、色相や彩度はもたず、明度の高さだけで区別します。" }] as card, i (card.title)}
+      <div class="term-card -items-centering" style="--ac:{cardAccents[i % cardAccents.length]}">
         <div class="card-header">
           <div class="card-dot"></div>
           <h3>{card.title}</h3>
@@ -92,7 +83,9 @@
     max-width: 700px;
     margin: 2rem auto 0;
     padding: 0 1.25rem 5rem;
-    transition: background 0.4s, color 0.4s;
+    transition:
+      background 0.4s,
+      color 0.4s;
   }
 
   /* ===== 見出し：パステルグラデーションテキスト（静的） ===== */
@@ -159,7 +152,9 @@
     border-radius: 999px;
     padding: 0.05em 0.6em;
     display: inline-block;
-    transition: background 0.4s, color 0.4s;
+    transition:
+      background 0.4s,
+      color 0.4s;
   }
 
   /* ===== .example：ティール系パステルカード ===== */
@@ -246,7 +241,10 @@
     border: 1px solid rgba(255, 255, 255, 0.07);
     border-radius: 6px;
     overflow: hidden;
-    transition: border-color 0.2s, transform 0.15s, box-shadow 0.15s;
+    transition:
+      border-color 0.2s,
+      transform 0.15s,
+      box-shadow 0.15s;
   }
 
   main .term-card:hover {
