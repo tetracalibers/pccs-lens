@@ -9,7 +9,7 @@
 <main>
   <header>
     <h1>PCCS Lens トップページ デザイン案</h1>
-    <p>4つのデザイン案を比較・検討してください</p>
+    <p>デザイン案を比較・検討してください</p>
   </header>
 
   <div class="design-list">
