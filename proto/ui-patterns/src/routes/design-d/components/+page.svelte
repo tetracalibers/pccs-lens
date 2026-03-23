@@ -39,6 +39,13 @@
       desc: "ulリストのバレットスタイルパターン",
       glow: "#67e8f9",
       gradient: "linear-gradient(135deg, #c77dff, #67e8f9)"
+    },
+    {
+      href: resolve("/design-d/components/switch-light-dark"),
+      title: "ライト/ダーク切替",
+      desc: "ダークモードとライトモードを切り替えるボタンのスタイルパターン",
+      glow: "#fbbf24",
+      gradient: "linear-gradient(135deg, #67e8f9, #fbbf24)"
     }
   ]
 </script>
