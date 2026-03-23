@@ -1,5 +1,6 @@
 <script lang="ts">
   import { getContext } from "svelte"
+  import Icon from "@iconify/svelte"
 
   const theme = getContext<{ isLight: boolean; toggle: () => void }>("designD")
 
@@ -82,7 +83,6 @@
               </span>
               <span class="btn-a-icon moon">☽</span>
             </button>
-
           {:else if p.id === "b"}
             <!-- B: アイコン丸ボタン -->
             <button
@@ -93,33 +93,34 @@
             >
               {#if theme.isLight}☽{:else}☀{/if}
             </button>
-
           {:else if p.id === "c"}
             <!-- C: セグメントスイッチ -->
             <div class="btn-c" class:is-light={!theme.isLight}>
               <button
                 class="btn-c-seg"
                 class:active={!theme.isLight}
-                onclick={() => { if (!theme.isLight) theme.toggle() }}
-              >☀ ライト</button>
+                onclick={() => {
+                  if (!theme.isLight) theme.toggle()
+                }}
+              >
+                ☀ ライト
+              </button>
               <button
                 class="btn-c-seg"
                 class:active={theme.isLight}
-                onclick={() => { if (theme.isLight) theme.toggle() }}
-              >☽ ダーク</button>
+                onclick={() => {
+                  if (theme.isLight) theme.toggle()
+                }}
+              >
+                ☽ ダーク
+              </button>
             </div>
-
           {:else if p.id === "d"}
             <!-- D: ゴーストボタン -->
-            <button
-              class="btn-d"
-              class:is-light={!theme.isLight}
-              onclick={theme.toggle}
-            >
+            <button class="btn-d" class:is-light={!theme.isLight} onclick={theme.toggle}>
               <span class="btn-d-icon">{theme.isLight ? "☽" : "☀"}</span>
               <span class="btn-d-text">{theme.isLight ? "ダークモード" : "ライトモード"}</span>
             </button>
-
           {:else if p.id === "e"}
             <!-- E: グロウリングアイコン -->
             <button
@@ -129,38 +130,33 @@
               aria-label={theme.isLight ? "ダークモードに切替" : "ライトモードに切替"}
             >
               <span class="btn-e-ring"></span>
-              <span class="btn-e-icon">{theme.isLight ? "☽" : "☀"}</span>
+              <span class="btn-e-icon">
+                {#if theme.isLight}
+                  <Icon
+                    icon="material-symbols-light:moon-stars-outline-rounded"
+                    width="24"
+                    height="24"
+                  />
+                {:else}
+                  <Icon icon="iconoir:sun-light" width="20" height="20" />
+                {/if}
+              </span>
             </button>
-
           {:else if p.id === "f"}
             <!-- F: スライドテキスト -->
-            <button
-              class="btn-f"
-              class:is-light={!theme.isLight}
-              onclick={theme.toggle}
-            >
+            <button class="btn-f" class:is-light={!theme.isLight} onclick={theme.toggle}>
               <span class="btn-f-label">{theme.isLight ? "Dark" : "Light"}</span>
               <span class="btn-f-arrow">→</span>
             </button>
-
           {:else if p.id === "g"}
             <!-- G: グラデーションシフト -->
-            <button
-              class="btn-g"
-              class:is-light={!theme.isLight}
-              onclick={theme.toggle}
-            >
+            <button class="btn-g" class:is-light={!theme.isLight} onclick={theme.toggle}>
               <span class="btn-g-icon">{theme.isLight ? "☽" : "☀"}</span>
               <span class="btn-g-text">{theme.isLight ? "Night" : "Day"}</span>
             </button>
-
           {:else if p.id === "h"}
             <!-- H: ミニマルテキストリンク -->
-            <button
-              class="btn-h"
-              class:is-light={!theme.isLight}
-              onclick={theme.toggle}
-            >
+            <button class="btn-h" class:is-light={!theme.isLight} onclick={theme.toggle}>
               <span class="btn-h-dot"></span>
               <span class="btn-h-text">{theme.isLight ? "ダークモード" : "ライトモード"}</span>
             </button>
@@ -458,17 +454,14 @@
      E: グロウリングアイコン
   ======================== */
   .btn-e {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.8rem;
-    height: 2.8rem;
+    display: grid;
+    place-items: center;
   }
 
   .btn-e-ring {
-    position: absolute;
-    inset: 0;
+    grid-area: 1 / 1;
+    width: 2.4rem;
+    height: 2.4rem;
     border-radius: 50%;
     border: 1.5px solid rgba(196, 181, 253, 0.5);
     box-shadow:
@@ -501,11 +494,10 @@
   }
 
   .btn-e-icon {
-    font-size: 1.15rem;
+    display: flex;
+    grid-area: 1 / 1;
     color: #c4b5fd;
     transition: color 0.3s;
-    position: relative;
-    z-index: 1;
   }
 
   .btn-e.is-light .btn-e-icon {
