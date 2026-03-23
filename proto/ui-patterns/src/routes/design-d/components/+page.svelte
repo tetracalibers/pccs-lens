@@ -46,6 +46,13 @@
       desc: "ダークモードとライトモードを切り替えるボタンのスタイルパターン",
       glow: "#fbbf24",
       gradient: "linear-gradient(135deg, #67e8f9, #fbbf24)"
+    },
+    {
+      href: resolve("/design-d/components/header"),
+      title: "ヘッダー",
+      desc: "ナビゲーションのレイアウトパターン（モバイル・デスクトップ対応）",
+      glow: "#a78bfa",
+      gradient: "linear-gradient(135deg, #fbbf24, #a78bfa)"
     }
   ]
 </script>
