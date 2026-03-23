@@ -72,7 +72,7 @@
             <!-- A: ピルトグル -->
             <button
               class="btn-a"
-              class:is-light={theme.isLight}
+              class:is-light={!theme.isLight}
               onclick={theme.toggle}
               aria-label={theme.isLight ? "ダークモードに切替" : "ライトモードに切替"}
             >
@@ -87,24 +87,24 @@
             <!-- B: アイコン丸ボタン -->
             <button
               class="btn-b"
-              class:is-light={theme.isLight}
+              class:is-light={!theme.isLight}
               onclick={theme.toggle}
               aria-label={theme.isLight ? "ダークモードに切替" : "ライトモードに切替"}
             >
-              {#if theme.isLight}☀{:else}☽{/if}
+              {#if theme.isLight}☽{:else}☀{/if}
             </button>
 
           {:else if p.id === "c"}
             <!-- C: セグメントスイッチ -->
-            <div class="btn-c" class:is-light={theme.isLight}>
+            <div class="btn-c" class:is-light={!theme.isLight}>
               <button
                 class="btn-c-seg"
-                class:active={theme.isLight}
+                class:active={!theme.isLight}
                 onclick={() => { if (!theme.isLight) theme.toggle() }}
               >☀ ライト</button>
               <button
                 class="btn-c-seg"
-                class:active={!theme.isLight}
+                class:active={theme.isLight}
                 onclick={() => { if (theme.isLight) theme.toggle() }}
               >☽ ダーク</button>
             </div>
@@ -113,33 +113,33 @@
             <!-- D: ゴーストボタン -->
             <button
               class="btn-d"
-              class:is-light={theme.isLight}
+              class:is-light={!theme.isLight}
               onclick={theme.toggle}
             >
-              <span class="btn-d-icon">{theme.isLight ? "☀" : "☽"}</span>
-              <span class="btn-d-text">{theme.isLight ? "ライトモード" : "ダークモード"}</span>
+              <span class="btn-d-icon">{theme.isLight ? "☽" : "☀"}</span>
+              <span class="btn-d-text">{theme.isLight ? "ダークモード" : "ライトモード"}</span>
             </button>
 
           {:else if p.id === "e"}
             <!-- E: グロウリングアイコン -->
             <button
               class="btn-e"
-              class:is-light={theme.isLight}
+              class:is-light={!theme.isLight}
               onclick={theme.toggle}
               aria-label={theme.isLight ? "ダークモードに切替" : "ライトモードに切替"}
             >
               <span class="btn-e-ring"></span>
-              <span class="btn-e-icon">{theme.isLight ? "☀" : "☽"}</span>
+              <span class="btn-e-icon">{theme.isLight ? "☽" : "☀"}</span>
             </button>
 
           {:else if p.id === "f"}
             <!-- F: スライドテキスト -->
             <button
               class="btn-f"
-              class:is-light={theme.isLight}
+              class:is-light={!theme.isLight}
               onclick={theme.toggle}
             >
-              <span class="btn-f-label">{theme.isLight ? "Light" : "Dark"}</span>
+              <span class="btn-f-label">{theme.isLight ? "Dark" : "Light"}</span>
               <span class="btn-f-arrow">→</span>
             </button>
 
@@ -147,22 +147,22 @@
             <!-- G: グラデーションシフト -->
             <button
               class="btn-g"
-              class:is-light={theme.isLight}
+              class:is-light={!theme.isLight}
               onclick={theme.toggle}
             >
-              <span class="btn-g-icon">{theme.isLight ? "☀" : "☽"}</span>
-              <span class="btn-g-text">{theme.isLight ? "Day" : "Night"}</span>
+              <span class="btn-g-icon">{theme.isLight ? "☽" : "☀"}</span>
+              <span class="btn-g-text">{theme.isLight ? "Night" : "Day"}</span>
             </button>
 
           {:else if p.id === "h"}
             <!-- H: ミニマルテキストリンク -->
             <button
               class="btn-h"
-              class:is-light={theme.isLight}
+              class:is-light={!theme.isLight}
               onclick={theme.toggle}
             >
               <span class="btn-h-dot"></span>
-              <span class="btn-h-text">{theme.isLight ? "ライトモード" : "ダークモード"}</span>
+              <span class="btn-h-text">{theme.isLight ? "ダークモード" : "ライトモード"}</span>
             </button>
           {/if}
         </div>
