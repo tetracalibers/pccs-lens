@@ -41,7 +41,7 @@
       （赤）で、トーンが
       <code>v</code>
       （vivid）の色は
-      <span class="mark -brackets"><code>v2</code></span>
+      <code>v2</code>
       と表す
     </p>
   </div>
@@ -127,7 +127,9 @@
     max-width: 680px;
     margin: 2.5rem auto 0;
     padding: 0 1.5rem 5rem;
-    transition: background 0.4s, color 0.4s;
+    transition:
+      background 0.4s,
+      color 0.4s;
   }
 
   /* ===== 見出し：大きな番号 + エディトリアル ===== */
@@ -218,7 +220,9 @@
     border-radius: 999px;
     padding: 0.1em 0.65em;
     display: inline-block;
-    transition: color 0.4s, background 0.4s;
+    transition:
+      color 0.4s,
+      background 0.4s;
   }
 
   /* ===== .example：パステルサーモン トップボーダー ===== */
@@ -305,7 +309,9 @@
     border: 1px solid rgba(255, 255, 255, 0.07);
     border-radius: 6px;
     background: rgba(255, 255, 255, 0.02);
-    transition: background 0.15s, border-color 0.2s;
+    transition:
+      background 0.15s,
+      border-color 0.2s;
   }
 
   main .term-card:hover {
