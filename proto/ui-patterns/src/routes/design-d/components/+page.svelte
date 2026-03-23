@@ -53,6 +53,13 @@
       desc: "ナビゲーションのレイアウトパターン（モバイル・デスクトップ対応）",
       glow: "#a78bfa",
       gradient: "linear-gradient(135deg, #fbbf24, #a78bfa)"
+    },
+    {
+      href: resolve("/design-d/components/toc"),
+      title: "目次",
+      desc: "h2〜h4の階層構造を表す目次のスタイルパターン",
+      glow: "#34d399",
+      gradient: "linear-gradient(135deg, #a78bfa, #34d399)"
     }
   ]
 </script>
