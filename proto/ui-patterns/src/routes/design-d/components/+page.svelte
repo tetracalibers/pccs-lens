@@ -60,6 +60,13 @@
       desc: "h2〜h4の階層構造を表す目次のスタイルパターン",
       glow: "#34d399",
       gradient: "linear-gradient(135deg, #a78bfa, #34d399)"
+    },
+    {
+      href: resolve("/design-d/components/global-nav"),
+      title: "グローバルナビ",
+      desc: "ツール群・コンテンツ群をグルーピングするナビゲーションのスタイルパターン",
+      glow: "#f97316",
+      gradient: "linear-gradient(135deg, #34d399, #f97316)"
     }
   ]
 </script>
