@@ -131,6 +131,7 @@
 
     <footer class="page-footer">
       <a href={resolve("/")} class="back-link">← デザイン一覧に戻る</a>
+      <a href={resolve("/design-d/components")} class="back-link">コンポーネント一覧 →</a>
     </footer>
   </main>
 </div>
@@ -559,7 +560,8 @@
     margin-top: 3rem;
     padding-top: 1.5rem;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
     transition: border-color 0.4s;
   }
 
