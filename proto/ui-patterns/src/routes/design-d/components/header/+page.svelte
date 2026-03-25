@@ -71,14 +71,15 @@
     </header>
 
     <div class="patterns">
-
       <!-- ===== A: ハンバーガーメニュー ===== -->
       <section class="pattern-section">
         <div class="pattern-meta">
           <span class="pattern-id">A</span>
           <div>
             <h2>ハンバーガーメニュー</h2>
-            <p class="pattern-note">モバイルでは≡ボタン1つにナビを格納。デスクトップではインライン展開。最もシンプルな実装で馴染みやすく、項目が増えても対応可能。</p>
+            <p class="pattern-note">
+              モバイルでは≡ボタン1つにナビを格納。デスクトップではインライン展開。最もシンプルな実装で馴染みやすく、項目が増えても対応可能。
+            </p>
           </div>
         </div>
         <div class="demo-frame">
@@ -91,7 +92,12 @@
                 <span class="logo-lens">Lens</span>
               </a>
               <div style="display:flex;align-items:center;gap:0.5rem">
-                <button class="icon-btn" onclick={() => theme.toggle()} title="モード切替" aria-label="モード切替">
+                <button
+                  class="icon-btn"
+                  onclick={() => theme.toggle()}
+                  title="モード切替"
+                  aria-label="モード切替"
+                >
                   <Icon icon={theme.isLight ? "ph:moon" : "ph:sun"} width={16} />
                 </button>
                 <button
@@ -101,7 +107,9 @@
                   aria-label="メニュー"
                   aria-expanded={aOpen}
                 >
-                  <span></span><span></span><span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
                 </button>
               </div>
             </div>
@@ -157,7 +165,9 @@
           <span class="pattern-id">B</span>
           <div>
             <h2>サイドドロワー</h2>
-            <p class="pattern-note">左からスライドインするドロワー。オーバーレイ付きで他コンテンツと分離。項目数が多くなっても縦スクロールで対応可能。</p>
+            <p class="pattern-note">
+              左からスライドインするドロワー。オーバーレイ付きで他コンテンツと分離。項目数が多くなっても縦スクロールで対応可能。
+            </p>
           </div>
         </div>
         <div class="demo-frame">
@@ -172,7 +182,12 @@
                 <span class="logo-pccs">PCCS</span>
                 <span class="logo-lens">Lens</span>
               </a>
-              <button class="icon-btn" onclick={() => theme.toggle()} title="モード切替" aria-label="モード切替">
+              <button
+                class="icon-btn"
+                onclick={() => theme.toggle()}
+                title="モード切替"
+                aria-label="モード切替"
+              >
                 <Icon icon={theme.isLight ? "ph:moon" : "ph:sun"} width={16} />
               </button>
             </div>
@@ -182,9 +197,17 @@
             <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
             <div class="drawer-overlay" onclick={() => (bOpen = false)}></div>
           {/if}
-          <nav class="drawer" class:open={bOpen} class:light={theme.isLight} aria-label="サイドナビゲーション">
+          <nav
+            class="drawer"
+            class:open={bOpen}
+            class:light={theme.isLight}
+            aria-label="サイドナビゲーション"
+          >
             <div class="drawer-header">
-              <span class="logo"><span class="logo-pccs">PCCS</span><span class="logo-lens">Lens</span></span>
+              <span class="logo">
+                <span class="logo-pccs">PCCS</span>
+                <span class="logo-lens">Lens</span>
+              </span>
               <button class="icon-btn" onclick={() => (bOpen = false)} aria-label="閉じる">
                 <Icon icon="ph:x" width={16} />
               </button>
@@ -209,7 +232,9 @@
           <span class="pattern-id">C</span>
           <div>
             <h2>セカンダリスクロールバー</h2>
-            <p class="pattern-note">上段にロゴ・アクション、下段にナビをスクロール可能な横バーで配置。項目増加に強く、JSなしで実装可能。タブバー的な直感操作。</p>
+            <p class="pattern-note">
+              上段にロゴ・アクション、下段にナビをスクロール可能な横バーで配置。項目増加に強く、JSなしで実装可能。タブバー的な直感操作。
+            </p>
           </div>
         </div>
         <div class="demo-frame">
@@ -247,7 +272,9 @@
           <span class="pattern-id">D</span>
           <div>
             <h2>ボトムシートナビ</h2>
-            <p class="pattern-note">「もっと見る」タップで画面下からシートが展開。親指が届きやすいモバイルUXを重視。重要なリンクをアイコン付きグリッドで一覧表示。</p>
+            <p class="pattern-note">
+              「もっと見る」タップで画面下からシートが展開。親指が届きやすいモバイルUXを重視。重要なリンクをアイコン付きグリッドで一覧表示。
+            </p>
           </div>
         </div>
         <div class="demo-frame">
@@ -263,7 +290,11 @@
                 <button class="icon-btn" onclick={() => theme.toggle()} aria-label="モード切替">
                   <Icon icon={theme.isLight ? "ph:moon" : "ph:sun"} width={16} />
                 </button>
-                <button class="icon-btn" onclick={() => (dOpen = !dOpen)} aria-label="ナビゲーションを開く">
+                <button
+                  class="icon-btn"
+                  onclick={() => (dOpen = !dOpen)}
+                  aria-label="ナビゲーションを開く"
+                >
                   <Icon icon="ph:dots-nine" width={18} />
                 </button>
               </div>
@@ -298,7 +329,9 @@
           <span class="pattern-id">E</span>
           <div>
             <h2>固定タブバー（フッター型）</h2>
-            <p class="pattern-note">主要ページをフッターに固定配置。親指圏内で完結するモバイル最優先設計。アクティブ状態が視覚的に明確で、画面上部はコンテンツに専念。</p>
+            <p class="pattern-note">
+              主要ページをフッターに固定配置。親指圏内で完結するモバイル最優先設計。アクティブ状態が視覚的に明確で、画面上部はコンテンツに専念。
+            </p>
           </div>
         </div>
         <div class="demo-frame" style="position:relative;overflow:hidden">
@@ -337,7 +370,9 @@
           <span class="pattern-id">F</span>
           <div>
             <h2>フルスクリーンオーバーレイ</h2>
-            <p class="pattern-note">開くと全画面を覆うナビ。大きなタップターゲット・グラデーション背景でブランド感を演出。遷移先を明確に提示できる没入型メニュー。</p>
+            <p class="pattern-note">
+              開くと全画面を覆うナビ。大きなタップターゲット・グラデーション背景でブランド感を演出。遷移先を明確に提示できる没入型メニュー。
+            </p>
           </div>
         </div>
         <div class="demo-frame">
@@ -353,7 +388,11 @@
                 <button class="icon-btn" onclick={() => theme.toggle()} aria-label="モード切替">
                   <Icon icon={theme.isLight ? "ph:moon" : "ph:sun"} width={16} />
                 </button>
-                <button class="menu-open-btn" onclick={() => (fOpen = true)} aria-label="メニューを開く">
+                <button
+                  class="menu-open-btn"
+                  onclick={() => (fOpen = true)}
+                  aria-label="メニューを開く"
+                >
                   <Icon icon="ph:list" width={18} />
                   MENU
                 </button>
@@ -361,10 +400,24 @@
             </div>
           </header>
           <!-- Fullscreen overlay -->
-          <div class="fullscreen-overlay" class:open={fOpen} class:light={theme.isLight} role="dialog" aria-modal="true" aria-label="ナビゲーション">
+          <div
+            class="fullscreen-overlay"
+            class:open={fOpen}
+            class:light={theme.isLight}
+            role="dialog"
+            aria-modal="true"
+            aria-label="ナビゲーション"
+          >
             <div class="fso-header">
-              <span class="logo"><span class="logo-pccs">PCCS</span><span class="logo-lens">Lens</span></span>
-              <button class="fso-close" onclick={() => (fOpen = false)} aria-label="メニューを閉じる">
+              <span class="logo">
+                <span class="logo-pccs">PCCS</span>
+                <span class="logo-lens">Lens</span>
+              </span>
+              <button
+                class="fso-close"
+                onclick={() => (fOpen = false)}
+                aria-label="メニューを閉じる"
+              >
                 <Icon icon="ph:x" width={20} />
               </button>
             </div>
@@ -395,7 +448,9 @@
           <span class="pattern-id">G</span>
           <div>
             <h2>コマンドパレット</h2>
-            <p class="pattern-note">検索窓を兼ねたコマンドパレット。キーボード操作に慣れたパワーユーザー向け。入力でフィルタリングでき、項目が大量でも迷子にならない。</p>
+            <p class="pattern-note">
+              検索窓を兼ねたコマンドパレット。キーボード操作に慣れたパワーユーザー向け。入力でフィルタリングでき、項目が大量でも迷子にならない。
+            </p>
           </div>
         </div>
         <div class="demo-frame">
@@ -407,7 +462,14 @@
                 <span class="logo-pccs">PCCS</span>
                 <span class="logo-lens">Lens</span>
               </a>
-              <button class="search-trigger" onclick={() => { gOpen = true; gQuery = "" }} class:light={theme.isLight}>
+              <button
+                class="search-trigger"
+                onclick={() => {
+                  gOpen = true
+                  gQuery = ""
+                }}
+                class:light={theme.isLight}
+              >
                 <Icon icon="ph:magnifying-glass" width={14} />
                 <span>移動・検索...</span>
                 <kbd>⌘K</kbd>
@@ -421,7 +483,12 @@
           {#if gOpen}
             <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
             <div class="cp-backdrop" onclick={() => (gOpen = false)}></div>
-            <div class="command-palette" class:light={theme.isLight} role="dialog" aria-label="コマンドパレット">
+            <div
+              class="command-palette"
+              class:light={theme.isLight}
+              role="dialog"
+              aria-label="コマンドパレット"
+            >
               <div class="cp-search">
                 <Icon icon="ph:magnifying-glass" width={16} />
                 <input
@@ -432,7 +499,7 @@
                 />
               </div>
               <div class="cp-results">
-                {#each moreNavItems.filter(i => i.label.includes(gQuery)) as item}
+                {#each moreNavItems.filter((i) => i.label.includes(gQuery)) as item}
                   <!-- svelte-ignore a11y_invalid_attribute -->
                   <a href="#" class="cp-item" onclick={() => (gOpen = false)}>
                     <Icon icon={item.icon} width={16} />
@@ -454,12 +521,18 @@
           <span class="pattern-id">H</span>
           <div>
             <h2>ポップオーバーメガメニュー</h2>
-            <p class="pattern-note">「メニュー」ボタン下にグリッド型のポップオーバーを展開。アイコン・説明付きで目的地を一覧。デスクトップではホバー連動も可能な設計。</p>
+            <p class="pattern-note">
+              「メニュー」ボタン下にグリッド型のポップオーバーを展開。アイコン・説明付きで目的地を一覧。デスクトップではホバー連動も可能な設計。
+            </p>
           </div>
         </div>
         <div class="demo-frame" style="overflow:visible">
           <div class="device-label">デスクトップ・タブレット向け</div>
-          <header class="hdr hdr-h" class:light={theme.isLight} style="position:relative;z-index:200">
+          <header
+            class="hdr hdr-h"
+            class:light={theme.isLight}
+            style="position:relative;z-index:200"
+          >
             <div class="hdr-inner">
               <!-- svelte-ignore a11y_invalid_attribute -->
               <a href="#" class="logo">
@@ -503,8 +576,8 @@
           </div>
         </div>
       </section>
-
-    </div><!-- /patterns -->
+    </div>
+    <!-- /patterns -->
 
     <footer class="page-footer">
       <a href="/design-d/components" class="back-link">← コンポーネント一覧に戻る</a>
@@ -520,9 +593,14 @@
     min-height: 100vh;
     background: #0c0c14;
     color: #f0f0f0;
-    transition: background 0.4s, color 0.4s;
+    transition:
+      background 0.4s,
+      color 0.4s;
   }
-  .light { background: #ffffff; color: #1a1a1a; }
+  .light {
+    background: #ffffff;
+    color: #1a1a1a;
+  }
 
   main {
     max-width: 760px;
@@ -530,7 +608,9 @@
     padding: 3rem 1.25rem 5rem;
   }
 
-  .page-header { margin-bottom: 2.5rem; }
+  .page-header {
+    margin-bottom: 2.5rem;
+  }
 
   .eyebrow {
     font-size: 0.7rem;
@@ -540,7 +620,9 @@
     margin: 0 0 0.5rem;
     transition: color 0.4s;
   }
-  .light .eyebrow { color: #999; }
+  .light .eyebrow {
+    color: #999;
+  }
 
   h1 {
     font-size: 2rem;
@@ -555,7 +637,9 @@
     margin: 0;
     transition: color 0.4s;
   }
-  .light .subtitle { color: #888; }
+  .light .subtitle {
+    color: #888;
+  }
 
   /* ============================
      Pattern sections
@@ -566,7 +650,11 @@
     gap: 3rem;
   }
 
-  .pattern-section { display: flex; flex-direction: column; gap: 1rem; }
+  .pattern-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
 
   .pattern-meta {
     display: flex;
@@ -596,7 +684,9 @@
     color: #f0f0f0;
     transition: color 0.4s;
   }
-  .light .pattern-section h2 { color: #1a1a1a; }
+  .light .pattern-section h2 {
+    color: #1a1a1a;
+  }
 
   .pattern-note {
     font-size: 0.82rem;
@@ -605,21 +695,23 @@
     line-height: 1.6;
     transition: color 0.4s;
   }
-  .light .pattern-note { color: #888; }
+  .light .pattern-note {
+    color: #888;
+  }
 
   /* ============================
      Demo frame
   ============================ */
   .demo-frame {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 10px;
     overflow: hidden;
     position: relative;
   }
   .light .demo-frame {
-    background: rgba(0,0,0,0.03);
-    border-color: rgba(0,0,0,0.08);
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.08);
   }
 
   .device-label {
@@ -628,14 +720,17 @@
     text-transform: uppercase;
     color: #444;
     padding: 4px 10px;
-    background: rgba(255,255,255,0.04);
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    transition: color 0.4s, background 0.4s, border-color 0.4s;
+    background: rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition:
+      color 0.4s,
+      background 0.4s,
+      border-color 0.4s;
   }
   .light .device-label {
     color: #aaa;
-    background: rgba(0,0,0,0.03);
-    border-bottom-color: rgba(0,0,0,0.06);
+    background: rgba(0, 0, 0, 0.03);
+    border-bottom-color: rgba(0, 0, 0, 0.06);
   }
 
   .demo-body {
@@ -651,18 +746,22 @@
     color: #444;
     transition: color 0.4s;
   }
-  .light .demo-placeholder { color: #bbb; }
+  .light .demo-placeholder {
+    color: #bbb;
+  }
 
   /* ============================
      Shared header primitives
   ============================ */
   .hdr {
     backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    transition: background 0.4s, border-color 0.4s;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    transition:
+      background 0.4s,
+      border-color 0.4s;
   }
   .hdr.light {
-    border-bottom-color: rgba(0,0,0,0.07);
+    border-bottom-color: rgba(0, 0, 0, 0.07);
   }
 
   .hdr-inner {
@@ -689,7 +788,9 @@
     letter-spacing: -0.03em;
     transition: color 0.4s;
   }
-  .light .logo-pccs { color: #1a1a1a; }
+  .light .logo-pccs {
+    color: #1a1a1a;
+  }
 
   .logo-lens {
     font-size: 1rem;
@@ -704,8 +805,12 @@
   }
 
   @keyframes hue-shift {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 200% 50%; }
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 200% 50%;
+    }
   }
 
   .icon-btn {
@@ -715,21 +820,38 @@
     width: 32px;
     height: 32px;
     border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     color: #aaa;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    transition:
+      background 0.2s,
+      color 0.2s,
+      border-color 0.2s;
   }
-  .icon-btn:hover { background: rgba(255,255,255,0.12); color: #eee; }
-  .light .icon-btn { border-color: rgba(0,0,0,0.1); background: rgba(0,0,0,0.04); color: #666; }
-  .light .icon-btn:hover { background: rgba(0,0,0,0.08); color: #222; }
+  .icon-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #eee;
+  }
+  .light .icon-btn {
+    border-color: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.04);
+    color: #666;
+  }
+  .light .icon-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: #222;
+  }
 
   /* ============================
      A: ハンバーガー
   ============================ */
-  .hdr-a { background: rgba(12,12,20,0.92); }
-  .hdr-a.light { background: rgba(255,255,255,0.92); }
+  .hdr-a {
+    background: rgba(12, 12, 20, 0.92);
+  }
+  .hdr-a.light {
+    background: rgba(255, 255, 255, 0.92);
+  }
 
   .hamburger {
     display: flex;
@@ -739,38 +861,61 @@
     width: 32px;
     height: 32px;
     padding: 6px;
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
-    background: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
     cursor: pointer;
-    transition: background 0.2s, border-color 0.2s;
+    transition:
+      background 0.2s,
+      border-color 0.2s;
   }
   .hamburger span {
     display: block;
     height: 1.5px;
     background: #aaa;
     border-radius: 1px;
-    transition: transform 0.25s, opacity 0.25s;
+    transition:
+      transform 0.25s,
+      opacity 0.25s;
     transform-origin: center;
   }
-  .hamburger.active span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
-  .hamburger.active span:nth-child(2) { opacity: 0; }
-  .hamburger.active span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
-  .light .hamburger { border-color: rgba(0,0,0,0.1); background: rgba(0,0,0,0.04); }
-  .light .hamburger span { background: #666; }
+  .hamburger.active span:nth-child(1) {
+    transform: translateY(5.5px) rotate(45deg);
+  }
+  .hamburger.active span:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger.active span:nth-child(3) {
+    transform: translateY(-5.5px) rotate(-45deg);
+  }
+  .light .hamburger {
+    border-color: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.04);
+  }
+  .light .hamburger span {
+    background: #666;
+  }
 
   .hdr-a-menu {
     display: flex;
     flex-direction: column;
     padding: 0.5rem 0;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
     animation: slide-down 0.2s ease;
   }
-  .hdr-a.light .hdr-a-menu { border-top-color: rgba(0,0,0,0.07); }
+  .hdr-a.light .hdr-a-menu {
+    border-top-color: rgba(0, 0, 0, 0.07);
+  }
 
   @keyframes slide-down {
-    from { opacity: 0; transform: translateY(-8px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .hdr-a-item {
@@ -781,11 +926,21 @@
     font-size: 0.85rem;
     color: #ccc;
     text-decoration: none;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
-  .hdr-a-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
-  .hdr-a.light .hdr-a-item { color: #555; }
-  .hdr-a.light .hdr-a-item:hover { background: rgba(0,0,0,0.04); color: #111; }
+  .hdr-a-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+  }
+  .hdr-a.light .hdr-a-item {
+    color: #555;
+  }
+  .hdr-a.light .hdr-a-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+    color: #111;
+  }
 
   /* A desktop: inline nav */
   .hdr-a-inline {
@@ -802,23 +957,40 @@
     color: #aaa;
     text-decoration: none;
     border-radius: 6px;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
     white-space: nowrap;
   }
-  .hdr-a-inline-item:hover { background: rgba(255,255,255,0.07); color: #eee; }
-  .hdr-a-desktop.light .hdr-a-inline-item { color: #666; }
-  .hdr-a-desktop.light .hdr-a-inline-item:hover { background: rgba(0,0,0,0.05); color: #111; }
+  .hdr-a-inline-item:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: #eee;
+  }
+  .hdr-a-desktop.light .hdr-a-inline-item {
+    color: #666;
+  }
+  .hdr-a-desktop.light .hdr-a-inline-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #111;
+  }
 
   /* ============================
      B: ドロワー
   ============================ */
-  .hdr-b { background: rgba(12,12,20,0.92); }
-  .hdr-b.light { background: rgba(255,255,255,0.92); }
+  .hdr-b {
+    background: rgba(12, 12, 20, 0.92);
+  }
+  .hdr-b.light {
+    background: rgba(255, 255, 255, 0.92);
+  }
 
-  .drawer-overlay, .sheet-overlay, .cp-backdrop, .mega-backdrop {
+  .drawer-overlay,
+  .sheet-overlay,
+  .cp-backdrop,
+  .mega-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(0,0,0,0.4);
+    background: rgba(0, 0, 0, 0.4);
     z-index: 150;
   }
 
@@ -829,16 +1001,21 @@
     height: 100%;
     width: 220px;
     background: #13131f;
-    border-right: 1px solid rgba(255,255,255,0.08);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
     z-index: 200;
     transform: translateX(-100%);
-    transition: transform 0.28s cubic-bezier(.4,0,.2,1);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
     overflow-y: auto;
   }
-  .drawer.open { transform: translateX(0); }
-  .drawer.light { background: #f8f8fb; border-right-color: rgba(0,0,0,0.08); }
+  .drawer.open {
+    transform: translateX(0);
+  }
+  .drawer.light {
+    background: #f8f8fb;
+    border-right-color: rgba(0, 0, 0, 0.08);
+  }
 
   .drawer-header {
     display: flex;
@@ -846,10 +1023,12 @@
     justify-content: space-between;
     padding: 0 1rem;
     height: 48px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     flex-shrink: 0;
   }
-  .drawer.light .drawer-header { border-bottom-color: rgba(0,0,0,0.07); }
+  .drawer.light .drawer-header {
+    border-bottom-color: rgba(0, 0, 0, 0.07);
+  }
 
   .drawer-item {
     display: flex;
@@ -859,27 +1038,45 @@
     font-size: 0.85rem;
     color: #ccc;
     text-decoration: none;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
-  .drawer-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
-  .drawer.light .drawer-item { color: #555; }
-  .drawer.light .drawer-item:hover { background: rgba(0,0,0,0.04); color: #111; }
+  .drawer-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+  }
+  .drawer.light .drawer-item {
+    color: #555;
+  }
+  .drawer.light .drawer-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+    color: #111;
+  }
 
   /* ============================
      C: セカンダリスクロールバー
   ============================ */
-  .hdr-c { background: rgba(12,12,20,0.92); }
-  .hdr-c.light { background: rgba(255,255,255,0.92); }
+  .hdr-c {
+    background: rgba(12, 12, 20, 0.92);
+  }
+  .hdr-c.light {
+    background: rgba(255, 255, 255, 0.92);
+  }
 
   .hdr-c-scroll {
     display: flex;
     overflow-x: auto;
     gap: 0;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
     scrollbar-width: none;
   }
-  .hdr-c-scroll::-webkit-scrollbar { display: none; }
-  .hdr-c.light .hdr-c-scroll { border-top-color: rgba(0,0,0,0.07); }
+  .hdr-c-scroll::-webkit-scrollbar {
+    display: none;
+  }
+  .hdr-c.light .hdr-c-scroll {
+    border-top-color: rgba(0, 0, 0, 0.07);
+  }
 
   .hdr-c-item {
     display: flex;
@@ -891,19 +1088,34 @@
     white-space: nowrap;
     color: #888;
     text-decoration: none;
-    border-right: 1px solid rgba(255,255,255,0.05);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
     flex-shrink: 0;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
-  .hdr-c-item:hover { background: rgba(255,255,255,0.05); color: #eee; }
-  .hdr-c.light .hdr-c-item { color: #888; border-right-color: rgba(0,0,0,0.06); }
-  .hdr-c.light .hdr-c-item:hover { background: rgba(0,0,0,0.04); color: #222; }
+  .hdr-c-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #eee;
+  }
+  .hdr-c.light .hdr-c-item {
+    color: #888;
+    border-right-color: rgba(0, 0, 0, 0.06);
+  }
+  .hdr-c.light .hdr-c-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+    color: #222;
+  }
 
   /* ============================
      D: ボトムシート
   ============================ */
-  .hdr-d { background: rgba(12,12,20,0.92); }
-  .hdr-d.light { background: rgba(255,255,255,0.92); }
+  .hdr-d {
+    background: rgba(12, 12, 20, 0.92);
+  }
+  .hdr-d.light {
+    background: rgba(255, 255, 255, 0.92);
+  }
 
   .bottom-sheet {
     position: absolute;
@@ -911,24 +1123,31 @@
     left: 0;
     right: 0;
     background: #1a1a2e;
-    border-top: 1px solid rgba(255,255,255,0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px 16px 0 0;
     z-index: 200;
     transform: translateY(100%);
-    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
     padding: 0 1rem 1rem;
   }
-  .bottom-sheet.open { transform: translateY(0); }
-  .bottom-sheet.light { background: #f5f5f8; border-top-color: rgba(0,0,0,0.09); }
+  .bottom-sheet.open {
+    transform: translateY(0);
+  }
+  .bottom-sheet.light {
+    background: #f5f5f8;
+    border-top-color: rgba(0, 0, 0, 0.09);
+  }
 
   .sheet-handle {
     width: 36px;
     height: 4px;
-    background: rgba(255,255,255,0.15);
+    background: rgba(255, 255, 255, 0.15);
     border-radius: 2px;
     margin: 10px auto 14px;
   }
-  .bottom-sheet.light .sheet-handle { background: rgba(0,0,0,0.12); }
+  .bottom-sheet.light .sheet-handle {
+    background: rgba(0, 0, 0, 0.12);
+  }
 
   .sheet-grid {
     display: grid;
@@ -945,21 +1164,42 @@
     border-radius: 10px;
     text-decoration: none;
     color: #ccc;
-    background: rgba(255,255,255,0.04);
-    transition: background 0.2s, color 0.2s;
+    background: rgba(255, 255, 255, 0.04);
+    transition:
+      background 0.2s,
+      color 0.2s;
   }
-  .sheet-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
-  .bottom-sheet.light .sheet-item { color: #555; background: rgba(0,0,0,0.04); }
-  .bottom-sheet.light .sheet-item:hover { background: rgba(0,0,0,0.08); color: #111; }
+  .sheet-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+  }
+  .bottom-sheet.light .sheet-item {
+    color: #555;
+    background: rgba(0, 0, 0, 0.04);
+  }
+  .bottom-sheet.light .sheet-item:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: #111;
+  }
 
-  .sheet-icon { font-size: 1.1rem; line-height: 1; }
-  .sheet-label { font-size: 0.62rem; text-align: center; }
+  .sheet-icon {
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+  .sheet-label {
+    font-size: 0.62rem;
+    text-align: center;
+  }
 
   /* ============================
      E: タブバー
   ============================ */
-  .hdr-e { background: rgba(12,12,20,0.92); }
-  .hdr-e.light { background: rgba(255,255,255,0.92); }
+  .hdr-e {
+    background: rgba(12, 12, 20, 0.92);
+  }
+  .hdr-e.light {
+    background: rgba(255, 255, 255, 0.92);
+  }
 
   .tab-bar {
     position: absolute;
@@ -968,11 +1208,14 @@
     right: 0;
     height: 56px;
     display: flex;
-    background: rgba(18,18,30,0.96);
-    border-top: 1px solid rgba(255,255,255,0.08);
+    background: rgba(18, 18, 30, 0.96);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(14px);
   }
-  .tab-bar.light { background: rgba(248,248,252,0.96); border-top-color: rgba(0,0,0,0.08); }
+  .tab-bar.light {
+    background: rgba(248, 248, 252, 0.96);
+    border-top-color: rgba(0, 0, 0, 0.08);
+  }
 
   .tab-item {
     flex: 1;
@@ -986,17 +1229,31 @@
     font-size: 0.6rem;
     transition: color 0.2s;
   }
-  .tab-item:hover { color: #aaa; }
-  .tab-item.active { color: #c77dff; }
-  .tab-bar.light .tab-item { color: #bbb; }
-  .tab-bar.light .tab-item:hover { color: #888; }
-  .tab-bar.light .tab-item.active { color: #6741d9; }
+  .tab-item:hover {
+    color: #aaa;
+  }
+  .tab-item.active {
+    color: #c77dff;
+  }
+  .tab-bar.light .tab-item {
+    color: #bbb;
+  }
+  .tab-bar.light .tab-item:hover {
+    color: #888;
+  }
+  .tab-bar.light .tab-item.active {
+    color: #6741d9;
+  }
 
   /* ============================
      F: フルスクリーンオーバーレイ
   ============================ */
-  .hdr-f { background: rgba(12,12,20,0.92); }
-  .hdr-f.light { background: rgba(255,255,255,0.92); }
+  .hdr-f {
+    background: rgba(12, 12, 20, 0.92);
+  }
+  .hdr-f.light {
+    background: rgba(255, 255, 255, 0.92);
+  }
 
   .menu-open-btn {
     display: flex;
@@ -1006,21 +1263,33 @@
     font-size: 0.75rem;
     font-weight: 700;
     border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.15);
-    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.06);
     color: #ccc;
     cursor: pointer;
     letter-spacing: 0.05em;
-    transition: background 0.2s, color 0.2s;
+    transition:
+      background 0.2s,
+      color 0.2s;
   }
-  .menu-open-btn:hover { background: rgba(255,255,255,0.12); color: #fff; }
-  .hdr-f.light .menu-open-btn { border-color: rgba(0,0,0,0.12); background: rgba(0,0,0,0.04); color: #555; }
-  .hdr-f.light .menu-open-btn:hover { background: rgba(0,0,0,0.08); color: #111; }
+  .menu-open-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+  }
+  .hdr-f.light .menu-open-btn {
+    border-color: rgba(0, 0, 0, 0.12);
+    background: rgba(0, 0, 0, 0.04);
+    color: #555;
+  }
+  .hdr-f.light .menu-open-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: #111;
+  }
 
   .fullscreen-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(8,8,16,0.97);
+    background: rgba(8, 8, 16, 0.97);
     z-index: 300;
     display: flex;
     flex-direction: column;
@@ -1028,8 +1297,13 @@
     pointer-events: none;
     transition: opacity 0.3s;
   }
-  .fullscreen-overlay.open { opacity: 1; pointer-events: auto; }
-  .fullscreen-overlay.light { background: rgba(248,248,252,0.98); }
+  .fullscreen-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .fullscreen-overlay.light {
+    background: rgba(248, 248, 252, 0.98);
+  }
 
   .fso-header {
     display: flex;
@@ -1037,9 +1311,11 @@
     justify-content: space-between;
     padding: 0 1rem;
     height: 48px;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   }
-  .fullscreen-overlay.light .fso-header { border-bottom-color: rgba(0,0,0,0.07); }
+  .fullscreen-overlay.light .fso-header {
+    border-bottom-color: rgba(0, 0, 0, 0.07);
+  }
 
   .fso-close {
     display: flex;
@@ -1048,14 +1324,23 @@
     width: 32px;
     height: 32px;
     border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     color: #aaa;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s;
+    transition:
+      background 0.2s,
+      color 0.2s;
   }
-  .fso-close:hover { background: rgba(255,255,255,0.1); color: #fff; }
-  .fullscreen-overlay.light .fso-close { border-color: rgba(0,0,0,0.1); background: rgba(0,0,0,0.04); color: #666; }
+  .fso-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+  .fullscreen-overlay.light .fso-close {
+    border-color: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.04);
+    color: #666;
+  }
 
   .fso-nav {
     flex: 1;
@@ -1074,24 +1359,44 @@
     font-weight: 600;
     color: #ccc;
     text-decoration: none;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
     animation: fso-in 0.3s ease both;
   }
 
   @keyframes fso-in {
-    from { opacity: 0; transform: translateX(-16px); }
-    to { opacity: 1; transform: translateX(0); }
+    from {
+      opacity: 0;
+      transform: translateX(-16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 
-  .fso-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
-  .fullscreen-overlay.light .fso-item { color: #444; }
-  .fullscreen-overlay.light .fso-item:hover { background: rgba(0,0,0,0.04); color: #111; }
+  .fso-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+  }
+  .fullscreen-overlay.light .fso-item {
+    color: #444;
+  }
+  .fullscreen-overlay.light .fso-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+    color: #111;
+  }
 
   /* ============================
      G: コマンドパレット
   ============================ */
-  .hdr-g { background: rgba(12,12,20,0.92); }
-  .hdr-g.light { background: rgba(255,255,255,0.92); }
+  .hdr-g {
+    background: rgba(12, 12, 20, 0.92);
+  }
+  .hdr-g.light {
+    background: rgba(255, 255, 255, 0.92);
+  }
 
   .search-trigger {
     flex: 1;
@@ -1101,32 +1406,57 @@
     padding: 0 0.75rem;
     height: 32px;
     border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
     color: #666;
     font-size: 0.78rem;
     cursor: pointer;
-    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    transition:
+      background 0.2s,
+      border-color 0.2s,
+      color 0.2s;
     min-width: 0;
     max-width: 240px;
   }
-  .search-trigger span { flex: 1; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .search-trigger:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.18); color: #aaa; }
-  .search-trigger.light { border-color: rgba(0,0,0,0.1); background: rgba(0,0,0,0.03); color: #aaa; }
-  .search-trigger.light:hover { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.15); color: #666; }
+  .search-trigger span {
+    flex: 1;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .search-trigger:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+    color: #aaa;
+  }
+  .search-trigger.light {
+    border-color: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.03);
+    color: #aaa;
+  }
+  .search-trigger.light:hover {
+    background: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.15);
+    color: #666;
+  }
 
   kbd {
     font-size: 0.65rem;
     padding: 1px 5px;
     border-radius: 4px;
-    border: 1px solid rgba(255,255,255,0.12);
-    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.06);
     color: #555;
     white-space: nowrap;
     font-family: monospace;
     flex-shrink: 0;
   }
-  .search-trigger.light kbd { border-color: rgba(0,0,0,0.12); background: rgba(0,0,0,0.05); color: #aaa; }
+  .search-trigger.light kbd {
+    border-color: rgba(0, 0, 0, 0.12);
+    background: rgba(0, 0, 0, 0.05);
+    color: #aaa;
+  }
 
   .command-palette {
     position: absolute;
@@ -1135,18 +1465,28 @@
     transform: translate(-50%, -50%);
     width: min(340px, 90%);
     background: #1a1a2e;
-    border: 1px solid rgba(255,255,255,0.12);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 12px;
     z-index: 200;
     overflow: hidden;
-    box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
     animation: cp-in 0.18s ease;
   }
-  .command-palette.light { background: #fafafa; border-color: rgba(0,0,0,0.1); box-shadow: 0 16px 48px rgba(0,0,0,0.15); }
+  .command-palette.light {
+    background: #fafafa;
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+  }
 
   @keyframes cp-in {
-    from { opacity: 0; transform: translate(-50%, calc(-50% - 12px)); }
-    to { opacity: 1; transform: translate(-50%, -50%); }
+    from {
+      opacity: 0;
+      transform: translate(-50%, calc(-50% - 12px));
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
   }
 
   .cp-search {
@@ -1154,10 +1494,13 @@
     align-items: center;
     gap: 0.6rem;
     padding: 0.75rem 1rem;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
     color: #888;
   }
-  .command-palette.light .cp-search { border-bottom-color: rgba(0,0,0,0.07); color: #aaa; }
+  .command-palette.light .cp-search {
+    border-bottom-color: rgba(0, 0, 0, 0.07);
+    color: #aaa;
+  }
 
   .cp-search input {
     flex: 1;
@@ -1168,9 +1511,15 @@
     color: #f0f0f0;
     font-family: inherit;
   }
-  .command-palette.light .cp-search input { color: #1a1a1a; }
+  .command-palette.light .cp-search input {
+    color: #1a1a1a;
+  }
 
-  .cp-results { padding: 0.5rem 0; max-height: 200px; overflow-y: auto; }
+  .cp-results {
+    padding: 0.5rem 0;
+    max-height: 200px;
+    overflow-y: auto;
+  }
 
   .cp-item {
     display: flex;
@@ -1180,17 +1529,31 @@
     font-size: 0.85rem;
     color: #ccc;
     text-decoration: none;
-    transition: background 0.12s, color 0.12s;
+    transition:
+      background 0.12s,
+      color 0.12s;
   }
-  .cp-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
-  .command-palette.light .cp-item { color: #555; }
-  .command-palette.light .cp-item:hover { background: rgba(0,0,0,0.04); color: #111; }
+  .cp-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+  }
+  .command-palette.light .cp-item {
+    color: #555;
+  }
+  .command-palette.light .cp-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+    color: #111;
+  }
 
   /* ============================
      H: メガメニュー
   ============================ */
-  .hdr-h { background: rgba(12,12,20,0.92); }
-  .hdr-h.light { background: rgba(255,255,255,0.92); }
+  .hdr-h {
+    background: rgba(12, 12, 20, 0.92);
+  }
+  .hdr-h.light {
+    background: rgba(255, 255, 255, 0.92);
+  }
 
   .mega-trigger {
     display: flex;
@@ -1200,26 +1563,38 @@
     font-size: 0.8rem;
     font-weight: 600;
     border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.12);
-    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.05);
     color: #ccc;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    transition:
+      background 0.2s,
+      color 0.2s,
+      border-color 0.2s;
   }
-  .mega-trigger:hover, .mega-trigger.active {
-    background: rgba(255,255,255,0.1);
-    border-color: rgba(255,255,255,0.2);
+  .mega-trigger:hover,
+  .mega-trigger.active {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
     color: #fff;
   }
-  .mega-trigger.light { border-color: rgba(0,0,0,0.1); background: rgba(0,0,0,0.04); color: #555; }
-  .mega-trigger.active.light { background: rgba(0,0,0,0.07); border-color: rgba(0,0,0,0.15); color: #111; }
+  .mega-trigger.light {
+    border-color: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.04);
+    color: #555;
+  }
+  .mega-trigger.active.light {
+    background: rgba(0, 0, 0, 0.07);
+    border-color: rgba(0, 0, 0, 0.15);
+    color: #111;
+  }
 
   .mega-menu {
     position: absolute;
     top: calc(100% + 6px);
     right: 0;
     background: #1a1a2e;
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     z-index: 201;
     display: grid;
@@ -1227,14 +1602,24 @@
     gap: 2px;
     padding: 0.5rem;
     min-width: 260px;
-    box-shadow: 0 12px 36px rgba(0,0,0,0.5);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
     animation: mega-in 0.18s ease;
   }
-  .mega-menu.light { background: #fafafa; border-color: rgba(0,0,0,0.09); box-shadow: 0 12px 36px rgba(0,0,0,0.12); }
+  .mega-menu.light {
+    background: #fafafa;
+    border-color: rgba(0, 0, 0, 0.09);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
+  }
 
   @keyframes mega-in {
-    from { opacity: 0; transform: translateY(-8px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .mega-item {
@@ -1246,9 +1631,14 @@
     color: #ccc;
     text-decoration: none;
     border-radius: 8px;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
-  .mega-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
+  .mega-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+  }
 
   .mega-icon {
     display: flex;
@@ -1257,14 +1647,22 @@
     width: 28px;
     height: 28px;
     border-radius: 7px;
-    background: rgba(199,125,255,0.12);
+    background: rgba(199, 125, 255, 0.12);
     color: #c77dff;
     flex-shrink: 0;
   }
 
-  .mega-menu.light .mega-item { color: #555; }
-  .mega-menu.light .mega-item:hover { background: rgba(0,0,0,0.04); color: #111; }
-  .mega-menu.light .mega-icon { background: rgba(103,65,217,0.08); color: #6741d9; }
+  .mega-menu.light .mega-item {
+    color: #555;
+  }
+  .mega-menu.light .mega-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+    color: #111;
+  }
+  .mega-menu.light .mega-icon {
+    background: rgba(103, 65, 217, 0.08);
+    color: #6741d9;
+  }
 
   /* ============================
      Page footer
@@ -1272,10 +1670,12 @@
   .page-footer {
     margin-top: 4rem;
     padding-top: 1.5rem;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
     transition: border-color 0.4s;
   }
-  .light .page-footer { border-top-color: rgba(0,0,0,0.08); }
+  .light .page-footer {
+    border-top-color: rgba(0, 0, 0, 0.08);
+  }
 
   .back-link {
     font-size: 0.85rem;
@@ -1283,7 +1683,13 @@
     text-decoration: none;
     transition: color 0.2s;
   }
-  .back-link:hover { color: #888; }
-  .light .back-link { color: #bbb; }
-  .light .back-link:hover { color: #777; }
+  .back-link:hover {
+    color: #888;
+  }
+  .light .back-link {
+    color: #bbb;
+  }
+  .light .back-link:hover {
+    color: #777;
+  }
 </style>

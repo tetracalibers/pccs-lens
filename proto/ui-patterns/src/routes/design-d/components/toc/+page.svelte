@@ -34,7 +34,9 @@
         <li class="h3"><a href="#">中間色と無彩色</a></li>
       </ol>
     </nav>
-    <p class="pattern-note">左端の縦ラインに対してインデントで階層を表現。h2は太字、h3/h4はフェードで深度を示す</p>
+    <p class="pattern-note">
+      左端の縦ラインに対してインデントで階層を表現。h2は太字、h3/h4はフェードで深度を示す
+    </p>
   </section>
 
   <!-- B: ドット階層 -->
@@ -55,7 +57,9 @@
         <li class="h3"><a href="#">中間色と無彩色</a></li>
       </ul>
     </nav>
-    <p class="pattern-note">レベルごとにサイズの異なる丸ドットをマーカーに使用。ドットの色と大きさで階層を直感的に表す</p>
+    <p class="pattern-note">
+      レベルごとにサイズの異なる丸ドットをマーカーに使用。ドットの色と大きさで階層を直感的に表す
+    </p>
   </section>
 
   <!-- C: 番号アウトライン -->
@@ -63,20 +67,55 @@
     <p class="pattern-label">C — 番号アウトライン</p>
     <nav class="toc-c">
       <ol>
-        <li class="h2"><span class="num">1</span><a href="#">PCCSとは？</a></li>
-        <li class="h3"><span class="num">1.1</span><a href="#">色相について</a></li>
-        <li class="h4"><span class="num">1.1.1</span><a href="#">色相環の読み方</a></li>
-        <li class="h4"><span class="num">1.1.2</span><a href="#">色相番号の意味</a></li>
-        <li class="h3"><span class="num">1.2</span><a href="#">トーンについて</a></li>
-        <li class="h4"><span class="num">1.2.1</span><a href="#">トーンの種類</a></li>
-        <li class="h2"><span class="num">2</span><a href="#">色の分類とトーンの位置関係</a></li>
-        <li class="h3"><span class="num">2.1</span><a href="#">純色・明清色・暗清色</a></li>
-        <li class="h4"><span class="num">2.1.1</span><a href="#">純色（vトーン）</a></li>
-        <li class="h4"><span class="num">2.1.2</span><a href="#">明清色と暗清色</a></li>
-        <li class="h3"><span class="num">2.2</span><a href="#">中間色と無彩色</a></li>
+        <li class="h2">
+          <span class="num">1</span>
+          <a href="#">PCCSとは？</a>
+        </li>
+        <li class="h3">
+          <span class="num">1.1</span>
+          <a href="#">色相について</a>
+        </li>
+        <li class="h4">
+          <span class="num">1.1.1</span>
+          <a href="#">色相環の読み方</a>
+        </li>
+        <li class="h4">
+          <span class="num">1.1.2</span>
+          <a href="#">色相番号の意味</a>
+        </li>
+        <li class="h3">
+          <span class="num">1.2</span>
+          <a href="#">トーンについて</a>
+        </li>
+        <li class="h4">
+          <span class="num">1.2.1</span>
+          <a href="#">トーンの種類</a>
+        </li>
+        <li class="h2">
+          <span class="num">2</span>
+          <a href="#">色の分類とトーンの位置関係</a>
+        </li>
+        <li class="h3">
+          <span class="num">2.1</span>
+          <a href="#">純色・明清色・暗清色</a>
+        </li>
+        <li class="h4">
+          <span class="num">2.1.1</span>
+          <a href="#">純色（vトーン）</a>
+        </li>
+        <li class="h4">
+          <span class="num">2.1.2</span>
+          <a href="#">明清色と暗清色</a>
+        </li>
+        <li class="h3">
+          <span class="num">2.2</span>
+          <a href="#">中間色と無彩色</a>
+        </li>
       </ol>
     </nav>
-    <p class="pattern-note">「1 / 1.1 / 1.1.1」形式の番号でアウトライン構造を明示。テクニカルドキュメント風</p>
+    <p class="pattern-note">
+      「1 / 1.1 / 1.1.1」形式の番号でアウトライン構造を明示。テクニカルドキュメント風
+    </p>
   </section>
 
   <!-- D: カラーレベルバッジ -->
@@ -84,17 +123,50 @@
     <p class="pattern-label">D — カラーレベルバッジ</p>
     <nav class="toc-d">
       <ul>
-        <li class="h2"><span class="badge">H2</span><a href="#">PCCSとは？</a></li>
-        <li class="h3"><span class="badge">H3</span><a href="#">色相について</a></li>
-        <li class="h4"><span class="badge">H4</span><a href="#">色相環の読み方</a></li>
-        <li class="h4"><span class="badge">H4</span><a href="#">色相番号の意味</a></li>
-        <li class="h3"><span class="badge">H3</span><a href="#">トーンについて</a></li>
-        <li class="h4"><span class="badge">H4</span><a href="#">トーンの種類</a></li>
-        <li class="h2"><span class="badge">H2</span><a href="#">色の分類とトーンの位置関係</a></li>
-        <li class="h3"><span class="badge">H3</span><a href="#">純色・明清色・暗清色</a></li>
-        <li class="h4"><span class="badge">H4</span><a href="#">純色（vトーン）</a></li>
-        <li class="h4"><span class="badge">H4</span><a href="#">明清色と暗清色</a></li>
-        <li class="h3"><span class="badge">H3</span><a href="#">中間色と無彩色</a></li>
+        <li class="h2">
+          <span class="badge">H2</span>
+          <a href="#">PCCSとは？</a>
+        </li>
+        <li class="h3">
+          <span class="badge">H3</span>
+          <a href="#">色相について</a>
+        </li>
+        <li class="h4">
+          <span class="badge">H4</span>
+          <a href="#">色相環の読み方</a>
+        </li>
+        <li class="h4">
+          <span class="badge">H4</span>
+          <a href="#">色相番号の意味</a>
+        </li>
+        <li class="h3">
+          <span class="badge">H3</span>
+          <a href="#">トーンについて</a>
+        </li>
+        <li class="h4">
+          <span class="badge">H4</span>
+          <a href="#">トーンの種類</a>
+        </li>
+        <li class="h2">
+          <span class="badge">H2</span>
+          <a href="#">色の分類とトーンの位置関係</a>
+        </li>
+        <li class="h3">
+          <span class="badge">H3</span>
+          <a href="#">純色・明清色・暗清色</a>
+        </li>
+        <li class="h4">
+          <span class="badge">H4</span>
+          <a href="#">純色（vトーン）</a>
+        </li>
+        <li class="h4">
+          <span class="badge">H4</span>
+          <a href="#">明清色と暗清色</a>
+        </li>
+        <li class="h3">
+          <span class="badge">H3</span>
+          <a href="#">中間色と無彩色</a>
+        </li>
       </ul>
     </nav>
     <p class="pattern-note">レベルを色分けしたピルバッジで明示。視認性が高く、階層が一目でわかる</p>
@@ -118,7 +190,9 @@
         <li class="h3 last-child"><a href="#">中間色と無彩色</a></li>
       </ul>
     </nav>
-    <p class="pattern-note">ファイルツリー風のL字コネクターで親子関係を視覚的に結ぶ。エンジニアに馴染み深いスタイル</p>
+    <p class="pattern-note">
+      ファイルツリー風のL字コネクターで親子関係を視覚的に結ぶ。エンジニアに馴染み深いスタイル
+    </p>
   </section>
 
   <!-- F: グラデーション左ボーダー -->
@@ -139,7 +213,9 @@
         <li class="h3"><a href="#">中間色と無彩色</a></li>
       </ul>
     </nav>
-    <p class="pattern-note">レベルごとに異なるカラーの左ボーダーを使用。h2はラベンダー、h3はシアン、h4はサーモン</p>
+    <p class="pattern-note">
+      レベルごとに異なるカラーの左ボーダーを使用。h2はラベンダー、h3はシアン、h4はサーモン
+    </p>
   </section>
 
   <!-- G: フラットリスト + 透明度 -->
@@ -160,7 +236,9 @@
         <li class="h3"><a href="#">中間色と無彩色</a></li>
       </ul>
     </nav>
-    <p class="pattern-note">インデントなしのフラットレイアウト。フォントサイズと透明度の変化だけで深度を表現するミニマル案</p>
+    <p class="pattern-note">
+      インデントなしのフラットレイアウト。フォントサイズと透明度の変化だけで深度を表現するミニマル案
+    </p>
   </section>
 
   <!-- H: カード型セクション -->
@@ -173,7 +251,8 @@
           <div class="h3-item">
             <a href="#" class="h3-link">色相について</a>
             <span class="h4-cluster">
-              <a href="#">色相環の読み方</a><a href="#">色相番号の意味</a>
+              <a href="#">色相環の読み方</a>
+              <a href="#">色相番号の意味</a>
             </span>
           </div>
           <div class="h3-item">
@@ -190,7 +269,8 @@
           <div class="h3-item">
             <a href="#" class="h3-link">純色・明清色・暗清色</a>
             <span class="h4-cluster">
-              <a href="#">純色（vトーン）</a><a href="#">明清色と暗清色</a>
+              <a href="#">純色（vトーン）</a>
+              <a href="#">明清色と暗清色</a>
             </span>
           </div>
           <div class="h3-item">
@@ -199,7 +279,9 @@
         </div>
       </div>
     </nav>
-    <p class="pattern-note">h2単位でカードに分割し、h3・h4をカード内にネスト。セクション間の境界が明確なブロック型</p>
+    <p class="pattern-note">
+      h2単位でカードに分割し、h3・h4をカード内にネスト。セクション間の境界が明確なブロック型
+    </p>
   </section>
 </main>
 

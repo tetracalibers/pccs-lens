@@ -4,11 +4,7 @@
 
   const theme = getContext<{ isLight: boolean; toggle: () => void }>("designD")
 
-  const tools = [
-    { label: "カラー分析" },
-    { label: "パレット生成" },
-    { label: "配色チェッカー" }
-  ]
+  const tools = [{ label: "カラー分析" }, { label: "パレット生成" }, { label: "配色チェッカー" }]
   const contents = [
     {
       category: "基礎知識",
@@ -76,13 +72,18 @@
   <header class="page-header">
     <p class="eyebrow">Design D / Components</p>
     <h1>グローバルナビゲーション</h1>
-    <p class="subtitle">ヘッダーに組み込むナビゲーション案。「ツール群」と「コンテンツ群（カテゴリ階層あり）」をグルーピング・階層化して表示する。</p>
+    <p class="subtitle">
+      ヘッダーに組み込むナビゲーション案。「ツール群」と「コンテンツ群（カテゴリ階層あり）」をグルーピング・階層化して表示する。
+    </p>
   </header>
 
   <!-- ===== 案A: ホバードロップダウン型 ===== -->
   <section class="pattern">
     <p class="pattern-label">A — ホバードロップダウン型</p>
-    <p class="pattern-desc">ツール・コンテンツをトップレベルに並べ、コンテンツカテゴリはクリックでドロップダウンを展開。Narrow: アコーディオン（「ツールとコンテンツを探す」）。</p>
+    <p class="pattern-desc">
+      ツール・コンテンツをトップレベルに並べ、コンテンツカテゴリはクリックでドロップダウンを展開。Narrow:
+      アコーディオン（「ツールとコンテンツを探す」）。
+    </p>
 
     <div class="demo-row">
       <!-- Wide -->
@@ -159,7 +160,10 @@
   <!-- ===== 案B: カラーバッジ型 ===== -->
   <section class="pattern">
     <p class="pattern-label">B — カラーバッジ型</p>
-    <p class="pattern-desc">カテゴリをカラーバッジで色分けし、リンクをピル形状で並べる。Narrow: カテゴリバッジをタップして対応リンクを切り替える2ステップ選択。</p>
+    <p class="pattern-desc">
+      カテゴリをカラーバッジで色分けし、リンクをピル形状で並べる。Narrow:
+      カテゴリバッジをタップして対応リンクを切り替える2ステップ選択。
+    </p>
 
     <div class="demo-row">
       <div class="demo-frame demo-wide">
@@ -194,14 +198,18 @@
               style="--bc:#ff6b6b"
               class:active={mobileBCat === "tools"}
               onclick={() => (mobileBCat = mobileBCat === "tools" ? null : "tools")}
-            >ツール</button>
+            >
+              ツール
+            </button>
             {#each contents as cat (cat.category)}
               <button
                 class="b-n-badge-btn"
                 style="--bc:{cat.color}"
                 class:active={mobileBCat === cat.category}
                 onclick={() => (mobileBCat = mobileBCat === cat.category ? null : cat.category)}
-              >{cat.category}</button>
+              >
+                {cat.category}
+              </button>
             {/each}
           </div>
           {#if mobileBCat === "tools"}
@@ -228,7 +236,10 @@
   <!-- ===== 案C: メガメニュー型 ===== -->
   <section class="pattern">
     <p class="pattern-label">C — メガメニュー型</p>
-    <p class="pattern-desc">「コンテンツ」ボタンでカテゴリ横並びのパネルを展開。Narrow: 「ツール」「コンテンツ」の切り替えタブを常時表示し、タップで対応リンクを表示。</p>
+    <p class="pattern-desc">
+      「コンテンツ」ボタンでカテゴリ横並びのパネルを展開。Narrow:
+      「ツール」「コンテンツ」の切り替えタブを常時表示し、タップで対応リンクを表示。
+    </p>
 
     <div class="demo-row">
       <div class="demo-frame demo-wide">
@@ -269,15 +280,27 @@
             <button
               class="c-n-tab"
               class:active={mobileCTab === "tools"}
-              onclick={() => { mobileCTab = "tools"; mobileCOpen = true }}
-            >ツール</button>
+              onclick={() => {
+                mobileCTab = "tools"
+                mobileCOpen = true
+              }}
+            >
+              ツール
+            </button>
             <button
               class="c-n-tab"
               class:active={mobileCTab === "contents"}
-              onclick={() => { mobileCTab = "contents"; mobileCOpen = true }}
-            >コンテンツ</button>
+              onclick={() => {
+                mobileCTab = "contents"
+                mobileCOpen = true
+              }}
+            >
+              コンテンツ
+            </button>
             {#if mobileCOpen}
-              <button class="c-n-close" onclick={() => (mobileCOpen = false)} aria-label="閉じる">✕</button>
+              <button class="c-n-close" onclick={() => (mobileCOpen = false)} aria-label="閉じる">
+                ✕
+              </button>
             {/if}
           </div>
           {#if mobileCOpen && mobileCTab === "tools"}
@@ -307,7 +330,10 @@
   <!-- ===== 案D: 蛍光グロー型 ===== -->
   <section class="pattern">
     <p class="pattern-label">D — 蛍光グロー型</p>
-    <p class="pattern-desc">カテゴリをネオン色で区別し、ホバーで発光エフェクト。Narrow: カテゴリをグリッドボタンで選択し、対応リンクをその下に展開。</p>
+    <p class="pattern-desc">
+      カテゴリをネオン色で区別し、ホバーで発光エフェクト。Narrow:
+      カテゴリをグリッドボタンで選択し、対応リンクをその下に展開。
+    </p>
 
     <div class="demo-row">
       <div class="demo-frame demo-wide">
@@ -380,7 +406,10 @@
   <!-- ===== 案E: 縦仕切り + カラーアクセント型 ===== -->
   <section class="pattern">
     <p class="pattern-label">E — 縦仕切り + カラーアクセント型</p>
-    <p class="pattern-desc">縦線でグループを仕切り、カテゴリ名にカラーバーを添える。Narrow: 「ツール」「コンテンツ」のセグメントコントロール常時表示、選択で対応リンクを切り替え。</p>
+    <p class="pattern-desc">
+      縦線でグループを仕切り、カテゴリ名にカラーバーを添える。Narrow:
+      「ツール」「コンテンツ」のセグメントコントロール常時表示、選択で対応リンクを切り替え。
+    </p>
 
     <div class="demo-row">
       <div class="demo-frame demo-wide">
@@ -432,14 +461,18 @@
               class="e-n-seg-btn"
               class:active={mobileESeg === "tools"}
               onclick={() => (mobileESeg = "tools")}
-            >ツール</button>
+            >
+              ツール
+            </button>
             {#each contents as cat (cat.category)}
               <button
                 class="e-n-seg-btn"
                 style="--sc:{cat.color}"
                 class:active={mobileESeg === cat.category}
                 onclick={() => (mobileESeg = cat.category)}
-              >{cat.category}</button>
+              >
+                {cat.category}
+              </button>
             {/each}
           </div>
           {#if mobileESeg === "tools"}
@@ -466,7 +499,10 @@
   <!-- ===== 案F: グラデーションタブ型 ===== -->
   <section class="pattern">
     <p class="pattern-label">F — グラデーションタブ型</p>
-    <p class="pattern-desc">ツール・コンテンツをタブで切り替え、選択タブはグラデーション下線で強調。Narrow: トグルなし常時展開のミニカードグリッド。</p>
+    <p class="pattern-desc">
+      ツール・コンテンツをタブで切り替え、選択タブはグラデーション下線で強調。Narrow:
+      トグルなし常時展開のミニカードグリッド。
+    </p>
 
     <div class="demo-row">
       <div class="demo-frame demo-wide">
@@ -477,12 +513,16 @@
               class="f-tab"
               class:active={openF === "tools"}
               onclick={() => (openF = openF === "tools" ? null : "tools")}
-            >ツール</button>
+            >
+              ツール
+            </button>
             <button
               class="f-tab"
               class:active={openF === "contents"}
               onclick={() => (openF = openF === "contents" ? null : "contents")}
-            >コンテンツ</button>
+            >
+              コンテンツ
+            </button>
           </div>
           {#if openF === "tools"}
             <div class="f-panel">
@@ -510,21 +550,37 @@
       <div class="demo-frame demo-narrow">
         <p class="demo-label">Narrow — 常時展開カードグリッド</p>
         <nav class="nav-f-narrow" class:light={theme.isLight}>
-          <a href="#" class="f-n-card" style="--fc:#ff6b6b; --fg:linear-gradient(135deg,#ff6b6b,#ffd93d)">
+          <a
+            href="#"
+            class="f-n-card"
+            style="--fc:#ff6b6b; --fg:linear-gradient(135deg,#ff6b6b,#ffd93d)"
+          >
             <span class="f-n-card-bar"></span>
             <span class="f-n-card-label">カラー分析</span>
           </a>
-          <a href="#" class="f-n-card" style="--fc:#ff6b6b; --fg:linear-gradient(135deg,#ffd93d,#ff6b6b)">
+          <a
+            href="#"
+            class="f-n-card"
+            style="--fc:#ff6b6b; --fg:linear-gradient(135deg,#ffd93d,#ff6b6b)"
+          >
             <span class="f-n-card-bar"></span>
             <span class="f-n-card-label">パレット生成</span>
           </a>
-          <a href="#" class="f-n-card" style="--fc:#ff6b6b; --fg:linear-gradient(135deg,#ff9f43,#ff6b6b)">
+          <a
+            href="#"
+            class="f-n-card"
+            style="--fc:#ff6b6b; --fg:linear-gradient(135deg,#ff9f43,#ff6b6b)"
+          >
             <span class="f-n-card-bar"></span>
             <span class="f-n-card-label">配色チェッカー</span>
           </a>
           {#each contents as cat (cat.category)}
             {#each cat.items as item (item.label)}
-              <a href="#" class="f-n-card" style="--fc:{cat.color}; --fg:linear-gradient(135deg,{cat.color},{cat.color}88)">
+              <a
+                href="#"
+                class="f-n-card"
+                style="--fc:{cat.color}; --fg:linear-gradient(135deg,{cat.color},{cat.color}88)"
+              >
                 <span class="f-n-card-bar"></span>
                 <span class="f-n-card-label">{item.label}</span>
                 <span class="f-n-card-cat" style="color:{cat.color}">{cat.category}</span>
@@ -539,7 +595,10 @@
   <!-- ===== 案G: スペクトル帯型 ===== -->
   <section class="pattern">
     <p class="pattern-label">G — スペクトル帯型</p>
-    <p class="pattern-desc">虹色スペクトルバー＋カテゴリ別カラーのリンク。Narrow: スペクトルバーをカテゴリ別ゾーンに分割し、タップで対応リンクをその下に表示。</p>
+    <p class="pattern-desc">
+      虹色スペクトルバー＋カテゴリ別カラーのリンク。Narrow:
+      スペクトルバーをカテゴリ別ゾーンに分割し、タップで対応リンクをその下に表示。
+    </p>
 
     <div class="demo-row">
       <div class="demo-frame demo-wide">
@@ -575,14 +634,18 @@
               style="background:linear-gradient(135deg,#ff6b6b,#ff9f43)"
               class:active={mobileGSec === "tools"}
               onclick={() => (mobileGSec = mobileGSec === "tools" ? null : "tools")}
-            >ツール</button>
+            >
+              ツール
+            </button>
             {#each contents as cat (cat.category)}
               <button
                 class="g-n-zone"
                 style="background:{cat.color}"
                 class:active={mobileGSec === cat.category}
                 onclick={() => (mobileGSec = mobileGSec === cat.category ? null : cat.category)}
-              >{cat.category}</button>
+              >
+                {cat.category}
+              </button>
             {/each}
           </div>
           {#if mobileGSec === "tools"}
@@ -609,7 +672,10 @@
   <!-- ===== 案H: ドット + テキスト階層型 ===== -->
   <section class="pattern">
     <p class="pattern-label">H — ドット + テキスト階層型</p>
-    <p class="pattern-desc">カラードットでカテゴリを示しドロップダウンを展開。Narrow: 「全ページを開く」でドロワー風の縦ツリーリストをアニメーション展開。</p>
+    <p class="pattern-desc">
+      カラードットでカテゴリを示しドロップダウンを展開。Narrow:
+      「全ページを開く」でドロワー風の縦ツリーリストをアニメーション展開。
+    </p>
 
     <div class="demo-row">
       <div class="demo-frame demo-wide">
@@ -629,7 +695,10 @@
           <div class="h-sep"></div>
           <div class="h-section">
             <div class="h-section-label">
-              <span class="h-dot" style="background:linear-gradient(135deg,#4d96ff,#c77dff,#6bcb77)"></span>
+              <span
+                class="h-dot"
+                style="background:linear-gradient(135deg,#4d96ff,#c77dff,#6bcb77)"
+              ></span>
               <span>コンテンツ</span>
             </div>
             <div class="h-links">
@@ -662,7 +731,11 @@
       <div class="demo-frame demo-narrow">
         <p class="demo-label">Narrow — ドロワー風ツリー</p>
         <nav class="nav-h-narrow" class:light={theme.isLight}>
-          <button class="h-n-toggle" onclick={() => (mobileHOpen = !mobileHOpen)} aria-expanded={mobileHOpen}>
+          <button
+            class="h-n-toggle"
+            onclick={() => (mobileHOpen = !mobileHOpen)}
+            aria-expanded={mobileHOpen}
+          >
             <span class="h-n-toggle-dots" aria-hidden="true">
               {#each ["#ff6b6b", "#4d96ff", "#c77dff", "#6bcb77"] as c (c)}
                 <span style="background:{c}; box-shadow:0 0 5px {c}55"></span>
@@ -674,7 +747,10 @@
           {#if mobileHOpen}
             <div class="h-n-drawer">
               <p class="h-n-tree-sec">
-                <span class="h-dot" style="background:linear-gradient(135deg,#ff6b6b,#ffd93d)"></span>
+                <span
+                  class="h-dot"
+                  style="background:linear-gradient(135deg,#ff6b6b,#ffd93d)"
+                ></span>
                 ツール
               </p>
               {#each tools as tool (tool.label)}
@@ -684,7 +760,10 @@
                 </a>
               {/each}
               <p class="h-n-tree-sec">
-                <span class="h-dot" style="background:linear-gradient(135deg,#4d96ff,#c77dff)"></span>
+                <span
+                  class="h-dot"
+                  style="background:linear-gradient(135deg,#4d96ff,#c77dff)"
+                ></span>
                 コンテンツ
               </p>
               {#each contents as cat (cat.category)}
@@ -722,14 +801,18 @@
     background: #0c0c14;
     color: #f0f0f0;
     min-height: 100vh;
-    transition: background 0.4s, color 0.4s;
+    transition:
+      background 0.4s,
+      color 0.4s;
   }
   main.light {
     background: #ffffff;
     color: #1a1a1a;
   }
 
-  .page-header { margin-bottom: 3rem; }
+  .page-header {
+    margin-bottom: 3rem;
+  }
 
   .eyebrow {
     font-size: 0.7rem;
@@ -739,7 +822,9 @@
     margin: 0 0 0.5rem;
     transition: color 0.4s;
   }
-  .light .eyebrow { color: #999; }
+  .light .eyebrow {
+    color: #999;
+  }
 
   h1 {
     font-size: 2rem;
@@ -754,15 +839,19 @@
     margin: 0;
     transition: color 0.4s;
   }
-  .light .subtitle { color: #888; }
+  .light .subtitle {
+    color: #888;
+  }
 
   .pattern {
     margin-bottom: 4rem;
     padding-bottom: 3rem;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     transition: border-color 0.4s;
   }
-  .light .pattern { border-bottom-color: rgba(0,0,0,0.07); }
+  .light .pattern {
+    border-bottom-color: rgba(0, 0, 0, 0.07);
+  }
 
   .pattern-label {
     font-size: 0.75rem;
@@ -778,7 +867,9 @@
     color: #666;
     margin: 0 0 1.5rem;
   }
-  .light .pattern-desc { color: #888; }
+  .light .pattern-desc {
+    color: #888;
+  }
 
   .demo-row {
     display: flex;
@@ -788,19 +879,27 @@
   }
 
   .demo-frame {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 8px;
     padding: 1rem;
-    transition: background 0.4s, border-color 0.4s;
+    transition:
+      background 0.4s,
+      border-color 0.4s;
   }
   .light .demo-frame {
-    background: rgba(0,0,0,0.02);
-    border-color: rgba(0,0,0,0.08);
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
   }
 
-  .demo-wide { flex: 1; min-width: 300px; }
-  .demo-narrow { width: 210px; flex-shrink: 0; }
+  .demo-wide {
+    flex: 1;
+    min-width: 300px;
+  }
+  .demo-narrow {
+    width: 210px;
+    flex-shrink: 0;
+  }
 
   .demo-label {
     font-size: 0.65rem;
@@ -809,7 +908,9 @@
     color: #555;
     margin: 0 0 0.75rem;
   }
-  .light .demo-label { color: #aaa; }
+  .light .demo-label {
+    color: #aaa;
+  }
 
   /* 共通ユーティリティ */
   .chevron {
@@ -817,7 +918,9 @@
     transition: transform 0.2s;
     font-size: 0.8em;
   }
-  .chevron.open { transform: rotate(180deg); }
+  .chevron.open {
+    transform: rotate(180deg);
+  }
 
   /* ============================
    * 案A Wide
@@ -845,29 +948,45 @@
     color: #555;
     transition: color 0.4s;
   }
-  .light .a-group-label { color: #aaa; }
+  .light .a-group-label {
+    color: #aaa;
+  }
 
   .a-link {
     color: #bbb;
     text-decoration: none;
     padding: 4px 10px;
     border-radius: 4px;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
-  .a-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
-  .light .a-link { color: #555; }
-  .light .a-link:hover { background: rgba(0,0,0,0.06); color: #111; }
+  .a-link:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+  }
+  .light .a-link {
+    color: #555;
+  }
+  .light .a-link:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: #111;
+  }
 
   .a-sep {
     width: 1px;
     height: 20px;
-    background: rgba(255,255,255,0.12);
+    background: rgba(255, 255, 255, 0.12);
     align-self: center;
     flex-shrink: 0;
   }
-  .light .a-sep { background: rgba(0,0,0,0.12); }
+  .light .a-sep {
+    background: rgba(0, 0, 0, 0.12);
+  }
 
-  .a-dropdown-wrap { position: relative; }
+  .a-dropdown-wrap {
+    position: relative;
+  }
 
   .a-dropdown-btn {
     background: none;
@@ -880,18 +999,28 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
-  .a-dropdown-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
-  .light .a-dropdown-btn { color: #555; }
-  .light .a-dropdown-btn:hover { background: rgba(0,0,0,0.06); color: #111; }
+  .a-dropdown-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+  }
+  .light .a-dropdown-btn {
+    color: #555;
+  }
+  .light .a-dropdown-btn:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: #111;
+  }
 
   .a-dropdown {
     position: absolute;
     top: calc(100% + 4px);
     left: 0;
     background: #1a1a2e;
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 6px;
     padding: 6px;
     min-width: 120px;
@@ -899,8 +1028,8 @@
   }
   .light .a-dropdown {
     background: #fff;
-    border-color: rgba(0,0,0,0.1);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   }
 
   .a-drop-item {
@@ -910,18 +1039,30 @@
     text-decoration: none;
     border-radius: 4px;
     font-size: 0.8rem;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
-  .a-drop-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
-  .light .a-drop-item { color: #555; }
-  .light .a-drop-item:hover { background: rgba(0,0,0,0.05); color: #111; }
+  .a-drop-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+  }
+  .light .a-drop-item {
+    color: #555;
+  }
+  .light .a-drop-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #111;
+  }
 
   /* 案A Narrow: アコーディオン */
-  .nav-a-narrow { font-size: 0.82rem; }
+  .nav-a-narrow {
+    font-size: 0.82rem;
+  }
 
   .a-n-toggle {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 6px;
     color: #ccc;
     cursor: pointer;
@@ -932,24 +1073,35 @@
     justify-content: space-between;
     width: 100%;
     gap: 6px;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
-  .a-n-toggle:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .a-n-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
   .light .a-n-toggle {
-    background: rgba(0,0,0,0.04);
-    border-color: rgba(0,0,0,0.1);
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.1);
     color: #444;
   }
-  .light .a-n-toggle:hover { background: rgba(0,0,0,0.07); color: #111; }
+  .light .a-n-toggle:hover {
+    background: rgba(0, 0, 0, 0.07);
+    color: #111;
+  }
 
   .a-n-panel {
     margin-top: 6px;
     background: #14142a;
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 6px;
     padding: 8px;
   }
-  .light .a-n-panel { background: #f8f8f8; border-color: rgba(0,0,0,0.08); }
+  .light .a-n-panel {
+    background: #f8f8f8;
+    border-color: rgba(0, 0, 0, 0.08);
+  }
 
   .a-n-sec {
     font-size: 0.62rem;
@@ -960,7 +1112,9 @@
     margin: 6px 0 4px;
     padding-left: 4px;
   }
-  .light .a-n-sec { color: #aaa; }
+  .light .a-n-sec {
+    color: #aaa;
+  }
 
   .a-n-link {
     display: block;
@@ -969,13 +1123,25 @@
     text-decoration: none;
     border-radius: 4px;
     font-size: 0.8rem;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
-  .a-n-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
-  .light .a-n-link { color: #555; }
-  .light .a-n-link:hover { background: rgba(0,0,0,0.05); color: #111; }
+  .a-n-link:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+  }
+  .light .a-n-link {
+    color: #555;
+  }
+  .light .a-n-link:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #111;
+  }
 
-  .a-n-details summary { list-style: none; }
+  .a-n-details summary {
+    list-style: none;
+  }
 
   .a-n-cat {
     cursor: pointer;
@@ -986,13 +1152,25 @@
     border-left: 3px solid var(--cc);
     margin: 3px 0;
     display: block;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
-  .a-n-cat:hover { background: rgba(255,255,255,0.06); color: #fff; }
-  .light .a-n-cat { color: #555; }
-  .light .a-n-cat:hover { background: rgba(0,0,0,0.04); color: #111; }
+  .a-n-cat:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+  }
+  .light .a-n-cat {
+    color: #555;
+  }
+  .light .a-n-cat:hover {
+    background: rgba(0, 0, 0, 0.04);
+    color: #111;
+  }
 
-  .a-n-sub { padding: 2px 0 4px 14px; }
+  .a-n-sub {
+    padding: 2px 0 4px 14px;
+  }
 
   .a-n-item {
     display: block;
@@ -1001,10 +1179,17 @@
     text-decoration: none;
     font-size: 0.78rem;
     border-radius: 4px;
-    transition: color 0.15s, background 0.15s;
+    transition:
+      color 0.15s,
+      background 0.15s;
   }
-  .a-n-item:hover { color: var(--cc); background: color-mix(in srgb, var(--cc) 8%, transparent); }
-  .light .a-n-item { color: #888; }
+  .a-n-item:hover {
+    color: var(--cc);
+    background: color-mix(in srgb, var(--cc) 8%, transparent);
+  }
+  .light .a-n-item {
+    color: #888;
+  }
 
   /* ============================
    * 案B Wide
@@ -1043,7 +1228,10 @@
     border-radius: 20px;
     border: 1px solid color-mix(in srgb, var(--bc) 30%, transparent);
     background: color-mix(in srgb, var(--bc) 8%, transparent);
-    transition: background 0.15s, border-color 0.15s, transform 0.15s;
+    transition:
+      background 0.15s,
+      border-color 0.15s,
+      transform 0.15s;
     display: inline-block;
   }
   .b-pill:hover {
@@ -1059,13 +1247,17 @@
   .b-divider {
     width: 1px;
     height: 20px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     flex-shrink: 0;
   }
-  .light .b-divider { background: rgba(0,0,0,0.1); }
+  .light .b-divider {
+    background: rgba(0, 0, 0, 0.1);
+  }
 
   /* 案B Narrow: バッジ選択→リンク切り替え */
-  .nav-b-narrow { font-size: 0.82rem; }
+  .nav-b-narrow {
+    font-size: 0.82rem;
+  }
 
   .b-n-hint {
     font-size: 0.65rem;
@@ -1073,7 +1265,9 @@
     margin: 0 0 6px;
     letter-spacing: 0.05em;
   }
-  .light .b-n-hint { color: #aaa; }
+  .light .b-n-hint {
+    color: #aaa;
+  }
 
   .b-n-cats {
     display: flex;
@@ -1093,7 +1287,10 @@
     padding: 4px 10px;
     border-radius: 20px;
     cursor: pointer;
-    transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+    transition:
+      background 0.15s,
+      transform 0.15s,
+      box-shadow 0.15s;
   }
   .b-n-badge-btn:hover {
     background: color-mix(in srgb, var(--bc) 22%, transparent);
@@ -1110,16 +1307,22 @@
     flex-wrap: wrap;
     gap: 5px;
     padding: 4px 0;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
   }
-  .light .b-n-links { border-top-color: rgba(0,0,0,0.06); }
+  .light .b-n-links {
+    border-top-color: rgba(0, 0, 0, 0.06);
+  }
 
-  .b-n-pill { font-size: 0.75rem; }
+  .b-n-pill {
+    font-size: 0.75rem;
+  }
 
   /* ============================
    * 案C Wide
    * ============================ */
-  .nav-c { font-size: 0.82rem; }
+  .nav-c {
+    font-size: 0.82rem;
+  }
 
   .c-bar {
     display: flex;
@@ -1128,25 +1331,40 @@
     flex-wrap: wrap;
   }
 
-  .c-tools { display: flex; gap: 0.25rem; }
+  .c-tools {
+    display: flex;
+    gap: 0.25rem;
+  }
 
   .c-tool-link {
     color: #bbb;
     text-decoration: none;
     padding: 4px 10px;
     border-radius: 4px;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
-  .c-tool-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
-  .light .c-tool-link { color: #555; }
-  .light .c-tool-link:hover { background: rgba(0,0,0,0.06); color: #111; }
+  .c-tool-link:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+  }
+  .light .c-tool-link {
+    color: #555;
+  }
+  .light .c-tool-link:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: #111;
+  }
 
   .c-sep {
     width: 1px;
     height: 18px;
-    background: rgba(255,255,255,0.12);
+    background: rgba(255, 255, 255, 0.12);
   }
-  .light .c-sep { background: rgba(0,0,0,0.12); }
+  .light .c-sep {
+    background: rgba(0, 0, 0, 0.12);
+  }
 
   .c-content-btn {
     background: none;
@@ -1159,16 +1377,26 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
-  .c-content-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
-  .light .c-content-btn { color: #555; }
-  .light .c-content-btn:hover { background: rgba(0,0,0,0.06); color: #111; }
+  .c-content-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+  }
+  .light .c-content-btn {
+    color: #555;
+  }
+  .light .c-content-btn:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: #111;
+  }
 
   .c-mega {
     margin-top: 8px;
     background: #14142a;
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 8px;
     padding: 16px;
     display: flex;
@@ -1176,11 +1404,13 @@
   }
   .light .c-mega {
     background: #f8f8f8;
-    border-color: rgba(0,0,0,0.08);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   }
 
-  .c-col { flex: 1; }
+  .c-col {
+    flex: 1;
+  }
 
   .c-col-head {
     font-size: 0.65rem;
@@ -1196,25 +1426,41 @@
     color: #bbb;
     text-decoration: none;
     font-size: 0.82rem;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    transition: color 0.15s, padding-left 0.15s;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    transition:
+      color 0.15s,
+      padding-left 0.15s;
   }
-  .c-col-link:last-child { border-bottom: none; }
-  .c-col-link:hover { color: #fff; padding-left: 4px; }
-  .light .c-col-link { color: #555; border-bottom-color: rgba(0,0,0,0.06); }
-  .light .c-col-link:hover { color: #111; }
+  .c-col-link:last-child {
+    border-bottom: none;
+  }
+  .c-col-link:hover {
+    color: #fff;
+    padding-left: 4px;
+  }
+  .light .c-col-link {
+    color: #555;
+    border-bottom-color: rgba(0, 0, 0, 0.06);
+  }
+  .light .c-col-link:hover {
+    color: #111;
+  }
 
   /* 案C Narrow: セクションタブ常時表示 */
-  .nav-c-narrow { font-size: 0.82rem; }
+  .nav-c-narrow {
+    font-size: 0.82rem;
+  }
 
   .c-n-tabs {
     display: flex;
     gap: 3px;
     align-items: center;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     margin-bottom: 6px;
   }
-  .light .c-n-tabs { border-bottom-color: rgba(0,0,0,0.08); }
+  .light .c-n-tabs {
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+  }
 
   .c-n-tab {
     background: none;
@@ -1228,7 +1474,9 @@
     position: relative;
     transition: color 0.2s;
   }
-  .c-n-tab:hover { color: #ccc; }
+  .c-n-tab:hover {
+    color: #ccc;
+  }
   .c-n-tab.active {
     color: #fff;
   }
@@ -1241,9 +1489,15 @@
     height: 2px;
     background: linear-gradient(90deg, #4d96ff, #c77dff);
   }
-  .light .c-n-tab { color: #aaa; }
-  .light .c-n-tab:hover { color: #444; }
-  .light .c-n-tab.active { color: #111; }
+  .light .c-n-tab {
+    color: #aaa;
+  }
+  .light .c-n-tab:hover {
+    color: #444;
+  }
+  .light .c-n-tab.active {
+    color: #111;
+  }
 
   .c-n-close {
     margin-left: auto;
@@ -1256,9 +1510,15 @@
     border-radius: 4px;
     transition: color 0.15s;
   }
-  .c-n-close:hover { color: #ccc; }
-  .light .c-n-close { color: #bbb; }
-  .light .c-n-close:hover { color: #333; }
+  .c-n-close:hover {
+    color: #ccc;
+  }
+  .light .c-n-close {
+    color: #bbb;
+  }
+  .light .c-n-close:hover {
+    color: #333;
+  }
 
   .c-n-panel {
     display: flex;
@@ -1273,11 +1533,21 @@
     text-decoration: none;
     font-size: 0.8rem;
     border-radius: 4px;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
-  .c-n-link:hover { background: rgba(255,255,255,0.07); color: #fff; }
-  .light .c-n-link { color: #555; }
-  .light .c-n-link:hover { background: rgba(0,0,0,0.05); color: #111; }
+  .c-n-link:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+  }
+  .light .c-n-link {
+    color: #555;
+  }
+  .light .c-n-link:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #111;
+  }
 
   .c-n-grid {
     display: grid;
@@ -1286,7 +1556,11 @@
     flex-direction: unset;
   }
 
-  .c-n-col { display: flex; flex-direction: column; gap: 2px; }
+  .c-n-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
 
   .c-n-item {
     display: block;
@@ -1296,9 +1570,15 @@
     padding: 3px 2px;
     transition: color 0.15s;
   }
-  .c-n-item:hover { color: #ddd; }
-  .light .c-n-item { color: #888; }
-  .light .c-n-item:hover { color: #222; }
+  .c-n-item:hover {
+    color: #ddd;
+  }
+  .light .c-n-item {
+    color: #888;
+  }
+  .light .c-n-item:hover {
+    color: #222;
+  }
 
   /* ============================
    * 案D Wide
@@ -1335,7 +1615,11 @@
     border-radius: 4px;
     border: 1px solid transparent;
     font-size: 0.82rem;
-    transition: color 0.2s, border-color 0.2s, text-shadow 0.2s, background 0.2s;
+    transition:
+      color 0.2s,
+      border-color 0.2s,
+      text-shadow 0.2s,
+      background 0.2s;
   }
   .d-link:hover {
     color: var(--gc);
@@ -1343,7 +1627,9 @@
     text-shadow: 0 0 10px color-mix(in srgb, var(--gc) 60%, transparent);
     background: color-mix(in srgb, var(--gc) 6%, transparent);
   }
-  .light .d-link { color: #666; }
+  .light .d-link {
+    color: #666;
+  }
   .light .d-link:hover {
     color: var(--gc);
     background: color-mix(in srgb, var(--gc) 8%, transparent);
@@ -1351,7 +1637,9 @@
   }
 
   /* 案D Narrow: カテゴリグリッドボタン→リンク展開 */
-  .nav-d-narrow { font-size: 0.82rem; }
+  .nav-d-narrow {
+    font-size: 0.82rem;
+  }
 
   .d-n-grid {
     display: grid;
@@ -1363,7 +1651,7 @@
   .d-n-cat-btn {
     position: relative;
     overflow: hidden;
-    background: rgba(255,255,255,0.04);
+    background: rgba(255, 255, 255, 0.04);
     border: 1px solid color-mix(in srgb, var(--gc) 20%, transparent);
     border-radius: 6px;
     color: var(--gc);
@@ -1372,7 +1660,10 @@
     font-weight: 600;
     padding: 8px 10px;
     text-align: left;
-    transition: background 0.15s, border-color 0.2s, box-shadow 0.2s;
+    transition:
+      background 0.15s,
+      border-color 0.2s,
+      box-shadow 0.2s;
   }
   .d-n-cat-btn:hover {
     background: color-mix(in srgb, var(--gc) 10%, transparent);
@@ -1403,11 +1694,16 @@
     flex-wrap: wrap;
     gap: 4px;
     padding-top: 6px;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
   }
-  .light .d-n-links { border-top-color: rgba(0,0,0,0.06); }
+  .light .d-n-links {
+    border-top-color: rgba(0, 0, 0, 0.06);
+  }
 
-  .d-n-link { font-size: 0.78rem; padding: 4px 9px; }
+  .d-n-link {
+    font-size: 0.78rem;
+    padding: 4px 9px;
+  }
 
   /* ============================
    * 案E Wide
@@ -1433,7 +1729,9 @@
     color: #555;
     transition: color 0.4s;
   }
-  .light .e-group-name { color: #aaa; }
+  .light .e-group-name {
+    color: #aaa;
+  }
 
   .e-links {
     display: flex;
@@ -1449,7 +1747,9 @@
     border-radius: 4px;
     font-size: 0.82rem;
     position: relative;
-    transition: color 0.2s, background 0.2s;
+    transition:
+      color 0.2s,
+      background 0.2s;
   }
   .e-link::after {
     content: "";
@@ -1463,20 +1763,34 @@
     transform: scaleX(0);
     transition: transform 0.2s;
   }
-  .e-link:hover { color: #fff; background: rgba(255,255,255,0.06); }
-  .e-link:hover::after { transform: scaleX(1); }
-  .light .e-link { color: #555; }
-  .light .e-link:hover { color: #111; background: rgba(0,0,0,0.05); }
+  .e-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+  }
+  .e-link:hover::after {
+    transform: scaleX(1);
+  }
+  .light .e-link {
+    color: #555;
+  }
+  .light .e-link:hover {
+    color: #111;
+    background: rgba(0, 0, 0, 0.05);
+  }
 
   .e-vline {
     width: 1px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     align-self: stretch;
     flex-shrink: 0;
   }
-  .light .e-vline { background: rgba(0,0,0,0.1); }
+  .light .e-vline {
+    background: rgba(0, 0, 0, 0.1);
+  }
 
-  .e-cat-wrap { position: relative; }
+  .e-cat-wrap {
+    position: relative;
+  }
 
   .e-cat-btn {
     background: none;
@@ -1489,12 +1803,22 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
     position: relative;
   }
-  .e-cat-btn:hover { background: rgba(255,255,255,0.07); color: #fff; }
-  .light .e-cat-btn { color: #555; }
-  .light .e-cat-btn:hover { background: rgba(0,0,0,0.05); color: #111; }
+  .e-cat-btn:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+  }
+  .light .e-cat-btn {
+    color: #555;
+  }
+  .light .e-cat-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #111;
+  }
 
   .e-cat-bar {
     position: absolute;
@@ -1520,22 +1844,29 @@
     border-radius: 4px;
     font-size: 0.78rem;
     border: 1px solid transparent;
-    transition: color 0.2s, border-color 0.2s, background 0.2s;
+    transition:
+      color 0.2s,
+      border-color 0.2s,
+      background 0.2s;
   }
   .e-cat-item:hover {
     color: var(--ec);
     border-color: color-mix(in srgb, var(--ec) 25%, transparent);
     background: color-mix(in srgb, var(--ec) 5%, transparent);
   }
-  .light .e-cat-item { color: #888; }
+  .light .e-cat-item {
+    color: #888;
+  }
 
   /* 案E Narrow: セグメントコントロール */
-  .nav-e-narrow { font-size: 0.82rem; }
+  .nav-e-narrow {
+    font-size: 0.82rem;
+  }
 
   .e-n-seg {
     display: flex;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 8px;
     padding: 3px;
     gap: 2px;
@@ -1543,8 +1874,8 @@
     flex-wrap: wrap;
   }
   .light .e-n-seg {
-    background: rgba(0,0,0,0.03);
-    border-color: rgba(0,0,0,0.08);
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.08);
   }
 
   .e-n-seg-btn {
@@ -1560,17 +1891,25 @@
     border-radius: 5px;
     text-align: center;
     white-space: nowrap;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
-  .e-n-seg-btn:hover { color: #ccc; }
+  .e-n-seg-btn:hover {
+    color: #ccc;
+  }
   .e-n-seg-btn.active {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     color: #fff;
   }
-  .light .e-n-seg-btn { color: #aaa; }
-  .light .e-n-seg-btn:hover { color: #444; }
+  .light .e-n-seg-btn {
+    color: #aaa;
+  }
+  .light .e-n-seg-btn:hover {
+    color: #444;
+  }
   .light .e-n-seg-btn.active {
-    background: rgba(0,0,0,0.07);
+    background: rgba(0, 0, 0, 0.07);
     color: #111;
   }
   /* アクティブ時カテゴリカラー強調 */
@@ -1584,21 +1923,30 @@
     gap: 4px;
   }
 
-  .e-n-link { font-size: 0.8rem; display: block; }
+  .e-n-link {
+    font-size: 0.8rem;
+    display: block;
+  }
 
-  .e-n-item { font-size: 0.78rem; }
+  .e-n-item {
+    font-size: 0.78rem;
+  }
 
   /* ============================
    * 案F Wide
    * ============================ */
-  .nav-f { font-size: 0.82rem; }
+  .nav-f {
+    font-size: 0.82rem;
+  }
 
   .f-tabs {
     display: flex;
     gap: 2px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
-  .light .f-tabs { border-bottom-color: rgba(0,0,0,0.08); }
+  .light .f-tabs {
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+  }
 
   .f-tab {
     background: none;
@@ -1609,13 +1957,21 @@
     padding: 6px 14px;
     border-radius: 4px 4px 0 0;
     position: relative;
-    transition: color 0.2s, background 0.2s;
+    transition:
+      color 0.2s,
+      background 0.2s;
     display: flex;
     align-items: center;
     gap: 4px;
   }
-  .f-tab:hover { color: #ccc; background: rgba(255,255,255,0.04); }
-  .f-tab.active { color: #fff; background: rgba(255,255,255,0.06); }
+  .f-tab:hover {
+    color: #ccc;
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .f-tab.active {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+  }
   .f-tab.active::after {
     content: "";
     position: absolute;
@@ -1625,9 +1981,17 @@
     height: 2px;
     background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #c77dff);
   }
-  .light .f-tab { color: #888; }
-  .light .f-tab:hover { color: #444; background: rgba(0,0,0,0.04); }
-  .light .f-tab.active { color: #111; background: rgba(0,0,0,0.04); }
+  .light .f-tab {
+    color: #888;
+  }
+  .light .f-tab:hover {
+    color: #444;
+    background: rgba(0, 0, 0, 0.04);
+  }
+  .light .f-tab.active {
+    color: #111;
+    background: rgba(0, 0, 0, 0.04);
+  }
 
   .f-panel {
     padding: 10px 4px 4px;
@@ -1642,13 +2006,25 @@
     padding: 4px 10px;
     border-radius: 4px;
     font-size: 0.82rem;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
-  .f-tool-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
-  .light .f-tool-link { color: #555; }
-  .light .f-tool-link:hover { background: rgba(0,0,0,0.06); color: #111; }
+  .f-tool-link:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+  }
+  .light .f-tool-link {
+    color: #555;
+  }
+  .light .f-tool-link:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: #111;
+  }
 
-  .f-content-panel { gap: 1rem; }
+  .f-content-panel {
+    gap: 1rem;
+  }
 
   .f-cat {
     display: flex;
@@ -1674,13 +2050,17 @@
     padding: 3px 6px;
     border-radius: 4px;
     font-size: 0.8rem;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
   .f-item:hover {
     background: color-mix(in srgb, var(--fc) 10%, transparent);
     color: var(--fc);
   }
-  .light .f-item { color: #555; }
+  .light .f-item {
+    color: #555;
+  }
 
   /* 案F Narrow: トグルなし・常時展開ミニカードグリッド */
   .nav-f-narrow {
@@ -1694,12 +2074,15 @@
     flex-direction: column;
     gap: 4px;
     padding: 8px 8px 6px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
     border-radius: 6px;
     text-decoration: none;
     overflow: hidden;
-    transition: border-color 0.15s, transform 0.15s, background 0.15s;
+    transition:
+      border-color 0.15s,
+      transform 0.15s,
+      background 0.15s;
   }
   .f-n-card:hover {
     border-color: color-mix(in srgb, var(--fc) 40%, transparent);
@@ -1707,10 +2090,12 @@
     transform: translateY(-1px);
   }
   .light .f-n-card {
-    background: rgba(255,255,255,0.7);
-    border-color: rgba(0,0,0,0.07);
+    background: rgba(255, 255, 255, 0.7);
+    border-color: rgba(0, 0, 0, 0.07);
   }
-  .light .f-n-card:hover { border-color: color-mix(in srgb, var(--fc) 50%, transparent); }
+  .light .f-n-card:hover {
+    border-color: color-mix(in srgb, var(--fc) 50%, transparent);
+  }
 
   .f-n-card-bar {
     height: 2px;
@@ -1724,8 +2109,12 @@
     color: #ccc;
     transition: color 0.15s;
   }
-  .f-n-card:hover .f-n-card-label { color: var(--fc); }
-  .light .f-n-card-label { color: #333; }
+  .f-n-card:hover .f-n-card-label {
+    color: var(--fc);
+  }
+  .light .f-n-card-label {
+    color: #333;
+  }
 
   .f-n-card-cat {
     font-size: 0.6rem;
@@ -1737,11 +2126,23 @@
   /* ============================
    * 案G Wide
    * ============================ */
-  .nav-g { font-size: 0.82rem; }
+  .nav-g {
+    font-size: 0.82rem;
+  }
 
   .g-spectrum-bar {
     height: 3px;
-    background: linear-gradient(90deg, #ff6b6b, #ff9f43, #ffd93d, #6bcb77, #4d96ff, #6741d9, #c77dff, #ff6b6b);
+    background: linear-gradient(
+      90deg,
+      #ff6b6b,
+      #ff9f43,
+      #ffd93d,
+      #6bcb77,
+      #4d96ff,
+      #6741d9,
+      #c77dff,
+      #ff6b6b
+    );
     background-size: 200%;
     animation: spectrum-shift 8s linear infinite;
     border-radius: 2px;
@@ -1749,8 +2150,12 @@
   }
 
   @keyframes spectrum-shift {
-    0% { background-position: 0%; }
-    100% { background-position: 200%; }
+    0% {
+      background-position: 0%;
+    }
+    100% {
+      background-position: 200%;
+    }
   }
 
   .g-content {
@@ -1782,25 +2187,35 @@
     padding: 4px 10px;
     border-radius: 4px;
     font-size: 0.82rem;
-    transition: color 0.2s, background 0.2s;
+    transition:
+      color 0.2s,
+      background 0.2s;
   }
   .g-link:hover {
     color: var(--gc);
     background: color-mix(in srgb, var(--gc) 10%, transparent);
   }
-  .light .g-link { color: #555; }
-  .light .g-link:hover { background: color-mix(in srgb, var(--gc) 8%, transparent); }
+  .light .g-link {
+    color: #555;
+  }
+  .light .g-link:hover {
+    background: color-mix(in srgb, var(--gc) 8%, transparent);
+  }
 
   .g-divider {
     width: 1px;
     height: 18px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     flex-shrink: 0;
   }
-  .light .g-divider { background: rgba(0,0,0,0.1); }
+  .light .g-divider {
+    background: rgba(0, 0, 0, 0.1);
+  }
 
   /* 案G Narrow: スペクトルゾーン選択 */
-  .nav-g-narrow { font-size: 0.82rem; }
+  .nav-g-narrow {
+    font-size: 0.82rem;
+  }
 
   .g-n-zones {
     display: flex;
@@ -1808,9 +2223,11 @@
     margin-bottom: 8px;
     border-radius: 6px;
     overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
-  .light .g-n-zones { border-color: rgba(0,0,0,0.1); }
+  .light .g-n-zones {
+    border-color: rgba(0, 0, 0, 0.1);
+  }
 
   .g-n-zone {
     flex: 1;
@@ -1818,25 +2235,32 @@
     cursor: pointer;
     font-size: 0.62rem;
     font-weight: 700;
-    color: rgba(255,255,255,0.7);
+    color: rgba(255, 255, 255, 0.7);
     padding: 8px 2px;
     text-align: center;
     letter-spacing: 0;
-    transition: filter 0.2s, color 0.2s;
+    transition:
+      filter 0.2s,
+      color 0.2s;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     opacity: 0.65;
   }
-  .g-n-zone:hover { opacity: 0.85; filter: brightness(1.2); }
+  .g-n-zone:hover {
+    opacity: 0.85;
+    filter: brightness(1.2);
+  }
   .g-n-zone.active {
     opacity: 1;
     filter: brightness(1.3);
     color: #fff;
-    outline: 2px solid rgba(255,255,255,0.5);
+    outline: 2px solid rgba(255, 255, 255, 0.5);
     outline-offset: -2px;
   }
-  .light .g-n-zone { color: rgba(255,255,255,0.9); }
+  .light .g-n-zone {
+    color: rgba(255, 255, 255, 0.9);
+  }
 
   .g-n-links {
     display: flex;
@@ -1845,7 +2269,10 @@
     padding-top: 4px;
   }
 
-  .g-n-link { font-size: 0.78rem; padding: 4px 9px; }
+  .g-n-link {
+    font-size: 0.78rem;
+    padding: 4px 9px;
+  }
 
   /* ============================
    * 案H Wide
@@ -1874,7 +2301,9 @@
     color: #555;
     transition: color 0.4s;
   }
-  .light .h-section-label { color: #aaa; }
+  .light .h-section-label {
+    color: #aaa;
+  }
 
   .h-dot {
     width: 10px;
@@ -1897,24 +2326,33 @@
     padding: 4px 10px;
     border-radius: 4px;
     font-size: 0.82rem;
-    transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s,
+      box-shadow 0.15s;
   }
   .h-link:hover {
     background: color-mix(in srgb, var(--hc) 10%, transparent);
     color: var(--hc);
     box-shadow: 0 0 0 1px color-mix(in srgb, var(--hc) 25%, transparent);
   }
-  .light .h-link { color: #555; }
+  .light .h-link {
+    color: #555;
+  }
 
   .h-sep {
     width: 1px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     align-self: stretch;
     flex-shrink: 0;
   }
-  .light .h-sep { background: rgba(0,0,0,0.1); }
+  .light .h-sep {
+    background: rgba(0, 0, 0, 0.1);
+  }
 
-  .h-cat-wrap { position: relative; }
+  .h-cat-wrap {
+    position: relative;
+  }
 
   .h-cat-btn {
     background: none;
@@ -1927,11 +2365,21 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
-  .h-cat-btn:hover { background: rgba(255,255,255,0.07); color: #fff; }
-  .light .h-cat-btn { color: #555; }
-  .light .h-cat-btn:hover { background: rgba(0,0,0,0.05); color: #111; }
+  .h-cat-btn:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+  }
+  .light .h-cat-btn {
+    color: #555;
+  }
+  .light .h-cat-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #111;
+  }
 
   .h-cat-dot {
     width: 7px;
@@ -1946,7 +2394,7 @@
     top: calc(100% + 4px);
     left: 0;
     background: #1a1a2e;
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     padding: 8px;
     min-width: 130px;
@@ -1957,8 +2405,8 @@
   }
   .light .h-cat-popup {
     background: #fff;
-    border-color: rgba(0,0,0,0.1);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   }
 
   .h-popup-link {
@@ -1970,7 +2418,9 @@
     text-decoration: none;
     border-radius: 4px;
     font-size: 0.8rem;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
   .h-popup-link::before {
     content: "";
@@ -1986,15 +2436,21 @@
     background: color-mix(in srgb, var(--hc) 8%, transparent);
     color: var(--hc);
   }
-  .h-popup-link:hover::before { opacity: 1; }
-  .light .h-popup-link { color: #555; }
+  .h-popup-link:hover::before {
+    opacity: 1;
+  }
+  .light .h-popup-link {
+    color: #555;
+  }
 
   /* 案H Narrow: ドロワー風ツリーリスト */
-  .nav-h-narrow { font-size: 0.82rem; }
+  .nav-h-narrow {
+    font-size: 0.82rem;
+  }
 
   .h-n-toggle {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 6px;
     color: #ccc;
     cursor: pointer;
@@ -2006,15 +2462,23 @@
     gap: 8px;
     width: 100%;
     justify-content: space-between;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
-  .h-n-toggle:hover { background: rgba(255,255,255,0.09); color: #fff; }
+  .h-n-toggle:hover {
+    background: rgba(255, 255, 255, 0.09);
+    color: #fff;
+  }
   .light .h-n-toggle {
-    background: rgba(0,0,0,0.03);
-    border-color: rgba(0,0,0,0.1);
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.1);
     color: #444;
   }
-  .light .h-n-toggle:hover { background: rgba(0,0,0,0.06); color: #111; }
+  .light .h-n-toggle:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: #111;
+  }
 
   .h-n-toggle-dots {
     display: flex;
@@ -2032,11 +2496,14 @@
   .h-n-drawer {
     margin-top: 6px;
     background: #13132a;
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 8px;
     padding: 10px 10px 8px;
   }
-  .light .h-n-drawer { background: #f8f8f8; border-color: rgba(0,0,0,0.08); }
+  .light .h-n-drawer {
+    background: #f8f8f8;
+    border-color: rgba(0, 0, 0, 0.08);
+  }
 
   .h-n-tree-sec {
     display: flex;
@@ -2049,7 +2516,9 @@
     color: #555;
     margin: 8px 0 4px;
   }
-  .light .h-n-tree-sec { color: #aaa; }
+  .light .h-n-tree-sec {
+    color: #aaa;
+  }
 
   .h-n-tree-link {
     display: flex;
@@ -2060,13 +2529,17 @@
     text-decoration: none;
     border-radius: 4px;
     font-size: 0.8rem;
-    transition: color 0.15s, background 0.15s;
+    transition:
+      color 0.15s,
+      background 0.15s;
   }
   .h-n-tree-link:hover {
     color: var(--hc);
     background: color-mix(in srgb, var(--hc) 8%, transparent);
   }
-  .light .h-n-tree-link { color: #555; }
+  .light .h-n-tree-link {
+    color: #555;
+  }
 
   .h-n-tree-dot {
     width: 6px;
@@ -2096,13 +2569,17 @@
     border-radius: 4px;
     font-size: 0.78rem;
     position: relative;
-    transition: color 0.15s, background 0.15s;
+    transition:
+      color 0.15s,
+      background 0.15s;
   }
   .h-n-tree-item:hover {
     color: var(--hc);
     background: color-mix(in srgb, var(--hc) 6%, transparent);
   }
-  .light .h-n-tree-item { color: #888; }
+  .light .h-n-tree-item {
+    color: #888;
+  }
 
   .h-n-tree-line {
     position: absolute;
@@ -2119,10 +2596,12 @@
   .page-footer {
     margin-top: 3rem;
     padding-top: 1.5rem;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
     transition: border-color 0.4s;
   }
-  .light .page-footer { border-top-color: rgba(0,0,0,0.08); }
+  .light .page-footer {
+    border-top-color: rgba(0, 0, 0, 0.08);
+  }
 
   .back-link {
     font-size: 0.85rem;
@@ -2130,7 +2609,13 @@
     text-decoration: none;
     transition: color 0.4s;
   }
-  .back-link:hover { color: #888; }
-  .light .back-link { color: #bbb; }
-  .light .back-link:hover { color: #777; }
+  .back-link:hover {
+    color: #888;
+  }
+  .light .back-link {
+    color: #bbb;
+  }
+  .light .back-link:hover {
+    color: #777;
+  }
 </style>
