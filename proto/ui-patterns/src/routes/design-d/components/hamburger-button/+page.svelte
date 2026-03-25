@@ -23,7 +23,6 @@
   <p class="page-desc">クリックで開閉をプレビューできます</p>
 
   <div class="grid">
-
     <!-- A: シンプル3本線 -->
     <section class="pattern">
       <p class="pattern-label">A — シンプル3本線</p>
@@ -118,9 +117,24 @@
         <button class="btn-f" class:open={opens[5]} onclick={() => toggle(5)} aria-label="メニュー">
           <svg class="f-svg" viewBox="0 0 36 36" fill="none" aria-hidden="true">
             <!-- 筆っぽい不規則な線 -->
-            <path class="f-stroke f-s1" d="M8 12 Q14 10 28 12.5" stroke-width="3" stroke-linecap="round" />
-            <path class="f-stroke f-s2" d="M8 18.5 Q18 16.5 28 18.5" stroke-width="3" stroke-linecap="round" />
-            <path class="f-stroke f-s3" d="M8 24.5 Q16 26.5 28 24" stroke-width="3" stroke-linecap="round" />
+            <path
+              class="f-stroke f-s1"
+              d="M8 12 Q14 10 28 12.5"
+              stroke-width="3"
+              stroke-linecap="round"
+            />
+            <path
+              class="f-stroke f-s2"
+              d="M8 18.5 Q18 16.5 28 18.5"
+              stroke-width="3"
+              stroke-linecap="round"
+            />
+            <path
+              class="f-stroke f-s3"
+              d="M8 24.5 Q16 26.5 28 24"
+              stroke-width="3"
+              stroke-linecap="round"
+            />
           </svg>
         </button>
       </div>
@@ -147,15 +161,19 @@
         <button class="btn-h" class:open={opens[7]} onclick={() => toggle(7)} aria-label="メニュー">
           <svg class="h-svg" viewBox="0 0 36 36" fill="none" aria-hidden="true">
             <!-- 雫型 × 3 -->
-            <path class="h-drop h-d1" d="M10 22 Q10 14 14 10 Q18 6 18 6 Q18 6 22 10 Q26 14 26 22 Q26 28.5 18 28.5 Q10 28.5 10 22Z" />
+            <path
+              class="h-drop h-d1"
+              d="M10 22 Q10 14 14 10 Q18 6 18 6 Q18 6 22 10 Q26 14 26 22 Q26 28.5 18 28.5 Q10 28.5 10 22Z"
+            />
             <line class="h-line h-l1" x1="18" y1="12" x2="18" y2="24" />
             <line class="h-line h-l2" x1="12" y1="19" x2="24" y2="19" />
           </svg>
         </button>
       </div>
-      <p class="pattern-note">絵の具のカラードロップ形状の中に十字。色彩をモチーフにしたオリジナルアイコン</p>
+      <p class="pattern-note">
+        絵の具のカラードロップ形状の中に十字。色彩をモチーフにしたオリジナルアイコン
+      </p>
     </section>
-
   </div>
 </main>
 
@@ -214,7 +232,9 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    transition: background 0.4s, border-color 0.4s;
+    transition:
+      background 0.4s,
+      border-color 0.4s;
   }
 
   main.light .pattern {
@@ -268,7 +288,9 @@
     justify-content: center;
     gap: 5px;
     padding: 0;
-    transition: background 0.2s, border-color 0.2s;
+    transition:
+      background 0.2s,
+      border-color 0.2s;
     position: relative;
   }
 
@@ -329,7 +351,9 @@
     justify-content: center;
     gap: 5px;
     padding: 0;
-    transition: background 0.2s, border-color 0.2s;
+    transition:
+      background 0.2s,
+      border-color 0.2s;
   }
 
   main.light .btn-b {
@@ -407,7 +431,9 @@
     stroke: #c0c0d0;
     stroke-width: 2;
     stroke-linecap: round;
-    transition: opacity 0.2s, transform 0.35s;
+    transition:
+      opacity 0.2s,
+      transform 0.35s;
     transform-origin: 18px 18px;
   }
 
@@ -449,7 +475,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s, border-color 0.2s;
+    transition:
+      background 0.2s,
+      border-color 0.2s;
   }
 
   main.light .btn-d {
@@ -464,7 +492,10 @@
 
   .d-dot {
     fill: #888;
-    transition: opacity 0.2s, fill 0.3s, transform 0.35s;
+    transition:
+      opacity 0.2s,
+      fill 0.3s,
+      transform 0.35s;
     transform-origin: center;
   }
 
@@ -480,12 +511,24 @@
     transform: scale(0);
   }
 
-  .btn-d.open .d-dot:nth-child(1) { fill: #ff6b6b; }
-  .btn-d.open .d-dot:nth-child(3) { fill: #ffd93d; }
-  .btn-d.open .d-dot:nth-child(4) { fill: #6bcb77; }
-  .btn-d.open .d-dot:nth-child(6) { fill: #4d96ff; }
-  .btn-d.open .d-dot:nth-child(7) { fill: #c77dff; }
-  .btn-d.open .d-dot:nth-child(9) { fill: #ff6b6b; }
+  .btn-d.open .d-dot:nth-child(1) {
+    fill: #ff6b6b;
+  }
+  .btn-d.open .d-dot:nth-child(3) {
+    fill: #ffd93d;
+  }
+  .btn-d.open .d-dot:nth-child(4) {
+    fill: #6bcb77;
+  }
+  .btn-d.open .d-dot:nth-child(6) {
+    fill: #4d96ff;
+  }
+  .btn-d.open .d-dot:nth-child(7) {
+    fill: #c77dff;
+  }
+  .btn-d.open .d-dot:nth-child(9) {
+    fill: #ff6b6b;
+  }
 
   /* ===== E: カラーアクセント ===== */
   .btn-e {
@@ -586,7 +629,10 @@
   .f-stroke {
     fill: none;
     stroke-linecap: round;
-    transition: stroke 0.3s, opacity 0.25s, d 0.4s;
+    transition:
+      stroke 0.3s,
+      opacity 0.25s,
+      d 0.4s;
   }
 
   .f-s1 {
@@ -612,8 +658,8 @@
   .btn-g {
     width: 44px;
     height: 44px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.09);
+    background: none;
+    border: 0;
     border-radius: 8px;
     cursor: pointer;
     display: flex;
@@ -622,12 +668,6 @@
     justify-content: center;
     gap: 5px;
     padding: 0 11px;
-    transition: background 0.2s;
-  }
-
-  main.light .btn-g {
-    background: rgba(0, 0, 0, 0.03);
-    border-color: rgba(0, 0, 0, 0.08);
   }
 
   .g-bar {
@@ -697,7 +737,9 @@
   }
 
   .h-drop {
-    transition: fill 0.4s, opacity 0.3s;
+    transition:
+      fill 0.4s,
+      opacity 0.3s;
   }
 
   .h-d1 {
