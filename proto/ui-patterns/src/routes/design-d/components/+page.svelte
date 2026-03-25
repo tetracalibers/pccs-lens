@@ -67,6 +67,13 @@
       desc: "ツール群・コンテンツ群をグルーピングするナビゲーションのスタイルパターン",
       glow: "#f97316",
       gradient: "linear-gradient(135deg, #34d399, #f97316)"
+    },
+    {
+      href: resolve("/design-d/components/hamburger-button"),
+      title: "ハンバーガーボタン",
+      desc: "メニューを開閉するボタンのスタイルパターン（カラフルなオリジナルアイコン含む）",
+      glow: "#c77dff",
+      gradient: "linear-gradient(135deg, #f97316, #c77dff)"
     }
   ]
 </script>
