@@ -5,8 +5,7 @@
     value = $bindable("#EE0026"),
     oninput,
     onchange
-  }: { value: string; oninput?: (hex: string) => void; onchange?: (hex: string) => void } =
-    $props()
+  }: { value: string; oninput?: (hex: string) => void; onchange?: (hex: string) => void } = $props()
 
   let textInput = $state(value)
   let error = $state("")
