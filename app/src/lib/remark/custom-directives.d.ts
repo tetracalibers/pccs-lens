@@ -1,8 +1,14 @@
-export type DirectiveConfig = {
-  name: string
-  tag: string
-  classes: string[]
-}
+export type DirectiveConfig =
+  | {
+      replaceTo: "html"
+      name: string
+      tag: string
+      classes: string[]
+    }
+  | {
+      replaceTo: "svelte-component"
+      name: string
+    }
 export type DirectiveConfigMap = {
   container: DirectiveConfig[]
   leaf: DirectiveConfig[]
