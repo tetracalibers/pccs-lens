@@ -3,18 +3,25 @@
 
   let {
     value = $bindable("#EE0026"),
-    oninput
-  }: { value: string; oninput?: (hex: string) => void } = $props()
+    oninput,
+    onchange
+  }: { value: string; oninput?: (hex: string) => void; onchange?: (hex: string) => void } =
+    $props()
 
   let textInput = $state(value)
   let error = $state("")
 
-  function onColorChange(e: Event) {
+  function onColorInput(e: Event) {
     const v = (e.target as HTMLInputElement).value
     value = v
     textInput = v
     error = ""
     oninput?.(v)
+  }
+
+  function onColorChange(e: Event) {
+    const v = (e.target as HTMLInputElement).value
+    onchange?.(v)
   }
 
   function onTextInput(e: Event) {
@@ -27,6 +34,7 @@
       textInput = normalized
       error = ""
       oninput?.(normalized)
+      onchange?.(normalized)
     } else {
       error = "6桁または3桁の有効なHEXコードを入力してください（例：#EE0026）"
     }
@@ -34,7 +42,13 @@
 </script>
 
 <div class="color-picker">
-  <input type="color" bind:value oninput={onColorChange} aria-label="カラーピッカー" />
+  <input
+    type="color"
+    bind:value
+    oninput={onColorInput}
+    onchange={onColorChange}
+    aria-label="カラーピッカー"
+  />
   <input
     type="text"
     value={textInput}

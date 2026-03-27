@@ -26,15 +26,15 @@
     isValidHexColor(urlColorWithHash) ? urlColorWithHash.toUpperCase() : randomHex()
   )
 
-  $effect(() => {
-    if (isValidHexColor(inputColor)) {
+  function onColorCommit(hex: string) {
+    if (isValidHexColor(hex)) {
       const url = new URL(window.location.href)
-      url.searchParams.set("color", inputColor.slice(1).toUpperCase())
+      url.searchParams.set("color", hex.slice(1).toUpperCase())
       // 次のエラーを解消するため、tick() を使用：
       // Cannot call replaceState(...) before router is initialized
       tick().then(() => replaceState(url, history.state))
     }
-  })
+  }
   let results: ApproximateResult[] = $derived(findClosestPccs(inputColor, colors, TOP_N))
   let jisResults: JISApproximateResult[] = $derived(
     findClosestJis(inputColor, jisColorList, JIS_TOP_N)
@@ -50,7 +50,7 @@
 
   <section class="input-section">
     <h2>色を入力</h2>
-    <ColorPicker bind:value={inputColor} />
+    <ColorPicker bind:value={inputColor} onchange={onColorCommit} />
   </section>
 
   <section class="results-section">
