@@ -5,8 +5,7 @@
   import ToneDiagram from "$lib/components/ToneDiagram.svelte"
   import ColorAnalysisResults from "$lib/components/ColorAnalysisResults.svelte"
   import { findClosestPccs } from "$lib/color/approximate"
-  import { deltaE2000 } from "$lib/color/ciede2000"
-  import { hexToLab } from "$lib/color/convert"
+  import chroma from "chroma-js"
   import { PCCS_CARD_199 } from "$lib/data/pccs"
   import type { PCCSColor } from "$lib/data/types"
   import randomColor from "randomcolor"
@@ -68,9 +67,8 @@
       if (e.id !== id) return e
       const oldSelected = e.selectedPCCS
       const pool = [oldSelected, ...e.alternatePCCS.filter((a) => a !== alternate)]
-      const inputLab = hexToLab(e.inputHex)
       const sorted = pool
-        .map((c) => ({ color: c, deltaE: deltaE2000(inputLab, hexToLab(c.hex)) }))
+        .map((c) => ({ color: c, deltaE: chroma.deltaE(e.inputHex, c.hex) }))
         .sort((a, b) => a.deltaE - b.deltaE)
         .slice(0, 2)
         .map((r) => r.color)
