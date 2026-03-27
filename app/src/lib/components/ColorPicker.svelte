@@ -28,7 +28,7 @@
       error = ""
       oninput?.(normalized)
     } else {
-      error = "有効な6桁HEXコードを入力してください（例：#EE0026）"
+      error = "6桁または3桁の有効なHEXコードを入力してください（例：#EE0026）"
     }
   }
 </script>
