@@ -78,7 +78,7 @@
     })
   }
 
-type TooltipState = {
+  type TooltipState = {
     visible: boolean
     anchorX: number
     anchorY: number

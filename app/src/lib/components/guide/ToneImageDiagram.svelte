@@ -92,7 +92,7 @@
     Bk: "#252525"
   }
 
-// SVG パイスライスパスを生成
+  // SVG パイスライスパスを生成
   function pieSlicePath(
     cx: number,
     cy: number,

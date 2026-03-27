@@ -91,7 +91,7 @@
     return entry?.hex ?? "#ccc"
   }
 
-// セル群の境界座標
+  // セル群の境界座標
   const CELLS_LEFT = OX + X0 - RECT_W / 2
   const CELLS_RIGHT = OX + X4 + CIRCLE_R
   const CELLS_TOP = OY + Y0 - RECT_H / 2
