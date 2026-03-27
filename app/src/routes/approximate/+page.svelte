@@ -27,7 +27,7 @@
   )
 
   $effect(() => {
-    if (/^#[0-9A-Fa-f]{6}$/.test(inputColor)) {
+    if (isValidHexColor(inputColor)) {
       const url = new URL(window.location.href)
       url.searchParams.set("color", inputColor.slice(1).toUpperCase())
       // 次のエラーを解消するため、tick() を使用：
