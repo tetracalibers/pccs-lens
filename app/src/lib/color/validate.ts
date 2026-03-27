@@ -1,1 +1,3 @@
-export const isValidHexColor = (v: string | null): v is string => /^#[0-9A-Fa-f]{6}$/.test(v ?? "")
+import chroma from "chroma-js"
+
+export const isValidHexColor = (v: string | null): v is string => v !== null && chroma.valid(v)
