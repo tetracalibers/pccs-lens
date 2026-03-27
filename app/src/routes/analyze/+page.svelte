@@ -8,7 +8,7 @@
   import chroma from "chroma-js"
   import { PCCS_CARD_199 } from "$lib/data/pccs"
   import type { PCCSColor } from "$lib/data/types"
-  import randomColor from "randomcolor"
+  import { randomHex } from "$lib/color/utils"
 
   const colors = PCCS_CARD_199
   const TOP_N = 3
@@ -20,10 +20,6 @@
     inputHex: string
     selectedPCCS: PCCSColor
     alternatePCCS: [PCCSColor, PCCSColor]
-  }
-
-  function randomHex(): string {
-    return randomColor()
   }
 
   function makeEntry(hex: string): ColorEntry {

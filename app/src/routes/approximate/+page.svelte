@@ -8,12 +8,7 @@
   import { page } from "$app/state"
   import { replaceState } from "$app/navigation"
   import { tick } from "svelte"
-  import { isValidHexColor } from "$lib/color/utils"
-  import randomColor from "randomcolor"
-
-  function randomHex(): string {
-    return randomColor()
-  }
+  import { isValidHexColor, randomHex } from "$lib/color/utils"
 
   const colors = PCCS_CARD_199
   const jisColorList = jisColors as JISColor[]

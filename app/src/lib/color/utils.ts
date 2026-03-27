@@ -1,4 +1,5 @@
 import chroma from "chroma-js"
+import randomColor from "randomcolor"
 
 export const isValidHexColor = (v: string | null): v is string => v !== null && chroma.valid(v)
 
@@ -8,4 +9,8 @@ export const isValidHexColor = (v: string | null): v is string => v !== null && 
  */
 export function isLightColor(hex: string): boolean {
   return chroma(hex).luminance() > 0.35
+}
+
+export function randomHex(): string {
+  return randomColor({ format: "hex" })
 }
