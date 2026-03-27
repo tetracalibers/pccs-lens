@@ -8,7 +8,11 @@ pccs-lens/                          リポジトリルート
 ├── blog/                           ブログコンテンツ
 ├── docs/                           永続的ドキュメント
 ├── proto/                          プロトタイプ集
+├── .claude/                        Claude Code設定
+├── .github/                        GitHub Actions・設定
 ├── .steering/                      作業単位のステアリングファイル
+├── .vscode/                        VSCode設定
+├── .gitignore
 ├── CLAUDE.md                       Claude向けプロジェクトメモリ
 └── README.md                       プロジェクト概要
 ```
@@ -43,9 +47,25 @@ app/
 │   │   │   ├── CopyButton.svelte            コピーボタン
 │   │   │   ├── HueWheel.svelte              PCCS色相環（SVG・read-only）
 │   │   │   ├── ToneDiagram.svelte           PCCSトーン概念図（SVG・read-only）
-│   │   │   └── guide/                       ガイドページ専用コンポーネント
-│   │   │       ├── ToneAreaDiagram.svelte
-│   │   │       └── ToneImageDiagram.svelte
+│   │   │   ├── guide/                       ガイドページ専用コンポーネント
+│   │   │   │   ├── ToneAreaDiagram.svelte
+│   │   │   │   └── ToneImageDiagram.svelte
+│   │   │   ├── m-directive/                 Markdownカスタムディレクティブ用コンポーネント
+│   │   │   │   ├── CardGrid.svelte
+│   │   │   │   ├── Example.svelte
+│   │   │   │   ├── Mark.svelte
+│   │   │   │   ├── TermCard.svelte
+│   │   │   │   └── Tips.svelte
+│   │   │   ├── m-html/                      MarkdownのHTML要素置き換え用コンポーネント
+│   │   │   │   ├── Heading2.svelte
+│   │   │   │   ├── Heading3.svelte
+│   │   │   │   └── Ulist.svelte
+│   │   │   └── patterns/                    配色パターンページ専用コンポーネント
+│   │   │       ├── GeoPatternSection.svelte
+│   │   │       ├── HueSelector.svelte
+│   │   │       ├── ThemeColorPicker.svelte
+│   │   │       ├── ThemeColorSchemePreview.svelte
+│   │   │       └── ToneSelector.svelte
 │   │   ├── data/                   JSONデータファイルと型定義
 │   │   │   ├── types.ts            共通型定義（PCCSColor、ColorEntry等）
 │   │   │   ├── pccs.ts             PCCSデータアクセス
@@ -94,6 +114,10 @@ app/
 │   └── app.html                    HTMLテンプレート
 ├── static/                         静的アセット（ビルド時にそのままコピー）
 │   └── robots.txt
+├── .gitignore
+├── .npmrc
+├── .prettierignore
+├── .prettierrc
 ├── eslint.config.js                ESLint設定
 ├── package.json
 ├── svelte.config.js
@@ -138,5 +162,6 @@ docs/
 
 ```
 proto/
-└── geo-pattern-generator/      ジオメトリックパターン生成プロトタイプ
+├── geo-pattern-generator/      ジオメトリックパターン生成プロトタイプ
+└── ui-patterns/                UIパターン検討プロトタイプ
 ```
