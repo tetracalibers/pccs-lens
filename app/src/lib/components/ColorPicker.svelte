@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { isValidHexColor } from "$lib/color/validate"
+  import { isValidHexColor } from "$lib/color/utils"
 
   let {
     value = $bindable("#EE0026"),

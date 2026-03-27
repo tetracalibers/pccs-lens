@@ -8,7 +8,7 @@
   import { page } from "$app/state"
   import { replaceState } from "$app/navigation"
   import { tick } from "svelte"
-  import { isValidHexColor } from "$lib/color/validate"
+  import { isValidHexColor } from "$lib/color/utils"
   import randomColor from "randomcolor"
 
   function randomHex(): string {
