@@ -34,11 +34,9 @@ export default function remarkCustomDirectives(directives) {
         directive.data = {
           ...node.data,
           hName: directive.name,
-          hProperties: directive.attributes
-            ? Object.fromEntries(
-                Object.entries(directive.attributes).filter(([_k, v]) => Boolean(v))
-              )
-            : {}
+          hProperties: Object.fromEntries(
+            Object.entries(directive.attributes ?? {}).filter(([_k, v]) => Boolean(v))
+          )
         }
       } else {
         if (config.replaceTo !== "html") return
