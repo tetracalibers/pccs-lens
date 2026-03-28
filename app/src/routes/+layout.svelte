@@ -8,10 +8,14 @@
 
   let { children } = $props()
 
-  const navItems = [
+  const toolItems = [
     { href: resolve("/approximate"), path: "/approximate", label: "色の近似" },
     { href: resolve("/analyze"), path: "/analyze", label: "配色分析" },
     { href: resolve("/patterns"), path: "/patterns", label: "配色シミュレータ" }
+  ]
+
+  const contentItems = [
+    { href: resolve("/guide"), path: "/guide", label: "PCCSとは？" }
   ]
 
   let isNavOpen = $state(false)
@@ -43,19 +47,43 @@
     </a>
 
     <!-- 中央：ワイド画面用グローバルナビ（H — ドット + テキスト階層型） -->
-    <nav class="wide-nav" aria-label="メインナビゲーション">
+    <nav class="wide-nav nav-h" aria-label="メインナビゲーション">
+      <!-- ツールセクション -->
       <div class="h-section">
         <div class="h-section-label">
           <span class="h-dot" style="background:linear-gradient(135deg,#ff6b6b,#ffd93d)"></span>
           <span>ツール</span>
         </div>
         <div class="h-links">
-          {#each navItems as item (item.href)}
+          {#each toolItems as item (item.href)}
             <a
               href={item.href}
               class="h-link"
               class:active={page.url.pathname.includes(item.path)}
               style="--hc:#ff6b6b"
+            >{item.label}</a>
+          {/each}
+        </div>
+      </div>
+
+      <div class="h-sep"></div>
+
+      <!-- コンテンツセクション -->
+      <div class="h-section">
+        <div class="h-section-label">
+          <span
+            class="h-dot"
+            style="background:linear-gradient(135deg,#4d96ff,#c77dff,#6bcb77)"
+          ></span>
+          <span>コンテンツ</span>
+        </div>
+        <div class="h-links">
+          {#each contentItems as item (item.href)}
+            <a
+              href={item.href}
+              class="h-link"
+              class:active={page.url.pathname.includes(item.path)}
+              style="--hc:#4d96ff"
             >{item.label}</a>
           {/each}
         </div>
@@ -81,21 +109,49 @@
     </div>
   </div>
 
-  <!-- ナロー画面用ドロップダウンナビ（A パターン：ヘッダー内展開） -->
+  <!-- ナロー画面用ドロップダウンナビ（H — ドット + テキスト階層型 Narrow） -->
   {#if isNavOpen}
     <nav id="dropdown-nav" class="dropdown-nav" aria-label="メインナビゲーション">
-      {#each navItems as item (item.href)}
-        <a
-          href={item.href}
-          class="dropdown-link"
-          class:active={page.url.pathname.includes(item.path)}
-          style="--hc:#ff6b6b"
-          onclick={closeNav}
-        >
-          <span class="dropdown-dot" style="background:#ff6b6b"></span>
-          {item.label}
-        </a>
-      {/each}
+      <div class="h-n-drawer">
+        <!-- ツールセクション -->
+        <p class="h-n-tree-sec">
+          <span class="h-dot" style="background:linear-gradient(135deg,#ff6b6b,#ffd93d)"></span>
+          ツール
+        </p>
+        {#each toolItems as item (item.href)}
+          <a
+            href={item.href}
+            class="h-n-tree-link"
+            class:active={page.url.pathname.includes(item.path)}
+            style="--hc:#ff6b6b"
+            onclick={closeNav}
+          >
+            <span class="h-n-tree-dot" style="background:#ff6b6b"></span>
+            {item.label}
+          </a>
+        {/each}
+
+        <!-- コンテンツセクション -->
+        <p class="h-n-tree-sec">
+          <span
+            class="h-dot"
+            style="background:linear-gradient(135deg,#4d96ff,#c77dff,#6bcb77)"
+          ></span>
+          コンテンツ
+        </p>
+        {#each contentItems as item (item.href)}
+          <a
+            href={item.href}
+            class="h-n-tree-link"
+            class:active={page.url.pathname.includes(item.path)}
+            style="--hc:#4d96ff"
+            onclick={closeNav}
+          >
+            <span class="h-n-tree-dot" style="background:#4d96ff"></span>
+            {item.label}
+          </a>
+        {/each}
+      </div>
     </nav>
   {/if}
 
@@ -215,11 +271,17 @@
     }
   }
 
+  /* nav-h: プロトタイプの .nav-h に対応（display は .wide-nav で制御） */
+  .nav-h {
+    align-items: flex-start;
+    gap: 1rem;
+    font-size: 0.82rem;
+  }
+
   .h-section {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
-    align-items: center;
+    gap: 0.5rem;
   }
 
   .h-section-label {
@@ -247,7 +309,6 @@
     flex-wrap: wrap;
     gap: 0.3rem;
     align-items: center;
-    justify-content: center;
   }
 
   .h-link {
@@ -267,6 +328,13 @@
     background: color-mix(in srgb, var(--hc) 10%, transparent);
     color: var(--hc);
     box-shadow: 0 0 0 1px color-mix(in srgb, var(--hc) 25%, transparent);
+  }
+
+  .h-sep {
+    width: 1px;
+    background: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+    align-self: stretch;
+    flex-shrink: 0;
   }
 
   /* ===== ヘッダー右側 ===== */
@@ -342,9 +410,7 @@
 
   /* ===== ナロー画面用ドロップダウンナビ ===== */
   .dropdown-nav {
-    display: flex;
-    flex-direction: column;
-    padding: 0.5rem 0;
+    padding: 0.75rem 1.25rem;
     border-top: 1px solid light-dark(rgba(0, 0, 0, 0.07), rgba(255, 255, 255, 0.06));
     animation: slide-down 0.2s ease;
   }
@@ -366,26 +432,48 @@
     }
   }
 
-  .dropdown-link {
+  /* H — ドット + テキスト階層型 Narrow の中身 */
+  .h-n-drawer {
+    background: light-dark(#f8f8f8, #13132a);
+    border: 1px solid light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.08));
+    border-radius: 8px;
+    padding: 10px 10px 8px;
+    font-size: 0.82rem;
+  }
+
+  .h-n-tree-sec {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
-    padding: 0.65rem 1.25rem;
-    font-size: 0.9rem;
-    color: light-dark(#555, #ccc);
+    gap: 6px;
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: light-dark(#aaa, #555);
+    margin: 8px 0 4px;
+  }
+
+  .h-n-tree-link {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 6px;
+    color: light-dark(#555, #bbb);
     text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.8rem;
     transition:
-      background 0.15s,
-      color 0.15s;
+      color 0.15s,
+      background 0.15s;
   }
 
-  .dropdown-link:hover,
-  .dropdown-link.active {
-    background: color-mix(in srgb, var(--hc) 8%, transparent);
+  .h-n-tree-link:hover,
+  .h-n-tree-link.active {
     color: var(--hc);
+    background: color-mix(in srgb, var(--hc) 8%, transparent);
   }
 
-  .dropdown-dot {
+  .h-n-tree-dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
