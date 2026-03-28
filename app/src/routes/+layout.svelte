@@ -14,9 +14,7 @@
     { href: resolve("/patterns"), path: "/patterns", label: "配色シミュレータ" }
   ]
 
-  const contentItems = [
-    { href: resolve("/guide"), path: "/guide", label: "PCCSとは？" }
-  ]
+  const contentItems = [{ href: resolve("/guide"), path: "/guide", label: "PCCSとは？" }]
 
   let isNavOpen = $state(false)
 
@@ -61,7 +59,9 @@
               class="h-link"
               class:active={page.url.pathname.includes(item.path)}
               style="--hc:#ff6b6b"
-            >{item.label}</a>
+            >
+              {item.label}
+            </a>
           {/each}
         </div>
       </div>
@@ -84,7 +84,9 @@
               class="h-link"
               class:active={page.url.pathname.includes(item.path)}
               style="--hc:#4d96ff"
-            >{item.label}</a>
+            >
+              {item.label}
+            </a>
           {/each}
         </div>
       </div>
@@ -159,8 +161,7 @@
   <div class="header-drip-bar" aria-hidden="true">
     {#each ["#e03131", "#f76707", "#f59f00", "#94d82d", "#2f9e44", "#0c8599", "#1971c2", "#3b5bdb", "#6741d9", "#9c36b5", "#c2255c", "#e84393"] as c, i (c)}
       <div class="hd-col" style="background:{c}">
-        <div class="hd-drip" style="--dh:{14 + (i % 3) * 10}px; --dl:{((i * 41) % 65) + 18}%">
-        </div>
+        <div class="hd-drip" style="--dh:{14 + (i % 3) * 10}px; --dl:{((i * 41) % 65) + 18}%"></div>
       </div>
     {/each}
   </div>
