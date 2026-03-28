@@ -1,5 +1,6 @@
 <script lang="ts">
   import { PCCS_ALL } from "$lib/data/pccs"
+  import { isLightColor } from "$lib/color/utils"
   const colorsFullData = PCCS_ALL
 
   let { highlights = [] }: { highlights: string[] } = $props()
@@ -88,14 +89,6 @@
     }
     const entry = colorsFullData.find((c) => c.toneSymbol === cell.key && c.hueNumber === 24)
     return entry?.hex ?? "#ccc"
-  }
-
-  // テキスト色（明度判定）
-  function isLightColor(hex: string): boolean {
-    const r = parseInt(hex.slice(1, 3), 16)
-    const g = parseInt(hex.slice(3, 5), 16)
-    const b = parseInt(hex.slice(5, 7), 16)
-    return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.5
   }
 
   // セル群の境界座標

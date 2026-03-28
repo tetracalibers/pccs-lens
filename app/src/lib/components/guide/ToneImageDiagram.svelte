@@ -1,5 +1,6 @@
 <script lang="ts">
   import { SvelteMap } from "svelte/reactivity"
+  import { isLightColor } from "$lib/color/utils"
   import { PCCS_ALL } from "$lib/data/pccs"
   import toneData from "$lib/data/pccs_tone.json"
 
@@ -89,13 +90,6 @@
     mGy: "#797979",
     dkGy: "#4A4A4A",
     Bk: "#252525"
-  }
-
-  function isLightColor(hex: string): boolean {
-    const r = parseInt(hex.slice(1, 3), 16)
-    const g = parseInt(hex.slice(3, 5), 16)
-    const b = parseInt(hex.slice(5, 7), 16)
-    return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.5
   }
 
   // SVG パイスライスパスを生成

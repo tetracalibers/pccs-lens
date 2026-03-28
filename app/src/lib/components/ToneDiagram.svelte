@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { PCCSColor } from "$lib/data/types"
+  import { isLightColor } from "$lib/color/utils"
 
   let {
     displayedPCCSList,
@@ -75,13 +76,6 @@
       if (c.isNeutral) return c.achromaticBucket === cell.key
       return c.toneSymbol === cell.key
     })
-  }
-
-  function isLightColor(hex: string): boolean {
-    const r = parseInt(hex.slice(1, 3), 16)
-    const g = parseInt(hex.slice(3, 5), 16)
-    const b = parseInt(hex.slice(5, 7), 16)
-    return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.5
   }
 
   type TooltipState = {

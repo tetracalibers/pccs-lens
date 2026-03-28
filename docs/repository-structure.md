@@ -30,15 +30,11 @@ app/
 │   │   │   ├── favicon.ico
 │   │   │   └── icon.svg
 │   │   ├── color/                  色計算ロジック（UIに非依存の純粋関数）
-│   │   │   ├── ciede2000.ts        CIEDE2000 色差計算
-│   │   │   ├── ciede2000.spec.ts
-│   │   │   ├── convert.ts          HEX → sRGB → Lab 変換
-│   │   │   ├── convert.spec.ts
 │   │   │   ├── approximate.ts      PCCS近似（最近傍探索）
 │   │   │   ├── approximate.spec.ts
 │   │   │   ├── analyze.ts          配色分析ロジック
 │   │   │   ├── analyze.spec.ts
-│   │   │   └── validate.ts         入力バリデーション
+│   │   │   └── utils.ts            色計算ユーティリティ
 │   │   ├── components/             共通UIコンポーネント
 │   │   │   ├── ColorAnalysisResults.svelte  配色分析結果表示
 │   │   │   ├── ColorEntryItem.svelte        色エントリーアイテム
@@ -99,7 +95,8 @@ app/
 │   │   ├── +layout.ts
 │   │   ├── +page.svelte            トップページ（/）
 │   │   ├── approximate/
-│   │   │   └── +page.svelte        機能1：色のPCCS近似（/approximate）
+│   │   │   ├── +page.svelte        機能1：色のPCCS近似（/approximate）
+│   │   │   └── +page.ts
 │   │   ├── analyze/
 │   │   │   ├── +page.svelte        機能2：配色の分析（/analyze）
 │   │   │   └── +page.ts
@@ -113,6 +110,7 @@ app/
 │   ├── app.d.ts                    SvelteKit型拡張
 │   └── app.html                    HTMLテンプレート
 ├── static/                         静的アセット（ビルド時にそのままコピー）
+│   ├── .assetsignore
 │   └── robots.txt
 ├── .gitignore
 ├── .npmrc
