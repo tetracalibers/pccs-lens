@@ -62,7 +62,7 @@
     <!-- 中央：ワイド画面用グローバルナビ（H — ドット + テキスト階層型） -->
     <nav class="wide-nav nav-h" aria-label="メインナビゲーション">
       <!-- ツールセクション -->
-      <div class="h-section">
+      <div class="h-section" style="--hc-gradient:linear-gradient(135deg,#ff6b6b,#ffd93d)">
         <div class="h-section-label">
           <span class="h-dot" style="background:linear-gradient(135deg,#ff6b6b,#ffd93d)"></span>
           <span>ツール</span>
@@ -73,7 +73,6 @@
               href={item.href}
               class="h-link"
               class:active={page.url.pathname.includes(item.path)}
-              style="--hc:#ff6b6b"
             >
               {item.label}
             </a>
@@ -82,7 +81,7 @@
       </div>
 
       <!-- コンテンツセクション -->
-      <div class="h-section">
+      <div class="h-section" style="--hc-gradient:linear-gradient(135deg,#4d96ff,#c77dff,#6bcb77)">
         <div class="h-section-label">
           <span
             class="h-dot"
@@ -96,7 +95,6 @@
               href={item.href}
               class="h-link"
               class:active={page.url.pathname.includes(item.path)}
-              style="--hc:#4d96ff"
             >
               {item.label}
             </a>
@@ -120,18 +118,19 @@
           <span class="h-dot" style="background:linear-gradient(135deg,#ff6b6b,#ffd93d)"></span>
           ツール
         </p>
-        {#each toolItems as item (item.href)}
-          <a
-            href={item.href}
-            class="h-n-tree-link"
-            class:active={page.url.pathname.includes(item.path)}
-            style="--hc:#ff6b6b"
-            onclick={closeNav}
-          >
-            <span class="h-n-tree-dot" style="background:#ff6b6b"></span>
-            {item.label}
-          </a>
-        {/each}
+        <div style="--hc:#ff6b6b; --hc-gradient:linear-gradient(135deg,#ff6b6b,#ffd93d)">
+          {#each toolItems as item (item.href)}
+            <a
+              href={item.href}
+              class="h-n-tree-link"
+              class:active={page.url.pathname.includes(item.path)}
+              onclick={closeNav}
+            >
+              <span class="h-n-tree-dot" style="background:#ff6b6b"></span>
+              {item.label}
+            </a>
+          {/each}
+        </div>
 
         <!-- コンテンツセクション -->
         <p class="h-n-tree-sec">
@@ -141,18 +140,19 @@
           ></span>
           コンテンツ
         </p>
-        {#each contentItems as item (item.href)}
-          <a
-            href={item.href}
-            class="h-n-tree-link"
-            class:active={page.url.pathname.includes(item.path)}
-            style="--hc:#4d96ff"
-            onclick={closeNav}
-          >
-            <span class="h-n-tree-dot" style="background:#4d96ff"></span>
-            {item.label}
-          </a>
-        {/each}
+        <div style="--hc:#4d96ff; --hc-gradient:linear-gradient(135deg,#4d96ff,#c77dff,#6bcb77)">
+          {#each contentItems as item (item.href)}
+            <a
+              href={item.href}
+              class="h-n-tree-link"
+              class:active={page.url.pathname.includes(item.path)}
+              onclick={closeNav}
+            >
+              <span class="h-n-tree-dot" style="background:#4d96ff"></span>
+              {item.label}
+            </a>
+          {/each}
+        </div>
       </div>
     </nav>
   {/if}
@@ -315,27 +315,28 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    padding-inline-start: 6px;
+    gap: 1rem;
+    padding-inline-start: 16px;
   }
 
   .h-link {
     color: light-dark(#555, #bbb);
     text-decoration: none;
     padding-block: 4px;
-    padding-inline: 10px;
-    border-radius: 4px;
+    padding-inline: 0;
     font-size: 0.82rem;
+    background-image: var(--hc-gradient);
+    background-repeat: no-repeat;
+    background-size: 0 1.5px;
+    background-position: 0 100%;
     transition:
-      background 0.15s,
       color 0.15s,
-      box-shadow 0.15s;
+      background-size 0.15s;
   }
 
   .h-link:hover,
   .h-link.active {
-    background: color-mix(in srgb, var(--hc) 10%, transparent);
-    color: var(--hc);
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--hc) 25%, transparent);
+    background-size: 100% 1.5px;
   }
 
   /* ===== ヘッダー右側 ===== */
@@ -457,15 +458,29 @@
     text-decoration: none;
     border-radius: 4px;
     font-size: 0.8rem;
-    transition:
-      color 0.15s,
-      background 0.15s;
+    position: relative;
+    transition: color 0.15s;
+  }
+
+  .h-n-tree-link::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--hc-gradient);
+    opacity: 0;
+    transition: opacity 0.15s;
+    pointer-events: none;
   }
 
   .h-n-tree-link:hover,
   .h-n-tree-link.active {
     color: var(--hc);
-    background: color-mix(in srgb, var(--hc) 8%, transparent);
+  }
+
+  .h-n-tree-link:hover::before,
+  .h-n-tree-link.active::before {
+    opacity: 0.1;
   }
 
   .h-n-tree-dot {
