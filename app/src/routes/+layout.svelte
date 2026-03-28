@@ -213,8 +213,8 @@
   .header-inner {
     max-width: 960px;
     margin: 0 auto;
-    padding: 0 1.25rem;
-    height: 56px;
+    padding: 0.5rem 1.25rem;
+    min-height: 56px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -228,20 +228,18 @@
     text-decoration: none;
     line-height: 1;
     flex-shrink: 0;
+
+    font-size: 1rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
   }
 
   .site-name-pccs {
-    font-size: 1rem;
-    font-weight: 900;
     color: light-dark(#1a1a1a, #f0f0f0);
-    letter-spacing: -0.03em;
     transition: color 0.4s;
   }
 
   .site-name-lens {
-    font-size: 1rem;
-    font-weight: 900;
-    letter-spacing: -0.03em;
     background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #c77dff, #ff6b6b);
     background-size: 200%;
     -webkit-background-clip: text;
