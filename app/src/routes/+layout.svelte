@@ -304,14 +304,15 @@
   .h-links {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.3rem;
     align-items: center;
+    padding-inline-start: 6px;
   }
 
   .h-link {
     color: light-dark(#555, #bbb);
     text-decoration: none;
-    padding: 4px 10px;
+    padding-block: 4px;
+    padding-inline: 10px;
     border-radius: 4px;
     font-size: 0.82rem;
     transition:
