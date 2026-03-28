@@ -144,7 +144,7 @@
 
     font-family: "SUSE Mono", "Zen Kaku Gothic Antique", sans-serif;
     font-synthesis-weight: none;
-    margin-block: 0;
+    margin: 0;
 
     background: light-dark(#ffffff, #0c0c14);
     color: light-dark(#1a1a1a, #f0f0f0);
