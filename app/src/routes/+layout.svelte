@@ -66,8 +66,6 @@
         </div>
       </div>
 
-      <div class="h-sep"></div>
-
       <!-- コンテンツセクション -->
       <div class="h-section">
         <div class="h-section-label">
@@ -273,7 +271,7 @@
   /* nav-h: プロトタイプの .nav-h に対応（display は .wide-nav で制御） */
   .nav-h {
     align-items: flex-start;
-    gap: 1rem;
+    gap: 1.25rem;
     font-size: 0.82rem;
   }
 
@@ -327,13 +325,6 @@
     background: color-mix(in srgb, var(--hc) 10%, transparent);
     color: var(--hc);
     box-shadow: 0 0 0 1px color-mix(in srgb, var(--hc) 25%, transparent);
-  }
-
-  .h-sep {
-    width: 1px;
-    background: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
-    align-self: stretch;
-    flex-shrink: 0;
   }
 
   /* ===== ヘッダー右側 ===== */
