@@ -69,11 +69,7 @@
         </div>
         <div class="h-links">
           {#each toolItems as item (item.href)}
-            <a
-              href={item.href}
-              class="h-link"
-              class:active={page.url.pathname.includes(item.path)}
-            >
+            <a href={item.href} class="h-link" class:active={page.url.pathname.includes(item.path)}>
               {item.label}
             </a>
           {/each}
@@ -91,11 +87,7 @@
         </div>
         <div class="h-links">
           {#each contentItems as item (item.href)}
-            <a
-              href={item.href}
-              class="h-link"
-              class:active={page.url.pathname.includes(item.path)}
-            >
+            <a href={item.href} class="h-link" class:active={page.url.pathname.includes(item.path)}>
               {item.label}
             </a>
           {/each}
@@ -118,7 +110,10 @@
           <span class="h-dot" style="background:linear-gradient(135deg,#ff6b6b,#ffd93d)"></span>
           ツール
         </p>
-        <div style="--hc:#ff6b6b; --hc-gradient:linear-gradient(135deg,#ff6b6b,#ffd93d)">
+        <div
+          class="h-n-tree-links"
+          style="--hc:#ff6b6b; --hc-gradient:linear-gradient(135deg,#ff6b6b,#ffd93d)"
+        >
           {#each toolItems as item (item.href)}
             <a
               href={item.href}
@@ -140,7 +135,10 @@
           ></span>
           コンテンツ
         </p>
-        <div style="--hc:#4d96ff; --hc-gradient:linear-gradient(135deg,#4d96ff,#c77dff,#6bcb77)">
+        <div
+          class="h-n-tree-links"
+          style="--hc:#4d96ff; --hc-gradient:linear-gradient(135deg,#4d96ff,#c77dff,#6bcb77)"
+        >
           {#each contentItems as item (item.href)}
             <a
               href={item.href}
@@ -449,6 +447,10 @@
     margin: 8px 0 4px;
   }
 
+  .h-n-tree-links {
+    padding-inline-start: 10px;
+  }
+
   .h-n-tree-link {
     display: flex;
     align-items: center;
@@ -463,7 +465,7 @@
   }
 
   .h-n-tree-link::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     border-radius: inherit;
