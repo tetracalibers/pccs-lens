@@ -411,9 +411,8 @@
 
   /* ===== ナロー画面用ドロップダウンナビ ===== */
   .dropdown-nav {
-    padding: 0.75rem 1.25rem;
+    padding: 0 1.25rem 0.5rem;
     border-top: 1px solid light-dark(rgba(0, 0, 0, 0.07), rgba(255, 255, 255, 0.06));
-    animation: slide-down 0.2s ease;
   }
 
   @media (min-width: 640px) {
@@ -435,9 +434,6 @@
 
   /* H — ドット + テキスト階層型 Narrow の中身 */
   .h-n-drawer {
-    background: light-dark(#f8f8f8, #13132a);
-    border: 1px solid light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.08));
-    border-radius: 8px;
     padding: 10px 10px 8px;
     font-size: 0.82rem;
   }
