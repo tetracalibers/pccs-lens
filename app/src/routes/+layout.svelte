@@ -56,9 +56,7 @@
               class="h-link"
               class:active={page.url.pathname.includes(item.path)}
               style="--hc:#ff6b6b"
-            >
-              {item.label}
-            </a>
+            >{item.label}</a>
           {/each}
         </div>
       </div>
@@ -70,10 +68,11 @@
       <!-- G — スペクトラムバー ハンバーガーボタン -->
       <button
         class="hamburger-btn"
-        onclick={() => (isNavOpen = true)}
-        aria-label="メニューを開く"
+        class:open={isNavOpen}
+        onclick={() => (isNavOpen = !isNavOpen)}
+        aria-label={isNavOpen ? "メニューを閉じる" : "メニューを開く"}
         aria-expanded={isNavOpen}
-        aria-controls="fullscreen-nav"
+        aria-controls="dropdown-nav"
       >
         <span class="g-bar g1"></span>
         <span class="g-bar g2"></span>
@@ -82,54 +81,34 @@
     </div>
   </div>
 
-  <!-- 色相ドリップバー -->
-  <div class="header-drip-bar" aria-hidden="true">
-    {#each ["#e03131", "#f76707", "#f59f00", "#94d82d", "#2f9e44", "#0c8599", "#1971c2", "#3b5bdb", "#6741d9", "#9c36b5", "#c2255c", "#e84393"] as c, i (c)}
-      <div class="hd-col" style="background:{c}">
-        <div class="hd-drip" style="--dh:{14 + (i % 3) * 10}px; --dl:{((i * 41) % 65) + 18}%"></div>
-      </div>
-    {/each}
-  </div>
-</header>
-
-<!-- F — フルスクリーンオーバーレイ（ナロー画面ナビ） -->
-<div
-  id="fullscreen-nav"
-  class="fullscreen-overlay"
-  class:open={isNavOpen}
-  role="dialog"
-  aria-modal="true"
-  aria-label="ナビゲーション"
->
-  <div class="fso-header">
-    <span class="site-name">
-      <span class="site-name-pccs">PCCS</span>
-      <span class="site-name-lens">Lens</span>
-    </span>
-    <button class="fso-close" onclick={closeNav} aria-label="メニューを閉じる">✕</button>
-  </div>
-  <nav class="fso-nav" aria-label="メインナビゲーション">
-    <!-- H — ドット + テキスト階層型 Narrow の中身 -->
-    <div class="h-n-drawer">
-      <p class="h-n-tree-sec">
-        <span class="h-dot" style="background:linear-gradient(135deg,#ff6b6b,#ffd93d)"></span>
-        ツール
-      </p>
+  <!-- ナロー画面用ドロップダウンナビ（A パターン：ヘッダー内展開） -->
+  {#if isNavOpen}
+    <nav id="dropdown-nav" class="dropdown-nav" aria-label="メインナビゲーション">
       {#each navItems as item (item.href)}
         <a
           href={item.href}
-          class="h-n-tree-link"
+          class="dropdown-link"
           class:active={page.url.pathname.includes(item.path)}
           style="--hc:#ff6b6b"
           onclick={closeNav}
         >
-          <span class="h-n-tree-dot" style="background:#ff6b6b"></span>
+          <span class="dropdown-dot" style="background:#ff6b6b"></span>
           {item.label}
         </a>
       {/each}
-    </div>
-  </nav>
-</div>
+    </nav>
+  {/if}
+
+  <!-- 色相ドリップバー -->
+  <div class="header-drip-bar" aria-hidden="true">
+    {#each ["#e03131", "#f76707", "#f59f00", "#94d82d", "#2f9e44", "#0c8599", "#1971c2", "#3b5bdb", "#6741d9", "#9c36b5", "#c2255c", "#e84393"] as c, i (c)}
+      <div class="hd-col" style="background:{c}">
+        <div class="hd-drip" style="--dh:{14 + (i % 3) * 10}px; --dl:{((i * 41) % 65) + 18}%">
+        </div>
+      </div>
+    {/each}
+  </div>
+</header>
 
 {@render children()}
 
@@ -344,6 +323,75 @@
     background: #4d96ff;
   }
 
+  .hamburger-btn.open .g1 {
+    width: 20px;
+    transform: translateY(7.5px) rotate(45deg);
+    transform-origin: center center;
+  }
+
+  .hamburger-btn.open .g2 {
+    opacity: 0;
+    width: 0;
+  }
+
+  .hamburger-btn.open .g3 {
+    width: 20px;
+    transform: translateY(-7.5px) rotate(-45deg);
+    transform-origin: center center;
+  }
+
+  /* ===== ナロー画面用ドロップダウンナビ ===== */
+  .dropdown-nav {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 0;
+    border-top: 1px solid light-dark(rgba(0, 0, 0, 0.07), rgba(255, 255, 255, 0.06));
+    animation: slide-down 0.2s ease;
+  }
+
+  @media (min-width: 640px) {
+    .dropdown-nav {
+      display: none;
+    }
+  }
+
+  @keyframes slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .dropdown-link {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.65rem 1.25rem;
+    font-size: 0.9rem;
+    color: light-dark(#555, #ccc);
+    text-decoration: none;
+    transition:
+      background 0.15s,
+      color 0.15s;
+  }
+
+  .dropdown-link:hover,
+  .dropdown-link.active {
+    background: color-mix(in srgb, var(--hc) 8%, transparent);
+    color: var(--hc);
+  }
+
+  .dropdown-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
   /* ===== 色相ドリップバー ===== */
   .header-drip-bar {
     display: flex;
@@ -367,109 +415,5 @@
     background: inherit;
     border-radius: 0 0 4px 4px;
     opacity: 1;
-  }
-
-  /* ===== F — フルスクリーンオーバーレイ ===== */
-  .fullscreen-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 200;
-    display: flex;
-    flex-direction: column;
-    background: light-dark(rgba(248, 248, 252, 0.98), rgba(8, 8, 16, 0.97));
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
-  }
-
-  .fullscreen-overlay.open {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .fso-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 1.25rem;
-    height: 56px;
-    border-bottom: 1px solid light-dark(rgba(0, 0, 0, 0.07), rgba(255, 255, 255, 0.07));
-    flex-shrink: 0;
-  }
-
-  .fso-close {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    border: 1px solid light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
-    background: light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.05));
-    color: light-dark(#666, #aaa);
-    cursor: pointer;
-    font-size: 1rem;
-    line-height: 1;
-    transition:
-      background 0.2s,
-      color 0.2s;
-  }
-
-  .fso-close:hover {
-    background: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.1));
-    color: light-dark(#111, #fff);
-  }
-
-  .fso-nav {
-    flex: 1;
-    padding: 1.25rem;
-    overflow-y: auto;
-  }
-
-  /* ===== H — ドット + テキスト階層型 Narrow の中身 ===== */
-  .h-n-drawer {
-    background: light-dark(#f8f8f8, #13132a);
-    border: 1px solid light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.08));
-    border-radius: 8px;
-    padding: 10px 10px 8px;
-  }
-
-  .h-n-tree-sec {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.62rem;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: light-dark(#aaa, #555);
-    margin: 8px 0 4px;
-  }
-
-  .h-n-tree-link {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    padding: 6px 8px;
-    color: light-dark(#555, #bbb);
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    transition:
-      color 0.15s,
-      background 0.15s;
-  }
-
-  .h-n-tree-link:hover,
-  .h-n-tree-link.active {
-    color: var(--hc);
-    background: color-mix(in srgb, var(--hc) 8%, transparent);
-  }
-
-  .h-n-tree-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    flex-shrink: 0;
   }
 </style>
