@@ -38,11 +38,26 @@
 
 <header class="site-header">
   <div class="header-inner">
-    <!-- 左：サイト名 -->
-    <a href={resolve("/")} class="site-name" aria-label="PCCS Lens トップへ">
-      <span class="site-name-pccs">PCCS</span>
-      <span class="site-name-lens">Lens</span>
-    </a>
+    <!-- 左：ハンバーガーボタン（ナロー専用）+ サイト名 -->
+    <div class="header-left">
+      <!-- G — スペクトラムバー ハンバーガーボタン -->
+      <button
+        class="hamburger-btn"
+        class:open={isNavOpen}
+        onclick={() => (isNavOpen = !isNavOpen)}
+        aria-label={isNavOpen ? "メニューを閉じる" : "メニューを開く"}
+        aria-expanded={isNavOpen}
+        aria-controls="dropdown-nav"
+      >
+        <span class="g-bar g1"></span>
+        <span class="g-bar g2"></span>
+        <span class="g-bar g3"></span>
+      </button>
+      <a href={resolve("/")} class="site-name" aria-label="PCCS Lens トップへ">
+        <span class="site-name-pccs">PCCS</span>
+        <span class="site-name-lens">Lens</span>
+      </a>
+    </div>
 
     <!-- 中央：ワイド画面用グローバルナビ（H — ドット + テキスト階層型） -->
     <nav class="wide-nav nav-h" aria-label="メインナビゲーション">
@@ -90,22 +105,9 @@
       </div>
     </nav>
 
-    <!-- 右：モード切り替えボタン + ハンバーガーボタン（ナロー専用） -->
+    <!-- 右：モード切り替えボタン -->
     <div class="header-right">
       <SwitchLightDark />
-      <!-- G — スペクトラムバー ハンバーガーボタン -->
-      <button
-        class="hamburger-btn"
-        class:open={isNavOpen}
-        onclick={() => (isNavOpen = !isNavOpen)}
-        aria-label={isNavOpen ? "メニューを閉じる" : "メニューを開く"}
-        aria-expanded={isNavOpen}
-        aria-controls="dropdown-nav"
-      >
-        <span class="g-bar g1"></span>
-        <span class="g-bar g2"></span>
-        <span class="g-bar g3"></span>
-      </button>
     </div>
   </div>
 
@@ -217,6 +219,14 @@
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
+  }
+
+  /* ===== ヘッダー左側 ===== */
+  .header-left {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-shrink: 0;
   }
 
   /* ===== サイト名 ===== */
@@ -343,9 +353,7 @@
     align-items: flex-start;
     justify-content: center;
     gap: 5px;
-    padding: 0 11px;
-    width: 44px;
-    height: 44px;
+    padding: 0;
     background: none;
     border: 0;
     cursor: pointer;
