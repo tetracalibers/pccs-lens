@@ -12,7 +12,6 @@
 
 <style>
   h1 {
-    counter-increment: section;
     font-size: 2.2rem;
     font-weight: 900;
     margin: 3.5rem 0 1.25rem;
@@ -21,7 +20,7 @@
     align-items: center;
     gap: 1rem;
     line-height: 1.2;
-    margin-inline-start: -20px;
+    margin-inline-start: -0.5rem;
   }
 
   h1 :global(svg) {
