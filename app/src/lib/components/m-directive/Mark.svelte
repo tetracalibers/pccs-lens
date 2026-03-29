@@ -12,5 +12,7 @@
   .mark {
     font-weight: 700;
     color: light-dark(#6b23a8, #e8c8ff);
+    display: inline-block;
+    padding-inline: 0.25rem;
   }
 </style>
