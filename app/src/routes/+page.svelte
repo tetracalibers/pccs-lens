@@ -15,8 +15,8 @@
       gradient: "linear-gradient(135deg, #ff6b6b, #ffd93d)",
       glow: "#ff6b6b",
       title: "色のPCCS近似",
-      desc: "入力した色のPCCS値と慣用色名を調べる",
-      tag: "近似"
+      desc: "入力した色に近いPCCS値と慣用色名を調べる",
+      tag: "調べる"
     },
     {
       href: resolve("/analyze"),
@@ -24,7 +24,7 @@
       glow: "#6bcb77",
       title: "配色の分析",
       desc: "PCCSの色相・トーンに基づいて配色を分析する",
-      tag: "分析"
+      tag: "調べる"
     },
     {
       href: resolve("/patterns"),
@@ -32,7 +32,7 @@
       glow: "#c77dff",
       title: "配色シミュレータ",
       desc: "イメージに合う色の組み合わせを実験する",
-      tag: "実験"
+      tag: "遊ぶ"
     }
   ]
 </script>
@@ -67,7 +67,7 @@
         <span class="h1-lens">Lens</span>
       </h1>
       <p class="tagline">色をPCCSというレンズを通して見る</p>
-      <p class="subtitle">トーンのしくみから、配色の理論を直感的に学ぼう</p>
+      <p class="subtitle">見て・触って学ぶ、色と配色のしくみ</p>
       <div class="hue-strip">
         {#each ["#e03131", "#f76707", "#f59f00", "#94d82d", "#2f9e44", "#0c8599", "#1971c2", "#3b5bdb", "#6741d9", "#9c36b5", "#c2255c", "#e84393"] as c (c)}
           <div class="hue-seg" style="background:{c}"></div>
@@ -95,7 +95,7 @@
             </div>
           </div>
           <div class="guide-body">
-            <span class="glass-tag">学習</span>
+            <span class="glass-tag">学ぶ</span>
             <h2>PCCSとは？</h2>
             <p>色相とトーンで体系化された、色のイメージを反映できる色の表し方。まずはここから。</p>
             <span class="neon-cta">学習を始める</span>
