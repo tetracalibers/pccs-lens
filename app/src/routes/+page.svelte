@@ -132,11 +132,6 @@
   .page {
     position: relative;
     overflow: hidden;
-    background: light-dark(#ffffff, #0c0c14);
-    color: light-dark(#1a1a1a, #f0f0f0);
-    transition:
-      background 0.4s,
-      color 0.4s;
   }
 
   /* Orbs */
