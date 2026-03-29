@@ -345,7 +345,7 @@
   .btn-download {
     background: var(--color-text, #111);
     border: 1.5px solid var(--color-text, #111);
-    color: #fff;
+    color: light-dark(#fff, #1a1a1a);
   }
 
   .btn-download:not(:disabled):hover {

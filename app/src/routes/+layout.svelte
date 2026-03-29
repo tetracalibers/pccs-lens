@@ -292,7 +292,7 @@
     font-weight: 800;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: light-dark(#aaa, #555);
+    color: light-dark(#aaa, #828282);
     transition: color 0.4s;
   }
 

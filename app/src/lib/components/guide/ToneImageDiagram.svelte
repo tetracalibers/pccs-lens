@@ -308,8 +308,7 @@
               text-anchor="middle"
               dominant-baseline="central"
               font-size="8"
-              fill="#555"
-              style="pointer-events: none; user-select: none;"
+              style="fill: light-dark(#555, #aaa); pointer-events: none; user-select: none;"
             >
               {hue}
             </text>
@@ -622,7 +621,7 @@
 
   .categories li {
     font-size: 0.75rem;
-    color: var(--color-text-muted, #777);
+    color: light-dark(#777, #aaa);
   }
 
   .categories li:not(:last-child)::after {

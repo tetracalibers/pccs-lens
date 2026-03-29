@@ -10,8 +10,10 @@
 
 <style>
   .term-card {
+    --color-border: light-dark(#ddd, #444);
+    --color-text: light-dark(#111, #f0f0f0);
     padding: 1.05rem;
-    border: 1px solid var(--color-border, #ddd);
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
     display: grid;
     gap: 0.75rem;
