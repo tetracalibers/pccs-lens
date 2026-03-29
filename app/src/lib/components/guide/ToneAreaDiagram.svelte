@@ -159,7 +159,7 @@
       y={H_LABEL_Y}
       text-anchor="middle"
       font-size="11"
-      fill="oklch(from #aaa calc(l * 0.65) c h)"
+      style="fill: light-dark(oklch(from #aaa calc(l * 0.65) c h), #aaa);"
     >
       彩度
     </text>
@@ -179,7 +179,7 @@
       y={(V_AXIS_Y1 + V_AXIS_Y2) / 2}
       text-anchor="middle"
       font-size="11"
-      fill="oklch(from #aaa calc(l * 0.75) c h)"
+      style="fill: light-dark(oklch(from #aaa calc(l * 0.75) c h), #aaa);"
     >
       明度
     </text>
@@ -189,10 +189,9 @@
       {@const highlighted = isHighlighted(cell)}
       {@const fillColor = getHighlightFill(cell)}
       {@const strokeColor = `oklch(from ${fillColor} calc(l * .85) c h)`}
-      {@const cellOpacity = highlighted ? 1 : 0.08}
       {@const labelFill = isLightColor(fillColor) ? "#333" : "#fff"}
 
-      <g opacity={cellOpacity}>
+      <g style="opacity: {highlighted ? 1 : 'var(--cell-opacity-muted)'};">
         {#if cell.shape === "circle"}
           <circle
             cx={cell.cx}
@@ -234,6 +233,14 @@
     display: flex;
     width: 100%;
     max-width: 320px;
+  }
+
+  :global(.light) .diagram-wrapper {
+    --cell-opacity-muted: 0.08;
+  }
+
+  :global(.dark) .diagram-wrapper {
+    --cell-opacity-muted: 0.2;
   }
 
   svg {

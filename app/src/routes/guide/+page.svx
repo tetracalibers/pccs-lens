@@ -8,7 +8,7 @@ title: PCCSとは？
   import ToneAreaDiagram from "$lib/components/guide/ToneAreaDiagram.svelte"
 </script>
 
-## PCCSとは？
+## トーンと色のイメージ
 
 PCCSは、色のイメージや配色を考えるときに便利な色の表し方です。
 PCCSでは、1つの色を:Mark[色相]と:Mark[トーン]によって表します。

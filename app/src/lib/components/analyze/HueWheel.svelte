@@ -156,7 +156,7 @@
     />
   {/each}
 
-  <circle cx={CX} cy={CY} r={R_INNER + 1} fill="white" />
+  <circle cx={CX} cy={CY} r={R_INNER + 1} style="fill: light-dark(white, #0c0c14);" />
 
   <!-- Labels (even hues + highlighted hues) -->
   {#each Array.from({ length: 24 }, (_, i) => i + 1) as h (h)}
@@ -171,7 +171,7 @@
         font-family="var(--font-mono)"
         font-size={isHighlighted ? 14 : 12}
         font-weight={isHighlighted ? "bold" : "normal"}
-        fill={isHighlighted ? HUE_COLORS[h] : "#444"}
+        style="fill: {isHighlighted ? HUE_COLORS[h] : 'light-dark(#444, #bbb)'};"
         opacity={hasHighlights && !isHighlighted ? 0.45 : 1}
       >
         {h}:{HUE_NAMES[h]}

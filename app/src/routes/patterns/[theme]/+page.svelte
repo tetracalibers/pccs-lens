@@ -198,7 +198,11 @@
   main {
     max-width: 720px;
     margin: 0 auto;
-    padding: 1.5rem 1rem 3rem;
+    --color-surface: light-dark(#ffffff, #16161f);
+    --color-border: light-dark(#e0e0e0, #2e2e3e);
+    --color-text: light-dark(#1a1a1a, #f0f0f0);
+    --color-text-secondary: light-dark(#555555, #999999);
+    --color-muted: light-dark(#eeeeee, #252535);
   }
 
   .breadcrumb {
@@ -331,9 +335,9 @@
 
   .pickers-hint {
     font-size: 0.78rem;
-    color: oklch(from #f9f9f9 calc(l * 0.6) c h);
+    color: light-dark(oklch(from #f9f9f9 calc(l * 0.6) c h), #999);
     margin: 0.5rem 0 1.5rem;
-    background-color: #f9f9f9;
+    background-color: light-dark(#f9f9f9, #1e1e2e);
     padding: 0.5rem 0.75rem;
     border-radius: 4px;
   }

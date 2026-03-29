@@ -10,7 +10,25 @@
 
 <style>
   h3 {
-    font-size: 1.05rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: light-dark(#1a1a1a, #eeeef8);
+    display: flex;
+    align-items: flex-start;
+    gap: calc(0.55rem + 3px);
+    line-height: 1.3;
     margin: 1.6rem 0 0.45rem;
+  }
+
+  h3::before {
+    content: "";
+    display: inline-block;
+    flex-shrink: 0;
+    width: 7px;
+    height: 7px;
+    margin-top: calc(0.65em - 3.5px);
+    margin-left: 1.5px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff6b6b, #c77dff);
   }
 </style>

@@ -230,7 +230,7 @@
       y={H_LABEL_Y}
       text-anchor="middle"
       font-size="14"
-      fill="oklch(from #aaa calc(l * 0.75) c h)"
+      style="fill: light-dark(oklch(from #aaa calc(l * 0.75) c h), #aaa);"
     >
       彩度
     </text>
@@ -250,7 +250,7 @@
       y={(V_AXIS_Y1 + V_AXIS_Y2) / 2}
       text-anchor="middle"
       font-size="14"
-      fill="oklch(from #aaa calc(l * 0.75) c h)"
+      style="fill: light-dark(oklch(from #aaa calc(l * 0.75) c h), #aaa);"
     >
       明度
     </text>
@@ -308,8 +308,7 @@
               text-anchor="middle"
               dominant-baseline="central"
               font-size="8"
-              fill="#555"
-              style="pointer-events: none; user-select: none;"
+              style="fill: light-dark(#555, #aaa); pointer-events: none; user-select: none;"
             >
               {hue}
             </text>
@@ -515,8 +514,8 @@
     width: min(200px, 90vw);
     max-height: 80svh;
     overflow-y: auto;
-    background: var(--color-surface, #fff);
-    color: var(--color-text, #111);
+    background: light-dark(#ffffff, #1c1c2e);
+    color: light-dark(#111111, #f0f0f0);
     border: none;
     border-radius: 6px;
     padding: 1.5rem;
@@ -606,8 +605,8 @@
   }
 
   .feeling-tag--plain {
-    background: var(--color-muted, #eee);
-    color: var(--color-text, #333);
+    background: light-dark(#eeeeee, #252535);
+    color: light-dark(#333333, #f0f0f0);
   }
 
   /* ---- カテゴリ ---- */
@@ -622,7 +621,7 @@
 
   .categories li {
     font-size: 0.75rem;
-    color: var(--color-text-muted, #777);
+    color: light-dark(#777, #aaa);
   }
 
   .categories li:not(:last-child)::after {

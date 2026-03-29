@@ -4,21 +4,15 @@
   let { children }: { children?: Snippet } = $props()
 </script>
 
-<span class="mark -brackets">
+<span class="mark">
   {@render children?.()}
 </span>
 
 <style>
-  .mark.-brackets {
-    line-height: 1;
-    font-weight: 600;
-  }
-
-  .mark.-brackets::before {
-    content: "「";
-  }
-
-  .mark.-brackets::after {
-    content: "」";
+  .mark {
+    font-weight: 700;
+    color: light-dark(#6b23a8, #e8c8ff);
+    display: inline-block;
+    padding-inline: 0.25rem;
   }
 </style>

@@ -1,9 +1,9 @@
 <script lang="ts">
-  import ColorEntryItem from "$lib/components/ColorEntryItem.svelte"
-  import ColorSchemePreview from "$lib/components/ColorSchemePreview.svelte"
-  import HueWheel from "$lib/components/HueWheel.svelte"
-  import ToneDiagram from "$lib/components/ToneDiagram.svelte"
-  import ColorAnalysisResults from "$lib/components/ColorAnalysisResults.svelte"
+  import ColorEntryItem from "$lib/components/analyze/ColorEntryItem.svelte"
+  import ColorSchemePreview from "$lib/components/analyze/ColorSchemePreview.svelte"
+  import HueWheel from "$lib/components/analyze/HueWheel.svelte"
+  import ToneDiagram from "$lib/components/analyze/ToneDiagram.svelte"
+  import ColorAnalysisResults from "$lib/components/analyze/ColorAnalysisResults.svelte"
   import { findClosestPccs } from "$lib/color/approximate"
   import chroma from "chroma-js"
   import { PCCS_CARD_199 } from "$lib/data/pccs"
@@ -120,7 +120,11 @@
   main {
     max-width: 800px;
     margin: 0 auto;
-    padding: 1.5rem 1rem 3rem;
+    --color-surface: light-dark(#ffffff, #16161f);
+    --color-border: light-dark(#e0e0e0, #2e2e3e);
+    --color-text: light-dark(#1a1a1a, #f0f0f0);
+    --color-text-secondary: light-dark(#555555, #999999);
+    --color-muted: light-dark(#eeeeee, #252535);
   }
 
   h1 {

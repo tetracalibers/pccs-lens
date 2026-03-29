@@ -36,13 +36,15 @@ app/
 │   │   │   ├── analyze.spec.ts
 │   │   │   └── utils.ts            色計算ユーティリティ
 │   │   ├── components/             共通UIコンポーネント
-│   │   │   ├── ColorAnalysisResults.svelte  配色分析結果表示
-│   │   │   ├── ColorEntryItem.svelte        色エントリーアイテム
 │   │   │   ├── ColorPicker.svelte           カラーピッカー＋HEX入力欄
-│   │   │   ├── ColorSchemePreview.svelte    配色プレビュー
 │   │   │   ├── CopyButton.svelte            コピーボタン
-│   │   │   ├── HueWheel.svelte              PCCS色相環（SVG・read-only）
-│   │   │   ├── ToneDiagram.svelte           PCCSトーン概念図（SVG・read-only）
+│   │   │   ├── SwitchLightDark.svelte       ライト／ダーク切り替えボタン
+│   │   │   ├── analyze/                     配色分析ページ専用コンポーネント
+│   │   │   │   ├── ColorAnalysisResults.svelte  配色分析結果表示
+│   │   │   │   ├── ColorEntryItem.svelte        色エントリーアイテム
+│   │   │   │   ├── ColorSchemePreview.svelte    配色プレビュー
+│   │   │   │   ├── HueWheel.svelte              PCCS色相環（SVG・read-only）
+│   │   │   │   └── ToneDiagram.svelte           PCCSトーン概念図（SVG・read-only）
 │   │   │   ├── guide/                       ガイドページ専用コンポーネント
 │   │   │   │   ├── ToneAreaDiagram.svelte
 │   │   │   │   └── ToneImageDiagram.svelte
@@ -53,8 +55,10 @@ app/
 │   │   │   │   ├── TermCard.svelte
 │   │   │   │   └── Tips.svelte
 │   │   │   ├── m-html/                      MarkdownのHTML要素置き換え用コンポーネント
+│   │   │   │   ├── Heading1.svelte
 │   │   │   │   ├── Heading2.svelte
 │   │   │   │   ├── Heading3.svelte
+│   │   │   │   ├── Heading4.svelte
 │   │   │   │   └── Ulist.svelte
 │   │   │   └── patterns/                    配色パターンページ専用コンポーネント
 │   │   │       ├── GeoPatternSection.svelte

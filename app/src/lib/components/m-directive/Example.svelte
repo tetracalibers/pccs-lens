@@ -10,20 +10,25 @@
 
 <style>
   .example {
-    margin: 1.05rem 0;
-    padding: 0.55rem 0.8rem;
-    border-radius: 4px;
-    width: 100%;
-    box-sizing: border-box;
-    font-size: 0.9rem;
+    margin: 1.5rem 0;
+    padding: 0.2rem 0 0.2rem 1rem;
+    border-left: 2px solid transparent;
+    border-image: linear-gradient(180deg, #4d96ff, #6bcb77) 1;
+    font-size: 0.88rem;
     line-height: 1.7;
-    border: 1px dashed lightblue;
+    position: relative;
   }
 
   .example::before {
-    content: "Example: ";
-    color: oklch(from lightblue calc(l * 0.75) c h);
-    font-weight: 600;
+    content: "Example";
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: light-dark(#0050c8, #4d96ff);
+    margin-bottom: 0.25rem;
+    opacity: 0.85;
   }
 
   .example :global(p) {
@@ -31,6 +36,6 @@
     margin: 0;
     font-size: inherit;
     line-height: inherit;
-    color: var(--color-text, #111);
+    color: light-dark(#556070, #9090b0);
   }
 </style>

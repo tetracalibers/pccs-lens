@@ -6,7 +6,8 @@
       "Bash(npx prettier:*)",
       "Bash(node:*)",
       "Bash(ls:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(npx eslint:*)"
     ]
   }
 }
