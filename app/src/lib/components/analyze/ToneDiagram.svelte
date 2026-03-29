@@ -142,7 +142,11 @@
       {@const isUsed = cell.usedColors.length > 0}
       {@const isSCell = cell.key === "s"}
       {@const showHatch = isSCell && isCard199 && !isUsed}
-      {@const fillColor = isUsed ? cell.usedColors[0].hex : showHatch ? "url(#hatch)" : "var(--cell-empty-fill)"}
+      {@const fillColor = isUsed
+        ? cell.usedColors[0].hex
+        : showHatch
+          ? "url(#hatch)"
+          : "var(--cell-empty-fill)"}
       {@const strokeColor = isUsed
         ? `oklch(from ${cell.usedColors[0].hex} calc(l * .85) c h)`
         : "var(--cell-empty-stroke)"}
