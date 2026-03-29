@@ -65,6 +65,10 @@
   main {
     max-width: 720px;
     margin: 0 auto;
+    --color-surface: light-dark(#ffffff, #16161f);
+    --color-border: light-dark(#e0e0e0, #2e2e3e);
+    --color-text: light-dark(#1a1a1a, #f0f0f0);
+    --color-text-secondary: light-dark(#555555, #999999);
   }
 
   .header {

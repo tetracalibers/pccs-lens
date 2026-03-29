@@ -337,7 +337,7 @@
           >
             <div
               xmlns="http://www.w3.org/1999/xhtml"
-              style="width: {iconSize}px; height: {iconSize}px; display: flex; align-items: center; justify-content: center; background-color: rgba(255,255,255,0.75); border-radius: 50%; color: {getCellStrokeColor(
+              style="width: {iconSize}px; height: {iconSize}px; display: flex; align-items: center; justify-content: center; background-color: light-dark(rgba(255,255,255,0.75), rgba(30,30,50,0.75)); border-radius: 50%; color: {getCellStrokeColor(
                 cell
               )};"
             >
@@ -470,8 +470,8 @@
     translate: 0 -50%;
 
     padding: 4px;
-    background: white;
-    border: 1px solid #ccc;
+    background: light-dark(white, #1c1c2e);
+    border: 1px solid light-dark(#ccc, #3a3a4e);
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
   }
@@ -483,7 +483,7 @@
   }
 
   .subtone-item {
-    border: 1px solid #ddd;
+    border: 1px solid light-dark(#ddd, #3a3a4e);
     border-radius: 3px;
     cursor: pointer;
     font-family: var(--font-mono);
@@ -496,8 +496,8 @@
   }
 
   .subtone-item.selected {
-    border: 2px solid #333;
-    outline: 1.5px dashed #333;
+    border: 2px solid light-dark(#333, #ccc);
+    outline: 1.5px dashed light-dark(#333, #ccc);
     outline-offset: 2px;
   }
 

@@ -229,8 +229,8 @@
 
   .tooltip {
     position: absolute;
-    background: var(--color-text, #111);
-    color: #fff;
+    background: light-dark(#1c1c2e, #dde0f0);
+    color: light-dark(#f0f0f0, #1c1c2e);
     border-radius: 6px;
     padding: 4px 8px;
     font-size: 0.75rem;
@@ -251,7 +251,9 @@
     transform: translateX(-50%);
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
-    border-top: 6px solid var(--color-text, #111);
+    border-top-width: 6px;
+    border-top-style: solid;
+    border-top-color: light-dark(#1c1c2e, #dde0f0);
   }
 
   .tooltip-row {

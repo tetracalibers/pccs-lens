@@ -223,6 +223,10 @@
 <style>
   .geo-patterns {
     margin-bottom: 2rem;
+    --color-surface: light-dark(#f5f5f5, #1c1c2e);
+    --color-border: light-dark(#e0e0e0, #2e2e3e);
+    --color-text: light-dark(#1a1a1a, #f0f0f0);
+    --color-text-secondary: light-dark(#555555, #999999);
   }
 
   h2 {

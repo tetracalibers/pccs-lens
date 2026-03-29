@@ -72,7 +72,7 @@
     height: 100px;
     border-radius: 8px;
     overflow: hidden;
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    border: 1px solid light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.1));
   }
 
   .swatch {

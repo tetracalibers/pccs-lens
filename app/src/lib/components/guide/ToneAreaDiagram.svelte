@@ -159,7 +159,7 @@
       y={H_LABEL_Y}
       text-anchor="middle"
       font-size="11"
-      fill="oklch(from #aaa calc(l * 0.65) c h)"
+      style="fill: light-dark(oklch(from #aaa calc(l * 0.65) c h), #aaa);"
     >
       彩度
     </text>
@@ -179,7 +179,7 @@
       y={(V_AXIS_Y1 + V_AXIS_Y2) / 2}
       text-anchor="middle"
       font-size="11"
-      fill="oklch(from #aaa calc(l * 0.75) c h)"
+      style="fill: light-dark(oklch(from #aaa calc(l * 0.75) c h), #aaa);"
     >
       明度
     </text>

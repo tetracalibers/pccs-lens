@@ -185,7 +185,12 @@
   {/each}
 
   <!-- 中心の白い円 -->
-  <circle cx={CX} cy={CY} r={R_INNER + 1} fill="white" style="pointer-events: none;" />
+  <circle
+    cx={CX}
+    cy={CY}
+    r={R_INNER + 1}
+    style="fill: light-dark(white, #0c0c14); pointer-events: none;"
+  />
 
   <!-- 色相番号ラベル（全24色相） -->
   {#each HUES as h (h)}
@@ -217,14 +222,15 @@
       cy={pos.y.toFixed(3)}
       r={SWATCH_R}
       fill={swatchColor}
-      stroke={selected ? "#333" : "rgba(0,0,0,0.15)"}
+      style="cursor: pointer; outline: none; stroke: {selected
+        ? 'light-dark(#333, #fff)'
+        : 'light-dark(rgba(0,0,0,0.15), rgba(255,255,255,0.25))'};"
       stroke-width={selected ? 2.5 : 1}
       opacity={getSwatchOpacity(h)}
       role="button"
       aria-label="色相{h}を選択"
       aria-pressed={selected}
       tabindex="0"
-      style="cursor: pointer; outline: none;"
       onclick={() => onselect(h)}
       onkeydown={(e) => e.key === "Enter" && onselect(h)}
       onfocus={() => (focusedHue = h)}
