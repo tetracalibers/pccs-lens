@@ -221,8 +221,8 @@
     min-height: 56px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+    justify-content: flex-start;
+    gap: 4rem;
   }
 
   /* ===== ヘッダー左側 ===== */
@@ -262,7 +262,6 @@
   /* ===== ワイド画面用ナビ（H — ドット + テキスト階層型） ===== */
   .wide-nav {
     display: none;
-    flex: 1;
     justify-content: center;
   }
 
@@ -339,6 +338,7 @@
     align-items: center;
     gap: 0.5rem;
     flex-shrink: 0;
+    margin-inline-start: auto;
   }
 
   /* ===== G — スペクトラムバー ハンバーガーボタン ===== */
