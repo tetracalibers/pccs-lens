@@ -1,10 +1,12 @@
 <script lang="ts">
+  import Icon from "@iconify/svelte"
   import type { Snippet } from "svelte"
 
   let { children }: { children?: Snippet } = $props()
 </script>
 
 <h1>
+  <Icon icon="solar:pen-new-round-broken" />
   {@render children?.()}
 </h1>
 
@@ -16,19 +18,16 @@
     margin: 3.5rem 0 1.25rem;
     color: light-dark(#1a1a1a, #dde8f0);
     display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
+    align-items: center;
+    gap: 1rem;
     line-height: 1.2;
+    margin-inline-start: -20px;
   }
 
-  h1::before {
-    content: counter(section, decimal-leading-zero);
-    font-size: 3.5rem;
-    font-weight: 900;
-    line-height: 1;
+  h1 :global(svg) {
     color: light-dark(#7c3aed, #c4b5fd);
     flex-shrink: 0;
-    margin-right: 0.1em;
+    font-size: 3rem;
   }
 
   h1:first-of-type {
