@@ -20,6 +20,7 @@
   <section class="pattern">
     <p class="pattern-label">A — 琥珀ネオン枠（現行案）</p>
     <div class="tips -a">トーンをクリックしてイメージを確認してみよう</div>
+    <div class="example -a">同じ枠スタイルをそのまま Example にも適用した場合の見た目</div>
     <p class="pattern-note">
       琥珀色の薄枠と背景で囲み、
       <code>::before</code>
@@ -31,6 +32,7 @@
   <section class="pattern">
     <p class="pattern-label">B — 左アクセントライン</p>
     <div class="tips -b">トーンをクリックしてイメージを確認してみよう</div>
+    <div class="example -b">同じ左ラインスタイルをそのまま Example にも適用した場合の見た目</div>
     <p class="pattern-note">
       左に2pxの琥珀グラデーションライン。枠で囲まず、余白と線だけで区切る。テキスト主体のページに溶け込みやすい
     </p>
@@ -40,6 +42,9 @@
   <section class="pattern">
     <p class="pattern-label">C — グラスモーフィズムカード</p>
     <div class="tips -c">トーンをクリックしてイメージを確認してみよう</div>
+    <div class="example -c">
+      同じグラスカードスタイルをそのまま Example にも適用した場合の見た目
+    </div>
     <p class="pattern-note">
       backdrop-blurとガラス感のある背景でカード化。ラベルはカード上部に独立した行として表示
     </p>
@@ -49,6 +54,9 @@
   <section class="pattern">
     <p class="pattern-label">D — レインボー上線</p>
     <div class="tips -d">トーンをクリックしてイメージを確認してみよう</div>
+    <div class="example -d">
+      同じレインボー上線スタイルをそのまま Example にも適用した場合の見た目
+    </div>
     <p class="pattern-note">
       上辺にレインボーグラデーションラインを引き、ブランドカラーを添える。背景は極めて薄く、本文に近い軽さを保つ
     </p>
@@ -58,6 +66,7 @@
   <section class="pattern">
     <p class="pattern-label">E — ラベルタグ付きドット枠</p>
     <div class="tips -e">トーンをクリックしてイメージを確認してみよう</div>
+    <div class="example -e">同じドット枠スタイルをそのまま Example にも適用した場合の見た目</div>
     <p class="pattern-note">
       点線の枠に角を重ねるようにラベルタグを配置。コード・端末を想起させるテクノロジー感のある表現
     </p>
@@ -67,6 +76,7 @@
   <section class="pattern">
     <p class="pattern-label">F — チップ型インラインラベル</p>
     <div class="tips -f">トーンをクリックしてイメージを確認してみよう</div>
+    <div class="example -f">同じチップ型スタイルをそのまま Example にも適用した場合の見た目</div>
     <p class="pattern-note">
       「Tips」をバッジ風のチップとして文頭に埋め込む。枠線なし、行ベースの読みやすいレイアウト
     </p>
@@ -76,6 +86,9 @@
   <section class="pattern">
     <p class="pattern-label">G — ネオングロー背景</p>
     <div class="tips -g">トーンをクリックしてイメージを確認してみよう</div>
+    <div class="example -g">
+      同じネオングロースタイルをそのまま Example にも適用した場合の見た目
+    </div>
     <p class="pattern-note">
       内側に青紫のグロー（box-shadow
       inset）を仕込んだ囲み。ネオン感が強く、インタラクティブな要素への誘導に向く
@@ -86,6 +99,9 @@
   <section class="pattern">
     <p class="pattern-label">H — 角括弧コーナー装飾</p>
     <div class="tips -h">トーンをクリックしてイメージを確認してみよう</div>
+    <div class="example -h">
+      同じコーナー装飾スタイルをそのまま Example にも適用した場合の見た目
+    </div>
     <p class="pattern-note">
       四隅にL字のコーナーラインを擬似要素で描く。枠線なしで浮遊感を演出し、コードエディタ的な世界観を表現
     </p>
@@ -478,6 +494,314 @@
       linear-gradient(rgba(47, 158, 68, 0.35), rgba(47, 158, 68, 0.35)) bottom right / 12px 1px
         no-repeat,
       linear-gradient(rgba(47, 158, 68, 0.35), rgba(47, 158, 68, 0.35)) bottom right / 1px 12px
+        no-repeat;
+  }
+
+  /* ===== 共通 Example テキスト ===== */
+  .example {
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: #9898b8;
+    margin-top: 0.75rem;
+  }
+
+  main.light .example {
+    color: #556070;
+  }
+
+  /* =====================
+     A: 琥珀ネオン枠（現行案）— Example
+  ===================== */
+  .example.-a {
+    padding: 0.6rem 0.85rem;
+    border: 1px solid rgba(77, 150, 255, 0.25);
+    background: rgba(77, 150, 255, 0.04);
+    border-radius: 4px;
+    backdrop-filter: blur(4px);
+  }
+
+  .example.-a::before {
+    content: "Example: ";
+    color: #4d96ff;
+    font-weight: 700;
+    opacity: 0.85;
+  }
+
+  main.light .example.-a {
+    border-color: rgba(0, 80, 200, 0.3);
+    background: rgba(77, 150, 255, 0.06);
+    color: #556070;
+  }
+
+  main.light .example.-a::before {
+    color: #0050c8;
+  }
+
+  /* =====================
+     B: 左アクセントライン — Example
+  ===================== */
+  .example.-b {
+    padding: 0.2rem 0 0.2rem 1rem;
+    border-left: 2px solid transparent;
+    border-image: linear-gradient(180deg, #4d96ff, #6bcb77) 1;
+    position: relative;
+  }
+
+  .example.-b::before {
+    content: "Example";
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #4d96ff;
+    margin-bottom: 0.25rem;
+    opacity: 0.85;
+  }
+
+  main.light .example.-b {
+    color: #556070;
+  }
+
+  main.light .example.-b::before {
+    color: #0050c8;
+  }
+
+  /* =====================
+     C: グラスモーフィズムカード — Example
+  ===================== */
+  .example.-c {
+    padding: 0.85rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+  }
+
+  .example.-c::before {
+    content: "Example";
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #4d96ff;
+    margin-bottom: 0.45rem;
+    opacity: 0.7;
+  }
+
+  main.light .example.-c {
+    border-color: rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: none;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+    color: #556070;
+  }
+
+  main.light .example.-c::before {
+    color: #0050c8;
+  }
+
+  /* =====================
+     D: レインボー上線 — Example
+  ===================== */
+  .example.-d {
+    padding: 0.7rem 0.9rem 0.6rem;
+    border-top: 2px solid transparent;
+    background:
+      linear-gradient(#0c0c14, #0c0c14) padding-box,
+      linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #c77dff) border-box;
+    border-radius: 0 0 4px 4px;
+  }
+
+  .example.-d::before {
+    content: "Example";
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #4d96ff, #6bcb77);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.3rem;
+  }
+
+  main.light .example.-d {
+    background:
+      linear-gradient(#ffffff, #ffffff) padding-box,
+      linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #c77dff) border-box;
+    color: #556070;
+  }
+
+  /* =====================
+     E: ラベルタグ付きドット枠 — Example
+  ===================== */
+  .example.-e {
+    padding: 0.9rem 0.9rem 0.65rem;
+    border: 1px dashed rgba(77, 150, 255, 0.3);
+    border-radius: 4px;
+    position: relative;
+    margin-top: 1.35rem;
+  }
+
+  .example.-e::before {
+    content: "Example";
+    position: absolute;
+    top: -0.65rem;
+    left: 0.75rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #4d96ff;
+    background: #0c0c14;
+    padding: 0 0.4rem;
+  }
+
+  main.light .example.-e {
+    border-color: rgba(0, 80, 200, 0.3);
+    color: #556070;
+  }
+
+  main.light .example.-e::before {
+    color: #0050c8;
+    background: #ffffff;
+  }
+
+  /* =====================
+     F: チップ型インラインラベル — Example
+  ===================== */
+  .example.-f {
+    padding: 0.3rem 0;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+
+  .example.-f::before {
+    content: "Example";
+    flex-shrink: 0;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #0c0c14;
+    background: #4d96ff;
+    border-radius: 3px;
+    padding: 2px 6px;
+    line-height: 1.4;
+    opacity: 0.9;
+  }
+
+  main.light .example.-f {
+    color: #556070;
+  }
+
+  main.light .example.-f::before {
+    color: #ffffff;
+    background: #0050c8;
+  }
+
+  /* =====================
+     G: ネオングロー背景 — Example
+  ===================== */
+  .example.-g {
+    padding: 0.7rem 0.9rem;
+    border: 1px solid rgba(77, 150, 255, 0.2);
+    border-radius: 6px;
+    background: rgba(77, 150, 255, 0.04);
+    box-shadow: inset 0 0 20px rgba(77, 150, 255, 0.06);
+  }
+
+  .example.-g::before {
+    content: "Example";
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #4d96ff;
+    margin-bottom: 0.35rem;
+    text-shadow: 0 0 8px rgba(77, 150, 255, 0.6);
+  }
+
+  main.light .example.-g {
+    border-color: rgba(0, 80, 200, 0.2);
+    background: rgba(0, 80, 200, 0.04);
+    box-shadow: none;
+    color: #556070;
+  }
+
+  main.light .example.-g::before {
+    color: #0050c8;
+    text-shadow: none;
+  }
+
+  /* =====================
+     H: 角括弧コーナー装飾 — Example
+  ===================== */
+  .example.-h {
+    padding: 0.75rem 0.9rem;
+    position: relative;
+  }
+
+  .example.-h::before {
+    content: "Example";
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #4d96ff;
+    margin-bottom: 0.35rem;
+  }
+
+  /* 左上・右上コーナー */
+  .example.-h::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      /* 左上横 */
+      linear-gradient(#4d96ff, #4d96ff) top left / 12px 1px no-repeat,
+      /* 左上縦 */ linear-gradient(#4d96ff, #4d96ff) top left / 1px 12px no-repeat,
+      /* 右上横 */ linear-gradient(#4d96ff, #4d96ff) top right / 12px 1px no-repeat,
+      /* 右上縦 */ linear-gradient(#4d96ff, #4d96ff) top right / 1px 12px no-repeat,
+      /* 左下横 */ linear-gradient(rgba(77, 150, 255, 0.35), rgba(77, 150, 255, 0.35)) bottom left /
+        12px 1px no-repeat,
+      /* 左下縦 */ linear-gradient(rgba(77, 150, 255, 0.35), rgba(77, 150, 255, 0.35)) bottom left /
+        1px 12px no-repeat,
+      /* 右下横 */ linear-gradient(rgba(77, 150, 255, 0.35), rgba(77, 150, 255, 0.35)) bottom
+        right / 12px 1px no-repeat,
+      /* 右下縦 */ linear-gradient(rgba(77, 150, 255, 0.35), rgba(77, 150, 255, 0.35)) bottom
+        right / 1px 12px no-repeat;
+    opacity: 0.85;
+  }
+
+  main.light .example.-h {
+    color: #556070;
+  }
+
+  main.light .example.-h::before {
+    color: #0050c8;
+  }
+
+  main.light .example.-h::after {
+    background:
+      linear-gradient(#0050c8, #0050c8) top left / 12px 1px no-repeat,
+      linear-gradient(#0050c8, #0050c8) top left / 1px 12px no-repeat,
+      linear-gradient(#0050c8, #0050c8) top right / 12px 1px no-repeat,
+      linear-gradient(#0050c8, #0050c8) top right / 1px 12px no-repeat,
+      linear-gradient(rgba(0, 80, 200, 0.35), rgba(0, 80, 200, 0.35)) bottom left / 12px 1px
+        no-repeat,
+      linear-gradient(rgba(0, 80, 200, 0.35), rgba(0, 80, 200, 0.35)) bottom left / 1px 12px
+        no-repeat,
+      linear-gradient(rgba(0, 80, 200, 0.35), rgba(0, 80, 200, 0.35)) bottom right / 12px 1px
+        no-repeat,
+      linear-gradient(rgba(0, 80, 200, 0.35), rgba(0, 80, 200, 0.35)) bottom right / 1px 12px
         no-repeat;
   }
 </style>
