@@ -201,7 +201,7 @@
     top: 0;
     z-index: 100;
     backdrop-filter: blur(14px);
-    background: light-dark(rgba(255, 255, 255, 0.92), rgba(12, 12, 20, 0.92));
+    background: light-dark(rgba(255, 255, 255, 0.85), rgba(12, 12, 20, 0.85));
     border-bottom: 1px solid light-dark(rgba(0, 0, 0, 0.07), rgba(255, 255, 255, 0.06));
     transition:
       background 0.4s,
