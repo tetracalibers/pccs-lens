@@ -25,6 +25,7 @@
 </svelte:head>
 
 <main>
+  <h1>{title}</h1>
   {@render children()}
 </main>
 
@@ -53,5 +54,10 @@
 
   main :global(blockquote p) {
     margin: 0;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    margin: 0 0 1.5rem;
   }
 </style>
