@@ -2,6 +2,8 @@
   import { lookupPCCSColor, GRAY_SUB_TONES } from "$lib/patterns/lookup"
   import type { PCCSColor } from "$lib/data/types"
   import Icon from "@iconify/svelte"
+  import chroma from "chroma-js"
+  import { isLightColor } from "$lib/color/utils"
 
   let {
     value,
@@ -160,13 +162,8 @@
     return `oklch(from ${getFillColor(cell)} calc(l * .85) c h)`
   }
 
-  function getCellStrokeStyle(cell: ToneCell): string {
-    return `stroke: ${getCellStrokeColor(cell)};`
-  }
-
-  function getSelectedRingStrokeStyle(cell: ToneCell): string {
-    const fill = getFillColor(cell)
-    return `pointer-events: none; stroke: oklch(from ${fill} calc(l - .10) c calc(h - 10));`
+  function getSelectedRingStrokeColor(cell: ToneCell): string {
+    return `oklch(from ${getFillColor(cell)} calc(l + .10) c calc(h - 10))`
   }
 
   function getStrokeWidth(cell: ToneCell): number {
@@ -174,11 +171,9 @@
   }
 
   function labelFillFromHex(hex: string): string {
-    const r = parseInt(hex.slice(1, 3), 16)
-    const g = parseInt(hex.slice(3, 5), 16)
-    const b = parseInt(hex.slice(5, 7), 16)
-    const brightness = (0.299 * r + 0.587 * g + 0.114 * b) / 255
-    return brightness > 0.5 ? "#444" : "#ccc"
+    return chroma(hex).luminance() > 0.55
+      ? `color-mix(in srgb, black 70%, ${hex})`
+      : `color-mix(in srgb, white 60%, ${hex})`
   }
 
   function getLabelFill(cell: ToneCell): string {
@@ -217,7 +212,6 @@
       {@const isGrayBucket = GRAY_BUCKET_KEYS.has(cell.key)}
       <g
         bind:this={triggerEls[cell.key]}
-        {opacity}
         role="button"
         aria-label={cell.label}
         aria-pressed={isGrayBucket ? undefined : selected}
@@ -252,9 +246,14 @@
             cx={cell.cx}
             cy={cell.cy}
             r={CIRCLE_R}
-            fill={getFillColor(cell)}
+            fill={suggested
+              ? getFillColor(cell)
+              : `color-mix(in srgb, rgb(from ${getFillColor(cell)} r g b / ${opacity * 100}%), color-mix(in srgb, ${getFillColor(cell)} var(--mix-ratio), #fff))`}
+            fill-opacity={`calc(${opacity} + var(--fill-opacity-add))`}
             stroke-width={getStrokeWidth(cell)}
-            style={getCellStrokeStyle(cell)}
+            stroke={suggested
+              ? getCellStrokeColor(cell)
+              : `color-mix(in srgb, rgb(from ${getCellStrokeColor(cell)} r g b / ${opacity * 100}%), color-mix(in srgb, ${getCellStrokeColor(cell)} var(--mix-ratio), #fff))`}
           />
         {:else}
           <rect
@@ -263,9 +262,13 @@
             width={RECT_W}
             height={RECT_H}
             rx="3"
-            fill={getFillColor(cell)}
+            fill={suggested
+              ? getFillColor(cell)
+              : `color-mix(in srgb, rgb(from ${getFillColor(cell)} r g b / ${opacity * 100}%), color-mix(in srgb, ${getFillColor(cell)} var(--mix-ratio), #fff))`}
             stroke-width={getStrokeWidth(cell)}
-            style={getCellStrokeStyle(cell)}
+            stroke={suggested
+              ? getCellStrokeColor(cell)
+              : `color-mix(in srgb, rgb(from ${getCellStrokeColor(cell)} r g b / ${opacity * 100}%), color-mix(in srgb, ${getCellStrokeColor(cell)} var(--mix-ratio), #fff))`}
           />
         {/if}
 
@@ -279,7 +282,9 @@
               fill="none"
               stroke-width="1.5"
               stroke-dasharray="3 2"
-              style={getSelectedRingStrokeStyle(cell)}
+              stroke={getSelectedRingStrokeColor(cell)}
+              stroke-opacity={`calc(${opacity} + var(--selected-opacity-add))`}
+              style="pointer-events: none;"
             />
           {:else}
             <rect
@@ -291,7 +296,9 @@
               fill="none"
               stroke-width="1.5"
               stroke-dasharray="3 2"
-              style={getSelectedRingStrokeStyle(cell)}
+              stroke={getSelectedRingStrokeColor(cell)}
+              stroke-opacity={`calc(${opacity} + var(--selected-opacity-add))`}
+              style="pointer-events: none;"
             />
           {/if}
         {/if}
@@ -337,7 +344,7 @@
           >
             <div
               xmlns="http://www.w3.org/1999/xhtml"
-              style="width: {iconSize}px; height: {iconSize}px; display: flex; align-items: center; justify-content: center; background-color: light-dark(rgba(255,255,255,0.75), rgba(30,30,50,0.75)); border-radius: 50%; color: {getCellStrokeColor(
+              style="width: {iconSize}px; height: {iconSize}px; display: flex; align-items: center; justify-content: center; background-color: rgba(255,255,255,0.75); border-radius: 50%; color: {getCellStrokeColor(
                 cell
               )};"
             >
@@ -354,7 +361,9 @@
           font-family="var(--font-mono)"
           font-size={selected || suggested ? 11 : 10}
           font-weight={selected ? "bold" : "normal"}
-          style={`pointer-events: none; user-select: none; fill: ${getLabelFill(cell)};`}
+          style="pointer-events: none; user-select: none; background-blend-mode: luminosity; filter: grayscale(1);"
+          fill={getLabelFill(cell)}
+          fill-opacity={selected || suggested ? 1 : "var(--label-opacity)"}
         >
           {cell.label}
         </text>
@@ -434,6 +443,18 @@
   .tone-selector-root {
     position: relative;
     width: 100%;
+
+    --mix-ratio: 10%;
+    --selected-opacity-add: 0;
+    --label-opacity: 0.4;
+    --fill-opacity-add: 1;
+  }
+
+  :global(.dark) .tone-selector-root {
+    --mix-ratio: 60%;
+    --selected-opacity-add: 0.4;
+    --label-opacity: 1;
+    --fill-opacity-add: 0.4;
   }
 
   /*

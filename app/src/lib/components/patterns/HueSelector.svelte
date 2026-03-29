@@ -111,9 +111,9 @@
   }
 
   function getSwatchOpacity(h: number): number {
-    if (isAchromaticSelected) return allowedSet.has(h) ? 1 : 0.2
+    if (isAchromaticSelected) return allowedSet.has(h) ? 1 : 0.4
     if (suggestedSet.has(h)) return 1
-    return 0.2
+    return 0.4
   }
 
   function isSelected(h: number): boolean {
@@ -204,9 +204,11 @@
       font-family="var(--font-mono)"
       font-size={suggested ? 11 : 9}
       font-weight={suggested ? "bold" : "normal"}
-      fill={suggested ? getHueColor(h) : "#666"}
-      opacity={getSectorOpacity(h)}
-      style="pointer-events: none; user-select: none;"
+      style="pointer-events: none; user-select: none; filter: brightness(0.9) saturate(1.5);"
+      fill={suggested
+        ? `oklch(from ${getHueColor(h)} calc(l + .10) c h)`
+        : "light-dark(#666, #fff)"}
+      fill-opacity={suggested ? 1 : 0.4}
     >
       {h}
     </text>
