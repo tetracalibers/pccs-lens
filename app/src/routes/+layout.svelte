@@ -257,16 +257,6 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: hue-shift 6s linear infinite;
-  }
-
-  @keyframes hue-shift {
-    0% {
-      background-position: 0% 50%;
-    }
-    100% {
-      background-position: 200% 50%;
-    }
   }
 
   /* ===== ワイド画面用ナビ（H — ドット + テキスト階層型） ===== */
@@ -421,17 +411,6 @@
   @media (min-width: 640px) {
     .dropdown-nav {
       display: none;
-    }
-  }
-
-  @keyframes slide-down {
-    from {
-      opacity: 0;
-      transform: translateY(-8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
     }
   }
 
