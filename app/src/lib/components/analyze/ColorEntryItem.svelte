@@ -174,8 +174,8 @@
   .alt-swatch:hover::after {
     content: attr(title);
     position: absolute;
-    background: var(--color-text, #111);
-    color: #fff;
+    background: light-dark(#1c1c2e, #dde0f0);
+    color: light-dark(#f0f0f0, #1c1c2e);
     padding: 0.25rem 0.4rem;
     border-radius: 0.25rem;
     font-size: 0.75rem;

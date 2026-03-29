@@ -34,15 +34,11 @@
     margin-block-start: 0;
   }
 
-  @media (prefers-color-scheme: dark) {
-    h1::before {
-      opacity: 0.8;
-    }
+  :global(.dark) h1::before {
+    opacity: 0.8;
   }
 
-  @media (prefers-color-scheme: light) {
-    h1::before {
-      opacity: 1;
-    }
+  :global(.light) h1::before {
+    opacity: 1;
   }
 </style>

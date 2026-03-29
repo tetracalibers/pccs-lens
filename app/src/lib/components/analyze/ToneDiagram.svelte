@@ -134,7 +134,7 @@
         patternUnits="userSpaceOnUse"
         patternTransform="rotate(45)"
       >
-        <line x1="0" y1="0" x2="0" y2="8" stroke="#bbb" stroke-width="1" />
+        <line x1="0" y1="0" x2="0" y2="8" style="stroke: var(--hatch-stroke);" stroke-width="1" />
       </pattern>
     </defs>
 
@@ -142,10 +142,10 @@
       {@const isUsed = cell.usedColors.length > 0}
       {@const isSCell = cell.key === "s"}
       {@const showHatch = isSCell && isCard199 && !isUsed}
-      {@const fillColor = isUsed ? cell.usedColors[0].hex : showHatch ? "url(#hatch)" : "white"}
+      {@const fillColor = isUsed ? cell.usedColors[0].hex : showHatch ? "url(#hatch)" : "var(--cell-empty-fill)"}
       {@const strokeColor = isUsed
         ? `oklch(from ${cell.usedColors[0].hex} calc(l * .85) c h)`
-        : "#ccc"}
+        : "var(--cell-empty-stroke)"}
       {@const strokeWidth = isUsed ? 1.5 : 1}
       {@const labelFill = isUsed
         ? isLightColor(cell.usedColors[0].hex)
@@ -225,6 +225,9 @@
   .diagram-wrapper {
     position: relative;
     display: inline-block;
+    --cell-empty-fill: light-dark(white, #1c1c2e);
+    --cell-empty-stroke: light-dark(#ccc, #3a3a4e);
+    --hatch-stroke: light-dark(#bbb, #3a3a4e);
   }
 
   .tooltip {

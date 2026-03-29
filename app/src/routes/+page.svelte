@@ -152,10 +152,8 @@
     opacity: 0.08;
   }
 
-  @media (prefers-color-scheme: light) {
-    .orb {
-      opacity: 0.18;
-    }
+  :global(.light) .orb {
+    opacity: 0.18;
   }
 
   /* Main */
