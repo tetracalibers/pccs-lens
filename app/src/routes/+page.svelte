@@ -140,12 +140,12 @@
     inset: 0;
     pointer-events: none;
     z-index: 0;
+    filter: blur(40px);
   }
 
   .orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(40px);
     transform: translate(-50%, -50%);
     opacity: 0.08;
   }
