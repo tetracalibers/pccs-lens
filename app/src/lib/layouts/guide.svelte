@@ -47,7 +47,7 @@
     counter-reset: section;
     max-width: 680px;
     margin: 0 auto;
-    padding: 0 1.5rem 0;
+    padding: 0 1rem 0;
   }
 
   main :global(p) {
