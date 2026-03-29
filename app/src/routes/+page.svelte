@@ -250,7 +250,6 @@
     background: light-dark(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.04));
     border: 1px solid light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.1));
     box-shadow: 0 2px 16px light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.02));
-    backdrop-filter: blur(12px);
     transition:
       border-color 0.2s,
       box-shadow 0.2s;
@@ -391,7 +390,6 @@
     overflow: hidden;
     text-decoration: none;
     color: inherit;
-    backdrop-filter: blur(8px);
     transition:
       border-color 0.2s,
       box-shadow 0.2s;
