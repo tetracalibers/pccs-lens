@@ -31,8 +31,7 @@
 <style>
   main {
     max-width: 700px;
-    margin: 2.75rem auto 0;
-    padding: 0 1rem 3rem;
+    margin: 0 auto;
   }
 
   main :global(p) {

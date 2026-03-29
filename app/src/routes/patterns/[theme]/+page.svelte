@@ -198,7 +198,6 @@
   main {
     max-width: 720px;
     margin: 0 auto;
-    padding: 1.5rem 1rem 3rem;
   }
 
   .breadcrumb {

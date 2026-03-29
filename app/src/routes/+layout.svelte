@@ -165,7 +165,7 @@
   </div>
 </header>
 
-{@render children()}
+<div class="container">{@render children()}</div>
 
 <style>
   /* ===== グローバル ===== */
@@ -193,6 +193,12 @@
 
   :global(body.dark) {
     color-scheme: dark;
+  }
+
+  /* ===== メインコンテンツラッパー ===== */
+  .container {
+    margin: 3rem auto 4rem;
+    padding: 1.5rem 1.5rem 0;
   }
 
   /* ===== サイトヘッダー ===== */

@@ -65,7 +65,6 @@
   main {
     max-width: 720px;
     margin: 0 auto;
-    padding: 2rem 1rem 4rem;
   }
 
   .header {

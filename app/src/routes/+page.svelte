@@ -131,7 +131,6 @@
 <style>
   .page {
     position: relative;
-    min-height: 100vh;
     overflow: hidden;
     background: light-dark(#ffffff, #0c0c14);
     color: light-dark(#1a1a1a, #f0f0f0);
@@ -165,13 +164,12 @@
     z-index: 1;
     max-width: 720px;
     margin: 0 auto;
-    padding: 0 1.25rem 4rem;
   }
 
   /* Hero */
   .hero {
     text-align: center;
-    padding: 3rem 0 3rem;
+    padding: 1rem 0 3rem;
   }
 
   .hero-eyebrow {
@@ -368,10 +366,6 @@
   }
 
   /* Tools */
-  .tools-section {
-    margin-bottom: 2rem;
-  }
-
   .tools-header {
     display: flex;
     align-items: center;
