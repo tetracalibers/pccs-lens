@@ -169,7 +169,7 @@
   /* Hero */
   .hero {
     text-align: center;
-    padding: 1rem 0 3rem;
+    padding: 0 0 3rem;
   }
 
   .hero-eyebrow {
