@@ -4,7 +4,7 @@
   import appleTouchIcon from "$lib/assets/apple-touch-icon.png"
   import { page } from "$app/state"
   import { resolve } from "$app/paths"
-  import SwitchLightDark from "$lib/components/switch-light-dark.svelte"
+  import SwitchLightDark from "$lib/components/SwitchLightDark.svelte"
 
   let { children } = $props()
 
