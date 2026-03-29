@@ -249,30 +249,16 @@
     color: inherit;
     background: light-dark(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.04));
     border: 1px solid light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.1));
-    box-shadow: light-dark(0 2px 16px rgba(0, 0, 0, 0.06), none);
+    box-shadow: 0 2px 16px light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.02));
     backdrop-filter: blur(12px);
     transition:
       border-color 0.2s,
-      transform 0.2s,
       box-shadow 0.2s;
   }
 
   .guide-card:hover {
-    transform: translateY(-2px);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .guide-card:hover {
-      border-color: rgba(255, 255, 255, 0.25);
-      box-shadow: 0 8px 32px rgba(255, 255, 255, 0.04);
-    }
-  }
-
-  @media (prefers-color-scheme: light) {
-    .guide-card:hover {
-      border-color: rgba(0, 0, 0, 0.15);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    }
+    border-color: light-dark(rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.25));
+    box-shadow: 0 4px 16px light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.04));
   }
 
   .guide-card-inner {
@@ -408,26 +394,12 @@
     backdrop-filter: blur(8px);
     transition:
       border-color 0.2s,
-      transform 0.2s,
       box-shadow 0.2s;
   }
 
   .tool-glass:hover {
-    transform: translateY(-3px);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .tool-glass:hover {
-      border-color: rgba(255, 255, 255, 0.2);
-      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
-    }
-  }
-
-  @media (prefers-color-scheme: light) {
-    .tool-glass:hover {
-      border-color: rgba(0, 0, 0, 0.12);
-      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
-    }
+    border-color: light-dark(rgba(0, 0, 0, 0.12), rgba(255, 255, 255, 0.2));
+    box-shadow: 0 4px 12px light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.2));
   }
 
   .tool-gradient-bar {
