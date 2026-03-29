@@ -32,7 +32,7 @@
 <style>
   main {
     max-width: 700px;
-    margin: 3rem auto;
+    margin: 4rem auto;
     padding: 0 1rem;
     text-align: center;
   }
