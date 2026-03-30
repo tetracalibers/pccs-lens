@@ -8,7 +8,7 @@
     { href: "#", title: "マンセル表色系", tags: ["3級"] },
     { href: "#", title: "PCCSの色相と色相環", tags: ["3級", "2級"] },
     { href: "#", title: "慣用色名と系統色名", tags: ["入門"] },
-    { href: "#", title: "オストワルト表色系", tags: ["2級"] },
+    { href: "#", title: "オストワルト表色系", tags: ["2級"] }
   ]
 
   const tagClass = (tag: string): string => {
@@ -17,7 +17,7 @@
       "3級": "grade-3",
       "2級": "grade-2",
       "1級": "grade-1",
-      UC級: "grade-uc",
+      UC級: "grade-uc"
     }
     return map[tag] ?? ""
   }
@@ -43,12 +43,17 @@
         </li>
       {/each}
     </ul>
-    <p class="pattern-note">各リンクの左側にティアドロップ型のマーカーを配置。border-radius: 50% 50% 50% 0 を -45° 回転させ、雫が滴り落ちる向きに整える。ホバーで色が変わりスケールが拡大する。</p>
+    <p class="pattern-note">
+      各リンクの左側にティアドロップ型のマーカーを配置。border-radius: 50% 50% 50% 0 を -45°
+      回転させ、雫が滴り落ちる向きに整える。ホバーで色が変わりスケールが拡大する。
+    </p>
   </section>
 
   <!-- B: オーガニックブロブバレット -->
   <section class="pattern">
-    <p class="pattern-label">B — オーガニックブロブ（border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%）</p>
+    <p class="pattern-label">
+      B — オーガニックブロブ（border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%）
+    </p>
     <ul class="link-list -b">
       {#each links as link}
         <li>
@@ -63,12 +68,17 @@
         </li>
       {/each}
     </ul>
-    <p class="pattern-note">不規則な有機的形状をバレットとして配置。ホバー時に border-radius の値が変形し、インクが広がるような動きを見せる。</p>
+    <p class="pattern-note">
+      不規則な有機的形状をバレットとして配置。ホバー時に border-radius
+      の値が変形し、インクが広がるような動きを見せる。
+    </p>
   </section>
 
   <!-- C: 縦長インクドリップ -->
   <section class="pattern">
-    <p class="pattern-label">C — 縦長インクドリップ（border-radius: 50% 50% 50% 50% / 20% 20% 80% 80%）</p>
+    <p class="pattern-label">
+      C — 縦長インクドリップ（border-radius: 50% 50% 50% 50% / 20% 20% 80% 80%）
+    </p>
     <ul class="link-list -c">
       {#each links as link}
         <li>
@@ -83,7 +93,9 @@
         </li>
       {/each}
     </ul>
-    <p class="pattern-note">上部が細く下部が丸い縦長の水滴フォルム。ホバー時に僅かに下方向へ移動し、滴り落ちる動きを表現する。</p>
+    <p class="pattern-note">
+      上部が細く下部が丸い縦長の水滴フォルム。ホバー時に僅かに下方向へ移動し、滴り落ちる動きを表現する。
+    </p>
   </section>
 
   <!-- D: SVGウォータードロップ -->
@@ -106,12 +118,16 @@
         </li>
       {/each}
     </ul>
-    <p class="pattern-note">SVGパスで描いたウォータードロップ型マーカー。ベジェ曲線による正確な雫シルエットをインラインSVGで実現。ホバー時に色とスケールが変化する。</p>
+    <p class="pattern-note">
+      SVGパスで描いたウォータードロップ型マーカー。ベジェ曲線による正確な雫シルエットをインラインSVGで実現。ホバー時に色とスケールが変化する。
+    </p>
   </section>
 
   <!-- E: ホバー時インクスプラッシュ -->
   <section class="pattern">
-    <p class="pattern-label">E — ホバー時インクスプラッシュ（border-radius: 70% 30% 60% 40% / 60% 40% 30% 70%）</p>
+    <p class="pattern-label">
+      E — ホバー時インクスプラッシュ（border-radius: 70% 30% 60% 40% / 60% 40% 30% 70%）
+    </p>
     <ul class="link-list -e">
       {#each links as link}
         <li>
@@ -126,7 +142,9 @@
         </li>
       {/each}
     </ul>
-    <p class="pattern-note">通常時はシンプルなテキストのみ。ホバー時に有機的なインクスプラッシュ形状が背後からフェードインし、選択範囲を染めるように広がる。</p>
+    <p class="pattern-note">
+      通常時はシンプルなテキストのみ。ホバー時に有機的なインクスプラッシュ形状が背後からフェードインし、選択範囲を染めるように広がる。
+    </p>
   </section>
 
   <!-- F: 雫型番号バッジ -->
@@ -147,7 +165,10 @@
         </li>
       {/each}
     </ul>
-    <p class="pattern-note">ティアドロップ型のバッジに連番を表示。角ごとに異なる border-radius で水滴フォルムを作り、番号付きリストに視覚的なアクセントを加える。</p>
+    <p class="pattern-note">
+      ティアドロップ型のバッジに連番を表示。角ごとに異なる border-radius
+      で水滴フォルムを作り、番号付きリストに視覚的なアクセントを加える。
+    </p>
   </section>
 
   <!-- G: インクドリップアンダーライン -->
@@ -167,12 +188,17 @@
         </li>
       {/each}
     </ul>
-    <p class="pattern-note">ホバー時に左端の縦長雫シェイプからラインが伸び、テキスト下を流れるようにアンダーラインが展開する。インクが滲んでいく動きを演出。</p>
+    <p class="pattern-note">
+      ホバー時に左端の縦長雫シェイプからラインが伸び、テキスト下を流れるようにアンダーラインが展開する。インクが滲んでいく動きを演出。
+    </p>
   </section>
 
   <!-- H: グロー付きウェットドロップ -->
   <section class="pattern">
-    <p class="pattern-label">H — グロー付きウェットドロップ（border-radius: 50% 50% 50% 50% / 20% 20% 80% 80% ＋ box-shadow）</p>
+    <p class="pattern-label">
+      H — グロー付きウェットドロップ（border-radius: 50% 50% 50% 50% / 20% 20% 80% 80% ＋
+      box-shadow）
+    </p>
     <ul class="link-list -h">
       {#each links as link}
         <li>
@@ -187,7 +213,9 @@
         </li>
       {/each}
     </ul>
-    <p class="pattern-note">縦長の雫型に柔らかいグローを加えた「濡れたインク」の表現。ホバー時にグローが強くなり、雫が浮き上がるような効果を生む。</p>
+    <p class="pattern-note">
+      縦長の雫型に柔らかいグローを加えた「濡れたインク」の表現。ホバー時にグローが強くなり、雫が浮き上がるような効果を生む。
+    </p>
   </section>
 </main>
 
