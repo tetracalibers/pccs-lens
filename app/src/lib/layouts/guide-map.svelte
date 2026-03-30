@@ -39,4 +39,10 @@
     font-size: 0.9rem;
     line-height: 1.9;
   }
+
+  main :global(ul) {
+    list-style: none;
+    padding-inline-start: 1rem;
+    margin-inline-start: 0.5rem;
+  }
 </style>

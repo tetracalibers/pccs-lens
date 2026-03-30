@@ -34,9 +34,9 @@
 
 <style>
   .page-link {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1rem;
     text-decoration: none;
     color: inherit;
     position: relative;
@@ -71,17 +71,16 @@
   }
 
   .pl-title {
-    flex: 1;
     min-width: 0;
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: 700;
-    letter-spacing: -0.01em;
     line-height: 1.4;
   }
 
   .pl-grades {
     display: flex;
     flex-wrap: nowrap;
+    align-items: center;
     gap: 4px;
     flex-shrink: 0;
   }
