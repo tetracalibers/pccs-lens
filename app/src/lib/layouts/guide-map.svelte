@@ -2,9 +2,10 @@
   import Heading2 from "$lib/components/m-html/Heading2.svelte"
 
   import Mark from "$lib/components/m-directive/Mark.svelte"
+  import PageLink from "$lib/components/m-directive/PageLink.svelte"
 
   /* eslint-disable no-import-assign */
-  export { Heading2 as h2, Mark }
+  export { Heading2 as h2, Mark, PageLink }
   /* eslint-enable no-import-assign */
 </script>
 

@@ -18,7 +18,10 @@ const directives = {
     { name: "TermCard", replaceTo: "svelte-component" }
   ],
   leaf: [],
-  text: [{ name: "Mark", replaceTo: "svelte-component" }]
+  text: [
+    { name: "Mark", replaceTo: "svelte-component" },
+    { name: "PageLink", replaceTo: "svelte-component" }
+  ]
 }
 
 /** @type {import('@sveltejs/kit').Config} */
