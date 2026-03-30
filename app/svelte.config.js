@@ -30,6 +30,7 @@ const config = {
   preprocess: [
     mdsvex({
       layout: {
+        "guide-map": fileURLToPath(new URL("./src/lib/layouts/guide-map.svelte", import.meta.url)),
         guide: fileURLToPath(new URL("./src/lib/layouts/guide.svelte", import.meta.url))
       },
       // @ts-ignore

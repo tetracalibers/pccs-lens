@@ -1,5 +1,5 @@
 ---
-layout: guide
+layout: guide-map
 title: 色の学び一覧
 ---
 

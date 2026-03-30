@@ -2,11 +2,11 @@
   import Icon from "@iconify/svelte"
   import type { Snippet } from "svelte"
 
-  let { children }: { children?: Snippet } = $props()
+  let { children, icon }: { children?: Snippet; icon: string } = $props()
 </script>
 
 <h1>
-  <Icon icon="solar:pen-new-round-broken" />
+  <Icon {icon} />
   {@render children?.()}
 </h1>
 

@@ -38,7 +38,7 @@
 </svelte:head>
 
 <main>
-  <Heading1>{title}</Heading1>
+  <Heading1 icon="solar:pen-new-round-broken">{title}</Heading1>
   {@render children()}
 </main>
 
