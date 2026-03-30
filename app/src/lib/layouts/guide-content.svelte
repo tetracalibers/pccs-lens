@@ -55,18 +55,4 @@
     font-size: 0.9rem;
     line-height: 1.9;
   }
-
-  main :global(blockquote) {
-    margin: 1.05rem 0;
-    padding: 0.55rem 0.8rem;
-    border-radius: 4px;
-    border: 1px dashed light-dark(rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.12));
-    box-sizing: border-box;
-    font-size: 0.9rem;
-    line-height: 1.7;
-  }
-
-  main :global(blockquote p) {
-    margin: 0;
-  }
 </style>
