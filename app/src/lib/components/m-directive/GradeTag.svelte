@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Icon from "@iconify/svelte"
+
   type Grade = "basic" | "3" | "2" | "1" | "uc"
 
   let { grade }: { grade: Grade } = $props()
@@ -12,7 +14,12 @@
   }
 </script>
 
-<span class="grade-tag" data-grade={grade}>{labels[grade]}</span>
+<span class="grade-tag" data-grade={grade}>
+  {#if grade === "basic"}
+    <Icon icon="solar:star-shine-bold" class="grade-tag-icon" />
+  {/if}
+  {labels[grade]}
+</span>
 
 <style>
   .grade-tag {
@@ -34,11 +41,11 @@
     padding: 4px 10px;
   }
 
-  .grade-tag[data-grade="basic"]::before {
-    content: "✦";
-    margin-right: 4px;
-    font-size: 0.65em;
-    opacity: 0.85;
+  .grade-tag[data-grade="basic"] :global(.grade-tag-icon) {
+    width: 0.9em;
+    height: 0.9em;
+    margin-right: 3px;
+    flex-shrink: 0;
   }
 
   .grade-tag[data-grade="3"] {
