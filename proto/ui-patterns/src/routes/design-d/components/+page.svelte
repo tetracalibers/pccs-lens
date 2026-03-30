@@ -74,6 +74,20 @@
       desc: "メニューを開閉するボタンのスタイルパターン（カラフルなオリジナルアイコン含む）",
       glow: "#c77dff",
       gradient: "linear-gradient(135deg, #f97316, #c77dff)"
+    },
+    {
+      href: resolve("/design-d/components/link-list"),
+      title: "リンクリスト",
+      desc: "章内のページ一覧を表すリストのスタイルパターン（雫・インク形状のシェイプ装飾）",
+      glow: "#38bdf8",
+      gradient: "linear-gradient(135deg, #6bcb77, #38bdf8)"
+    },
+    {
+      href: resolve("/design-d/components/tag"),
+      title: "タグ",
+      desc: "「入門」「3級」〜「UC級」などのグレードを示すラベルのスタイルパターン",
+      glow: "#c77dff",
+      gradient: "linear-gradient(135deg, #38bdf8, #c77dff)"
     }
   ]
 </script>
