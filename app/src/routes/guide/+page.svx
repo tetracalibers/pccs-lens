@@ -1,6 +1,6 @@
 ---
 layout: guide-map
-title: 色の学び一覧
+title: 色の理論一覧
 ---
 
 ## 色の表し方
