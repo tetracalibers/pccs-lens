@@ -45,9 +45,10 @@
 
 <style>
   .page-link {
-    display: inline-flex;
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: span 2;
     align-items: center;
-    gap: 1rem;
     text-decoration: none;
     color: inherit;
     position: relative;

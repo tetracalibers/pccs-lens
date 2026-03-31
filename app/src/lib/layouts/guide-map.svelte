@@ -42,7 +42,14 @@
 
   main :global(ul) {
     list-style: none;
-    padding-inline-start: 1rem;
+    padding-inline: 1rem;
     margin-inline-start: 0.5rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 3rem;
+  }
+
+  main :global(li) {
+    display: contents;
   }
 </style>
