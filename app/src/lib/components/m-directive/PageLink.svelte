@@ -94,7 +94,6 @@
     font-size: 1rem;
     font-weight: 700;
     line-height: 1.4;
-    border-block-end: 2px solid var(--pl-accent);
   }
 
   .pl-grades {
