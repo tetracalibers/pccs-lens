@@ -9,7 +9,7 @@
   import { PCCS_CARD_199 } from "$lib/data/pccs"
   import type { PCCSColor } from "$lib/data/types"
   import { randomHex } from "$lib/color/utils"
-  import Heading1 from "$lib/components/m-html/Heading1.svelte"
+  import Heading1 from "$lib/components/Heading1.svelte"
 
   const colors = PCCS_CARD_199
   const TOP_N = 3

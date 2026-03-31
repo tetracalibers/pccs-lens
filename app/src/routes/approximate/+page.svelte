@@ -9,7 +9,7 @@
   import { replaceState } from "$app/navigation"
   import { tick } from "svelte"
   import { isValidHexColor, randomHex } from "$lib/color/utils"
-  import Heading1 from "$lib/components/m-html/Heading1.svelte"
+  import Heading1 from "$lib/components/Heading1.svelte"
 
   const colors = PCCS_CARD_199
   const jisColorList = jisColors as JISColor[]

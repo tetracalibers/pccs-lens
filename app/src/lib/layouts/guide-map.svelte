@@ -11,7 +11,7 @@
 
 <script lang="ts">
   import type { Snippet } from "svelte"
-  import Heading1 from "$lib/components/m-html/Heading1.svelte"
+  import Heading1 from "$lib/components/Heading1.svelte"
 
   let { title, children }: { title?: string; children: Snippet } = $props()
   const pageTitle = $derived(title ? `${title} - PCCS Lens` : "PCCS Lens")

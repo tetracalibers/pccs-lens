@@ -27,7 +27,7 @@
 
 <script lang="ts">
   import type { Snippet } from "svelte"
-  import Heading1 from "$lib/components/m-html/Heading1.svelte"
+  import Heading1 from "$lib/components/Heading1.svelte"
   import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
   import type { GuideFrontmatter } from "$lib/meta/guide-pages"
   import Breadcrumb from "$lib/components/Breadcrumb.svelte"

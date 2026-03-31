@@ -3,7 +3,7 @@
   import { THEMES } from "$lib/patterns/themes"
   import { CHECKERBOARD_RULES } from "$lib/patterns/checkerboard-rules"
   import { pickRandomSuggest, lookupPCCSColor } from "$lib/patterns/lookup"
-  import Heading1 from "$lib/components/m-html/Heading1.svelte"
+  import Heading1 from "$lib/components/Heading1.svelte"
 
   // 各テーマのベース・アソートカラーを市松模様専用ルールからランダム選択
   function getCheckerboardColors(themeId: string): { base: string; assort: string } {
