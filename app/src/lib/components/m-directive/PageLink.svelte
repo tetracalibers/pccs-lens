@@ -1,26 +1,23 @@
 <script lang="ts">
   import GradeTag from "./GradeTag.svelte"
   import { resolve } from "$app/paths"
-  import type { Snippet } from "svelte"
+  import { guidePages } from "$lib/meta/guide-pages"
 
-  type Grade = "3" | "2" | "1" | "uc"
+  let { slug }: { slug: string } = $props()
 
-  let {
-    path,
-    children,
-    grades: gradesInput = "",
-    basic = false
-  }: {
-    path: string
-    children: Snippet
-    grades?: string
-    basic?: boolean
-  } = $props()
-
-  let grades = $derived(gradesInput.split(/\s+/).filter(Boolean) as Grade[])
+  const meta = $derived(guidePages.get(slug))
+  const {
+    grades = [],
+    basic = false,
+    title
+  } = $derived.by(() => {
+    console.log(meta)
+    if (meta) return meta
+    throw new Error(`PageLink: No metadata found for slug "${slug}"`)
+  })
 
   // @ts-expect-error
-  let href = $derived(resolve(path))
+  let href = $derived(resolve(`/guide/${slug}`))
 
   const gradeColors = {
     "3": "#c4b5fd",
@@ -33,7 +30,7 @@
 </script>
 
 <a {href} class="page-link" style="--pl-accent: {accentColor}">
-  <span class="pl-title">{@render children?.()}</span>
+  <span class="pl-title">{title}</span>
   {#if grades.length > 0 || basic}
     <span class="pl-grades">
       {#each grades as grade (grade)}

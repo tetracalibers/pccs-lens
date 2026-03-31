@@ -1,6 +1,9 @@
 ---
 layout: guide-content
 title: PCCSとは？
+
+grades: ["3"]
+basic: true
 ---
 
 <script lang="ts">
