@@ -28,8 +28,15 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
   import Heading1 from "$lib/components/m-html/Heading1.svelte"
+  import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
+  import type { GuideFrontmatter } from "$lib/meta/guide-pages"
 
-  let { title, children }: { title?: string; children: Snippet } = $props()
+  let {
+    title,
+    grades = [],
+    basic = false,
+    children
+  }: GuideFrontmatter & { children: Snippet } = $props()
   const pageTitle = $derived(title ? `${title} - PCCS Lens` : "PCCS Lens")
 </script>
 
@@ -39,6 +46,16 @@
 
 <main>
   <Heading1 icon="solar:pen-new-round-broken">{title}</Heading1>
+  {#if grades.length > 0 || basic}
+    <div class="page-grades">
+      {#each grades as grade (grade)}
+        <GradeTag {grade} />
+      {/each}
+      {#if basic}
+        <GradeTag grade="basic" />
+      {/if}
+    </div>
+  {/if}
   {@render children()}
 </main>
 
@@ -47,6 +64,13 @@
     max-width: 680px;
     margin: 0 auto;
     padding: 0;
+  }
+
+  .page-grades {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 4px;
+    margin-bottom: 2.5rem;
   }
 
   main :global(p) {
