@@ -70,7 +70,8 @@
     display: flex;
     flex-wrap: nowrap;
     gap: 4px;
-    margin-bottom: 2.5rem;
+    margin-block-end: 2.5rem;
+    margin-inline-start: -4px;
   }
 
   main :global(p) {

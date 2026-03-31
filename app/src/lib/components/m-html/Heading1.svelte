@@ -20,7 +20,7 @@
     align-items: center;
     gap: 1rem;
     line-height: 1.2;
-    margin-inline-start: -0.5rem;
+    margin-inline-start: -8px;
   }
 
   h1 :global(svg) {
