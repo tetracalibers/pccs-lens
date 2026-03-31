@@ -103,7 +103,6 @@
   .pl-grades {
     display: flex;
     flex-wrap: nowrap;
-    align-items: center;
     gap: 4px;
     flex-shrink: 0;
   }
