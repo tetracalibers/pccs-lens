@@ -61,12 +61,12 @@
   .page-link::before {
     content: "";
     position: absolute;
-    left: 1px;
+    left: 2px;
     top: 50%;
     width: 10px;
     height: 10px;
-    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-    transform: translateY(-50%);
+    border-radius: 50% 50% 50% 0;
+    transform: translateY(-50%) rotate(225deg);
     background: linear-gradient(
       135deg,
       var(--pl-accent),
@@ -84,7 +84,7 @@
 
   .page-link:hover::before {
     border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
-    transform: translateY(-50%) scale(1.35);
+    transform: translateY(-50%) scale(1.35) rotate(315deg);
     background: linear-gradient(
       135deg,
       oklch(from var(--pl-accent) calc(l - 0.08) c h),
@@ -97,7 +97,7 @@
     font-size: 1rem;
     font-weight: 700;
     line-height: 1.4;
-    border-block-end: 2px dotted var(--pl-accent);
+    border-block-end: 2px solid var(--pl-accent);
   }
 
   .pl-grades {
