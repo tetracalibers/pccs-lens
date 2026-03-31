@@ -8,6 +8,7 @@
   import ThemeColorSchemePreview from "$lib/components/patterns/ThemeColorSchemePreview.svelte"
   import GeoPatternSection from "$lib/components/patterns/GeoPatternSection.svelte"
   import Icon from "@iconify/svelte"
+  import Breadcrumb from "$lib/components/Breadcrumb.svelte"
 
   let { data } = $props()
   const theme = $derived(data.theme)
@@ -101,11 +102,10 @@
 </svelte:head>
 
 <main>
-  <nav class="breadcrumb">
-    <a href={resolve("/patterns")}>配色シミュレータ</a>
-    <span>›</span>
-    <span>{theme.labelJa}</span>
-  </nav>
+  <Breadcrumb
+    category="tool"
+    crumbs={[{ label: "配色シミュレータ", href: resolve("/patterns") }, { label: theme.labelJa }]}
+  />
 
   <header class="theme-header">
     <div class="theme-title">
@@ -203,25 +203,6 @@
     --color-text: light-dark(#1a1a1a, #f0f0f0);
     --color-text-secondary: light-dark(#555555, #999999);
     --color-muted: light-dark(#eeeeee, #252535);
-  }
-
-  .breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.8rem;
-    color: var(--color-text-secondary, #777);
-    margin-bottom: 1.5rem;
-  }
-
-  .breadcrumb a {
-    color: var(--color-text-secondary, #777);
-    text-decoration: none;
-  }
-
-  .breadcrumb a:hover {
-    color: var(--color-text, #111);
-    text-decoration: underline;
   }
 
   .theme-header {

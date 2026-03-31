@@ -30,6 +30,8 @@
   import Heading1 from "$lib/components/m-html/Heading1.svelte"
   import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
   import type { GuideFrontmatter } from "$lib/meta/guide-pages"
+  import Breadcrumb from "$lib/components/Breadcrumb.svelte"
+  import { resolve } from "$app/paths"
 
   let {
     title,
@@ -45,6 +47,10 @@
 </svelte:head>
 
 <main>
+  <Breadcrumb
+    category="contents"
+    crumbs={[{ label: "色の理論", href: resolve("/guide") }, { label: title }]}
+  />
   <Heading1 icon="solar:pen-new-round-broken">{title}</Heading1>
   {#if grades.length > 0 || basic}
     <div class="page-grades">
