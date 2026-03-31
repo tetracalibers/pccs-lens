@@ -2,10 +2,15 @@
   import Icon from "@iconify/svelte"
   import type { Snippet } from "svelte"
 
-  let { children, icon }: { children?: Snippet; icon: string } = $props()
+  let {
+    children,
+    icon,
+    grayscale = false,
+    tight = false
+  }: { children?: Snippet; icon: string; grayscale?: boolean; tight?: boolean } = $props()
 </script>
 
-<h1>
+<h1 class:grayscale class:tight>
   <Icon {icon} />
   {@render children?.()}
 </h1>
@@ -23,10 +28,21 @@
     margin-inline-start: -8px;
   }
 
+  h1.tight {
+    gap: 0.75rem;
+    font-size: 2rem;
+  }
+
   h1 :global(svg) {
-    color: light-dark(#7c3aed, #c4b5fd);
+    --_icon-color: light-dark(#7c3aed, #c4b5fd);
+
+    color: var(--_icon-color);
     flex-shrink: 0;
     font-size: 3rem;
+  }
+
+  h1.grayscale :global(svg) {
+    color: color-mix(in srgb, var(--_icon-color) 10%, slategray 90%);
   }
 
   h1:first-of-type {

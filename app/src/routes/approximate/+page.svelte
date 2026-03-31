@@ -9,6 +9,7 @@
   import { replaceState } from "$app/navigation"
   import { tick } from "svelte"
   import { isValidHexColor, randomHex } from "$lib/color/utils"
+  import Heading1 from "$lib/components/m-html/Heading1.svelte"
 
   const colors = PCCS_CARD_199
   const jisColorList = jisColors as JISColor[]
@@ -41,7 +42,7 @@
 </svelte:head>
 
 <main>
-  <h1>色のPCCS近似</h1>
+  <Heading1 icon="fluent:color-background-20-filled" grayscale tight>色のPCCS近似</Heading1>
 
   <section class="input-section">
     <h2>色を入力</h2>
@@ -110,13 +111,12 @@
     --color-muted: light-dark(#eeeeee, #252535);
   }
 
-  h1 {
-    font-size: 1.5rem;
-    margin: 0 0 1.5rem;
-  }
-
   section {
     margin-bottom: 2rem;
+  }
+
+  section:first-of-type {
+    margin-block-start: 2rem;
   }
 
   h2 {
