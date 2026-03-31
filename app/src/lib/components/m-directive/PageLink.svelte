@@ -3,31 +3,45 @@
   import { resolve } from "$app/paths"
   import type { Snippet } from "svelte"
 
-  type Grade = "basic" | "3" | "2" | "1" | "uc"
+  type Grade = "3" | "2" | "1" | "uc"
 
   let {
     path,
     children,
-    grades: gradesInput = ""
+    grades: gradesInput = "",
+    basic = false
   }: {
     path: string
     children: Snippet
     grades?: string
+    basic?: boolean
   } = $props()
 
   let grades = $derived(gradesInput.split(/\s+/).filter(Boolean) as Grade[])
 
   // @ts-expect-error
   let href = $derived(resolve(path))
+
+  const gradeColors = {
+    "3": "#c4b5fd",
+    "2": "#6ee7b7",
+    "1": "#fde68a",
+    uc: "#93c5fd"
+  }
+
+  let accentColor = $derived(grades.length > 0 ? gradeColors[grades[0]] : "#94a3b8")
 </script>
 
-<a {href} class="page-link">
+<a {href} class="page-link" style="--pl-accent: {accentColor}">
   <span class="pl-title">{@render children?.()}</span>
-  {#if grades.length > 0}
+  {#if grades.length > 0 || basic}
     <span class="pl-grades">
       {#each grades as grade (grade)}
         <GradeTag {grade} />
       {/each}
+      {#if basic}
+        <GradeTag grade="basic" />
+      {/if}
     </span>
   {/if}
 </a>
@@ -53,7 +67,11 @@
     height: 10px;
     border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
     transform: translateY(-50%);
-    background: light-dark(#ea580c, #f97316);
+    background: linear-gradient(
+      135deg,
+      var(--pl-accent),
+      oklch(from var(--pl-accent) calc(l - 0.1) c h)
+    );
     transition:
       border-radius 0.5s ease,
       transform 0.3s,
@@ -61,13 +79,17 @@
   }
 
   .page-link:hover {
-    color: light-dark(#c2410c, #fb923c);
+    color: oklch(from var(--pl-accent) calc(l - 0.2) c h);
   }
 
   .page-link:hover::before {
     border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
     transform: translateY(-50%) scale(1.35);
-    background: light-dark(#c2410c, #ea580c);
+    background: linear-gradient(
+      135deg,
+      oklch(from var(--pl-accent) calc(l - 0.08) c h),
+      oklch(from var(--pl-accent) calc(l - 0.22) c h)
+    );
   }
 
   .pl-title {
