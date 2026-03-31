@@ -6,11 +6,11 @@
     children,
     icon,
     grayscale = false,
-    tight = false
-  }: { children?: Snippet; icon: string; grayscale?: boolean; tight?: boolean } = $props()
+    compact = false
+  }: { children?: Snippet; icon: string; grayscale?: boolean; compact?: boolean } = $props()
 </script>
 
-<h1 class:grayscale class:tight>
+<h1 class:grayscale class:compact>
   <Icon {icon} />
   {@render children?.()}
 </h1>
@@ -28,7 +28,7 @@
     margin-inline-start: -8px;
   }
 
-  h1.tight {
+  h1.compact {
     gap: 0.75rem;
     font-size: 2rem;
   }

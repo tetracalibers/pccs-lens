@@ -83,7 +83,7 @@
 </svelte:head>
 
 <main>
-  <Heading1 icon="famicons:color-palette-sharp" grayscale tight>配色の分析</Heading1>
+  <Heading1 icon="famicons:color-palette-sharp" grayscale compact>配色の分析</Heading1>
 
   <section class="approximation-section">
     <h2>配色に使う色</h2>

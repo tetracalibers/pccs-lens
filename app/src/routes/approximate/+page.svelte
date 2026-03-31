@@ -42,7 +42,7 @@
 </svelte:head>
 
 <main>
-  <Heading1 icon="fluent:color-background-20-filled" grayscale tight>色のPCCS近似</Heading1>
+  <Heading1 icon="fluent:color-background-20-filled" grayscale compact>色のPCCS近似</Heading1>
 
   <section class="input-section">
     <h2>色を入力</h2>

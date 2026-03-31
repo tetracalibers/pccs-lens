@@ -37,7 +37,7 @@
 
 <main>
   <div class="header">
-    <Heading1 icon="famicons:color-palette-sharp" grayscale tight>配色シミュレータ</Heading1>
+    <Heading1 icon="famicons:color-palette-sharp" grayscale compact>配色シミュレータ</Heading1>
     <p class="subtitle">イメージを選んで、配色ルールに沿った色の組み合わせを試してみよう</p>
   </div>
 
