@@ -1,6 +1,6 @@
 ---
 layout: guide-content
-title: PCCSとは？
+title: PCCSの基本
 
 grades: ["3"]
 basic: true
@@ -16,8 +16,8 @@ basic: true
 PCCSは、色のイメージや配色を考えるときに便利な色の表し方です。
 PCCSでは、1つの色を:Mark[色相]と:Mark[トーン]によって表します。
 
-- :Mark[色相]… 赤・黄・緑・青・紫など、どの色みをもたせるか
-- :Mark[トーン]… どんなイメージをもたせるか
+- :Mark[色相]：赤・黄・緑・青・紫など、どの色みをもたせるか
+- :Mark[トーン]：どんなイメージをもたせるか
 
 :::Example
 色相が`2`（赤）で、トーンが`v`（vivid）の色は:Mark[`v2`]と表す
