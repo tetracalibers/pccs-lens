@@ -25,7 +25,7 @@
   .grade-tag {
     display: inline-flex;
     align-items: center;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     font-weight: 600;
     letter-spacing: 0.04em;
     line-height: 1;
@@ -38,12 +38,12 @@
     background: #ff7675;
     color: #ffffff;
     font-size: 0.82rem;
-    padding: 4px 10px;
+    padding: 4px 8px;
   }
 
   .grade-tag[data-grade="basic"] :global(.grade-tag-icon) {
-    width: 0.9em;
-    height: 0.9em;
+    width: 1em;
+    height: 1em;
     margin-right: 3px;
     flex-shrink: 0;
   }
