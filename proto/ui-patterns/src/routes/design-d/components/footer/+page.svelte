@@ -384,7 +384,8 @@
   ============================================== */
   .demo.-c {
     padding-top: 3px;
-    background: linear-gradient(90deg, #818cf8, #a78bfa, #67e8f9) top / 100% 3px no-repeat,
+    background:
+      linear-gradient(90deg, #818cf8, #a78bfa, #67e8f9) top / 100% 3px no-repeat,
       light-dark(rgba(0, 0, 0, 0.03), rgba(255, 255, 255, 0.03));
     border-top: none;
   }
@@ -503,7 +504,14 @@
   }
 
   .nav-link.-d.prev {
-    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%, 12px 50%);
+    clip-path: polygon(
+      0 0,
+      calc(100% - 12px) 0,
+      100% 50%,
+      calc(100% - 12px) 100%,
+      0 100%,
+      12px 50%
+    );
     padding: 0.6rem 1rem 0.6rem 1.2rem;
   }
 
