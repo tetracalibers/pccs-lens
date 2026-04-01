@@ -12,7 +12,7 @@
   h2 {
     font-size: 1.6rem;
     font-weight: 700;
-    color: light-dark(#1a1a1a, #eeeef8);
+    color: var(--color-heading);
     display: flex;
     align-items: flex-start;
     gap: 0.55rem;

@@ -3,6 +3,7 @@
   import { THEMES } from "$lib/patterns/themes"
   import { CHECKERBOARD_RULES } from "$lib/patterns/checkerboard-rules"
   import { pickRandomSuggest, lookupPCCSColor } from "$lib/patterns/lookup"
+  import Heading1 from "$lib/components/Heading1.svelte"
 
   // 各テーマのベース・アソートカラーを市松模様専用ルールからランダム選択
   function getCheckerboardColors(themeId: string): { base: string; assort: string } {
@@ -36,7 +37,7 @@
 
 <main>
   <div class="header">
-    <h1>配色シミュレータ</h1>
+    <Heading1 icon="famicons:color-palette-sharp" grayscale compact>配色シミュレータ</Heading1>
     <p class="subtitle">イメージを選んで、配色ルールに沿った色の組み合わせを試してみよう</p>
   </div>
 
@@ -73,12 +74,6 @@
 
   .header {
     margin-bottom: 2rem;
-  }
-
-  h1 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0 0 0.5rem;
   }
 
   .subtitle {

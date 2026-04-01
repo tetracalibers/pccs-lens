@@ -27,9 +27,18 @@
 
 <script lang="ts">
   import type { Snippet } from "svelte"
-  import Heading1 from "$lib/components/m-html/Heading1.svelte"
+  import Heading1 from "$lib/components/Heading1.svelte"
+  import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
+  import type { GuideFrontmatter } from "$lib/meta/guide-pages"
+  import Breadcrumb from "$lib/components/Breadcrumb.svelte"
+  import { resolve } from "$app/paths"
 
-  let { title, children }: { title?: string; children: Snippet } = $props()
+  let {
+    title,
+    grades = [],
+    basic = false,
+    children
+  }: GuideFrontmatter & { children: Snippet } = $props()
   const pageTitle = $derived(title ? `${title} - PCCS Lens` : "PCCS Lens")
 </script>
 
@@ -38,7 +47,21 @@
 </svelte:head>
 
 <main>
-  <Heading1>{title}</Heading1>
+  <Breadcrumb
+    category="contents"
+    crumbs={[{ label: "色の理論", href: resolve("/guide") }, { label: title }]}
+  />
+  <Heading1 icon="solar:pen-new-round-broken">{title}</Heading1>
+  {#if grades.length > 0 || basic}
+    <div class="page-grades">
+      {#each grades as grade (grade)}
+        <GradeTag {grade} />
+      {/each}
+      {#if basic}
+        <GradeTag grade="basic" />
+      {/if}
+    </div>
+  {/if}
   {@render children()}
 </main>
 
@@ -49,24 +72,19 @@
     padding: 0;
   }
 
+  .page-grades {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 4px;
+    margin-block-end: 2.5rem;
+    margin-inline-start: -4px;
+  }
+
   main :global(p) {
-    color: light-dark(#556070, #9090b0);
+    color: light-dark(#556070, #f0f0f0);
+    color: var(--color-body);
     margin: 0.75rem 0;
     font-size: 0.9rem;
     line-height: 1.9;
-  }
-
-  main :global(blockquote) {
-    margin: 1.05rem 0;
-    padding: 0.55rem 0.8rem;
-    border-radius: 4px;
-    border: 1px dashed light-dark(rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.12));
-    box-sizing: border-box;
-    font-size: 0.9rem;
-    line-height: 1.7;
-  }
-
-  main :global(blockquote p) {
-    margin: 0;
   }
 </style>

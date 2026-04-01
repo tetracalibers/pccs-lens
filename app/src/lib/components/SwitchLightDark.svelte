@@ -43,9 +43,9 @@
   <span class="ring"></span>
   <span class="icon-wrap">
     {#if isLight}
-      <Icon icon="material-symbols-light:moon-stars-outline-rounded" width="24" height="24" />
+      <Icon icon="solar:moon-stars-broken" width="22" height="22" />
     {:else}
-      <Icon icon="iconoir:sun-light" width="20" height="20" />
+      <Icon icon="solar:sun-2-broken" width="22" height="22" />
     {/if}
   </span>
 </button>

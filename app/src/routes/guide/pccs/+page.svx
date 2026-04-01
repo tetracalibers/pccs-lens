@@ -1,0 +1,83 @@
+---
+layout: guide-content
+title: PCCSの基本
+
+grades: ["3"]
+basic: true
+---
+
+<script lang="ts">
+  import ToneImageDiagram from "$lib/demo/pccs/ToneImageDiagram.svelte"
+  import ToneAreaDiagram from "$lib/demo/pccs/ToneAreaDiagram.svelte"
+</script>
+
+## トーンと色のイメージ
+
+PCCSは、色のイメージや配色を考えるときに便利な色の表し方です。
+PCCSでは、1つの色を:Mark[色相]と:Mark[トーン]によって表します。
+
+- :Mark[色相]：赤・黄・緑・青・紫など、どの色みをもたせるか
+- :Mark[トーン]：どんなイメージをもたせるか
+
+:::Example
+色相が`2`（赤）で、トーンが`v`（vivid）の色は:Mark[`v2`]と表す
+:::
+
+PCCSのトーンは、色のイメージごとに明度・彩度の領域をまとめたものです。
+同じトーンであれば、色相が違っても、似たイメージを演出することができます。
+
+:::Tips
+トーンをクリックしてイメージを確認してみよう
+:::
+
+<ToneImageDiagram />
+
+たとえば、dトーンは明度が低めなのでやや暗く、彩度も中間くらいであまり鮮やかとはいえず、「くすんだ」といったイメージになります。
+
+PCCSでは、トーンを調整することで、色のイメージを調整することができます。
+
+## 色の分類とトーンの位置関係
+
+::::CardGrid
+
+:::TermCard{.-items-centering}
+### 純色
+
+白も黒もグレイも混ざっていない純粋な色を:Mark[純色]といいます。PCCSではvトーンが純色で、色みが最もわかりやすいです。
+
+<ToneAreaDiagram highlights={["v"]} />
+:::
+
+:::TermCard{.-items-centering}
+### 明清色
+
+純色に白を混ぜてできる色を:Mark[明清色]といいます。白を多く混ぜていくにつれ、だんだんと明度が高く、彩度は低くなっていきます。
+
+<ToneAreaDiagram highlights={["p", "lt", "b"]} />
+:::
+
+:::TermCard{.-items-centering}
+### 暗清色
+
+純色に黒を混ぜてできる色を:Mark[暗清色]といいます。黒を多く混ぜていくにつれ、だんだんと明度が低く、彩度も低くなっていきます。
+
+<ToneAreaDiagram highlights={["dkg", "dk", "dp"]} />
+:::
+
+:::TermCard{.-items-centering}
+### 中間色（濁色）
+
+純色に白と黒の両方（＝グレイ）を混ぜてできる色を:Mark[中間色]といいます。グレイを混ぜると濁った色になるため、:Mark[濁色]とも呼ばれます。
+
+<ToneAreaDiagram highlights={["ltg", "g", "sf", "d", "s"]} />
+:::
+
+:::TermCard{.-items-centering}
+### 無彩色
+
+白、黒、グレイは:Mark[無彩色]と呼ばれ、色相や彩度はもたず、明度の高さだけで区別します。
+
+<ToneAreaDiagram highlights={["W", "Gy", "Bk"]} />
+:::
+
+::::

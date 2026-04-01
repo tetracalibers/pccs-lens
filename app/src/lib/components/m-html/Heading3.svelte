@@ -12,7 +12,7 @@
   h3 {
     font-size: 1.2rem;
     font-weight: 700;
-    color: light-dark(#1a1a1a, #eeeef8);
+    color: var(--color-heading);
     display: flex;
     align-items: flex-start;
     gap: calc(0.55rem + 3px);

@@ -1,0 +1,10 @@
+:root {
+  --color-heading--light: #1a1a1a;
+  --color-body--light: oklch(from var(--color-heading--light) calc(l + 0.22) 0.04 235);
+
+  --color-heading--dark: #eeeef8;
+  --color-body--dark: oklch(from var(--color-heading--dark) calc(l - 0.15) calc(c * 0.5) h);
+
+  --color-heading: light-dark(var(--color-heading--light), var(--color-heading--dark));
+  --color-body: light-dark(var(--color-body--light), var(--color-body--dark));
+}

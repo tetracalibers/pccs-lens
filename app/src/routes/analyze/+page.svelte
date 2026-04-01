@@ -9,6 +9,7 @@
   import { PCCS_CARD_199 } from "$lib/data/pccs"
   import type { PCCSColor } from "$lib/data/types"
   import { randomHex } from "$lib/color/utils"
+  import Heading1 from "$lib/components/Heading1.svelte"
 
   const colors = PCCS_CARD_199
   const TOP_N = 3
@@ -82,7 +83,7 @@
 </svelte:head>
 
 <main>
-  <h1>PCCSによる配色の分析</h1>
+  <Heading1 icon="famicons:color-palette-sharp" grayscale compact>配色の分析</Heading1>
 
   <section class="approximation-section">
     <h2>配色に使う色</h2>
@@ -127,9 +128,8 @@
     --color-muted: light-dark(#eeeeee, #252535);
   }
 
-  h1 {
-    font-size: 1.5rem;
-    margin: 0 0 1.5rem;
+  section:first-of-type {
+    margin-block-start: 2rem;
   }
 
   h2 {

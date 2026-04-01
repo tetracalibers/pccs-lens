@@ -5,6 +5,7 @@
   import { page } from "$app/state"
   import { resolve } from "$app/paths"
   import SwitchLightDark from "$lib/components/SwitchLightDark.svelte"
+  import "$lib/styles/color.css"
 
   let { children } = $props()
 
@@ -14,7 +15,7 @@
     { href: resolve("/patterns"), path: "/patterns", label: "配色シミュレータ" }
   ]
 
-  const contentItems = [{ href: resolve("/guide"), path: "/guide", label: "PCCSとは？" }]
+  const contentItems = [{ href: resolve("/guide"), path: "/guide", label: "色の理論" }]
 
   let isNavOpen = $state(false)
 

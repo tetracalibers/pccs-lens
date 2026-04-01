@@ -18,7 +18,10 @@ const directives = {
     { name: "TermCard", replaceTo: "svelte-component" }
   ],
   leaf: [],
-  text: [{ name: "Mark", replaceTo: "svelte-component" }]
+  text: [
+    { name: "Mark", replaceTo: "svelte-component" },
+    { name: "PageLink", replaceTo: "svelte-component" }
+  ]
 }
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -30,7 +33,10 @@ const config = {
   preprocess: [
     mdsvex({
       layout: {
-        guide: fileURLToPath(new URL("./src/lib/layouts/guide.svelte", import.meta.url))
+        "guide-map": fileURLToPath(new URL("./src/lib/layouts/guide-map.svelte", import.meta.url)),
+        "guide-content": fileURLToPath(
+          new URL("./src/lib/layouts/guide-content.svelte", import.meta.url)
+        )
       },
       // @ts-ignore
       remarkPlugins: [remarkBreaks, remarkDirective, [remarkCustomDirectives, directives]]
