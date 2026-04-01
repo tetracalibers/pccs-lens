@@ -20,7 +20,7 @@
     font-size: 2.2rem;
     font-weight: 900;
     margin: 3.5rem 0 1.25rem;
-    color: light-dark(#1a1a1a, #dde8f0);
+    color: var(--color-heading);
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -42,7 +42,7 @@
   }
 
   h1.grayscale :global(svg) {
-    color: color-mix(in srgb, var(--_icon-color) 10%, slategray 90%);
+    color: color-mix(in srgb, var(--_icon-color) 25%, var(--color-heading) 75%);
   }
 
   h1:first-of-type {

@@ -5,6 +5,7 @@
   import { page } from "$app/state"
   import { resolve } from "$app/paths"
   import SwitchLightDark from "$lib/components/SwitchLightDark.svelte"
+  import "$lib/styles/color.css"
 
   let { children } = $props()
 

@@ -34,7 +34,7 @@
   }
 
   main :global(p) {
-    color: light-dark(#556070, #9090b0);
+    color: var(--color-body);
     margin: 0.75rem 0;
     font-size: 0.9rem;
     line-height: 1.9;

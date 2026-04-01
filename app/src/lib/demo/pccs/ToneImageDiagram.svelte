@@ -557,7 +557,7 @@
     padding: 0.25rem 0.5rem;
     border-radius: 6px;
     cursor: pointer;
-    color: var(--color-text, #333);
+    color: var(--color-body);
   }
 
   .tooltip-close:hover {
@@ -621,7 +621,7 @@
 
   .categories li {
     font-size: 0.75rem;
-    color: light-dark(#777, #aaa);
+    color: var(--color-body);
   }
 
   .categories li:not(:last-child)::after {

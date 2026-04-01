@@ -21,7 +21,7 @@
 
   ul :global(li) {
     font-size: 0.9rem;
-    color: light-dark(#556070, #9090b0);
+    color: var(--color-body);
     line-height: 1.7;
     padding-left: 1.4rem;
     position: relative;

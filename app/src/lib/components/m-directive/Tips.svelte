@@ -38,6 +38,6 @@
     margin: 0;
     font-size: inherit;
     line-height: inherit;
-    color: light-dark(#556070, #9090b0);
+    color: var(--color-body);
   }
 </style>
