@@ -38,4 +38,8 @@
     margin: 0 0 0.55rem;
     color: var(--color-text, #111);
   }
+
+  .term-card :global(p:last-child) {
+    margin-block-end: 0;
+  }
 </style>
