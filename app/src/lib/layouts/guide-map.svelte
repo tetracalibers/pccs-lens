@@ -1,11 +1,12 @@
 <script lang="ts" module>
   import Heading2 from "$lib/components/m-html/Heading2.svelte"
 
-  import Mark from "$lib/components/m-directive/Mark.svelte"
+  import ComingSoon from "$lib/components/m-directive/ComingSoon.svelte"
+  import MoreToCome from "$lib/components/m-directive/MoreToCome.svelte"
   import PageLink from "$lib/components/m-directive/PageLink.svelte"
 
   /* eslint-disable no-import-assign */
-  export { Heading2 as h2, Mark, PageLink }
+  export { Heading2 as h2, ComingSoon, MoreToCome, PageLink }
   /* eslint-enable no-import-assign */
 </script>
 
