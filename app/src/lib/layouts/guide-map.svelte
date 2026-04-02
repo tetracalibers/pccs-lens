@@ -46,8 +46,8 @@
     padding-inline: 1rem;
     margin-inline-start: 0.5rem;
     display: grid;
-    grid-template-columns: auto 1fr;
-    column-gap: 3rem;
+    grid-template-columns: auto auto;
+    column-gap: 1rem;
   }
 
   main :global(li) {
