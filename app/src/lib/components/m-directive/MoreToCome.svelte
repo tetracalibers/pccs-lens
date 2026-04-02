@@ -17,10 +17,9 @@
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
-    font-family: "Chokokutai", system-ui;
+    font-family: var(--font-fancy);
     display: inline-block;
     line-height: 1.4;
-    padding-inline-start: 1.5rem;
     margin-block: 0.5rem;
     font-size: 0.85rem;
   }
@@ -39,7 +38,16 @@
     );
   }
 
+  .more-to-come::before,
   .more-to-come::after {
-    content: "...";
+    content: "--";
+    display: inline-block;
+  }
+
+  .more-to-come::before {
+    padding-inline-end: 1ex;
+  }
+  .more-to-come::after {
+    padding-inline-start: 1ex;
   }
 </style>

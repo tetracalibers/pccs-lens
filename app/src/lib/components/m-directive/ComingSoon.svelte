@@ -17,7 +17,7 @@
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
-    font-family: "Chokokutai", system-ui;
+    font-family: var(--font-fancy);
     font-size: 1rem;
     display: inline-block;
     line-height: 1.2;

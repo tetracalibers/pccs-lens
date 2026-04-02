@@ -176,6 +176,7 @@
 
   :global(body) {
     --font-mono: "Reddit Mono", monospace;
+    --font-fancy: "Chokokutai", system-ui;
 
     font-family: "SUSE Mono", "Zen Kaku Gothic Antique", sans-serif;
     font-synthesis-weight: none;
