@@ -32,6 +32,7 @@
     padding: 3px 8px;
     border-radius: 4px;
     color: #1a1a2e;
+    flex-shrink: 0;
   }
 
   .grade-tag[data-grade="basic"] {

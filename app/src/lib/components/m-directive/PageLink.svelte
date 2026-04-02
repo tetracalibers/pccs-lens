@@ -11,7 +11,6 @@
     basic = false,
     title
   } = $derived.by(() => {
-    console.log(meta)
     if (meta) return meta
     throw new Error(`PageLink: No metadata found for slug "${slug}"`)
   })

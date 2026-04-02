@@ -17,10 +17,11 @@ const directives = {
     { name: "CardGrid", replaceTo: "svelte-component" },
     { name: "TermCard", replaceTo: "svelte-component" }
   ],
-  leaf: [],
+  leaf: [{ name: "ComingSoon", replaceTo: "svelte-component" }],
   text: [
     { name: "Mark", replaceTo: "svelte-component" },
-    { name: "PageLink", replaceTo: "svelte-component" }
+    { name: "PageLink", replaceTo: "svelte-component" },
+    { name: "MoreToCome", replaceTo: "svelte-component" }
   ]
 }
 
