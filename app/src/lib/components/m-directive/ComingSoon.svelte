@@ -2,9 +2,9 @@
 
 <style>
   .coming-soon {
-    --_grad-1: #818cf8;
-    --_grad-2: #c592fe;
-    --_grad-3: #38bdf8;
+    --_grad-1: #9a9a9a;
+    --_grad-2: #b5b5b5;
+    --_grad-3: #9c9c9c;
 
     background-image: linear-gradient(
       297deg,
@@ -13,6 +13,7 @@
       var(--_grad-3),
       var(--_grad-1)
     );
+
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
