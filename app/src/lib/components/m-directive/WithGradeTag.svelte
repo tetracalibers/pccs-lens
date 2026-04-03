@@ -2,22 +2,30 @@
   import type { Snippet } from "svelte"
   import GradeTag from "./GradeTag.svelte"
 
-  type Grade = "basic" | "3" | "2" | "1" | "uc"
+  type Grade = "3" | "2" | "1" | "uc"
+  type GradeCSV = Grade | `${Grade},${Grade}` | `${Grade},${Grade},${Grade}`
 
-  let { children, grade }: { children?: Snippet; grade: Grade } = $props()
+  let { children, grades }: { children?: Snippet; grades: GradeCSV } = $props()
+  const gradeList = $derived(grades.split(",") as Grade[])
 </script>
 
 <div class="with-grade-tag">
   <span class="text">{@render children?.()}</span>
-  <GradeTag {grade} />
+  <div class="grade-tags">
+    {#each gradeList as grade (grade)}
+      <GradeTag {grade} />
+    {/each}
+  </div>
 </div>
 
 <style>
-  .with-grade-tag {
-    display: inline;
+  .grade-tags {
+    display: inline-flex;
+    gap: 4px;
+    translate: 0 calc(50% - 0.5lh);
   }
-  .with-grade-tag :global(.grade-tag) {
-    vertical-align: 0.25lh;
+
+  .grade-tags :global(.grade-tag) {
     line-height: 1.3;
   }
 </style>

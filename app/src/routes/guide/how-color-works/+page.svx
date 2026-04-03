@@ -5,5 +5,5 @@ title: 色とは何か
 grades: ["3", "uc"]
 ---
 
-## :WithGradeTag[色を見るための3要素]{grade="3"}
+## :WithGradeTag[色を見るための3要素]{grades="3,uc"}
 
