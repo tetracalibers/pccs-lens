@@ -11,6 +11,7 @@
   import Example from "$lib/components/m-directive/Example.svelte"
   import CardGrid from "$lib/components/m-directive/CardGrid.svelte"
   import TermCard from "$lib/components/m-directive/TermCard.svelte"
+  import ComingSoon from "$lib/components/m-directive/ComingSoon.svelte"
 
   /* eslint-disable no-import-assign */
   export {
@@ -24,7 +25,8 @@
     Tips,
     Example,
     CardGrid,
-    TermCard
+    TermCard,
+    ComingSoon
   }
   /* eslint-enable no-import-assign */
 </script>
