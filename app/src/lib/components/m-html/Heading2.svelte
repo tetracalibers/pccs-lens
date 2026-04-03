@@ -5,6 +5,7 @@
 </script>
 
 <h2>
+  <span class="dot"></span>
   {@render children?.()}
 </h2>
 
@@ -13,20 +14,20 @@
     font-size: 1.6rem;
     font-weight: 700;
     color: var(--color-heading);
-    display: flex;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
     gap: 0.55rem;
     line-height: 1.3;
     margin: 2rem 0 0.75rem;
   }
 
-  h2::before {
-    content: "";
+  .dot {
     display: inline-block;
     flex-shrink: 0;
     width: 10px;
     height: 10px;
-    margin-top: calc(0.65em - 5px);
+    translate: 0 -5px;
     border-radius: 50%;
     background: linear-gradient(135deg, #ff6b6b, #c77dff);
   }

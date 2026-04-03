@@ -5,6 +5,8 @@
   import Ulist from "$lib/components/m-html/Ulist.svelte"
 
   import Mark from "$lib/components/m-directive/Mark.svelte"
+  import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
+  import WithGradeTag from "$lib/components/m-directive/WithGradeTag.svelte"
   import Tips from "$lib/components/m-directive/Tips.svelte"
   import Example from "$lib/components/m-directive/Example.svelte"
   import CardGrid from "$lib/components/m-directive/CardGrid.svelte"
@@ -17,6 +19,8 @@
     Heading4 as h4,
     Ulist as ul,
     Mark,
+    GradeTag,
+    WithGradeTag,
     Tips,
     Example,
     CardGrid,
@@ -28,7 +32,6 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
   import Heading1 from "$lib/components/Heading1.svelte"
-  import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
   import type { GuideFrontmatter } from "$lib/meta/guide-pages"
   import Breadcrumb from "$lib/components/Breadcrumb.svelte"
   import { resolve } from "$app/paths"
