@@ -8,6 +8,7 @@
   import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
   import WithGradeTag from "$lib/components/m-directive/WithGradeTag.svelte"
   import Tips from "$lib/components/m-directive/Tips.svelte"
+  import Note from "$lib/components/m-directive/Note.svelte"
   import Example from "$lib/components/m-directive/Example.svelte"
   import CardGrid from "$lib/components/m-directive/CardGrid.svelte"
   import TermCard from "$lib/components/m-directive/TermCard.svelte"
@@ -23,6 +24,7 @@
     GradeTag,
     WithGradeTag,
     Tips,
+    Note,
     Example,
     CardGrid,
     TermCard,
