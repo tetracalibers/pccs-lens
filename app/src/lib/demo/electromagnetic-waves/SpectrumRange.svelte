@@ -121,13 +121,13 @@
 
   // ===== 色ブロック =====
   const colorBlocks: ColorBlock[] = [
-    { label: "紫", nmStart: 380, nmEnd: 430, fill: "#6020c0" },
-    { label: "藍", nmStart: 430, nmEnd: 460, fill: "#1838c8" },
-    { label: "青", nmStart: 460, nmEnd: 500, fill: "#0878cc" },
-    { label: "緑", nmStart: 500, nmEnd: 570, fill: "#208828" },
-    { label: "黄", nmStart: 570, nmEnd: 590, fill: "#a89800" },
-    { label: "橙", nmStart: 590, nmEnd: 610, fill: "#cc6600" },
-    { label: "赤", nmStart: 610, nmEnd: 780, fill: "#c01020" }
+    { label: "紫", nmStart: 380, nmEnd: 430, fill: "#6A00FF" },
+    { label: "藍", nmStart: 430, nmEnd: 460, fill: "#003CFF" },
+    { label: "青", nmStart: 460, nmEnd: 500, fill: "#0094FF" },
+    { label: "緑", nmStart: 500, nmEnd: 570, fill: "#00E600" },
+    { label: "黄", nmStart: 570, nmEnd: 590, fill: "#FFE600" },
+    { label: "橙", nmStart: 590, nmEnd: 610, fill: "#FF7F00" },
+    { label: "赤", nmStart: 610, nmEnd: 780, fill: "#FF0000" }
   ]
 
   const LAST_BLOCK = colorBlocks.length - 1
