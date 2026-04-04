@@ -11,27 +11,24 @@
 <style>
   .tips {
     margin: 1.05rem 0;
-    padding: 0.3rem 0;
-    display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
+    padding: 0.2rem 0 0.2rem 1rem;
+    border-left: 2px solid transparent;
+    border-image: linear-gradient(180deg, #ffd93d, #ff6b6b) 1;
+    position: relative;
     font-size: 0.88rem;
     line-height: 1.7;
   }
 
   .tips::before {
     content: "Tips";
-    flex-shrink: 0;
-    font-size: 0.65rem;
+    display: block;
+    font-size: 0.68rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: light-dark(#ffffff, #1a1a1a);
-    background: light-dark(#555555, #888888);
-    border-radius: 3px;
-    padding: 2px 6px;
-    line-height: 1.4;
-    opacity: 0.9;
+    color: light-dark(#9a6200, #ffd93d);
+    margin-bottom: 0.25rem;
+    opacity: 0.85;
   }
 
   .tips :global(p) {
