@@ -56,7 +56,6 @@
   const HEIGHT = BLOCK_TOP + BLOCK_HEIGHT + 20 // 下余白 20px
 
   // ===== 色定数 =====
-  const COL_BLACK = "#1a1a1a"
   const COL_AXIS = "#3c3c3c"
   const COL_BLUE = "#3366dd"
   const COL_GREEN = "#339944"
