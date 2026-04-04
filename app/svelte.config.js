@@ -43,7 +43,12 @@ const config = {
         )
       },
       // @ts-ignore
-      remarkPlugins: [remarkBreaks, remarkDirective, [remarkCustomDirectives, directives], remarkMermaid]
+      remarkPlugins: [
+        remarkBreaks,
+        remarkDirective,
+        [remarkCustomDirectives, directives],
+        remarkMermaid
+      ]
     })
   ],
   extensions: [".svelte", ".svx"]
