@@ -43,7 +43,7 @@
   const Y_SEC_LABEL = Y_FULL_ARROW + GAP_ARROW_TO_SEC
   const Y_SEC_RANGE = Y_SEC_LABEL + 22
   const Y_SEC_ARROW = Y_SEC_RANGE + 16
-  const GAP_SEC_TO_BAND = 15  // セクション矢印 → スペクトル帯間の余白 (px)
+  const GAP_SEC_TO_BAND = 15 // セクション矢印 → スペクトル帯間の余白 (px)
   const BAND_TOP = Y_SEC_ARROW + GAP_SEC_TO_BAND
   const BAND_HEIGHT = 150
   const BAND_BOTTOM = BAND_TOP + BAND_HEIGHT
@@ -157,20 +157,45 @@
       </linearGradient>
 
       <!-- 全域矢印マーカー (黒) -->
-      <marker id="aL-k" markerWidth="10" markerHeight="8" refX="0" refY="4" orient="auto">
-        <polygon points="10,0 0,4 10,8" fill={COL_BLACK} />
+      <!-- markerWidth=9, markerHeight=10: 高さ7・半底辺4 で正三角形に近い比率 (4/7 ≈ 1/√3) -->
+      <marker id="aL-k" markerWidth="9" markerHeight="10" refX="1" refY="5" orient="auto">
+        <polyline
+          points="8,1 1,5 8,9"
+          fill="none"
+          stroke={COL_BLACK}
+          stroke-width="1"
+          stroke-linejoin="round"
+        />
       </marker>
-      <marker id="aR-k" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto">
-        <polygon points="0,0 10,4 0,8" fill={COL_BLACK} />
+      <marker id="aR-k" markerWidth="9" markerHeight="10" refX="8" refY="5" orient="auto">
+        <polyline
+          points="1,1 8,5 1,9"
+          fill="none"
+          stroke={COL_BLACK}
+          stroke-width="1"
+          stroke-linejoin="round"
+        />
       </marker>
 
       <!-- 各セクションの矢印マーカー -->
       {#each sections as sec (sec.id)}
-        <marker id="aL-{sec.id}" markerWidth="10" markerHeight="8" refX="0" refY="4" orient="auto">
-          <polygon points="10,0 0,4 10,8" fill={sec.color} />
+        <marker id="aL-{sec.id}" markerWidth="9" markerHeight="10" refX="1" refY="5" orient="auto">
+          <polyline
+            points="8,1 1,5 8,9"
+            fill="none"
+            stroke={sec.color}
+            stroke-width="1"
+            stroke-linejoin="round"
+          />
         </marker>
-        <marker id="aR-{sec.id}" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto">
-          <polygon points="0,0 10,4 0,8" fill={sec.color} />
+        <marker id="aR-{sec.id}" markerWidth="9" markerHeight="10" refX="8" refY="5" orient="auto">
+          <polyline
+            points="1,1 8,5 1,9"
+            fill="none"
+            stroke={sec.color}
+            stroke-width="1"
+            stroke-linejoin="round"
+          />
         </marker>
       {/each}
     </defs>
