@@ -23,7 +23,6 @@
 
   // ===== SVG dimensions =====
   const WIDTH = 1100
-  const HEIGHT = 420
 
   // ===== Spectrum parameters =====
   const NM_MIN = 380
@@ -40,18 +39,21 @@
   const Y_TITLE_1 = 30
   const Y_TITLE_2 = 58
   const Y_FULL_ARROW = 76
-  const Y_SEC_LABEL = 102
-  const Y_SEC_RANGE = 124
-  const Y_SEC_ARROW = 140
-  const BAND_TOP = 155
+  const GAP_ARROW_TO_SEC = 40 // 全域矢印 → セクションラベル間の余白 (px)
+  const Y_SEC_LABEL = Y_FULL_ARROW + GAP_ARROW_TO_SEC
+  const Y_SEC_RANGE = Y_SEC_LABEL + 22
+  const Y_SEC_ARROW = Y_SEC_RANGE + 16
+  const GAP_SEC_TO_BAND = 15  // セクション矢印 → スペクトル帯間の余白 (px)
+  const BAND_TOP = Y_SEC_ARROW + GAP_SEC_TO_BAND
   const BAND_HEIGHT = 150
   const BAND_BOTTOM = BAND_TOP + BAND_HEIGHT
   const MAJOR_TICK_LEN = 25
   const MINOR_TICK_LEN = 10
-  const Y_TICK_LABEL = 330
-  const BLOCK_TOP = 348
+  const Y_TICK_LABEL = BAND_BOTTOM + 25
+  const BLOCK_TOP = Y_TICK_LABEL + 18
   const BLOCK_HEIGHT = 52
   const BLOCK_GAP = 1 // 隣接ブロック間の隙間 (px)
+  const HEIGHT = BLOCK_TOP + BLOCK_HEIGHT + 20 // 下余白 20px
 
   // ===== 色定数 =====
   const COL_BLACK = "#1a1a1a"
