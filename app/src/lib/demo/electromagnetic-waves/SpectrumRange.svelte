@@ -22,13 +22,13 @@
   }
 
   // ===== SVG dimensions =====
-  const WIDTH = 1100
+  const WIDTH = 960
 
   // ===== Spectrum parameters =====
   const NM_MIN = 380
   const NM_MAX = 780
-  const X_START = 70 // px at NM_MIN
-  const X_END = 1030 // px at NM_MAX
+  const X_START = 0
+  const X_END = WIDTH
   const SPECTRUM_W = X_END - X_START
   const PX_PER_NM = SPECTRUM_W / (NM_MAX - NM_MIN)
 
