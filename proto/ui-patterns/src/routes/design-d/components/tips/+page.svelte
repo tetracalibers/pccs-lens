@@ -230,7 +230,7 @@
   .tips.-b {
     padding: 0.2rem 0 0.2rem 1rem;
     border-left: 2px solid transparent;
-    border-image: linear-gradient(180deg, #ffd93d, #ff6b6b) 1;
+    border-image: linear-gradient(180deg, #7b8eb8, #4d6090) 1;
     position: relative;
   }
 
@@ -241,7 +241,7 @@
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #ffd93d;
+    color: #8899cc;
     margin-bottom: 0.25rem;
     opacity: 0.85;
   }
@@ -251,7 +251,7 @@
   }
 
   main.light .tips.-b::before {
-    color: #9a6200;
+    color: #4a5880;
   }
 
   /* =====================
@@ -586,7 +586,7 @@
   .note.-b {
     padding: 0.2rem 0 0.2rem 1rem;
     border-left: 2px solid transparent;
-    border-image: linear-gradient(180deg, #6bcb77, #5cc8c8) 1;
+    border-image: linear-gradient(180deg, #ffd93d, #ff6b6b) 1;
     position: relative;
   }
 
@@ -597,7 +597,7 @@
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #6bcb77;
+    color: #ffd93d;
     margin-bottom: 0.25rem;
     opacity: 0.85;
   }
@@ -607,7 +607,7 @@
   }
 
   main.light .note.-b::before {
-    color: #1d7a2a;
+    color: #9a6200;
   }
 
   /* =====================
