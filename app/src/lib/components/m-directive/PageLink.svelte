@@ -32,12 +32,12 @@
   <span class="pl-title">{title}</span>
   {#if grades.length > 0 || basic}
     <span class="pl-grades">
-      {#each grades as grade (grade)}
-        <GradeTag {grade} />
-      {/each}
       {#if basic}
         <GradeTag grade="basic" />
       {/if}
+      {#each grades as grade (grade)}
+        <GradeTag {grade} />
+      {/each}
     </span>
   {/if}
 </a>

@@ -59,12 +59,12 @@
   <Heading1 icon="solar:pen-new-round-broken">{title}</Heading1>
   {#if grades.length > 0 || basic}
     <div class="page-grades">
-      {#each grades as grade (grade)}
-        <GradeTag {grade} />
-      {/each}
       {#if basic}
         <GradeTag grade="basic" />
       {/if}
+      {#each grades as grade (grade)}
+        <GradeTag {grade} />
+      {/each}
     </div>
   {/if}
   {@render children()}
