@@ -1,5 +1,3 @@
-// @ts-check
-
 import { mdsvex } from "mdsvex"
 import adapter from "@sveltejs/adapter-static"
 import { fileURLToPath } from "url"
@@ -14,6 +12,7 @@ const isGithubPages = process.env.GITHUB_PAGES === "true"
 const directives = {
   container: [
     { name: "Tips", replaceTo: "svelte-component" },
+    { name: "Note", replaceTo: "svelte-component" },
     { name: "Example", replaceTo: "svelte-component" },
     { name: "CardGrid", replaceTo: "svelte-component" },
     { name: "TermCard", replaceTo: "svelte-component" }
@@ -42,7 +41,6 @@ const config = {
           new URL("./src/lib/layouts/guide-content.svelte", import.meta.url)
         )
       },
-      // @ts-ignore
       remarkPlugins: [
         remarkBreaks,
         remarkDirective,
