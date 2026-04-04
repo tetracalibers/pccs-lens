@@ -5,6 +5,10 @@ title: 光とは何か
 grades: ["3", "uc"]
 ---
 
+<script>
+  import SpectrumRange from "$lib/demo/electromagnetic-waves/SpectrumRange.svelte"
+</script>
+
 ## :WithGradeTag[電磁波と波長による分類]{grades="3,uc"}
 
 そもそも、光とは一体なんだろうか？
@@ -35,4 +39,4 @@ grades: ["3", "uc"]
 
 ## :WithGradeTag[可視光の波長と色]{grades="3,uc"}
 
-::ComingSoon
+<SpectrumRange />
