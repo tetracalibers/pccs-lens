@@ -33,6 +33,7 @@
     <p class="pattern-label">B — 左アクセントライン</p>
     <div class="tips -b">トーンをクリックしてイメージを確認してみよう</div>
     <div class="example -b">同じ左ラインスタイルをそのまま Example にも適用した場合の見た目</div>
+    <div class="note -b">同じ左ラインスタイルをそのまま Note にも適用した場合の見た目</div>
     <p class="pattern-note">
       左に2pxの琥珀グラデーションライン。枠で囲まず、余白と線だけで区切る。テキスト主体のページに溶け込みやすい
     </p>
@@ -509,6 +510,18 @@
     color: #556070;
   }
 
+  /* ===== 共通 Note テキスト ===== */
+  .note {
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: #9898b8;
+    margin-top: 0.75rem;
+  }
+
+  main.light .note {
+    color: #556070;
+  }
+
   /* =====================
      A: 琥珀ネオン枠（現行案）— Example
   ===================== */
@@ -565,6 +578,36 @@
 
   main.light .example.-b::before {
     color: #0050c8;
+  }
+
+  /* =====================
+     B: 左アクセントライン — Note
+  ===================== */
+  .note.-b {
+    padding: 0.2rem 0 0.2rem 1rem;
+    border-left: 2px solid transparent;
+    border-image: linear-gradient(180deg, #6bcb77, #5cc8c8) 1;
+    position: relative;
+  }
+
+  .note.-b::before {
+    content: "Note";
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #6bcb77;
+    margin-bottom: 0.25rem;
+    opacity: 0.85;
+  }
+
+  main.light .note.-b {
+    color: #556070;
+  }
+
+  main.light .note.-b::before {
+    color: #1d7a2a;
   }
 
   /* =====================
