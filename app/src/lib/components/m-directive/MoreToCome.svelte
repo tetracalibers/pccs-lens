@@ -22,6 +22,7 @@
     line-height: 1.4;
     margin-block: 0.5rem;
     font-size: 0.85rem;
+    grid-column: 1 / -1;
   }
 
   :global(.dark) .more-to-come {

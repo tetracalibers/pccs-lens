@@ -6,6 +6,7 @@ import { fileURLToPath } from "url"
 import remarkBreaks from "remark-breaks"
 import remarkDirective from "./src/lib/remark/directive.js"
 import remarkCustomDirectives from "./src/lib/remark/custom-directives.js"
+import remarkMermaid from "./src/lib/remark/mermaid.js"
 
 const isGithubPages = process.env.GITHUB_PAGES === "true"
 
@@ -20,8 +21,10 @@ const directives = {
   leaf: [{ name: "ComingSoon", replaceTo: "svelte-component" }],
   text: [
     { name: "Mark", replaceTo: "svelte-component" },
+    { name: "GradeTag", replaceTo: "svelte-component" },
     { name: "PageLink", replaceTo: "svelte-component" },
-    { name: "MoreToCome", replaceTo: "svelte-component" }
+    { name: "MoreToCome", replaceTo: "svelte-component" },
+    { name: "WithGradeTag", replaceTo: "svelte-component" }
   ]
 }
 
@@ -40,7 +43,12 @@ const config = {
         )
       },
       // @ts-ignore
-      remarkPlugins: [remarkBreaks, remarkDirective, [remarkCustomDirectives, directives]]
+      remarkPlugins: [
+        remarkBreaks,
+        remarkDirective,
+        [remarkCustomDirectives, directives],
+        remarkMermaid
+      ]
     })
   ],
   extensions: [".svelte", ".svx"]

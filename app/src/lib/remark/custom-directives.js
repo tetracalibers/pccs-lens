@@ -26,27 +26,30 @@ export default function remarkCustomDirectives(directives) {
       })()
       if (!typeKey) return
 
-      const config = directives[typeKey].find((d) => d.name === directive.name)
-      if (!config) return
-
       const isComponent = directive.name[0] === directive.name[0].toUpperCase()
-      if (isComponent) {
-        directive.data = {
-          ...node.data,
-          hName: directive.name,
-          hProperties: Object.fromEntries(
-            Object.entries(directive.attributes ?? {}).filter(([_k, v]) => Boolean(v))
-          )
-        }
-      } else {
-        if (config.replaceTo !== "html") return
-        const classes = directive.attributes?.class ? directive.attributes.class.split(" ") : []
+      const config = directives[typeKey].find((d) => d.name === directive.name)
 
+      if (isComponent && config?.replaceTo === "svelte-component") {
         directive.data = {
-          ...node.data,
-          hName: config.tag,
-          hProperties: { class: [...config.classes, ...classes].join(" ") }
+          ...directive.data,
+          hName: directive.name,
+          hProperties: directive.attributes
         }
+        return
+      }
+
+      const classes = (() => {
+        const configClasses = config && config.replaceTo === "html" ? config.classes : []
+        const directiveClasses = directive.attributes?.class
+          ? directive.attributes.class.split(" ")
+          : []
+        return [...configClasses, ...directiveClasses]
+      })()
+
+      directive.data = {
+        ...directive.data,
+        hName: directive.name,
+        hProperties: { ...directive.attributes, class: classes.join(" ") }
       }
     })
   }

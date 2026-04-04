@@ -5,10 +5,13 @@
   import Ulist from "$lib/components/m-html/Ulist.svelte"
 
   import Mark from "$lib/components/m-directive/Mark.svelte"
+  import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
+  import WithGradeTag from "$lib/components/m-directive/WithGradeTag.svelte"
   import Tips from "$lib/components/m-directive/Tips.svelte"
   import Example from "$lib/components/m-directive/Example.svelte"
   import CardGrid from "$lib/components/m-directive/CardGrid.svelte"
   import TermCard from "$lib/components/m-directive/TermCard.svelte"
+  import ComingSoon from "$lib/components/m-directive/ComingSoon.svelte"
 
   /* eslint-disable no-import-assign */
   export {
@@ -17,10 +20,13 @@
     Heading4 as h4,
     Ulist as ul,
     Mark,
+    GradeTag,
+    WithGradeTag,
     Tips,
     Example,
     CardGrid,
-    TermCard
+    TermCard,
+    ComingSoon
   }
   /* eslint-enable no-import-assign */
 </script>
@@ -28,7 +34,6 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
   import Heading1 from "$lib/components/Heading1.svelte"
-  import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
   import type { GuideFrontmatter } from "$lib/meta/guide-pages"
   import Breadcrumb from "$lib/components/Breadcrumb.svelte"
   import { resolve } from "$app/paths"
@@ -54,12 +59,12 @@
   <Heading1 icon="solar:pen-new-round-broken">{title}</Heading1>
   {#if grades.length > 0 || basic}
     <div class="page-grades">
-      {#each grades as grade (grade)}
-        <GradeTag {grade} />
-      {/each}
       {#if basic}
         <GradeTag grade="basic" />
       {/if}
+      {#each grades as grade (grade)}
+        <GradeTag {grade} />
+      {/each}
     </div>
   {/if}
   {@render children()}
@@ -86,5 +91,11 @@
     margin: 0.75rem 0;
     font-size: 0.9rem;
     line-height: 1.9;
+  }
+
+  main :global(.mermaid-diagram) {
+    margin: 1.5rem 0;
+    max-width: 100%;
+    overflow-x: auto;
   }
 </style>
