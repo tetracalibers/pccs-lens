@@ -94,7 +94,7 @@
   }
 
   main :global(.mermaid-diagram) {
-    margin: 0;
+    margin: 1.5rem 0;
     max-width: 100%;
     overflow-x: auto;
   }
