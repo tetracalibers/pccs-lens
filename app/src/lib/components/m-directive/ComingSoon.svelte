@@ -37,19 +37,9 @@
       var(--_grad-dk-1)
     );
   }
-
-  .coming-soon::before,
   .coming-soon::after {
-    content: "--";
+    content: "...";
     display: inline-block;
-  }
-
-  .coming-soon::before {
-    padding-inline-start: 1rem;
-    padding-inline-end: 1ex;
-  }
-  .coming-soon::after {
-    padding-inline-start: 1ex;
-    padding-inline-end: 1rem;
+    padding-inline-start: 0.5ex;
   }
 </style>

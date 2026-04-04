@@ -39,19 +39,13 @@
     );
   }
 
-  .more-to-come::before,
-  .more-to-come::after {
-    content: "--";
+  .more-to-come::before {
+    content: "—";
     display: inline-block;
     width: 1.5rem;
+    padding-inline-end: 1ex;
     text-align: center;
     box-sizing: border-box;
-  }
-
-  .more-to-come::before {
-    padding-inline-end: 1ex;
-  }
-  .more-to-come::after {
-    padding-inline-start: 1ex;
+    vertical-align: text-bottom;
   }
 </style>
