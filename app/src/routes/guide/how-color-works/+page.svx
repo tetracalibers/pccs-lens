@@ -52,4 +52,10 @@ grades: ["3", "uc"]
 
 ## :WithGradeTag[光源色と物体色]{grades="uc"}
 
-::ComingSoon
+```mermaid
+graph LR
+    Color["色"] --- LightColor["光源色"]
+    Color --- ObjectColor["物体色"]
+    ObjectColor --- SurfaceColor["表面色"]
+    ObjectColor --- TransmissionColor["透過色"]
+```

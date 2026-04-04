@@ -92,4 +92,10 @@
     font-size: 0.9rem;
     line-height: 1.9;
   }
+
+  main :global(.mermaid-diagram) {
+    margin: 0;
+    max-width: 100%;
+    overflow-x: auto;
+  }
 </style>
