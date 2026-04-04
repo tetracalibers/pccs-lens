@@ -47,7 +47,7 @@
     display: grid;
     grid-template-columns: subgrid;
     grid-column: span 2;
-    align-items: center;
+    align-items: flex-start;
     text-decoration: none;
     color: inherit;
     position: relative;
@@ -59,11 +59,11 @@
     content: "";
     position: absolute;
     left: 2px;
-    top: 50%;
+    top: 0.5rem;
     width: 10px;
     height: 10px;
     border-radius: 50% 50% 50% 0;
-    transform: translateY(-50%) rotate(225deg);
+    transform: translateY(50%) rotate(225deg);
     background: linear-gradient(
       135deg,
       var(--pl-accent),
@@ -81,7 +81,7 @@
 
   .page-link:hover::before {
     border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
-    transform: translateY(-50%) scale(1.35) rotate(315deg);
+    transform: translateY(50%) scale(1.35) rotate(315deg);
     background: linear-gradient(
       135deg,
       oklch(from var(--pl-accent) calc(l - 0.08) c h),
@@ -91,15 +91,18 @@
 
   .pl-title {
     min-width: 0;
+    width: fit-content;
     font-size: 1rem;
     font-weight: 700;
     line-height: 1.4;
+    white-space: nowrap;
   }
 
   .pl-grades {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: 4px;
     flex-shrink: 0;
+    justify-content: flex-end;
   }
 </style>

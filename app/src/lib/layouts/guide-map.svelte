@@ -46,8 +46,9 @@
     padding-inline: 1rem;
     margin-inline-start: 0.5rem;
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: fit-content(100%) auto;
     column-gap: 1rem;
+    max-width: 600px;
   }
 
   main :global(li) {
