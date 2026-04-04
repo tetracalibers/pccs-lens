@@ -318,6 +318,8 @@
     display: block;
     width: 100%;
     height: auto;
-    min-width: 320px;
+    min-width: 500px;
+    padding: 1rem;
+    box-sizing: border-box;
   }
 </style>
