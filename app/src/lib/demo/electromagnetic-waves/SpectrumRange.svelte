@@ -173,29 +173,11 @@
       {/each}
     </defs>
 
-    <!-- 背景 -->
-    <rect width={WIDTH} height={HEIGHT} fill="white" />
-
     <!-- タイトル -->
-    <text
-      x={WIDTH / 2}
-      y={Y_TITLE_1}
-      text-anchor="middle"
-      font-family="'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif"
-      font-size="22"
-      fill={COL_BLACK}
-    >
+    <text x={WIDTH / 2} y={Y_TITLE_1} text-anchor="middle" font-size="22" fill={COL_BLACK}>
       可視範囲
     </text>
-    <text
-      x={WIDTH / 2}
-      y={Y_TITLE_2}
-      text-anchor="middle"
-      font-family="Georgia, 'Times New Roman', serif"
-      font-style="italic"
-      font-size="22"
-      fill={COL_BLACK}
-    >
+    <text x={WIDTH / 2} y={Y_TITLE_2} text-anchor="middle" font-size="22" fill={COL_BLACK}>
       {NM_MIN}nm ~ {NM_MAX}nm
     </text>
 
@@ -218,22 +200,13 @@
         x={midX}
         y={Y_SEC_LABEL}
         text-anchor="middle"
-        font-family="'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif"
         font-size="20"
         font-weight="bold"
         fill={sec.color}
       >
         {sec.label}
       </text>
-      <text
-        x={midX}
-        y={Y_SEC_RANGE}
-        text-anchor="middle"
-        font-family="Georgia, 'Times New Roman', serif"
-        font-style="italic"
-        font-size="19"
-        fill={sec.color}
-      >
+      <text x={midX} y={Y_SEC_RANGE} text-anchor="middle" font-size="19" fill={sec.color}>
         {sec.range}
       </text>
       <line
@@ -283,7 +256,7 @@
     </g>
 
     <!-- 目盛りラベル -->
-    <g fill={COL_AXIS} font-size="18" font-family="'Annai MN', sans-serif" text-anchor="middle">
+    <g fill={COL_AXIS} font-size="18" text-anchor="middle">
       {#each majorTicks as nm (nm)}
         <text x={xAt(nm)} y={Y_TICK_LABEL}>{nm}</text>
       {/each}
@@ -298,7 +271,6 @@
       <text
         x={cx}
         y={BLOCK_TOP + BLOCK_HEIGHT / 2}
-        font-family="'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif"
         font-size="18"
         fill="white"
         text-anchor="middle"
