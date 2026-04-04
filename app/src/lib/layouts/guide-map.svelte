@@ -34,6 +34,14 @@
     padding: 0;
   }
 
+  main :global(h3) {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-heading);
+    line-height: 1.3;
+    margin: 1.6rem 0 0.45rem;
+  }
+
   main :global(p) {
     color: var(--color-body);
     margin: 0.75rem 0;
@@ -44,7 +52,7 @@
   main :global(ul) {
     list-style: none;
     padding-inline: 1rem;
-    margin-inline-start: 0.5rem;
+    margin-inline-start: 0.35rem;
     display: grid;
     grid-template-columns: fit-content(100%) auto;
     column-gap: 1rem;
