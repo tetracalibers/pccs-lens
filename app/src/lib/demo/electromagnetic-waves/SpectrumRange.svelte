@@ -162,7 +162,7 @@
         <polyline
           points="8,1 1,5 8,9"
           fill="none"
-          stroke={COL_BLACK}
+          stroke="var(--color-body)"
           stroke-width="1"
           stroke-linejoin="round"
         />
@@ -171,7 +171,7 @@
         <polyline
           points="1,1 8,5 1,9"
           fill="none"
-          stroke={COL_BLACK}
+          stroke="var(--color-body)"
           stroke-width="1"
           stroke-linejoin="round"
         />
@@ -201,10 +201,10 @@
     </defs>
 
     <!-- タイトル -->
-    <text x={WIDTH / 2} y={Y_TITLE_1} text-anchor="middle" font-size="22" fill={COL_BLACK}>
+    <text x={WIDTH / 2} y={Y_TITLE_1} text-anchor="middle" font-size="22" fill="var(--color-body)">
       可視範囲
     </text>
-    <text x={WIDTH / 2} y={Y_TITLE_2} text-anchor="middle" font-size="22" fill={COL_BLACK}>
+    <text x={WIDTH / 2} y={Y_TITLE_2} text-anchor="middle" font-size="22" fill="var(--color-body)">
       {NM_MIN}nm ~ {NM_MAX}nm
     </text>
 
@@ -214,7 +214,7 @@
       y1={Y_FULL_ARROW}
       x2={X_END}
       y2={Y_FULL_ARROW}
-      stroke={COL_BLACK}
+      stroke="var(--color-body)"
       stroke-width="2"
       marker-start="url(#aL-k)"
       marker-end="url(#aR-k)"
@@ -285,7 +285,7 @@
     <!-- 目盛りラベル -->
     <g fill={COL_AXIS} font-size="18" text-anchor="middle">
       {#each majorTicks as nm (nm)}
-        <text x={xAt(nm)} y={Y_TICK_LABEL}>{nm}</text>
+        <text x={xAt(nm)} y={Y_TICK_LABEL} fill="var(--color-body)">{nm}</text>
       {/each}
     </g>
 
