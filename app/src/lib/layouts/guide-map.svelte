@@ -4,9 +4,10 @@
   import ComingSoon from "$lib/components/m-directive/ComingSoon.svelte"
   import MoreToCome from "$lib/components/m-directive/MoreToCome.svelte"
   import PageLink from "$lib/components/m-directive/PageLink.svelte"
+  import DraftPageTitle from "$lib/components/m-directive/DraftPageTitle.svelte"
 
   /* eslint-disable no-import-assign */
-  export { Heading2 as h2, ComingSoon, MoreToCome, PageLink }
+  export { Heading2 as h2, ComingSoon, MoreToCome, PageLink, DraftPageTitle as PageDraft }
   /* eslint-enable no-import-assign */
 </script>
 
@@ -52,11 +53,10 @@
   main :global(ul) {
     list-style: none;
     padding-inline: 1rem;
-    margin-inline-start: 0.35rem;
-    display: grid;
-    grid-template-columns: fit-content(100%) auto;
+    display: flex;
+    flex-direction: column;
     column-gap: 1rem;
-    max-width: 600px;
+    max-width: calc(680px - 1.5rem * 2);
   }
 
   main :global(li) {

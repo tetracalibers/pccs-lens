@@ -6,7 +6,7 @@
   let { grade }: { grade: Grade } = $props()
 
   const labels: Record<Grade, string> = {
-    basic: "入門",
+    basic: "便利",
     "3": "3級",
     "2": "2級",
     "1": "1級",
@@ -25,6 +25,7 @@
   .grade-tag {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     font-size: 0.85rem;
     font-weight: 600;
     letter-spacing: 0.04em;
@@ -33,6 +34,8 @@
     border-radius: 4px;
     color: #1a1a2e;
     flex-shrink: 0;
+    white-space: nowrap;
+    box-sizing: border-box;
   }
 
   .grade-tag[data-grade="basic"] {
@@ -40,12 +43,13 @@
     color: #ffffff;
     font-size: 0.82rem;
     padding: 4px 8px;
+    display: inline-flex;
+    justify-content: center;
   }
 
   .grade-tag[data-grade="basic"] :global(.grade-tag-icon) {
     width: 1em;
     height: 1em;
-    margin-right: 3px;
     flex-shrink: 0;
   }
 

@@ -44,15 +44,16 @@
 
 <style>
   .page-link {
-    display: grid;
-    grid-template-columns: subgrid;
-    grid-column: span 2;
+    display: flex;
+    flex-wrap: wrap;
     align-items: flex-start;
     text-decoration: none;
     color: inherit;
     position: relative;
     padding: 0.5rem 0 0.5rem 1.5rem;
     transition: color 0.2s;
+    column-gap: 0.5rem;
+    row-gap: 0.25rem;
   }
 
   .page-link::before {
@@ -96,13 +97,14 @@
     font-weight: 700;
     line-height: 1.4;
     white-space: nowrap;
+    flex-shrink: 0;
   }
 
   .pl-grades {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
-    flex-shrink: 0;
-    justify-content: flex-end;
+    margin-inline-start: auto;
+    align-self: flex-end;
   }
 </style>

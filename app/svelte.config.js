@@ -22,6 +22,7 @@ const directives = {
     { name: "Mark", replaceTo: "svelte-component" },
     { name: "GradeTag", replaceTo: "svelte-component" },
     { name: "PageLink", replaceTo: "svelte-component" },
+    { name: "PageDraft", replaceTo: "svelte-component" },
     { name: "MoreToCome", replaceTo: "svelte-component" },
     { name: "WithGradeTag", replaceTo: "svelte-component" }
   ]
