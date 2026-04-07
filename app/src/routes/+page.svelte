@@ -216,7 +216,7 @@
     font-size: 0.7rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: light-dark(#999, #555);
+    color: light-dark(#999, #7b7b7b);
     margin-bottom: 1rem;
   }
 
@@ -258,7 +258,7 @@
   .tagline {
     font-size: 1.1rem;
     font-weight: 600;
-    color: light-dark(#222, #ddd);
+    color: var(--color-heading);
     margin: 0 0 0.5rem;
   }
 
@@ -371,12 +371,12 @@
     font-size: 1.2rem;
     font-weight: 700;
     margin: 0 0 0.4rem;
-    color: light-dark(#1a1a1a, #f0f0f0);
+    color: var(--color-heading);
   }
 
   .guide-body p {
     font-size: 0.85rem;
-    color: light-dark(#666, #888);
+    color: var(--color-body);
     margin: 0 0 0.75rem;
     line-height: 1.6;
   }
@@ -418,7 +418,7 @@
   .tools-label {
     font-size: 0.72rem;
     font-weight: 700;
-    color: light-dark(#aaa, #444);
+    color: light-dark(#aaa, #7b7b7b);
     text-transform: uppercase;
     letter-spacing: 0.12em;
     white-space: nowrap;
@@ -427,7 +427,7 @@
   .tools-divider {
     flex: 1;
     height: 1px;
-    background: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.08));
+    background: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.15));
   }
 
   .tools-grid {
@@ -491,12 +491,12 @@
     font-size: 0.9rem;
     font-weight: 700;
     margin: 0 0 0.35rem;
-    color: light-dark(#1a1a1a, #f0f0f0);
+    color: var(--color-heading);
   }
 
   .tool-glass-body p {
     font-size: 0.78rem;
-    color: light-dark(#888, #666);
+    color: var(--color-body);
     margin: 0;
     line-height: 1.5;
   }
