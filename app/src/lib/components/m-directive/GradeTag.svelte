@@ -43,8 +43,9 @@
     background: #ff7675;
     color: #ffffff;
     font-size: 0.82rem;
-    padding: 4px 8px;
+    padding: 4px 6px;
     display: inline-flex;
+    gap: 2px;
     justify-content: center;
   }
 
