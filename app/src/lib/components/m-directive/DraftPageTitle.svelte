@@ -8,7 +8,12 @@
 
   let { grades, title }: { grades: GradeCSV; title: string } = $props()
 
-  const gradeList = $derived(grades.split(",") as Grade[])
+  const gradeList = $derived(
+    grades.split(",").sort((a, b) => {
+      const order: Record<Grade, number> = { "3": 0, "2": 1, "1": 2, uc: 3 }
+      return order[a as Grade] - order[b as Grade]
+    }) as Grade[]
+  )
   let accentColor = $derived(gradeList.length > 0 ? gradeColors[gradeList[0]] : "#94a3b8")
 </script>
 
