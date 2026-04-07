@@ -16,7 +16,8 @@
   ]
 
   const contentItems = [
-    { href: resolve("/color-theory"), path: "/color-theory", label: "色の理論" }
+    { href: resolve("/color-theory"), path: "/color-theory", label: "色の理論" },
+    { href: resolve("/color-fields"), path: "/color-fields", label: "色の応用分野" }
   ]
 
   let isNavOpen = $state(false)
@@ -312,7 +313,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 1rem;
+    column-gap: 1rem;
     padding-inline-start: 16px;
   }
 
