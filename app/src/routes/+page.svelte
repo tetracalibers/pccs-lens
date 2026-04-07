@@ -22,7 +22,7 @@
       href: resolve("/color-fields"),
       gradient: "linear-gradient(135deg, #6bcb77, #4d96ff)",
       glow: "#6bcb77",
-      title: "色の応用分野",
+      title: "色の活用分野",
       desc: "デザイン・ビジネス・ファッション・インテリア・景観色彩など",
       tag: "学ぶ"
     }

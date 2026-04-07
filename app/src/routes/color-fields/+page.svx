@@ -1,9 +1,15 @@
 ---
 layout: guide-map
-title: 色の応用分野
+title: 色の活用分野
 ---
 
 ## デザイン
+
+### ビジュアルとメディアデザイン
+
+::ComingSoon
+
+### 色のユニバーサルデザイン
 
 ::ComingSoon
 
