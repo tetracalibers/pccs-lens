@@ -1,19 +1,12 @@
 <script lang="ts">
+  import { gradeCSV2Array, type AftGradeCSV } from "$lib/meta/grade"
   import GradeTag from "./GradeTag.svelte"
-
-  type Grade = "3" | "2" | "1" | "uc"
-  type GradeCSV = Grade | `${Grade},${Grade}` | `${Grade},${Grade},${Grade}`
 
   const gradeColors = { "3": "#c4b5fd", "2": "#6ee7b7", "1": "#fde68a", uc: "#93c5fd" }
 
-  let { grades, title }: { grades: GradeCSV; title: string } = $props()
+  let { grades, title }: { grades: AftGradeCSV; title: string } = $props()
 
-  const gradeList = $derived(
-    grades.split(",").sort((a, b) => {
-      const order: Record<Grade, number> = { "3": 0, "2": 1, "1": 2, uc: 3 }
-      return order[a as Grade] - order[b as Grade]
-    }) as Grade[]
-  )
+  const gradeList = $derived(gradeCSV2Array(grades))
   let accentColor = $derived(gradeList.length > 0 ? gradeColors[gradeList[0]] : "#94a3b8")
 </script>
 

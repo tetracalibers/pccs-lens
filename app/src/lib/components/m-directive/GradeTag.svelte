@@ -1,7 +1,8 @@
 <script lang="ts">
   import Icon from "@iconify/svelte"
+  import type { AftGrade } from "$lib/meta/grade"
 
-  type Grade = "basic" | "3" | "2" | "1" | "uc"
+  type Grade = "basic" | AftGrade
 
   let { grade }: { grade: Grade } = $props()
 

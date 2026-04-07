@@ -1,12 +1,10 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
   import GradeTag from "./GradeTag.svelte"
+  import { type AftGradeCSV, gradeCSV2Array } from "$lib/meta/grade"
 
-  type Grade = "3" | "2" | "1" | "uc"
-  type GradeCSV = Grade | `${Grade},${Grade}` | `${Grade},${Grade},${Grade}`
-
-  let { children, grades }: { children?: Snippet; grades: GradeCSV } = $props()
-  const gradeList = $derived(grades.split(",") as Grade[])
+  let { children, grades }: { children?: Snippet; grades: AftGradeCSV } = $props()
+  const gradeList = $derived(gradeCSV2Array(grades))
 </script>
 
 <div class="with-grade-tag">
