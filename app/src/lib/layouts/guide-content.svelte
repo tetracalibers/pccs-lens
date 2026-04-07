@@ -56,7 +56,7 @@
 <main>
   <Breadcrumb
     category="contents"
-    crumbs={[{ label: "色の理論", href: resolve("/guide") }, { label: title }]}
+    crumbs={[{ label: "色の理論", href: resolve("/color-theory") }, { label: title }]}
   />
   <Heading1 icon="solar:pen-new-round-broken">{title}</Heading1>
   {#if grades.length > 0 || basic}

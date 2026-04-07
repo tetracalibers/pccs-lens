@@ -16,7 +16,7 @@
   })
 
   // @ts-expect-error
-  let href = $derived(resolve(`/guide/${slug}`))
+  let href = $derived(resolve(`/color-theory/${slug}`))
 
   const gradeColors = {
     "3": "#c4b5fd",

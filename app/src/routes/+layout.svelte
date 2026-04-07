@@ -15,7 +15,9 @@
     { href: resolve("/patterns"), path: "/patterns", label: "配色シミュレータ" }
   ]
 
-  const contentItems = [{ href: resolve("/guide"), path: "/guide", label: "色の理論" }]
+  const contentItems = [
+    { href: resolve("/color-theory"), path: "/color-theory", label: "色の理論" }
+  ]
 
   let isNavOpen = $state(false)
 
