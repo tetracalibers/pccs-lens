@@ -9,6 +9,25 @@
     { color: "#c77dff", x: 35, y: 65, size: 90 }
   ]
 
+  const contents = [
+    {
+      href: resolve("/color-theory"),
+      gradient: "linear-gradient(135deg, #ff6b6b, #ffd93d)",
+      glow: "#ff6b6b",
+      title: "色の理論",
+      desc: "色彩検定3級・2級・1級・UC級に対応",
+      tag: "学ぶ"
+    },
+    {
+      href: resolve("/color-fields"),
+      gradient: "linear-gradient(135deg, #6bcb77, #4d96ff)",
+      glow: "#6bcb77",
+      title: "色の応用分野",
+      desc: "デザイン・ビジネス・ファッション・インテリア・景観色彩など",
+      tag: "学ぶ"
+    }
+  ]
+
   const tools = [
     {
       href: resolve("/approximate"),
@@ -102,6 +121,31 @@
           </div>
         </div>
       </a>
+    </section>
+
+    <!-- Contents -->
+    <section class="contents-section">
+      <div class="tools-header">
+        <span class="tools-label">コンテンツ</span>
+        <div class="tools-divider"></div>
+      </div>
+      <div class="contents-grid">
+        {#each contents as content (content.title)}
+          <a href={content.href} class="tool-glass" style="--glow: {content.glow}">
+            <div class="tool-gradient-bar" style="background: {content.gradient}"></div>
+            <div class="tool-glass-body">
+              <span
+                class="tool-glass-tag"
+                style="color: {content.glow}; border-color: {content.glow}55"
+              >
+                {content.tag}
+              </span>
+              <h3>{content.title}</h3>
+              <p>{content.desc}</p>
+            </div>
+          </a>
+        {/each}
+      </div>
     </section>
 
     <!-- Tools -->
@@ -344,6 +388,23 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  /* Contents */
+  .contents-section {
+    margin-bottom: 2rem;
+  }
+
+  .contents-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    .contents-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   /* Tools */
