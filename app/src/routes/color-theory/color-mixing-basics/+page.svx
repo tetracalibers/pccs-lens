@@ -1,0 +1,28 @@
+---
+layout: guide-content
+title: 混色で色をつくる
+
+grades: ["3"]
+---
+
+## :WithGradeTag[混色と原色]{grades="3"}
+
+2色以上の色を重ねたり混ぜたりして新しい色を作ることを:Mark[混色]といいます。
+このとき、混ぜるもとになる色は:Mark[原色]と呼ばれます。
+
+どんな色が原色となり、混色によってどんな色ができるか？という法則は、大きく2種類に分けられます。
+
+- :Mark[加法混色]：色を:Mark[光]として、スクリーン上で使うときの混色
+- :Mark[減法混色]：色を絵の具などの:Mark[色料]として、紙や布などの生地の上で使うときの混色
+
+## :WithGradeTag[加法混色]{grades="3"}
+
+::ComingSoon
+
+## :WithGradeTag[減法混色]{grades="3"}
+
+::ComingSoon
+
+## :WithGradeTag[補色]{grades="3"}
+
+::ComingSoon

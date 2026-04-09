@@ -1,0 +1,17 @@
+---
+layout: guide-content
+title: 実世界でみられる混色
+
+grades: ["3"]
+---
+
+## :WithGradeTag[加法混色の種類]{grades="3"}
+
+```mermaid
+graph LR
+    A["加法混色"] --- B["同時加法混色"]
+    A --- C["併置加法混色"]
+    A --- D["継時加法混色"]
+```
+
+::ComingSoon
