@@ -15,7 +15,7 @@
       gradient: "linear-gradient(135deg, #ff6b6b, #ffd93d)",
       glow: "#ff6b6b",
       title: "色の理論",
-      desc: "色彩検定3級・2級・1級・UC級に対応",
+      desc: "色彩検定3級・2級・1級・UC級に対応した色彩学の解説",
       tag: "学ぶ"
     },
     {
