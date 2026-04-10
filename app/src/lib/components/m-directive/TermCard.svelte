@@ -1,10 +1,16 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
+  import Heading3 from "../m-html/Heading3.svelte"
 
-  let { children, class: cls = "" }: { children?: Snippet; class?: string } = $props()
+  let {
+    children,
+    centering = false,
+    title
+  }: { children?: Snippet; centering?: boolean; title: string } = $props()
 </script>
 
-<div class="term-card {cls}">
+<div class="term-card" class:centering>
+  <Heading3>{title}</Heading3>
   {@render children?.()}
 </div>
 
@@ -19,7 +25,7 @@
     gap: 0.75rem;
   }
 
-  .term-card.-items-centering {
+  .term-card.centering {
     justify-items: center;
   }
 
