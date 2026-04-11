@@ -6,7 +6,7 @@ grades: ["3", "uc"]
 ---
 
 <script>
-  import SpectrumRange from "$lib/demo/electromagnetic-waves/SpectrumRange.svelte"
+  import SpectrumRange from "$lib/demo/spectrum/SpectrumRange.svelte"
 </script>
 
 ## :WithGradeTag[電磁波と波長]{grades="3,uc"}

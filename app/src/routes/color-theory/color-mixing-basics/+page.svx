@@ -7,7 +7,7 @@ grades: ["3"]
 
 <script lang="ts">
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
-  import VisibleSpectrumGradient from "$lib/demo/VisibleSpectrumGradient.svelte"
+  import SpectrumGradient from "$lib/demo/spectrum/SpectrumGradient.svelte"
   import ReflectRGB from "$lib/demo/color-mixing/ReflectRGB.svelte"
   import ReflectCMY from "$lib/demo/color-mixing/ReflectCMY.svelte"
   import PrimaryColorsCMY from "$lib/demo/color-mixing/PrimaryColorsCMY.svelte"
@@ -47,7 +47,7 @@ RGBの3色を混ぜ合わせると白色光になり、2色だけを混ぜ合わ
 
 加法混色で得られる二次色は、光のスペクトルのグラデーションに現れています。
 
-<VisibleSpectrumGradient />
+<SpectrumGradient />
 
 スペクトルの青と緑の境界は明るい青緑色に見え、この色を:Mark[シアン]とよびます。
 スペクトルの緑と赤の境界は黄色に見え、この色を:Mark[イエロー]とよびます。
