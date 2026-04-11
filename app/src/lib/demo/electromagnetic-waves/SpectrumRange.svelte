@@ -57,9 +57,6 @@
 
   // ===== 色定数 =====
   const COL_AXIS = "#3c3c3c"
-  const COL_BLUE = "#3366dd"
-  const COL_GREEN = "#339944"
-  const COL_RED = "#cc3333"
 
   // ===== グラデーションストップ =====
   // 同じ nm を 2 回続けることでハードエッジを表現
@@ -91,7 +88,7 @@
       range: `${NM_MIN}nm ~ 500nm`,
       nmStart: NM_MIN,
       nmEnd: 500,
-      color: COL_BLUE,
+      color: "var(--canvas-pen-blue)",
       id: "b"
     },
     {
@@ -99,7 +96,7 @@
       range: "500nm ~ 600nm",
       nmStart: 500,
       nmEnd: 600,
-      color: COL_GREEN,
+      color: "var(--canvas-pen-green)",
       id: "g"
     },
     {
@@ -107,7 +104,7 @@
       range: `600nm ~ ${NM_MAX}nm`,
       nmStart: 600,
       nmEnd: NM_MAX,
-      color: COL_RED,
+      color: "var(--canvas-pen-red)",
       id: "r"
     }
   ]

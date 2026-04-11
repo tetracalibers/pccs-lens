@@ -7,4 +7,10 @@
 
   --color-heading: light-dark(var(--color-heading--light), var(--color-heading--dark));
   --color-body: light-dark(var(--color-body--light), var(--color-body--dark));
+
+  --canvas-pen-red: #cc3333;
+  --canvas-pen-green: #339944;
+  --canvas-pen-blue: #3366dd;
+  --canvas-pen-water: #5ac4f6;
+  --canvas-pen-orange: #ef8c00;
 }
