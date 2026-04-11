@@ -36,7 +36,7 @@ title: 色の理論一覧
 
 - :PageLink{slug="eye-structure"}
 - :PageLink{slug="light-path-through-the-retina"}
-- :PageDraft{title="視細胞の種類と分布" grades="2,3,uc"}
+- :PageLink{slug="photoreceptor-types-and-distribution"}
 - :PageDraft{title="明るさに対する感度と順応" grades="2"}
 - :PageDraft{title="見え方の安定性" grades="2,1"}
 
