@@ -10,6 +10,8 @@ grades: ["3"]
   import VisibleSpectrumGradient from "$lib/demo/VisibleSpectrumGradient.svelte"
   import ReflectRGB from "$lib/demo/color-mixing/ReflectRGB.svelte"
   import ReflectCMY from "$lib/demo/color-mixing/ReflectCMY.svelte"
+  import PrimaryColorsCMY from "$lib/demo/color-mixing/PrimaryColorsCMY.svelte"
+  import PrimaryColorsRGB from "$lib/demo/color-mixing/PrimaryColorsRGB.svelte"
 </script>
 
 ## :WithGradeTag[混色と原色]{grades="3"}
@@ -104,4 +106,12 @@ RGBの3色を混ぜ合わせると白色光になり、2色だけを混ぜ合わ
 
 ## :WithGradeTag[補色]{grades="3"}
 
-::ComingSoon
+::::CardGrid
+:::TermCard{title="色料の三原色" centering}
+<PrimaryColorsCMY />
+:::
+
+:::TermCard{title="色光の三原色" centering}
+<PrimaryColorsRGB />
+:::
+::::
