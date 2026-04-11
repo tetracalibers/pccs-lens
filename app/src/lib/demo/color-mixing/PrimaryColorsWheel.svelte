@@ -60,7 +60,7 @@
 
   // ===== ラベル縁取り =====
   const COLOR_LABEL_OUTLINE = "#fff"
-  const OUTLINE_STROKE_WIDTH = 1.5
+  const OUTLINE_STROKE_WIDTH = 3
 
   // ===== 12等分ラベル（Y を 0 番として時計回り）=====
   const PRIMARY_SET = new Set(["Y", "G", "C", "M"])
