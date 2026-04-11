@@ -13,6 +13,7 @@ grades: ["3"]
   import PrimaryColorsCMY from "$lib/demo/color-mixing/PrimaryColorsCMY.svelte"
   import PrimaryColorsRGB from "$lib/demo/color-mixing/PrimaryColorsRGB.svelte"
   import PrimaryColorsWheel from "$lib/demo/color-mixing/PrimaryColorsWheel.svelte"
+  import AddColorMixVenn from "$lib/demo/color-mixing/AddColorMixVenn.svelte"
 </script>
 
 ## :WithGradeTag[混色と原色]{grades="3"}
@@ -24,6 +25,18 @@ grades: ["3"]
 
 - :Mark[加法混色]：色を:Mark[光]として、スクリーン上で使うときの混色
 - :Mark[減法混色]：色を絵の具などの:Mark[色料]として、紙や布などの生地の上で使うときの混色
+
+::::CardGrid
+:::TermCard{title="加法混色" centering}
+<SVGWrapper maxW="300">
+  <AddColorMixVenn />
+</SVGWrapper>
+:::
+
+:::TermCard{title="減法混色" centering}
+
+:::
+::::
 
 ## :WithGradeTag[加法混色]{grades="3"}
 
