@@ -9,11 +9,12 @@ grades: ["3", "uc"]
   import SpectrumRange from "$lib/demo/electromagnetic-waves/SpectrumRange.svelte"
 </script>
 
-## :WithGradeTag[電磁波と波長による分類]{grades="3,uc"}
+## :WithGradeTag[電磁波と波長]{grades="3,uc"}
 
 そもそも、光とは一体何でしょうか？
 
-光は:Mark[電磁波]（空間を伝わる電気と磁気のエネルギーの波）の一種です。電磁波は:Mark[波長]によって性質や利用分野がまったく異なります。
+光は:Mark[電磁波]（空間を伝わる電気と磁気のエネルギーの波）の一種です。
+電磁波は:Mark[波長]によって性質や利用分野がまったく異なります。電磁波は波長が:Mark[短い]ほど高いエネルギーを持ち、そのエネルギーに応じた利用用途があるからです。
 
 波長が短い順に並べると、電磁波は次のように分類されています。
 
