@@ -35,7 +35,7 @@ title: 色の理論一覧
 ### 眼と視覚系
 
 - :PageLink{slug="eye-structure"}
-- :PageDraft{title="網膜内の光の経路" grades="3,uc"}
+- :PageLink{slug="light-path-through-the-retina"}
 - :PageDraft{title="視細胞の種類と分布" grades="2,3,uc"}
 - :PageDraft{title="明るさに対する感度と順応" grades="2"}
 - :PageDraft{title="見え方の安定性" grades="2,1"}
