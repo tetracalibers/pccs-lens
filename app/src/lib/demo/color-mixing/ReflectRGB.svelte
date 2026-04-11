@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { PCCS_MAP } from "$lib/data/pccs"
+
   // ── Layout ────────────────────────────────────────────────────────────────
   const SVG_WIDTH = 1000
   const LABEL_X = 33 // R/G/B ラベルの x 中心
@@ -51,7 +53,7 @@
   const rows: Row[] = [
     {
       label: "R",
-      labelColor: "#FD1A1C",
+      labelColor: PCCS_MAP.get("v3")!,
       regions: [
         { kind: "absorb", span: 2 / 3 },
         { kind: "reflect", span: 1 / 3 }
@@ -59,7 +61,7 @@
     },
     {
       label: "G",
-      labelColor: "#33A23D",
+      labelColor: PCCS_MAP.get("v12")!,
       regions: [
         { kind: "absorb", span: 1 / 3 },
         { kind: "reflect", span: 1 / 3 },
@@ -68,7 +70,7 @@
     },
     {
       label: "B",
-      labelColor: "#1D1A88",
+      labelColor: PCCS_MAP.get("v19")!,
       regions: [
         { kind: "reflect", span: 1 / 3 },
         { kind: "absorb", span: 2 / 3 }

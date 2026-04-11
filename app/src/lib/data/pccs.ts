@@ -10,3 +10,6 @@ export const PCCS_CARD_199 = [...pccsV24, ...pccsEven12, ...pccsNeutral] as PCCS
 
 /** PCCSの全トーンの全色相（PCCS_CARD_199 + sトーン全色相 + 奇数色相） */
 export const PCCS_ALL = [...PCCS_CARD_199, ...pccsS12, ...pccsOdd12]
+
+/** Map<notation, hex> */
+export const PCCS_MAP = new Map(PCCS_ALL.map(({ notation, hex }) => [notation, hex]))

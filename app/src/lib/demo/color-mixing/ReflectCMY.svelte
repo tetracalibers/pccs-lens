@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { PCCS_MAP } from "$lib/data/pccs"
+
   // ── Layout ────────────────────────────────────────────────────────────────
   const SVG_WIDTH = 1000
   const BAR_X = 17 // バー左端の x 座標
@@ -57,7 +59,7 @@
   const rows: Row[] = [
     {
       label: "C",
-      labelColor: "#055D87",
+      labelColor: PCCS_MAP.get("v16")!,
       regions: [
         { kind: "reflect", span: 2 / 3 },
         { kind: "absorb", span: 1 / 3 }
@@ -65,7 +67,7 @@
     },
     {
       label: "M",
-      labelColor: "#AF0065",
+      labelColor: PCCS_MAP.get("v24")!,
       regions: [
         { kind: "reflect", span: 1 / 3 },
         { kind: "absorb", span: 1 / 3 },
@@ -74,7 +76,7 @@
     },
     {
       label: "Y",
-      labelColor: "#FFE600",
+      labelColor: PCCS_MAP.get("v8")!,
       regions: [
         { kind: "absorb", span: 1 / 3 },
         { kind: "reflect", span: 2 / 3 }
