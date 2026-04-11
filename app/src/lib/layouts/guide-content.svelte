@@ -41,6 +41,7 @@
   import type { GuideFrontmatter } from "$lib/meta/guide-pages"
   import Breadcrumb from "$lib/components/Breadcrumb.svelte"
   import { resolve } from "$app/paths"
+  import { sortGrades } from "$lib/meta/grade"
 
   let {
     title,
@@ -48,7 +49,9 @@
     basic = false,
     children
   }: GuideFrontmatter & { children: Snippet } = $props()
+
   const pageTitle = $derived(title ? `${title} - PCCS Lens` : "PCCS Lens")
+  const gradeList = $derived(sortGrades(grades))
 </script>
 
 <svelte:head>
@@ -66,7 +69,7 @@
       {#if basic}
         <GradeTag grade="basic" />
       {/if}
-      {#each grades as grade (grade)}
+      {#each gradeList as grade (grade)}
         <GradeTag {grade} />
       {/each}
     </div>

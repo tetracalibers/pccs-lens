@@ -2,6 +2,7 @@
   import GradeTag from "./GradeTag.svelte"
   import { resolve } from "$app/paths"
   import { guidePages } from "$lib/meta/guide-pages"
+  import { sortGrades } from "$lib/meta/grade"
 
   let { slug }: { slug: string } = $props()
 
@@ -26,6 +27,7 @@
   }
 
   let accentColor = $derived(grades.length > 0 ? gradeColors[grades[0]] : "#94a3b8")
+  const gradesList = $derived(sortGrades(grades))
 </script>
 
 <a {href} class="page-link" style="--pl-accent: {accentColor}">
@@ -35,7 +37,7 @@
       {#if basic}
         <GradeTag grade="basic" />
       {/if}
-      {#each grades as grade (grade)}
+      {#each gradesList as grade (grade)}
         <GradeTag {grade} />
       {/each}
     </span>
