@@ -6,7 +6,10 @@ grades: ["3"]
 ---
 
 <script lang="ts">
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
   import VisibleSpectrumGradient from "$lib/demo/VisibleSpectrumGradient.svelte"
+  import ReflectRGB from "$lib/demo/color-mixing/ReflectRGB.svelte"
+  import ReflectCMY from "$lib/demo/color-mixing/ReflectCMY.svelte"
 </script>
 
 ## :WithGradeTag[混色と原色]{grades="3"}
@@ -68,6 +71,10 @@ RGBの3色を混ぜ合わせると白色光になり、2色だけを混ぜ合わ
 - 物体が緑に見える ＝ 物体が緑の波長を反射し、赤と青の波長を吸収する
 - 物体が青に見える ＝ 物体が青の波長を反射し、赤と緑の波長を吸収する
 
+<SVGWrapper>
+  <ReflectRGB />
+</SVGWrapper>
+
 光では、赤と緑を混ぜると黄になりましたが、絵の具などの色料では、赤と緑を混ぜてもうまく新しい色をつくることができません。
 
 赤の絵の具は赤の波長を反射しますが、緑の絵の具は赤の波長を吸収してしまいます。
@@ -84,6 +91,10 @@ RGBの3色を混ぜ合わせると白色光になり、2色だけを混ぜ合わ
 - 物体がシアンに見える ＝ 物体が緑と青の波長を反射し、赤の波長を吸収する
 - 物体がマゼンタに見える ＝ 物体が赤と青の波長を反射し、緑の波長を吸収する
 - 物体がイエローに見える ＝ 物体が赤と緑の波長を反射し、青の波長を吸収する
+
+<SVGWrapper>
+  <ReflectCMY />
+</SVGWrapper>
 
 たとえば、シアンとマゼンタはどちらも青の波長を反射し、それぞれが赤と緑の波長を吸収するため、シアンとマゼンタを混ぜると青の波長だけが残り、青ができます。
 
