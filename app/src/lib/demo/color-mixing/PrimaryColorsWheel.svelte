@@ -7,8 +7,14 @@
   const CY = SIZE / 2
   const R = 200
 
+  // ===== ラベルフォントサイズ =====
+  const FONT_SIZE_PRIMARY = 36 // 原色ラベル（R・G・B・C・M・Y）
+  const FONT_SIZE_NORMAL = 18 // 通常ラベル（10:YG など）
+
   // ===== ラベル配置半径 =====
-  const LABEL_R_NORMAL = R + 28 // 通常ラベル（12等分うち非原色）
+  const CHAR_WIDTH_MONO = FONT_SIZE_NORMAL * 0.6 // 等幅フォントの字幅（px）
+  const CHAR_HEIGHT_MONO = FONT_SIZE_NORMAL * 0.7 // 等幅フォントの字高（px）
+  const LABEL_GAP_MIN = 16 // テキスト内端と円周の最小余白（px）
   const LABEL_R_PRIMARY = R + 52 // 大ラベル（G・C・M・Y・R・B）
 
   // ===== 矢印端点の内側縮め量 =====
@@ -19,6 +25,7 @@
     index: number
     text: string
     isPrimary: boolean
+    radius: number
   }
 
   interface ExtraPrimary {
@@ -41,6 +48,21 @@
     return { x: CX + radius * Math.cos(a), y: CY + radius * Math.sin(a) }
   }
 
+  /**
+   * 通常ラベルの配置半径を計算する。
+   * テキスト矩形が円に向かって投影する長さ（halfW×|cosα| + halfH×|sinα|）を円半径に加算し、
+   * どの角度でもテキスト内端と円周の距離が LABEL_GAP_MIN になるよう設計する。
+   * ─ 3/9時方向：halfW がそのまま投影 → 短いラベルほど小さい半径
+   * ─ 12/6時方向：halfH のみ投影 → 最小半径
+   */
+  const normalLabelRadius = (text: string, idx: number): number => {
+    const angle = angleAt(idx)
+    const halfW = (text.length * CHAR_WIDTH_MONO) / 2
+    const halfH = CHAR_HEIGHT_MONO / 2
+    const projection = halfW * Math.abs(Math.cos(angle)) + halfH * Math.abs(Math.sin(angle))
+    return R + projection + LABEL_GAP_MIN
+  }
+
   // ===== 原色カラーマップ（PCCS_MAP から取得）=====
   const PRIMARY_COLORS: Record<string, string> = {
     R: PCCS_MAP.get("v3")!,
@@ -54,10 +76,6 @@
   /** 原色ラベルの塗り色。原色でない場合は本文色にフォールバック */
   const primaryColor = (text: string): string => PRIMARY_COLORS[text] ?? "var(--color-body)"
 
-  // ===== ラベルフォントサイズ =====
-  const FONT_SIZE_PRIMARY = 36 // 原色ラベル（R・G・B・C・M・Y）
-  const FONT_SIZE_NORMAL = 18 // 通常ラベル（10:YG など）
-
   // ===== ラベル縁取り =====
   const COLOR_LABEL_OUTLINE = "#fff"
   const OUTLINE_STROKE_WIDTH = 3
@@ -69,7 +87,8 @@
   const hueLabels: HueLabel[] = HUES.map((text, index) => ({
     index,
     text,
-    isPrimary: PRIMARY_SET.has(text)
+    isPrimary: PRIMARY_SET.has(text),
+    radius: PRIMARY_SET.has(text) ? LABEL_R_PRIMARY : normalLabelRadius(text, index)
   }))
 
   // ===== 追加原色ラベル（R・B：12等分点の中間に配置）=====
@@ -180,7 +199,7 @@
 
     <!-- 12等分ラベル -->
     {#each hueLabels as lbl (lbl.index)}
-      {@const p = pointAt(lbl.index, lbl.isPrimary ? LABEL_R_PRIMARY : LABEL_R_NORMAL)}
+      {@const p = pointAt(lbl.index, lbl.radius)}
       {#if lbl.isPrimary}
         <!-- 縁取り -->
         <text
