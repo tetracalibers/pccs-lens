@@ -12,6 +12,7 @@ grades: ["3"]
   import ReflectCMY from "$lib/demo/color-mixing/ReflectCMY.svelte"
   import PrimaryColorsCMY from "$lib/demo/color-mixing/PrimaryColorsCMY.svelte"
   import PrimaryColorsRGB from "$lib/demo/color-mixing/PrimaryColorsRGB.svelte"
+  import PrimaryColorsWheel from "$lib/demo/color-mixing/PrimaryColorsWheel.svelte"
 </script>
 
 ## :WithGradeTag[混色と原色]{grades="3"}
@@ -115,3 +116,5 @@ RGBの3色を混ぜ合わせると白色光になり、2色だけを混ぜ合わ
 <PrimaryColorsRGB />
 :::
 ::::
+
+<PrimaryColorsWheel />
