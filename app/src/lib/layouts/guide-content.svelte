@@ -3,6 +3,7 @@
   import Heading3 from "$lib/components/m-html/Heading3.svelte"
   import Heading4 from "$lib/components/m-html/Heading4.svelte"
   import Ulist from "$lib/components/m-html/Ulist.svelte"
+  import Olist from "$lib/components/m-html/Olist.svelte"
 
   import Mark from "$lib/components/m-directive/Mark.svelte"
   import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
@@ -20,6 +21,7 @@
     Heading3 as h3,
     Heading4 as h4,
     Ulist as ul,
+    Olist as ol,
     Mark,
     GradeTag,
     WithGradeTag,
