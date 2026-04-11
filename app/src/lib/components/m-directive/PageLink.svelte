@@ -48,13 +48,13 @@
   .page-link {
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-start;
+    align-items: center;
     text-decoration: none;
     color: inherit;
     position: relative;
     padding: 0.5rem 0 0.5rem 1.5rem;
     transition: color 0.2s;
-    column-gap: 0.5rem;
+    column-gap: 1rem;
     row-gap: 0.25rem;
   }
 
@@ -107,6 +107,5 @@
     flex-wrap: wrap;
     gap: 4px;
     margin-inline-start: auto;
-    align-self: flex-end;
   }
 </style>
