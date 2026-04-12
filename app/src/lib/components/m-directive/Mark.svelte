@@ -22,7 +22,8 @@
 
   .mark.anki {
     color: transparent;
-    border-block-end: 2px solid darkgray;
-    box-sizing: border-box;
+    text-decoration: underline;
+    text-decoration-color: darkgray;
+    text-decoration-thickness: 2px;
   }
 </style>
