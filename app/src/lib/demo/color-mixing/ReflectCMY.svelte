@@ -33,6 +33,7 @@
   interface Row {
     label: string
     labelColor: string
+    reflectLabels?: string[] // 反射領域を等分してラベルを上書き表示する場合に指定
     regions: Region[]
   }
 
@@ -60,6 +61,7 @@
     {
       label: "C",
       labelColor: PCCS_MAP.get("v16")!,
+      reflectLabels: ["B", "G"],
       regions: [
         { kind: "reflect", span: 2 / 3 },
         { kind: "absorb", span: 1 / 3 }
@@ -68,6 +70,7 @@
     {
       label: "M",
       labelColor: PCCS_MAP.get("v24")!,
+      reflectLabels: ["B", "R"],
       regions: [
         { kind: "reflect", span: 1 / 3 },
         { kind: "absorb", span: 1 / 3 },
@@ -77,6 +80,7 @@
     {
       label: "Y",
       labelColor: PCCS_MAP.get("v8")!,
+      reflectLabels: ["G", "R"],
       regions: [
         { kind: "absorb", span: 1 / 3 },
         { kind: "reflect", span: 2 / 3 }
@@ -134,6 +138,26 @@
       offset += width
       return result
     })
+  }
+
+  /**
+   * 反射領域 1 つに表示するラベル配列を返す。
+   * reflectLabels が指定されている場合は反射領域の数で均等分配し、
+   * 指定がない場合は row.label を単体で返す。
+   */
+  function regionBarLabels(
+    row: Row,
+    region: ResolvedRegion,
+    allRegions: ResolvedRegion[]
+  ): string[] {
+    if (!row.reflectLabels) return [row.label]
+    const reflectRegions = allRegions.filter((r) => r.kind === "reflect")
+    const reflectIndex = reflectRegions.findIndex((r) => r.localX === region.localX)
+    const labelsPerRegion = row.reflectLabels.length / reflectRegions.length
+    return row.reflectLabels.slice(
+      reflectIndex * labelsPerRegion,
+      (reflectIndex + 1) * labelsPerRegion
+    )
   }
 
   /**
@@ -289,6 +313,26 @@
         stroke={COLOR_BAR_BORDER}
         stroke-width="1"
       />
+      <!-- 反射領域の白文字ラベル（各領域の縦横中央） -->
+      {#each regions as region (region.localX)}
+        {#if region.kind === "reflect"}
+          {@const labels = regionBarLabels(row, region, regions)}
+          {#each labels as subLabel, si (si)}
+            <text
+              x={region.localX + (si + 0.5) * (region.width / labels.length)}
+              y={BAR_HEIGHT / 2}
+              text-anchor="middle"
+              dominant-baseline="central"
+              fill="white"
+              font-size="44"
+              font-weight="bold"
+              font-family="var(--font-classic)"
+            >
+              {subLabel}
+            </text>
+          {/each}
+        {/if}
+      {/each}
     </g>
   {/each}
 </svg>

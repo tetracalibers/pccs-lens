@@ -284,6 +284,23 @@
         stroke={COLOR_BAR_BORDER}
         stroke-width="1"
       />
+      <!-- 反射領域の白文字ラベル（各領域の縦横中央） -->
+      {#each regions as region (region.localX)}
+        {#if region.kind === "reflect"}
+          <text
+            x={region.localX + region.width / 2}
+            y={BAR_HEIGHT / 2}
+            text-anchor="middle"
+            dominant-baseline="central"
+            fill="white"
+            font-size="44"
+            font-weight="bold"
+            font-family="var(--font-classic)"
+          >
+            {row.label}
+          </text>
+        {/if}
+      {/each}
     </g>
   {/each}
 </svg>
