@@ -187,7 +187,7 @@
     font-synthesis-weight: none;
     margin: 0;
 
-    background: light-dark(#ffffff, #0c0c14);
+    background: var(--color-bg);
     color: light-dark(#1a1a1a, #f0f0f0);
     transition:
       background 0.4s,
