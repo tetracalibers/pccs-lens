@@ -4,34 +4,34 @@
   // ── 寸法・レイアウト定数 ──
   const SIZE = 900 // SVG の一辺（px）
   const RADIUS = 240 // 各円の半径
-  const H_SPREAD = 150 // G・B 中心の横方向オフセット（中心 X ±）
-  const V_GAP = 280 // R と G・B の中心 Y 差
-  const R_TOP_Y = 280 // R 円の中心 Y 座標
+  const H_SPREAD = 150 // Y・M 中心の横方向オフセット（中心 X ±）
+  const V_GAP = 280 // C と Y・M の中心 Y 差
+  const C_TOP_Y = 280 // C 円の中心 Y 座標
 
   // ── 色定数 ──
   const COLOR = {
-    r: PCCS_MAP.get("v3"), // 赤
-    g: PCCS_MAP.get("v12"), // 緑
-    b: PCCS_MAP.get("v19"), // 青
-    y: PCCS_MAP.get("v8"), // R∩G（黄）
-    m: PCCS_MAP.get("v24"), // R∩B（マゼンタ）
-    c: PCCS_MAP.get("v16"), // G∩B（シアン）
-    white: "#fff", // R∩G∩B（白）
+    c: PCCS_MAP.get("v16"), // シアン
+    y: PCCS_MAP.get("v8"), // 黄
+    m: PCCS_MAP.get("v24"), // マゼンタ
+    g: PCCS_MAP.get("v12"), // C∩Y（緑）
+    b: PCCS_MAP.get("v19"), // C∩M（青）
+    r: PCCS_MAP.get("v3"), // M∩Y（赤）
+    black: "#1a1a1a", // C∩Y∩M（黒）
     label: "#ffffff"
   } as const
 
   const STROKE_COLORS = {
-    r: "var(--canvas-pen-red)",
-    g: "var(--canvas-pen-green)",
-    b: "var(--canvas-pen-blue)",
+    c: "var(--canvas-pen-water)",
+    y: "var(--canvas-pen-yellow)",
+    m: "var(--canvas-pen-pink)",
     other: "var(--canvas-pen-gray)"
   } as const
   type StrokeColorKey = keyof typeof STROKE_COLORS
 
   // ── スタイル定数 ──
   const STROKE_WIDTH = 6
-  const OUTER_FONT_SIZE = 68 // R・G・B ラベルのフォントサイズ
-  const INNER_FONT_SIZE = 50 // Y・M・C ラベルのフォントサイズ
+  const OUTER_FONT_SIZE = 68 // C・Y・M ラベルのフォントサイズ
+  const INNER_FONT_SIZE = 50 // G・B・R ラベルのフォントサイズ
   const OUTER_LABEL_DIST = 60 // 円中心から外側ラベルまでの押し出し距離（px）
   const INNER_LABEL_DIST = 40 // 2 円中間点から交差ラベルまでの押し出し距離（px、正=重心から遠ざかる方向）
 
@@ -40,16 +40,16 @@
 
   // ── 円中心座標 ──
   const CENTER_X = SIZE / 2
-  const pos: Record<"r" | "g" | "b", Pt> = {
-    r: { x: CENTER_X, y: R_TOP_Y },
-    g: { x: CENTER_X - H_SPREAD, y: R_TOP_Y + V_GAP },
-    b: { x: CENTER_X + H_SPREAD, y: R_TOP_Y + V_GAP }
+  const pos: Record<"c" | "y" | "m", Pt> = {
+    c: { x: CENTER_X, y: C_TOP_Y },
+    y: { x: CENTER_X - H_SPREAD, y: C_TOP_Y + V_GAP },
+    m: { x: CENTER_X + H_SPREAD, y: C_TOP_Y + V_GAP }
   }
 
   // ── 3 円の重心 ──
   const centroid: Pt = {
-    x: (pos.r.x + pos.g.x + pos.b.x) / 3,
-    y: (pos.r.y + pos.g.y + pos.b.y) / 3
+    x: (pos.c.x + pos.y.x + pos.m.x) / 3,
+    y: (pos.c.y + pos.y.y + pos.m.y) / 3
   }
 
   /** 点 p を重心から遠ざかる方向へ dist px 移動した座標を返す */
@@ -67,52 +67,52 @@
 
   // ── 基本円（id は clipPath ID 生成にも使用） ──
   const baseCircles = [
-    { id: "r", fill: COLOR.r, ...pos.r },
-    { id: "g", fill: COLOR.g, ...pos.g },
-    { id: "b", fill: COLOR.b, ...pos.b }
+    { id: "c", fill: COLOR.c, ...pos.c },
+    { id: "y", fill: COLOR.y, ...pos.y },
+    { id: "m", fill: COLOR.m, ...pos.m }
   ]
 
-  // ── 外側ラベル（R・G・B） ──
+  // ── 外側ラベル（C・Y・M） ──
   const outerLabels = [
-    { id: "r", text: "R", ...pushOut(pos.r, OUTER_LABEL_DIST) },
-    { id: "g", text: "G", ...pushOut(pos.g, OUTER_LABEL_DIST) },
-    { id: "b", text: "B", ...pushOut(pos.b, OUTER_LABEL_DIST) }
+    { id: "c", text: "C", ...pushOut(pos.c, OUTER_LABEL_DIST) },
+    { id: "y", text: "Y", ...pushOut(pos.y, OUTER_LABEL_DIST) },
+    { id: "m", text: "M", ...pushOut(pos.m, OUTER_LABEL_DIST) }
   ]
 
   // ── 2 円交差領域（塗り用）
   //   pt:     描画する円の中心（クリップで交差を取り出す側）
   //   clipId: 適用するクリップパス ID
-  //   lp:     交差ラベルの中心座標（2 円の中間点）
+  //   lp:     交差ラベルの中心座標
   const intersections = [
     {
-      id: "rg",
-      pt: pos.g,
-      clipId: "clipR",
-      fill: COLOR.y,
-      label: "Y",
-      lp: pushOut(midpoint(pos.r, pos.g), INNER_LABEL_DIST)
+      id: "cy",
+      pt: pos.y,
+      clipId: "clipC",
+      fill: COLOR.g,
+      label: "G",
+      lp: pushOut(midpoint(pos.c, pos.y), INNER_LABEL_DIST)
     },
     {
-      id: "rb",
-      pt: pos.b,
-      clipId: "clipR",
-      fill: COLOR.m,
-      label: "M",
-      lp: pushOut(midpoint(pos.r, pos.b), INNER_LABEL_DIST)
+      id: "cm",
+      pt: pos.m,
+      clipId: "clipC",
+      fill: COLOR.b,
+      label: "B",
+      lp: pushOut(midpoint(pos.c, pos.m), INNER_LABEL_DIST)
     },
     {
-      id: "gb",
-      pt: pos.b,
-      clipId: "clipG",
-      fill: COLOR.c,
-      label: "C",
-      lp: pushOut(midpoint(pos.g, pos.b), INNER_LABEL_DIST)
+      id: "ym",
+      pt: pos.m,
+      clipId: "clipY",
+      fill: COLOR.r,
+      label: "R",
+      lp: pushOut(midpoint(pos.y, pos.m), INNER_LABEL_DIST)
     }
   ]
 
   // ── 交差枠線（各交差につき両側の弧を描画） ──
-  type CircleKey = "r" | "g" | "b"
-  const circleKeys: CircleKey[] = ["r", "g", "b"]
+  type CircleKey = "c" | "y" | "m"
+  const circleKeys: CircleKey[] = ["c", "y", "m"]
 
   const intersectionStrokes = circleKeys.flatMap((a, i) =>
     circleKeys.slice(i + 1).flatMap((b) => [
@@ -124,21 +124,21 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {SIZE} {SIZE}" width={SIZE} height={SIZE}>
   <defs>
-    <!-- 各円の単独クリップパス（id: 'r'→'clipR' など） -->
+    <!-- 各円の単独クリップパス（id: 'c'→'clipC' など） -->
     {#each baseCircles as c (c.id)}
       <clipPath id="clip{c.id.toUpperCase()}">
         <circle cx={c.x} cy={c.y} r={RADIUS} />
       </clipPath>
     {/each}
 
-    <!-- R∩G 交差クリップ（clipRGB 構築用の中間クリップ） -->
-    <clipPath id="clipRG">
-      <circle cx={pos.g.x} cy={pos.g.y} r={RADIUS} clip-path="url(#clipR)" />
+    <!-- C∩Y 交差クリップ（clipCYM 構築用の中間クリップ） -->
+    <clipPath id="clipCY">
+      <circle cx={pos.y.x} cy={pos.y.y} r={RADIUS} clip-path="url(#clipC)" />
     </clipPath>
 
     <!-- 3 円交差クリップ -->
-    <clipPath id="clipRGB">
-      <circle cx={pos.b.x} cy={pos.b.y} r={RADIUS} clip-path="url(#clipRG)" />
+    <clipPath id="clipCYM">
+      <circle cx={pos.m.x} cy={pos.m.y} r={RADIUS} clip-path="url(#clipCY)" />
     </clipPath>
   </defs>
 
@@ -154,8 +154,8 @@
     <circle cx={is.pt.x} cy={is.pt.y} r={RADIUS} fill={is.fill} clip-path="url(#{is.clipId})" />
   {/each}
 
-  <!-- 3 円交差領域（塗りのみ） -->
-  <circle cx={pos.b.x} cy={pos.b.y} r={RADIUS} fill={COLOR.white} clip-path="url(#clipRGB)" />
+  <!-- 3 円交差領域（黒） -->
+  <circle cx={pos.m.x} cy={pos.m.y} r={RADIUS} fill={COLOR.black} clip-path="url(#clipCYM)" />
 
   <!-- ── 枠線（上層）── -->
 
@@ -184,7 +184,7 @@
     />
   {/each}
 
-  <!-- 外側ラベル（R・G・B） -->
+  <!-- 外側ラベル（C・Y・M） -->
   {#each outerLabels as lbl (lbl.id)}
     <text
       x={lbl.x}
@@ -200,7 +200,7 @@
     </text>
   {/each}
 
-  <!-- 交差ラベル（Y・M・C） -->
+  <!-- 交差ラベル（G・B・R） -->
   {#each intersections as is (`${is.id}-lbl`)}
     <text
       x={is.lp.x}

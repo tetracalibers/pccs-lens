@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
+  import { getContext } from "svelte"
   import Heading3 from "../m-html/Heading3.svelte"
 
   let {
@@ -7,10 +8,15 @@
     centering = false,
     title
   }: { children?: Snippet; centering?: boolean; title: string } = $props()
+
+  const ankiCtx = getContext<{ isAnki: boolean } | undefined>("anki-mode")
+  const isAnki = $derived(ankiCtx?.isAnki)
+
+  const dummyText = $derived("X".repeat(title.length))
 </script>
 
-<div class="term-card" class:centering>
-  <Heading3>{title}</Heading3>
+<div class="term-card" class:centering class:anki={isAnki}>
+  <Heading3>{isAnki ? dummyText : title}</Heading3>
   {@render children?.()}
 </div>
 
@@ -22,6 +28,7 @@
     border: 1px solid var(--color-border);
     border-radius: 0.5rem;
     display: grid;
+    align-content: flex-start;
     gap: 0.75rem;
   }
 
@@ -38,14 +45,33 @@
     margin: 0;
   }
 
-  .term-card :global(p) {
+  .term-card.anki :global(h3) {
+    font-family: var(--font-anki-title);
+    color: dimgray;
+  }
+
+  .term-card :global(:is(p, li)) {
     font-size: 0.85rem;
-    line-height: 1.8;
-    margin: 0 0 0.55rem;
     color: var(--color-text, #111);
+  }
+
+  .term-card :global(p) {
+    margin: 0 0 0.55rem;
+    line-height: 1.8;
+  }
+
+  .term-card :global(li) {
+    line-height: 1.4;
   }
 
   .term-card :global(p:last-child) {
     margin-block-end: 0;
+  }
+
+  .term-card :global(ul) {
+    margin-block: 0;
+  }
+  .term-card :global(p:has(+ ul)) {
+    margin-block: 0;
   }
 </style>

@@ -1,10 +1,10 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
 
-  let { children }: { children?: Snippet } = $props()
+  let { children, lastWide = false }: { children?: Snippet; lastWide?: boolean } = $props()
 </script>
 
-<div class="term-grid">
+<div class="term-grid" class:--_last-wide={lastWide}>
   {@render children?.()}
 </div>
 
@@ -16,7 +16,7 @@
     margin: 1.05rem 0;
   }
 
-  .term-grid :global(.term-card:last-child:nth-child(odd)) {
+  .term-grid.--_last-wide :global(.term-card:last-child:nth-child(odd)) {
     grid-column: 1 / -1;
   }
 </style>

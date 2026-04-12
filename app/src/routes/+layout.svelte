@@ -35,7 +35,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
   <link
-    href="https://fonts.googleapis.com/css2?family=Rakkas&family=Delius&family=Reddit+Mono:wght@400..700&family=SUSE+Mono:wght@400;500&family=Zen+Kaku+Gothic+Antique:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Flow+Rounded&family=Rakkas&family=Delius&family=Reddit+Mono:wght@400..700&family=SUSE+Mono:wght@400;500&family=Zen+Kaku+Gothic+Antique:wght@400;500&display=swap"
     rel="stylesheet"
   />
 </svelte:head>
@@ -181,12 +181,13 @@
     --font-mono: "Reddit Mono", monospace;
     --font-fancy: "Delius", cursive;
     --font-classic: "Rakkas", serif;
+    --font-anki-title: "Flow Rounded", system-ui;
 
     font-family: "SUSE Mono", "Zen Kaku Gothic Antique", sans-serif;
     font-synthesis-weight: none;
     margin: 0;
 
-    background: light-dark(#ffffff, #0c0c14);
+    background: var(--color-bg);
     color: light-dark(#1a1a1a, #f0f0f0);
     transition:
       background 0.4s,
