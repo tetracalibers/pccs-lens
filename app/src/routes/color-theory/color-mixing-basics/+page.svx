@@ -15,6 +15,7 @@ draft: true
   import PrimaryColorsRGB from "$lib/demo/color-mixing/PrimaryColorsRGB.svelte"
   import PrimaryColorsWheel from "$lib/demo/color-mixing/PrimaryColorsWheel.svelte"
   import AddColorMixVenn from "$lib/demo/color-mixing/AddColorMixVenn.svelte"
+  import SubColorMixVenn from "$lib/demo/color-mixing/SubColorMixVenn.svelte"
 </script>
 
 ## :WithGradeTag[混色と原色]{grades="3"}
@@ -35,7 +36,9 @@ draft: true
 :::
 
 :::TermCard{title="減法混色" centering}
-
+<SVGWrapper maxW="300">
+  <SubColorMixVenn />
+</SVGWrapper>
 :::
 ::::
 
