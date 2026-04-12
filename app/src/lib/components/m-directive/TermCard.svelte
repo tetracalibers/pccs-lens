@@ -28,6 +28,7 @@
     border: 1px solid var(--color-border);
     border-radius: 0.5rem;
     display: grid;
+    align-content: flex-start;
     gap: 0.75rem;
   }
 
@@ -49,14 +50,28 @@
     color: dimgray;
   }
 
-  .term-card :global(p) {
+  .term-card :global(:is(p, li)) {
     font-size: 0.85rem;
-    line-height: 1.8;
-    margin: 0 0 0.55rem;
     color: var(--color-text, #111);
+  }
+
+  .term-card :global(p) {
+    margin: 0 0 0.55rem;
+    line-height: 1.8;
+  }
+
+  .term-card :global(li) {
+    line-height: 1.4;
   }
 
   .term-card :global(p:last-child) {
     margin-block-end: 0;
+  }
+
+  .term-card :global(ul) {
+    margin-block: 0;
+  }
+  .term-card :global(p:has(+ ul)) {
+    margin-block: 0;
   }
 </style>
