@@ -16,7 +16,7 @@ export default function remarkMermaid() {
         ...THEMES["nord-light"],
         transparent: true,
         font: "'Zen Kaku Gothic Antique', sans-serif",
-        nodeSpacing: 50,
+        nodeSpacing: 30,
         layerSpacing: 50,
         padding: 20
       })

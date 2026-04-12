@@ -15,7 +15,10 @@
     { href: resolve("/patterns"), path: "/patterns", label: "配色シミュレータ" }
   ]
 
-  const contentItems = [{ href: resolve("/guide"), path: "/guide", label: "色の理論" }]
+  const contentItems = [
+    { href: resolve("/color-theory"), path: "/color-theory", label: "色の理論" },
+    { href: resolve("/color-fields"), path: "/color-fields", label: "色の活用分野" }
+  ]
 
   let isNavOpen = $state(false)
 
@@ -32,7 +35,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
   <link
-    href="https://fonts.googleapis.com/css2?family=Delius&family=Reddit+Mono:wght@400..700&family=SUSE+Mono:wght@400;500&family=Zen+Kaku+Gothic+Antique:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Rakkas&family=Delius&family=Reddit+Mono:wght@400..700&family=SUSE+Mono:wght@400;500&family=Zen+Kaku+Gothic+Antique:wght@400;500&display=swap"
     rel="stylesheet"
   />
 </svelte:head>
@@ -177,6 +180,7 @@
   :global(body) {
     --font-mono: "Reddit Mono", monospace;
     --font-fancy: "Delius", cursive;
+    --font-classic: "Rakkas", serif;
 
     font-family: "SUSE Mono", "Zen Kaku Gothic Antique", sans-serif;
     font-synthesis-weight: none;
@@ -310,7 +314,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 1rem;
+    column-gap: 1rem;
     padding-inline-start: 16px;
   }
 

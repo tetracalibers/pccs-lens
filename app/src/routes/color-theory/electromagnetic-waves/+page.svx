@@ -6,14 +6,15 @@ grades: ["3", "uc"]
 ---
 
 <script>
-  import SpectrumRange from "$lib/demo/electromagnetic-waves/SpectrumRange.svelte"
+  import SpectrumRange from "$lib/demo/spectrum/SpectrumRange.svelte"
 </script>
 
-## :WithGradeTag[電磁波と波長による分類]{grades="3,uc"}
+## :WithGradeTag[電磁波と波長]{grades="3,uc"}
 
 そもそも、光とは一体何でしょうか？
 
-光は:Mark[電磁波]（空間を伝わる電気と磁気のエネルギーの波）の一種です。電磁波は:Mark[波長]によって性質や利用分野がまったく異なります。
+光は:Mark[電磁波]（空間を伝わる電気と磁気のエネルギーの波）の一種です。
+電磁波は:Mark[波長]によって性質や利用分野がまったく異なります。電磁波は波長が:Mark[短い]ほど高いエネルギーを持ち、そのエネルギーに応じた利用用途があるからです。
 
 波長が短い順に並べると、電磁波は次のように分類されています。
 
@@ -40,6 +41,7 @@ grades: ["3", "uc"]
 <SpectrumRange />
 
 可視範囲の各波長に対応する色を並べると、虹のようなグラデーションになります。
+波長が短い方から、:Mark[紫]・:Mark[藍]・:Mark[青]・:Mark[緑]・:Mark[黄]・:Mark[橙]・:Mark[赤]の順に変化し、このように波長ごとに対応する色を並べた虹色の帯を:Mark[スペクトル]と呼びます。
 
 可視範囲は、:Mark[短波長]・:Mark[中波長]・:Mark[長波長]の3つの領域に分けて考えることが多いです。
 

@@ -2,21 +2,21 @@
   import GradeTag from "./GradeTag.svelte"
   import { resolve } from "$app/paths"
   import { guidePages } from "$lib/meta/guide-pages"
+  import { gradeArray2CSV, sortGrades } from "$lib/meta/grade"
+  import DraftPageTitle from "./DraftPageTitle.svelte"
+  import { isProduction } from "$lib/env"
+  import DraftTag from "../DraftTag.svelte"
 
   let { slug }: { slug: string } = $props()
 
   const meta = $derived(guidePages.get(slug))
-  const {
-    grades = [],
-    basic = false,
-    title
-  } = $derived.by(() => {
+  const { grades, basic, title, draft } = $derived.by(() => {
     if (meta) return meta
     throw new Error(`PageLink: No metadata found for slug "${slug}"`)
   })
 
   // @ts-expect-error
-  let href = $derived(resolve(`/guide/${slug}`))
+  let href = $derived(resolve(`/color-theory/${slug}`))
 
   const gradeColors = {
     "3": "#c4b5fd",
@@ -26,33 +26,42 @@
   }
 
   let accentColor = $derived(grades.length > 0 ? gradeColors[grades[0]] : "#94a3b8")
+  const gradesList = $derived(sortGrades(grades))
 </script>
 
-<a {href} class="page-link" style="--pl-accent: {accentColor}">
-  <span class="pl-title">{title}</span>
-  {#if grades.length > 0 || basic}
-    <span class="pl-grades">
-      {#if basic}
-        <GradeTag grade="basic" />
-      {/if}
-      {#each grades as grade (grade)}
-        <GradeTag {grade} />
-      {/each}
-    </span>
-  {/if}
-</a>
+{#if draft && isProduction}
+  <DraftPageTitle grades={gradeArray2CSV(grades)} {title} />
+{:else}
+  <a {href} class="page-link" style="--pl-accent: {accentColor}">
+    <span class="pl-title">{title}</span>
+    {#if grades.length > 0 || basic || draft}
+      <span class="pl-grades">
+        {#if draft}
+          <DraftTag />
+        {/if}
+        {#if basic}
+          <GradeTag grade="basic" />
+        {/if}
+        {#each gradesList as grade (grade)}
+          <GradeTag {grade} />
+        {/each}
+      </span>
+    {/if}
+  </a>
+{/if}
 
 <style>
   .page-link {
-    display: grid;
-    grid-template-columns: subgrid;
-    grid-column: span 2;
-    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     text-decoration: none;
     color: inherit;
     position: relative;
     padding: 0.5rem 0 0.5rem 1.5rem;
     transition: color 0.2s;
+    column-gap: 1rem;
+    row-gap: 0.25rem;
   }
 
   .page-link::before {
@@ -96,13 +105,13 @@
     font-weight: 700;
     line-height: 1.4;
     white-space: nowrap;
+    flex-shrink: 0;
   }
 
   .pl-grades {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
-    flex-shrink: 0;
-    justify-content: flex-end;
+    margin-inline-start: auto;
   }
 </style>

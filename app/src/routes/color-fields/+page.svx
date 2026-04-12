@@ -1,0 +1,30 @@
+---
+layout: guide-map
+title: 色の活用分野
+---
+
+## デザイン
+
+### ビジュアルとメディアデザイン
+
+::ComingSoon
+
+### 色のユニバーサルデザイン
+
+::ComingSoon
+
+## ビジネス
+
+::ComingSoon
+
+## ファッション
+
+::ComingSoon
+
+## インテリア
+
+::ComingSoon
+
+## 景観色彩
+
+::ComingSoon

@@ -1,0 +1,134 @@
+---
+layout: guide-content
+title: 混色で色をつくる
+
+grades: ["3"]
+draft: true
+---
+
+<script lang="ts">
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import SpectrumGradient from "$lib/demo/spectrum/SpectrumGradient.svelte"
+  import ReflectRGB from "$lib/demo/color-mixing/ReflectRGB.svelte"
+  import ReflectCMY from "$lib/demo/color-mixing/ReflectCMY.svelte"
+  import PrimaryColorsCMY from "$lib/demo/color-mixing/PrimaryColorsCMY.svelte"
+  import PrimaryColorsRGB from "$lib/demo/color-mixing/PrimaryColorsRGB.svelte"
+  import PrimaryColorsWheel from "$lib/demo/color-mixing/PrimaryColorsWheel.svelte"
+  import AddColorMixVenn from "$lib/demo/color-mixing/AddColorMixVenn.svelte"
+</script>
+
+## :WithGradeTag[混色と原色]{grades="3"}
+
+2色以上の色を重ねたり混ぜたりして新しい色を作ることを:Mark[混色]といいます。
+このとき、混ぜるもとになる色は:Mark[原色]と呼ばれます。
+
+どんな色が原色となり、混色によってどんな色ができるか？という法則は、大きく2種類に分けられます。
+
+- :Mark[加法混色]：色を:Mark[光]として、スクリーン上で使うときの混色
+- :Mark[減法混色]：色を絵の具などの:Mark[色料]として、紙や布などの生地の上で使うときの混色
+
+::::CardGrid
+:::TermCard{title="加法混色" centering}
+<SVGWrapper maxW="300">
+  <AddColorMixVenn />
+</SVGWrapper>
+:::
+
+:::TermCard{title="減法混色" centering}
+
+:::
+::::
+
+## :WithGradeTag[加法混色]{grades="3"}
+
+すべての波長の光がまんべんなく含まれる光は白く見え、:Mark[白色光]と呼ばれていました。
+
+異なる波長をもつ光（＝異なる色の光）を重ねていくと、白色光になるために必要な波長がだんだんと揃っていきます。
+このように、:Mark[色光]を重ねるとより多くの光が得られて:Mark[明るく]なり、最終的に:Mark[白]に近づく混色を:Mark[加法混色]といいます。
+
+### 光の三原色
+
+白い光をつくるためには、実はスペクトルに含まれるすべての色の光が必要なわけではありません。
+赤・緑・青の3色の光さえあれば白色光をつくることができ、これらを:Mark[色光の三原色]と呼びます。
+色光の三原色は、それぞれRed・Green・Blueの頭文字をとって、:Mark[R]・:Mark[G]・:Mark[B]と表されます。
+
+### 加法混色で得られる二次色
+
+RGBの3色を混ぜ合わせると白色光になり、2色だけを混ぜ合わせると:Mark[二次色]とよばれる新しい色になります。
+
+:::Note
+原色を:Mark[一次色]、原色と原色を混ぜ合わせてできる色を:Mark[二次色]と呼びます。
+:::
+
+加法混色で得られる二次色は、光のスペクトルのグラデーションに現れています。
+
+<SpectrumGradient />
+
+スペクトルの青と緑の境界は明るい青緑色に見え、この色を:Mark[シアン]とよびます。
+スペクトルの緑と赤の境界は黄色に見え、この色を:Mark[イエロー]とよびます。
+スペクトルの青と赤はそれぞれスペクトルの端にあるので、混ざった結果がわかりづらいですが、実はスペクトルには赤紫が欠けています。青と赤の間には本来、赤紫色があり、この色を:Mark[マゼンタ]とよびます。
+
+まとめると、次のような関係が成り立つわけです。
+
+- 赤 + 緑 = :Mark[イエロー]
+- 緑 + 青 = :Mark[シアン]
+- 青 + 赤 = :Mark[マゼンタ]
+
+## :WithGradeTag[減法混色]{grades="3"}
+
+色のついたフィルタを重ね合わせると、重なった部分の色が:Mark[暗く]なります。
+これは、フィルタ（物体）が特定の波長の光を:Mark[吸収]してしまうからです。
+
+### 反射と吸収の関係
+
+白色光には、赤の波長、緑の波長、青の波長がすべて含まれています。
+物体に白色光を当てると、物体は特定の波長の光を吸収し、残りの波長の光を反射します。
+
+- 物体が赤に見える ＝ 物体が赤の波長を反射し、緑と青の波長を吸収する
+- 物体が緑に見える ＝ 物体が緑の波長を反射し、赤と青の波長を吸収する
+- 物体が青に見える ＝ 物体が青の波長を反射し、赤と緑の波長を吸収する
+
+<SVGWrapper>
+  <ReflectRGB />
+</SVGWrapper>
+
+光では、赤と緑を混ぜると黄になりましたが、絵の具などの色料では、赤と緑を混ぜてもうまく新しい色をつくることができません。
+
+赤の絵の具は赤の波長を反射しますが、緑の絵の具は赤の波長を吸収してしまいます。
+同様に、緑の絵の具は緑の波長を反射しますが、赤の絵の具は緑の波長を吸収してしまいます。
+さらに、どちらの絵の具も青の波長を吸収してしまうので、黒に近い色ができてしまうのです。
+
+このように、色料でさまざまな色をつくるには、光の三原色とは異なる原色が必要になります。
+
+### 色料の三原色
+
+色料やフィルタなどの物体は光を吸収してしまうため、重ねたときに狙ったRGBの光だけが残るような色を考えます。
+ここで使えるのが、加法混色で得られる二次色のシアン・マゼンタ・イエローです。
+
+- 物体がシアンに見える ＝ 物体が緑と青の波長を反射し、赤の波長を吸収する
+- 物体がマゼンタに見える ＝ 物体が赤と青の波長を反射し、緑の波長を吸収する
+- 物体がイエローに見える ＝ 物体が赤と緑の波長を反射し、青の波長を吸収する
+
+<SVGWrapper>
+  <ReflectCMY />
+</SVGWrapper>
+
+たとえば、シアンとマゼンタはどちらも青の波長を反射し、それぞれが赤と緑の波長を吸収するため、シアンとマゼンタを混ぜると青の波長だけが残り、青ができます。
+
+## なぜあらゆる色を作れるのか
+
+::ComingSoon
+
+## :WithGradeTag[補色]{grades="3"}
+
+::::CardGrid
+:::TermCard{title="色光の三原色" centering}
+<PrimaryColorsRGB />
+:::
+
+:::TermCard{title="色料の三原色" centering}
+<PrimaryColorsCMY />
+:::
+::::
+
+<PrimaryColorsWheel />

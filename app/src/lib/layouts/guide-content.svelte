@@ -3,6 +3,7 @@
   import Heading3 from "$lib/components/m-html/Heading3.svelte"
   import Heading4 from "$lib/components/m-html/Heading4.svelte"
   import Ulist from "$lib/components/m-html/Ulist.svelte"
+  import Olist from "$lib/components/m-html/Olist.svelte"
 
   import Mark from "$lib/components/m-directive/Mark.svelte"
   import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
@@ -20,6 +21,7 @@
     Heading3 as h3,
     Heading4 as h4,
     Ulist as ul,
+    Olist as ol,
     Mark,
     GradeTag,
     WithGradeTag,
@@ -39,14 +41,13 @@
   import type { GuideFrontmatter } from "$lib/meta/guide-pages"
   import Breadcrumb from "$lib/components/Breadcrumb.svelte"
   import { resolve } from "$app/paths"
+  import { sortGrades } from "$lib/meta/grade"
+  import DraftTag from "$lib/components/DraftTag.svelte"
 
-  let {
-    title,
-    grades = [],
-    basic = false,
-    children
-  }: GuideFrontmatter & { children: Snippet } = $props()
+  let { title, grades, basic, draft, children }: GuideFrontmatter & { children: Snippet } = $props()
+
   const pageTitle = $derived(title ? `${title} - PCCS Lens` : "PCCS Lens")
+  const gradeList = $derived(sortGrades(grades))
 </script>
 
 <svelte:head>
@@ -56,15 +57,18 @@
 <main>
   <Breadcrumb
     category="contents"
-    crumbs={[{ label: "色の理論", href: resolve("/guide") }, { label: title }]}
+    crumbs={[{ label: "色の理論", href: resolve("/color-theory") }, { label: title }]}
   />
   <Heading1 icon="solar:pen-new-round-broken">{title}</Heading1>
-  {#if grades.length > 0 || basic}
+  {#if grades.length > 0 || basic || draft}
     <div class="page-grades">
+      {#if draft}
+        <DraftTag />
+      {/if}
       {#if basic}
         <GradeTag grade="basic" />
       {/if}
-      {#each grades as grade (grade)}
+      {#each gradeList as grade (grade)}
         <GradeTag {grade} />
       {/each}
     </div>

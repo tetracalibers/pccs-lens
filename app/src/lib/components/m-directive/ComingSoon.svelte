@@ -22,6 +22,7 @@
     font-size: 1rem;
     display: inline-block;
     line-height: 1.2;
+    margin-inline-start: 1.25rem;
   }
 
   :global(.dark) .coming-soon {

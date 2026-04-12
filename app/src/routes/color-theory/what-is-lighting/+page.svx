@@ -1,0 +1,28 @@
+---
+layout: guide-content
+title: 照明と照明光
+
+grades: ["3"]
+---
+
+## :WithGradeTag[照明とは]{grades="3"}
+
+光を使って物を照らしたり、場所を明るくしたりすることを:Mark[照明]といいます。
+このとき、光を発する源を:Mark[光源]と呼び、光源から出てくる光は:Mark[照明光]と呼ばれます。
+
+## :WithGradeTag[照明光の種類]{grades="3"}
+
+照明光は:Mark[自然光]と:Mark[人工光]の2種類に大きく分けられます。
+
+```mermaid
+graph LR
+    Lighting["照明光"] --- NaturalLight["自然光"]
+    Lighting --- ArtificialLight["人工光"]
+    NaturalLight --- Sunlight{{"太陽光（昼光）"}}
+    ArtificialLight --- Incandescent{{"白熱電球"}}
+    ArtificialLight --- Fluorescent{{"蛍光ランプ"}}
+    ArtificialLight --- LED{{"LED"}}
+```
+
+自然光は:Mark[太陽光]（:Mark[昼光]）のみですが、人工光にはさまざまな種類があります。
+人工的な光源（:Mark[ランプ]）は多数開発されていますし、ろうそくの光も人工光です。

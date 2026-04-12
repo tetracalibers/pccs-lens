@@ -9,6 +9,25 @@
     { color: "#c77dff", x: 35, y: 65, size: 90 }
   ]
 
+  const contents = [
+    {
+      href: resolve("/color-theory"),
+      gradient: "linear-gradient(135deg, #ff6b6b, #ffd93d)",
+      glow: "#ff6b6b",
+      title: "色の理論",
+      desc: "色彩検定3級・2級・1級・UC級に対応した色彩学の解説",
+      tag: "学ぶ"
+    },
+    {
+      href: resolve("/color-fields"),
+      gradient: "linear-gradient(135deg, #6bcb77, #4d96ff)",
+      glow: "#6bcb77",
+      title: "色の活用分野",
+      desc: "デザイン・ビジネス・ファッション・インテリア・景観色彩など",
+      tag: "学ぶ"
+    }
+  ]
+
   const tools = [
     {
       href: resolve("/approximate"),
@@ -77,7 +96,7 @@
 
     <!-- Guide -->
     <section class="guide-section">
-      <a href={resolve("/guide/pccs")} class="guide-card">
+      <a href={resolve("/color-theory/pccs")} class="guide-card">
         <div class="guide-card-inner">
           <div class="guide-visual">
             <div class="guide-orb-ring">
@@ -102,6 +121,31 @@
           </div>
         </div>
       </a>
+    </section>
+
+    <!-- Contents -->
+    <section class="contents-section">
+      <div class="tools-header">
+        <span class="tools-label">コンテンツ</span>
+        <div class="tools-divider"></div>
+      </div>
+      <div class="contents-grid">
+        {#each contents as content (content.title)}
+          <a href={content.href} class="tool-glass" style="--glow: {content.glow}">
+            <div class="tool-gradient-bar" style="background: {content.gradient}"></div>
+            <div class="tool-glass-body">
+              <span
+                class="tool-glass-tag"
+                style="color: {content.glow}; border-color: {content.glow}55"
+              >
+                {content.tag}
+              </span>
+              <h3>{content.title}</h3>
+              <p>{content.desc}</p>
+            </div>
+          </a>
+        {/each}
+      </div>
     </section>
 
     <!-- Tools -->
@@ -172,7 +216,7 @@
     font-size: 0.7rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: light-dark(#999, #555);
+    color: light-dark(#999, #7b7b7b);
     margin-bottom: 1rem;
   }
 
@@ -214,7 +258,7 @@
   .tagline {
     font-size: 1.1rem;
     font-weight: 600;
-    color: light-dark(#222, #ddd);
+    color: var(--color-heading);
     margin: 0 0 0.5rem;
   }
 
@@ -327,12 +371,12 @@
     font-size: 1.2rem;
     font-weight: 700;
     margin: 0 0 0.4rem;
-    color: light-dark(#1a1a1a, #f0f0f0);
+    color: var(--color-heading);
   }
 
   .guide-body p {
     font-size: 0.85rem;
-    color: light-dark(#666, #888);
+    color: var(--color-body);
     margin: 0 0 0.75rem;
     line-height: 1.6;
   }
@@ -346,6 +390,23 @@
     background-clip: text;
   }
 
+  /* Contents */
+  .contents-section {
+    margin-bottom: 2rem;
+  }
+
+  .contents-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    .contents-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
   /* Tools */
   .tools-header {
     display: flex;
@@ -357,7 +418,7 @@
   .tools-label {
     font-size: 0.72rem;
     font-weight: 700;
-    color: light-dark(#aaa, #444);
+    color: light-dark(#aaa, #7b7b7b);
     text-transform: uppercase;
     letter-spacing: 0.12em;
     white-space: nowrap;
@@ -366,7 +427,7 @@
   .tools-divider {
     flex: 1;
     height: 1px;
-    background: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.08));
+    background: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.15));
   }
 
   .tools-grid {
@@ -430,12 +491,12 @@
     font-size: 0.9rem;
     font-weight: 700;
     margin: 0 0 0.35rem;
-    color: light-dark(#1a1a1a, #f0f0f0);
+    color: var(--color-heading);
   }
 
   .tool-glass-body p {
     font-size: 0.78rem;
-    color: light-dark(#888, #666);
+    color: var(--color-body);
     margin: 0;
     line-height: 1.5;
   }

@@ -1,0 +1,204 @@
+---
+layout: guide-map
+title: 色の理論一覧
+---
+
+## 色の表し方
+
+色を誰かに伝えるために、色を記号や数値で表す方法（表色系）と色を言葉で表す方法（色名）を学びます。色の特徴を捉える上で基本となるのは、色相・明度・彩度の三属性です。
+
+### 色を記号や数値で表す
+
+- :PageLink{slug="color-three-attributes"}
+- :PageLink{slug="pccs"}
+- :PageDraft{title="表色系の分類" grades="3"}
+- :PageDraft{title="色相環と色立体" grades="3,uc"}
+- :PageDraft{title="PCCSによる色表示" grades="3"}
+- :PageDraft{title="マンセル表色系" grades="2"}
+
+### 色を言葉で表す
+
+::ComingSoon
+
+## 色が見えるしくみ
+
+私たちが目にする色は、一体どこで生み出されるのか？
+ある色をその色として認識できるメカニズムを、光の性質、眼の構造と視覚の仕組み、脳内での情報処理の仕組みに分けて紐解いていきます。
+
+### 光と色
+
+- :PageLink{slug="how-color-works"}
+- :PageLink{slug="electromagnetic-waves"}
+- :PageDraft{title="光の成分と反射率" grades="2,3,uc"}
+- :PageDraft{title="光のいろいろな現象" grades="3"}
+
+### 眼と視覚系
+
+- :PageLink{slug="eye-structure"}
+- :PageLink{slug="light-path-through-the-retina"}
+- :PageLink{slug="photoreceptor-types-and-distribution"}
+- :PageDraft{title="明るさに対する感度と順応" grades="2"}
+- :PageDraft{title="見え方の安定性" grades="2,1"}
+
+### 色の知覚
+
+- :PageDraft{title="色覚説" grades="2,uc"}
+- :PageDraft{title="錐体の反応と色の識別" grades="uc"}
+- :PageDraft{title="NCS表色系" grades="1"}
+
+## 色の作り方と色再現
+
+色を重ねたり混ぜたりすると新たな色が現れる、混色について学びます。色のついた光を重ねるのか、色のついた物（フィルタなど）を重ねるのかによって、現れる色は異なってきます。
+混色の考え方は、コンピュータ等での色の指定にも用いられます。コンピュータで作った色を印刷したらどうなるか？についても考えてみましょう。
+
+### 混色の基本
+
+- :PageLink{slug="color-mixing-basics"}
+- :PageLink{slug="real-world-color-mixing"}
+
+### デジタル空間の色
+
+- :PageDraft{title="コンピュータで色を作る" grades="2"}
+- :PageDraft{title="色再現領域" grades="2"}
+- :PageDraft{title="カラーマネジメント" grades="2"}
+- :PageDraft{title="デジタル画像" grades="2"}
+
+### 混色の法則性
+
+::ComingSoon
+
+### 混色の原理による色表示
+
+- :PageDraft{title="XYZ表色系" grades="1"}
+- :PageDraft{title="xy色度図" grades="1"}
+- :PageDraft{title="色差の表示" grades="1"}
+- :PageDraft{title="L*a*b*色空間" grades="1"}
+- :PageDraft{title="オストワルト表色系" grades="1"}
+
+## 色の見え方
+
+同じ色が使われているはずなのに、色の見え方に違いが生じる要因はさまざまあります。
+色の組み合わせや配置によっては脳が解釈する色がズレたり、照明が変わると色の感じ方も変わったり、物体の質感によっても色の見え方は変わります。
+意図した通りに色を表現するには、これらの要因を知っておくことが大切です。
+
+### 色の視覚効果
+
+- :PageDraft{title="心理補色と補色残像" grades="3"}
+- :PageDraft{title="色の対比" grades="3"}
+- :PageDraft{title="色の同化" grades="3"}
+- :PageDraft{title="面積と見え方" grades="3"}
+- :PageDraft{title="主観色" grades="3"}
+- :PageDraft{title="錯視" grades="2"}
+
+### 照明
+
+- :PageLink{slug="what-is-lighting"}
+- :PageDraft{title="照明の明るさを表す量" grades="2,1"}
+- :PageDraft{title="光色の表し方" grades="2,1"}
+- :PageDraft{title="照明の色再現性" grades="2"}
+- :PageDraft{title="ランプの種類" grades="2"}
+
+### 色の現れ方と感じ方
+
+- :PageDraft{title="物体表面の質感と光" grades="2"}
+- :PageDraft{title="色の様相" grades="1"}
+- :PageDraft{title="色の現れ方の分類" grades="1"}
+
+### 光と色知覚の複雑性
+
+- :PageDraft{title="三属性間の影響" grades="1"}
+- :PageDraft{title="光の入射角の影響" grades="1"}
+
+## 配色と色彩調和
+
+PCCSのトーンの仕組みは、明度や彩度の関係をシンプルに捉え、イメージに合う色選びを助けてくれるものです。使いたい色をPCCSに落とし込んでから色の組み合わせ（配色）を考えることで、配色の技法を直感的に理解できます。
+
+また、配色技法の背景には、なぜその組み合わせが調和するのか？という数々の研究があります。
+
+### 配色の技法
+
+- :PageDraft{title="色相差とトーン差" grades="3"}
+- :PageDraft{title="代表的な配色用語" grades="2"}
+- :PageDraft{title="色相環を分割した配色" grades="2"}
+- :PageDraft{title="色の強調と分離" grades="3"}
+- :PageDraft{title="グラデーション" grades="3"}
+- :PageDraft{title="イメージ別の配色" grades="2,3"}
+
+### 色彩調和論
+
+- :PageDraft{title="色彩調和論の必要性" grades="1"}
+- :PageDraft{title="統一と変化" grades="3"}
+- :PageDraft{title="ジャッドの4つの原理" grades="2,1"}
+- :PageDraft{title="シュヴルールの色彩調和論" grades="1"}
+- :PageDraft{title="色相の自然連鎖" grades="2,1"}
+- :PageDraft{title="色相分割による調和" grades="1"}
+- :PageDraft{title="混色から考える調和" grades="1"}
+- :PageDraft{title="ムーン＆スペンサーの色彩調和論" grades="1"}
+
+## 色のはたらき方
+
+色の美しさを追求するだけでなく、色の持つ効果をうまく活用することが重要です。色に結びついている普遍的なイメージや心理を理解することも、よりよい表現につながります。
+
+### 色の役割
+
+- :PageDraft{title="色のはたらき" grades="2,3"}
+- :PageDraft{title="見やすさの性質" grades="2"}
+
+### 色の心理効果
+
+- :PageDraft{title="色と感覚" grades="3"}
+- :PageDraft{title="色の好み" grades="2"}
+- :PageDraft{title="色の連想と象徴性" grades="2"}
+- :PageDraft{title="記憶色と色記憶" grades="1"}
+
+## 色の見え方の多様性
+
+色の見え方には個人差があり、目立つ色や見やすい色も人によって異なります。
+さまざまな色の見え方を学ぶことは、すべての人に伝わるような色の使い方を考える第一歩です。
+
+### 色覚の多様性
+
+- :PageDraft{title="色覚の特性" grades="2,uc"}
+- :PageDraft{title="色覚タイプの分類" grades="2,uc"}
+
+### 色覚タイプごとの見え方
+
+- :PageDraft{title="混同しやすい色" grades="uc"}
+- :PageDraft{title="色の誤認" grades="uc"}
+- :PageDraft{title="色覚特性による困りごと" grades="uc"}
+
+### 高齢者の見え方
+
+- :PageDraft{title="加齢による視機能への影響" grades="2,uc"}
+- :PageDraft{title="高齢者の見え方の特徴" grades="uc"}
+- :PageDraft{title="加齢に伴う眼疾病" grades="uc"}
+- :PageDraft{title="高齢者やロービジョンの人への配慮" grades="uc"}
+
+### 色覚の遺伝と検査法
+
+- :PageDraft{title="色覚の遺伝" grades="uc"}
+- :PageDraft{title="色覚検査法" grades="uc"}
+
+## 色の測り方
+
+### 測色と色管理
+
+- :PageDraft{title="測色とは" grades="1"}
+- :PageDraft{title="測色における照明" grades="1"}
+- :PageDraft{title="測り方による色の分類" grades="1"}
+- :MoreToCome
+
+### 色の印象の評価
+
+- :PageDraft{title="心理評価法" grades="1"}
+- :MoreToCome
+
+## 色彩文化の発展
+
+### 西洋の色彩と文化
+
+::ComingSoon
+
+### 日本の色彩と文化
+
+::ComingSoon
