@@ -1,1 +1,1 @@
-export const isProduction = import.meta.env.GITHUB_PAGES === "true"
+export const isProduction = process.env.GITHUB_PAGES == "true"
