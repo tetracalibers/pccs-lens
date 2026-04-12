@@ -289,14 +289,7 @@
   </defs>
 
   <!-- 「補色の関係」ヘッダー -->
-  <text
-    x={MID_CENTER_X}
-    y={PAD_TOP - 14}
-    text-anchor="middle"
-    fill={COLOR_CENTER}
-    font-size="18"
-    font-family="var(--font-classic)"
-  >
+  <text x={MID_CENTER_X} y={PAD_TOP - 14} text-anchor="middle" fill={COLOR_CENTER} font-size="18">
     補色の関係
   </text>
 
@@ -463,7 +456,6 @@
     text-anchor="middle"
     fill={COLOR_REFLECT}
     font-size="16"
-    font-family="var(--font-classic)"
   >
     反射を重ねて白へ
   </text>
@@ -485,8 +477,7 @@
     dominant-baseline="middle"
     fill="#333"
     font-size="18"
-    font-weight="bold"
-    font-family="var(--font-classic)"
+    font-family="var(--font-mono)"
   >
     W
   </text>
@@ -512,7 +503,6 @@
     text-anchor="middle"
     fill={COLOR_CENTER}
     font-size="15"
-    font-family="var(--font-classic)"
   >
     混ぜて
   </text>
@@ -522,7 +512,6 @@
     text-anchor="middle"
     fill={COLOR_CENTER}
     font-size="15"
-    font-family="var(--font-classic)"
   >
     白か黒になるのが
   </text>
@@ -533,7 +522,6 @@
     fill={COLOR_CENTER}
     font-size="17"
     font-weight="bold"
-    font-family="var(--font-classic)"
   >
     補色
   </text>
@@ -545,7 +533,6 @@
     text-anchor="middle"
     fill={COLOR_ABSORB}
     font-size="16"
-    font-family="var(--font-classic)"
   >
     吸収を重ねて黒へ
   </text>
@@ -581,8 +568,7 @@
     dominant-baseline="middle"
     fill="white"
     font-size="16"
-    font-weight="bold"
-    font-family="var(--font-classic)"
+    font-family="var(--font-mono)"
   >
     Bk
   </text>
