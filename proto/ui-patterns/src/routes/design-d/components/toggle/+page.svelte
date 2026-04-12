@@ -90,26 +90,28 @@
               </span>
               <span class="btn-a-label" class:active={!modes[i]}>解説</span>
             </button>
-
           {:else if p.id === "b"}
             <!-- B: セグメントコントロール -->
             <div class="btn-b" class:is-kaisetsu={!modes[i]}>
               <button
                 class="btn-b-seg"
                 class:active={modes[i]}
-                onclick={() => { if (!modes[i]) toggleMode(i) }}
+                onclick={() => {
+                  if (!modes[i]) toggleMode(i)
+                }}
               >
                 暗記
               </button>
               <button
                 class="btn-b-seg"
                 class:active={!modes[i]}
-                onclick={() => { if (modes[i]) toggleMode(i) }}
+                onclick={() => {
+                  if (modes[i]) toggleMode(i)
+                }}
               >
                 解説
               </button>
             </div>
-
           {:else if p.id === "c"}
             <!-- C: モードバッジボタン -->
             <button
@@ -121,7 +123,6 @@
               <span class="btn-c-mode">{modes[i] ? "暗記モード" : "解説モード"}</span>
               <span class="btn-c-arrow">⇄</span>
             </button>
-
           {:else if p.id === "d"}
             <!-- D: アイコン丸ボタン -->
             <button
@@ -133,49 +134,85 @@
               <svg class="btn-d-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 {#if modes[i]}
                   <!-- 暗記: 本アイコン -->
-                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke="currentColor" stroke-width="2"/>
-                  <line x1="9" y1="7" x2="15" y2="7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                  <line x1="9" y1="10" x2="15" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <path
+                    d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  />
+                  <line
+                    x1="9"
+                    y1="7"
+                    x2="15"
+                    y2="7"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
+                  <line
+                    x1="9"
+                    y1="10"
+                    x2="15"
+                    y2="10"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
                 {:else}
                   <!-- 解説: 電球アイコン -->
-                  <path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z" stroke="currentColor" stroke-width="2"/>
-                  <line x1="9" y1="21" x2="15" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                  <line x1="10" y1="18" x2="14" y2="18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <path
+                    d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  />
+                  <line
+                    x1="9"
+                    y1="21"
+                    x2="15"
+                    y2="21"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  />
+                  <line
+                    x1="10"
+                    y1="18"
+                    x2="14"
+                    y2="18"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
                 {/if}
               </svg>
             </button>
-
           {:else if p.id === "e"}
             <!-- E: スライドテキスト -->
-            <button
-              class="btn-e"
-              class:is-kaisetsu={!modes[i]}
-              onclick={() => toggleMode(i)}
-            >
+            <button class="btn-e" class:is-kaisetsu={!modes[i]} onclick={() => toggleMode(i)}>
               <span class="btn-e-current">{modes[i] ? "暗記モード" : "解説モード"}</span>
               <span class="btn-e-divider">|</span>
               <span class="btn-e-next">{modes[i] ? "解説へ →" : "暗記へ →"}</span>
             </button>
-
           {:else if p.id === "f"}
             <!-- F: グラデーションシフト -->
-            <button
-              class="btn-f"
-              class:is-kaisetsu={!modes[i]}
-              onclick={() => toggleMode(i)}
-            >
+            <button class="btn-f" class:is-kaisetsu={!modes[i]} onclick={() => toggleMode(i)}>
               <span class="btn-f-icon">{modes[i] ? "📖" : "💡"}</span>
               <span class="btn-f-text">{modes[i] ? "暗記" : "解説"}</span>
             </button>
-
           {:else if p.id === "g"}
             <!-- G: アンダーライン付き2択 -->
             <div class="btn-g" class:is-kaisetsu={!modes[i]}>
               <button
                 class="btn-g-tab"
                 class:active={modes[i]}
-                onclick={() => { if (!modes[i]) toggleMode(i) }}
+                onclick={() => {
+                  if (!modes[i]) toggleMode(i)
+                }}
               >
                 暗記
               </button>
@@ -183,19 +220,16 @@
               <button
                 class="btn-g-tab"
                 class:active={!modes[i]}
-                onclick={() => { if (modes[i]) toggleMode(i) }}
+                onclick={() => {
+                  if (modes[i]) toggleMode(i)
+                }}
               >
                 解説
               </button>
             </div>
-
           {:else if p.id === "h"}
             <!-- H: ゴーストカプセル -->
-            <button
-              class="btn-h"
-              class:is-kaisetsu={!modes[i]}
-              onclick={() => toggleMode(i)}
-            >
+            <button class="btn-h" class:is-kaisetsu={!modes[i]} onclick={() => toggleMode(i)}>
               <span class="btn-h-dot"></span>
               <span class="btn-h-text">{modes[i] ? "暗記モード" : "解説モード"}</span>
             </button>
