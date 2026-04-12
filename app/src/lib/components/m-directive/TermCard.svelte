@@ -46,6 +46,7 @@
 
   .term-card.anki :global(h3) {
     font-family: var(--font-anki-title);
+    color: dimgray;
   }
 
   .term-card :global(p) {
