@@ -13,12 +13,12 @@
   const BTM_CHIP_GAP = 8
 
   // 左列（RGB）: バーはチップ幅 + ギャップ分だけ右寄りにして下部と縦揃え
-  const LEFT_LABEL_X = 22
   const LEFT_BAR_X = BTM_CHIP_SIZE + BTM_CHIP_GAP // = 68
+  const LEFT_LABEL_X = BTM_CHIP_SIZE / 2 // W チップ中心に縦揃え = 30
 
   // 右列（CMY）: バー左・ラベル右
   const RIGHT_BAR_X = SVG_WIDTH - LEFT_BAR_X - BAR_WIDTH // = 557
-  const RIGHT_LABEL_X = SVG_WIDTH - 22 // = 978
+  const RIGHT_LABEL_X = RIGHT_BAR_X + BAR_WIDTH + BTM_CHIP_GAP + BTM_CHIP_SIZE / 2 // Bk チップ中心に縦揃え = 970
 
   // 中央列
   const MID_LEFT = LEFT_BAR_X + BAR_WIDTH // = 443
