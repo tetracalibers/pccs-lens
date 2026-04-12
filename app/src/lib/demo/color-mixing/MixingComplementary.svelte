@@ -2,7 +2,6 @@
   import { PCCS_MAP } from "$lib/data/pccs"
 
   // ── Layout ────────────────────────────────────────────────────────────────
-  const SVG_WIDTH = 1000
 
   // 上部セクション – スペクトルバー寸法
   const BAR_WIDTH = 375
@@ -13,17 +12,21 @@
   const BTM_CHIP_GAP = 8
 
   // 左列（RGB）: バーはチップ幅 + ギャップ分だけ右寄りにして下部と縦揃え
-  const LEFT_BAR_X = BTM_CHIP_SIZE + BTM_CHIP_GAP // = 68
-  const LEFT_LABEL_X = BTM_CHIP_SIZE / 2 // W チップ中心に縦揃え = 30
+  const LEFT_BAR_X = BTM_CHIP_SIZE + BTM_CHIP_GAP
+  const LEFT_LABEL_X = BTM_CHIP_SIZE / 2 // W チップ中心に縦揃え
 
   // 右列（CMY）: バー左・ラベル右
-  const RIGHT_BAR_X = SVG_WIDTH - LEFT_BAR_X - BAR_WIDTH // = 557
-  const RIGHT_LABEL_X = RIGHT_BAR_X + BAR_WIDTH + BTM_CHIP_GAP + BTM_CHIP_SIZE / 2 // Bk チップ中心に縦揃え = 970
+  const MID_GAP = 180 // 左列バー右端と右列バー左端の間隔（ここを変えるだけで全体が追従）
+  const RIGHT_BAR_X = LEFT_BAR_X + BAR_WIDTH + MID_GAP
+  const RIGHT_LABEL_X = RIGHT_BAR_X + BAR_WIDTH + BTM_CHIP_GAP + BTM_CHIP_SIZE / 2 // Bk チップ中心に縦揃え
+
+  // SVG 幅をレイアウトから導出（MID_GAP に追従して自動拡縮）
+  const SVG_WIDTH = RIGHT_BAR_X + BAR_WIDTH + BTM_CHIP_GAP + BTM_CHIP_SIZE
 
   // 中央列
-  const MID_LEFT = LEFT_BAR_X + BAR_WIDTH // = 443
-  const MID_RIGHT = RIGHT_BAR_X // = 557
-  const MID_CENTER_X = (MID_LEFT + MID_RIGHT) / 2 // = 500
+  const MID_LEFT = LEFT_BAR_X + BAR_WIDTH
+  const MID_RIGHT = RIGHT_BAR_X
+  const MID_CENTER_X = (MID_LEFT + MID_RIGHT) / 2
 
   // 矢印セクション（バー上部）
   const ARROW_TEXT_OFFSET = 20
