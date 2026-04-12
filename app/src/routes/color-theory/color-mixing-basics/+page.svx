@@ -3,6 +3,7 @@ layout: guide-content
 title: 混色で色をつくる
 
 grades: ["3"]
+draft: true
 ---
 
 <script lang="ts">

@@ -42,13 +42,9 @@
   import Breadcrumb from "$lib/components/Breadcrumb.svelte"
   import { resolve } from "$app/paths"
   import { sortGrades } from "$lib/meta/grade"
+  import DraftTag from "$lib/components/DraftTag.svelte"
 
-  let {
-    title,
-    grades = [],
-    basic = false,
-    children
-  }: GuideFrontmatter & { children: Snippet } = $props()
+  let { title, grades, basic, draft, children }: GuideFrontmatter & { children: Snippet } = $props()
 
   const pageTitle = $derived(title ? `${title} - PCCS Lens` : "PCCS Lens")
   const gradeList = $derived(sortGrades(grades))
@@ -64,8 +60,11 @@
     crumbs={[{ label: "色の理論", href: resolve("/color-theory") }, { label: title }]}
   />
   <Heading1 icon="solar:pen-new-round-broken">{title}</Heading1>
-  {#if grades.length > 0 || basic}
+  {#if grades.length > 0 || basic || draft}
     <div class="page-grades">
+      {#if draft}
+        <DraftTag />
+      {/if}
       {#if basic}
         <GradeTag grade="basic" />
       {/if}

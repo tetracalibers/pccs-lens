@@ -1,7 +1,8 @@
 export type GuideFrontmatter = {
   title: string
-  grades?: ("3" | "2" | "1" | "uc")[]
+  grades: ("3" | "2" | "1" | "uc")[]
   basic?: boolean
+  draft?: boolean
 }
 
 const modules = import.meta.glob(
@@ -16,6 +17,14 @@ export const guidePages: Map<string, GuideFrontmatter> = new Map(
       .replace(/^\/src\/routes\/color-theory\//, "")
       .replace(/\/\+page\.svx$/, "")
     const meta = mod.metadata
-    return [slug, { title: meta.title, grades: meta.grades ?? [], basic: meta.basic ?? false }]
+    return [
+      slug,
+      {
+        title: meta.title,
+        grades: meta.grades ?? [],
+        basic: meta.basic ?? false,
+        draft: meta.draft ?? false
+      }
+    ]
   })
 )

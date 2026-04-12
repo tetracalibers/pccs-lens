@@ -13,3 +13,8 @@ export const gradeCSV2Array = (gradeCSV: AftGradeCSV): AftGrade[] => {
   const grades = gradeCSV.split(",") as AftGrade[]
   return sortGrades(grades)
 }
+
+export const gradeArray2CSV = (grades: AftGrade[]): AftGradeCSV => {
+  const sortedGrades = sortGrades(grades)
+  return sortedGrades.join(",") as AftGradeCSV
+}
