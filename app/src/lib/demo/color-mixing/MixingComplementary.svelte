@@ -483,7 +483,7 @@
     x={BTM_LEFT_CHIP_X + BTM_CHIP_SIZE / 2}
     y={BTM_CHIP_Y + BTM_CHIP_SIZE / 2}
     text-anchor="middle"
-    dominant-baseline="middle"
+    dominant-baseline="central"
     fill="#333"
     font-size="18"
     font-family="var(--font-mono)"
@@ -574,7 +574,7 @@
     x={BTM_RIGHT_CHIP_X + BTM_CHIP_SIZE / 2}
     y={BTM_CHIP_Y + BTM_CHIP_SIZE / 2}
     text-anchor="middle"
-    dominant-baseline="middle"
+    dominant-baseline="central"
     fill="white"
     font-size="16"
     font-family="var(--font-mono)"
