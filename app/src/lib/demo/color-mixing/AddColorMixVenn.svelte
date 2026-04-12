@@ -33,6 +33,7 @@
   const OUTER_FONT_SIZE = 68 // R・G・B ラベルのフォントサイズ
   const INNER_FONT_SIZE = 50 // Y・M・C ラベルのフォントサイズ
   const OUTER_LABEL_DIST = 60 // 円中心から外側ラベルまでの押し出し距離（px）
+  const INNER_LABEL_DIST = 40 // 2 円中間点から交差ラベルまでの押し出し距離（px、正=重心から遠ざかる方向）
 
   // ── 型定義 ──
   type Pt = { x: number; y: number }
@@ -83,9 +84,30 @@
   //   clipId: 適用するクリップパス ID
   //   lp:     交差ラベルの中心座標（2 円の中間点）
   const intersections = [
-    { id: "rg", pt: pos.g, clipId: "clipR", fill: COLOR.y, label: "Y", lp: midpoint(pos.r, pos.g) },
-    { id: "rb", pt: pos.b, clipId: "clipR", fill: COLOR.m, label: "M", lp: midpoint(pos.r, pos.b) },
-    { id: "gb", pt: pos.b, clipId: "clipG", fill: COLOR.c, label: "C", lp: midpoint(pos.g, pos.b) }
+    {
+      id: "rg",
+      pt: pos.g,
+      clipId: "clipR",
+      fill: COLOR.y,
+      label: "Y",
+      lp: pushOut(midpoint(pos.r, pos.g), INNER_LABEL_DIST)
+    },
+    {
+      id: "rb",
+      pt: pos.b,
+      clipId: "clipR",
+      fill: COLOR.m,
+      label: "M",
+      lp: pushOut(midpoint(pos.r, pos.b), INNER_LABEL_DIST)
+    },
+    {
+      id: "gb",
+      pt: pos.b,
+      clipId: "clipG",
+      fill: COLOR.c,
+      label: "C",
+      lp: pushOut(midpoint(pos.g, pos.b), INNER_LABEL_DIST)
+    }
   ]
 
   // ── 交差枠線（各交差につき両側の弧を描画） ──
