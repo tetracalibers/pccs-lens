@@ -27,6 +27,7 @@
   const MID_LEFT = LEFT_BAR_X + BAR_WIDTH
   const MID_RIGHT = RIGHT_BAR_X
   const MID_CENTER_X = (MID_LEFT + MID_RIGHT) / 2
+  const MID_ARROW_MARGIN = 18 // 中央矢印の先端とバー左右端との間隔
 
   // 矢印セクション（バー上部）
   const ARROW_TEXT_OFFSET = 20
@@ -445,9 +446,9 @@
 
     <!-- 中央 双方向矢印（←→）-->
     <line
-      x1={MID_LEFT + 8}
+      x1={MID_LEFT + MID_ARROW_MARGIN}
       y1={bCenterY}
-      x2={MID_RIGHT - 8}
+      x2={MID_RIGHT - MID_ARROW_MARGIN}
       y2={bCenterY}
       stroke={COLOR_CENTER}
       stroke-width="2"
