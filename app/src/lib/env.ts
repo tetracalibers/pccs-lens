@@ -1,3 +1,4 @@
-const isCF = import.meta.env.CF_PAGES === "true"
+declare const __GITHUB_PAGES__: boolean
+const isGithubPages = __GITHUB_PAGES__
 
-export const isProduction = import.meta.env.NODE_ENV === "production" && !isCF
+export const isProduction = isGithubPages

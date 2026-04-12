@@ -3,6 +3,9 @@ import { playwright } from "@vitest/browser-playwright"
 import { sveltekit } from "@sveltejs/kit/vite"
 
 export default defineConfig({
+  define: {
+    __GITHUB_PAGES__: JSON.stringify(process.env.GITHUB_PAGES === "true")
+  },
   plugins: [sveltekit()],
   test: {
     expect: { requireAssertions: true },
