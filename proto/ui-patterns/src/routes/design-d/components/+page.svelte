@@ -102,6 +102,13 @@
       desc: "前へ・次へ・一覧リンクを備えたページナビゲーションフッターのスタイルパターン",
       glow: "#34d399",
       gradient: "linear-gradient(135deg, #818cf8, #34d399)"
+    },
+    {
+      href: resolve("/design-d/components/toggle"),
+      title: "切替トグル",
+      desc: "暗記モードと解説モードを切り替えるトグルボタンのスタイルパターン（8案）",
+      glow: "#c77dff",
+      gradient: "linear-gradient(135deg, #34d399, #c77dff)"
     }
   ]
 </script>
