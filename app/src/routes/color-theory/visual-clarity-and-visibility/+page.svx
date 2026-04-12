@@ -1,0 +1,21 @@
+---
+layout: guide-content
+title: 見やすさの性質
+
+grades: ["2"]
+draft: true
+---
+
+TODO: 色の機能的効果の種類であることを序文で説明
+
+## :WithGradeTag[発見されやすさ]{grades="2"}
+
+::ComingSoon
+
+## :WithGradeTag[理解のしやすさ]{grades="2"}
+
+::ComingSoon
+
+## :WithGradeTag[区別のしやすさ]{grades="2"}
+
+::ComingSoon
