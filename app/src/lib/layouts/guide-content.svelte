@@ -37,14 +37,23 @@
 
 <script lang="ts">
   import type { Snippet } from "svelte"
+  import { setContext } from "svelte"
   import Heading1 from "$lib/components/Heading1.svelte"
   import type { GuideFrontmatter } from "$lib/meta/guide-pages"
   import Breadcrumb from "$lib/components/Breadcrumb.svelte"
   import { resolve } from "$app/paths"
   import { sortGrades } from "$lib/meta/grade"
   import DraftTag from "$lib/components/DraftTag.svelte"
+  import AnkiModeToggle from "$lib/components/AnkiModeToggle.svelte"
 
   let { title, grades, basic, draft, children }: GuideFrontmatter & { children: Snippet } = $props()
+
+  let isAnki = $state(false)
+  setContext("anki-mode", {
+    get isAnki() {
+      return isAnki
+    }
+  })
 
   const pageTitle = $derived(title ? `${title} - PCCS Lens` : "PCCS Lens")
   const gradeList = $derived(sortGrades(grades))
@@ -60,19 +69,29 @@
     crumbs={[{ label: "色の理論", href: resolve("/color-theory") }, { label: title }]}
   />
   <Heading1 icon="solar:pen-new-round-broken">{title}</Heading1>
-  {#if grades.length > 0 || basic || draft}
-    <div class="page-grades">
-      {#if draft}
-        <DraftTag />
-      {/if}
-      {#if basic}
-        <GradeTag grade="basic" />
-      {/if}
-      {#each gradeList as grade (grade)}
-        <GradeTag {grade} />
-      {/each}
+  <div class="page-meta">
+    {#if grades.length > 0 || basic || draft}
+      <div class="page-grades">
+        {#if draft}
+          <DraftTag />
+        {/if}
+        {#if basic}
+          <GradeTag grade="basic" />
+        {/if}
+        {#each gradeList as grade (grade)}
+          <GradeTag {grade} />
+        {/each}
+      </div>
+    {/if}
+    <div class="anki-toggle">
+      <AnkiModeToggle
+        {isAnki}
+        ontoggle={() => {
+          isAnki = !isAnki
+        }}
+      />
     </div>
-  {/if}
+  </div>
   {@render children()}
 </main>
 
@@ -83,12 +102,24 @@
     padding: 0;
   }
 
+  .page-meta {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-block-end: 2.5rem;
+  }
+
   .page-grades {
     display: flex;
     flex-wrap: nowrap;
     gap: 4px;
-    margin-block-end: 2.5rem;
     margin-inline-start: -4px;
+  }
+
+  .anki-toggle {
+    margin-inline-start: auto;
   }
 
   main :global(p) {
