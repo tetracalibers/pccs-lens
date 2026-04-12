@@ -16,6 +16,7 @@ draft: true
   import PrimaryColorsWheel from "$lib/demo/color-mixing/PrimaryColorsWheel.svelte"
   import AddColorMixVenn from "$lib/demo/color-mixing/AddColorMixVenn.svelte"
   import SubColorMixVenn from "$lib/demo/color-mixing/SubColorMixVenn.svelte"
+  import MixingComplementary from "$lib/demo/color-mixing/MixingComplementary.svelte"
 </script>
 
 ## :WithGradeTag[混色と原色]{grades="3"}
@@ -135,3 +136,7 @@ RGBの3色を混ぜ合わせると白色光になり、2色だけを混ぜ合わ
 ::::
 
 <PrimaryColorsWheel />
+
+<SVGWrapper>
+  <MixingComplementary />
+</SVGWrapper>
