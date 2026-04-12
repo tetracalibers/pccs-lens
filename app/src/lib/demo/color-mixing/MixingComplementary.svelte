@@ -36,7 +36,7 @@
 
   const ROW_HEIGHT = ARROW_H + BAR_HEIGHT // = 140
   const ROW_GAP = 28
-  const PAD_TOP = 50 // 「補色の関係」ヘッダーの余白
+  const PAD_TOP = 12
   const PAD_BOTTOM = 28
 
   // ── Colors ────────────────────────────────────────────────────────────────
@@ -291,8 +291,14 @@
     </marker>
   </defs>
 
-  <!-- 「補色の関係」ヘッダー -->
-  <text x={MID_CENTER_X} y={PAD_TOP - 14} text-anchor="middle" fill={COLOR_CENTER} font-size="18">
+  <!-- 「補色の関係」: 行 0 の中央矢印の上、GAP_TEXT_TO_LINE 分の余白を持たせて -->
+  <text
+    x={MID_CENTER_X}
+    y={PAD_TOP + ARROW_H + BAR_HEIGHT / 2 - GAP_TEXT_TO_LINE}
+    text-anchor="middle"
+    fill={COLOR_CENTER}
+    font-size="18"
+  >
     補色の関係
   </text>
 
