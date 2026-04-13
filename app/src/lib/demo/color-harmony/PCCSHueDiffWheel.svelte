@@ -244,7 +244,7 @@
   })
 </script>
 
-<svg viewBox="0 0 {size} {size}" width={size} height={size} role="img" aria-label="PCCS色相差環">
+<svg viewBox="0 0 {size} {size}" width={size} height={size}>
   <defs>
     <!--
       矢印マーカー（SpectrumRange と同形状のオープンシェブロン）。
@@ -263,7 +263,7 @@
       <polyline
         points="1,1 8,5 1,9"
         fill="none"
-        stroke="#555"
+        stroke="var(--color-body)"
         stroke-width="1"
         stroke-linejoin="round"
       />
@@ -293,12 +293,22 @@
 
   <!-- 色相差の数字 -->
   {#each diffNumbers as d (d.num)}
-    <text class="diff-number" x={d.x} y={d.y} font-size={13}>{d.diff}</text>
+    <text class="diff-number" class:diff-number--base={d.diff === 0} x={d.x} y={d.y} font-size={13}>
+      {d.diff}
+    </text>
   {/each}
 
   <!-- 色相差範囲ラベル -->
   {#each rangeLabels as r (r.key)}
-    <text class="range-label" x={r.x} y={r.y} font-size={14}>{r.label}</text>
+    <text
+      class="range-label"
+      class:range-label--base={r.label === "同一"}
+      x={r.x}
+      y={r.y}
+      font-size={14}
+    >
+      {r.label}
+    </text>
   {/each}
 
   <!-- 外周円弧（双方向矢印）とラベル -->
@@ -335,7 +345,7 @@
   }
 
   .radial-line {
-    stroke: #888;
+    stroke: var(--color-body);
     stroke-width: 1;
   }
 
@@ -343,22 +353,27 @@
     font-family: var(--font-mono);
     text-anchor: middle;
     dominant-baseline: central;
-    fill: #333;
+    fill: var(--color-body);
   }
 
   .range-label {
     text-anchor: middle;
     dominant-baseline: central;
-    fill: #333;
+    fill: var(--color-body);
   }
 
   .outer-arc {
     fill: none;
-    stroke: #555;
+    stroke: var(--color-body);
     stroke-width: 1.25;
   }
 
   .arc-label {
-    fill: #333;
+    fill: var(--color-body);
+  }
+
+  .diff-number--base,
+  .range-label--base {
+    fill: var(--color-body--light);
   }
 </style>
