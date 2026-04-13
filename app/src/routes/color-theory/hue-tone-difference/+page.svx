@@ -9,6 +9,9 @@ draft: true
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
   import PCCSHueDiffWheel from "$lib/demo/color-harmony/PCCSHueDiffWheel.svelte"
+  
+  import ColorPaletteGrid from "$lib/demo/color-harmony/ColorPaletteGrid.svelte"
+  import HueBasedPalettePreview from "$lib/demo/color-harmony/HueBasedPalettePreview.svelte"
 </script>
 
 ## :WithGradeTag[色相を手がかりにした配色]{grades="3"}
@@ -16,3 +19,78 @@ draft: true
 <SVGWrapper maxW={500}>
   <PCCSHueDiffWheel baseHue={8} />
 </SVGWrapper>
+
+::::CardGrid
+:::TermCard{title="同一色相配色" centering}
+色相差が:Mark[0]の配色が:Mark[同一]色相配色です。
+色相が同じ色どうしで、まとまりが最も強く感じられる配色となります。
+PCCSでは、:Mark[無彩色]と組み合わせた配色も同一色相配色に含まれます。
+
+TODO：プレビュー
+:::
+
+:::TermCard{title="隣接色相配色" centering}
+色相差が:Mark[1]の配色が:Mark[隣接]色相配色です。
+色相環で隣り合う色どうしで統一感があり、まとまりが感じられる配色となります。
+偶数記号と奇数記号を組み合わせて作ります。
+
+<ColorPaletteGrid>
+  <HueBasedPalettePreview baseHue={8} hueDiff={1} rotation="cw" />
+  <HueBasedPalettePreview baseHue={8} hueDiff={1} rotation="ccw" />
+</ColorPaletteGrid>
+:::
+
+:::TermCard{title="類似色相配色" centering}
+色相差が:Mark[2]〜:Mark[3]の配色が:Mark[類似]色相配色です。
+色相が似た色どうしで、まとまりの中にもやや色相の変化が感じられる配色となります。
+
+<ColorPaletteGrid>
+  <HueBasedPalettePreview baseHue={8} hueDiff={2} rotation="cw" />
+  <HueBasedPalettePreview baseHue={8} hueDiff={2} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={8} hueDiff={3} rotation="cw" />
+  <HueBasedPalettePreview baseHue={8} hueDiff={3} rotation="ccw" />
+</ColorPaletteGrid>
+:::
+
+:::TermCard{title="中差色相配色" centering}
+色相差が:Mark[4]〜:Mark[7]の配色が:Mark[中差]色相配色です。
+色相にやや違いがあり、統一の調和にも変化の調和にも当てはまりません。
+
+<ColorPaletteGrid>
+  <HueBasedPalettePreview baseHue={8} hueDiff={4} rotation="cw" />
+  <HueBasedPalettePreview baseHue={8} hueDiff={4} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={8} hueDiff={5} rotation="cw" />
+  <HueBasedPalettePreview baseHue={8} hueDiff={5} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={8} hueDiff={6} rotation="cw" />
+  <HueBasedPalettePreview baseHue={8} hueDiff={6} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={8} hueDiff={7} rotation="cw" />
+  <HueBasedPalettePreview baseHue={8} hueDiff={7} rotation="ccw" />
+</ColorPaletteGrid>
+:::
+
+:::TermCard{title="対照色相配色" centering}
+色相差が:Mark[8]〜:Mark[10]の配色が:Mark[対照]色相配色です。
+色みの共通性やまとまりは感じられませんが、:Mark[彩度]の高い色どうしではコントラストが生まれます。
+
+<ColorPaletteGrid>
+  <HueBasedPalettePreview baseHue={8} hueDiff={8} rotation="cw" />
+  <HueBasedPalettePreview baseHue={8} hueDiff={8} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={8} hueDiff={9} rotation="cw" />
+  <HueBasedPalettePreview baseHue={8} hueDiff={9} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={8} hueDiff={10} rotation="cw" />
+  <HueBasedPalettePreview baseHue={8} hueDiff={10} rotation="ccw" />
+</ColorPaletteGrid>
+:::
+
+:::TermCard{title="補色色相配色" centering}
+色相差が:Mark[11]〜:Mark[12]の配色が:Mark[補色]色相配色です。
+色相環で正反対の位置にある色どうしで、色相の変化が最も大きく、コントラストが強調されます。
+:Mark[彩度]の高い色どうしを使うと、:Mark[明度]の変化も大きくなります。
+
+<ColorPaletteGrid>
+  <HueBasedPalettePreview baseHue={8} hueDiff={11} rotation="cw" />
+  <HueBasedPalettePreview baseHue={8} hueDiff={11} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={8} hueDiff={12} rotation="cw" />
+</ColorPaletteGrid>
+:::
+::::
