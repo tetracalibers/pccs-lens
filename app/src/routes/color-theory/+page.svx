@@ -13,7 +13,7 @@ title: 色の理論一覧
 - :PageLink{slug="pccs-basics"}
 - :PageDraft{title="表色系の分類" grades="3"}
 - :PageDraft{title="色相環と色立体" grades="3,uc"}
-- :PageDraft{title="PCCSによる色表示" grades="3"}
+- :PageLink{slug="pccs-color-system"}
 - :PageDraft{title="マンセル表色系" grades="2"}
 
 ### 色を言葉で表す

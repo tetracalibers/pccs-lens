@@ -6,13 +6,4 @@ grades: ["3"]
 draft: true
 ---
 
-<script>
-  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
-  import PCCSHueWheel from "$lib/demo/pccs/PCCSHueWheel.svelte"
-</script>
-
 ## :WithGradeTag[色相を手がかりにした配色]{grades="3"}
-
-<SVGWrapper maxW={500}>
-  <PCCSHueWheel />
-</SVGWrapper>
