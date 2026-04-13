@@ -203,6 +203,19 @@
     )
   )
 
+  // 基準色相の強調扇形（色スウォッチ・「0」・「同一」を包む）
+  let baseSectorPath = $derived.by(() => {
+    const angle = hueAngle(baseHue)
+    // 「同一」/「隣接」の境界 = 放射状直線A（±0.5ステップ）の角度
+    const startAngle = angle - HALF_ANGLE
+    const endAngle = angle + HALF_ANGLE
+    const outerR = arcRadius
+    const s = polarToCartesian(startAngle, outerR)
+    const e = polarToCartesian(endAngle, outerR)
+    // 扇角 = ANGLE_PER_HUE (15°) なので largeArc は常に 0
+    return `M ${cx.toFixed(3)} ${cy.toFixed(3)} L ${s.x.toFixed(3)} ${s.y.toFixed(3)} A ${outerR} ${outerR} 0 0 1 ${e.x.toFixed(3)} ${e.y.toFixed(3)} Z`
+  })
+
   // 外周円弧
   // 直線Cどうし（±3.5）を基準側で結ぶ弧 → 共通性
   // 直線CとD（3.5 ↔ 7.5、-3.5 ↔ -7.5）→ やや違い（2本）
@@ -260,6 +273,9 @@
     {/each}
   </defs>
 
+  <!-- 基準色相の強調扇形（スウォッチより下に描画） -->
+  <path class="base-sector" d={baseSectorPath} />
+
   <!-- 色相スウォッチ -->
   {#each hues as hue (hue.num)}
     <path d={hue.path} fill={hue.color} />
@@ -312,6 +328,10 @@
     font-family: var(--font-mono);
     text-anchor: middle;
     dominant-baseline: central;
+  }
+
+  .base-sector {
+    fill: #d8d8d8;
   }
 
   .radial-line {
