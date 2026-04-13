@@ -16,10 +16,10 @@ draft: true
   const baseHue = writable(8)
 </script>
 
-## :WithGradeTag[色相を手がかりにした配色]{grades="3"}
+## :WithGradeTag[色相を基準にした配色]{grades="3"}
 
 :::Tips
-色相をクリックして色相差と配色を確認してみよう
+色相をクリックして、その色相を基準にした色相差と配色を確認してみよう
 :::
 
 <SVGWrapper maxW={500}>
@@ -100,3 +100,11 @@ TODO：プレビュー
 </ColorPaletteGrid>
 :::
 ::::
+
+## :WithGradeTag[トーンを基準にした配色]{grades="3"}
+
+::ComingSoon
+
+## :WithGradeTag[無彩色との配色]{grades="3"}
+
+::ComingSoon
