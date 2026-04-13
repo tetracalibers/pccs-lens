@@ -13,6 +13,6 @@ draft: true
 
 ## :WithGradeTag[色相を手がかりにした配色]{grades="3"}
 
-<SVGWrapper>
+<SVGWrapper maxW={500}>
   <PCCSHueWheel />
 </SVGWrapper>

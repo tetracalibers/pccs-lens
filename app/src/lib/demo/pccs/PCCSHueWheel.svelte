@@ -4,9 +4,13 @@
   interface Props {
     /** 色相環の外側の円の半径（px） */
     radius?: number
+    /** 台形スウォッチの高さ（外周から内周までの距離, px） */
+    swatchHeight?: number
+    /** 台形スウォッチの内辺とsymbolラベルの間の余白（px） */
+    labelMargin?: number
   }
 
-  let { radius = 220 }: Props = $props()
+  let { radius = 220, swatchHeight = 50, labelMargin = 20 }: Props = $props()
 
   const HUE_COUNT = 24
   const ANGLE_PER_HUE = (2 * Math.PI) / HUE_COUNT
@@ -16,13 +20,17 @@
   const TOP_ANGLE = -Math.PI / 2
 
   let R = $derived(radius)
-  let ringThickness = $derived(R * 0.32)
-  let r = $derived(R - ringThickness)
+  let r = $derived(Math.max(1, R - swatchHeight))
   // 色スウォッチ同士の隙間（外側・内側ともに同じ距離）
   let gap = $derived(Math.max(2, R * 0.018))
 
-  // 無彩色ラベル用の中央領域のマージンを確保
-  let labelRadius = $derived(r * 0.88)
+  // スウォッチ内辺の中点から原点までの距離（全色相で共通）
+  let innerEdgeMidDist = $derived(
+    (gap / 2) * Math.sin(HALF_ANGLE) +
+      Math.sqrt(Math.max(0, r * r - (gap / 2) ** 2)) * Math.cos(HALF_ANGLE)
+  )
+  // ラベル中心の配置半径（内辺中点から labelMargin だけ内側）
+  let labelRadius = $derived(Math.max(0, innerEdgeMidDist - labelMargin))
 
   let padding = $derived(R * 0.08)
   let size = $derived((R + padding) * 2)
@@ -91,7 +99,7 @@
     <path d={hue.path} fill={hue.color} />
   {/each}
   {#each hues as hue (hue.num)}
-    <text class="symbol" x={hue.label.x} y={hue.label.y} font-size={R * 0.055}>
+    <text class="symbol" x={hue.label.x} y={hue.label.y} font-size={Math.max(16, R * 0.05)}>
       {hue.symbol}
     </text>
   {/each}
