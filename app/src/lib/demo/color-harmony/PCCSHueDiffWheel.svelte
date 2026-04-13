@@ -11,7 +11,7 @@
     swatchHeight?: number
   }
 
-  let { baseHue = 2, radius = 220, swatchHeight = 55 }: Props = $props()
+  let { baseHue = 8, radius = 220, swatchHeight = 55 }: Props = $props()
 
   const HUE_COUNT = 24
   const ANGLE_PER_HUE = (2 * Math.PI) / HUE_COUNT
