@@ -9,9 +9,18 @@
     radius?: number
     /** 台形スウォッチの高さ（外周から内周までの距離, px） */
     swatchHeight?: number
+    /** 色相スウォッチ選択時のコールバック */
+    onSelectHue?: (hueNumber: number) => void
   }
 
-  let { baseHue = 8, radius = 220, swatchHeight = 55 }: Props = $props()
+  let { baseHue = 8, radius = 220, swatchHeight = 55, onSelectHue }: Props = $props()
+
+  let selectedHue = $state<number | null>(null)
+
+  function handleSelectHue(num: number) {
+    selectedHue = num
+    onSelectHue?.(num)
+  }
 
   const HUE_COUNT = 24
   const ANGLE_PER_HUE = (2 * Math.PI) / HUE_COUNT
@@ -276,15 +285,48 @@
   <!-- 基準色相の強調扇形（スウォッチより下に描画） -->
   <path class="base-sector" d={baseSectorPath} />
 
-  <!-- 色相スウォッチ -->
+  <!-- 色相スウォッチ（インタラクティブ） -->
   {#each hues as hue (hue.num)}
-    <path d={hue.path} fill={hue.color} />
+    <g
+      data-hue-swatch
+      role="button"
+      tabindex="0"
+      aria-label="色相 {hue.num} {hue.symbol}"
+      aria-pressed={selectedHue === hue.num}
+      onclick={() => handleSelectHue(hue.num)}
+      onkeydown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault()
+          handleSelectHue(hue.num)
+        }
+      }}
+    >
+      <!--
+        キーボードフォーカスリング。スウォッチ fill より先に描画することで、
+        stroke の外半分のみがスウォッチ間の隙間に露出して見える。
+      -->
+      <path class="hue-focus-ring" d={hue.path} fill="none" style="pointer-events: none;" />
+      <path d={hue.path} fill={hue.color} />
+      <text
+        class="symbol"
+        x={hue.label.x}
+        y={hue.label.y}
+        font-size={14}
+        fill={hue.textColor}
+        style="pointer-events: none; user-select: none;"
+      >
+        {hue.symbol}
+      </text>
+    </g>
   {/each}
-  {#each hues as hue (hue.num)}
-    <text class="symbol" x={hue.label.x} y={hue.label.y} font-size={14} fill={hue.textColor}>
-      {hue.symbol}
-    </text>
-  {/each}
+
+  <!-- 選択中の色相のアウトライン（全スウォッチより上に描画） -->
+  {#if selectedHue !== null}
+    {@const sel = hues.find((h) => h.num === selectedHue)}
+    {#if sel}
+      <path class="selected-hue-outline" d={sel.path} fill="none" style="pointer-events: none;" />
+    {/if}
+  {/if}
 
   <!-- 放射状直線 -->
   {#each radialLines as line, i (i)}
@@ -332,6 +374,30 @@
     display: block;
     max-width: 100%;
     height: auto;
+  }
+
+  [data-hue-swatch] {
+    outline: none;
+    cursor: pointer;
+  }
+
+  /*
+   * キーボードフォーカスリング。ToneImageDiagram の focus-ring と同パターン。
+   * スウォッチ fill より先に描画されているため、stroke の外半分のみ隙間に露出する。
+   */
+  [data-hue-swatch]:focus :global(.hue-focus-ring) {
+    stroke: Highlight;
+    stroke-width: 3;
+  }
+
+  /*
+   * クリック選択中のアウトライン。全スウォッチより後に描画することで
+   * 隣接スウォッチに隠れず確実に表示される。
+   * stroke は外半分（隙間側）と内半分（スウォッチ上）の両方に現れる。
+   */
+  .selected-hue-outline {
+    stroke: white;
+    stroke-width: 2.5;
   }
 
   .symbol {

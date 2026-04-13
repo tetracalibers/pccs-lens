@@ -7,17 +7,23 @@ draft: true
 ---
 
 <script>
+  import { writable } from 'svelte/store'
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
   import PCCSHueDiffWheel from "$lib/demo/color-harmony/PCCSHueDiffWheel.svelte"
-  
   import ColorPaletteGrid from "$lib/demo/color-harmony/ColorPaletteGrid.svelte"
   import HueBasedPalettePreview from "$lib/demo/color-harmony/HueBasedPalettePreview.svelte"
+
+  const baseHue = writable(8)
 </script>
 
 ## :WithGradeTag[色相を手がかりにした配色]{grades="3"}
 
+:::Tips
+色相をクリックして色相差と配色を確認してみよう
+:::
+
 <SVGWrapper maxW={500}>
-  <PCCSHueDiffWheel baseHue={8} />
+  <PCCSHueDiffWheel baseHue={$baseHue} onSelectHue={(n) => baseHue.set(n)} />
 </SVGWrapper>
 
 ::::CardGrid
@@ -35,8 +41,8 @@ TODO：プレビュー
 偶数記号と奇数記号を組み合わせて作ります。
 
 <ColorPaletteGrid>
-  <HueBasedPalettePreview baseHue={8} hueDiff={1} rotation="cw" />
-  <HueBasedPalettePreview baseHue={8} hueDiff={1} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={1} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={1} rotation="ccw" />
 </ColorPaletteGrid>
 :::
 
@@ -45,10 +51,10 @@ TODO：プレビュー
 色相が似た色どうしで、まとまりの中にもやや色相の変化が感じられる配色となります。
 
 <ColorPaletteGrid>
-  <HueBasedPalettePreview baseHue={8} hueDiff={2} rotation="cw" />
-  <HueBasedPalettePreview baseHue={8} hueDiff={2} rotation="ccw" />
-  <HueBasedPalettePreview baseHue={8} hueDiff={3} rotation="cw" />
-  <HueBasedPalettePreview baseHue={8} hueDiff={3} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={2} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={2} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={3} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={3} rotation="ccw" />
 </ColorPaletteGrid>
 :::
 
@@ -57,14 +63,14 @@ TODO：プレビュー
 色相にやや違いがあり、統一の調和にも変化の調和にも当てはまりません。
 
 <ColorPaletteGrid>
-  <HueBasedPalettePreview baseHue={8} hueDiff={4} rotation="cw" />
-  <HueBasedPalettePreview baseHue={8} hueDiff={4} rotation="ccw" />
-  <HueBasedPalettePreview baseHue={8} hueDiff={5} rotation="cw" />
-  <HueBasedPalettePreview baseHue={8} hueDiff={5} rotation="ccw" />
-  <HueBasedPalettePreview baseHue={8} hueDiff={6} rotation="cw" />
-  <HueBasedPalettePreview baseHue={8} hueDiff={6} rotation="ccw" />
-  <HueBasedPalettePreview baseHue={8} hueDiff={7} rotation="cw" />
-  <HueBasedPalettePreview baseHue={8} hueDiff={7} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={4} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={4} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={5} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={5} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={6} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={6} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={7} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={7} rotation="ccw" />
 </ColorPaletteGrid>
 :::
 
@@ -73,12 +79,12 @@ TODO：プレビュー
 色みの共通性やまとまりは感じられませんが、:Mark[彩度]の高い色どうしではコントラストが生まれます。
 
 <ColorPaletteGrid>
-  <HueBasedPalettePreview baseHue={8} hueDiff={8} rotation="cw" />
-  <HueBasedPalettePreview baseHue={8} hueDiff={8} rotation="ccw" />
-  <HueBasedPalettePreview baseHue={8} hueDiff={9} rotation="cw" />
-  <HueBasedPalettePreview baseHue={8} hueDiff={9} rotation="ccw" />
-  <HueBasedPalettePreview baseHue={8} hueDiff={10} rotation="cw" />
-  <HueBasedPalettePreview baseHue={8} hueDiff={10} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={8} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={8} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={9} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={9} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={10} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={10} rotation="ccw" />
 </ColorPaletteGrid>
 :::
 
@@ -88,9 +94,9 @@ TODO：プレビュー
 :Mark[彩度]の高い色どうしを使うと、:Mark[明度]の変化も大きくなります。
 
 <ColorPaletteGrid>
-  <HueBasedPalettePreview baseHue={8} hueDiff={11} rotation="cw" />
-  <HueBasedPalettePreview baseHue={8} hueDiff={11} rotation="ccw" />
-  <HueBasedPalettePreview baseHue={8} hueDiff={12} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={11} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={11} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={12} rotation="cw" />
 </ColorPaletteGrid>
 :::
 ::::
