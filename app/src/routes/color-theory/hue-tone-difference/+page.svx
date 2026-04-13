@@ -1,0 +1,18 @@
+---
+layout: guide-content
+title: 色相差とトーン差
+
+grades: ["3"]
+draft: true
+---
+
+<script>
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import PCCSHueWheel from "$lib/demo/pccs/PCCSHueWheel.svelte"
+</script>
+
+## :WithGradeTag[色相を手がかりにした配色]{grades="3"}
+
+<SVGWrapper>
+  <PCCSHueWheel />
+</SVGWrapper>
