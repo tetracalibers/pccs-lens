@@ -6,4 +6,13 @@ grades: ["3"]
 draft: true
 ---
 
+<script>
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import PCCSHueDiffWheel from "$lib/demo/color-harmony/PCCSHueDiffWheel.svelte"
+</script>
+
 ## :WithGradeTag[色相を手がかりにした配色]{grades="3"}
+
+<SVGWrapper maxW={500}>
+  <PCCSHueDiffWheel baseHue={8} />
+</SVGWrapper>
