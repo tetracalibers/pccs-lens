@@ -1,16 +1,15 @@
 <script lang="ts">
   import { PCCS_HUE_MAP } from "$lib/data/pccs"
+  import { isLightColor } from "$lib/color/utils"
 
   interface Props {
     /** 色相環の外側の円の半径（px） */
     radius?: number
     /** 台形スウォッチの高さ（外周から内周までの距離, px） */
     swatchHeight?: number
-    /** 台形スウォッチの内辺とsymbolラベルの間の余白（px） */
-    labelMargin?: number
   }
 
-  let { radius = 220, swatchHeight = 50, labelMargin = 20 }: Props = $props()
+  let { radius = 220, swatchHeight = 55 }: Props = $props()
 
   const HUE_COUNT = 24
   const ANGLE_PER_HUE = (2 * Math.PI) / HUE_COUNT
@@ -24,13 +23,15 @@
   // 色スウォッチ同士の隙間（外側・内側ともに同じ距離）
   let gap = $derived(Math.max(2, R * 0.018))
 
-  // スウォッチ内辺の中点から原点までの距離（全色相で共通）
-  let innerEdgeMidDist = $derived(
+  // 台形スウォッチの中心（外辺中点と内辺中点の中点）の配置半径
+  // 幾何対称性から全色相で共通の値になる
+  let labelRadius = $derived(
     (gap / 2) * Math.sin(HALF_ANGLE) +
-      Math.sqrt(Math.max(0, r * r - (gap / 2) ** 2)) * Math.cos(HALF_ANGLE)
+      ((Math.sqrt(Math.max(0, R * R - (gap / 2) ** 2)) +
+        Math.sqrt(Math.max(0, r * r - (gap / 2) ** 2))) /
+        2) *
+        Math.cos(HALF_ANGLE)
   )
-  // ラベル中心の配置半径（内辺中点から labelMargin だけ内側）
-  let labelRadius = $derived(Math.max(0, innerEdgeMidDist - labelMargin))
 
   let padding = $derived(R * 0.08)
   let size = $derived((R + padding) * 2)
@@ -80,18 +81,21 @@
     return `M ${toSvg(outerL)} L ${toSvg(outerR)} L ${toSvg(innerR)} L ${toSvg(innerL)} Z`
   }
 
-  const hues = Array.from(PCCS_HUE_MAP.entries()).map(([num, data]) => {
-    const angle = hueAngle(num)
-    return {
-      num,
-      ...data,
-      path: buildSwatchPath(num),
-      label: {
-        x: cx + labelRadius * Math.cos(angle),
-        y: cy + labelRadius * Math.sin(angle)
+  let hues = $derived(
+    Array.from(PCCS_HUE_MAP.entries()).map(([num, data]) => {
+      const angle = hueAngle(num)
+      return {
+        num,
+        ...data,
+        path: buildSwatchPath(num),
+        label: {
+          x: cx + labelRadius * Math.cos(angle),
+          y: cy + labelRadius * Math.sin(angle)
+        },
+        textColor: isLightColor(data.color) ? "#222" : "#fff"
       }
-    }
-  })
+    })
+  )
 </script>
 
 <svg viewBox="0 0 {size} {size}" width={size} height={size} role="img" aria-label="PCCS色相環">
@@ -99,7 +103,7 @@
     <path d={hue.path} fill={hue.color} />
   {/each}
   {#each hues as hue (hue.num)}
-    <text class="symbol" x={hue.label.x} y={hue.label.y} font-size={Math.max(16, R * 0.05)}>
+    <text class="symbol" x={hue.label.x} y={hue.label.y} font-size={14} fill={hue.textColor}>
       {hue.symbol}
     </text>
   {/each}
@@ -113,10 +117,8 @@
   }
 
   .symbol {
-    fill: var(--color-body);
     font-family: var(--font-mono);
     text-anchor: middle;
     dominant-baseline: central;
-    user-select: none;
   }
 </style>
