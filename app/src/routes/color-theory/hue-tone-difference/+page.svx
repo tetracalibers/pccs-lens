@@ -26,7 +26,9 @@ draft: true
   <PCCSHueDiffWheel baseHue={$baseHue} onSelectHue={(n) => baseHue.set(n)} />
 </SVGWrapper>
 
-::::CardGrid
+### 色相に共通性がある配色
+
+::::CardGrid{lastWide}
 :::TermCard{title="同一色相配色" centering}
 色相差が:Mark[0]の配色が:Mark[同一]色相配色です。
 色相が同じ色どうしで、まとまりが最も強く感じられる配色となります。
@@ -57,7 +59,11 @@ TODO：プレビュー
   <HueBasedPalettePreview baseHue={$baseHue} hueDiff={3} rotation="ccw" />
 </ColorPaletteGrid>
 :::
+::::
 
+### 色相にやや違いがある配色
+
+::::CardGrid
 :::TermCard{title="中差色相配色" centering}
 色相差が:Mark[4]〜:Mark[7]の配色が:Mark[中差]色相配色です。
 色相にやや違いがあり、統一の調和にも変化の調和にも当てはまりません。
@@ -73,7 +79,11 @@ TODO：プレビュー
   <HueBasedPalettePreview baseHue={$baseHue} hueDiff={7} rotation="ccw" />
 </ColorPaletteGrid>
 :::
+::::
 
+### 色相に対照性がある配色
+
+::::CardGrid
 :::TermCard{title="対照色相配色" centering}
 色相差が:Mark[8]〜:Mark[10]の配色が:Mark[対照]色相配色です。
 色みの共通性やまとまりは感じられませんが、:Mark[彩度]の高い色どうしではコントラストが生まれます。

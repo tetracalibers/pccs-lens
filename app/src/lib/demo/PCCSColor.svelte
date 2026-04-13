@@ -23,5 +23,6 @@
     display: grid;
     place-items: center;
     font-family: var(--font-mono);
+    flex-shrink: 0;
   }
 </style>

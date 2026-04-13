@@ -11,7 +11,10 @@
 <style>
   .color-palette-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(0, 6rem));
+    width: 100%;
+    max-width: 70%;
     gap: 0.5rem;
+    justify-items: center;
   }
 </style>
