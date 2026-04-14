@@ -111,7 +111,25 @@ interface ToneBasedPaletteRule {
   suggestNext: (toneSymbol: string) => string[] | null
 }
 
-export const PCCS_TONE_BASED_PALETTE_RULE: Record<string, ToneBasedPaletteRule> = {
+const PCCS_TONE_BASED_PALETTE_KEYS = [
+  "identicalTone",
+  "similarToneVertical",
+  "similarToneHorizontal",
+  "similarToneDiagonal",
+  "contrastingToneLightness",
+  "contrastingToneSaturation",
+  "contrastingToneLightnessSaturation",
+  "achromaticTones",
+  "achromaticAndHighSaturation",
+  "achromaticAndLowSaturation"
+] as const
+
+export type PCCS_TONE_BASED_PALETTE_KEY = (typeof PCCS_TONE_BASED_PALETTE_KEYS)[number]
+
+export const PCCS_TONE_BASED_PALETTE_RULE: Record<
+  PCCS_TONE_BASED_PALETTE_KEY,
+  ToneBasedPaletteRule
+> = {
   identicalTone: {
     label: "同一トーン",
     allowedTones: PCCS_CHROMATIC_TONE_SYMBOLS,

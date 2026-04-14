@@ -12,6 +12,7 @@ draft: true
   import PCCSHueDiffWheel from "$lib/demo/color-harmony/PCCSHueDiffWheel.svelte"
   import ColorPaletteGrid from "$lib/demo/color-harmony/ColorPaletteGrid.svelte"
   import HueBasedPalettePreview from "$lib/demo/color-harmony/HueBasedPalettePreview.svelte"
+  import ToneBasedPalettePreviewWithDiffMap from "$lib/demo/color-harmony/ToneBasedPalettePreviewWithDiffMap.svelte"
 
   const baseHue = writable(8)
 </script>
@@ -113,8 +114,54 @@ TODO：プレビュー
 
 ## :WithGradeTag[トーンを基準にした配色]{grades="3"}
 
-::ComingSoon
+### トーンに共通性がある配色
+
+::::CardGrid
+:::TermCard{title="同一トーン配色" centering}
+<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="identicalTone" />
+:::
+
+:::TermCard{title="類似トーン配色（縦方向）" centering}
+<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="similarToneVertical" />
+:::
+
+:::TermCard{title="類似トーン配色（横方向）" centering}
+<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="similarToneHorizontal" />
+:::
+
+:::TermCard{title="類似トーン配色（斜め方向）" centering}
+<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="similarToneDiagonal" />
+:::
+::::
+
+### トーンに対照性がある配色
+
+::::CardGrid
+:::TermCard{title="対照トーン配色（明度方向）" centering}
+<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="contrastingToneLightness" />
+:::
+
+:::TermCard{title="対照トーン配色（彩度方向）" centering}
+<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="contrastingToneSaturation" />
+:::
+
+:::TermCard{title="対照トーン配色（明度・彩度方向）" centering}
+<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="contrastingToneLightnessSaturation" />
+:::
+::::
 
 ## :WithGradeTag[無彩色との配色]{grades="3"}
 
-::ComingSoon
+::::CardGrid
+:::TermCard{title="無彩色どうしの配色" centering}
+<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="achromaticTones" />
+:::
+
+:::TermCard{title="無彩色と有彩色の配色" centering}
+<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="achromaticAndHighSaturation" />
+:::
+
+:::TermCard{title="無彩色と低彩度の配色" centering}
+<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="achromaticAndLowSaturation" />
+:::
+::::

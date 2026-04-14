@@ -16,5 +16,6 @@
     max-width: 70%;
     gap: 0.5rem;
     justify-items: center;
+    justify-content: center;
   }
 </style>
