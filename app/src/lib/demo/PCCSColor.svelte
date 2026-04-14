@@ -28,6 +28,7 @@
     display: grid;
     place-items: center;
     font-family: var(--font-mono);
+    font-size: 0.8rem;
     flex-shrink: 0;
   }
 
