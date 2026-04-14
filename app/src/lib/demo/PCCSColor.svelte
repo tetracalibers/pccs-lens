@@ -8,7 +8,12 @@
   const isLightBg = $derived(isLightColor(color))
 </script>
 
-<div class="square" style:--_pccs-color={color} style:--_text-color={isLightBg ? "black" : "white"}>
+<div
+  class="square"
+  style:--_pccs-color={color}
+  style:--_text-color={isLightBg ? "black" : "white"}
+  class:--_need-border={pccs === "W"}
+>
   {pccs}
 </div>
 
@@ -24,5 +29,10 @@
     place-items: center;
     font-family: var(--font-mono);
     flex-shrink: 0;
+  }
+
+  .square.--_need-border {
+    border: 1px solid var(--color-body--light);
+    box-sizing: border-box;
   }
 </style>
