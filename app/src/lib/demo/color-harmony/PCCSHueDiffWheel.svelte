@@ -233,22 +233,31 @@
     const ba = hueAngle(baseHue)
     // 各弧の両端を半ギャップ分だけ内側に縮め、対向する矢印間に ARROW_GAP px の隙間を作る
     const gapAngle = ARROW_GAP / 2 / arcRadius
-    const toArc = (startOffset: number, endOffset: number, label: string, key: string) => {
+    const toArc = (
+      startOffset: number,
+      endOffset: number,
+      label: string,
+      key: string,
+      color?: string
+    ) => {
       const startAngle = ba + startOffset * ANGLE_PER_HUE + gapAngle
       const endAngle = ba + endOffset * ANGLE_PER_HUE - gapAngle
       return {
         key,
         label,
+        color: color ?? "var(--color-body)",
+        strokeWidth: color ? 2 : 1.5,
+        fontSize: color ? 20 : 18,
         arcPath: buildArcPath(startAngle, endAngle, arcRadius),
         textPath: buildTextArcPath(startAngle, endAngle),
         textPathId: `hue-diff-arc-text-${key}`
       }
     }
     return [
-      toArc(-3.5, 3.5, "色相に共通性がある", "common"),
+      toArc(-3.5, 3.5, "色相に共通性がある", "common", "var(--canvas-pen-pink)"),
       toArc(3.5, 7.5, "色相にやや違いがある", "somewhat-r"),
       toArc(-7.5, -3.5, "色相にやや違いがある", "somewhat-l"),
-      toArc(7.5, 16.5, "色相に対照性がある", "contrast")
+      toArc(7.5, 16.5, "色相に対照性がある", "contrast", "var(--canvas-pen-water)")
     ]
   })
 </script>
@@ -272,7 +281,7 @@
       <polyline
         points="1,1 8,5 1,9"
         fill="none"
-        stroke="var(--color-body)"
+        stroke="context-stroke"
         stroke-width="1"
         stroke-linejoin="round"
       />
@@ -358,10 +367,11 @@
     <path
       class="outer-arc"
       d={arc.arcPath}
+      style="stroke: {arc.color}; stroke-width: {arc.strokeWidth}"
       marker-start="url(#hue-diff-arrow)"
       marker-end="url(#hue-diff-arrow)"
     />
-    <text class="arc-label" font-size={18}>
+    <text class="arc-label" font-size={arc.fontSize} style="fill: {arc.color}">
       <textPath href="#{arc.textPathId}" startOffset="50%" text-anchor="middle">
         {arc.label}
       </textPath>
@@ -431,7 +441,7 @@
   .outer-arc {
     fill: none;
     stroke: var(--color-body);
-    stroke-width: 1.25;
+    stroke-width: 1.5;
   }
 
   .arc-label {
