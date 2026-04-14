@@ -466,7 +466,7 @@
   }
 
   .base-sector {
-    fill: oklch(from lightslategray calc(l * 1.15) c h);
+    fill: oklch(from lightslategray calc(l * 1.1) c h);
   }
 
   .radial-line {
@@ -500,5 +500,6 @@
   .diff-number--base,
   .range-label--base {
     fill: white;
+    font-weight: bold;
   }
 </style>
