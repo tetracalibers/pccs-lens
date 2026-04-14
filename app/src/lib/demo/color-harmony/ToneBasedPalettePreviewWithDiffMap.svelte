@@ -1,5 +1,6 @@
 <script lang="ts">
   import { untrack } from "svelte"
+  import { lightModeState } from "$lib/state/lightMode.svelte"
   import {
     PCCS_TONE_BASED_PALETTE_RULE,
     PCCS_ACHROMATIC_TONE_SYMBOLS,
@@ -7,8 +8,8 @@
   } from "$lib/data/pccs-tone"
   import ColorPaletteGrid from "$lib/demo/color-harmony/ColorPaletteGrid.svelte"
   import PCCSColor from "$lib/demo/PCCSColor.svelte"
-  import { isLightColor } from "$lib/color/utils"
   import { PCCS_MAP } from "$lib/data/pccs"
+  import chroma from "chroma-js"
 
   let {
     hue,
@@ -91,13 +92,15 @@
   }
 
   function getLabelFill(hex: string): string {
-    return isLightColor(hex)
+    return chroma(hex).luminance() > 0.55
       ? `color-mix(in srgb, black 70%, ${hex})`
       : `color-mix(in srgb, white 60%, ${hex})`
   }
 
   function getSelectedRingStroke(hex: string): string {
-    return `oklch(from ${hex} calc(l - .10) c calc(h - 10))`
+    return lightModeState.isLightMode
+      ? `oklch(from ${hex} calc(l - .10) c calc(h - 10))`
+      : `oklch(from ${hex} calc(l + .10) c calc(h - 10))`
   }
 
   // セルの不透明度
@@ -106,7 +109,7 @@
   // - allowedTones 外: 不透明（代わりに斜線で選択不可を表示）
   function getCellOpacity(key: string): number {
     if (key === selectedTone || highlightedSet.has(key)) return 1
-    if (allowedSet.has(key)) return 0.2
+    if (allowedSet.has(key)) return 0.4
     return 1
   }
 
