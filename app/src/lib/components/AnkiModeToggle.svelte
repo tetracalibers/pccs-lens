@@ -25,18 +25,18 @@
     line-height: 1;
     display: inline-flex;
     align-items: center;
-    gap: 0.55rem;
+    gap: 0.5rem;
   }
 
   .label {
     font-size: 0.82rem;
-    font-weight: 600;
-    color: light-dark(#aaaacc, #4848a0);
+    color: var(--color-body);
     transition: color 0.3s;
   }
 
   /* デフォルト（解説モード）: 解説ラベルがアクティブ（青緑） */
   .label.active {
+    font-weight: bold;
     color: light-dark(#0e7490, #22d3ee);
   }
 

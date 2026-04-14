@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
-  import { getContext } from "svelte"
   import Heading3 from "../m-html/Heading3.svelte"
 
   let {
@@ -8,15 +7,10 @@
     centering = false,
     title
   }: { children?: Snippet; centering?: boolean; title: string } = $props()
-
-  const ankiCtx = getContext<{ isAnki: boolean } | undefined>("anki-mode")
-  const isAnki = $derived(ankiCtx?.isAnki)
-
-  const dummyText = $derived("X".repeat(title.length))
 </script>
 
-<section class="term-card" class:centering class:anki={isAnki}>
-  <Heading3>{isAnki ? dummyText : title}</Heading3>
+<section class="term-card" class:centering>
+  <Heading3 {title}>{title}</Heading3>
   {@render children?.()}
 </section>
 
@@ -43,11 +37,6 @@
   .term-card :global(h3) {
     font-size: 1rem;
     margin: 0;
-  }
-
-  .term-card.anki :global(h3) {
-    font-family: var(--font-anki-title);
-    color: dimgray;
   }
 
   .term-card :global(:is(p, li)) {
