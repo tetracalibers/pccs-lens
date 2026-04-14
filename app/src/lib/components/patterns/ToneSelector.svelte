@@ -4,6 +4,7 @@
   import Icon from "@iconify/svelte"
   import chroma from "chroma-js"
   import { isLightColor } from "$lib/color/utils"
+  import { lightModeState } from "$lib/state/lightMode.svelte"
 
   let {
     value,
@@ -163,7 +164,10 @@
   }
 
   function getSelectedRingStrokeColor(cell: ToneCell): string {
-    return `oklch(from ${getFillColor(cell)} calc(l + .10) c calc(h - 10))`
+    const hex = getFillColor(cell)
+    return lightModeState.isLightMode
+      ? `oklch(from ${hex} calc(l - .10) c calc(h - 10))`
+      : `oklch(from ${hex} calc(l + .10) c calc(h - 10))`
   }
 
   function getStrokeWidth(cell: ToneCell): number {

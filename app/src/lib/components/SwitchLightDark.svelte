@@ -1,21 +1,20 @@
 <script lang="ts">
   import Icon from "@iconify/svelte"
-
-  let isLight = $state(false)
+  import { lightModeState } from "$lib/state/lightMode.svelte"
 
   $effect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: light)")
-    isLight = mq.matches
+    lightModeState.isLightMode = mq.matches
 
     const handler = (e: MediaQueryListEvent) => {
-      isLight = e.matches
+      lightModeState.isLightMode = e.matches
     }
     mq.addEventListener("change", handler)
     return () => mq.removeEventListener("change", handler)
   })
 
   $effect(() => {
-    if (isLight) {
+    if (lightModeState.isLightMode) {
       document.body.classList.add("light")
       document.body.classList.remove("dark")
     } else {
@@ -25,7 +24,7 @@
   })
 
   function toggle() {
-    isLight = !isLight
+    lightModeState.isLightMode = !lightModeState.isLightMode
   }
 </script>
 
@@ -36,13 +35,13 @@
 -->
 <button
   class="switch-btn"
-  class:is-light={!isLight}
+  class:is-light={!lightModeState.isLightMode}
   onclick={toggle}
-  aria-label={isLight ? "ダークモードに切替" : "ライトモードに切替"}
+  aria-label={lightModeState.isLightMode ? "ダークモードに切替" : "ライトモードに切替"}
 >
   <span class="ring"></span>
   <span class="icon-wrap">
-    {#if isLight}
+    {#if lightModeState.isLightMode}
       <Icon icon="solar:moon-stars-broken" width="22" height="22" />
     {:else}
       <Icon icon="solar:sun-2-broken" width="22" height="22" />

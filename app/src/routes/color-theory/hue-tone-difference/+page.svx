@@ -1,0 +1,221 @@
+---
+layout: guide-content
+title: 色相差とトーン差による配色
+
+grades: ["3"]
+---
+
+<script>
+  import { writable } from 'svelte/store'
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import PCCSHueDiffWheel from "$lib/demo/color-harmony/PCCSHueDiffWheel.svelte"
+  import ColorPaletteGrid from "$lib/demo/color-harmony/ColorPaletteGrid.svelte"
+  import HueBasedPalettePreview from "$lib/demo/color-harmony/HueBasedPalettePreview.svelte"
+  import ToneBasedPalettePreviewWithDiffMap from "$lib/demo/color-harmony/ToneBasedPalettePreviewWithDiffMap.svelte"
+  import ColorPaletteWithRandomTonePreview from "$lib/demo/color-harmony/ColorPaletteWithRandomTonePreview.svelte"
+  import ColorPaletteWithRandomNeutralPreview from "$lib/demo/color-harmony/ColorPaletteWithRandomNeutralPreview.svelte"
+
+  const baseHue = writable(8)
+</script>
+
+## :WithGradeTag[色相を基準にした配色]{grades="3"}
+
+色相を手がかりに配色を考える方法では、使う色の:Mark[色相差]に注目します。
+
+まったく同じ色相の色を使う場合は、色相差は:Mark[0]です。
+PCCSで考える場合、色相環は24等分されていますが、色相差は時計回りにも反時計回りにも数えることができ、色相番号24と1は連続していると考えるため、最大の色相差は:Mark[12]となります。
+
+:::Tips
+色相をクリックして、その色相を基準にした色相差と配色を確認してみよう
+:::
+
+<SVGWrapper maxW={500}>
+  <PCCSHueDiffWheel baseHue={$baseHue} onSelectHue={(n) => baseHue.set(n)} />
+</SVGWrapper>
+
+色相を基準に配色を考えるとき、トーンは自由に選べますが、ここでは色相の違いによる配色の印象をわかりやすくするため、なるべく同じトーンに統一しています。
+
+### 色相に共通性がある配色
+
+共通の色みを持つ色どうしを組み合わせると、まとまりやすく、統一感のある配色になります。
+
+::::CardGrid{lastWide}
+:::TermCard{title="同一色相配色" centering}
+色相差が:Mark[0]の配色が:Mark[同一]色相配色です。
+色相が同じ色どうしで、まとまりが最も強く感じられる配色となります。
+PCCSでは、:Mark[無彩色]と組み合わせた配色も同一色相配色に含まれます。
+
+<ColorPaletteGrid>
+  <ColorPaletteWithRandomTonePreview hue={$baseHue} />
+  <ColorPaletteWithRandomNeutralPreview hue={$baseHue} />
+</ColorPaletteGrid>
+:::
+
+:::TermCard{title="隣接色相配色" centering}
+色相差が:Mark[1]の配色が:Mark[隣接]色相配色です。
+色相環で隣り合う色どうしで統一感があり、まとまりが感じられる配色となります。
+偶数記号と奇数記号を組み合わせて作ります。
+
+<ColorPaletteGrid>
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={1} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={1} rotation="ccw" />
+</ColorPaletteGrid>
+:::
+
+:::TermCard{title="類似色相配色" centering}
+色相差が:Mark[2]〜:Mark[3]の配色が:Mark[類似]色相配色です。
+まとまりの中にもやや色相の変化が感じられ、明らかに異なる色だと感じられる配色も含まれます。
+
+<ColorPaletteGrid>
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={2} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={2} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={3} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={3} rotation="ccw" />
+</ColorPaletteGrid>
+:::
+::::
+
+色相差が1の:Mark[隣接]色相配色は、偶数番号と奇数番号の色相の組み合わせです。新配色カード199を使う場合は、唯一奇数番号の色相が収録されている:Mark[v]トーンを必ず使うことになります。
+
+### 色相にやや違いがある配色
+
+組み合わせる色に共通性はほぼなく、色相差によって印象が大きく変わる配色になります。
+
+::::CardGrid
+:::TermCard{title="中差色相配色" centering}
+色相差が:Mark[4]〜:Mark[7]の配色が:Mark[中差]色相配色です。
+統一の調和にも変化の調和にも当てはまりませんが、小さい色相差だと多少のまとまり感を、大きい色相差だと対照性を感じるなど、色相差の大きさによって印象が変わります。
+
+<ColorPaletteGrid>
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={4} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={4} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={5} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={5} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={6} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={6} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={7} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={7} rotation="ccw" />
+</ColorPaletteGrid>
+:::
+::::
+
+### 色相に対照性がある配色
+
+共通する色みがなく、:Mark[コントラスト]（対比）が強いため、多彩なイメージを表現できます。
+
+::::CardGrid
+:::TermCard{title="対照色相配色" centering}
+色相差が:Mark[8]〜:Mark[10]の配色が:Mark[対照]色相配色です。
+色みの共通性やまとまりは感じられませんが、:Mark[彩度]の高い色どうしではコントラストが生まれます。
+
+<ColorPaletteGrid>
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={8} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={8} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={9} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={9} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={10} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={10} rotation="ccw" />
+</ColorPaletteGrid>
+:::
+
+:::TermCard{title="補色色相配色" centering}
+色相差が:Mark[11]〜:Mark[12]の配色が:Mark[補色]色相配色です。
+色相環で正反対の位置にある色どうしで、お互いを引き立て合う組み合わせです。
+:Mark[彩度]の高い色どうしを使うと、派手で力強い印象となり、:Mark[明度]の変化も大きくなります。
+
+<ColorPaletteGrid>
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={11} rotation="cw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={11} rotation="ccw" />
+  <HueBasedPalettePreview baseHue={$baseHue} hueDiff={12} rotation="cw" />
+</ColorPaletteGrid>
+:::
+::::
+
+## :WithGradeTag[トーンを基準にした配色]{grades="3"}
+
+トーンの位置関係を手がかりに配色を考えることもできます。
+トーンは色のイメージを表現するため、同じ色の組み合わせでも、トーンの位置関係によって、配色の印象が大きく変わります。
+:Mark[彩度]の低い色では:Mark[トーン]の印象を強く感じ、彩度の高い色では:Mark[色相]の印象が強い配色となります。
+
+トーンを基準に配色を考えるとき、色相は自由に選ぶことができます。
+
+:::Tips
+トーンをクリックして、どんな位置関係のトーンを組み合わせたらよいか、配色の印象はどう変わるかを確認してみよう（斜線が引かれていないトーンは自由にクリックできます）
+:::
+
+### トーンに共通性がある配色
+
+位置関係が近いトーンは、明度や彩度の差が小さく共通性が高いトーンです。
+このようなトーンを選ぶと、:Mark[トーン]のイメージが強調された、まとまりやすい配色になります。
+
+::::CardGrid
+:::TermCard{title="同一トーン配色" centering}
+トーンが同じ色どうしを組み合わせた:Mark[同一]トーン配色は、色相差が大きくてもまとまり感が強く、:Mark[トーン]のイメージがダイレクトに伝わる配色になります。
+
+<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="identicalTone" />
+:::
+
+:::TermCard{title="類似トーン配色（縦方向）" centering}
+縦に隣り合うトーンを組み合わせた:Mark[類似]トーン配色では、やや:Mark[明度]の差が生まれます。
+両方のトーンに共通したイメージが配色に反映されます。
+<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="similarToneVertical" />
+:::
+
+:::TermCard{title="類似トーン配色（横方向）" centering}
+横に隣り合うトーンを組み合わせた:Mark[類似]トーン配色では、やや:Mark[彩度]の差が生まれます。
+両方のトーンに共通したイメージが配色に反映されます。
+<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="similarToneHorizontal" />
+:::
+
+:::TermCard{title="類似トーン配色（斜め方向）" centering}
+斜めに隣り合うトーンを組み合わせた:Mark[類似]トーン配色では、:Mark[明度]と:Mark[彩度]の両方にやや差が生まれます。
+他の類似トーン配色と比べると、やや変化を感じる配色となります。
+<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="similarToneDiagonal" />
+:::
+::::
+
+### トーンに対照性がある配色
+
+位置関係が離れたトーンを組み合わせると、明度や彩度の変化が大きく、コントラストの強い対照性のある配色になります。
+トーンマップの中央にある:Mark[sf]トーンと:Mark[d]トーンは、大きく離れたトーンがないため、このような対照的な組み合わせを作ることができません。
+
+::::CardGrid{lastWide}
+:::TermCard{title="対照トーン配色（明度方向）" centering}
+トーンが縦方向に離れた:Mark[対照]トーン配色では、:Mark[明度]の差が大きくなります。
+このような配色を作るには、:Mark[明清色]と:Mark[暗清色]を組み合わせることになります。
+<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="contrastingToneLightness" />
+:::
+
+:::TermCard{title="対照トーン配色（彩度方向）" centering}
+トーンが横方向に離れた:Mark[対照]トーン配色では、:Mark[彩度]の差が大きくなります。
+このような配色を作るには、:Mark[低彩度色]と:Mark[高彩度色]を組み合わせることになります。
+<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="contrastingToneSaturation" />
+:::
+
+:::TermCard{title="対照トーン配色（明度・彩度方向）" centering}
+トーンが斜め方向に離れた:Mark[対照]トーン配色を考えることもできます。
+この場合、明度と彩度の両方の差が大きくなります。
+<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="contrastingToneLightnessSaturation" />
+:::
+::::
+
+## :WithGradeTag[無彩色との配色]{grades="3"}
+
+無彩色は、すべての:Mark[有彩色]と調和するとされています。
+
+::::CardGrid{lastWide}
+:::TermCard{title="無彩色と高彩度色の配色" centering}
+無彩色と高彩度色は、:Mark[彩度]差が最も大きくなる組み合わせです。コントラストが強く現れます。
+<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="achromaticAndHighSaturation" />
+:::
+
+:::TermCard{title="無彩色と低彩度色の配色" centering}
+無彩色と低彩度色は:Mark[彩度]差が小さいため、類似性のある配色になります。
+<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="achromaticAndLowSaturation" />
+:::
+
+:::TermCard{title="無彩色どうしの配色" centering}
+無彩色どうしの配色では、:Mark[明度]差によって、まとまり感と対照性のどちらが強く感じられるかが変わります。
+<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="achromaticTones" />
+:::
+::::

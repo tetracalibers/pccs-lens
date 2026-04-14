@@ -15,10 +15,10 @@
   const dummyText = $derived("X".repeat(title.length))
 </script>
 
-<div class="term-card" class:centering class:anki={isAnki}>
+<section class="term-card" class:centering class:anki={isAnki}>
   <Heading3>{isAnki ? dummyText : title}</Heading3>
   {@render children?.()}
-</div>
+</section>
 
 <style>
   .term-card {
