@@ -9,7 +9,8 @@
       "Bash(npx tsc:*)",
       "Bash(npx eslint:*)",
       "Bash(grep:*)",
-      "mcp__context7__query-docs"
+      "mcp__context7__query-docs",
+      "Bash(npm test:*)"
     ]
   }
 }

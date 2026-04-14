@@ -66,6 +66,41 @@ export const PCCS_CHROMATIC_TONE_SIMILAR_VERTICAL = [
   ["b", "s", "dp"]
 ]
 
+// トーンマップ上の座標マップ（行インデックス, 列インデックス）
+const TONE_POSITION_MAP: Record<string, [number, number]> = Object.fromEntries(
+  PCCS_CHROMATIC_TONE_MAP_STRUCTURE.flatMap((row, rowIdx) =>
+    row
+      .map((tone, colIdx) => (tone !== null ? [tone, [rowIdx, colIdx] as [number, number]] : null))
+      .filter((entry): entry is [string, [number, number]] => entry !== null)
+  )
+)
+
+// 縦方向に隣り合うトーンを返す（同じ縦グループ内の他のトーン）
+const getVerticallyAdjacentTones = (toneSymbol: string): string[] => {
+  const group = PCCS_CHROMATIC_TONE_SIMILAR_VERTICAL.find((g) => g.includes(toneSymbol))
+  return group ? group.filter((t) => t !== toneSymbol) : []
+}
+
+// 横方向に隣り合うトーンを返す（同じ横グループ内の他のトーン）
+const getHorizontallyAdjacentTones = (toneSymbol: string): string[] => {
+  const group = PCCS_CHROMATIC_TONE_SIMILAR_HORIZONTAL.find((g) => g.includes(toneSymbol))
+  return group ? group.filter((t) => t !== toneSymbol) : []
+}
+
+// 斜め方向に隣り合うトーンを返す（列差が1かつ行差が1または2のトーン）
+const getDiagonallyAdjacentTones = (toneSymbol: string): string[] => {
+  const pos = TONE_POSITION_MAP[toneSymbol]
+  if (!pos) return []
+  const [row, col] = pos
+  return Object.entries(TONE_POSITION_MAP)
+    .filter(([, otherPos]) => {
+      const rowDiff = Math.abs(row - otherPos[0])
+      const colDiff = Math.abs(col - otherPos[1])
+      return colDiff === 1 && (rowDiff === 1 || rowDiff === 2)
+    })
+    .map(([tone]) => tone)
+}
+
 interface ToneBasedPaletteRule {
   // ルール名
   label: string
@@ -87,25 +122,24 @@ export const PCCS_TONE_BASED_PALETTE_RULE: Record<string, ToneBasedPaletteRule> 
     label: "類似トーン（縦方向）",
     allowedTones: PCCS_CHROMATIC_TONE_SYMBOLS.filter((tone) => tone !== "v"),
     suggestNext: (tone: string) => {
-      // TODO: 縦に隣り合う全トーンを返すようにする
-      return [tone]
+      const adjacent = getVerticallyAdjacentTones(tone)
+      return adjacent.length > 0 ? adjacent : null
     }
   },
   similarToneHorizontal: {
     label: "類似トーン（横方向）",
     allowedTones: PCCS_CHROMATIC_TONE_SYMBOLS,
     suggestNext: (tone: string) => {
-      // TODO: 横に隣り合う全トーンを返すようにする
-      return [tone]
+      const adjacent = getHorizontallyAdjacentTones(tone)
+      return adjacent.length > 0 ? adjacent : null
     }
   },
   similarToneDiagonal: {
     label: "類似トーン（斜め方向）",
     allowedTones: PCCS_CHROMATIC_TONE_SYMBOLS,
     suggestNext: (tone: string) => {
-      // TODO: 斜めに隣り合う全トーンを返すようにする
-      // PCCS_CHROMATIC_TONE_MAP_STRUCTUREで、列番号が1かつ行番号が1~2ずれたところにある、nullでない全トーンを返せばよい
-      return [tone]
+      const adjacent = getDiagonallyAdjacentTones(tone)
+      return adjacent.length > 0 ? adjacent : null
     }
   },
   contrastingToneLightness: {
@@ -130,8 +164,16 @@ export const PCCS_TONE_BASED_PALETTE_RULE: Record<string, ToneBasedPaletteRule> 
     label: "対照トーン（明度・彩度方向）",
     allowedTones: PCCS_CHROMATIC_TONE_SYMBOLS.filter((tone) => !["sf", "d"].includes(tone)),
     suggestNext: (tone: string) => {
-      // TODO: 縦・横・斜め方向のいずれにも隣り合わないトーンを返すようにする
-      return [tone]
+      const adjacentTones = new Set([
+        tone,
+        ...getVerticallyAdjacentTones(tone),
+        ...getHorizontallyAdjacentTones(tone),
+        ...getDiagonallyAdjacentTones(tone)
+      ])
+      const contrastingTones = PCCS_CHROMATIC_TONE_SYMBOLS.filter(
+        (t) => !adjacentTones.has(t) && !["sf", "d"].includes(t)
+      )
+      return contrastingTones.length > 0 ? contrastingTones : null
     }
   },
   achromaticTones: {
