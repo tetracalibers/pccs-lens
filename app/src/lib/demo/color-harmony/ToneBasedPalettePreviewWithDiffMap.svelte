@@ -93,11 +93,9 @@
 
   function getLabelFill(hex: string): string {
     if (lightModeState.isLightMode) {
-      return isLightColor(hex) ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.9)"
+      return isLightColor(hex) ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.8)"
     } else {
-      return isLightColor(hex)
-        ? `color-mix(in srgb, rgba(0,0,0,0.9) 95%, ${hex})`
-        : "rgba(255,255,255,0.5)"
+      return isLightColor(hex) ? `oklch(from ${hex} calc(l + .80) c h);` : "rgba(255,255,255,0.6)"
     }
   }
 
