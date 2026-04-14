@@ -5,10 +5,10 @@
     PCCS_ACHROMATIC_TONE_SYMBOLS,
     type PCCS_TONE_BASED_PALETTE_KEY
   } from "$lib/data/pccs-tone"
-  import { lookupPCCSColor } from "$lib/patterns/lookup"
   import ColorPaletteGrid from "$lib/demo/color-harmony/ColorPaletteGrid.svelte"
   import PCCSColor from "$lib/demo/PCCSColor.svelte"
   import { isLightColor } from "$lib/color/utils"
+  import { PCCS_MAP } from "$lib/data/pccs"
 
   let {
     hue,
@@ -66,14 +66,6 @@
     { key: "v", label: "v", cx: X4, cy: Y0 + S * 2, shape: "circle" }
   ]
 
-  const ACHROMATIC_HEX: Record<string, string> = {
-    W: "#ffffff",
-    ltGy: "#c8c8c8",
-    mGy: "#888888",
-    dkGy: "#555555",
-    Bk: "#1a1a1a"
-  }
-
   const ruleObj = $derived(PCCS_TONE_BASED_PALETTE_RULE[rule])
 
   // 初期値は空文字。$effect.pre が最初のレンダリング前にランダムな allowedTone をセットする。
@@ -100,8 +92,7 @@
   }
 
   function getFillColor(key: string): string {
-    if (key in ACHROMATIC_HEX) return ACHROMATIC_HEX[key]
-    return lookupPCCSColor(hue, key)?.hex ?? "#e0e0e0"
+    return PCCS_MAP.get(getToneNotation(key)) ?? "#e0e0e0"
   }
 
   function getLabelFill(hex: string): string {
@@ -137,9 +128,7 @@
 
   // PCCS_MAP のキー形式に変換する（有彩色: toneSymbol+hue、無彩色: バケット代表のnotation）
   function getToneNotation(toneSymbol: string): string {
-    if (PCCS_ACHROMATIC_TONE_SYMBOLS.includes(toneSymbol)) {
-      return lookupPCCSColor(null, toneSymbol)?.notation ?? toneSymbol
-    }
+    if (PCCS_ACHROMATIC_TONE_SYMBOLS.includes(toneSymbol)) return toneSymbol
     return `${toneSymbol}${hue}`
   }
 </script>
