@@ -57,13 +57,13 @@ interface ToneBasedPaletteRule {
 }
 
 const PCCS_TONE_BASED_PALETTE_RULE: Record<string, ToneBasedPaletteRule> = {
-  同一トーン: {
+  identicalTone: {
     label: "同一トーン",
     allowedTones: PCCS_CHROMATIC_TONE_SYMBOLS,
     // 同一トーンなので他のトーンは選択できない
     suggestNext: (_tone: string) => null
   },
-  "類似トーン（縦方向）": {
+  similarToneVertical: {
     label: "類似トーン（縦方向）",
     allowedTones: PCCS_CHROMATIC_TONE_SYMBOLS.filter((tone) => tone !== "v"),
     suggestNext: (tone: string) => {
@@ -71,7 +71,7 @@ const PCCS_TONE_BASED_PALETTE_RULE: Record<string, ToneBasedPaletteRule> = {
       return [tone]
     }
   },
-  "類似トーン（横方向）": {
+  similarToneHorizontal: {
     label: "類似トーン（横方向）",
     allowedTones: PCCS_CHROMATIC_TONE_SYMBOLS,
     suggestNext: (tone: string) => {
@@ -79,7 +79,7 @@ const PCCS_TONE_BASED_PALETTE_RULE: Record<string, ToneBasedPaletteRule> = {
       return [tone]
     }
   },
-  "類似トーン（斜め方向）": {
+  similarToneDiagonal: {
     label: "類似トーン（斜め方向）",
     allowedTones: PCCS_CHROMATIC_TONE_SYMBOLS,
     suggestNext: (tone: string) => {
@@ -87,7 +87,7 @@ const PCCS_TONE_BASED_PALETTE_RULE: Record<string, ToneBasedPaletteRule> = {
       return [tone]
     }
   },
-  "対照トーン（明度方向）": {
+  contrastingToneLightness: {
     label: "対照トーン（明度方向）",
     allowedTones: [...PCCS_TINT_TONE_SYMBOLS, ...PCCS_SHADE_TONE_SYMBOLS],
     suggestNext: (tone: string) => {
@@ -96,7 +96,7 @@ const PCCS_TONE_BASED_PALETTE_RULE: Record<string, ToneBasedPaletteRule> = {
       return null
     }
   },
-  "対照トーン（彩度方向）": {
+  contrastingToneSaturation: {
     label: "対照トーン（彩度方向）",
     allowedTones: [...PCCS_LOW_SATURATION_TONE_SYMBOLS, ...PCCS_HIGH_SATURATION_TONE_SYMBOLS],
     suggestNext: (tone: string) => {
@@ -105,7 +105,7 @@ const PCCS_TONE_BASED_PALETTE_RULE: Record<string, ToneBasedPaletteRule> = {
       return null
     }
   },
-  "対照トーン（明度・彩度方向）": {
+  contrastingToneLightnessSaturation: {
     label: "対照トーン（明度・彩度方向）",
     allowedTones: PCCS_CHROMATIC_TONE_SYMBOLS.filter((tone) => !["sf", "d"].includes(tone)),
     suggestNext: (tone: string) => {
@@ -113,7 +113,7 @@ const PCCS_TONE_BASED_PALETTE_RULE: Record<string, ToneBasedPaletteRule> = {
       return [tone]
     }
   },
-  無彩色どうし: {
+  achromaticTones: {
     label: "無彩色どうし",
     allowedTones: PCCS_ACHROMATIC_TONE_SYMBOLS,
     suggestNext: (tone: string) => {
@@ -121,7 +121,7 @@ const PCCS_TONE_BASED_PALETTE_RULE: Record<string, ToneBasedPaletteRule> = {
       return PCCS_ACHROMATIC_TONE_SYMBOLS.filter((t) => t !== tone)
     }
   },
-  無彩色と高彩度: {
+  achromaticAndHighSaturation: {
     label: "無彩色と高彩度",
     allowedTones: [...PCCS_ACHROMATIC_TONE_SYMBOLS, ...PCCS_HIGH_SATURATION_TONE_SYMBOLS],
     suggestNext: (tone: string) => {
@@ -130,7 +130,7 @@ const PCCS_TONE_BASED_PALETTE_RULE: Record<string, ToneBasedPaletteRule> = {
       return null
     }
   },
-  無彩色と低彩度: {
+  achromaticAndLowSaturation: {
     label: "無彩色と低彩度",
     allowedTones: [...PCCS_ACHROMATIC_TONE_SYMBOLS, ...PCCS_LOW_SATURATION_TONE_SYMBOLS],
     suggestNext: (tone: string) => {
