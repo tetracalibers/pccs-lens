@@ -23,8 +23,8 @@
   const CIRCLE_R = 20
   const RECT_W = 45
   const RECT_H = 36
-  const ROW_STEP = 46
-  const COL_GAP = 8
+  const ROW_STEP = 50
+  const COL_GAP = 12
   const COL_GAP_ACH = 12
   const PAD = 4
   const X0 = PAD + RECT_W / 2
@@ -243,6 +243,33 @@
                 fill="none"
                 stroke-width="1.5"
                 stroke-dasharray="3 2"
+                stroke={getSelectedRingStroke(hex)}
+                style="pointer-events: none;"
+              />
+            {/if}
+          {/if}
+
+          <!-- ハイライトインジケータ（外枠リング、実線） -->
+          {#if highlighted && !selected}
+            {#if cell.shape === "circle"}
+              <circle
+                cx={cell.cx}
+                cy={cell.cy}
+                r={CIRCLE_R + 3}
+                fill="none"
+                stroke-width="1.5"
+                stroke={getSelectedRingStroke(hex)}
+                style="pointer-events: none;"
+              />
+            {:else}
+              <rect
+                x={cell.cx - RECT_W / 2 - 3}
+                y={cell.cy - RECT_H / 2 - 3}
+                width={RECT_W + 6}
+                height={RECT_H + 6}
+                rx="4"
+                fill="none"
+                stroke-width="1.5"
                 stroke={getSelectedRingStroke(hex)}
                 style="pointer-events: none;"
               />
