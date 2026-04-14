@@ -11,7 +11,8 @@
       "Bash(grep:*)",
       "mcp__context7__query-docs",
       "Bash(npm test:*)",
-      "Bash(npx svelte-check:*)"
+      "Bash(npx svelte-check:*)",
+      "Bash(find:*)"
     ]
   }
 }

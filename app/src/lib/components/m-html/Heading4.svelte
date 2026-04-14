@@ -1,11 +1,19 @@
 <script lang="ts">
-  import type { Snippet } from "svelte"
+  import { getContext, type Snippet } from "svelte"
 
-  let { children }: { children?: Snippet } = $props()
+  let { children, title = "" }: { children?: Snippet; title?: string } = $props()
+
+  const ankiCtx = getContext<{ isAnki: boolean } | undefined>("anki-mode")
+  const isAnki = $derived(ankiCtx?.isAnki)
+  const dummyText = $derived("X".repeat(title.length))
 </script>
 
-<h4>
-  {@render children?.()}
+<h4 class:--anki={isAnki}>
+  {#if isAnki && title}
+    {dummyText}
+  {:else}
+    {@render children?.()}
+  {/if}
 </h4>
 
 <style>
@@ -30,5 +38,10 @@
     margin-left: 2.5px;
     border-radius: 50%;
     background: linear-gradient(135deg, rgba(255, 107, 107, 0.5), rgba(199, 125, 255, 0.5));
+  }
+
+  .--anki {
+    font-family: var(--font-anki-title);
+    color: dimgray;
   }
 </style>
