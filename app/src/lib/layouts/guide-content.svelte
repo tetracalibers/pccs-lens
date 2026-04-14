@@ -44,14 +44,13 @@
   import { resolve } from "$app/paths"
   import { sortGrades } from "$lib/meta/grade"
   import DraftTag from "$lib/components/DraftTag.svelte"
-  import AnkiModeToggle from "$lib/components/AnkiModeToggle.svelte"
+  import { ankiMode } from "$lib/state/anki.svelte"
 
   let { title, grades, basic, draft, children }: GuideFrontmatter & { children: Snippet } = $props()
 
-  let isAnki = $state(false)
   setContext("anki-mode", {
     get isAnki() {
-      return isAnki
+      return ankiMode.isAnki
     }
   })
 
@@ -83,14 +82,6 @@
         {/each}
       </div>
     {/if}
-    <div class="anki-toggle">
-      <AnkiModeToggle
-        {isAnki}
-        ontoggle={() => {
-          isAnki = !isAnki
-        }}
-      />
-    </div>
   </div>
   {@render children()}
 </main>
@@ -116,10 +107,6 @@
     flex-wrap: nowrap;
     gap: 4px;
     margin-inline-start: -4px;
-  }
-
-  .anki-toggle {
-    margin-inline-start: auto;
   }
 
   main :global(p) {

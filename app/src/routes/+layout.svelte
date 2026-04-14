@@ -5,6 +5,8 @@
   import { page } from "$app/state"
   import { resolve } from "$app/paths"
   import SwitchLightDark from "$lib/components/SwitchLightDark.svelte"
+  import AnkiModeToggle from "$lib/components/AnkiModeToggle.svelte"
+  import { ankiMode } from "$lib/state/anki.svelte"
   import "$lib/styles/color.css"
 
   let { children } = $props()
@@ -14,14 +16,22 @@
     { href: resolve("/analyze"), path: "/analyze", label: "配色分析" },
     { href: resolve("/patterns"), path: "/patterns", label: "配色シミュレータ" }
   ]
-
   const contentItems = [
     { href: resolve("/color-theory"), path: "/color-theory", label: "色の理論" },
     { href: resolve("/color-fields"), path: "/color-fields", label: "色の活用分野" }
   ]
 
-  let isNavOpen = $state(false)
+  const CONTENT_TOP_ROUTES = new Set(["/color-theory", "/color-fields"])
+  const isContentPage = $derived(
+    page.route.id !== null &&
+      !CONTENT_TOP_ROUTES.has(page.route.id) &&
+      (page.route.id.startsWith("/color-theory") || page.route.id.startsWith("/color-fields"))
+  )
+  $effect(() => {
+    if (!isContentPage) ankiMode.reset()
+  })
 
+  let isNavOpen = $state(false)
   function closeNav() {
     isNavOpen = false
   }
@@ -101,6 +111,9 @@
 
     <!-- 右：モード切り替えボタン -->
     <div class="header-right">
+      {#if isContentPage}
+        <AnkiModeToggle isAnki={ankiMode.isAnki} ontoggle={ankiMode.toggle} />
+      {/if}
       <SwitchLightDark />
     </div>
   </div>
@@ -229,7 +242,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    gap: 4rem;
+    gap: 2rem;
   }
 
   /* ===== ヘッダー左側 ===== */
@@ -343,7 +356,7 @@
   .header-right {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 1rem;
     flex-shrink: 0;
     margin-inline-start: auto;
   }
