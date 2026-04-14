@@ -68,18 +68,13 @@
 
   const ruleObj = $derived(PCCS_TONE_BASED_PALETTE_RULE[rule])
 
-  // 初期値は空文字。$effect.pre が最初のレンダリング前にランダムな allowedTone をセットする。
-  // rule 変更時、現在の selectedTone が新しい allowedTones に含まれない場合もリセットする。
+  // 初期値は allowedTones[0] を固定で使用（SSR/ハイドレーションで空のまま一瞬レンダリングされるのを防ぐ）。
+  // rule 変更時、現在の selectedTone が新しい allowedTones に含まれない場合はランダムにリセットする。
   // selectedTone の読み取りは untrack で囲むことで依存関係に加えず、
   // rule（= ruleObj.allowedTones）の変更のみで再実行される。
-  let selectedTone = $state("")
-
-  $effect.pre(() => {
-    const allowed = ruleObj.allowedTones
-    if (!allowed.includes(untrack(() => selectedTone))) {
-      selectedTone = pickRandomTone(allowed)
-    }
-  })
+  let selectedTone = $state(
+    untrack(() => pickRandomTone(PCCS_TONE_BASED_PALETTE_RULE[rule].allowedTones))
+  )
 
   const allowedSet = $derived(new Set(ruleObj.allowedTones))
   const highlightedTones = $derived(ruleObj.suggestNext(selectedTone) ?? [])
@@ -313,7 +308,7 @@
   </div>
 
   <!-- 配色プレビュー -->
-  {#if highlightedTones.length > 0 && selectedTone !== ""}
+  {#if highlightedTones.length > 0}
     <ColorPaletteGrid>
       {#each highlightedTones as highlightedTone (highlightedTone)}
         <div class="pair">
