@@ -89,6 +89,7 @@
     }
   })
 
+  const allowedSet = $derived(new Set(ruleObj.allowedTones))
   const highlightedTones = $derived(ruleObj.suggestNext(selectedTone) ?? [])
   const highlightedSet = $derived(new Set(highlightedTones))
 
@@ -113,16 +114,24 @@
     return `oklch(from ${hex} calc(l - .10) c calc(h - 10))`
   }
 
-  function isHighlighted(key: string): boolean {
-    return highlightedSet.has(key)
+  // セルの不透明度
+  // - 選択中 / ハイライト: 不透明
+  // - allowedTones 内だがハイライトでない: やや薄く
+  // - allowedTones 外: 不透明（代わりに斜線で選択不可を表示）
+  function getCellOpacity(key: string): number {
+    if (key === selectedTone || highlightedSet.has(key)) return 1
+    if (allowedSet.has(key)) return 0.2
+    return 1
   }
 
-  function isDisabled(key: string): boolean {
-    return key !== selectedTone && !highlightedSet.has(key)
+  // 複数インスタンス配置時の clipPath ID 衝突を防ぐ
+  const instanceId = Math.random().toString(36).slice(2, 8)
+  function getClipId(key: string): string {
+    return `tone-preview-clip-${instanceId}-${key}`
   }
 
   function handleSelect(key: string) {
-    if (!isHighlighted(key)) return
+    if (!allowedSet.has(key)) return
     selectedTone = key
   }
 
@@ -144,14 +153,38 @@
       aria-label="トーン選択"
       style="width: 100%; overflow: visible;"
     >
+      <defs>
+        {#each CELLS as cell (cell.key)}
+          <clipPath id={getClipId(cell.key)}>
+            {#if cell.shape === "circle"}
+              <circle cx={cell.cx} cy={cell.cy} r={CIRCLE_R} />
+            {:else}
+              <rect
+                x={cell.cx - RECT_W / 2}
+                y={cell.cy - RECT_H / 2}
+                width={RECT_W}
+                height={RECT_H}
+                rx="3"
+              />
+            {/if}
+          </clipPath>
+        {/each}
+      </defs>
+
       {#each CELLS as cell (cell.key)}
         {@const selected = cell.key === selectedTone}
-        {@const highlighted = isHighlighted(cell.key)}
-        {@const disabled = isDisabled(cell.key)}
-        {@const clickable = highlighted}
-        {@const hex = getFillColor(cell.key)}
-        {@const opacity = disabled ? 0.2 : 1}
-        {@const strokeHex = `oklch(from ${hex} calc(l * .85) c h)`}
+        {@const highlighted = highlightedSet.has(cell.key)}
+        {@const allowed = allowedSet.has(cell.key)}
+        {@const clickable = allowed}
+        {@const opacity = getCellOpacity(cell.key)}
+        <!-- allowedTones にないセルは色をつけず、ストロークも中立色に -->
+        {@const hex = allowed ? getFillColor(cell.key) : "var(--cell-empty-fill)"}
+        {@const strokeHex = allowed
+          ? `oklch(from ${getFillColor(cell.key)} calc(l * .85) c h)`
+          : "var(--cell-empty-stroke)"}
+        {@const labelFill = allowed
+          ? getLabelFill(getFillColor(cell.key))
+          : "var(--cell-empty-label)"}
 
         <g
           role="button"
@@ -253,6 +286,24 @@
             {/if}
           {/if}
 
+          <!-- allowedTones 外のセルに右上→左下の斜線 -->
+          {#if !allowed}
+            {@const x1 = cell.shape === "circle" ? cell.cx + CIRCLE_R : cell.cx + RECT_W / 2}
+            {@const y1 = cell.shape === "circle" ? cell.cy - CIRCLE_R : cell.cy - RECT_H / 2}
+            {@const x2 = cell.shape === "circle" ? cell.cx - CIRCLE_R : cell.cx - RECT_W / 2}
+            {@const y2 = cell.shape === "circle" ? cell.cy + CIRCLE_R : cell.cy + RECT_H / 2}
+            <line
+              {x1}
+              {y1}
+              {x2}
+              {y2}
+              stroke="var(--cell-empty-stroke)"
+              stroke-width="1.5"
+              clip-path="url(#{getClipId(cell.key)})"
+              style="pointer-events: none;"
+            />
+          {/if}
+
           <text
             x={cell.cx}
             y={cell.cy}
@@ -262,7 +313,7 @@
             font-size={selected || highlighted ? 11 : 10}
             font-weight={selected ? "bold" : "normal"}
             style="pointer-events: none; user-select: none;"
-            fill={getLabelFill(hex)}
+            fill={labelFill}
             fill-opacity={opacity}
           >
             {cell.label}
@@ -298,6 +349,9 @@
   .diagram-wrapper {
     width: 100%;
     max-width: 220px;
+    --cell-empty-fill: light-dark(white, #1c1c2e);
+    --cell-empty-stroke: light-dark(#ccc, #3a3a4e);
+    --cell-empty-label: light-dark(#aaa, #555);
   }
 
   .pair {
