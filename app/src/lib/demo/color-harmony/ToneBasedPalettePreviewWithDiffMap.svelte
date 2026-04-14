@@ -9,7 +9,7 @@
   import ColorPaletteGrid from "$lib/demo/color-harmony/ColorPaletteGrid.svelte"
   import PCCSColor from "$lib/demo/PCCSColor.svelte"
   import { PCCS_MAP } from "$lib/data/pccs"
-  import chroma from "chroma-js"
+  import { isLightColor } from "$lib/color/utils"
 
   let {
     hue,
@@ -92,9 +92,13 @@
   }
 
   function getLabelFill(hex: string): string {
-    return chroma(hex).luminance() > 0.55
-      ? `color-mix(in srgb, black 70%, ${hex})`
-      : `color-mix(in srgb, white 60%, ${hex})`
+    if (lightModeState.isLightMode) {
+      return isLightColor(hex) ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.9)"
+    } else {
+      return isLightColor(hex)
+        ? `color-mix(in srgb, rgba(0,0,0,0.9) 95%, ${hex})`
+        : "rgba(255,255,255,0.5)"
+    }
   }
 
   function getSelectedRingStroke(hex: string): string {
@@ -109,7 +113,7 @@
   // - allowedTones 外: 不透明（代わりに斜線で選択不可を表示）
   function getCellOpacity(key: string): number {
     if (key === selectedTone || highlightedSet.has(key)) return 1
-    if (allowedSet.has(key)) return 0.4
+    if (allowedSet.has(key)) return 0.3
     return 1
   }
 
@@ -210,7 +214,6 @@
               height={RECT_H}
               rx="3"
               fill={hex}
-              fill-opacity={opacity}
               stroke={strokeHex}
               stroke-opacity={opacity}
               stroke-width={highlighted ? 1.5 : 1}
@@ -301,7 +304,6 @@
             font-weight={selected ? "bold" : "normal"}
             style="pointer-events: none; user-select: none;"
             fill={labelFill}
-            fill-opacity={opacity}
           >
             {cell.label}
           </text>
