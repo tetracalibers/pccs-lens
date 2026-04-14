@@ -96,7 +96,7 @@
 
     <!-- Guide -->
     <section class="guide-section">
-      <a href={resolve("/color-theory/pccs")} class="guide-card">
+      <a href={resolve("/color-theory/pccs-basics")} class="guide-card">
         <div class="guide-card-inner">
           <div class="guide-visual">
             <div class="guide-orb-ring">
