@@ -75,16 +75,20 @@ const TONE_POSITION_MAP: Record<string, [number, number]> = Object.fromEntries(
   )
 )
 
-// 縦方向に隣り合うトーンを返す（同じ縦グループ内の他のトーン）
+// 縦方向に隣り合うトーンを返す（同じ縦グループ内の隣接トーンのみ）
 const getVerticallyAdjacentTones = (toneSymbol: string): string[] => {
   const group = PCCS_CHROMATIC_TONE_SIMILAR_VERTICAL.find((g) => g.includes(toneSymbol))
-  return group ? group.filter((t) => t !== toneSymbol) : []
+  if (!group) return []
+  const idx = group.indexOf(toneSymbol)
+  return [group[idx - 1], group[idx + 1]].filter((t): t is string => t !== undefined)
 }
 
-// 横方向に隣り合うトーンを返す（同じ横グループ内の他のトーン）
+// 横方向に隣り合うトーンを返す（同じ横グループ内の隣接トーンのみ）
 const getHorizontallyAdjacentTones = (toneSymbol: string): string[] => {
   const group = PCCS_CHROMATIC_TONE_SIMILAR_HORIZONTAL.find((g) => g.includes(toneSymbol))
-  return group ? group.filter((t) => t !== toneSymbol) : []
+  if (!group) return []
+  const idx = group.indexOf(toneSymbol)
+  return [group[idx - 1], group[idx + 1]].filter((t): t is string => t !== undefined)
 }
 
 // 斜め方向に隣り合うトーンを返す（列差が1かつ行差が1または2のトーン）
