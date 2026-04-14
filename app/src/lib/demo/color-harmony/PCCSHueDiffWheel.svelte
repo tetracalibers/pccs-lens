@@ -257,6 +257,7 @@
         markerId,
         strokeWidth: color ? 2 : 1.5,
         fontSize: color ? 20 : 18,
+        fontWeight: color ? "bold" : "normal",
         arcPath: buildArcPath(startAngle, endAngle, arcRadius),
         textPath: buildTextArcPath(startAngle, endAngle),
         textPathId: `hue-diff-arc-text-${key}`
@@ -415,7 +416,11 @@
       marker-start="url(#{arc.markerId})"
       marker-end="url(#{arc.markerId})"
     />
-    <text class="arc-label" font-size={arc.fontSize} style="fill: {arc.color}">
+    <text
+      class="arc-label"
+      font-size={arc.fontSize}
+      style="fill: {arc.color}; font-weight: {arc.fontWeight}"
+    >
       <textPath href="#{arc.textPathId}" startOffset="50%" text-anchor="middle">
         {arc.label}
       </textPath>
