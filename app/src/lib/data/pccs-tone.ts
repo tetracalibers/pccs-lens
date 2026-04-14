@@ -56,7 +56,7 @@ interface ToneBasedPaletteRule {
   suggestNext: (toneSymbol: string) => string[] | null
 }
 
-const PCCS_TONE_BASED_PALETTE_RULE: Record<string, ToneBasedPaletteRule> = {
+export const PCCS_TONE_BASED_PALETTE_RULE: Record<string, ToneBasedPaletteRule> = {
   identicalTone: {
     label: "同一トーン",
     allowedTones: PCCS_CHROMATIC_TONE_SYMBOLS,
@@ -140,7 +140,3 @@ const PCCS_TONE_BASED_PALETTE_RULE: Record<string, ToneBasedPaletteRule> = {
     }
   }
 }
-
-export const PCCS_TONE_BASED_PALETTE_RULE_MAP = new Map(
-  Object.entries(PCCS_TONE_BASED_PALETTE_RULE)
-)
