@@ -136,7 +136,7 @@ TODO：プレビュー
 
 ### トーンに対照性がある配色
 
-::::CardGrid
+::::CardGrid{lastWide}
 :::TermCard{title="対照トーン配色（明度方向）" centering}
 <ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="contrastingToneLightness" />
 :::
@@ -152,16 +152,16 @@ TODO：プレビュー
 
 ## :WithGradeTag[無彩色との配色]{grades="3"}
 
-::::CardGrid
-:::TermCard{title="無彩色どうしの配色" centering}
-<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="achromaticTones" />
-:::
-
-:::TermCard{title="無彩色と有彩色の配色" centering}
+::::CardGrid{lastWide}
+:::TermCard{title="無彩色と高彩度の配色" centering}
 <ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="achromaticAndHighSaturation" />
 :::
 
 :::TermCard{title="無彩色と低彩度の配色" centering}
 <ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="achromaticAndLowSaturation" />
+:::
+
+:::TermCard{title="無彩色どうしの配色" centering}
+<ToneBasedPalettePreviewWithDiffMap hue={$baseHue} rule="achromaticTones" />
 :::
 ::::
