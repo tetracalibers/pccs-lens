@@ -10,6 +10,7 @@
   import PCCSColor from "$lib/demo/PCCSColor.svelte"
   import { PCCS_MAP } from "$lib/data/pccs"
   import { isLightColor } from "$lib/color/utils"
+  import { SvelteSet } from "svelte/reactivity"
 
   let {
     hue,
@@ -131,6 +132,33 @@
     if (PCCS_ACHROMATIC_TONE_SYMBOLS.includes(toneSymbol)) return toneSymbol
     return `${toneSymbol}${hue}`
   }
+
+  // PCCSの色相環上でdelta分ずらした色相番号（1〜24）を返す
+  function shiftHue(baseHue: number, delta: number, rotation: "cw" | "ccw"): number {
+    const adjustedDelta = rotation === "cw" ? delta : -delta
+    return ((baseHue - 1 + adjustedDelta + 24) % 24) + 1
+  }
+
+  function randomHueOffset(baseHue: number): number {
+    const randomDelta = Math.floor(Math.random() * 12) + 1
+    const randomRotation = Math.random() < 0.5 ? "cw" : "ccw"
+    return shiftHue(baseHue, randomDelta, randomRotation)
+  }
+
+  // 被らないようにランダムに色相を選ぶ（同一色相配色の例を表示するため）
+  const randomHues = $derived(() => {
+    const hues = new SvelteSet<number>()
+    while (hues.size < 2) {
+      hues.add(randomHueOffset(hue))
+    }
+    return Array.from(hues)
+  })
+
+  // identicalTone の場合に表示する色相差プレビューのペア
+  const identicalTonePairs = $derived(() => {
+    if (rule !== "identicalTone") return []
+    return randomHues().map((h) => `${selectedTone}${h}`)
+  })
 </script>
 
 <div class="root">
@@ -344,6 +372,15 @@
         <div class="pair">
           <PCCSColor pccs={getToneNotation(selectedTone)} />
           <PCCSColor pccs={getToneNotation(highlightedTone)} />
+        </div>
+      {/each}
+    </ColorPaletteGrid>
+  {:else if identicalTonePairs().length > 0}
+    <ColorPaletteGrid>
+      {#each identicalTonePairs() as pairedNotation, i (i)}
+        <div class="pair">
+          <PCCSColor pccs={getToneNotation(selectedTone)} />
+          <PCCSColor pccs={pairedNotation} />
         </div>
       {/each}
     </ColorPaletteGrid>
