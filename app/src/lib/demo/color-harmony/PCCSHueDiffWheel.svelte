@@ -335,7 +335,7 @@
 
   <!-- 色相差の数字 -->
   {#each diffNumbers as d (d.num)}
-    <text class="diff-number" class:diff-number--base={d.diff === 0} x={d.x} y={d.y} font-size={13}>
+    <text class="diff-number" class:diff-number--base={d.diff === 0} x={d.x} y={d.y} font-size={14}>
       {d.diff}
     </text>
   {/each}
@@ -347,7 +347,7 @@
       class:range-label--base={r.label === "同一"}
       x={r.x}
       y={r.y}
-      font-size={14}
+      font-size={16}
     >
       {r.label}
     </text>
@@ -361,7 +361,7 @@
       marker-start="url(#hue-diff-arrow)"
       marker-end="url(#hue-diff-arrow)"
     />
-    <text class="arc-label" font-size={13}>
+    <text class="arc-label" font-size={18}>
       <textPath href="#{arc.textPathId}" startOffset="50%" text-anchor="middle">
         {arc.label}
       </textPath>
