@@ -2,7 +2,7 @@
   {
     "notation": "W",
     "hex": "#f1f1f1",
-    "toneSymbol": null,
+    "toneSymbol": "W",
     "hueNumber": null,
     "isNeutral": true,
     "achromaticBucket": "W"
@@ -34,7 +34,7 @@
   {
     "notation": "Gy-7.5",
     "hex": "#BBBBBB",
-    "toneSymbol": null,
+    "toneSymbol": "ltGy",
     "hueNumber": null,
     "isNeutral": true,
     "achromaticBucket": "ltGy"
@@ -66,7 +66,7 @@
   {
     "notation": "Gy-5.5",
     "hex": "#868686",
-    "toneSymbol": null,
+    "toneSymbol": "mGy",
     "hueNumber": null,
     "isNeutral": true,
     "achromaticBucket": "mGy"
@@ -98,7 +98,7 @@
   {
     "notation": "Gy-3.5",
     "hex": "#545454",
-    "toneSymbol": null,
+    "toneSymbol": "dkGy",
     "hueNumber": null,
     "isNeutral": true,
     "achromaticBucket": "dkGy"
@@ -130,7 +130,7 @@
   {
     "notation": "Bk",
     "hex": "#252525",
-    "toneSymbol": null,
+    "toneSymbol": "Bk",
     "hueNumber": null,
     "isNeutral": true,
     "achromaticBucket": "Bk"

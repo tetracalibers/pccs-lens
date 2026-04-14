@@ -12,7 +12,15 @@ export const PCCS_CARD_199 = [...pccsV24, ...pccsEven12, ...pccsNeutral] as PCCS
 export const PCCS_ALL = [...PCCS_CARD_199, ...pccsS12, ...pccsOdd12]
 
 /** Map<notation, hex> */
-export const PCCS_MAP = new Map(PCCS_ALL.map(({ notation, hex }) => [notation, hex]))
+const PCCS_HEX = new Map(PCCS_ALL.map(({ notation, hex }) => [notation, hex]))
+const PCCS_NEUTRAL_TONE_HEX = new Map([
+  ["W", PCCS_HEX.get("W")],
+  ["ltGy", PCCS_HEX.get("Gy-7.5")],
+  ["mGy", PCCS_HEX.get("Gy-5.5")],
+  ["dkGy", PCCS_HEX.get("Gy-3.5")],
+  ["Bk", PCCS_HEX.get("Bk")]
+])
+export const PCCS_MAP = new Map([...PCCS_HEX, ...PCCS_NEUTRAL_TONE_HEX])
 
 const PCCS_HUE = [
   {
