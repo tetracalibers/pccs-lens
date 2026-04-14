@@ -40,12 +40,6 @@ export const isTintTone = (toneSymbol: string) => PCCS_TINT_TONE_SYMBOLS.include
 // 暗清色かどうか
 export const isShadeTone = (toneSymbol: string) => PCCS_SHADE_TONE_SYMBOLS.includes(toneSymbol)
 
-// 対照トーンかどうか（横・縦・斜め方向のいずれでも隣り合っていない）
-export const isContrastingTone = (toneSymbol: string): boolean => {
-  // TODO: 横・縦・斜め方向のいずれでも隣り合っていないトーンを判定できるようにする
-  return false
-}
-
 interface ToneBasedPaletteRule {
   // ルール名
   label: string
