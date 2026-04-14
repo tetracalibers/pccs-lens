@@ -40,6 +40,32 @@ export const isTintTone = (toneSymbol: string) => PCCS_TINT_TONE_SYMBOLS.include
 // 暗清色かどうか
 export const isShadeTone = (toneSymbol: string) => PCCS_SHADE_TONE_SYMBOLS.includes(toneSymbol)
 
+// 有彩色トーンのトーンマップ上の位置関係
+export const PCCS_CHROMATIC_TONE_MAP_STRUCTURE = [
+  ["p", "lt", null, null],
+  [null, null, "b", null],
+  ["ltg", "sf", null, null],
+  [null, null, "s", "v"],
+  ["g", "d", null, null],
+  [null, null, "dp", null],
+  ["dkg", "dk", null, null]
+]
+
+// 横に並ぶトーンの組み合わせ
+export const PCCS_CHROMATIC_TONE_SIMILAR_HORIZONTAL = [
+  ["p", "lt", "b"],
+  ["ltg", "sf"],
+  ["g", "d"],
+  ["dkg", "dk", "dp"],
+  ["s", "v"]
+]
+// 縦に並ぶトーンの組み合わせ
+export const PCCS_CHROMATIC_TONE_SIMILAR_VERTICAL = [
+  ["p", "ltg", "g", "dkg"],
+  ["lt", "sf", "d", "dk"],
+  ["b", "s", "dp"]
+]
+
 interface ToneBasedPaletteRule {
   // ルール名
   label: string
@@ -78,6 +104,7 @@ export const PCCS_TONE_BASED_PALETTE_RULE: Record<string, ToneBasedPaletteRule> 
     allowedTones: PCCS_CHROMATIC_TONE_SYMBOLS,
     suggestNext: (tone: string) => {
       // TODO: 斜めに隣り合う全トーンを返すようにする
+      // PCCS_CHROMATIC_TONE_MAP_STRUCTUREで、列番号が1かつ行番号が1~2ずれたところにある、nullでない全トーンを返せばよい
       return [tone]
     }
   },
@@ -103,7 +130,7 @@ export const PCCS_TONE_BASED_PALETTE_RULE: Record<string, ToneBasedPaletteRule> 
     label: "対照トーン（明度・彩度方向）",
     allowedTones: PCCS_CHROMATIC_TONE_SYMBOLS.filter((tone) => !["sf", "d"].includes(tone)),
     suggestNext: (tone: string) => {
-      // TODO: 対照トーン（明度方向）・対照トーン（彩度方向）・類似トーンのいずれにも当てはまらないトーンを返すようにする
+      // TODO: 縦・横・斜め方向のいずれにも隣り合わないトーンを返すようにする
       return [tone]
     }
   },
