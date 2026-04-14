@@ -455,7 +455,7 @@
    * stroke は外半分（隙間側）と内半分（スウォッチ上）の両方に現れる。
    */
   .selected-hue-outline {
-    stroke: white;
+    stroke: whitesmoke;
     stroke-width: 2.5;
   }
 
@@ -466,7 +466,7 @@
   }
 
   .base-sector {
-    fill: #d8d8d8;
+    fill: oklch(from lightslategray calc(l * 1.15) c h);
   }
 
   .radial-line {
@@ -499,6 +499,6 @@
 
   .diff-number--base,
   .range-label--base {
-    fill: var(--color-body--light);
+    fill: white;
   }
 </style>
