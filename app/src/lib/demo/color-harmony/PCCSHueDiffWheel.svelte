@@ -242,10 +242,19 @@
     ) => {
       const startAngle = ba + startOffset * ANGLE_PER_HUE + gapAngle
       const endAngle = ba + endOffset * ANGLE_PER_HUE - gapAngle
+      const resolvedColor = color ?? "var(--color-body)"
+      // Safari は context-stroke 未サポートのため、色ごとに個別マーカーIDを参照する
+      const markerId =
+        color === "var(--canvas-pen-pink)"
+          ? "hue-diff-arrow-pink"
+          : color === "var(--canvas-pen-water)"
+            ? "hue-diff-arrow-water"
+            : "hue-diff-arrow-body"
       return {
         key,
         label,
-        color: color ?? "var(--color-body)",
+        color: resolvedColor,
+        markerId,
         strokeWidth: color ? 2 : 1.5,
         fontSize: color ? 20 : 18,
         arcPath: buildArcPath(startAngle, endAngle, arcRadius),
@@ -268,9 +277,10 @@
       矢印マーカー（SpectrumRange と同形状のオープンシェブロン）。
       orient="auto-start-reverse" により marker-start では 180° 反転して左向きになる。
       viewBox は 9×10 固定、ARROW_SIZE で実際の描画サイズを制御する。
+      Safari は context-stroke 未サポートのため、色ごとに個別マーカーを定義する。
     -->
     <marker
-      id="hue-diff-arrow"
+      id="hue-diff-arrow-body"
       viewBox="0 0 9 10"
       refX="8"
       refY="5"
@@ -281,7 +291,41 @@
       <polyline
         points="1,1 8,5 1,9"
         fill="none"
-        stroke="context-stroke"
+        stroke="var(--color-body)"
+        stroke-width="1"
+        stroke-linejoin="round"
+      />
+    </marker>
+    <marker
+      id="hue-diff-arrow-pink"
+      viewBox="0 0 9 10"
+      refX="8"
+      refY="5"
+      markerWidth={ARROW_SIZE * 0.9}
+      markerHeight={ARROW_SIZE}
+      orient="auto-start-reverse"
+    >
+      <polyline
+        points="1,1 8,5 1,9"
+        fill="none"
+        stroke="var(--canvas-pen-pink)"
+        stroke-width="1"
+        stroke-linejoin="round"
+      />
+    </marker>
+    <marker
+      id="hue-diff-arrow-water"
+      viewBox="0 0 9 10"
+      refX="8"
+      refY="5"
+      markerWidth={ARROW_SIZE * 0.9}
+      markerHeight={ARROW_SIZE}
+      orient="auto-start-reverse"
+    >
+      <polyline
+        points="1,1 8,5 1,9"
+        fill="none"
+        stroke="var(--canvas-pen-water)"
         stroke-width="1"
         stroke-linejoin="round"
       />
@@ -368,8 +412,8 @@
       class="outer-arc"
       d={arc.arcPath}
       style="stroke: {arc.color}; stroke-width: {arc.strokeWidth}"
-      marker-start="url(#hue-diff-arrow)"
-      marker-end="url(#hue-diff-arrow)"
+      marker-start="url(#{arc.markerId})"
+      marker-end="url(#{arc.markerId})"
     />
     <text class="arc-label" font-size={arc.fontSize} style="fill: {arc.color}">
       <textPath href="#{arc.textPathId}" startOffset="50%" text-anchor="middle">
