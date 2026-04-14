@@ -324,7 +324,7 @@
   </div>
 
   <!-- 配色プレビュー -->
-  {#if highlightedTones.length > 0}
+  {#if highlightedTones.length > 0 && selectedTone !== ""}
     <ColorPaletteGrid>
       {#each highlightedTones as highlightedTone (highlightedTone)}
         <div class="pair">
