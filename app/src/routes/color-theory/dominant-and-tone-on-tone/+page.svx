@@ -14,9 +14,24 @@ draft: true
 
 ## :WithGradeTag[ドミナント効果]{grades="2"}
 
-::ComingSoon
+自然の風景では、一つの色相やトーンで全体がまとまって見えることがあり、これを:Mark[ドミナント効果]と呼びます。
+ドミナントは「:Mark[支配]的な」「:Mark[優勢]な」という意味をもつ言葉で、ドミナント効果は、ある色相やトーンが全体の印象を支配しているように見える現象を指します。
+
+たとえば、夕焼けの風景は、全体が赤〜オレンジ系の色相に偏って見える:Mark[色相]のドミナントです。
+本来は青いはずの影や水面ですら、ほんのり赤みを帯びて見えます。
+
+また、霧に包まれた風景は、全体が灰みがかった淡いトーンに偏って見える:Mark[トーン]のドミナントです。
+霧によって色相の違いがわかりにくくなり、全体が低彩度＋中〜高明度の柔らかいトーンで統一されたように見えます。
 
 ## :WithGradeTag[ドミナントカラー配色]{grades="2"}
+
+ドミナントカラー配色は、:Mark[色相]のドミナント効果を利用した配色です。
+使う色相の数を絞ることで全体の色相を統一し、結果として:Mark[色み]のイメージが前面に打ち出されます。
+
+ドミナントカラー配色を作るときは、1つの支配的な色相を決め、その色相で全体をまとめることを意識します。:Mark[同一]色相が基本ですが、なじみ感や統一感があれば、:Mark[隣接]・:Mark[類似]色相を使っても構いません。
+
+使う色数や順番は自由ですが、3色以上の配色で色にまとまりをつけたいときに効果的な配色技法です。
+また、トーンも自由に選ぶことができます。
 
 ::::CardGrid{lastWide}
 :::TermCard
@@ -36,29 +51,12 @@ draft: true
 :::
 ::::
 
-## :WithGradeTag[ドミナントトーン配色]{grades="2"}
-
-:Mark[トーンイントーン]配色とも呼ばれます。
-
-::::CardGrid{lastWide}
-:::TermCard
-<AnalyzedPalette pccsCSV="lt24, lt6, b8, b10, b18" />
-:::
-:::TermCard
-<AnalyzedPalette pccsCSV="dp12, dp14, dp8, dp20" />
-:::
-:::TermCard
-<AnalyzedPalette pccsCSV="p2, ltg18" />
-:::
-:::TermCard
-<AnalyzedPalette pccsCSV="p2, lt24" />
-:::
-:::TermCard
-<AnalyzedPalette pccsCSV="v3, v6, v11, b18, v22, b24" />
-:::
-::::
-
 ## :WithGradeTag[トーンオントーン配色]{grades="2"}
+
+トーンオントーン配色は、:Mark[色相]の数を絞った上で、:Mark[明度]に多少の変化をもたせた配色です。
+
+明度に変化を持たせるには、トーン図で見ると:Mark[縦]方向に並ぶトーンを組み合わせることになります。
+そのため、トーンオントーンとは「トーンの上にトーンを重ねる」という意味として捉えることができます。
 
 ::::CardGrid{lastWide}
 :::TermCard
@@ -75,5 +73,35 @@ draft: true
 :::
 :::TermCard
 <AnalyzedPalette pccsCSV="dp24, d24, sf24, lt24" />
+:::
+::::
+
+## :WithGradeTag[ドミナントトーン配色]{grades="2"}
+
+ドミナントトーン配色は、:Mark[トーン]のドミナント効果を利用した配色です。
+TODO: 使う色相の数を絞ることで、全体の色相を統一します。
+
+ドミナントトーン配色を作るときは、1つの支配的なトーンを決め、そのトーンで全体をまとめることを意識します。:Mark[同一]トーンが基本ですが、:Mark[類似]トーンを使っても構いません。
+
+TODO: 使う色数や順番は自由ですが、3色以上の配色で色にまとまりをつけたいときに効果的な配色技法です。
+TODO: また、トーンも自由に選ぶことができます。
+
+TODO: :Mark[トーンイントーン]配色とも呼ばれます。
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="lt24, lt6, b8, b10, b18" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dp12, dp14, dp8, dp20" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="p2, ltg18" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="p2, lt24" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v3, v6, v11, b18, v22, b24" />
 :::
 ::::
