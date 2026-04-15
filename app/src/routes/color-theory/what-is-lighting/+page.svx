@@ -16,12 +16,12 @@ grades: ["3"]
 
 ```mermaid
 graph LR
-    Lighting["照明光"] --- NaturalLight["自然光"]
-    Lighting --- ArtificialLight["人工光"]
-    NaturalLight --- Sunlight{{"太陽光（昼光）"}}
-    ArtificialLight --- Incandescent{{"白熱電球"}}
-    ArtificialLight --- Fluorescent{{"蛍光ランプ"}}
-    ArtificialLight --- LED{{"LED"}}
+    Lighting["照明光"] --- Anki_NaturalLight["自然光"]
+    Lighting --- Anki_ArtificialLight["人工光"]
+    Anki_NaturalLight --- Anki_Sunlight{{"太陽光（昼光）"}}
+    Anki_ArtificialLight --- Anki_Incandescent{{"白熱電球"}}
+    Anki_ArtificialLight --- Anki_Fluorescent{{"蛍光ランプ"}}
+    Anki_ArtificialLight --- Anki_LED{{"LED"}}
 ```
 
 自然光は:Mark[太陽光]（:Mark[昼光]）のみですが、人工光にはさまざまな種類があります。

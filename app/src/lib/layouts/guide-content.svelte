@@ -54,6 +54,8 @@
     }
   })
 
+  const isAnki = $derived(ankiMode.isAnki)
+
   const pageTitle = $derived(title ? `${title} - PCCS Lens` : "PCCS Lens")
   const gradeList = $derived(sortGrades(grades))
 </script>
@@ -83,7 +85,7 @@
       </div>
     {/if}
   </div>
-  {@render children()}
+  <div class:--_anki={isAnki}>{@render children()}</div>
 </main>
 
 <style>
@@ -121,5 +123,9 @@
     margin: 1.5rem 0;
     max-width: 100%;
     overflow-x: auto;
+  }
+
+  .--_anki :global(.mermaid-diagram [data-id^="Anki"] text) {
+    fill: transparent;
   }
 </style>

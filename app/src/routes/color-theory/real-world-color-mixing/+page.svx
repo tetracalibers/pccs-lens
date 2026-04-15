@@ -10,9 +10,9 @@ draft: true
 
 ```mermaid
 graph LR
-    A["加法混色"] --- B["同時加法混色"]
-    A --- C["併置加法混色"]
-    A --- D["継時加法混色"]
+    A["加法混色"] --- Anki_B["同時加法混色"]
+    A --- Anki_C["併置加法混色"]
+    A --- Anki_D["継時加法混色"]
 ```
 
 ::ComingSoon
