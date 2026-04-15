@@ -12,7 +12,7 @@ draft: true
   import AnalyzedPalette from '$lib/demo/color-palette/AnalyzedPalette.svelte'
 </script>
 
-## :WithGradeTag[ドミナント配色]{grades="2"}
+## :WithGradeTag[ドミナントとトーンオントーン]{grades="2"}
 
 TODO: ドミナント効果の説明
 
@@ -36,18 +36,150 @@ TODO: ドミナント効果の説明
 :::
 ::::
 
-## :WithGradeTag[色相かトーンの統一]{grades="2"}
+### ドミナントトーン配色
 
-::ComingSoon
+:Mark[トーンイントーン]配色とも呼ばれます。
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="lt24, lt6, b8, b10, b18" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dp12, dp14, dp8, dp20" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="p2, ltg18" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="p2, lt24" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v3, v6, v11, b18, v22, b24" />
+:::
+::::
+
+### トーンオントーン配色
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="ltg10, g10, dkg10" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dk4, lt6" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v18, b18, W" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="b6, dp18" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dp24, d24, sf24, lt24" />
+:::
+::::
 
 ## :WithGradeTag[中間色による配色]{grades="2"}
 
-::ComingSoon
+### トーナル配色
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="ltg10, sf10, d10, g10" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="sf16, g8, d8, d18" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="ltg8, g12, d4" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="sf6, d6" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="ltGy, ltg6, g6, g8, g12" />
+:::
+::::
 
 ## :WithGradeTag[色を近似させた配色]{grades="2"}
 
-::ComingSoon
+### カマイユ配色
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="lt20, p20" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="p4, lt4" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="sf6, sf8" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v4, v5" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dp14, v15, v14" />
+:::
+::::
+
+### フォカマイユ配色
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="lt16, lt18, sf16" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="p6, lt6, lt4" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="lt24, p2" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="b22, lt20" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dk2, dp4" />
+:::
+::::
 
 ## :WithGradeTag[明快な配色]{grades="2"}
 
-::ComingSoon
+### ビコロール配色
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="v8, v20" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v12, v4" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dp2, W" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v4, Bk" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dk18, W" />
+:::
+::::
+
+### トリコロール配色
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="v2, W, v17" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v11, W, v2" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v12, v20, v4" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v12, Bk, v2" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="W, Bk, v7" />
+:::
+::::
