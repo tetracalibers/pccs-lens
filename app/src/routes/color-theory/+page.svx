@@ -20,6 +20,34 @@ title: 色の理論一覧
 
 ::ComingSoon
 
+## 配色と色彩調和
+
+PCCSのトーンの仕組みは、明度や彩度の関係をシンプルに捉え、イメージに合う色選びを助けてくれるものです。使いたい色をPCCSに落とし込んでから色の組み合わせ（配色）を考えることで、配色の技法を直感的に理解できます。
+
+また、配色技法の背景には、なぜその組み合わせが調和するのか？という数々の研究があります。
+
+### 配色の技法
+
+- :PageLink{slug="hue-tone-difference"}
+- :PageLink{slug="dominant-and-tone-on-tone"}
+- :PageLink{slug="tonal-color-scheme"}
+- :PageLink{slug="camaieu-and-faux-camaieu"}
+- :PageLink{slug="bicolor-and-tricolor"}
+- :PageDraft{title="色相環を分割した配色" grades="2"}
+- :PageDraft{title="色の強調と分離" grades="3"}
+- :PageDraft{title="グラデーション" grades="3"}
+- :PageDraft{title="イメージ別の配色" grades="2,3"}
+
+### 色彩調和論
+
+- :PageLink{slug="unity-and-variety"}
+- :PageLink{slug="chevreul-color-harmony"}
+- :PageDraft{title="ジャッドの4つの原理" grades="2,1"}
+- :PageDraft{title="色相の自然連鎖" grades="2,1"}
+- :PageDraft{title="色相分割による調和" grades="1"}
+- :PageDraft{title="混色から考える調和" grades="1"}
+- :PageDraft{title="ムーン＆スペンサーの色彩調和論" grades="1"}
+
 ## 色が見えるしくみ
 
 私たちが目にする色は、一体どこで生み出されるのか？
@@ -108,34 +136,6 @@ title: 色の理論一覧
 
 - :PageDraft{title="三属性間の影響" grades="1"}
 - :PageDraft{title="光の入射角の影響" grades="1"}
-
-## 配色と色彩調和
-
-PCCSのトーンの仕組みは、明度や彩度の関係をシンプルに捉え、イメージに合う色選びを助けてくれるものです。使いたい色をPCCSに落とし込んでから色の組み合わせ（配色）を考えることで、配色の技法を直感的に理解できます。
-
-また、配色技法の背景には、なぜその組み合わせが調和するのか？という数々の研究があります。
-
-### 配色の技法
-
-- :PageLink{slug="hue-tone-difference"}
-- :PageLink{slug="dominant-and-tone-on-tone"}
-- :PageLink{slug="tonal-color-scheme"}
-- :PageLink{slug="camaieu-and-faux-camaieu"}
-- :PageLink{slug="bicolor-and-tricolor"}
-- :PageDraft{title="色相環を分割した配色" grades="2"}
-- :PageDraft{title="色の強調と分離" grades="3"}
-- :PageDraft{title="グラデーション" grades="3"}
-- :PageDraft{title="イメージ別の配色" grades="2,3"}
-
-### 色彩調和論
-
-- :PageLink{slug="unity-and-variety"}
-- :PageLink{slug="chevreul-color-harmony"}
-- :PageDraft{title="ジャッドの4つの原理" grades="2,1"}
-- :PageDraft{title="色相の自然連鎖" grades="2,1"}
-- :PageDraft{title="色相分割による調和" grades="1"}
-- :PageDraft{title="混色から考える調和" grades="1"}
-- :PageDraft{title="ムーン＆スペンサーの色彩調和論" grades="1"}
 
 ## 色のはたらき方
 
