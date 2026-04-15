@@ -1,0 +1,53 @@
+---
+layout: guide-content
+title: ビコロールとトリコロール
+
+grades: ["2"]
+basic: true
+
+draft: true
+---
+
+<script>
+  import AnalyzedPalette from '$lib/demo/color-palette/AnalyzedPalette.svelte'
+</script>
+
+## :WithGradeTag[ビコロール配色]{grades="2"}
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="v8, v20" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v12, v4" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dp2, W" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v4, Bk" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dk18, W" />
+:::
+::::
+
+## :WithGradeTag[トリコロール配色]{grades="2"}
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="v2, W, v17" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v11, W, v2" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v12, v20, v4" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v12, Bk, v2" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="W, Bk, v7" />
+:::
+::::

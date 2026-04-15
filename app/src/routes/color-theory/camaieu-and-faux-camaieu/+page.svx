@@ -1,0 +1,53 @@
+---
+layout: guide-content
+title: カマイユとフォカマイユ
+
+grades: ["2"]
+basic: true
+
+draft: true
+---
+
+<script>
+  import AnalyzedPalette from '$lib/demo/color-palette/AnalyzedPalette.svelte'
+</script>
+
+## :WithGradeTag[カマイユ配色]{grades="2"}
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="lt20, p20" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="p4, lt4" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="sf6, sf8" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v4, v5" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dp14, v15, v14" />
+:::
+::::
+
+## :WithGradeTag[フォカマイユ配色]{grades="2"}
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="lt16, lt18, sf16" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="p6, lt6, lt4" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="lt24, p2" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="b22, lt20" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dk2, dp4" />
+:::
+::::

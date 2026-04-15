@@ -1,0 +1,79 @@
+---
+layout: guide-content
+title: ドミナントとトーンオントーン
+
+grades: ["2"]
+basic: true
+
+draft: true
+---
+
+<script>
+  import AnalyzedPalette from '$lib/demo/color-palette/AnalyzedPalette.svelte'
+</script>
+
+## :WithGradeTag[ドミナント効果]{grades="2"}
+
+::ComingSoon
+
+## :WithGradeTag[ドミナントカラー配色]{grades="2"}
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="ltg24, dk24, d24, v24" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v2, v3, dp4" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dp6, p8, dk6" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="sf18, b18, p18, dp18" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dp12, v11, p12" />
+:::
+::::
+
+## :WithGradeTag[ドミナントトーン配色]{grades="2"}
+
+:Mark[トーンイントーン]配色とも呼ばれます。
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="lt24, lt6, b8, b10, b18" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dp12, dp14, dp8, dp20" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="p2, ltg18" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="p2, lt24" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v3, v6, v11, b18, v22, b24" />
+:::
+::::
+
+## :WithGradeTag[トーンオントーン配色]{grades="2"}
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="ltg10, g10, dkg10" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dk4, lt6" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v18, b18, W" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="b6, dp18" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dp24, d24, sf24, lt24" />
+:::
+::::
