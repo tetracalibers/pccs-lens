@@ -1,10 +1,10 @@
 <script lang="ts">
   import { isLightColor } from "$lib/color/utils"
-  import { PCCS_MAP } from "$lib/data/pccs"
+  import { PCCS_HEX_MAP } from "$lib/data/pccs"
 
   let { pccs }: { pccs: string } = $props()
 
-  const color = $derived(PCCS_MAP.get(pccs)!)
+  const color = $derived(PCCS_HEX_MAP.get(pccs)!)
   const isLightBg = $derived(isLightColor(color))
 </script>
 

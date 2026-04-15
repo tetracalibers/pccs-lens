@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { PCCS_MAP } from "$lib/data/pccs"
+  import { PCCS_HEX_MAP } from "$lib/data/pccs"
 
   // ── Layout ────────────────────────────────────────────────────────────────
   const SVG_WIDTH = 1000
@@ -60,7 +60,7 @@
   const rows: Row[] = [
     {
       label: "C",
-      labelColor: PCCS_MAP.get("v16")!,
+      labelColor: PCCS_HEX_MAP.get("v16")!,
       reflectLabels: ["B", "G"],
       regions: [
         { kind: "reflect", span: 2 / 3 },
@@ -69,7 +69,7 @@
     },
     {
       label: "M",
-      labelColor: PCCS_MAP.get("v24")!,
+      labelColor: PCCS_HEX_MAP.get("v24")!,
       reflectLabels: ["B", "R"],
       regions: [
         { kind: "reflect", span: 1 / 3 },
@@ -79,7 +79,7 @@
     },
     {
       label: "Y",
-      labelColor: PCCS_MAP.get("v8")!,
+      labelColor: PCCS_HEX_MAP.get("v8")!,
       reflectLabels: ["G", "R"],
       regions: [
         { kind: "absorb", span: 1 / 3 },
