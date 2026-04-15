@@ -294,6 +294,7 @@
   /* nav-h: プロトタイプの .nav-h に対応（display は .wide-nav で制御） */
   .nav-h {
     align-items: flex-start;
+    margin-inline: 2rem;
     gap: 1.25rem;
     font-size: 0.82rem;
   }
@@ -338,6 +339,7 @@
     padding-block: 4px;
     padding-inline: 0;
     font-size: 0.82rem;
+    white-space: nowrap;
     background-image: var(--hc-gradient);
     background-repeat: no-repeat;
     background-size: 0 1.5px;
