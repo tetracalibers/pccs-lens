@@ -6,7 +6,7 @@
     PCCS_ACHROMATIC_TONE_SYMBOLS,
     type PCCS_TONE_BASED_PALETTE_KEY
   } from "$lib/data/pccs-tone"
-  import ColorPaletteGrid from "$lib/demo/color-harmony/ColorPaletteGrid.svelte"
+  import ColorPaletteGrid from "$lib/demo/hue-tone-diff/ColorPaletteGrid.svelte"
   import PCCSColor from "$lib/demo/PCCSColor.svelte"
   import { PCCS_HEX_MAP } from "$lib/data/pccs"
   import { isLightColor } from "$lib/color/utils"
