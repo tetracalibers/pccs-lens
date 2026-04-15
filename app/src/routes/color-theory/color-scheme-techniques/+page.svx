@@ -8,9 +8,17 @@ basic: true
 draft: true
 ---
 
+<script>
+  import AnalyzedPalette from '$lib/demo/color-palette/AnalyzedPalette.svelte'
+</script>
+
 ## :WithGradeTag[ドミナント配色]{grades="2"}
 
-::ComingSoon
+TODO: ドミナント効果の説明
+
+### ドミナントカラー配色
+
+<AnalyzedPalette pccsCSV="ltg24, dk24, d24, v24"></AnalyzedPalette>
 
 ## :WithGradeTag[色相かトーンの統一]{grades="2"}
 
