@@ -114,6 +114,9 @@
 </script>
 
 <svg viewBox="0 0 320 320" role="img" aria-label="PCCS色相環" style="pointer-events: none;">
+  <!-- Background circle -->
+  <circle cx={CX} cy={CY} r={R} fill="white" fill-opacity="0.8" />
+
   <!-- Sectors -->
   {#each Array.from({ length: 24 }, (_, i) => i + 1) as h (h)}
     {@const isHighlighted = highlightedHueSet.has(h)}
@@ -171,8 +174,10 @@
         font-family="var(--font-mono)"
         font-size={isHighlighted ? 14 : 12}
         font-weight={isHighlighted ? "bold" : "normal"}
-        style="fill: {isHighlighted ? HUE_COLORS[h] : 'light-dark(#444, #bbb)'};"
-        opacity={hasHighlights && !isHighlighted ? 0.45 : 1}
+        style="fill: {isHighlighted
+          ? `color-mix(in oklch, ${HUE_COLORS[h]} 70%, var(--color-body--dark) 30%)`
+          : 'var(--color-body)'};"
+        opacity={hasHighlights && !isHighlighted ? 0.75 : 1}
       >
         {h}:{HUE_NAMES[h]}
       </text>

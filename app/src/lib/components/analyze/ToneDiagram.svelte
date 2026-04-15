@@ -125,7 +125,13 @@
 </script>
 
 <div class="diagram-wrapper" bind:this={wrapperEl}>
-  <svg viewBox="0 0 {SVG_W} {SVG_H}" role="img" aria-label="PCCSトーン概念図" bind:this={svgEl}>
+  <svg
+    viewBox="0 0 {SVG_W} {SVG_H}"
+    width="100%"
+    role="img"
+    aria-label="PCCSトーン概念図"
+    bind:this={svgEl}
+  >
     <defs>
       <pattern
         id="hatch"
@@ -157,7 +163,8 @@
           : `oklch(from ${cell.usedColors[0].hex} calc(l + .60) c h);`
         : isSCell && isCard199
           ? "#bbb"
-          : "#aaa"}
+          : "var(--color-body)"}
+      {@const strokeOpacity = isUsed ? 1 : isSCell && isCard199 ? 0.5 : 0.6}
       {@const cellOpacity = isSCell && isCard199 && !isUsed ? 0.5 : 1}
 
       <g
@@ -182,6 +189,7 @@
             fill={fillColor}
             stroke={strokeColor}
             stroke-width={strokeWidth}
+            stroke-opacity={strokeOpacity}
           />
         {:else}
           <rect
@@ -192,6 +200,7 @@
             fill={fillColor}
             stroke={strokeColor}
             stroke-width={strokeWidth}
+            stroke-opacity={strokeOpacity}
           />
         {/if}
         <text
@@ -201,7 +210,7 @@
           dominant-baseline="central"
           font-family="var(--font-mono)"
           font-size={isUsed ? 11 : 10}
-          style={`pointer-events: none; user-select: none; fill: ${labelFill};`}
+          style={`pointer-events: none; user-select: none; fill: ${labelFill}; fill-opacity: ${strokeOpacity};`}
         >
           {cell.label}
         </text>
@@ -230,7 +239,7 @@
     position: relative;
     display: inline-block;
     --cell-empty-fill: light-dark(white, #1c1c2e);
-    --cell-empty-stroke: light-dark(#ccc, #3a3a4e);
+    --cell-empty-stroke: var(--color-body);
     --hatch-stroke: light-dark(#bbb, #3a3a4e);
   }
 
