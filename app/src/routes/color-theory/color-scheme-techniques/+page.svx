@@ -18,7 +18,23 @@ TODO: ドミナント効果の説明
 
 ### ドミナントカラー配色
 
-<AnalyzedPalette pccsCSV="ltg24, dk24, d24, v24"></AnalyzedPalette>
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="ltg24, dk24, d24, v24" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v2, v3, dp4" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dp6, p8, dk6" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="sf18, b18, p18, dp18" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dp12, v11, p12" />
+:::
+::::
 
 ## :WithGradeTag[色相かトーンの統一]{grades="2"}
 
