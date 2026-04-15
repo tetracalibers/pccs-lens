@@ -22,31 +22,31 @@
 
 <div class="analyzed-palette-root">
   <div class="palette-preview"><ColorPalettePreview pccsSymbols={pccsSymbols()} /></div>
-  <div class="analyzed-result">
-    <div class="hue-wheel"><HueWheel displayedPCCSList={displayedPCCSList()} /></div>
-    <div class="tone-diagram">
-      <ToneDiagram displayedPCCSList={displayedPCCSList()} isCard199={false} />
-    </div>
+  <div class="hue-wheel"><HueWheel displayedPCCSList={displayedPCCSList()} /></div>
+  <div class="tone-diagram">
+    <ToneDiagram displayedPCCSList={displayedPCCSList()} isCard199={false} />
   </div>
 </div>
 
 <style>
   .analyzed-palette-root {
     display: grid;
-    gap: 1rem;
+    column-gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(0, 250px));
+    grid-template-rows: auto auto;
+    place-items: center;
+    justify-content: center;
   }
 
   .palette-preview {
-    justify-self: center;
+    grid-column: 1;
+    margin-block: 1rem;
   }
 
-  .analyzed-result {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(0, 250px));
-    column-gap: 1rem;
-    row-gap: 0.75rem;
-    align-items: center;
-    justify-content: center;
+  .hue-wheel {
+    grid-column: 1;
+    width: 100%;
+    justify-self: flex-end;
   }
 
   .tone-diagram {
