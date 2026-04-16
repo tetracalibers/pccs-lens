@@ -133,26 +133,16 @@
     bind:this={svgEl}
   >
     <defs>
-      <pattern
-        id="hatch"
-        width="8"
-        height="8"
-        patternUnits="userSpaceOnUse"
-        patternTransform="rotate(45)"
-      >
-        <line x1="0" y1="0" x2="0" y2="8" style="stroke: var(--hatch-stroke);" stroke-width="1" />
-      </pattern>
+      <clipPath id="hatch-clip">
+        <circle cx={X3} cy={Y0 + S * 2} r={CIRCLE_R} />
+      </clipPath>
     </defs>
 
     {#each cellData as cell (cell.key)}
       {@const isUsed = cell.usedColors.length > 0}
       {@const isSCell = cell.key === "s"}
       {@const showHatch = isSCell && isCard199 && !isUsed}
-      {@const fillColor = isUsed
-        ? cell.usedColors[0].hex
-        : showHatch
-          ? "url(#hatch)"
-          : "var(--cell-empty-fill)"}
+      {@const fillColor = isUsed ? cell.usedColors[0].hex : "var(--cell-empty-fill)"}
       {@const strokeColor = isUsed
         ? `oklch(from ${cell.usedColors[0].hex} calc(l * .85) c h)`
         : "var(--cell-empty-stroke)"}
@@ -201,6 +191,18 @@
             stroke={strokeColor}
             stroke-width={strokeWidth}
             stroke-opacity={strokeOpacity}
+          />
+        {/if}
+        {#if showHatch}
+          <line
+            x1={cell.cx + CIRCLE_R}
+            y1={cell.cy - CIRCLE_R}
+            x2={cell.cx - CIRCLE_R}
+            y2={cell.cy + CIRCLE_R}
+            stroke="var(--hatch-stroke)"
+            stroke-width="1.5"
+            clip-path="url(#hatch-clip)"
+            style="pointer-events: none;"
           />
         {/if}
         <text
