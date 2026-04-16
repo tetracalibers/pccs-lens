@@ -86,7 +86,7 @@
         <span class="h1-lens">Lens</span>
       </h1>
       <p class="tagline">色をPCCSというレンズを通して見る</p>
-      <p class="subtitle">見て・触って学ぶ、色と配色のしくみ</p>
+      <p class="subtitle">見て・触って学ぶ、色彩のしくみ</p>
       <div class="hue-strip">
         {#each ["#e03131", "#f76707", "#f59f00", "#94d82d", "#2f9e44", "#0c8599", "#1971c2", "#3b5bdb", "#6741d9", "#9c36b5", "#c2255c", "#e84393"] as c (c)}
           <div class="hue-seg" style="background:{c}"></div>
