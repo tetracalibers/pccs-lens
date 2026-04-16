@@ -4,15 +4,17 @@
   interface Props {
     children?: Snippet
     lastWide?: boolean
+    firstWide?: boolean
     cols?: number
   }
 
-  let { children, lastWide = false, cols }: Props = $props()
+  let { children, lastWide = false, firstWide = false, cols }: Props = $props()
 </script>
 
 <div
   class="term-grid"
   class:--_last-wide={lastWide}
+  class:--_first-wide={firstWide}
   class:--_fixed-cols={cols}
   style:--_cols={cols}
 >
@@ -29,6 +31,10 @@
 
   .term-grid.--_fixed-cols {
     grid-template-columns: repeat(var(--_cols), 1fr);
+  }
+
+  .term-grid.--_first-wide :global(.term-card:first-child) {
+    grid-column: 1 / -1;
   }
 
   .term-grid.--_last-wide :global(.term-card:last-child:nth-child(odd)) {
