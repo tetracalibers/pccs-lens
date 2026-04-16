@@ -40,6 +40,8 @@
   const SVG_W = Math.ceil(X4 + CIRCLE_R + PAD)
   const SVG_H = Math.ceil(Y0 + 4 * ROW_STEP + RECT_H / 2 + PAD)
 
+  const UNUSED_STROKE_WIDTH = 1
+
   // --- staggered midpoint 配置 ---
   // Col0: Y0, Y0+S, Y0+2S, Y0+3S, Y0+4S
   // Col1/2: midpoints of Col0 pairs → Y0+S/2, Y0+3S/2, Y0+5S/2, Y0+7S/2
@@ -134,7 +136,7 @@
   >
     <defs>
       <clipPath id="hatch-clip">
-        <circle cx={X3} cy={Y0 + S * 2} r={CIRCLE_R} />
+        <circle cx={X3} cy={Y0 + S * 2} r={CIRCLE_R - UNUSED_STROKE_WIDTH / 2} />
       </clipPath>
     </defs>
 
@@ -148,7 +150,7 @@
           ? "rgb(from var(--color-body) r g b / 0.75)"
           : `oklch(from ${cell.usedColors[0].hex} calc(l * .85) c h)`
         : "var(--cell-empty-stroke)"}
-      {@const strokeWidth = isUsed ? 1.5 : 1}
+      {@const strokeWidth = isUsed ? 1.5 : UNUSED_STROKE_WIDTH}
       {@const labelFill = isUsed
         ? isLightColor(cell.usedColors[0].hex)
           ? `oklch(from ${cell.usedColors[0].hex} calc(l - .60) c h)`
@@ -171,6 +173,19 @@
             }
           : undefined}
       >
+        {#if showHatch}
+          <line
+            x1={cell.cx + CIRCLE_R}
+            y1={cell.cy - CIRCLE_R}
+            x2={cell.cx - CIRCLE_R}
+            y2={cell.cy + CIRCLE_R}
+            stroke-opacity={strokeOpacity}
+            stroke="var(--hatch-stroke)"
+            stroke-width="1.5"
+            clip-path="url(#hatch-clip)"
+            style="pointer-events: none;"
+          />
+        {/if}
         {#if cell.shape === "circle"}
           <circle
             cx={cell.cx}
@@ -193,19 +208,6 @@
             stroke={strokeColor}
             stroke-width={strokeWidth}
             stroke-opacity={strokeOpacity}
-          />
-        {/if}
-        {#if showHatch}
-          <line
-            x1={cell.cx + CIRCLE_R}
-            y1={cell.cy - CIRCLE_R}
-            x2={cell.cx - CIRCLE_R}
-            y2={cell.cy + CIRCLE_R}
-            opacity={cellOpacity}
-            stroke="var(--hatch-stroke)"
-            stroke-width="1.5"
-            clip-path="url(#hatch-clip)"
-            style="pointer-events: none;"
           />
         {/if}
         <text
@@ -245,7 +247,7 @@
     display: inline-block;
     --cell-empty-fill: light-dark(white, #1c1c2e);
     --cell-empty-stroke: var(--color-body);
-    --hatch-stroke: light-dark(#bbb, #3a3a4e);
+    --hatch-stroke: var(--color-body);
   }
 
   .tooltip {
