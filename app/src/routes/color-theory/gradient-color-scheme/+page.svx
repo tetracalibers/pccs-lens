@@ -1,0 +1,84 @@
+---
+layout: guide-content
+title: グラデーション
+
+grades: ["3"]
+basic: true
+---
+
+<script>
+  import AnalyzedPalette from '$lib/demo/color-palette/AnalyzedPalette.svelte'
+</script>
+
+## :WithGradeTag[グラデーションの効果]{grades="3"}
+
+グラデーションは、色を:Mark[段階]的（:Mark[リズミカル]）に変化させながら並べた多色配色です。
+
+虹や夕焼け空に見られるような、色の境界がはっきりしない連続した色の変化もグラデーションです。
+順序がバラバラである（変化する段階の順に並んでいない）配色は、連続性による:Mark[リズム]が生まれないため、グラデーションとは呼びません。
+
+グラデーションを使うと、配色に:Mark[動き]や:Mark[流れ]を与えることができます。
+隣り合う色は類似性を、両端の色は対照性をもつため、:Mark[統一]と:Mark[変化]のバランスがよい配色です。
+
+グラデーションには、色の三属性のうちのどれを動かすのかによって、いくつかの種類があります。
+
+## :WithGradeTag[色相のグラデーション]{grades="3"}
+
+色相のグラデーションは、明度と彩度はできるだけ統一して、色相だけを変化させる配色です。
+
+トーンは:Mark[同一]トーンとし、一定の色相差で色相を変化させることでつくることができます。
+特に、:Mark[高彩度]のトーンを使うと色相の違いがわかりやすく、効果的です。隣り合う色どうしの色相差は:Mark[1]〜:Mark[3]の範囲にするとよいでしょう。
+
+::::CardGrid{cols=1}
+:::TermCard
+<AnalyzedPalette pccsCSV="v12, v11, v10, v9" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v24, v22, v20, v18" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v8, v5, v2, v23" />
+:::
+::::
+
+## :WithGradeTag[明度のグラデーション]{grades="3"}
+
+明度のグラデーションは、色相と彩度はできるだけ統一して、明度だけを変化させる配色です。
+
+色相は:Mark[同一]色相とし、トーン図の:Mark[縦]方向になるべく等間隔でトーンを変化させることでつくることができます。:Mark[無彩色]でも作ることができ、その場合は一定の明度差で並べるようにします。
+
+::::CardGrid{cols=1}
+:::TermCard
+<AnalyzedPalette pccsCSV="lt2, sf2, d2, dk2" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="Gy-8.0, Gy-7.0, Gy-6.0, Gy-5.0" />
+:::
+::::
+
+## :WithGradeTag[彩度のグラデーション]{grades="3"}
+
+彩度のグラデーションは、色相と明度はできるだけ統一して、彩度だけを変化させる配色です。
+
+色相は:Mark[同一]色相とし、トーン図の:Mark[横]方向になるべく等間隔でトーンを変化させることでつくることができます。
+
+::::CardGrid{cols=1}
+:::TermCard
+<AnalyzedPalette pccsCSV="W, p18, lt18, b18" />
+:::
+::::
+
+## :WithGradeTag[トーンのグラデーション]{grades="3"}
+
+トーン（明度・彩度）のグラデーションは、色相はできるだけ統一して、トーン（明度と彩度）を変化させる配色です。
+
+色相は:Mark[同一]色相とし、:Mark[純色]から:Mark[明清色]（もしくはその逆）、または:Mark[純色]から:Mark[暗清色]（もしくはその逆）へと並べると効果的です。
+
+::::CardGrid{cols=1}
+:::TermCard
+<AnalyzedPalette pccsCSV="p24, lt24, b24, v24" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dkg12, dk12, dp12, v12" />
+:::
+::::
