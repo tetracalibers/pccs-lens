@@ -9,9 +9,10 @@
   interface Props {
     pccsCSV: string
     hideTone?: boolean
+    useToneColor?: boolean
   }
 
-  let { pccsCSV, hideTone = false }: Props = $props()
+  let { pccsCSV, hideTone = false, useToneColor = false }: Props = $props()
 
   const pccsSymbols = $derived(() => pccsCSV.split(",").map((s) => s.trim()))
 
@@ -27,7 +28,7 @@
 
 <div class="analyzed-palette-root" class:--_anki={isAnki}>
   <div class="palette-preview"><ColorPalettePreview pccsSymbols={pccsSymbols()} /></div>
-  <div class="hue-wheel"><HueWheel displayedPCCSList={displayedPCCSList()} /></div>
+  <div class="hue-wheel"><HueWheel displayedPCCSList={displayedPCCSList()} {useToneColor} /></div>
   {#if !hideTone}
     <div class="tone-diagram">
       <ToneDiagram displayedPCCSList={displayedPCCSList()} isCard199={false} />

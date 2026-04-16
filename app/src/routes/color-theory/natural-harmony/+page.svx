@@ -20,16 +20,16 @@ draft: true
 
 ::::CardGrid
 :::TermCard
-<AnalyzedPalette pccsCSV="v9, dp10" />
+<AnalyzedPalette pccsCSV="v9, dp10" useToneColor />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="lt6, d4" />
+<AnalyzedPalette pccsCSV="lt6, d4" useToneColor />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="sf8, dk6" />
+<AnalyzedPalette pccsCSV="sf8, dk6" useToneColor />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="g24, ltg2" />
+<AnalyzedPalette pccsCSV="g24, ltg2" useToneColor />
 :::
 ::::
 
@@ -37,13 +37,13 @@ draft: true
 
 ::::CardGrid{firstWide}
 :::TermCard
-<AnalyzedPalette pccsCSV="d14, p16" />
+<AnalyzedPalette pccsCSV="d14, p16" useToneColor />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="b18, dk6" />
+<AnalyzedPalette pccsCSV="b18, dk6" useToneColor />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="dk2, v24" />
+<AnalyzedPalette pccsCSV="dk2, v24" useToneColor />
 :::
 ::::
 
@@ -51,18 +51,18 @@ draft: true
 
 ::::CardGrid{cols=1}
 :::TermCard
-<AnalyzedPalette pccsCSV="W, b24" />
+<AnalyzedPalette pccsCSV="W, b24" useToneColor />
 :::
 ::::
 
 ::::CardGrid{cols=1}
 :::TermCard
-<AnalyzedPalette pccsCSV="v1, v15" />
+<AnalyzedPalette pccsCSV="v1, v15" useToneColor />
 :::
 ::::
 
 ::::CardGrid{cols=1}
 :::TermCard
-<AnalyzedPalette pccsCSV="sf6, lt14" />
+<AnalyzedPalette pccsCSV="sf6, lt14" useToneColor />
 :::
 ::::
