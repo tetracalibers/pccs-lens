@@ -2,7 +2,7 @@
 
 <style>
   .draft-tag {
-    --_draft-color: light-dark(maroon, indianred);
+    --_draft-color: lightslategray;
 
     display: inline-flex;
     align-items: center;
