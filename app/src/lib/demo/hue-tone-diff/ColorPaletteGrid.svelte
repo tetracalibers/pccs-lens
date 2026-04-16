@@ -13,8 +13,8 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(0, 6rem));
     width: 100%;
-    max-width: 70%;
-    gap: 0.5rem;
+    max-width: 80%;
+    gap: 1rem;
     justify-items: center;
     justify-content: center;
   }

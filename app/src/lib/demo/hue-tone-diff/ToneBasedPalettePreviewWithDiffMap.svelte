@@ -407,5 +407,6 @@
 
   .pair {
     display: flex;
+    gap: 2px;
   }
 </style>

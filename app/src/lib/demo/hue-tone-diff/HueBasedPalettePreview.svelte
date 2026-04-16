@@ -26,5 +26,6 @@
 <style>
   .palette-preview {
     display: flex;
+    gap: 2px;
   }
 </style>
