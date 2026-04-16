@@ -4,15 +4,20 @@ title: カマイユとフォカマイユ
 
 grades: ["2"]
 basic: true
-
-draft: true
 ---
 
 <script>
   import AnalyzedPalette from '$lib/demo/color-palette/AnalyzedPalette.svelte'
 </script>
 
+ここでは、色相もトーンも近い色を組み合わせる、色を近似した配色を紹介します。
+
 ## :WithGradeTag[カマイユ配色]{grades="2"}
+
+カマイユ配色は、一見すると:Mark[単色]に見えるような、色相もトーンもかなり近似した配色です。
+カマイユとは、フランス語で「:Mark[単色画法]」を意味します。
+
+トーンは:Mark[同一]・:Mark[類似]トーンから選択し、色相もできるだけ近い:Mark[同一]・:Mark[類似]色相を選びます。
 
 ::::CardGrid{lastWide}
 :::TermCard
@@ -33,6 +38,11 @@ draft: true
 ::::
 
 ## :WithGradeTag[フォカマイユ配色]{grades="2"}
+
+フォカマイユ配色は、:Mark[カマイユ]配色よりも少しだけ色相やトーンに変化をつけた配色です。
+フォカマイユの「フォ」には、フランス語で「:Mark[まがいもの]」「:Mark[偽り]の」という意味があります。
+
+トーンはカマイユ配色と同様に:Mark[同一]・:Mark[類似]トーンから選択しますが、色相はカマイユ配色よりも差を広げ、:Mark[類似]色相から選ぶようにします。
 
 ::::CardGrid{lastWide}
 :::TermCard
