@@ -25,5 +25,6 @@
     text-decoration: underline;
     text-decoration-color: darkgray;
     text-decoration-thickness: 2px;
+    text-decoration-skip-ink: none;
   }
 </style>
