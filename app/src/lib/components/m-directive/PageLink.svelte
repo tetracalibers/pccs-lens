@@ -39,12 +39,12 @@
         {#if draft}
           <DraftTag />
         {/if}
-        {#if basic}
-          <GradeTag grade="basic" />
-        {/if}
         {#each gradesList as grade (grade)}
           <GradeTag {grade} />
         {/each}
+        {#if basic}
+          <GradeTag grade="basic" />
+        {/if}
       </span>
     {/if}
   </a>
