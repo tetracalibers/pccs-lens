@@ -125,7 +125,7 @@
       fill={HUE_COLORS[h]}
       stroke="white"
       stroke-width="0.5"
-      opacity={hasHighlights && !isHighlighted ? 0.45 : 1}
+      opacity={!isHighlighted ? 0.45 : 1}
     />
   {/each}
 
