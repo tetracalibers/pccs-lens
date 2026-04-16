@@ -18,6 +18,7 @@
   style:--_text-color={isLightBg ? "black" : "white"}
   class:--_white-tone={pccs === "W"}
   class:--_black-tone={pccs === "Bk"}
+  class:--_small-font={pccs.startsWith("Gy-")}
 >
   {isAnki ? "" : pccs}
 </div>
@@ -38,6 +39,10 @@
     font-size: 0.8rem;
     flex-shrink: 0;
     box-sizing: border-box;
+  }
+
+  .square.--_small-font {
+    font-size: 0.65rem;
   }
 
   .square.--_white-tone {
