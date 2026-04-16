@@ -1,0 +1,68 @@
+---
+layout: guide-content
+title: ナチュラルハーモニー
+
+grades: ["2"]
+basic: true
+
+draft: true
+---
+
+<script>
+  import AnalyzedPalette from '$lib/demo/color-palette/AnalyzedPalette.svelte'
+</script>
+
+## :WithGradeTag[色相の自然連鎖]{grades="2"}
+
+::ComingSoon
+
+## :WithGradeTag[ナチュラルハーモニー]{grades="2"}
+
+::::CardGrid
+:::TermCard
+<AnalyzedPalette pccsCSV="v9, dp10" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="lt6, d4" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="sf8, dk6" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="g24, ltg2" />
+:::
+::::
+
+## :WithGradeTag[コンプレックスハーモニー]{grades="2"}
+
+::::CardGrid{firstWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="d14, p16" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="b18, dk6" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dk2, v24" />
+:::
+::::
+
+## :WithGradeTag[どちらにも当てはまらない配色]{grades="2"}
+
+::::CardGrid{cols=1}
+:::TermCard
+<AnalyzedPalette pccsCSV="W, b24" />
+:::
+::::
+
+::::CardGrid{cols=1}
+:::TermCard
+<AnalyzedPalette pccsCSV="v1, v15" />
+:::
+::::
+
+::::CardGrid{cols=1}
+:::TermCard
+<AnalyzedPalette pccsCSV="sf6, lt14" />
+:::
+::::
