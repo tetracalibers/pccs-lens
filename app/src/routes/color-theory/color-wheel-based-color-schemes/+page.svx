@@ -12,7 +12,15 @@ draft: true
   import AnalyzedPalette from '$lib/demo/color-palette/AnalyzedPalette.svelte'
 </script>
 
+色相環を等分割した配色は、西洋の古典的な配色技法であり、色相を選ぶ際の参考になります。
+
 ## :WithGradeTag[ダイアード]{grades="2"}
+
+- ダイアードは、色相環上で:Mark[補色]の位置にある:Mark[2]色を使った配色
+- 色相環を:Mark[2]等分するため、PCCSでは色相差は:Mark[12]となる
+- 各色がお互いを引き立て合うような、ダイナミックで動きのあるイメージを演出できる
+- 同じ2色配色のビコロール配色とは異なり、ダイアードでは無彩色を使うことはできないが、トーンのコントラストによる明快さは必須ではない
+- 選ぶトーンによっては、穏やかな印象のダイアード配色もつくれる
 
 ::::CardGrid{lastWide}
 :::TermCard
@@ -31,6 +39,12 @@ draft: true
 
 ## :WithGradeTag[トライアド]{grades="2"}
 
+- トライアドは、色相環を:Mark[3]等分し、:Mark[正三角形]の頂点を結ぶように色相を選ぶ:Mark[3]色配色
+- 色相環を:Mark[3]等分するため、PCCSでは色相差は:Mark[8]となる
+- :Mark[色料]の三原色（:Mark[v8]・:Mark[v16]・:Mark[v24]）はトライアドの関係にある
+- 同じ3色配色のトリコロール配色とは異なり、トライアドでは無彩色を使うことはできないが、トーンのコントラストによる明快さは必須ではない
+- 選ぶトーンによっては、穏やかな印象のトライアド配色もつくれる
+
 ::::CardGrid{lastWide}
 :::TermCard
 <AnalyzedPalette pccsCSV="v24, v8, v16" hideTone />
@@ -47,6 +61,12 @@ draft: true
 ::::
 
 ## :WithGradeTag[スプリットコンプリメンタリー]{grades="2"}
+
+- スプリットコンプリメンタリーは、:Mark[補色]関係にある片方の色を直接使わず、その両隣（色相差:Mark[1]〜:Mark[2]）の色相を用いた:Mark[3]色配色
+- 1色対2色の関係にすることで、2色の方の色相の共通性が全体の統一感をつくり出す
+- 色相は:Mark[二等辺三角形]の頂点を結ぶ位置関係になる
+- スプリットは「:Mark[分裂]」を意味し、スプリットコンプリメンタリーは:Mark[分裂補色]配色とも呼ばれる
+- 明快なコントラストがありながら、それぞれの色相がもつ多彩なイメージを、単なる補色配色よりも強く演出できる
 
 ::::CardGrid{lastWide}
 :::TermCard
@@ -65,6 +85,11 @@ draft: true
 
 ## :WithGradeTag[テトラード]{grades="2"}
 
+- テトラードは、色相環を:Mark[4]等分し、:Mark[正方形]の頂点を結ぶように色相を選ぶ:Mark[4]色配色
+- 色相環を:Mark[4]等分するため、PCCSでは色相差は:Mark[6]となる
+- 向かい合う2色は:Mark[補色]の関係になる
+- リズミカルなイメージを演出できる
+
 ::::CardGrid{lastWide}
 :::TermCard
 <AnalyzedPalette pccsCSV="v4, v10, v16, v22" hideTone />
@@ -82,6 +107,10 @@ draft: true
 
 ## :WithGradeTag[ペンタード]{grades="2"}
 
+- ペンタードは、色相環を:Mark[5]等分し、:Mark[正五角形]の頂点を結ぶように色相を選ぶ:Mark[5]色配色
+- PCCSなど色相環を5等分することができない場合は、:Mark[トライアド]に白と黒を加えたものをペンタードとする
+- トライアドが持つ明快さに、白と黒が加わると、スッキリとしたイメージを演出できる
+
 ::::CardGrid{lastWide}
 :::TermCard
 <AnalyzedPalette pccsCSV="v3, v6, v12, v23, v18" hideTone />
@@ -92,6 +121,10 @@ draft: true
 ::::
 
 ## :WithGradeTag[ヘクサード]{grades="2"}
+
+- ヘクサードは、色相環を:Mark[6]等分し、:Mark[正六角形]の頂点を結ぶように色相を選ぶ:Mark[6]色配色
+- 色相環を:Mark[6]等分するため、PCCSでは色相差は:Mark[4]となる
+- :Mark[テトラード]に白と黒を加えてヘクサードをつくることもできる
 
 ::::CardGrid{lastWide}
 :::TermCard
