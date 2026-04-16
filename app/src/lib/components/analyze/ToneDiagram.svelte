@@ -144,7 +144,9 @@
       {@const showHatch = isSCell && isCard199 && !isUsed}
       {@const fillColor = isUsed ? cell.usedColors[0].hex : "var(--cell-empty-fill)"}
       {@const strokeColor = isUsed
-        ? `oklch(from ${cell.usedColors[0].hex} calc(l * .85) c h)`
+        ? cell.label === "W"
+          ? "rgb(from var(--color-body) r g b / 0.75)"
+          : `oklch(from ${cell.usedColors[0].hex} calc(l * .85) c h)`
         : "var(--cell-empty-stroke)"}
       {@const strokeWidth = isUsed ? 1.5 : 1}
       {@const labelFill = isUsed
