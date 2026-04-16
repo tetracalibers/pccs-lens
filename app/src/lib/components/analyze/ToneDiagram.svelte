@@ -151,14 +151,12 @@
         ? isLightColor(cell.usedColors[0].hex)
           ? `oklch(from ${cell.usedColors[0].hex} calc(l - .60) c h)`
           : `oklch(from ${cell.usedColors[0].hex} calc(l + .60) c h);`
-        : isSCell && isCard199
-          ? "#bbb"
-          : "var(--color-body)"}
+        : "var(--color-body)"}
       {@const strokeOpacity = isUsed ? 1 : isSCell && isCard199 ? 0.5 : 0.6}
       {@const cellOpacity = isSCell && isCard199 && !isUsed ? 0.5 : 1}
+      {@const textOpacity = isUsed ? 1 : showHatch ? 0.5 : 0.6}
 
       <g
-        opacity={cellOpacity}
         role={isUsed ? "img" : undefined}
         aria-label={isUsed
           ? `${cell.label}: ${cell.usedColors.map((c) => c.notation).join(", ")}`
@@ -176,6 +174,7 @@
             cx={cell.cx}
             cy={cell.cy}
             r={CIRCLE_R}
+            opacity={cellOpacity}
             fill={fillColor}
             stroke={strokeColor}
             stroke-width={strokeWidth}
@@ -187,6 +186,7 @@
             y={cell.cy - RECT_H / 2}
             width={RECT_W}
             height={RECT_H}
+            opacity={cellOpacity}
             fill={fillColor}
             stroke={strokeColor}
             stroke-width={strokeWidth}
@@ -199,6 +199,7 @@
             y1={cell.cy - CIRCLE_R}
             x2={cell.cx - CIRCLE_R}
             y2={cell.cy + CIRCLE_R}
+            opacity={cellOpacity}
             stroke="var(--hatch-stroke)"
             stroke-width="1.5"
             clip-path="url(#hatch-clip)"
@@ -212,7 +213,7 @@
           dominant-baseline="central"
           font-family="var(--font-mono)"
           font-size={isUsed ? 11 : 10}
-          style={`pointer-events: none; user-select: none; fill: ${labelFill}; fill-opacity: ${strokeOpacity};`}
+          style={`pointer-events: none; user-select: none; fill: ${labelFill}; fill-opacity: ${textOpacity};`}
         >
           {cell.label}
         </text>
