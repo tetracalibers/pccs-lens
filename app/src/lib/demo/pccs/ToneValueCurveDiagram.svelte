@@ -137,7 +137,7 @@
             text-anchor="middle"
             dominant-baseline="central"
             font-family="var(--font-mono)"
-            font-size="10"
+            font-size={p.color.notation.length <= 3 ? 12 : 10}
             fill={textColor}
             style="pointer-events: none; user-select: none;"
           >
@@ -154,12 +154,14 @@
     width: 100%;
     padding-inline: 1rem;
     padding-block: 2rem;
+    box-sizing: border-box;
     overflow-x: auto;
   }
 
   svg {
     display: block;
-    max-height: 600px;
+    max-height: 550px;
     width: auto;
+    margin-inline: auto;
   }
 </style>
