@@ -1,10 +1,16 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
 
-  let { children, maxW }: { children: Snippet; maxW?: number } = $props()
+  interface Props {
+    children: Snippet
+    maxW?: number
+    style?: string
+  }
+
+  let { children, maxW, style }: Props = $props()
 </script>
 
-<div class="svg-wrapper" style:--_max-w={maxW ? `${maxW}px` : "none"}>
+<div class="svg-wrapper" style:--_max-w={maxW ? `${maxW}px` : "none"} {style}>
   {@render children()}
 </div>
 
