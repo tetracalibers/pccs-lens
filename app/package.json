@@ -15,7 +15,8 @@
     "test:unit": "vitest",
     "test": "npm run test:unit -- --run",
     "deploy": "npm run build && wrangler deploy",
-    "cf-typegen": "wrangler types"
+    "cf-typegen": "wrangler types",
+    "data:pccs-approx": "node scripts/add-pccs-approximations.mjs && prettier --write src/lib/data/jis_colors.json"
   },
   "devDependencies": {
     "@eslint/compat": "^2.0.2",
