@@ -1,0 +1,112 @@
+[
+  {
+    "id": "red",
+    "name": "赤系",
+    "subcategories": [
+      {
+        "id": "pink-red-purple",
+        "name": "ピンク・赤紫系"
+      },
+      {
+        "id": "orange-red",
+        "name": "オレンジ・赤系"
+      }
+    ]
+  },
+  {
+    "id": "brown",
+    "name": "茶系",
+    "subcategories": [
+      {
+        "id": "yellow-red-light-brown",
+        "name": "黄赤寄りの明るい茶系"
+      },
+      {
+        "id": "yellow-green-brown",
+        "name": "黄緑寄りの茶系"
+      },
+      {
+        "id": "yellow-red-dark-brown",
+        "name": "黄赤寄りの暗い茶系"
+      }
+    ]
+  },
+  {
+    "id": "yellow",
+    "name": "黄系",
+    "subcategories": [
+      {
+        "id": "light-yellow",
+        "name": "薄めの黄系"
+      },
+      {
+        "id": "dark-yellow",
+        "name": "濃いめの黄系"
+      }
+    ]
+  },
+  {
+    "id": "green",
+    "name": "緑系",
+    "subcategories": [
+      {
+        "id": "yellow-green",
+        "name": "黄緑系"
+      },
+      {
+        "id": "light-blue-green",
+        "name": "薄めの緑・青緑系"
+      },
+      {
+        "id": "dark-blue-green",
+        "name": "濃いめの緑・青緑系"
+      }
+    ]
+  },
+  {
+    "id": "blue",
+    "name": "青系",
+    "subcategories": [
+      {
+        "id": "water-light-blue-green",
+        "name": "水色・薄めの青緑系"
+      },
+      {
+        "id": "blue-green",
+        "name": "青緑・青系"
+      },
+      {
+        "id": "blue-purple",
+        "name": "青紫系"
+      }
+    ]
+  },
+  {
+    "id": "purple",
+    "name": "紫系",
+    "subcategories": [
+      {
+        "id": "light-purple-blue-purple",
+        "name": "薄紫・青紫系"
+      },
+      {
+        "id": "dark-purple-red-purple",
+        "name": "濃い紫・赤紫系"
+      }
+    ]
+  },
+  {
+    "id": "neutral",
+    "name": "無彩色系",
+    "subcategories": [
+      {
+        "id": "off-neutral",
+        "name": "準無彩色"
+      },
+      {
+        "id": "neutral-gray",
+        "name": "無彩色・灰色系"
+      }
+    ]
+  }
+]
