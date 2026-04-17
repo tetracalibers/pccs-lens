@@ -7,7 +7,7 @@ export type PCCSColor = {
   hueNumber: number | null
   isNeutral: boolean
   achromaticBucket: AchromaticBucket | null
-  munsell: string | null
+  munsell: string | null // 奇数番号の色相など、一般的ではない色はマンセル値データが見つからないため、nullの可能性がある
 }
 
 export type JISColor = {
