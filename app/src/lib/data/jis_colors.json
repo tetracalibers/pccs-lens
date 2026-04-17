@@ -3,762 +3,889 @@
     "name": "桜色",
     "reading": "さくらいろ",
     "hex": "#fdeeef",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "10RP 9/2.5"
   },
   {
     "name": "紅梅色",
     "reading": "こうばいいろ",
     "hex": "#f3a7a5",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "2.5R 6.5/7.5"
   },
   {
     "name": "鴇色",
     "reading": "ときいろ",
     "hex": "#f4b3c2",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "7RP 7.5/8"
   },
   {
     "name": "珊瑚色",
     "reading": "さんごいろ",
     "hex": "#f4ada3",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "2.5R 7/11"
   },
   {
     "name": "ローズピンク",
     "reading": "rose pink",
     "hex": "#f29c9f",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "10RP 7/8"
   },
   {
     "name": "オールドローズ",
     "reading": "old rose",
     "hex": "#da8d93",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "1R 6/6.5"
   },
   {
     "name": "ベビーピンク",
     "reading": "baby pink",
     "hex": "#fadbda",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "4R 8.5/4"
   },
   {
     "name": "サーモンピンク",
     "reading": "salmon pink",
     "hex": "#f4a583",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "8R 7.5/7.5"
   },
   {
     "name": "韓紅色",
     "reading": "からくれないいろ",
     "hex": "#e95464",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "1.5R 5.5/13"
   },
   {
     "name": "朱色",
     "reading": "しゅいろ",
     "hex": "#e94709",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "6R 5.5/14"
   },
   {
     "name": "牡丹色",
     "reading": "ぼたんいろ",
     "hex": "#e55a9b",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "3RP 5/14"
   },
   {
     "name": "バーミリオン",
     "reading": "vermilion",
     "hex": "#eb613b",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "6R 5.5/14"
   },
   {
     "name": "カーマイン",
     "reading": "carmine",
     "hex": "#d7003a",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "4R 4/14"
   },
   {
     "name": "スカーレット",
     "reading": "scarlet",
     "hex": "#ea5539",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "7R 5/14"
   },
   {
     "name": "茜色",
     "reading": "あかねいろ",
     "hex": "#b7282d",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "4R 3.5/11"
   },
   {
     "name": "蘇芳",
     "reading": "すおう",
     "hex": "#9e3d3e",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "4R 4/7"
   },
   {
     "name": "ポピーレッド",
     "reading": "poppy red",
     "hex": "#e9474d",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "4R 5/14"
   },
   {
     "name": "ワインレッド",
     "reading": "wine red",
     "hex": "#932e44",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "10RP 3/9"
   },
   {
     "name": "ボルドー",
     "reading": "bordeaux",
     "hex": "#600f18",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "2.5R 2.5/3"
   },
   {
     "name": "バーガンディー",
     "reading": "burgundy",
     "hex": "#561620",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "10RP 2/2.5"
   },
   {
     "name": "黄丹",
     "reading": "おうに",
     "hex": "#ee7948",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "10R 6/12"
   },
   {
     "name": "柑子色",
     "reading": "こうじいろ",
     "hex": "#f6ad48",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "5.5YR 7.5/9"
   },
   {
     "name": "山吹色",
     "reading": "やまぶきいろ",
     "hex": "#f8b500",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "10YR 7.5/13"
   },
   {
     "name": "ピーチ",
     "reading": "peach",
     "hex": "#fbd8b5",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "3YR 8/3.5"
   },
   {
     "name": "マリーゴールド",
     "reading": "marigold",
     "hex": "#f39800",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "8YR 7.5/13"
   },
   {
     "name": "オリーブ",
     "reading": "olive",
     "hex": "#72640a",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "7.5Y 3.5/4"
   },
   {
     "name": "刈安色",
     "reading": "かりやすいろ",
     "hex": "#f5e56b",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "7Y 8.5/7"
   },
   {
     "name": "黄蘗色",
     "reading": "きはだいろ",
     "hex": "#fef263",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "9Y 8/8"
   },
   {
     "name": "鬱金色",
     "reading": "うこんいろ",
     "hex": "#fabf13",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "2Y 7.5/12"
   },
   {
     "name": "芥子色",
     "reading": "からしいろ",
     "hex": "#d2b74e",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "3Y 7/6"
   },
   {
     "name": "ゴールデンイエロー",
     "reading": "golden yellow",
     "hex": "#f8b856",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "7.5YR 7/10"
   },
   {
     "name": "ネープルスイエロー",
     "reading": "naples yellow",
     "hex": "#fdd75c",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "2.5Y 8/7.5"
   },
   {
     "name": "ジョンブリアン",
     "reading": "jaune brillant",
     "hex": "#ffdc00",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "5Y 8.5/14"
   },
   {
     "name": "レモンイエロー",
     "reading": "lemon yellow",
     "hex": "#fff33f",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "8Y 8/12"
   },
   {
     "name": "カナリヤ",
     "reading": "canary yellow",
     "hex": "#fff262",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "7Y 8.5/10"
   },
   {
     "name": "クリームイエロー",
     "reading": "cream yellow",
     "hex": "#fff2b8",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "5Y 8.5/3.5"
   },
   {
     "name": "ブロンド",
     "reading": "blond",
     "hex": "#f7dc8d",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "2Y 7.5/7"
   },
   {
     "name": "萌黄",
     "reading": "もえぎ",
     "hex": "#afd147",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "4GY 6.5/9"
   },
   {
     "name": "若竹色",
     "reading": "わかたけいろ",
     "hex": "#67be8d",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "6G 6/7.5"
   },
   {
     "name": "海松色",
     "reading": "みるいろ",
     "hex": "#726d3f",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "9.5Y 4.5/2.5"
   },
   {
     "name": "常磐色",
     "reading": "ときわいろ",
     "hex": "#007c45",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "3G 4.5/7"
   },
   {
     "name": "松葉色",
     "reading": "まつばいろ",
     "hex": "#839a5c",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "7.5GY 5/4"
   },
   {
     "name": "青磁色",
     "reading": "せいじいろ",
     "hex": "#68b7a1",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "7.5G 6.5/4"
   },
   {
     "name": "緑青色",
     "reading": "ろくしょういろ",
     "hex": "#4f8a5d",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "4G 5/4"
   },
   {
     "name": "鶯色",
     "reading": "うぐいすいろ",
     "hex": "#9d973b",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "1GY 4.5/3.5"
   },
   {
     "name": "鶸色",
     "reading": "ひわいろ",
     "hex": "#d7cf3a",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "1GY 7.5/8"
   },
   {
     "name": "リーフグリーン",
     "reading": "leaf green",
     "hex": "#9dc04c",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "5GY 6/7"
   },
   {
     "name": "グラスグリーン",
     "reading": "grass green",
     "hex": "#7b8d41",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "5GY 5/5"
   },
   {
     "name": "アップルグリーン",
     "reading": "apple green",
     "hex": "#a2cc89",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "10GY 8/5"
   },
   {
     "name": "オリーブグリーン",
     "reading": "olive green",
     "hex": "#5f651e",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "2.5GY 3.5/3"
   },
   {
     "name": "マラカイトグリーン",
     "reading": "malachite green",
     "hex": "#009854",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "4G 4.5/9"
   },
   {
     "name": "コバルトグリーン",
     "reading": "cobalt green",
     "hex": "#3ab483",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "4G 7/9"
   },
   {
     "name": "ビリジアン",
     "reading": "viridian",
     "hex": "#008969",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "8G 4/6"
   },
   {
     "name": "エメラルドグリーン",
     "reading": "emerald green",
     "hex": "#00aa6e",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "4G 6/8"
   },
   {
     "name": "シャルトルーズグリーン",
     "reading": "chartreuse green",
     "hex": "#d9e367",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "4GY 5/10"
   },
   {
     "name": "ミントグリーン",
     "reading": "mint green",
     "hex": "#98ce97",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "2.5G 7.5/8"
   },
   {
     "name": "ボトルグリーン",
     "reading": "bottle green",
     "hex": "#005635",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "5G 2.5/3"
   },
   {
     "name": "ピーコックグリーン",
     "reading": "peacock green",
     "hex": "#00a496",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "7.5BG 4.5/9"
   },
   {
     "name": "空色",
     "reading": "そらいろ",
     "hex": "#a0d8ef",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "9B 7.5/5.5"
   },
   {
     "name": "瑠璃色",
     "reading": "るりいろ",
     "hex": "#1d50a2",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "6PB 3/8"
   },
   {
     "name": "群青色",
     "reading": "ぐんじょういろ",
     "hex": "#4e67b0",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "7.5PB 3.5/11"
   },
   {
     "name": "藍色",
     "reading": "あいいろ",
     "hex": "#0f5779",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "2PB 3/5"
   },
   {
     "name": "甕覗き",
     "reading": "かめのぞき",
     "hex": "#a2d7dd",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "4.5B 7/4"
   },
   {
     "name": "縹色",
     "reading": "はなだいろ",
     "hex": "#2980af",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "3PB 4/7.5"
   },
   {
     "name": "納戸色",
     "reading": "なんどいろ",
     "hex": "#007d92",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "4B 4/6"
   },
   {
     "name": "鉄色",
     "reading": "てついろ",
     "hex": "#005242",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "2.5BG 2.5/2.5"
   },
   {
     "name": "浅葱色",
     "reading": "あさぎいろ",
     "hex": "#00a1ae",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "2.5B 5/8"
   },
   {
     "name": "新橋色",
     "reading": "しんばしいろ",
     "hex": "#64bcc7",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "2.5B 6.5/5.5"
   },
   {
     "name": "スカイブルー",
     "reading": "sky blue",
     "hex": "#a0d8ef",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "9B 7.5/5.5"
   },
   {
     "name": "ミッドナイトブルー",
     "reading": "midnight blue",
     "hex": "#001d42",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "5PB 1.5/2"
   },
   {
     "name": "ウルトラマリンブルー",
     "reading": "ultramarine blue",
     "hex": "#4052a2",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "7.5PB 3.5/11"
   },
   {
     "name": "ターコイズブルー",
     "reading": "turquoise blue",
     "hex": "#00afcc",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "5B 6/8"
   },
   {
     "name": "ベビーブルー",
     "reading": "baby blue",
     "hex": "#bbe2f1",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "10B 7.5/3"
   },
   {
     "name": "コバルトブルー",
     "reading": "cobalt blue",
     "hex": "#0068b7",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "3PB 4/10"
   },
   {
     "name": "セルリアンブルー",
     "reading": "cerulean blue",
     "hex": "#008db7",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "9B 4.5/9"
   },
   {
     "name": "シアン",
     "reading": "cyan",
     "hex": "#00a0e9",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "7.5B 6/10"
   },
   {
     "name": "マリンブルー",
     "reading": "marine blue",
     "hex": "#006788",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "5B 3/7"
   },
   {
     "name": "ネイビーブルー",
     "reading": "navy blue",
     "hex": "#1f2e55",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "6PB 2.5/4"
   },
   {
     "name": "サックスブルー",
     "reading": "saxe blue",
     "hex": "#3a8daa",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "1PB 5/4.5"
   },
   {
     "name": "ナイルブルー",
     "reading": "nile blue",
     "hex": "#259f94",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "10BG 5.5/5"
   },
   {
     "name": "マゼンタ",
     "reading": "magenta",
     "hex": "#e4007f",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "5RP 5/14"
   },
   {
     "name": "江戸紫",
     "reading": "えどむらさき",
     "hex": "#734e95",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "3P 3.5/7"
   },
   {
     "name": "古代紫",
     "reading": "こだいむらさき",
     "hex": "#895687",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "7.5P 4/6"
   },
   {
     "name": "藤色",
     "reading": "ふじいろ",
     "hex": "#bbb7da",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "10PB 6.5/6.5"
   },
   {
     "name": "桔梗色",
     "reading": "ききょういろ",
     "hex": "#5654a2",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "9PB 3.5/13"
   },
   {
     "name": "杜若色",
     "reading": "かきつばたいろ",
     "hex": "#4d4398",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "7PB 4/10"
   },
   {
     "name": "菖蒲色",
     "reading": "あやめいろ",
     "hex": "#cc7db1",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "10P 6/10"
   },
   {
     "name": "茄子紺",
     "reading": "なすこん",
     "hex": "#4b1a47",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "7.5P 2.5/2.5"
   },
   {
     "name": "モーブ",
     "reading": "mauve",
     "hex": "#915da3",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "5P 4.5/9"
   },
   {
     "name": "バイオレット",
     "reading": "violet",
     "hex": "#714f9d",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "2.5P 4/11"
   },
   {
     "name": "パープル",
     "reading": "purple",
     "hex": "#9b68a9",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "7.5P 5/12"
   },
   {
     "name": "ライラック",
     "reading": "lilac",
     "hex": "#d1bada",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "6P 7/6"
   },
   {
     "name": "ウイスタリア",
     "reading": "wistaria",
     "hex": "#8e8bc2",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "10PB 5/12"
   },
   {
     "name": "ラベンダー",
     "reading": "lavender",
     "hex": "#c5b3d3",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "5P 6/3"
   },
   {
     "name": "黄土色",
     "reading": "おうどいろ",
     "hex": "#c39043",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "10YR 6/7.5"
   },
   {
     "name": "代赭",
     "reading": "たいしゃ",
     "hex": "#bb541f",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "2.5YR 5/8.5"
   },
   {
     "name": "弁柄色",
     "reading": "べんがらいろ",
     "hex": "#8f2d12",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "8R 3.5/7"
   },
   {
     "name": "朽葉色",
     "reading": "くちばいろ",
     "hex": "#917347",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "10YR 5/2"
   },
   {
     "name": "煤竹色",
     "reading": "すすたけいろ",
     "hex": "#6b5146",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "9.5YR 3.5/1.5"
   },
   {
     "name": "檜皮色",
     "reading": "ひわだいろ",
     "hex": "#965036",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "1YR 4.5/4"
   },
   {
     "name": "栗色",
     "reading": "くりいろ",
     "hex": "#762e05",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "2YR 3.5/4"
   },
   {
     "name": "海老茶",
     "reading": "えびちゃ",
     "hex": "#814336",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "8R 3/4.5"
   },
   {
     "name": "鳶色",
     "reading": "とびいろ",
     "hex": "#8b4239",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "7.5R 3.5/5"
   },
   {
     "name": "琥珀色",
     "reading": "こはくいろ",
     "hex": "#bf7834",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "8YR 5.5/6.5"
   },
   {
     "name": "煉瓦色",
     "reading": "れんがいろ",
     "hex": "#a2482b",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "10R 4/7"
   },
   {
     "name": "ローシェンナ",
     "reading": "raw sienna",
     "hex": "#d98032",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "4YR 5/9"
   },
   {
     "name": "バーントシェンナ",
     "reading": "burnt sienna",
     "hex": "#b25532",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "10R 4.5/7.5"
   },
   {
     "name": "ローアンバー",
     "reading": "raw umber",
     "hex": "#916f24",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "2.5Y 4/6"
   },
   {
     "name": "バーントアンバー",
     "reading": "burnt umber",
     "hex": "#7a5e3d",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "10YR 3/3"
   },
   {
     "name": "セピア",
     "reading": "sepia",
     "hex": "#6f4e27",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "10YR 2.5/2"
   },
   {
     "name": "カーキー",
     "reading": "khaki",
     "hex": "#bb9855",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "1Y 5/5.5"
   },
   {
     "name": "ベージュ",
     "reading": "beige",
     "hex": "#eedcb3",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "10YR 7/2.5"
   },
   {
     "name": "エクルベージュ",
     "reading": "ecru beige",
     "hex": "#f8eacf",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "7.5YR 8.5/4"
   },
   {
     "name": "タン",
     "reading": "tan",
     "hex": "#c1813f",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "6YR 5/6"
   },
   {
     "name": "マルーン",
     "reading": "maroon",
     "hex": "#6a1816",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "5R 2.5/6"
   },
   {
     "name": "テラコッタ",
     "reading": "terracotta",
     "hex": "#be6d55",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "7.5R 4.5/8"
   },
   {
     "name": "チョコレート",
     "reading": "chocholate",
     "hex": "#612c16",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "10R 2.5/2.5"
   },
   {
     "name": "アンバー",
     "reading": "amber",
     "hex": "#c28953",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "8YR 5.5/6.5"
   },
   {
     "name": "生成り色",
     "reading": "きなりいろ",
     "hex": "#fbfaf3",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "10YR 9/1"
   },
   {
     "name": "茶鼠",
     "reading": "ちゃねず",
     "hex": "#a99e93",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "5YR 6/1"
   },
   {
     "name": "銀鼠",
     "reading": "ぎんねず",
     "hex": "#afafb0",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "N6.5"
   },
   {
     "name": "利休鼠",
     "reading": "りきゅうねず",
     "hex": "#7b8174",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "5.5Y 5.5/2.5"
   },
   {
     "name": "アイボリー",
     "reading": "ivory",
     "hex": "#f8f5e3",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "2.5Y 8.5/1.5"
   },
   {
     "name": "シルバーグレー",
     "reading": "silver grey",
     "hex": "#afafb0",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "N6.5"
   },
   {
     "name": "スレートグレー",
     "reading": "slate grey",
     "hex": "#636062",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "2.5PB 3.5/0.5"
   },
   {
     "name": "チャコールグレー",
     "reading": "charcoal grey",
     "hex": "#4e4449",
-    "examLevel": 3
+    "examLevel": 3,
+    "munsell": "5P 3/1"
   },
   {
     "name": "ランプブラック",
     "reading": "lamp black",
     "hex": "#24130d",
-    "examLevel": 2
+    "examLevel": 2,
+    "munsell": "N1"
   }
 ]

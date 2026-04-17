@@ -15,6 +15,7 @@ export type JISColor = {
   reading: string
   hex: string
   examLevel: 2 | 3 | null
+  munsell: string
 }
 
 export type ApproximateResult = {
