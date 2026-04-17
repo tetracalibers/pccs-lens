@@ -10,6 +10,7 @@ draft: true
 
 <script>
   import AnalyzedPalette from '$lib/demo/color-palette/AnalyzedPalette.svelte'
+  import ToneValueCurveDiagram from '$lib/demo/pccs/ToneValueCurveDiagram.svelte'
 </script>
 
 ## :WithGradeTag[色相の自然連鎖]{grades="2"}
@@ -118,3 +119,5 @@ TODO
 - 同じトーン内で配色を考えると、ほとんどがナチュラルハーモニーになる
 - 逆に、同じトーン内の色を使ってコンプレックスハーモニーをつくることはできない
 - それは、PCCSのトーンの中の色の序列が色相の自然連鎖に従って並んでいるため
+
+<ToneValueCurveDiagram></ToneValueCurveDiagram>
