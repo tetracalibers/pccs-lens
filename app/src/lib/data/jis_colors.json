@@ -21,7 +21,8 @@
         "notation": "Gy-8.5",
         "deltaE": 9.19
       }
-    ]
+    ],
+    "id": "sakura-iro"
   },
   {
     "name": "紅梅色",
@@ -37,7 +38,8 @@
         "notation": "p3",
         "deltaE": 3.67
       }
-    ]
+    ],
+    "id": "kobai-iro"
   },
   {
     "name": "鴇色",
@@ -53,7 +55,8 @@
         "notation": "p2",
         "deltaE": 1.3
       }
-    ]
+    ],
+    "id": "toki-iro"
   },
   {
     "name": "珊瑚色",
@@ -69,7 +72,8 @@
         "notation": "p3",
         "deltaE": 4.13
       }
-    ]
+    ],
+    "id": "sango-iro"
   },
   {
     "name": "ローズピンク",
@@ -93,7 +97,8 @@
         "notation": "ltg3",
         "deltaE": 8.56
       }
-    ]
+    ],
+    "id": "rose-pink"
   },
   {
     "name": "オールドローズ",
@@ -117,7 +122,8 @@
         "notation": "lt1",
         "deltaE": 9.09
       }
-    ]
+    ],
+    "id": "old-rose"
   },
   {
     "name": "ベビーピンク",
@@ -133,7 +139,8 @@
         "notation": "p4",
         "deltaE": 9.22
       }
-    ]
+    ],
+    "id": "baby-pink"
   },
   {
     "name": "サーモンピンク",
@@ -149,7 +156,8 @@
         "notation": "lt5",
         "deltaE": 3.89
       }
-    ]
+    ],
+    "id": "salmon-pink"
   },
   {
     "name": "韓紅色",
@@ -173,7 +181,8 @@
         "notation": "sf3",
         "deltaE": 5.97
       }
-    ]
+    ],
+    "id": "karakurenai-iro"
   },
   {
     "name": "朱色",
@@ -197,7 +206,8 @@
         "notation": "v5",
         "deltaE": 6.2
       }
-    ]
+    ],
+    "id": "shu-iro"
   },
   {
     "name": "牡丹色",
@@ -217,7 +227,8 @@
         "notation": "lt24",
         "deltaE": 4.31
       }
-    ]
+    ],
+    "id": "botan-iro"
   },
   {
     "name": "バーミリオン",
@@ -237,7 +248,8 @@
         "notation": "v4",
         "deltaE": 5.18
       }
-    ]
+    ],
+    "id": "vermilion"
   },
   {
     "name": "カーマイン",
@@ -257,7 +269,8 @@
         "notation": "s2",
         "deltaE": 5.02
       }
-    ]
+    ],
+    "id": "carmine"
   },
   {
     "name": "スカーレット",
@@ -273,7 +286,8 @@
         "notation": "b4",
         "deltaE": 2.97
       }
-    ]
+    ],
+    "id": "scarlet"
   },
   {
     "name": "茜色",
@@ -289,7 +303,8 @@
         "notation": "s2",
         "deltaE": 3.38
       }
-    ]
+    ],
+    "id": "akane-iro"
   },
   {
     "name": "蘇芳",
@@ -309,7 +324,8 @@
         "notation": "d4",
         "deltaE": 4.69
       }
-    ]
+    ],
+    "id": "suo"
   },
   {
     "name": "ポピーレッド",
@@ -325,7 +341,8 @@
         "notation": "b2",
         "deltaE": 3.03
       }
-    ]
+    ],
+    "id": "poppy-red"
   },
   {
     "name": "ワインレッド",
@@ -345,7 +362,8 @@
         "notation": "s1",
         "deltaE": 5.84
       }
-    ]
+    ],
+    "id": "wine-red"
   },
   {
     "name": "ボルドー",
@@ -369,7 +387,8 @@
         "notation": "dk1",
         "deltaE": 8.39
       }
-    ]
+    ],
+    "id": "bordeaux"
   },
   {
     "name": "バーガンディー",
@@ -393,7 +412,8 @@
         "notation": "dk3",
         "deltaE": 6.99
       }
-    ]
+    ],
+    "id": "burgundy"
   },
   {
     "name": "黄丹",
@@ -417,7 +437,8 @@
         "notation": "sf5",
         "deltaE": 6.11
       }
-    ]
+    ],
+    "id": "oni"
   },
   {
     "name": "柑子色",
@@ -441,7 +462,8 @@
         "notation": "sf7",
         "deltaE": 7.9
       }
-    ]
+    ],
+    "id": "koji-iro"
   },
   {
     "name": "山吹色",
@@ -465,7 +487,8 @@
         "notation": "sf7",
         "deltaE": 8.56
       }
-    ]
+    ],
+    "id": "yamabuki-iro"
   },
   {
     "name": "ピーチ",
@@ -481,7 +504,8 @@
         "notation": "p5",
         "deltaE": 1.6
       }
-    ]
+    ],
+    "id": "peach"
   },
   {
     "name": "マリーゴールド",
@@ -497,7 +521,8 @@
         "notation": "b6",
         "deltaE": 3.01
       }
-    ]
+    ],
+    "id": "marigold"
   },
   {
     "name": "オリーブ",
@@ -517,7 +542,8 @@
         "notation": "dk9",
         "deltaE": 6.16
       }
-    ]
+    ],
+    "id": "olive"
   },
   {
     "name": "刈安色",
@@ -533,7 +559,8 @@
         "notation": "lt8",
         "deltaE": 2.86
       }
-    ]
+    ],
+    "id": "kariyasu-iro"
   },
   {
     "name": "黄蘗色",
@@ -553,7 +580,8 @@
         "notation": "b8",
         "deltaE": 3.78
       }
-    ]
+    ],
+    "id": "kihada-iro"
   },
   {
     "name": "鬱金色",
@@ -573,7 +601,8 @@
         "notation": "v7",
         "deltaE": 3.94
       }
-    ]
+    ],
+    "id": "ukon-iro"
   },
   {
     "name": "芥子色",
@@ -589,7 +618,8 @@
         "notation": "sf8",
         "deltaE": 2.7
       }
-    ]
+    ],
+    "id": "karashi-iro"
   },
   {
     "name": "ゴールデンイエロー",
@@ -613,7 +643,8 @@
         "notation": "lt7",
         "deltaE": 8.61
       }
-    ]
+    ],
+    "id": "golden-yellow"
   },
   {
     "name": "ネープルスイエロー",
@@ -637,7 +668,8 @@
         "notation": "v7",
         "deltaE": 5.64
       }
-    ]
+    ],
+    "id": "naples-yellow"
   },
   {
     "name": "ジョンブリアン",
@@ -653,7 +685,8 @@
         "notation": "v8",
         "deltaE": 3.06
       }
-    ]
+    ],
+    "id": "jaune-brillant"
   },
   {
     "name": "レモンイエロー",
@@ -669,7 +702,8 @@
         "notation": "b8",
         "deltaE": 0.83
       }
-    ]
+    ],
+    "id": "lemon-yellow"
   },
   {
     "name": "カナリヤ",
@@ -689,7 +723,8 @@
         "notation": "b8",
         "deltaE": 3.65
       }
-    ]
+    ],
+    "id": "canary-yellow"
   },
   {
     "name": "クリームイエロー",
@@ -705,7 +740,8 @@
         "notation": "p7",
         "deltaE": 1.87
       }
-    ]
+    ],
+    "id": "cream-yellow"
   },
   {
     "name": "ブロンド",
@@ -725,7 +761,8 @@
         "notation": "p6",
         "deltaE": 4.34
       }
-    ]
+    ],
+    "id": "blond"
   },
   {
     "name": "萌黄",
@@ -749,7 +786,8 @@
         "notation": "lt10",
         "deltaE": 4.77
       }
-    ]
+    ],
+    "id": "moegi"
   },
   {
     "name": "若竹色",
@@ -765,7 +803,8 @@
         "notation": "lt13",
         "deltaE": 2.2
       }
-    ]
+    ],
+    "id": "wakatake-iro"
   },
   {
     "name": "海松色",
@@ -789,7 +828,8 @@
         "notation": "d10",
         "deltaE": 7.45
       }
-    ]
+    ],
+    "id": "miru-iro"
   },
   {
     "name": "常磐色",
@@ -813,7 +853,8 @@
         "notation": "d13",
         "deltaE": 5.11
       }
-    ]
+    ],
+    "id": "tokiwa-iro"
   },
   {
     "name": "松葉色",
@@ -837,7 +878,8 @@
         "notation": "d11",
         "deltaE": 9.58
       }
-    ]
+    ],
+    "id": "matsuba-iro"
   },
   {
     "name": "青磁色",
@@ -853,7 +895,8 @@
         "notation": "lt14",
         "deltaE": 3.33
       }
-    ]
+    ],
+    "id": "seiji-iro"
   },
   {
     "name": "緑青色",
@@ -877,7 +920,8 @@
         "notation": "s12",
         "deltaE": 7
       }
-    ]
+    ],
+    "id": "rokusho-iro"
   },
   {
     "name": "鶯色",
@@ -897,7 +941,8 @@
         "notation": "d9",
         "deltaE": 6.32
       }
-    ]
+    ],
+    "id": "uguisu-iro"
   },
   {
     "name": "鶸色",
@@ -921,7 +966,8 @@
         "notation": "sf9",
         "deltaE": 7.17
       }
-    ]
+    ],
+    "id": "hiwa-iro"
   },
   {
     "name": "リーフグリーン",
@@ -945,7 +991,8 @@
         "notation": "lt10",
         "deltaE": 7.39
       }
-    ]
+    ],
+    "id": "leaf-green"
   },
   {
     "name": "グラスグリーン",
@@ -969,7 +1016,8 @@
         "notation": "d11",
         "deltaE": 7.21
       }
-    ]
+    ],
+    "id": "grass-green"
   },
   {
     "name": "アップルグリーン",
@@ -989,7 +1037,8 @@
         "notation": "lt12",
         "deltaE": 5.5
       }
-    ]
+    ],
+    "id": "apple-green"
   },
   {
     "name": "オリーブグリーン",
@@ -1009,7 +1058,8 @@
         "notation": "dk10",
         "deltaE": 5.44
       }
-    ]
+    ],
+    "id": "olive-green"
   },
   {
     "name": "マラカイトグリーン",
@@ -1033,7 +1083,8 @@
         "notation": "s12",
         "deltaE": 7.02
       }
-    ]
+    ],
+    "id": "malachite-green"
   },
   {
     "name": "コバルトグリーン",
@@ -1057,7 +1108,8 @@
         "notation": "sf13",
         "deltaE": 6.25
       }
-    ]
+    ],
+    "id": "cobalt-green"
   },
   {
     "name": "ビリジアン",
@@ -1073,7 +1125,8 @@
         "notation": "v13",
         "deltaE": 3.98
       }
-    ]
+    ],
+    "id": "viridian"
   },
   {
     "name": "エメラルドグリーン",
@@ -1089,7 +1142,8 @@
         "notation": "b12",
         "deltaE": 4.03
       }
-    ]
+    ],
+    "id": "emerald-green"
   },
   {
     "name": "シャルトルーズグリーン",
@@ -1105,7 +1159,8 @@
         "notation": "lt9",
         "deltaE": 2.4
       }
-    ]
+    ],
+    "id": "chartreuse-green"
   },
   {
     "name": "ミントグリーン",
@@ -1129,7 +1184,8 @@
         "notation": "lt11",
         "deltaE": 6.02
       }
-    ]
+    ],
+    "id": "mint-green"
   },
   {
     "name": "ボトルグリーン",
@@ -1149,7 +1205,8 @@
         "notation": "dk12",
         "deltaE": 6.48
       }
-    ]
+    ],
+    "id": "bottle-green"
   },
   {
     "name": "ピーコックグリーン",
@@ -1165,7 +1222,8 @@
         "notation": "b14",
         "deltaE": 2.35
       }
-    ]
+    ],
+    "id": "peacock-green"
   },
   {
     "name": "空色",
@@ -1189,7 +1247,8 @@
         "notation": "p18",
         "deltaE": 6.93
       }
-    ]
+    ],
+    "id": "sora-iro"
   },
   {
     "name": "瑠璃色",
@@ -1209,7 +1268,8 @@
         "notation": "d17",
         "deltaE": 5.43
       }
-    ]
+    ],
+    "id": "ruri-iro"
   },
   {
     "name": "群青色",
@@ -1225,7 +1285,8 @@
         "notation": "b19",
         "deltaE": 1.29
       }
-    ]
+    ],
+    "id": "gunjo-iro"
   },
   {
     "name": "藍色",
@@ -1249,7 +1310,8 @@
         "notation": "d16",
         "deltaE": 3.81
       }
-    ]
+    ],
+    "id": "ai-iro"
   },
   {
     "name": "甕覗き",
@@ -1269,7 +1331,8 @@
         "notation": "p16",
         "deltaE": 4.26
       }
-    ]
+    ],
+    "id": "kamenozoki"
   },
   {
     "name": "縹色",
@@ -1289,7 +1352,8 @@
         "notation": "b17",
         "deltaE": 4.05
       }
-    ]
+    ],
+    "id": "hanada-iro"
   },
   {
     "name": "納戸色",
@@ -1305,7 +1369,8 @@
         "notation": "v15",
         "deltaE": 3.41
       }
-    ]
+    ],
+    "id": "nando-iro"
   },
   {
     "name": "鉄色",
@@ -1329,7 +1394,8 @@
         "notation": "dp13",
         "deltaE": 8.03
       }
-    ]
+    ],
+    "id": "tetsu-iro"
   },
   {
     "name": "浅葱色",
@@ -1353,7 +1419,8 @@
         "notation": "sf16",
         "deltaE": 8.83
       }
-    ]
+    ],
+    "id": "asagi-iro"
   },
   {
     "name": "新橋色",
@@ -1373,7 +1440,8 @@
         "notation": "lt16",
         "deltaE": 6.66
       }
-    ]
+    ],
+    "id": "shinbashi-iro"
   },
   {
     "name": "スカイブルー",
@@ -1397,7 +1465,8 @@
         "notation": "p18",
         "deltaE": 6.93
       }
-    ]
+    ],
+    "id": "sky-blue"
   },
   {
     "name": "ミッドナイトブルー",
@@ -1421,7 +1490,8 @@
         "notation": "dk18",
         "deltaE": 8.37
       }
-    ]
+    ],
+    "id": "midnight-blue"
   },
   {
     "name": "ウルトラマリンブルー",
@@ -1445,7 +1515,8 @@
         "notation": "sf20",
         "deltaE": 7.47
       }
-    ]
+    ],
+    "id": "ultramarine-blue"
   },
   {
     "name": "ターコイズブルー",
@@ -1465,7 +1536,8 @@
         "notation": "lt17",
         "deltaE": 7.69
       }
-    ]
+    ],
+    "id": "turquoise-blue"
   },
   {
     "name": "ベビーブルー",
@@ -1489,7 +1561,8 @@
         "notation": "p15",
         "deltaE": 6.02
       }
-    ]
+    ],
+    "id": "baby-blue"
   },
   {
     "name": "コバルトブルー",
@@ -1505,7 +1578,8 @@
         "notation": "b18",
         "deltaE": 3.58
       }
-    ]
+    ],
+    "id": "cobalt-blue"
   },
   {
     "name": "セルリアンブルー",
@@ -1521,7 +1595,8 @@
         "notation": "b16",
         "deltaE": 2.54
       }
-    ]
+    ],
+    "id": "cerulean-blue"
   },
   {
     "name": "シアン",
@@ -1541,7 +1616,8 @@
         "notation": "lt17",
         "deltaE": 8.64
       }
-    ]
+    ],
+    "id": "cyan"
   },
   {
     "name": "マリンブルー",
@@ -1557,7 +1633,8 @@
         "notation": "d16",
         "deltaE": 2.62
       }
-    ]
+    ],
+    "id": "marine-blue"
   },
   {
     "name": "ネイビーブルー",
@@ -1573,7 +1650,8 @@
         "notation": "dk19",
         "deltaE": 2.37
       }
-    ]
+    ],
+    "id": "navy-blue"
   },
   {
     "name": "サックスブルー",
@@ -1589,7 +1667,8 @@
         "notation": "b16",
         "deltaE": 4.13
       }
-    ]
+    ],
+    "id": "saxe-blue"
   },
   {
     "name": "ナイルブルー",
@@ -1609,7 +1688,8 @@
         "notation": "sf15",
         "deltaE": 4.93
       }
-    ]
+    ],
+    "id": "nile-blue"
   },
   {
     "name": "マゼンタ",
@@ -1633,7 +1713,8 @@
         "notation": "sf24",
         "deltaE": 9.73
       }
-    ]
+    ],
+    "id": "magenta"
   },
   {
     "name": "江戸紫",
@@ -1649,13 +1730,15 @@
         "notation": "sf21",
         "deltaE": 3.64
       }
-    ]
+    ],
+    "id": "edomurasaki"
   },
   {
     "name": "古代紫",
     "reading": "こだいむらさき",
     "systematicName": "くすんだ紫",
     "hex": "#895687",
+    "id": "kodai-murasaki",
     "examLevel": 2,
     "munsell": "7.5P 4/6",
     "category": "purple",
@@ -1685,7 +1768,8 @@
         "notation": "p20",
         "deltaE": 3.09
       }
-    ]
+    ],
+    "id": "fuji-iro"
   },
   {
     "name": "桔梗色",
@@ -1709,7 +1793,8 @@
         "notation": "b20",
         "deltaE": 6.1
       }
-    ]
+    ],
+    "id": "kikyo-iro"
   },
   {
     "name": "杜若色",
@@ -1733,7 +1818,8 @@
         "notation": "d21",
         "deltaE": 7.05
       }
-    ]
+    ],
+    "id": "kakitsubata-iro"
   },
   {
     "name": "菖蒲色",
@@ -1753,7 +1839,8 @@
         "notation": "lt24",
         "deltaE": 5.88
       }
-    ]
+    ],
+    "id": "ayame-iro"
   },
   {
     "name": "茄子紺",
@@ -1777,7 +1864,8 @@
         "notation": "dk23",
         "deltaE": 7.15
       }
-    ]
+    ],
+    "id": "nasukon"
   },
   {
     "name": "モーブ",
@@ -1797,7 +1885,8 @@
         "notation": "b22",
         "deltaE": 4.13
       }
-    ]
+    ],
+    "id": "mauve"
   },
   {
     "name": "バイオレット",
@@ -1821,7 +1910,8 @@
         "notation": "b21",
         "deltaE": 6.77
       }
-    ]
+    ],
+    "id": "violet"
   },
   {
     "name": "パープル",
@@ -1845,7 +1935,8 @@
         "notation": "lt21",
         "deltaE": 6.13
       }
-    ]
+    ],
+    "id": "purple"
   },
   {
     "name": "ライラック",
@@ -1861,7 +1952,8 @@
         "notation": "p22",
         "deltaE": 2.31
       }
-    ]
+    ],
+    "id": "lilac"
   },
   {
     "name": "ウイスタリア",
@@ -1877,7 +1969,8 @@
         "notation": "lt20",
         "deltaE": 4.83
       }
-    ]
+    ],
+    "id": "wistaria"
   },
   {
     "name": "ラベンダー",
@@ -1897,7 +1990,8 @@
         "notation": "p21",
         "deltaE": 2.99
       }
-    ]
+    ],
+    "id": "lavender"
   },
   {
     "name": "黄土色",
@@ -1921,7 +2015,8 @@
         "notation": "s7",
         "deltaE": 6.6
       }
-    ]
+    ],
+    "id": "odo-iro"
   },
   {
     "name": "代赭",
@@ -1941,7 +2036,8 @@
         "notation": "d6",
         "deltaE": 5.13
       }
-    ]
+    ],
+    "id": "taisha-iro"
   },
   {
     "name": "弁柄色",
@@ -1965,7 +2061,8 @@
         "notation": "dp3",
         "deltaE": 6.89
       }
-    ]
+    ],
+    "id": "bengara-iro"
   },
   {
     "name": "朽葉色",
@@ -1989,7 +2086,8 @@
         "notation": "g8",
         "deltaE": 8.28
       }
-    ]
+    ],
+    "id": "kuchiba-iro"
   },
   {
     "name": "煤竹色",
@@ -2013,7 +2111,8 @@
         "notation": "g4",
         "deltaE": 9
       }
-    ]
+    ],
+    "id": "susutake-iro"
   },
   {
     "name": "檜皮色",
@@ -2037,7 +2136,8 @@
         "notation": "dp5",
         "deltaE": 9.22
       }
-    ]
+    ],
+    "id": "hiwada-iro"
   },
   {
     "name": "栗色",
@@ -2057,7 +2157,8 @@
         "notation": "dk4",
         "deltaE": 7.74
       }
-    ]
+    ],
+    "id": "kuri-iro"
   },
   {
     "name": "海老茶",
@@ -2073,7 +2174,8 @@
         "notation": "dk4",
         "deltaE": 4.62
       }
-    ]
+    ],
+    "id": "ebicha"
   },
   {
     "name": "鳶色",
@@ -2097,7 +2199,8 @@
         "notation": "d4",
         "deltaE": 8.32
       }
-    ]
+    ],
+    "id": "tobi-iro"
   },
   {
     "name": "琥珀色",
@@ -2121,7 +2224,8 @@
         "notation": "sf5",
         "deltaE": 6.72
       }
-    ]
+    ],
+    "id": "kohaku-iro"
   },
   {
     "name": "煉瓦色",
@@ -2145,7 +2249,8 @@
         "notation": "dp5",
         "deltaE": 6.28
       }
-    ]
+    ],
+    "id": "renga-iro"
   },
   {
     "name": "ローシェンナ",
@@ -2161,7 +2266,8 @@
         "notation": "s6",
         "deltaE": 3.31
       }
-    ]
+    ],
+    "id": "raw-sienna"
   },
   {
     "name": "バーントシェンナ",
@@ -2177,7 +2283,8 @@
         "notation": "d6",
         "deltaE": 1.41
       }
-    ]
+    ],
+    "id": "burnt-sienna"
   },
   {
     "name": "ローアンバー",
@@ -2201,7 +2308,8 @@
         "notation": "dp8",
         "deltaE": 8.76
       }
-    ]
+    ],
+    "id": "raw-umber"
   },
   {
     "name": "バーントアンバー",
@@ -2225,7 +2333,8 @@
         "notation": "dk7",
         "deltaE": 8.4
       }
-    ]
+    ],
+    "id": "burnt-umber"
   },
   {
     "name": "セピア",
@@ -2241,7 +2350,8 @@
         "notation": "dk6",
         "deltaE": 2.8
       }
-    ]
+    ],
+    "id": "sepia"
   },
   {
     "name": "カーキー",
@@ -2265,7 +2375,8 @@
         "notation": "d8",
         "deltaE": 9.38
       }
-    ]
+    ],
+    "id": "khaki"
   },
   {
     "name": "ベージュ",
@@ -2289,7 +2400,8 @@
         "notation": "p5",
         "deltaE": 6.23
       }
-    ]
+    ],
+    "id": "beige"
   },
   {
     "name": "エクルベージュ",
@@ -2313,7 +2425,8 @@
         "notation": "ltg8",
         "deltaE": 9.56
       }
-    ]
+    ],
+    "id": "ecru-beige"
   },
   {
     "name": "タン",
@@ -2337,7 +2450,8 @@
         "notation": "sf5",
         "deltaE": 7.99
       }
-    ]
+    ],
+    "id": "tan"
   },
   {
     "name": "マルーン",
@@ -2357,7 +2471,8 @@
         "notation": "dk4",
         "deltaE": 7.19
       }
-    ]
+    ],
+    "id": "maroon"
   },
   {
     "name": "テラコッタ",
@@ -2381,7 +2496,8 @@
         "notation": "sf3",
         "deltaE": 8.04
       }
-    ]
+    ],
+    "id": "terracotta"
   },
   {
     "name": "チョコレート",
@@ -2401,7 +2517,8 @@
         "notation": "dk5",
         "deltaE": 5.79
       }
-    ]
+    ],
+    "id": "chocholate"
   },
   {
     "name": "アンバー",
@@ -2417,7 +2534,8 @@
         "notation": "sf6",
         "deltaE": 5.18
       }
-    ]
+    ],
+    "id": "amber"
   },
   {
     "name": "生成り色",
@@ -2433,7 +2551,8 @@
         "notation": "W",
         "deltaE": 3.58
       }
-    ]
+    ],
+    "id": "kinari-iro"
   },
   {
     "name": "茶鼠",
@@ -2457,7 +2576,8 @@
         "notation": "Gy-6.0",
         "deltaE": 7.79
       }
-    ]
+    ],
+    "id": "chanezu"
   },
   {
     "name": "銀鼠",
@@ -2473,7 +2593,8 @@
         "notation": "Gy-7.0",
         "deltaE": 0.82
       }
-    ]
+    ],
+    "id": "ginnezu"
   },
   {
     "name": "利休鼠",
@@ -2497,7 +2618,8 @@
         "notation": "Gy-5.5",
         "deltaE": 8.29
       }
-    ]
+    ],
+    "id": "rikyunezu"
   },
   {
     "name": "アイボリー",
@@ -2517,7 +2639,8 @@
         "notation": "Gy-9.0",
         "deltaE": 8.67
       }
-    ]
+    ],
+    "id": "ivory"
   },
   {
     "name": "シルバーグレー",
@@ -2533,7 +2656,8 @@
         "notation": "Gy-7.0",
         "deltaE": 0.82
       }
-    ]
+    ],
+    "id": "silver-grey"
   },
   {
     "name": "スレートグレー",
@@ -2549,7 +2673,8 @@
         "notation": "Gy-4.0",
         "deltaE": 2.39
       }
-    ]
+    ],
+    "id": "slate-grey"
   },
   {
     "name": "チャコールグレー",
@@ -2573,7 +2698,8 @@
         "notation": "dkg24",
         "deltaE": 7.49
       }
-    ]
+    ],
+    "id": "charcoal-grey"
   },
   {
     "name": "ランプブラック",
@@ -2597,6 +2723,7 @@
         "notation": "dkg2",
         "deltaE": 8.8
       }
-    ]
+    ],
+    "id": "lamp-black"
   }
 ]
