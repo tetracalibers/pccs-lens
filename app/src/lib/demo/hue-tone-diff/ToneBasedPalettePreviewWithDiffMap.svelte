@@ -6,9 +6,9 @@
     PCCS_ACHROMATIC_TONE_SYMBOLS,
     type PCCS_TONE_BASED_PALETTE_KEY
   } from "$lib/data/pccs-tone"
-  import ColorPaletteGrid from "$lib/demo/color-harmony/ColorPaletteGrid.svelte"
+  import ColorPaletteGrid from "$lib/demo/hue-tone-diff/ColorPaletteGrid.svelte"
   import PCCSColor from "$lib/demo/PCCSColor.svelte"
-  import { PCCS_MAP } from "$lib/data/pccs"
+  import { PCCS_HEX_MAP } from "$lib/data/pccs"
   import { isLightColor } from "$lib/color/utils"
   import { SvelteSet } from "svelte/reactivity"
 
@@ -89,7 +89,7 @@
   }
 
   function getFillColor(key: string): string {
-    return PCCS_MAP.get(getToneNotation(key)) ?? "#e0e0e0"
+    return PCCS_HEX_MAP.get(getToneNotation(key)) ?? "#e0e0e0"
   }
 
   function getLabelFill(hex: string): string {
@@ -127,7 +127,7 @@
     selectedTone = key
   }
 
-  // PCCS_MAP のキー形式に変換する（有彩色: toneSymbol+hue、無彩色: バケット代表のnotation）
+  // PCCS_HEX_MAP のキー形式に変換する（有彩色: toneSymbol+hue、無彩色: バケット代表のnotation）
   function getToneNotation(toneSymbol: string): string {
     if (PCCS_ACHROMATIC_TONE_SYMBOLS.includes(toneSymbol)) return toneSymbol
     return `${toneSymbol}${hue}`
@@ -407,5 +407,6 @@
 
   .pair {
     display: flex;
+    gap: 2px;
   }
 </style>

@@ -1,0 +1,63 @@
+---
+layout: guide-content
+title: カマイユとフォカマイユ
+
+grades: ["2"]
+basic: true
+---
+
+<script>
+  import AnalyzedPalette from '$lib/demo/color-palette/AnalyzedPalette.svelte'
+</script>
+
+ここでは、色相もトーンも近い色を組み合わせる、色を近似した配色を紹介します。
+
+## :WithGradeTag[カマイユ配色]{grades="2"}
+
+カマイユ配色は、一見すると:Mark[単色]に見えるような、色相もトーンもかなり近似した配色です。
+カマイユとは、フランス語で「:Mark[単色画法]」を意味します。
+
+トーンは:Mark[同一]・:Mark[類似]トーンから選択し、色相もできるだけ近い:Mark[同一]・:Mark[類似]色相を選びます。
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="lt20, p20" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="p4, lt4" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="sf6, sf8" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v4, v5" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dp14, v15, v14" />
+:::
+::::
+
+## :WithGradeTag[フォカマイユ配色]{grades="2"}
+
+フォカマイユ配色は、:Mark[カマイユ]配色よりも少しだけ色相やトーンに変化をつけた配色です。
+フォカマイユの「フォ」には、フランス語で「:Mark[まがいもの]」「:Mark[偽り]の」という意味があります。
+
+トーンはカマイユ配色と同様に:Mark[同一]・:Mark[類似]トーンから選択しますが、色相はカマイユ配色よりも差を広げ、:Mark[類似]色相から選ぶようにします。
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="lt16, lt18, sf16" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="p6, lt6, lt4" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="lt24, p2" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="b22, lt20" />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dk2, dp4" />
+:::
+::::

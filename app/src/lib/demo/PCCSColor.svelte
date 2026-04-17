@@ -1,11 +1,15 @@
 <script lang="ts">
   import { isLightColor } from "$lib/color/utils"
-  import { PCCS_MAP } from "$lib/data/pccs"
+  import { PCCS_HEX_MAP } from "$lib/data/pccs"
+  import { getContext } from "svelte"
 
   let { pccs }: { pccs: string } = $props()
 
-  const color = $derived(PCCS_MAP.get(pccs)!)
+  const color = $derived(PCCS_HEX_MAP.get(pccs)!)
   const isLightBg = $derived(isLightColor(color))
+
+  const ankiCtx = getContext<{ isAnki: boolean } | undefined>("anki-mode")
+  const isAnki = $derived(ankiCtx?.isAnki)
 </script>
 
 <div
@@ -14,8 +18,9 @@
   style:--_text-color={isLightBg ? "black" : "white"}
   class:--_white-tone={pccs === "W"}
   class:--_black-tone={pccs === "Bk"}
+  class:--_small-font={pccs.startsWith("Gy-")}
 >
-  {pccs}
+  {isAnki ? "" : pccs}
 </div>
 
 <style>
@@ -34,6 +39,10 @@
     font-size: 0.8rem;
     flex-shrink: 0;
     box-sizing: border-box;
+  }
+
+  .square.--_small-font {
+    font-size: 0.65rem;
   }
 
   .square.--_white-tone {

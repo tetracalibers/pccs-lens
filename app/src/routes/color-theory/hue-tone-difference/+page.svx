@@ -9,12 +9,12 @@ basic: true
 <script>
   import { writable } from 'svelte/store'
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
-  import PCCSHueDiffWheel from "$lib/demo/color-harmony/PCCSHueDiffWheel.svelte"
-  import ColorPaletteGrid from "$lib/demo/color-harmony/ColorPaletteGrid.svelte"
-  import HueBasedPalettePreview from "$lib/demo/color-harmony/HueBasedPalettePreview.svelte"
-  import ToneBasedPalettePreviewWithDiffMap from "$lib/demo/color-harmony/ToneBasedPalettePreviewWithDiffMap.svelte"
-  import ColorPaletteWithRandomTonePreview from "$lib/demo/color-harmony/ColorPaletteWithRandomTonePreview.svelte"
-  import ColorPaletteWithRandomNeutralPreview from "$lib/demo/color-harmony/ColorPaletteWithRandomNeutralPreview.svelte"
+  import PCCSHueDiffWheel from "$lib/demo/hue-tone-diff/PCCSHueDiffWheel.svelte"
+  import ColorPaletteGrid from "$lib/demo/hue-tone-diff/ColorPaletteGrid.svelte"
+  import HueBasedPalettePreview from "$lib/demo/hue-tone-diff/HueBasedPalettePreview.svelte"
+  import ToneBasedPalettePreviewWithDiffMap from "$lib/demo/hue-tone-diff/ToneBasedPalettePreviewWithDiffMap.svelte"
+  import ColorPaletteWithRandomTonePreview from "$lib/demo/hue-tone-diff/ColorPaletteWithRandomTonePreview.svelte"
+  import ColorPaletteWithRandomNeutralPreview from "$lib/demo/hue-tone-diff/ColorPaletteWithRandomNeutralPreview.svelte"
 
   const baseHue = writable(8)
 </script>

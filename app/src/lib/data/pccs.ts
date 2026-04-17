@@ -10,6 +10,7 @@ export const PCCS_CARD_199 = [...pccsV24, ...pccsEven12, ...pccsNeutral] as PCCS
 
 /** PCCSの全トーンの全色相（PCCS_CARD_199 + sトーン全色相 + 奇数色相） */
 export const PCCS_ALL = [...PCCS_CARD_199, ...pccsS12, ...pccsOdd12]
+export const PCCS_ALL_MAP = new Map(PCCS_ALL.map((color) => [color.notation, color]))
 
 /** Map<notation, hex> */
 const PCCS_HEX = new Map(PCCS_ALL.map(({ notation, hex }) => [notation, hex]))
@@ -20,7 +21,7 @@ const PCCS_NEUTRAL_TONE_HEX = new Map([
   ["dkGy", PCCS_HEX.get("Gy-3.5")],
   ["Bk", PCCS_HEX.get("Bk")]
 ])
-export const PCCS_MAP = new Map([...PCCS_HEX, ...PCCS_NEUTRAL_TONE_HEX])
+export const PCCS_HEX_MAP = new Map([...PCCS_HEX, ...PCCS_NEUTRAL_TONE_HEX])
 
 const PCCS_HUE = [
   {
@@ -28,168 +29,168 @@ const PCCS_HUE = [
     name: "pR",
     labelEn: "purplish red",
     labelJa: "紫みの赤",
-    color: PCCS_MAP.get("v1")!
+    color: PCCS_HEX_MAP.get("v1")!
   },
   {
     num: 2,
     name: "R",
     labelEn: "red",
     labelJa: "赤",
-    color: PCCS_MAP.get("v2")!
+    color: PCCS_HEX_MAP.get("v2")!
   },
   {
     num: 3,
     name: "yR",
     labelEn: "yellowish red",
     labelJa: "黄みの赤",
-    color: PCCS_MAP.get("v3")!
+    color: PCCS_HEX_MAP.get("v3")!
   },
   {
     num: 4,
     name: "rO",
     labelEn: "reddish orange",
     labelJa: "赤みの橙",
-    color: PCCS_MAP.get("v4")!
+    color: PCCS_HEX_MAP.get("v4")!
   },
   {
     num: 5,
     name: "O",
     labelEn: "orange",
     labelJa: "橙",
-    color: PCCS_MAP.get("v5")!
+    color: PCCS_HEX_MAP.get("v5")!
   },
   {
     num: 6,
     name: "yO",
     labelEn: "yellowish orange",
     labelJa: "黄みの橙",
-    color: PCCS_MAP.get("v6")!
+    color: PCCS_HEX_MAP.get("v6")!
   },
   {
     num: 7,
     name: "rY",
     labelEn: "reddish yellow",
     labelJa: "赤みの黄",
-    color: PCCS_MAP.get("v7")!
+    color: PCCS_HEX_MAP.get("v7")!
   },
   {
     num: 8,
     name: "Y",
     labelEn: "yellow",
     labelJa: "黄",
-    color: PCCS_MAP.get("v8")!
+    color: PCCS_HEX_MAP.get("v8")!
   },
   {
     num: 9,
     name: "gY",
     labelEn: "greenish yellow",
     labelJa: "緑みの黄",
-    color: PCCS_MAP.get("v9")!
+    color: PCCS_HEX_MAP.get("v9")!
   },
   {
     num: 10,
     name: "YG",
     labelEn: "yellow green",
     labelJa: "黄緑",
-    color: PCCS_MAP.get("v10")!
+    color: PCCS_HEX_MAP.get("v10")!
   },
   {
     num: 11,
     name: "yG",
     labelEn: "yellowish green",
     labelJa: "黄みの緑",
-    color: PCCS_MAP.get("v11")!
+    color: PCCS_HEX_MAP.get("v11")!
   },
   {
     num: 12,
     name: "G",
     labelEn: "green",
     labelJa: "緑",
-    color: PCCS_MAP.get("v12")!
+    color: PCCS_HEX_MAP.get("v12")!
   },
   {
     num: 13,
     name: "bG",
     labelEn: "bluish green",
     labelJa: "青みの緑",
-    color: PCCS_MAP.get("v13")!
+    color: PCCS_HEX_MAP.get("v13")!
   },
   {
     num: 14,
     name: "BG",
     labelEn: "blue green",
     labelJa: "青緑",
-    color: PCCS_MAP.get("v14")!
+    color: PCCS_HEX_MAP.get("v14")!
   },
   {
     num: 15,
     name: "BG",
     labelEn: "blue green",
     labelJa: "青緑",
-    color: PCCS_MAP.get("v15")!
+    color: PCCS_HEX_MAP.get("v15")!
   },
   {
     num: 16,
     name: "gB",
     labelEn: "greenish blue",
     labelJa: "緑みの青",
-    color: PCCS_MAP.get("v16")!
+    color: PCCS_HEX_MAP.get("v16")!
   },
   {
     num: 17,
     name: "B",
     labelEn: "blue",
     labelJa: "青",
-    color: PCCS_MAP.get("v17")!
+    color: PCCS_HEX_MAP.get("v17")!
   },
   {
     num: 18,
     name: "B",
     labelEn: "blue",
     labelJa: "青",
-    color: PCCS_MAP.get("v18")!
+    color: PCCS_HEX_MAP.get("v18")!
   },
   {
     num: 19,
     name: "pB",
     labelEn: "purplish blue",
     labelJa: "紫みの青",
-    color: PCCS_MAP.get("v19")!
+    color: PCCS_HEX_MAP.get("v19")!
   },
   {
     num: 20,
     name: "V",
     labelEn: "violet",
     labelJa: "青紫",
-    color: PCCS_MAP.get("v20")!
+    color: PCCS_HEX_MAP.get("v20")!
   },
   {
     num: 21,
     name: "bP",
     labelEn: "bluish purple",
     labelJa: "青みの紫",
-    color: PCCS_MAP.get("v21")!
+    color: PCCS_HEX_MAP.get("v21")!
   },
   {
     num: 22,
     name: "P",
     labelEn: "purple",
     labelJa: "紫",
-    color: PCCS_MAP.get("v22")!
+    color: PCCS_HEX_MAP.get("v22")!
   },
   {
     num: 23,
     name: "rP",
     labelEn: "reddish purple",
     labelJa: "赤みの紫",
-    color: PCCS_MAP.get("v23")!
+    color: PCCS_HEX_MAP.get("v23")!
   },
   {
     num: 24,
     name: "RP",
     labelEn: "red purple",
     labelJa: "赤紫",
-    color: PCCS_MAP.get("v24")!
+    color: PCCS_HEX_MAP.get("v24")!
   }
 ]
 

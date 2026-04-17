@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { PCCS_MAP } from "$lib/data/pccs"
+  import { PCCS_HEX_MAP } from "$lib/data/pccs"
   import PCCSColor from "../PCCSColor.svelte"
 
   type ColorsListItem = {
@@ -12,7 +12,7 @@
 
 <ul class="list">
   {#each colors as { pccs, name } (name)}
-    <li style:--_pccs-color={PCCS_MAP.get(pccs)!}>
+    <li style:--_pccs-color={PCCS_HEX_MAP.get(pccs)!}>
       <span class="label">{name}</span>
       <PCCSColor {pccs} />
     </li>

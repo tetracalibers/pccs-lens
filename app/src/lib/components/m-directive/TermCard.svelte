@@ -10,7 +10,9 @@
 </script>
 
 <section class="term-card" class:centering>
-  <Heading3 {title}>{title}</Heading3>
+  {#if title}
+    <Heading3 {title}>{title}</Heading3>
+  {/if}
   {@render children?.()}
 </section>
 

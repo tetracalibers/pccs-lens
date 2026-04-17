@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { PCCS_MAP } from "$lib/data/pccs"
+  import { PCCS_HEX_MAP } from "$lib/data/pccs"
 
   // ===== SVG dimensions =====
   const SIZE = 600
@@ -63,14 +63,14 @@
     return R + projection + LABEL_GAP_MIN
   }
 
-  // ===== 原色カラーマップ（PCCS_MAP から取得）=====
+  // ===== 原色カラーマップ（PCCS_HEX_MAP から取得）=====
   const PRIMARY_COLORS: Record<string, string> = {
-    R: PCCS_MAP.get("v3")!,
-    G: PCCS_MAP.get("v12")!,
-    B: PCCS_MAP.get("v19")!,
-    C: PCCS_MAP.get("v16")!,
-    M: PCCS_MAP.get("v24")!,
-    Y: PCCS_MAP.get("v8")!
+    R: PCCS_HEX_MAP.get("v3")!,
+    G: PCCS_HEX_MAP.get("v12")!,
+    B: PCCS_HEX_MAP.get("v19")!,
+    C: PCCS_HEX_MAP.get("v16")!,
+    M: PCCS_HEX_MAP.get("v24")!,
+    Y: PCCS_HEX_MAP.get("v8")!
   }
 
   /** 原色ラベルの塗り色。原色でない場合は本文色にフォールバック */

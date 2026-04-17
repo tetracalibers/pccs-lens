@@ -1,0 +1,139 @@
+---
+layout: guide-content
+title: 色相環を分割した配色
+
+grades: ["2"]
+basic: true
+---
+
+<script>
+  import AnalyzedPalette from '$lib/demo/color-palette/AnalyzedPalette.svelte'
+</script>
+
+色相環を等分割した配色は、西洋の古典的な配色技法であり、色相を選ぶ際の参考になります。
+
+## :WithGradeTag[ダイアード]{grades="2"}
+
+ダイアードは、色相環上で:Mark[補色]の位置にある:Mark[2]色を使った配色です。
+色相環を:Mark[2]等分するため、PCCSでは色相差は:Mark[12]となります。
+
+ダイアードを使うと、各色がお互いを引き立て合うような、:Mark[ダイナミック]で動きのあるイメージを演出できます。
+
+同じ2色配色の:Mark[ビコロール]配色とは異なり、ダイアードでは:Mark[無彩色]を使うことはできませんが、トーンのコントラストによる明快さは必須ではありません。
+選ぶトーンによっては、穏やかな印象のダイアード配色も作ることができます。
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="b10, dp22" hideTone />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="g4, g16" hideTone />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="lt6, lt18" hideTone />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v18, v5" hideTone />
+:::
+::::
+
+## :WithGradeTag[トライアド]{grades="2"}
+
+トライアドは、色相環を:Mark[3]等分し、:Mark[正三角形]の頂点を結ぶように色相を選ぶ:Mark[3]色配色です。
+色相環を:Mark[3]等分するため、PCCSでは色相差は:Mark[8]となります。
+
+同じ3色配色の:Mark[トリコロール]配色とは異なり、トライアドでは:Mark[無彩色]を使うことはできませんが、トーンのコントラストによる明快さは必須ではありません。
+選ぶトーンによっては、穏やかな印象のトライアド配色も作ることができます。
+
+また、:Mark[色料]の三原色（:Mark[v8]・:Mark[v16]・:Mark[v24]）はトライアドの関係にあります。
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="v24, v8, v16" hideTone />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="p4, p12, p20" hideTone />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="b24, b10, b18" hideTone />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="b8, v2, v17" hideTone />
+:::
+::::
+
+## :WithGradeTag[スプリットコンプリメンタリー]{grades="2"}
+
+スプリットコンプリメンタリーは、:Mark[補色]関係にある片方の色を直接使わず、その両隣（色相差:Mark[1]〜:Mark[2]）の色相を用いた:Mark[3]色配色です。
+スプリットは「:Mark[分裂]」を意味し、スプリットコンプリメンタリーは:Mark[分裂補色]配色とも呼ばれます。
+
+色相は:Mark[二等辺三角形]の頂点を結ぶ位置関係になり、1色対2色の関係にすることで、2色の方の色相の共通性が全体の統一感をつくり出します。
+明快なコントラストがありながら、それぞれの色相がもつ多彩なイメージを、単なる補色配色よりも強く演出できる配色です。
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="v7, v20, v9" hideTone />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="lt14, lt4, lt24" hideTone />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v5, v18, v7" hideTone />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="lt16, v6, lt20" hideTone />
+:::
+::::
+
+## :WithGradeTag[テトラード]{grades="2"}
+
+テトラードは、色相環を:Mark[4]等分し、:Mark[正方形]の頂点を結ぶように色相を選ぶ:Mark[4]色配色です。
+色相環を:Mark[4]等分するため、PCCSでは色相差は:Mark[6]となります。
+
+向かい合う2色は:Mark[補色]の関係になり、リズミカルなイメージを演出できます。
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="v4, v10, v16, v22" hideTone />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="p2, p8, p14, p20" hideTone />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="dp10, dp21, dp2, dp17" hideTone />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v8, v2, v12, b18" hideTone />
+:::
+::::
+
+## :WithGradeTag[ペンタード]{grades="2"}
+
+ペンタードは、色相環を:Mark[5]等分し、:Mark[正五角形]の頂点を結ぶように色相を選ぶ:Mark[5]色配色です。
+
+PCCSなど色相環を5等分することができない場合は、:Mark[トライアド]に白と黒を加えたものをペンタードとします。トライアドが持つ明快さに、白と黒が加わると、スッキリとしたイメージを演出できます。
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="v3, v6, v12, v23, v18" hideTone />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="v18, W, v2, Bk, v10" hideTone />
+:::
+::::
+
+## :WithGradeTag[ヘクサード]{grades="2"}
+
+ヘクサードは、色相環を:Mark[6]等分し、:Mark[正六角形]の頂点を結ぶように色相を選ぶ:Mark[6]色配色です。
+色相環を:Mark[6]等分するため、PCCSでは色相差は:Mark[4]となります。
+
+ペンタードの作り方と同様に、:Mark[テトラード]に白と黒を加えることでヘクサードをつくることもできます。
+
+::::CardGrid{lastWide}
+:::TermCard
+<AnalyzedPalette pccsCSV="v2, v14, v18, v6, v10, v22" hideTone />
+:::
+:::TermCard
+<AnalyzedPalette pccsCSV="b16, Bk, b4, b10, W, b22" hideTone />
+:::
+::::

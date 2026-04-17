@@ -38,7 +38,12 @@
     <div class="approx-badge">
       <span class="swatch swatch--main" aria-label={selectedPCCS.hex}>
         <span class="swatch-bg"></span>
-        <span class="swatch-preview" style="background-color: {selectedPCCS.hex}"></span>
+        <span
+          class="swatch-preview"
+          style="background-color: {selectedPCCS.hex}"
+          class:_white-border={selectedPCCS.notation === "W"}
+          class:_black-border={selectedPCCS.notation === "Bk"}
+        ></span>
       </span>
       <span class="notation">{selectedPCCS.notation}</span>
     </div>
@@ -49,6 +54,8 @@
           class="alt-swatch"
           onclick={() => onSelectAlternate(alt)}
           style="background-color: {alt.hex}"
+          class:_white-border={alt.notation === "W"}
+          class:_black-border={alt.notation === "Bk"}
           title={alt.notation}
           aria-label="{alt.notation} に変更"
         ></button>
@@ -59,6 +66,9 @@
 
 <style>
   .color-entry {
+    --_black-border: rgba(0, 0, 0, 0.2);
+    --_white-border: rgba(255, 255, 255, 0.2);
+
     display: grid;
     grid-template-areas: "input remove-btn";
     align-items: center;
@@ -182,5 +192,12 @@
     white-space: nowrap;
     transform: translate(-50%, -165%);
     pointer-events: none;
+  }
+
+  ._white-border {
+    border: 1px solid light-dark(var(--_black-border), transparent);
+  }
+  ._black-border {
+    border: 1px solid light-dark(transparent, var(--_white-border));
   }
 </style>

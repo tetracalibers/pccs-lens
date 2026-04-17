@@ -71,10 +71,10 @@ grades: ["3", "uc"]
 
 ```mermaid
 graph LR
-    Color["色"] --- LightColor["光源色"]
-    Color --- ObjectColor["物体色"]
-    ObjectColor --- SurfaceColor["表面色"]
-    ObjectColor --- TransmissionColor["透過色"]
+    Color["色"] --- Anki_LightColor["光源色"]
+    Color --- Anki_ObjectColor["物体色"]
+    Anki_ObjectColor --- Anki_SurfaceColor["表面色"]
+    Anki_ObjectColor --- Anki_TransmissionColor["透過色"]
 ```
 
 :Mark[物体色]は、反射によって目に届いた色なのか、透過によって目に届いた色なのかによって、さらに:Mark[表面色]と:Mark[透過色]に分けられます。

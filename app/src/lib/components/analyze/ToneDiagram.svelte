@@ -40,6 +40,8 @@
   const SVG_W = Math.ceil(X4 + CIRCLE_R + PAD)
   const SVG_H = Math.ceil(Y0 + 4 * ROW_STEP + RECT_H / 2 + PAD)
 
+  const UNUSED_STROKE_WIDTH = 1
+
   // --- staggered midpoint 配置 ---
   // Col0: Y0, Y0+S, Y0+2S, Y0+3S, Y0+4S
   // Col1/2: midpoints of Col0 pairs → Y0+S/2, Y0+3S/2, Y0+5S/2, Y0+7S/2
@@ -125,43 +127,40 @@
 </script>
 
 <div class="diagram-wrapper" bind:this={wrapperEl}>
-  <svg viewBox="0 0 {SVG_W} {SVG_H}" role="img" aria-label="PCCSトーン概念図" bind:this={svgEl}>
+  <svg
+    viewBox="0 0 {SVG_W} {SVG_H}"
+    width="100%"
+    role="img"
+    aria-label="PCCSトーン概念図"
+    bind:this={svgEl}
+  >
     <defs>
-      <pattern
-        id="hatch"
-        width="8"
-        height="8"
-        patternUnits="userSpaceOnUse"
-        patternTransform="rotate(45)"
-      >
-        <line x1="0" y1="0" x2="0" y2="8" style="stroke: var(--hatch-stroke);" stroke-width="1" />
-      </pattern>
+      <clipPath id="hatch-clip">
+        <circle cx={X3} cy={Y0 + S * 2} r={CIRCLE_R - UNUSED_STROKE_WIDTH / 2} />
+      </clipPath>
     </defs>
 
     {#each cellData as cell (cell.key)}
       {@const isUsed = cell.usedColors.length > 0}
       {@const isSCell = cell.key === "s"}
       {@const showHatch = isSCell && isCard199 && !isUsed}
-      {@const fillColor = isUsed
-        ? cell.usedColors[0].hex
-        : showHatch
-          ? "url(#hatch)"
-          : "var(--cell-empty-fill)"}
+      {@const fillColor = isUsed ? cell.usedColors[0].hex : "var(--cell-empty-fill)"}
       {@const strokeColor = isUsed
-        ? `oklch(from ${cell.usedColors[0].hex} calc(l * .85) c h)`
+        ? cell.label === "W"
+          ? "rgb(from var(--color-body) r g b / 0.75)"
+          : `oklch(from ${cell.usedColors[0].hex} calc(l * .85) c h)`
         : "var(--cell-empty-stroke)"}
-      {@const strokeWidth = isUsed ? 1.5 : 1}
+      {@const strokeWidth = isUsed ? 1.5 : UNUSED_STROKE_WIDTH}
       {@const labelFill = isUsed
         ? isLightColor(cell.usedColors[0].hex)
           ? `oklch(from ${cell.usedColors[0].hex} calc(l - .60) c h)`
           : `oklch(from ${cell.usedColors[0].hex} calc(l + .60) c h);`
-        : isSCell && isCard199
-          ? "#bbb"
-          : "#aaa"}
+        : "var(--color-body)"}
+      {@const strokeOpacity = isUsed ? 1 : isSCell && isCard199 ? 0.5 : 0.6}
       {@const cellOpacity = isSCell && isCard199 && !isUsed ? 0.5 : 1}
+      {@const textOpacity = isUsed ? 1 : showHatch ? 0.5 : 0.6}
 
       <g
-        opacity={cellOpacity}
         role={isUsed ? "img" : undefined}
         aria-label={isUsed
           ? `${cell.label}: ${cell.usedColors.map((c) => c.notation).join(", ")}`
@@ -174,14 +173,29 @@
             }
           : undefined}
       >
+        {#if showHatch}
+          <line
+            x1={cell.cx + CIRCLE_R}
+            y1={cell.cy - CIRCLE_R}
+            x2={cell.cx - CIRCLE_R}
+            y2={cell.cy + CIRCLE_R}
+            stroke-opacity={strokeOpacity}
+            stroke="var(--hatch-stroke)"
+            stroke-width="1.5"
+            clip-path="url(#hatch-clip)"
+            style="pointer-events: none;"
+          />
+        {/if}
         {#if cell.shape === "circle"}
           <circle
             cx={cell.cx}
             cy={cell.cy}
             r={CIRCLE_R}
+            opacity={cellOpacity}
             fill={fillColor}
             stroke={strokeColor}
             stroke-width={strokeWidth}
+            stroke-opacity={strokeOpacity}
           />
         {:else}
           <rect
@@ -189,9 +203,11 @@
             y={cell.cy - RECT_H / 2}
             width={RECT_W}
             height={RECT_H}
+            opacity={cellOpacity}
             fill={fillColor}
             stroke={strokeColor}
             stroke-width={strokeWidth}
+            stroke-opacity={strokeOpacity}
           />
         {/if}
         <text
@@ -201,7 +217,7 @@
           dominant-baseline="central"
           font-family="var(--font-mono)"
           font-size={isUsed ? 11 : 10}
-          style={`pointer-events: none; user-select: none; fill: ${labelFill};`}
+          style={`pointer-events: none; user-select: none; fill: ${labelFill}; fill-opacity: ${textOpacity};`}
         >
           {cell.label}
         </text>
@@ -230,8 +246,8 @@
     position: relative;
     display: inline-block;
     --cell-empty-fill: light-dark(white, #1c1c2e);
-    --cell-empty-stroke: light-dark(#ccc, #3a3a4e);
-    --hatch-stroke: light-dark(#bbb, #3a3a4e);
+    --cell-empty-stroke: var(--color-body);
+    --hatch-stroke: var(--color-body);
   }
 
   .tooltip {

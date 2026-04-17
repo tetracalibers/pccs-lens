@@ -1,10 +1,13 @@
 <script lang="ts">
   import type { PCCSColor } from "$lib/data/types"
+  import { PCCS_HUE_MAP } from "$lib/data/pccs"
 
   let {
-    displayedPCCSList
+    displayedPCCSList,
+    useToneColor = false
   }: {
     displayedPCCSList: PCCSColor[]
+    useToneColor?: boolean
   } = $props()
 
   const CX = 160
@@ -14,60 +17,6 @@
   const R_LINE = 105
   const R_LABEL = 135
   const R_LABEL_HIGHLIGHTED = 138
-
-  const HUE_COLORS: Record<number, string> = {
-    1: "#D40045",
-    2: "#EE0026",
-    3: "#FD1A1C",
-    4: "#FE4118",
-    5: "#FF590B",
-    6: "#FF7F00",
-    7: "#FFCC00",
-    8: "#FFE600",
-    9: "#CCE700",
-    10: "#99CF15",
-    11: "#66B82B",
-    12: "#33A23D",
-    13: "#008F62",
-    14: "#008678",
-    15: "#007A87",
-    16: "#055D87",
-    17: "#093F86",
-    18: "#0F218B",
-    19: "#1D1A88",
-    20: "#281285",
-    21: "#340C81",
-    22: "#56007D",
-    23: "#770071",
-    24: "#AF0065"
-  }
-
-  const HUE_NAMES: Record<number, string> = {
-    1: "pR",
-    2: "R",
-    3: "yR",
-    4: "rO",
-    5: "O",
-    6: "yO",
-    7: "rY",
-    8: "Y",
-    9: "gY",
-    10: "YG",
-    11: "yG",
-    12: "G",
-    13: "bG",
-    14: "BG",
-    15: "GB",
-    16: "gB",
-    17: "B",
-    18: "B",
-    19: "pB",
-    20: "V",
-    21: "bP",
-    22: "P",
-    23: "rP",
-    24: "RP"
-  }
 
   function toRad(deg: number) {
     return (deg * Math.PI) / 180
@@ -110,19 +59,37 @@
 
   const highlightedHueSet = $derived(new Set(highlightedEntries.map((c) => c.hueNumber)))
 
+  /** hueNumber → displayedPCCSListで指定されたトーンのhex */
+  const highlightedHexMap = $derived(new Map(highlightedEntries.map((c) => [c.hueNumber!, c.hex])))
+
   const hasHighlights = $derived(highlightedEntries.length > 0)
+
+  function hueColor(h: number): string {
+    return PCCS_HUE_MAP.get(h)?.color ?? "#ccc"
+  }
+
+  /** useToneColor時はハイライト色相に指定トーンの色を使う */
+  function effectiveColor(h: number): string {
+    if (useToneColor && highlightedHexMap.has(h)) {
+      return highlightedHexMap.get(h)!
+    }
+    return hueColor(h)
+  }
 </script>
 
 <svg viewBox="0 0 320 320" role="img" aria-label="PCCS色相環" style="pointer-events: none;">
+  <!-- Background circle -->
+  <circle cx={CX} cy={CY} r={R} fill="white" fill-opacity={useToneColor ? 1 : 0.8} />
+
   <!-- Sectors -->
   {#each Array.from({ length: 24 }, (_, i) => i + 1) as h (h)}
     {@const isHighlighted = highlightedHueSet.has(h)}
     <path
       d={sectorPath(h)}
-      fill={HUE_COLORS[h]}
+      fill={isHighlighted ? effectiveColor(h) : hueColor(h)}
       stroke="white"
       stroke-width="0.5"
-      opacity={hasHighlights && !isHighlighted ? 0.45 : 1}
+      opacity={!isHighlighted ? (useToneColor ? 0.25 : 0.45) : 1}
     />
   {/each}
 
@@ -133,7 +100,7 @@
       <path
         d={sectorPath(h)}
         fill="none"
-        stroke={`oklch(from ${HUE_COLORS[h]} calc(l * .85) c h)`}
+        stroke={`oklch(from ${effectiveColor(h)} calc(l * .85) c h)`}
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"
@@ -171,10 +138,12 @@
         font-family="var(--font-mono)"
         font-size={isHighlighted ? 14 : 12}
         font-weight={isHighlighted ? "bold" : "normal"}
-        style="fill: {isHighlighted ? HUE_COLORS[h] : 'light-dark(#444, #bbb)'};"
-        opacity={hasHighlights && !isHighlighted ? 0.45 : 1}
+        style="fill: {isHighlighted
+          ? `color-mix(in oklch, ${effectiveColor(h)} 70%, var(--color-body--dark) 30%)`
+          : 'var(--color-body)'};"
+        opacity={hasHighlights && !isHighlighted ? 0.75 : 1}
       >
-        {h}:{HUE_NAMES[h]}
+        {PCCS_HUE_MAP.get(h)?.symbol ?? h}
       </text>
     {/if}
   {/each}

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { PCCS_MAP } from "$lib/data/pccs"
+  import { PCCS_HEX_MAP } from "$lib/data/pccs"
 
   // ── 寸法・レイアウト定数 ──
   const SIZE = 900 // SVG の一辺（px）
@@ -10,12 +10,12 @@
 
   // ── 色定数 ──
   const COLOR = {
-    r: PCCS_MAP.get("v3"), // 赤
-    g: PCCS_MAP.get("v12"), // 緑
-    b: PCCS_MAP.get("v19"), // 青
-    y: PCCS_MAP.get("v8"), // R∩G（黄）
-    m: PCCS_MAP.get("v24"), // R∩B（マゼンタ）
-    c: PCCS_MAP.get("v16"), // G∩B（シアン）
+    r: PCCS_HEX_MAP.get("v3"), // 赤
+    g: PCCS_HEX_MAP.get("v12"), // 緑
+    b: PCCS_HEX_MAP.get("v19"), // 青
+    y: PCCS_HEX_MAP.get("v8"), // R∩G（黄）
+    m: PCCS_HEX_MAP.get("v24"), // R∩B（マゼンタ）
+    c: PCCS_HEX_MAP.get("v16"), // G∩B（シアン）
     white: "#fff", // R∩G∩B（白）
     label: "#ffffff"
   } as const

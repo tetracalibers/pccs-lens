@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { PCCS_MAP } from "$lib/data/pccs"
+  import { PCCS_HEX_MAP } from "$lib/data/pccs"
 
   // ── Layout ────────────────────────────────────────────────────────────────
 
@@ -80,13 +80,13 @@
   const rows: RowDef[] = [
     {
       leftLabel: "R",
-      leftColor: PCCS_MAP.get("v3")!,
+      leftColor: PCCS_HEX_MAP.get("v3")!,
       leftRegions: [
         { kind: "absorb", span: 2 / 3 },
         { kind: "reflect", span: 1 / 3 }
       ],
       rightLabel: "C",
-      rightColor: PCCS_MAP.get("v16")!,
+      rightColor: PCCS_HEX_MAP.get("v16")!,
       rightRegions: [
         { kind: "reflect", span: 2 / 3 },
         { kind: "absorb", span: 1 / 3 }
@@ -94,14 +94,14 @@
     },
     {
       leftLabel: "G",
-      leftColor: PCCS_MAP.get("v12")!,
+      leftColor: PCCS_HEX_MAP.get("v12")!,
       leftRegions: [
         { kind: "absorb", span: 1 / 3 },
         { kind: "reflect", span: 1 / 3 },
         { kind: "absorb", span: 1 / 3 }
       ],
       rightLabel: "M",
-      rightColor: PCCS_MAP.get("v24")!,
+      rightColor: PCCS_HEX_MAP.get("v24")!,
       rightRegions: [
         { kind: "reflect", span: 1 / 3 },
         { kind: "absorb", span: 1 / 3 },
@@ -110,13 +110,13 @@
     },
     {
       leftLabel: "B",
-      leftColor: PCCS_MAP.get("v19")!,
+      leftColor: PCCS_HEX_MAP.get("v19")!,
       leftRegions: [
         { kind: "reflect", span: 1 / 3 },
         { kind: "absorb", span: 2 / 3 }
       ],
       rightLabel: "Y",
-      rightColor: PCCS_MAP.get("v8")!,
+      rightColor: PCCS_HEX_MAP.get("v8")!,
       rightRegions: [
         { kind: "absorb", span: 1 / 3 },
         { kind: "reflect", span: 2 / 3 }
