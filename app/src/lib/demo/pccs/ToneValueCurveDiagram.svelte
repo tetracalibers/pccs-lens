@@ -7,17 +7,17 @@
   // 横軸の色相番号（左から 24, 2, 4, ..., 22）
   const HUE_ORDER = [24, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22]
 
-  // sトーンを除く全トーン（偶数色相を持つもの）
-  const TONES = ["p", "lt", "b", "v", "sf", "ltg", "d", "dp", "g", "dk", "dkg"]
+  // トーン（偶数色相を持つもの）
+  const TONES = ["p", "v", "dp", "dk", "dkg"]
 
   // --- レイアウト定数 ---
   const COL_W = 64
-  const X_PAD = 40
-  const CIRCLE_R = 22
+  const X_PAD = 0
+  const CIRCLE_R = 18
   const VALUE_MIN = 1
   const VALUE_MAX = 9.5
-  const PLOT_H = 600
-  const PLOT_TOP_PAD = 24
+  const PLOT_H = 650
+  const PLOT_TOP_PAD = 0
   const AXIS_GAP = 12
   const LABEL_GAP = 18
   const LABEL_FONT = 13
@@ -87,8 +87,8 @@
       y1={H_AXIS_Y}
       x2={SVG_W - X_PAD}
       y2={H_AXIS_Y}
-      stroke="#aaa"
-      stroke-width="1.5"
+      stroke="var(--color-body)"
+      stroke-width="1"
     />
 
     <!-- 横軸ラベル（色相番号） -->
@@ -99,7 +99,7 @@
         text-anchor="middle"
         font-size={LABEL_FONT}
         font-family="var(--font-mono)"
-        style="fill: light-dark(#555, #aaa);"
+        style="fill: var(--color-body);"
       >
         {hue}
       </text>
@@ -112,7 +112,7 @@
         fill="none"
         stroke={series.curveColor}
         stroke-width="1.5"
-        stroke-opacity="0.55"
+        stroke-opacity="1"
         stroke-linecap="round"
       />
     {/each}
@@ -137,8 +137,7 @@
             text-anchor="middle"
             dominant-baseline="central"
             font-family="var(--font-mono)"
-            font-size="11"
-            font-weight="bold"
+            font-size="10"
             fill={textColor}
             style="pointer-events: none; user-select: none;"
           >
@@ -153,10 +152,14 @@
 <style>
   .scroll-wrapper {
     width: 100%;
+    padding-inline: 1rem;
+    padding-block: 2rem;
     overflow-x: auto;
   }
 
   svg {
     display: block;
+    max-height: 600px;
+    width: auto;
   }
 </style>
