@@ -9,7 +9,7 @@ import type { PCCSColor } from "./types"
 export const PCCS_CARD_199 = [...pccsV24, ...pccsEven12, ...pccsNeutral] as PCCSColor[]
 
 /** PCCSの全トーンの全色相（PCCS_CARD_199 + sトーン全色相 + 奇数色相） */
-export const PCCS_ALL = [...PCCS_CARD_199, ...pccsS12, ...pccsOdd12]
+export const PCCS_ALL = [...PCCS_CARD_199, ...pccsS12, ...pccsOdd12] as PCCSColor[]
 export const PCCS_ALL_MAP = new Map(PCCS_ALL.map((color) => [color.notation, color]))
 
 /** Map<notation, hex> */
