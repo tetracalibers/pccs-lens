@@ -5,7 +5,8 @@
     "toneSymbol": "v",
     "hueNumber": 1,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "10RP 4/13.5"
   },
   {
     "notation": "v2",
@@ -13,7 +14,8 @@
     "toneSymbol": "v",
     "hueNumber": 2,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "4R 4.5/14"
   },
   {
     "notation": "v3",
@@ -21,7 +23,8 @@
     "toneSymbol": "v",
     "hueNumber": 3,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "7R 5/14"
   },
   {
     "notation": "v4",
@@ -29,7 +32,8 @@
     "toneSymbol": "v",
     "hueNumber": 4,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "10R 5.5/14"
   },
   {
     "notation": "v5",
@@ -37,7 +41,8 @@
     "toneSymbol": "v",
     "hueNumber": 5,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "4YR 6/13.5"
   },
   {
     "notation": "v6",
@@ -45,7 +50,8 @@
     "toneSymbol": "v",
     "hueNumber": 6,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "8YR 7/13"
   },
   {
     "notation": "v7",
@@ -53,7 +59,8 @@
     "toneSymbol": "v",
     "hueNumber": 7,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "2Y 7.5/13"
   },
   {
     "notation": "v8",
@@ -61,7 +68,8 @@
     "toneSymbol": "v",
     "hueNumber": 8,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "5Y 8/13"
   },
   {
     "notation": "v9",
@@ -69,7 +77,8 @@
     "toneSymbol": "v",
     "hueNumber": 9,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "8Y 7.5/12"
   },
   {
     "notation": "v10",
@@ -77,7 +86,8 @@
     "toneSymbol": "v",
     "hueNumber": 10,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "3GY 7/12"
   },
   {
     "notation": "v11",
@@ -85,7 +95,8 @@
     "toneSymbol": "v",
     "hueNumber": 11,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "8GY 6/11.5"
   },
   {
     "notation": "v12",
@@ -93,7 +104,8 @@
     "toneSymbol": "v",
     "hueNumber": 12,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "3G 5.5/11"
   },
   {
     "notation": "v13",
@@ -101,7 +113,8 @@
     "toneSymbol": "v",
     "hueNumber": 13,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "9G 5/10.5"
   },
   {
     "notation": "v14",
@@ -109,7 +122,8 @@
     "toneSymbol": "v",
     "hueNumber": 14,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "5BG 4.5/10"
   },
   {
     "notation": "v15",
@@ -117,7 +131,8 @@
     "toneSymbol": "v",
     "hueNumber": 15,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "10BG 4/10"
   },
   {
     "notation": "v16",
@@ -125,7 +140,8 @@
     "toneSymbol": "v",
     "hueNumber": 16,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "5B 4/10"
   },
   {
     "notation": "v17",
@@ -133,7 +149,8 @@
     "toneSymbol": "v",
     "hueNumber": 17,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "10B 3.5/10.5"
   },
   {
     "notation": "v18",
@@ -141,7 +158,8 @@
     "toneSymbol": "v",
     "hueNumber": 18,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "3PB 3.5/11.5"
   },
   {
     "notation": "v19",
@@ -149,7 +167,8 @@
     "toneSymbol": "v",
     "hueNumber": 19,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "6PB 3.5/11.5"
   },
   {
     "notation": "v20",
@@ -157,7 +176,8 @@
     "toneSymbol": "v",
     "hueNumber": 20,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "9PB 3.5/11.5"
   },
   {
     "notation": "v21",
@@ -165,7 +185,8 @@
     "toneSymbol": "v",
     "hueNumber": 21,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "3P 3.5/11.5"
   },
   {
     "notation": "v22",
@@ -173,7 +194,8 @@
     "toneSymbol": "v",
     "hueNumber": 22,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "7P 3.5/11.5"
   },
   {
     "notation": "v23",
@@ -181,7 +203,8 @@
     "toneSymbol": "v",
     "hueNumber": 23,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "1RP 3.5/11.5"
   },
   {
     "notation": "v24",
@@ -189,6 +212,7 @@
     "toneSymbol": "v",
     "hueNumber": 24,
     "isNeutral": false,
-    "achromaticBucket": null
+    "achromaticBucket": null,
+    "munsell": "6RP 4/12.5"
   }
 ]
