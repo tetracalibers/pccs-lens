@@ -7,6 +7,7 @@ export type PCCSColor = {
   hueNumber: number | null
   isNeutral: boolean
   achromaticBucket: AchromaticBucket | null
+  munsell: string | null
 }
 
 export type JISColor = {
