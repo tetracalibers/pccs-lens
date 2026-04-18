@@ -152,7 +152,11 @@
     overflow-x: auto;
     padding: 0.5rem 0.25rem 1.5rem;
 
-    --cell-size: 72px;
+    --cell-size: 60px;
+    --map-font-xs: calc(var(--cell-size) * 0.12);
+    --map-font-s: calc(var(--cell-size) * 0.14);
+    --map-font-m: calc(var(--cell-size) * 0.16);
+    --map-font-l: calc(var(--cell-size) * 0.19);
   }
 
   @media (max-width: 640px) {
@@ -178,7 +182,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.65rem;
+    font-size: var(--map-font-m);
     font-family: var(--font-mono);
     color: var(--color-body);
     padding: 0.25rem 0;

@@ -20,10 +20,10 @@
 
   const fontSize = $derived.by(() => {
     const density = Math.max(maxSegments, totalLines)
-    if (density >= 5) return "0.55rem"
-    if (density >= 4) return "0.65rem"
-    if (density >= 3) return "0.75rem"
-    return "0.85rem"
+    if (density >= 5) return "var(--map-font-xs, 0.55rem)"
+    if (density >= 4) return "var(--map-font-s, 0.65rem)"
+    if (density >= 3) return "var(--map-font-m, 0.75rem)"
+    return "var(--map-font-l, 0.85rem)"
   })
 
   const title = $derived(colors.map((c) => `${c.name}（${c.reading}）`).join(" / "))
@@ -68,12 +68,12 @@
 
   .pccs-symbol {
     position: absolute;
-    top: -0.4rem;
+    top: calc(var(--cell-size, 72px) * -0.08);
     left: 50%;
     transform: translateX(-50%);
-    font-size: 0.55rem;
+    font-size: var(--map-font-xs, 0.55rem);
     font-weight: 700;
-    padding: 0.05rem 0.3rem;
+    padding: calc(var(--cell-size, 72px) * 0.01) calc(var(--cell-size, 72px) * 0.06);
     background: var(--color-bg, #fff);
     border: 1px solid var(--color-body);
     border-radius: 999px;

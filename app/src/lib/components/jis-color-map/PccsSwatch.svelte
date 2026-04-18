@@ -8,16 +8,10 @@
   const hueInfo = $derived(pccs.hueNumber !== null ? PCCS_HUE_MAP.get(pccs.hueNumber) : null)
   const symbol = $derived(hueInfo ? hueInfo.symbol : pccs.notation)
   const textColor = $derived(isLightColor(pccs.hex) ? "var(--color-body)" : "#fff")
-  const fontSize = $derived(symbol.length >= 5 ? "0.6rem" : "0.7rem")
 </script>
 
 <div class="cell" title={pccs.notation}>
-  <div
-    class="swatch"
-    style:background-color={pccs.hex}
-    style:color={textColor}
-    style:font-size={fontSize}
-  >
+  <div class="swatch" style:background-color={pccs.hex} style:color={textColor}>
     {symbol}
   </div>
 </div>
@@ -32,8 +26,8 @@
   }
 
   .swatch {
-    width: 85%;
-    height: 85%;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -41,5 +35,6 @@
     font-weight: 700;
     text-align: center;
     letter-spacing: -0.02em;
+    font-size: var(--map-font-l, 0.7rem);
   }
 </style>
