@@ -31,6 +31,7 @@ export type JISApproximatePccs = {
 export type JISColor = {
   id: string
   name: string
+  nameSegments?: string[]
   reading: string
   systematicName: string
   hex: string
