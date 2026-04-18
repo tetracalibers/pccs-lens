@@ -10,7 +10,7 @@
   const textColor = $derived(isLightColor(pccs.hex) ? "#333" : "#fff")
 </script>
 
-<div class="cell" title={pccs.notation}>
+<div class="cell">
   <div class="swatch" style:background-color={pccs.hex} style:color={textColor}>
     {symbol}
   </div>
