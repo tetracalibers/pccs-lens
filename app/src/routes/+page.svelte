@@ -25,6 +25,14 @@
       title: "色の活用分野",
       desc: "デザイン・ビジネス・ファッション・インテリア・景観色彩など",
       tag: "学ぶ"
+    },
+    {
+      href: resolve("/jis-color-map"),
+      gradient: "linear-gradient(135deg, #f59f00, #c77dff)",
+      glow: "#f59f00",
+      title: "慣用色名マップ",
+      desc: "JIS慣用色をマンセル色相・明度の2軸で俯瞰する",
+      tag: "見る"
     }
   ]
 

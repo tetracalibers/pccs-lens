@@ -5,6 +5,9 @@ import pccsOdd12 from "./pccs_odd12.json"
 import pccsNeutral from "./pccs_neutral.json"
 import type { PCCSColor } from "./types"
 
+/** vトーン全24色相 */
+export const PCCS_V24 = pccsV24 as PCCSColor[]
+
 /** 新配色カード199の収録色（vトーン全色相 + v・s以外の偶数色相 + 無彩色） */
 export const PCCS_CARD_199 = [...pccsV24, ...pccsEven12, ...pccsNeutral] as PCCSColor[]
 

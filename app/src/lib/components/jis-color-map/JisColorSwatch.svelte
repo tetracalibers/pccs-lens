@@ -1,0 +1,109 @@
+<script lang="ts">
+  import { isLightColor } from "$lib/color/utils"
+  import type { JISColor } from "$lib/data/jis-colors"
+
+  let {
+    colors,
+    pccsSymbol
+  }: {
+    colors: JISColor[]
+    pccsSymbol?: string
+  } = $props()
+
+  const bgHex = $derived(colors[0].hex)
+  const textColor = $derived(isLightColor(bgHex) ? "var(--color-body)" : "#fff")
+
+  const maxSegments = $derived(
+    Math.max(...colors.map((c) => c.nameSegments?.length ?? c.name.length))
+  )
+  const totalLines = $derived(colors.reduce((sum, c) => sum + (c.nameSegments?.length ?? 1), 0))
+
+  const fontSize = $derived.by(() => {
+    const density = Math.max(maxSegments, totalLines)
+    if (density >= 5) return "0.55rem"
+    if (density >= 4) return "0.65rem"
+    if (density >= 3) return "0.75rem"
+    return "0.85rem"
+  })
+
+  const title = $derived(colors.map((c) => `${c.name}（${c.reading}）`).join(" / "))
+</script>
+
+<div class="cell">
+  {#if pccsSymbol}
+    <span class="pccs-symbol">{pccsSymbol}</span>
+  {/if}
+  <div
+    class="swatch"
+    style:background-color={bgHex}
+    style:color={textColor}
+    style:font-size={fontSize}
+    {title}
+  >
+    <div class="names">
+      {#each colors as color (color.id)}
+        <div class="name">
+          {#if color.nameSegments}
+            {#each color.nameSegments as segment, i (i)}
+              {segment}
+              {#if i < color.nameSegments.length - 1}<br />{/if}
+            {/each}
+          {:else}
+            {color.name}
+          {/if}
+        </div>
+      {/each}
+    </div>
+  </div>
+</div>
+
+<style>
+  .cell {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pccs-symbol {
+    position: absolute;
+    top: -0.4rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.55rem;
+    font-weight: 700;
+    padding: 0.05rem 0.3rem;
+    background: var(--color-bg, #fff);
+    border: 1px solid var(--color-body);
+    border-radius: 999px;
+    color: var(--color-body);
+    white-space: nowrap;
+    z-index: 1;
+  }
+
+  .swatch {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    padding: 0.15rem;
+    box-sizing: border-box;
+    text-align: center;
+    line-height: 1.1;
+    font-weight: 600;
+  }
+
+  .names {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    width: 100%;
+  }
+
+  .name {
+    overflow: hidden;
+    overflow-wrap: break-word;
+  }
+</style>

@@ -1,0 +1,30 @@
+<script lang="ts">
+  import Heading1 from "$lib/components/Heading1.svelte"
+  import JisColorMap from "$lib/components/jis-color-map/JisColorMap.svelte"
+</script>
+
+<svelte:head>
+  <title>慣用色名マップ — PCCS Lens</title>
+</svelte:head>
+
+<main>
+  <div class="header">
+    <Heading1 icon="mdi:palette-swatch" grayscale compact>慣用色名マップ</Heading1>
+    <p class="subtitle">JIS慣用色をマンセル色相・明度の2軸で俯瞰する</p>
+  </div>
+
+  <JisColorMap groupId="all" />
+</main>
+
+<style>
+  .header {
+    margin-bottom: 1.5rem;
+    padding: 0 1rem;
+  }
+
+  .subtitle {
+    color: light-dark(#555, #999);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+</style>
