@@ -2,7 +2,7 @@
   {
     "id": "red",
     "name": "赤系",
-    "subcategories": [
+    "subfamilies": [
       {
         "id": "pink-red-purple",
         "name": "ピンク・赤紫系"
@@ -16,7 +16,7 @@
   {
     "id": "brown",
     "name": "茶系",
-    "subcategories": [
+    "subfamilies": [
       {
         "id": "yellow-red-light-brown",
         "name": "黄赤寄りの明るい茶系"
@@ -34,7 +34,7 @@
   {
     "id": "yellow",
     "name": "黄系",
-    "subcategories": [
+    "subfamilies": [
       {
         "id": "light-yellow",
         "name": "薄めの黄系"
@@ -48,7 +48,7 @@
   {
     "id": "green",
     "name": "緑系",
-    "subcategories": [
+    "subfamilies": [
       {
         "id": "yellow-green",
         "name": "黄緑系"
@@ -66,7 +66,7 @@
   {
     "id": "blue",
     "name": "青系",
-    "subcategories": [
+    "subfamilies": [
       {
         "id": "water-light-blue-green",
         "name": "水色・薄めの青緑系"
@@ -84,7 +84,7 @@
   {
     "id": "purple",
     "name": "紫系",
-    "subcategories": [
+    "subfamilies": [
       {
         "id": "light-purple-blue-purple",
         "name": "薄紫・青紫系"
@@ -98,7 +98,7 @@
   {
     "id": "neutral",
     "name": "無彩色系",
-    "subcategories": [
+    "subfamilies": [
       {
         "id": "off-neutral",
         "name": "準無彩色"
