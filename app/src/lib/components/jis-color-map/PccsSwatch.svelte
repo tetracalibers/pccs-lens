@@ -35,5 +35,6 @@
     text-align: center;
     letter-spacing: -0.02em;
     font-size: var(--map-font-l, 0.7rem);
+    font-family: var(--font-mono);
   }
 </style>

@@ -22,8 +22,7 @@
     const density = Math.max(maxSegments, totalLines)
     if (density >= 5) return "var(--map-font-xs, 0.55rem)"
     if (density >= 4) return "var(--map-font-s, 0.65rem)"
-    if (density >= 3) return "var(--map-font-m, 0.75rem)"
-    return "var(--map-font-l, 0.85rem)"
+    return "var(--map-font-m, 0.75rem)"
   })
 
   const title = $derived(colors.map((c) => `${c.name}（${c.reading}）`).join(" / "))
@@ -91,6 +90,7 @@
     box-sizing: border-box;
     text-align: center;
     line-height: 1.1;
+    font-family: var(--font-round);
   }
 
   .names {
