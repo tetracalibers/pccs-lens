@@ -129,7 +129,7 @@
 <div class="scroll">
   <div
     class="map"
-    style:grid-template-columns="auto repeat({data.hueColumns.length}, var(--cell-size))"
+    style:grid-template-columns="var(--cell-size) repeat({data.hueColumns.length}, var(--cell-size))"
     style:grid-template-rows="auto repeat({layout.totalRows}, var(--cell-size))"
   >
     <!-- 色相ヘッダー -->
