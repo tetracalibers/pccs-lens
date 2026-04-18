@@ -471,6 +471,7 @@
     {
       "id": "marigold",
       "name": "マリーゴールド",
+      "nameSegments": ["マリー", "ゴールド"],
       "reading": "marigold",
       "systematicName": "鮮やかな赤みの黄",
       "hex": "#f39800",
