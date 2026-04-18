@@ -183,7 +183,9 @@
 <style>
   .scroll {
     overflow-x: auto;
-    padding: 0.5rem 0.25rem 1.5rem;
+    padding-block: 0.5rem 1.5rem;
+    padding-inline: 0;
+    max-width: 90cqw;
 
     --cell-size: 60px;
     --map-font-xs: calc(var(--cell-size) * 0.12);
@@ -202,8 +204,8 @@
     display: grid;
     gap: 4px;
     width: max-content;
-    padding: 0.5rem;
     margin-inline: auto;
+    padding-inline-end: 1rem;
   }
 
   .corner {

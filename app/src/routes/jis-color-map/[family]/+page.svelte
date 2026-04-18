@@ -1,6 +1,5 @@
 <script lang="ts">
   import { resolve } from "$app/paths"
-  import Heading1 from "$lib/components/Heading1.svelte"
   import Breadcrumb from "$lib/components/Breadcrumb.svelte"
   import JisColorMap from "$lib/components/jis-color-map/JisColorMap.svelte"
   import { JIS_COLOR_FAMILIES, type ColorFamily } from "$lib/data/jis-colors"
@@ -21,9 +20,7 @@
 <main>
   <div class="header">
     <Breadcrumb {crumbs} category="contents" />
-    <Heading1 icon="mdi:palette-swatch" grayscale compact>
-      {family.name}の慣用色名マップ
-    </Heading1>
+    <h1>{family.name}の慣用色名マップ</h1>
   </div>
 
   <JisColorMap groupId={data.family} />
@@ -32,10 +29,20 @@
 <style>
   main {
     margin: 0 auto;
-    max-width: 1200px;
+    max-width: 90cqw;
+    display: grid;
+    justify-items: flex-start;
+    grid-template-columns: min-content;
+    width: min-content;
   }
 
   .header {
-    margin-inline-start: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
   }
 </style>
