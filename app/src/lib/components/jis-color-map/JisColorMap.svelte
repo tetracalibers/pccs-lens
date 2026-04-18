@@ -167,8 +167,7 @@
           {@const pccs = p.cell.pccsHint
             ? {
                 symbol:
-                  PCCS_HUE_MAP.get(p.cell.pccsHint.hueNumber!)?.symbol ??
-                  p.cell.pccsHint.notation,
+                  PCCS_HUE_MAP.get(p.cell.pccsHint.hueNumber!)?.symbol ?? p.cell.pccsHint.notation,
                 hex: p.cell.pccsHint.hex
               }
             : undefined}
