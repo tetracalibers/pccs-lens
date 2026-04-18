@@ -82,5 +82,5 @@ export const JIS_COLORS_BY_GROUP: Map<ColorFamily | ColorSubfamily, JISColor[]> 
 })()
 
 export const JIS_COLORS: JISColor[] = JIS_COLOR_FAMILIES.flatMap((f) =>
-  f.subfamilies.flatMap((s) => JIS_COLORS_BY_SUBFAMILY[s.id] ?? []),
+  f.subfamilies.flatMap((s) => JIS_COLORS_BY_SUBFAMILY[s.id] ?? [])
 )
