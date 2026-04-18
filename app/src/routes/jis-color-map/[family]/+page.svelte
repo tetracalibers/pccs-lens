@@ -19,8 +19,8 @@
 </svelte:head>
 
 <main>
-  <Breadcrumb {crumbs} category="contents" />
   <div class="header">
+    <Breadcrumb {crumbs} category="contents" />
     <Heading1 icon="mdi:palette-swatch" grayscale compact>
       {family.name}の慣用色名マップ
     </Heading1>
@@ -30,10 +30,12 @@
 </main>
 
 <style>
+  main {
+    margin: 0 auto;
+    max-width: 1200px;
+  }
+
   .header {
-    margin-bottom: 1.5rem;
-    padding: 0 1rem;
-    margin-inline: auto;
-    width: fit-content;
+    margin-inline-start: 1.5rem;
   }
 </style>
