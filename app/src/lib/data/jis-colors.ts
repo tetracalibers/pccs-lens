@@ -37,8 +37,6 @@ export type JISColor = {
   hex: string
   examLevel: 2 | 3 | null
   munsell: string
-  category: ColorFamily
-  subcategory: ColorSubfamily
   // 最低1件、最大3件
   approximatePccs: [JISApproximatePccs, ...JISApproximatePccs[]]
 }
@@ -63,6 +61,26 @@ export type JISColorFamily = {
   subfamilies: JISSubfamily[]
 }
 
-export const JIS_COLORS: JISColor[] = jisColorsJson as JISColor[]
+export type JISColorsBySubfamily = Record<ColorSubfamily, JISColor[]>
 
 export const JIS_COLOR_FAMILIES: JISColorFamily[] = jisColorFamilyJson as JISColorFamily[]
+
+const JIS_COLORS_BY_SUBFAMILY = jisColorsJson as JISColorsBySubfamily
+
+export const JIS_COLORS_BY_GROUP: Map<ColorFamily | ColorSubfamily, JISColor[]> = (() => {
+  const map = new Map<ColorFamily | ColorSubfamily, JISColor[]>()
+  for (const family of JIS_COLOR_FAMILIES) {
+    const familyColors: JISColor[] = []
+    for (const sub of family.subfamilies) {
+      const subColors = JIS_COLORS_BY_SUBFAMILY[sub.id] ?? []
+      map.set(sub.id, subColors)
+      familyColors.push(...subColors)
+    }
+    map.set(family.id, familyColors)
+  }
+  return map
+})()
+
+export const JIS_COLORS: JISColor[] = JIS_COLOR_FAMILIES.flatMap((f) =>
+  f.subfamilies.flatMap((s) => JIS_COLORS_BY_SUBFAMILY[s.id] ?? []),
+)

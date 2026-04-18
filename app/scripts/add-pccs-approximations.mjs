@@ -54,22 +54,23 @@ function computeApproximatePccs(jisHex, pccsAll) {
 async function main() {
   const pccsAll = await loadPccsAll()
   const jisPath = resolve(DATA_DIR, "jis_colors.json")
-  const jisColors = JSON.parse(await readFile(jisPath, "utf8"))
+  const jisColorsBySubfamily = JSON.parse(await readFile(jisPath, "utf8"))
+  const allColors = Object.values(jisColorsBySubfamily).flat()
 
-  for (const jis of jisColors) {
+  for (const jis of allColors) {
     jis.approximatePccs = computeApproximatePccs(jis.hex, pccsAll)
   }
 
-  await writeFile(jisPath, JSON.stringify(jisColors), "utf8")
+  await writeFile(jisPath, JSON.stringify(jisColorsBySubfamily), "utf8")
 
-  const total = jisColors.length
-  const withOnlyOne = jisColors.filter((c) => c.approximatePccs.length === 1).length
-  const maxed = jisColors.filter((c) => c.approximatePccs.length === MAX_RESULTS).length
+  const total = allColors.length
+  const withOnlyOne = allColors.filter((c) => c.approximatePccs.length === 1).length
+  const maxed = allColors.filter((c) => c.approximatePccs.length === MAX_RESULTS).length
   console.log(`Updated ${total} entries.`)
   console.log(`  1 candidate:  ${withOnlyOne}`)
   console.log(`  ${MAX_RESULTS} candidates: ${maxed}`)
 
-  const largeFirstDeltaE = jisColors
+  const largeFirstDeltaE = allColors
     .filter((c) => c.approximatePccs[0].deltaE > DELTA_E_ABS_THRESHOLD)
     .map(
       (c) =>
