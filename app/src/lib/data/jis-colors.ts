@@ -87,7 +87,10 @@ export const JIS_COLORS: JISColor[] = JIS_COLOR_FAMILIES.flatMap((f) =>
 
 export type JISColorGroupId = ColorFamily | ColorSubfamily | "all"
 
-const FAMILY_IDS = new Set<string>(JIS_COLOR_FAMILIES.map((f) => f.id))
+const FAMILY_IDS: Set<ColorFamily> = new Set(JIS_COLOR_FAMILIES.map((f) => f.id))
+
+export const isColorFamily = (value: string): value is ColorFamily =>
+  (FAMILY_IDS as Set<string>).has(value)
 
 export const getJisColorsByGroup = (groupId: JISColorGroupId): JISColor[] => {
   if (groupId === "all") return JIS_COLORS
@@ -96,7 +99,7 @@ export const getJisColorsByGroup = (groupId: JISColorGroupId): JISColor[] => {
 
 export const getSubfamiliesByGroup = (groupId: JISColorGroupId): JISSubfamily[] => {
   if (groupId === "all") return JIS_COLOR_FAMILIES.flatMap((f) => f.subfamilies)
-  if (FAMILY_IDS.has(groupId)) {
+  if ((FAMILY_IDS as Set<string>).has(groupId)) {
     const family = JIS_COLOR_FAMILIES.find((f) => f.id === groupId)
     return family ? family.subfamilies : []
   }
