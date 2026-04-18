@@ -7,7 +7,7 @@
 
   const hueInfo = $derived(pccs.hueNumber !== null ? PCCS_HUE_MAP.get(pccs.hueNumber) : null)
   const symbol = $derived(hueInfo ? hueInfo.symbol : pccs.notation)
-  const textColor = $derived(isLightColor(pccs.hex) ? "var(--color-body)" : "#fff")
+  const textColor = $derived(isLightColor(pccs.hex) ? "#333" : "#fff")
 </script>
 
 <div class="cell" title={pccs.notation}>
@@ -32,7 +32,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
     text-align: center;
     letter-spacing: -0.02em;
     font-size: var(--map-font-l, 0.7rem);

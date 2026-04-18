@@ -13,7 +13,7 @@
     <p class="subtitle">JIS慣用色をマンセル色相・明度の2軸で俯瞰する</p>
   </div>
 
-  <JisColorMap groupId="all" />
+  <JisColorMap groupId="red" />
 </main>
 
 <style>

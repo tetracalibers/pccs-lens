@@ -11,7 +11,7 @@
   } = $props()
 
   const bgHex = $derived(colors[0].hex)
-  const textColor = $derived(isLightColor(bgHex) ? "var(--color-body)" : "#fff")
+  const textColor = $derived(isLightColor(bgHex) ? "#333" : "#fff")
 
   const maxSegments = $derived(
     Math.max(...colors.map((c) => c.nameSegments?.length ?? c.name.length))
@@ -72,7 +72,6 @@
     left: 50%;
     transform: translateX(-50%);
     font-size: var(--map-font-xs, 0.55rem);
-    font-weight: 700;
     padding: calc(var(--cell-size, 72px) * 0.01) calc(var(--cell-size, 72px) * 0.06);
     background: var(--color-bg, #fff);
     border: 1px solid var(--color-body);
@@ -92,7 +91,6 @@
     box-sizing: border-box;
     text-align: center;
     line-height: 1.1;
-    font-weight: 600;
   }
 
   .names {

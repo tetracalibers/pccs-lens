@@ -21,7 +21,6 @@
 
   .label {
     font-size: var(--map-font-m, 0.65rem);
-    font-weight: 500;
     white-space: nowrap;
   }
 </style>
