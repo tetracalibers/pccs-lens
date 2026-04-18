@@ -2470,8 +2470,8 @@
     },
     {
       "id": "silver-grey",
-      "name": "シルバーグレー",
-      "nameSegments": ["シルバー", "グレー"],
+      "name": "シルバーグレイ",
+      "nameSegments": ["シルバー", "グレイ"],
       "reading": "silver grey",
       "systematicName": "明るい灰色",
       "hex": "#afafb0",
@@ -2486,8 +2486,8 @@
     },
     {
       "id": "slate-grey",
-      "name": "スレートグレー",
-      "nameSegments": ["スレート", "グレー"],
+      "name": "スレートグレイ",
+      "nameSegments": ["スレート", "グレイ"],
       "reading": "slate grey",
       "systematicName": "暗い灰色",
       "hex": "#636062",
@@ -2502,8 +2502,8 @@
     },
     {
       "id": "charcoal-grey",
-      "name": "チャコールグレー",
-      "nameSegments": ["チャコール", "グレー"],
+      "name": "チャコールグレイ",
+      "nameSegments": ["チャコール", "グレイ"],
       "reading": "charcoal grey",
       "systematicName": "紫みの暗い灰色",
       "hex": "#4e4449",
