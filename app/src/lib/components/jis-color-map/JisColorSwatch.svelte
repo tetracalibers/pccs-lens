@@ -14,13 +14,21 @@
   const textColor = $derived(isLightColor(bgHex) ? "#333" : "#fff")
   const pccsTextColor = $derived(pccs ? (isLightColor(pccs.hex) ? "#333" : "#fff") : "#fff")
 
-  const maxSegments = $derived(
-    Math.max(...colors.map((c) => c.nameSegments?.length ?? c.name.length))
+  const maxDensityPerColor = $derived(
+    Math.max(
+      ...colors.map((c) => {
+        if (c.nameSegments) {
+          const longestSegment = Math.max(...c.nameSegments.map((s) => s.length))
+          return Math.max(c.nameSegments.length, longestSegment)
+        }
+        return c.name.length
+      })
+    )
   )
   const totalLines = $derived(colors.reduce((sum, c) => sum + (c.nameSegments?.length ?? 1), 0))
 
   const fontSize = $derived.by(() => {
-    const density = Math.max(maxSegments, totalLines)
+    const density = Math.max(maxDensityPerColor, totalLines)
     if (density >= 5) return "var(--map-font-xs, 0.55rem)"
     if (density >= 4) return "var(--map-font-s, 0.65rem)"
     return "var(--map-font-m, 0.75rem)"
