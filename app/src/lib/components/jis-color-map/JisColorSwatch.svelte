@@ -4,14 +4,15 @@
 
   let {
     colors,
-    pccsSymbol
+    pccs
   }: {
     colors: JISColor[]
-    pccsSymbol?: string
+    pccs?: { symbol: string; hex: string }
   } = $props()
 
   const bgHex = $derived(colors[0].hex)
   const textColor = $derived(isLightColor(bgHex) ? "#333" : "#fff")
+  const pccsTextColor = $derived(pccs ? (isLightColor(pccs.hex) ? "#333" : "#fff") : "#fff")
 
   const maxSegments = $derived(
     Math.max(...colors.map((c) => c.nameSegments?.length ?? c.name.length))
@@ -29,8 +30,10 @@
 </script>
 
 <div class="cell">
-  {#if pccsSymbol}
-    <span class="pccs-symbol">{pccsSymbol}</span>
+  {#if pccs}
+    <div class="pccs" style:background-color={pccs.hex}>
+      <span class="pccs-symbol" style:color={pccsTextColor}>{pccs.symbol}</span>
+    </div>
   {/if}
   <div
     class="swatch"
@@ -65,19 +68,25 @@
     flex-direction: column;
   }
 
-  .pccs-symbol {
+  .pccs {
     position: absolute;
-    top: calc(var(--cell-size, 72px) * -0.08);
-    left: 50%;
+    top: 70%;
+    left: 90%;
     transform: translateX(-50%);
-    font-size: var(--map-font-xs, 0.55rem);
-    padding: calc(var(--cell-size, 72px) * 0.01) calc(var(--cell-size, 72px) * 0.06);
-    background: var(--color-bg, #fff);
-    border: 1px solid var(--color-body);
-    border-radius: 999px;
+    font-size: var(--map-font-l, 0.55rem);
     color: var(--color-body);
     white-space: nowrap;
     z-index: 1;
+    display: grid;
+    width: 50%;
+    height: 50%;
+    border-radius: 50%;
+    place-items: center;
+  }
+
+  .pccs-symbol {
+    font-family: var(--font-mono);
+    font-size: var(--map-font-s);
   }
 
   .swatch {

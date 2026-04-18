@@ -164,10 +164,15 @@
         style:grid-row="{p.row + 1} / span {p.rowSpan}"
       >
         {#if p.cell.kind === "jis"}
-          {@const pccsSymbol = p.cell.pccsHint
-            ? (PCCS_HUE_MAP.get(p.cell.pccsHint.hueNumber!)?.symbol ?? p.cell.pccsHint.notation)
+          {@const pccs = p.cell.pccsHint
+            ? {
+                symbol:
+                  PCCS_HUE_MAP.get(p.cell.pccsHint.hueNumber!)?.symbol ??
+                  p.cell.pccsHint.notation,
+                hex: p.cell.pccsHint.hex
+              }
             : undefined}
-          <JisColorSwatch colors={p.cell.colors} {pccsSymbol} />
+          <JisColorSwatch colors={p.cell.colors} {pccs} />
         {:else}
           <PccsSwatch pccs={p.cell.pccs} />
         {/if}
