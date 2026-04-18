@@ -28,11 +28,11 @@
     },
     {
       href: resolve("/jis-color-map"),
-      gradient: "linear-gradient(135deg, #f59f00, #c77dff)",
-      glow: "#f59f00",
+      gradient: "linear-gradient(135deg, #c77dff, #4d96ff)",
+      glow: "#c77dff",
       title: "慣用色名マップ",
-      desc: "JIS慣用色をマンセル色相・明度の2軸で俯瞰する",
-      tag: "見る"
+      desc: "慣用色を色相・明度の2軸で眺め、比較して覚える",
+      tag: "比べる"
     }
   ]
 
