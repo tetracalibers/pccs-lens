@@ -33,24 +33,24 @@ export const parseMunsell = (munsell: string): MunsellColor | null => {
   }
 }
 
-// 10RPを起点（0）として色相環を一周[0, 100)にマップするオフセット。
-// R→YR→Y→GY→G→BG→B→PB→P→RPの順に色相環を進む。
+// RPを起点として色相環を一周[0, 100)にマップするオフセット。
+// RP→R→YR→Y→GY→G→BG→B→PB→Pの順に色相環を進む。
 const HUE_FAMILY_OFFSET: Record<string, number> = {
-  R: 0,
-  YR: 10,
-  Y: 20,
-  GY: 30,
-  G: 40,
-  BG: 50,
-  B: 60,
-  PB: 70,
-  P: 80,
-  RP: 90
+  RP: 0,
+  R: 10,
+  YR: 20,
+  Y: 30,
+  GY: 40,
+  G: 50,
+  BG: 60,
+  B: 70,
+  PB: 80,
+  P: 90
 }
 
 /**
  * マンセル色相表記（例: "10RP", "4R", "2.5YR"）を[0, 100)のランクに変換する。
- * 10RPを起点（0）として色相環順に並ぶ。ソートキーとして利用できる。
+ * RPを起点として色相環順に並ぶ。ソートキーとして利用できる。
  */
 export const munsellHueRank = (hue: string): number | null => {
   const match = hue.match(/^(\d+(?:\.\d+)?)([A-Z]+)$/)
