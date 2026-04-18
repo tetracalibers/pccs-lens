@@ -24,17 +24,18 @@
       ]
     },
     {
-      "id": "kobai-iro",
-      "name": "紅梅色",
-      "reading": "こうばいいろ",
-      "systematicName": "やわらかい赤",
-      "hex": "#f3a7a5",
+      "id": "baby-pink",
+      "name": "ベビーピンク",
+      "nameSegments": ["ベビー", "ピンク"],
+      "reading": "baby pink",
+      "systematicName": "薄い赤",
+      "hex": "#fadbda",
       "examLevel": 3,
-      "munsell": "2.5R 6.5/7.5",
+      "munsell": "4R 8.5/4",
       "approximatePccs": [
         {
-          "notation": "p3",
-          "deltaE": 3.67
+          "notation": "p4",
+          "deltaE": 9.22
         }
       ]
     },
@@ -102,18 +103,48 @@
       ]
     },
     {
-      "id": "baby-pink",
-      "name": "ベビーピンク",
-      "nameSegments": ["ベビー", "ピンク"],
-      "reading": "baby pink",
-      "systematicName": "薄い赤",
-      "hex": "#fadbda",
+      "id": "sango-iro",
+      "name": "珊瑚色",
+      "reading": "さんごいろ",
+      "systematicName": "明るい赤",
+      "hex": "#f4ada3",
       "examLevel": 3,
-      "munsell": "4R 8.5/4",
+      "munsell": "2.5R 7/11",
       "approximatePccs": [
         {
-          "notation": "p4",
-          "deltaE": 9.22
+          "notation": "p3",
+          "deltaE": 4.13
+        }
+      ]
+    },
+    {
+      "id": "kobai-iro",
+      "name": "紅梅色",
+      "reading": "こうばいいろ",
+      "systematicName": "やわらかい赤",
+      "hex": "#f3a7a5",
+      "examLevel": 3,
+      "munsell": "2.5R 6.5/7.5",
+      "approximatePccs": [
+        {
+          "notation": "p3",
+          "deltaE": 3.67
+        }
+      ]
+    },
+    {
+      "id": "salmon-pink",
+      "name": "サーモンピンク",
+      "nameSegments": ["サーモン", "ピンク"],
+      "reading": "salmon pink",
+      "systematicName": "やわらかい黄みの赤",
+      "hex": "#f4a583",
+      "examLevel": 3,
+      "munsell": "8R 7.5/7.5",
+      "approximatePccs": [
+        {
+          "notation": "lt5",
+          "deltaE": 3.89
         }
       ]
     },
@@ -133,49 +164,6 @@
         {
           "notation": "lt24",
           "deltaE": 4.31
-        }
-      ]
-    },
-    {
-      "id": "wine-red",
-      "name": "ワインレッド",
-      "nameSegments": ["ワイン", "レッド"],
-      "reading": "wine red",
-      "systematicName": "濃い紫みの赤",
-      "hex": "#932e44",
-      "examLevel": 3,
-      "munsell": "10RP 3/9",
-      "approximatePccs": [
-        {
-          "notation": "d2",
-          "deltaE": 4.32
-        },
-        {
-          "notation": "s1",
-          "deltaE": 5.84
-        }
-      ]
-    },
-    {
-      "id": "burgundy",
-      "name": "バーガンディー",
-      "reading": "burgundy",
-      "systematicName": "ごく暗い紫みの赤",
-      "hex": "#561620",
-      "examLevel": 2,
-      "munsell": "10RP 2/2.5",
-      "approximatePccs": [
-        {
-          "notation": "dk2",
-          "deltaE": 5.12
-        },
-        {
-          "notation": "dk1",
-          "deltaE": 5.36
-        },
-        {
-          "notation": "dk3",
-          "deltaE": 6.99
         }
       ]
     },
@@ -205,56 +193,17 @@
   ],
   "orange-red": [
     {
-      "id": "sango-iro",
-      "name": "珊瑚色",
-      "reading": "さんごいろ",
-      "systematicName": "明るい赤",
-      "hex": "#f4ada3",
+      "id": "scarlet",
+      "name": "スカーレット",
+      "reading": "scarlet",
+      "systematicName": "鮮やかな黄みの赤",
+      "hex": "#ea5539",
       "examLevel": 3,
-      "munsell": "2.5R 7/11",
+      "munsell": "7R 5/14",
       "approximatePccs": [
         {
-          "notation": "p3",
-          "deltaE": 4.13
-        }
-      ]
-    },
-    {
-      "id": "salmon-pink",
-      "name": "サーモンピンク",
-      "nameSegments": ["サーモン", "ピンク"],
-      "reading": "salmon pink",
-      "systematicName": "やわらかい黄みの赤",
-      "hex": "#f4a583",
-      "examLevel": 3,
-      "munsell": "8R 7.5/7.5",
-      "approximatePccs": [
-        {
-          "notation": "lt5",
-          "deltaE": 3.89
-        }
-      ]
-    },
-    {
-      "id": "karakurenai-iro",
-      "name": "韓紅色",
-      "reading": "からくれないいろ",
-      "systematicName": "鮮やかな赤",
-      "hex": "#e95464",
-      "examLevel": 2,
-      "munsell": "1.5R 5.5/13",
-      "approximatePccs": [
-        {
-          "notation": "b2",
-          "deltaE": 5.29
-        },
-        {
-          "notation": "b1",
-          "deltaE": 5.87
-        },
-        {
-          "notation": "sf3",
-          "deltaE": 5.97
+          "notation": "b4",
+          "deltaE": 2.97
         }
       ]
     },
@@ -320,17 +269,41 @@
       ]
     },
     {
-      "id": "scarlet",
-      "name": "スカーレット",
-      "reading": "scarlet",
-      "systematicName": "鮮やかな黄みの赤",
-      "hex": "#ea5539",
-      "examLevel": 3,
-      "munsell": "7R 5/14",
+      "id": "poppy-red",
+      "name": "ポピーレッド",
+      "nameSegments": ["ポピー", "レッド"],
+      "reading": "poppy red",
+      "systematicName": "鮮やかな赤",
+      "hex": "#e9474d",
+      "examLevel": 2,
+      "munsell": "4R 5/14",
       "approximatePccs": [
         {
-          "notation": "b4",
-          "deltaE": 2.97
+          "notation": "b2",
+          "deltaE": 3.03
+        }
+      ]
+    },
+    {
+      "id": "karakurenai-iro",
+      "name": "韓紅色",
+      "reading": "からくれないいろ",
+      "systematicName": "鮮やかな赤",
+      "hex": "#e95464",
+      "examLevel": 2,
+      "munsell": "1.5R 5.5/13",
+      "approximatePccs": [
+        {
+          "notation": "b2",
+          "deltaE": 5.29
+        },
+        {
+          "notation": "b1",
+          "deltaE": 5.87
+        },
+        {
+          "notation": "sf3",
+          "deltaE": 5.97
         }
       ]
     },
@@ -350,37 +323,22 @@
       ]
     },
     {
-      "id": "suo",
-      "name": "蘇芳",
-      "reading": "すおう",
-      "systematicName": "くすんだ赤",
-      "hex": "#9e3d3e",
-      "examLevel": 2,
-      "munsell": "4R 4/7",
+      "id": "wine-red",
+      "name": "ワインレッド",
+      "nameSegments": ["ワイン", "レッド"],
+      "reading": "wine red",
+      "systematicName": "濃い紫みの赤",
+      "hex": "#932e44",
+      "examLevel": 3,
+      "munsell": "10RP 3/9",
       "approximatePccs": [
         {
-          "notation": "d3",
-          "deltaE": 3.98
+          "notation": "d2",
+          "deltaE": 4.32
         },
         {
-          "notation": "d4",
-          "deltaE": 4.69
-        }
-      ]
-    },
-    {
-      "id": "poppy-red",
-      "name": "ポピーレッド",
-      "nameSegments": ["ポピー", "レッド"],
-      "reading": "poppy red",
-      "systematicName": "鮮やかな赤",
-      "hex": "#e9474d",
-      "examLevel": 2,
-      "munsell": "4R 5/14",
-      "approximatePccs": [
-        {
-          "notation": "b2",
-          "deltaE": 3.03
+          "notation": "s1",
+          "deltaE": 5.84
         }
       ]
     },
@@ -406,130 +364,22 @@
           "deltaE": 8.39
         }
       ]
-    },
-    {
-      "id": "oni",
-      "name": "黄丹",
-      "reading": "おうに",
-      "systematicName": "強い黄赤",
-      "hex": "#ee7948",
-      "examLevel": 2,
-      "munsell": "10R 6/12",
-      "approximatePccs": [
-        {
-          "notation": "b5",
-          "deltaE": 4.31
-        },
-        {
-          "notation": "sf4",
-          "deltaE": 5.11
-        },
-        {
-          "notation": "sf5",
-          "deltaE": 6.11
-        }
-      ]
-    },
-    {
-      "id": "koji-iro",
-      "name": "柑子色",
-      "reading": "こうじいろ",
-      "systematicName": "明るい黄赤",
-      "hex": "#f6ad48",
-      "examLevel": 2,
-      "munsell": "5.5YR 7.5/9",
-      "approximatePccs": [
-        {
-          "notation": "lt6",
-          "deltaE": 5.51
-        },
-        {
-          "notation": "b6",
-          "deltaE": 6.66
-        },
-        {
-          "notation": "sf7",
-          "deltaE": 7.9
-        }
-      ]
-    },
-    {
-      "id": "peach",
-      "name": "ピーチ",
-      "reading": "peach",
-      "systematicName": "明るい灰みの黄赤",
-      "hex": "#fbd8b5",
-      "examLevel": 3,
-      "munsell": "3YR 8/3.5",
-      "approximatePccs": [
-        {
-          "notation": "p5",
-          "deltaE": 1.6
-        }
-      ]
-    },
-    {
-      "id": "marigold",
-      "name": "マリーゴールド",
-      "nameSegments": ["マリー", "ゴールド"],
-      "reading": "marigold",
-      "systematicName": "鮮やかな赤みの黄",
-      "hex": "#f39800",
-      "examLevel": 3,
-      "munsell": "8YR 7.5/13",
-      "approximatePccs": [
-        {
-          "notation": "b6",
-          "deltaE": 3.01
-        }
-      ]
-    },
-    {
-      "id": "golden-yellow",
-      "name": "ゴールデンイエロー",
-      "nameSegments": ["ゴールデン", "イエロー"],
-      "reading": "golden yellow",
-      "systematicName": "強い赤みの黄",
-      "hex": "#f8b856",
-      "examLevel": 2,
-      "munsell": "7.5YR 7/10",
-      "approximatePccs": [
-        {
-          "notation": "lt6",
-          "deltaE": 6.07
-        },
-        {
-          "notation": "sf7",
-          "deltaE": 8.39
-        },
-        {
-          "notation": "lt7",
-          "deltaE": 8.61
-        }
-      ]
     }
   ],
   "yellow-red-light-brown": [
     {
-      "id": "odo-iro",
-      "name": "黄土色",
-      "reading": "おうどいろ",
-      "systematicName": "濃い赤みの黄",
-      "hex": "#c39043",
-      "examLevel": 3,
-      "munsell": "10YR 6/7.5",
+      "id": "raw-sienna",
+      "name": "ローシェンナ",
+      "nameSegments": ["ロー", "シェンナ"],
+      "reading": "raw sienna",
+      "systematicName": "強い黄赤",
+      "hex": "#d98032",
+      "examLevel": 2,
+      "munsell": "4YR 5/9",
       "approximatePccs": [
         {
-          "notation": "sf6",
-          "deltaE": 6.34
-        },
-        {
-          "notation": "sf7",
-          "deltaE": 6.34
-        },
-        {
-          "notation": "s7",
-          "deltaE": 6.6
+          "notation": "s6",
+          "deltaE": 3.31
         }
       ]
     },
@@ -553,157 +403,18 @@
       ]
     },
     {
-      "id": "kuchiba-iro",
-      "name": "朽葉色",
-      "reading": "くちばいろ",
-      "systematicName": "灰みの赤みの黄",
-      "hex": "#917347",
-      "examLevel": 2,
-      "munsell": "10YR 5/2",
-      "approximatePccs": [
-        {
-          "notation": "d8",
-          "deltaE": 6.18
-        },
-        {
-          "notation": "d7",
-          "deltaE": 7.77
-        },
-        {
-          "notation": "g8",
-          "deltaE": 8.28
-        }
-      ]
-    },
-    {
-      "id": "kohaku-iro",
-      "name": "琥珀色",
-      "reading": "こはくいろ",
-      "systematicName": "くすんだ赤みの黄",
-      "hex": "#bf7834",
-      "examLevel": 2,
-      "munsell": "8YR 5.5/6.5",
-      "approximatePccs": [
-        {
-          "notation": "s6",
-          "deltaE": 6.01
-        },
-        {
-          "notation": "d7",
-          "deltaE": 6.62
-        },
-        {
-          "notation": "sf5",
-          "deltaE": 6.72
-        }
-      ]
-    },
-    {
-      "id": "raw-sienna",
-      "name": "ローシェンナ",
-      "nameSegments": ["ロー", "シェンナ"],
-      "reading": "raw sienna",
-      "systematicName": "強い黄赤",
-      "hex": "#d98032",
-      "examLevel": 2,
-      "munsell": "4YR 5/9",
-      "approximatePccs": [
-        {
-          "notation": "s6",
-          "deltaE": 3.31
-        }
-      ]
-    },
-    {
-      "id": "khaki",
-      "name": "カーキー",
-      "reading": "khaki",
-      "systematicName": "くすんだ赤みの黄",
-      "hex": "#bb9855",
-      "examLevel": 3,
-      "munsell": "1Y 5/5.5",
-      "approximatePccs": [
-        {
-          "notation": "sf7",
-          "deltaE": 7.04
-        },
-        {
-          "notation": "s7",
-          "deltaE": 8.7
-        },
-        {
-          "notation": "d8",
-          "deltaE": 9.38
-        }
-      ]
-    },
-    {
-      "id": "beige",
-      "name": "ベージュ",
-      "reading": "beige",
-      "systematicName": "明るい灰みの赤みの黄",
-      "hex": "#eedcb3",
-      "examLevel": 3,
-      "munsell": "10YR 7/2.5",
-      "approximatePccs": [
-        {
-          "notation": "p6",
-          "deltaE": 4.98
-        },
-        {
-          "notation": "ltg8",
-          "deltaE": 5.23
-        },
-        {
-          "notation": "p5",
-          "deltaE": 6.23
-        }
-      ]
-    },
-    {
-      "id": "ecru-beige",
-      "name": "エクルベージュ",
-      "nameSegments": ["エクル", "ベージュ"],
-      "reading": "ecru beige",
-      "systematicName": "ごく薄い赤みの黄",
-      "hex": "#f8eacf",
-      "examLevel": 2,
-      "munsell": "7.5YR 8.5/4",
-      "approximatePccs": [
-        {
-          "notation": "p5",
-          "deltaE": 8.05
-        },
-        {
-          "notation": "p6",
-          "deltaE": 8.54
-        },
-        {
-          "notation": "ltg8",
-          "deltaE": 9.56
-        }
-      ]
-    },
-    {
-      "id": "tan",
-      "name": "タン",
-      "reading": "tan",
+      "id": "burnt-sienna",
+      "name": "バーントシェンナ",
+      "nameSegments": ["バーント", "シェンナ"],
+      "reading": "burnt sienna",
       "systematicName": "くすんだ黄赤",
-      "hex": "#c1813f",
+      "hex": "#b25532",
       "examLevel": 2,
-      "munsell": "6YR 5/6",
+      "munsell": "10R 4.5/7.5",
       "approximatePccs": [
         {
-          "notation": "sf6",
-          "deltaE": 5.61
-        },
-        {
-          "notation": "s6",
-          "deltaE": 7.11
-        },
-        {
-          "notation": "sf5",
-          "deltaE": 7.99
+          "notation": "d6",
+          "deltaE": 1.41
         }
       ]
     },
@@ -731,66 +442,51 @@
       ]
     },
     {
-      "id": "amber",
-      "name": "アンバー",
-      "reading": "amber",
-      "systematicName": "くすんだ赤みの黄",
-      "hex": "#c28953",
+      "id": "hiwada-iro",
+      "name": "檜皮色",
+      "reading": "ひわだいろ",
+      "systematicName": "暗い灰みの黄赤",
+      "hex": "#965036",
       "examLevel": 2,
-      "munsell": "8YR 5.5/6.5",
+      "munsell": "1YR 4.5/4",
       "approximatePccs": [
         {
-          "notation": "sf6",
-          "deltaE": 5.18
-        }
-      ]
-    }
-  ],
-  "yellow-green-brown": [
-    {
-      "id": "olive",
-      "name": "オリーブ",
-      "reading": "olive",
-      "systematicName": "暗い緑みの黄",
-      "hex": "#72640a",
-      "examLevel": 3,
-      "munsell": "7.5Y 3.5/4",
-      "approximatePccs": [
-        {
-          "notation": "dk8",
-          "deltaE": 4.21
+          "notation": "d6",
+          "deltaE": 6.67
         },
         {
-          "notation": "dk9",
-          "deltaE": 6.16
+          "notation": "d5",
+          "deltaE": 7.57
+        },
+        {
+          "notation": "dp5",
+          "deltaE": 9.22
         }
       ]
     },
     {
-      "id": "miru-iro",
-      "name": "海松色",
-      "reading": "みるいろ",
-      "systematicName": "暗い灰みの黄緑",
-      "hex": "#726d3f",
-      "examLevel": 2,
-      "munsell": "9.5Y 4.5/2.5",
+      "id": "renga-iro",
+      "name": "煉瓦色",
+      "reading": "れんがいろ",
+      "systematicName": "暗い黄赤",
+      "hex": "#a2482b",
+      "examLevel": 3,
+      "munsell": "10R 4/7",
       "approximatePccs": [
         {
-          "notation": "dk9",
-          "deltaE": 5.47
+          "notation": "d6",
+          "deltaE": 5.9
         },
         {
-          "notation": "g9",
-          "deltaE": 7.2
+          "notation": "d5",
+          "deltaE": 6.14
         },
         {
-          "notation": "d10",
-          "deltaE": 7.45
+          "notation": "dp5",
+          "deltaE": 6.28
         }
       ]
-    }
-  ],
-  "yellow-red-dark-brown": [
+    },
     {
       "id": "bengara-iro",
       "name": "弁柄色",
@@ -811,6 +507,220 @@
         {
           "notation": "dp3",
           "deltaE": 6.89
+        }
+      ]
+    },
+    {
+      "id": "suo",
+      "name": "蘇芳",
+      "reading": "すおう",
+      "systematicName": "くすんだ赤",
+      "hex": "#9e3d3e",
+      "examLevel": 2,
+      "munsell": "4R 4/7",
+      "approximatePccs": [
+        {
+          "notation": "d3",
+          "deltaE": 3.98
+        },
+        {
+          "notation": "d4",
+          "deltaE": 4.69
+        }
+      ]
+    },
+    {
+      "id": "amber",
+      "name": "アンバー",
+      "reading": "amber",
+      "systematicName": "くすんだ赤みの黄",
+      "hex": "#c28953",
+      "examLevel": 2,
+      "munsell": "8YR 5.5/6.5",
+      "approximatePccs": [
+        {
+          "notation": "sf6",
+          "deltaE": 5.18
+        }
+      ]
+    }
+  ],
+  "yellow-green-brown": [
+    {
+      "id": "tan",
+      "name": "タン",
+      "reading": "tan",
+      "systematicName": "くすんだ黄赤",
+      "hex": "#c1813f",
+      "examLevel": 2,
+      "munsell": "6YR 5/6",
+      "approximatePccs": [
+        {
+          "notation": "sf6",
+          "deltaE": 5.61
+        },
+        {
+          "notation": "s6",
+          "deltaE": 7.11
+        },
+        {
+          "notation": "sf5",
+          "deltaE": 7.99
+        }
+      ]
+    },
+    {
+      "id": "kohaku-iro",
+      "name": "琥珀色",
+      "reading": "こはくいろ",
+      "systematicName": "くすんだ赤みの黄",
+      "hex": "#bf7834",
+      "examLevel": 2,
+      "munsell": "8YR 5.5/6.5",
+      "approximatePccs": [
+        {
+          "notation": "s6",
+          "deltaE": 6.01
+        },
+        {
+          "notation": "d7",
+          "deltaE": 6.62
+        },
+        {
+          "notation": "sf5",
+          "deltaE": 6.72
+        }
+      ]
+    },
+    {
+      "id": "odo-iro",
+      "name": "黄土色",
+      "reading": "おうどいろ",
+      "systematicName": "濃い赤みの黄",
+      "hex": "#c39043",
+      "examLevel": 3,
+      "munsell": "10YR 6/7.5",
+      "approximatePccs": [
+        {
+          "notation": "sf6",
+          "deltaE": 6.34
+        },
+        {
+          "notation": "sf7",
+          "deltaE": 6.34
+        },
+        {
+          "notation": "s7",
+          "deltaE": 6.6
+        }
+      ]
+    },
+    {
+      "id": "raw-umber",
+      "name": "ローアンバー",
+      "nameSegments": ["ロー", "アンバー"],
+      "reading": "raw umber",
+      "systematicName": "暗い黄",
+      "hex": "#916f24",
+      "examLevel": 2,
+      "munsell": "2.5Y 4/6",
+      "approximatePccs": [
+        {
+          "notation": "d8",
+          "deltaE": 6.52
+        },
+        {
+          "notation": "dp7",
+          "deltaE": 8.09
+        },
+        {
+          "notation": "dp8",
+          "deltaE": 8.76
+        }
+      ]
+    },
+    {
+      "id": "khaki",
+      "name": "カーキー",
+      "reading": "khaki",
+      "systematicName": "くすんだ赤みの黄",
+      "hex": "#bb9855",
+      "examLevel": 3,
+      "munsell": "1Y 5/5.5",
+      "approximatePccs": [
+        {
+          "notation": "sf7",
+          "deltaE": 7.04
+        },
+        {
+          "notation": "s7",
+          "deltaE": 8.7
+        },
+        {
+          "notation": "d8",
+          "deltaE": 9.38
+        }
+      ]
+    },
+    {
+      "id": "kuchiba-iro",
+      "name": "朽葉色",
+      "reading": "くちばいろ",
+      "systematicName": "灰みの赤みの黄",
+      "hex": "#917347",
+      "examLevel": 2,
+      "munsell": "10YR 5/2",
+      "approximatePccs": [
+        {
+          "notation": "d8",
+          "deltaE": 6.18
+        },
+        {
+          "notation": "d7",
+          "deltaE": 7.77
+        },
+        {
+          "notation": "g8",
+          "deltaE": 8.28
+        }
+      ]
+    },
+    {
+      "id": "burnt-umber",
+      "name": "バーントアンバー",
+      "nameSegments": ["バーント", "アンバー"],
+      "reading": "burnt umber",
+      "systematicName": "ごく暗い赤みの黄",
+      "hex": "#7a5e3d",
+      "examLevel": 2,
+      "munsell": "10YR 3/3",
+      "approximatePccs": [
+        {
+          "notation": "g8",
+          "deltaE": 8.22
+        },
+        {
+          "notation": "dk6",
+          "deltaE": 8.22
+        },
+        {
+          "notation": "dk7",
+          "deltaE": 8.4
+        }
+      ]
+    },
+    {
+      "id": "sepia",
+      "name": "セピア",
+      "reading": "sepia",
+      "systematicName": "ごく暗い赤みの黄",
+      "hex": "#6f4e27",
+      "examLevel": 3,
+      "munsell": "10YR 2.5/2",
+      "approximatePccs": [
+        {
+          "notation": "dk6",
+          "deltaE": 2.8
         }
       ]
     },
@@ -836,30 +746,9 @@
           "deltaE": 9
         }
       ]
-    },
-    {
-      "id": "hiwada-iro",
-      "name": "檜皮色",
-      "reading": "ひわだいろ",
-      "systematicName": "暗い灰みの黄赤",
-      "hex": "#965036",
-      "examLevel": 2,
-      "munsell": "1YR 4.5/4",
-      "approximatePccs": [
-        {
-          "notation": "d6",
-          "deltaE": 6.67
-        },
-        {
-          "notation": "d5",
-          "deltaE": 7.57
-        },
-        {
-          "notation": "dp5",
-          "deltaE": 9.22
-        }
-      ]
-    },
+    }
+  ],
+  "yellow-red-dark-brown": [
     {
       "id": "kuri-iro",
       "name": "栗色",
@@ -918,104 +807,21 @@
       ]
     },
     {
-      "id": "renga-iro",
-      "name": "煉瓦色",
-      "reading": "れんがいろ",
-      "systematicName": "暗い黄赤",
-      "hex": "#a2482b",
+      "id": "chocholate",
+      "name": "チョコレート",
+      "reading": "chocholate",
+      "systematicName": "ごく暗い黄赤",
+      "hex": "#612c16",
       "examLevel": 3,
-      "munsell": "10R 4/7",
+      "munsell": "10R 2.5/2.5",
       "approximatePccs": [
         {
-          "notation": "d6",
-          "deltaE": 5.9
+          "notation": "dk4",
+          "deltaE": 5.44
         },
         {
-          "notation": "d5",
-          "deltaE": 6.14
-        },
-        {
-          "notation": "dp5",
-          "deltaE": 6.28
-        }
-      ]
-    },
-    {
-      "id": "burnt-sienna",
-      "name": "バーントシェンナ",
-      "nameSegments": ["バーント", "シェンナ"],
-      "reading": "burnt sienna",
-      "systematicName": "くすんだ黄赤",
-      "hex": "#b25532",
-      "examLevel": 2,
-      "munsell": "10R 4.5/7.5",
-      "approximatePccs": [
-        {
-          "notation": "d6",
-          "deltaE": 1.41
-        }
-      ]
-    },
-    {
-      "id": "raw-umber",
-      "name": "ローアンバー",
-      "nameSegments": ["ロー", "アンバー"],
-      "reading": "raw umber",
-      "systematicName": "暗い黄",
-      "hex": "#916f24",
-      "examLevel": 2,
-      "munsell": "2.5Y 4/6",
-      "approximatePccs": [
-        {
-          "notation": "d8",
-          "deltaE": 6.52
-        },
-        {
-          "notation": "dp7",
-          "deltaE": 8.09
-        },
-        {
-          "notation": "dp8",
-          "deltaE": 8.76
-        }
-      ]
-    },
-    {
-      "id": "burnt-umber",
-      "name": "バーントアンバー",
-      "nameSegments": ["バーント", "アンバー"],
-      "reading": "burnt umber",
-      "systematicName": "ごく暗い赤みの黄",
-      "hex": "#7a5e3d",
-      "examLevel": 2,
-      "munsell": "10YR 3/3",
-      "approximatePccs": [
-        {
-          "notation": "g8",
-          "deltaE": 8.22
-        },
-        {
-          "notation": "dk6",
-          "deltaE": 8.22
-        },
-        {
-          "notation": "dk7",
-          "deltaE": 8.4
-        }
-      ]
-    },
-    {
-      "id": "sepia",
-      "name": "セピア",
-      "reading": "sepia",
-      "systematicName": "ごく暗い赤みの黄",
-      "hex": "#6f4e27",
-      "examLevel": 3,
-      "munsell": "10YR 2.5/2",
-      "approximatePccs": [
-        {
-          "notation": "dk6",
-          "deltaE": 2.8
+          "notation": "dk5",
+          "deltaE": 5.79
         }
       ]
     },
@@ -1039,41 +845,30 @@
       ]
     },
     {
-      "id": "chocholate",
-      "name": "チョコレート",
-      "reading": "chocholate",
-      "systematicName": "ごく暗い黄赤",
-      "hex": "#612c16",
-      "examLevel": 3,
-      "munsell": "10R 2.5/2.5",
+      "id": "burgundy",
+      "name": "バーガンディー",
+      "reading": "burgundy",
+      "systematicName": "ごく暗い紫みの赤",
+      "hex": "#561620",
+      "examLevel": 2,
+      "munsell": "10RP 2/2.5",
       "approximatePccs": [
         {
-          "notation": "dk4",
-          "deltaE": 5.44
+          "notation": "dk2",
+          "deltaE": 5.12
         },
         {
-          "notation": "dk5",
-          "deltaE": 5.79
+          "notation": "dk1",
+          "deltaE": 5.36
+        },
+        {
+          "notation": "dk3",
+          "deltaE": 6.99
         }
       ]
     }
   ],
   "light-yellow": [
-    {
-      "id": "kariyasu-iro",
-      "name": "刈安色",
-      "reading": "かりやすいろ",
-      "systematicName": "薄い緑みの黄",
-      "hex": "#f5e56b",
-      "examLevel": 2,
-      "munsell": "7Y 8.5/7",
-      "approximatePccs": [
-        {
-          "notation": "lt8",
-          "deltaE": 2.86
-        }
-      ]
-    },
     {
       "id": "kihada-iro",
       "name": "黄蘗色",
@@ -1090,30 +885,6 @@
         {
           "notation": "b8",
           "deltaE": 3.78
-        }
-      ]
-    },
-    {
-      "id": "naples-yellow",
-      "name": "ネープルスイエロー",
-      "nameSegments": ["ネープルス", "イエロー"],
-      "reading": "naples yellow",
-      "systematicName": "強い黄",
-      "hex": "#fdd75c",
-      "examLevel": 2,
-      "munsell": "2.5Y 8/7.5",
-      "approximatePccs": [
-        {
-          "notation": "lt7",
-          "deltaE": 3.8
-        },
-        {
-          "notation": "b7",
-          "deltaE": 5.21
-        },
-        {
-          "notation": "v7",
-          "deltaE": 5.64
         }
       ]
     },
@@ -1186,9 +957,110 @@
           "deltaE": 4.34
         }
       ]
+    },
+    {
+      "id": "beige",
+      "name": "ベージュ",
+      "reading": "beige",
+      "systematicName": "明るい灰みの赤みの黄",
+      "hex": "#eedcb3",
+      "examLevel": 3,
+      "munsell": "10YR 7/2.5",
+      "approximatePccs": [
+        {
+          "notation": "p6",
+          "deltaE": 4.98
+        },
+        {
+          "notation": "ltg8",
+          "deltaE": 5.23
+        },
+        {
+          "notation": "p5",
+          "deltaE": 6.23
+        }
+      ]
+    },
+    {
+      "id": "ecru-beige",
+      "name": "エクルベージュ",
+      "nameSegments": ["エクル", "ベージュ"],
+      "reading": "ecru beige",
+      "systematicName": "ごく薄い赤みの黄",
+      "hex": "#f8eacf",
+      "examLevel": 2,
+      "munsell": "7.5YR 8.5/4",
+      "approximatePccs": [
+        {
+          "notation": "p5",
+          "deltaE": 8.05
+        },
+        {
+          "notation": "p6",
+          "deltaE": 8.54
+        },
+        {
+          "notation": "ltg8",
+          "deltaE": 9.56
+        }
+      ]
+    },
+    {
+      "id": "peach",
+      "name": "ピーチ",
+      "reading": "peach",
+      "systematicName": "明るい灰みの黄赤",
+      "hex": "#fbd8b5",
+      "examLevel": 3,
+      "munsell": "3YR 8/3.5",
+      "approximatePccs": [
+        {
+          "notation": "p5",
+          "deltaE": 1.6
+        }
+      ]
     }
   ],
   "dark-yellow": [
+    {
+      "id": "oni",
+      "name": "黄丹",
+      "reading": "おうに",
+      "systematicName": "強い黄赤",
+      "hex": "#ee7948",
+      "examLevel": 2,
+      "munsell": "10R 6/12",
+      "approximatePccs": [
+        {
+          "notation": "b5",
+          "deltaE": 4.31
+        },
+        {
+          "notation": "sf4",
+          "deltaE": 5.11
+        },
+        {
+          "notation": "sf5",
+          "deltaE": 6.11
+        }
+      ]
+    },
+    {
+      "id": "marigold",
+      "name": "マリーゴールド",
+      "nameSegments": ["マリー", "ゴールド"],
+      "reading": "marigold",
+      "systematicName": "鮮やかな赤みの黄",
+      "hex": "#f39800",
+      "examLevel": 3,
+      "munsell": "8YR 7.5/13",
+      "approximatePccs": [
+        {
+          "notation": "b6",
+          "deltaE": 3.01
+        }
+      ]
+    },
     {
       "id": "yamabuki-iro",
       "name": "山吹色",
@@ -1232,17 +1104,73 @@
       ]
     },
     {
-      "id": "karashi-iro",
-      "name": "芥子色",
-      "reading": "からしいろ",
-      "systematicName": "やわらかい黄",
-      "hex": "#d2b74e",
-      "examLevel": 3,
-      "munsell": "3Y 7/6",
+      "id": "koji-iro",
+      "name": "柑子色",
+      "reading": "こうじいろ",
+      "systematicName": "明るい黄赤",
+      "hex": "#f6ad48",
+      "examLevel": 2,
+      "munsell": "5.5YR 7.5/9",
       "approximatePccs": [
         {
-          "notation": "sf8",
-          "deltaE": 2.7
+          "notation": "lt6",
+          "deltaE": 5.51
+        },
+        {
+          "notation": "b6",
+          "deltaE": 6.66
+        },
+        {
+          "notation": "sf7",
+          "deltaE": 7.9
+        }
+      ]
+    },
+    {
+      "id": "golden-yellow",
+      "name": "ゴールデンイエロー",
+      "nameSegments": ["ゴールデン", "イエロー"],
+      "reading": "golden yellow",
+      "systematicName": "強い赤みの黄",
+      "hex": "#f8b856",
+      "examLevel": 2,
+      "munsell": "7.5YR 7/10",
+      "approximatePccs": [
+        {
+          "notation": "lt6",
+          "deltaE": 6.07
+        },
+        {
+          "notation": "sf7",
+          "deltaE": 8.39
+        },
+        {
+          "notation": "lt7",
+          "deltaE": 8.61
+        }
+      ]
+    },
+    {
+      "id": "naples-yellow",
+      "name": "ネープルスイエロー",
+      "nameSegments": ["ネープルス", "イエロー"],
+      "reading": "naples yellow",
+      "systematicName": "強い黄",
+      "hex": "#fdd75c",
+      "examLevel": 2,
+      "munsell": "2.5Y 8/7.5",
+      "approximatePccs": [
+        {
+          "notation": "lt7",
+          "deltaE": 3.8
+        },
+        {
+          "notation": "b7",
+          "deltaE": 5.21
+        },
+        {
+          "notation": "v7",
+          "deltaE": 5.64
         }
       ]
     },
@@ -1261,9 +1189,55 @@
           "deltaE": 3.06
         }
       ]
+    },
+    {
+      "id": "kariyasu-iro",
+      "name": "刈安色",
+      "reading": "かりやすいろ",
+      "systematicName": "薄い緑みの黄",
+      "hex": "#f5e56b",
+      "examLevel": 2,
+      "munsell": "7Y 8.5/7",
+      "approximatePccs": [
+        {
+          "notation": "lt8",
+          "deltaE": 2.86
+        }
+      ]
+    },
+    {
+      "id": "karashi-iro",
+      "name": "芥子色",
+      "reading": "からしいろ",
+      "systematicName": "やわらかい黄",
+      "hex": "#d2b74e",
+      "examLevel": 3,
+      "munsell": "3Y 7/6",
+      "approximatePccs": [
+        {
+          "notation": "sf8",
+          "deltaE": 2.7
+        }
+      ]
     }
   ],
   "yellow-green": [
+    {
+      "id": "chartreuse-green",
+      "name": "シャルトルーズグリーン",
+      "nameSegments": ["シャルトルーズ", "グリーン"],
+      "reading": "chartreuse green",
+      "systematicName": "明るい黄緑",
+      "hex": "#d9e367",
+      "examLevel": 2,
+      "munsell": "4GY 5/10",
+      "approximatePccs": [
+        {
+          "notation": "lt9",
+          "deltaE": 2.4
+        }
+      ]
+    },
     {
       "id": "moegi",
       "name": "萌黄",
@@ -1284,71 +1258,6 @@
         {
           "notation": "lt10",
           "deltaE": 4.77
-        }
-      ]
-    },
-    {
-      "id": "matsuba-iro",
-      "name": "松葉色",
-      "reading": "まつばいろ",
-      "systematicName": "くすんだ黄緑",
-      "hex": "#839a5c",
-      "examLevel": 3,
-      "munsell": "7.5GY 5/4",
-      "approximatePccs": [
-        {
-          "notation": "sf11",
-          "deltaE": 8.38
-        },
-        {
-          "notation": "d9",
-          "deltaE": 8.91
-        },
-        {
-          "notation": "d11",
-          "deltaE": 9.58
-        }
-      ]
-    },
-    {
-      "id": "uguisu-iro",
-      "name": "鶯色",
-      "reading": "うぐいすいろ",
-      "systematicName": "くすんだ黄緑",
-      "hex": "#9d973b",
-      "examLevel": 3,
-      "munsell": "1GY 4.5/3.5",
-      "approximatePccs": [
-        {
-          "notation": "dp9",
-          "deltaE": 4.27
-        },
-        {
-          "notation": "d9",
-          "deltaE": 6.32
-        }
-      ]
-    },
-    {
-      "id": "hiwa-iro",
-      "name": "鶸色",
-      "reading": "ひわいろ",
-      "systematicName": "やわらかい黄緑",
-      "hex": "#d7cf3a",
-      "examLevel": 2,
-      "munsell": "1GY 7.5/8",
-      "approximatePccs": [
-        {
-          "notation": "s8",
-          "deltaE": 5.92
-        },
-        {
-          "notation": "sf8",
-          "deltaE": 6.52
-        },
-        {
-          "notation": "sf9",
-          "deltaE": 7.17
         }
       ]
     },
@@ -1401,22 +1310,67 @@
       ]
     },
     {
-      "id": "apple-green",
-      "name": "アップルグリーン",
-      "nameSegments": ["アップル", "グリーン"],
-      "reading": "apple green",
-      "systematicName": "やわらかい黄みの緑",
-      "hex": "#a2cc89",
-      "examLevel": 2,
-      "munsell": "10GY 8/5",
+      "id": "matsuba-iro",
+      "name": "松葉色",
+      "reading": "まつばいろ",
+      "systematicName": "くすんだ黄緑",
+      "hex": "#839a5c",
+      "examLevel": 3,
+      "munsell": "7.5GY 5/4",
       "approximatePccs": [
         {
-          "notation": "lt11",
-          "deltaE": 3.81
+          "notation": "sf11",
+          "deltaE": 8.38
         },
         {
-          "notation": "lt12",
-          "deltaE": 5.5
+          "notation": "d9",
+          "deltaE": 8.91
+        },
+        {
+          "notation": "d11",
+          "deltaE": 9.58
+        }
+      ]
+    },
+    {
+      "id": "olive",
+      "name": "オリーブ",
+      "reading": "olive",
+      "systematicName": "暗い緑みの黄",
+      "hex": "#72640a",
+      "examLevel": 3,
+      "munsell": "7.5Y 3.5/4",
+      "approximatePccs": [
+        {
+          "notation": "dk8",
+          "deltaE": 4.21
+        },
+        {
+          "notation": "dk9",
+          "deltaE": 6.16
+        }
+      ]
+    },
+    {
+      "id": "miru-iro",
+      "name": "海松色",
+      "reading": "みるいろ",
+      "systematicName": "暗い灰みの黄緑",
+      "hex": "#726d3f",
+      "examLevel": 2,
+      "munsell": "9.5Y 4.5/2.5",
+      "approximatePccs": [
+        {
+          "notation": "dk9",
+          "deltaE": 5.47
+        },
+        {
+          "notation": "g9",
+          "deltaE": 7.2
+        },
+        {
+          "notation": "d10",
+          "deltaE": 7.45
         }
       ]
     },
@@ -1441,23 +1395,93 @@
       ]
     },
     {
-      "id": "chartreuse-green",
-      "name": "シャルトルーズグリーン",
-      "nameSegments": ["シャルトルーズ", "グリーン"],
-      "reading": "chartreuse green",
-      "systematicName": "明るい黄緑",
-      "hex": "#d9e367",
-      "examLevel": 2,
-      "munsell": "4GY 5/10",
+      "id": "uguisu-iro",
+      "name": "鶯色",
+      "reading": "うぐいすいろ",
+      "systematicName": "くすんだ黄緑",
+      "hex": "#9d973b",
+      "examLevel": 3,
+      "munsell": "1GY 4.5/3.5",
       "approximatePccs": [
         {
-          "notation": "lt9",
-          "deltaE": 2.4
+          "notation": "dp9",
+          "deltaE": 4.27
+        },
+        {
+          "notation": "d9",
+          "deltaE": 6.32
+        }
+      ]
+    },
+    {
+      "id": "hiwa-iro",
+      "name": "鶸色",
+      "reading": "ひわいろ",
+      "systematicName": "やわらかい黄緑",
+      "hex": "#d7cf3a",
+      "examLevel": 2,
+      "munsell": "1GY 7.5/8",
+      "approximatePccs": [
+        {
+          "notation": "s8",
+          "deltaE": 5.92
+        },
+        {
+          "notation": "sf8",
+          "deltaE": 6.52
+        },
+        {
+          "notation": "sf9",
+          "deltaE": 7.17
         }
       ]
     }
   ],
   "light-blue-green": [
+    {
+      "id": "apple-green",
+      "name": "アップルグリーン",
+      "nameSegments": ["アップル", "グリーン"],
+      "reading": "apple green",
+      "systematicName": "やわらかい黄みの緑",
+      "hex": "#a2cc89",
+      "examLevel": 2,
+      "munsell": "10GY 8/5",
+      "approximatePccs": [
+        {
+          "notation": "lt11",
+          "deltaE": 3.81
+        },
+        {
+          "notation": "lt12",
+          "deltaE": 5.5
+        }
+      ]
+    },
+    {
+      "id": "mint-green",
+      "name": "ミントグリーン",
+      "nameSegments": ["ミント", "グリーン"],
+      "reading": "mint green",
+      "systematicName": "明るい緑",
+      "hex": "#98ce97",
+      "examLevel": 2,
+      "munsell": "2.5G 7.5/8",
+      "approximatePccs": [
+        {
+          "notation": "lt12",
+          "deltaE": 5.07
+        },
+        {
+          "notation": "lt13",
+          "deltaE": 5.77
+        },
+        {
+          "notation": "lt11",
+          "deltaE": 6.02
+        }
+      ]
+    },
     {
       "id": "wakatake-iro",
       "name": "若竹色",
@@ -1488,6 +1512,44 @@
         }
       ]
     },
+    {
+      "id": "nile-blue",
+      "name": "ナイルブルー",
+      "nameSegments": ["ナイル", "ブルー"],
+      "reading": "nile blue",
+      "systematicName": "くすんだ青緑",
+      "hex": "#259f94",
+      "examLevel": 2,
+      "munsell": "10BG 5.5/5",
+      "approximatePccs": [
+        {
+          "notation": "b14",
+          "deltaE": 3.31
+        },
+        {
+          "notation": "sf15",
+          "deltaE": 4.93
+        }
+      ]
+    },
+    {
+      "id": "peacock-green",
+      "name": "ピーコックグリーン",
+      "nameSegments": ["ピーコック", "グリーン"],
+      "reading": "peacock green",
+      "systematicName": "鮮やかな青緑",
+      "hex": "#00a496",
+      "examLevel": 2,
+      "munsell": "7.5BG 4.5/9",
+      "approximatePccs": [
+        {
+          "notation": "b14",
+          "deltaE": 2.35
+        }
+      ]
+    }
+  ],
+  "dark-blue-green": [
     {
       "id": "cobalt-green",
       "name": "コバルトグリーン",
@@ -1529,31 +1591,29 @@
       ]
     },
     {
-      "id": "mint-green",
-      "name": "ミントグリーン",
-      "nameSegments": ["ミント", "グリーン"],
-      "reading": "mint green",
-      "systematicName": "明るい緑",
-      "hex": "#98ce97",
+      "id": "malachite-green",
+      "name": "マラカイトグリーン",
+      "nameSegments": ["マラカイト", "グリーン"],
+      "reading": "malachite green",
+      "systematicName": "濃い緑",
+      "hex": "#009854",
       "examLevel": 2,
-      "munsell": "2.5G 7.5/8",
+      "munsell": "4G 4.5/9",
       "approximatePccs": [
         {
-          "notation": "lt12",
-          "deltaE": 5.07
+          "notation": "b12",
+          "deltaE": 5.05
         },
         {
-          "notation": "lt13",
-          "deltaE": 5.77
+          "notation": "v13",
+          "deltaE": 5.69
         },
         {
-          "notation": "lt11",
-          "deltaE": 6.02
+          "notation": "s12",
+          "deltaE": 7.02
         }
       ]
-    }
-  ],
-  "dark-blue-green": [
+    },
     {
       "id": "tokiwa-iro",
       "name": "常磐色",
@@ -1601,30 +1661,6 @@
       ]
     },
     {
-      "id": "malachite-green",
-      "name": "マラカイトグリーン",
-      "nameSegments": ["マラカイト", "グリーン"],
-      "reading": "malachite green",
-      "systematicName": "濃い緑",
-      "hex": "#009854",
-      "examLevel": 2,
-      "munsell": "4G 4.5/9",
-      "approximatePccs": [
-        {
-          "notation": "b12",
-          "deltaE": 5.05
-        },
-        {
-          "notation": "v13",
-          "deltaE": 5.69
-        },
-        {
-          "notation": "s12",
-          "deltaE": 7.02
-        }
-      ]
-    },
-    {
       "id": "viridian",
       "name": "ビリジアン",
       "reading": "viridian",
@@ -1660,22 +1696,6 @@
       ]
     },
     {
-      "id": "peacock-green",
-      "name": "ピーコックグリーン",
-      "nameSegments": ["ピーコック", "グリーン"],
-      "reading": "peacock green",
-      "systematicName": "鮮やかな青緑",
-      "hex": "#00a496",
-      "examLevel": 2,
-      "munsell": "7.5BG 4.5/9",
-      "approximatePccs": [
-        {
-          "notation": "b14",
-          "deltaE": 2.35
-        }
-      ]
-    },
-    {
       "id": "tetsu-iro",
       "name": "鉄色",
       "reading": "てついろ",
@@ -1701,9 +1721,57 @@
   ],
   "water-light-blue-green": [
     {
+      "id": "baby-blue",
+      "name": "ベビーブルー",
+      "nameSegments": ["ベビー", "ブルー"],
+      "reading": "baby blue",
+      "systematicName": "明るい灰みの青",
+      "hex": "#bbe2f1",
+      "examLevel": 3,
+      "munsell": "10B 7.5/3",
+      "approximatePccs": [
+        {
+          "notation": "p17",
+          "deltaE": 4.23
+        },
+        {
+          "notation": "p16",
+          "deltaE": 4.39
+        },
+        {
+          "notation": "p15",
+          "deltaE": 6.02
+        }
+      ]
+    },
+    {
       "id": "sora-iro",
       "name": "空色",
       "reading": "そらいろ",
+      "systematicName": "明るい青",
+      "hex": "#a0d8ef",
+      "examLevel": 3,
+      "munsell": "9B 7.5/5.5",
+      "approximatePccs": [
+        {
+          "notation": "p17",
+          "deltaE": 5.76
+        },
+        {
+          "notation": "p16",
+          "deltaE": 6.44
+        },
+        {
+          "notation": "p18",
+          "deltaE": 6.93
+        }
+      ]
+    },
+    {
+      "id": "sky-blue",
+      "name": "スカイブルー",
+      "nameSegments": ["スカイ", "ブルー"],
+      "reading": "sky blue",
       "systematicName": "明るい青",
       "hex": "#a0d8ef",
       "examLevel": 3,
@@ -1762,113 +1830,6 @@
       ]
     },
     {
-      "id": "sky-blue",
-      "name": "スカイブルー",
-      "nameSegments": ["スカイ", "ブルー"],
-      "reading": "sky blue",
-      "systematicName": "明るい青",
-      "hex": "#a0d8ef",
-      "examLevel": 3,
-      "munsell": "9B 7.5/5.5",
-      "approximatePccs": [
-        {
-          "notation": "p17",
-          "deltaE": 5.76
-        },
-        {
-          "notation": "p16",
-          "deltaE": 6.44
-        },
-        {
-          "notation": "p18",
-          "deltaE": 6.93
-        }
-      ]
-    },
-    {
-      "id": "baby-blue",
-      "name": "ベビーブルー",
-      "nameSegments": ["ベビー", "ブルー"],
-      "reading": "baby blue",
-      "systematicName": "明るい灰みの青",
-      "hex": "#bbe2f1",
-      "examLevel": 3,
-      "munsell": "10B 7.5/3",
-      "approximatePccs": [
-        {
-          "notation": "p17",
-          "deltaE": 4.23
-        },
-        {
-          "notation": "p16",
-          "deltaE": 4.39
-        },
-        {
-          "notation": "p15",
-          "deltaE": 6.02
-        }
-      ]
-    }
-  ],
-  "blue-green": [
-    {
-      "id": "ai-iro",
-      "name": "藍色",
-      "reading": "あいいろ",
-      "systematicName": "暗い青",
-      "hex": "#0f5779",
-      "examLevel": 3,
-      "munsell": "2PB 3/5",
-      "approximatePccs": [
-        {
-          "notation": "v16",
-          "deltaE": 2.81
-        },
-        {
-          "notation": "s16",
-          "deltaE": 3.69
-        },
-        {
-          "notation": "d16",
-          "deltaE": 3.81
-        }
-      ]
-    },
-    {
-      "id": "hanada-iro",
-      "name": "縹色",
-      "reading": "はなだいろ",
-      "systematicName": "強い青",
-      "hex": "#2980af",
-      "examLevel": 2,
-      "munsell": "3PB 4/7.5",
-      "approximatePccs": [
-        {
-          "notation": "b16",
-          "deltaE": 3.77
-        },
-        {
-          "notation": "b17",
-          "deltaE": 4.05
-        }
-      ]
-    },
-    {
-      "id": "nando-iro",
-      "name": "納戸色",
-      "reading": "なんどいろ",
-      "systematicName": "強い緑みの青",
-      "hex": "#007d92",
-      "examLevel": 2,
-      "munsell": "4B 4/6",
-      "approximatePccs": [
-        {
-          "notation": "v15",
-          "deltaE": 3.41
-        }
-      ]
-    },
-    {
       "id": "asagi-iro",
       "name": "浅葱色",
       "reading": "あさぎいろ",
@@ -1912,38 +1873,6 @@
       ]
     },
     {
-      "id": "cobalt-blue",
-      "name": "コバルトブルー",
-      "nameSegments": ["コバルト", "ブルー"],
-      "reading": "cobalt blue",
-      "systematicName": "鮮やかな青",
-      "hex": "#0068b7",
-      "examLevel": 3,
-      "munsell": "3PB 4/10",
-      "approximatePccs": [
-        {
-          "notation": "b18",
-          "deltaE": 3.58
-        }
-      ]
-    },
-    {
-      "id": "cerulean-blue",
-      "name": "セルリアンブルー",
-      "nameSegments": ["セルリアン", "ブルー"],
-      "reading": "cerulean blue",
-      "systematicName": "鮮やかな青",
-      "hex": "#008db7",
-      "examLevel": 2,
-      "munsell": "9B 4.5/9",
-      "approximatePccs": [
-        {
-          "notation": "b16",
-          "deltaE": 2.54
-        }
-      ]
-    },
-    {
       "id": "cyan",
       "name": "シアン",
       "reading": "cyan",
@@ -1959,6 +1888,23 @@
         {
           "notation": "lt17",
           "deltaE": 8.64
+        }
+      ]
+    }
+  ],
+  "blue-green": [
+    {
+      "id": "nando-iro",
+      "name": "納戸色",
+      "reading": "なんどいろ",
+      "systematicName": "強い緑みの青",
+      "hex": "#007d92",
+      "examLevel": 2,
+      "munsell": "4B 4/6",
+      "approximatePccs": [
+        {
+          "notation": "v15",
+          "deltaE": 3.41
         }
       ]
     },
@@ -1979,6 +1925,29 @@
       ]
     },
     {
+      "id": "ai-iro",
+      "name": "藍色",
+      "reading": "あいいろ",
+      "systematicName": "暗い青",
+      "hex": "#0f5779",
+      "examLevel": 3,
+      "munsell": "2PB 3/5",
+      "approximatePccs": [
+        {
+          "notation": "v16",
+          "deltaE": 2.81
+        },
+        {
+          "notation": "s16",
+          "deltaE": 3.69
+        },
+        {
+          "notation": "d16",
+          "deltaE": 3.81
+        }
+      ]
+    },
+    {
       "id": "saxe-blue",
       "name": "サックスブルー",
       "nameSegments": ["サックス", "ブルー"],
@@ -1995,27 +1964,81 @@
       ]
     },
     {
-      "id": "nile-blue",
-      "name": "ナイルブルー",
-      "nameSegments": ["ナイル", "ブルー"],
-      "reading": "nile blue",
-      "systematicName": "くすんだ青緑",
-      "hex": "#259f94",
+      "id": "hanada-iro",
+      "name": "縹色",
+      "reading": "はなだいろ",
+      "systematicName": "強い青",
+      "hex": "#2980af",
       "examLevel": 2,
-      "munsell": "10BG 5.5/5",
+      "munsell": "3PB 4/7.5",
       "approximatePccs": [
         {
-          "notation": "b14",
-          "deltaE": 3.31
+          "notation": "b16",
+          "deltaE": 3.77
         },
         {
-          "notation": "sf15",
-          "deltaE": 4.93
+          "notation": "b17",
+          "deltaE": 4.05
+        }
+      ]
+    },
+    {
+      "id": "cerulean-blue",
+      "name": "セルリアンブルー",
+      "nameSegments": ["セルリアン", "ブルー"],
+      "reading": "cerulean blue",
+      "systematicName": "鮮やかな青",
+      "hex": "#008db7",
+      "examLevel": 2,
+      "munsell": "9B 4.5/9",
+      "approximatePccs": [
+        {
+          "notation": "b16",
+          "deltaE": 2.54
+        }
+      ]
+    },
+    {
+      "id": "cobalt-blue",
+      "name": "コバルトブルー",
+      "nameSegments": ["コバルト", "ブルー"],
+      "reading": "cobalt blue",
+      "systematicName": "鮮やかな青",
+      "hex": "#0068b7",
+      "examLevel": 3,
+      "munsell": "3PB 4/10",
+      "approximatePccs": [
+        {
+          "notation": "b18",
+          "deltaE": 3.58
         }
       ]
     }
   ],
   "blue-purple": [
+    {
+      "id": "kakitsubata-iro",
+      "name": "杜若色",
+      "reading": "かきつばたいろ",
+      "systematicName": "鮮やかな紫みの青",
+      "hex": "#4d4398",
+      "examLevel": 3,
+      "munsell": "7PB 4/10",
+      "approximatePccs": [
+        {
+          "notation": "d20",
+          "deltaE": 6.04
+        },
+        {
+          "notation": "s18",
+          "deltaE": 6.91
+        },
+        {
+          "notation": "d21",
+          "deltaE": 7.05
+        }
+      ]
+    },
     {
       "id": "ruri-iro",
       "name": "瑠璃色",
@@ -2047,30 +2070,6 @@
         {
           "notation": "b19",
           "deltaE": 1.29
-        }
-      ]
-    },
-    {
-      "id": "midnight-blue",
-      "name": "ミッドナイトブルー",
-      "nameSegments": ["ミッドナイト", "ブルー"],
-      "reading": "midnight blue",
-      "systematicName": "ごく暗い紫みの青",
-      "hex": "#001d42",
-      "examLevel": 2,
-      "munsell": "5PB 1.5/2",
-      "approximatePccs": [
-        {
-          "notation": "dk19",
-          "deltaE": 5.72
-        },
-        {
-          "notation": "dp19",
-          "deltaE": 7.42
-        },
-        {
-          "notation": "dk18",
-          "deltaE": 8.37
         }
       ]
     },
@@ -2113,74 +2112,33 @@
           "deltaE": 2.37
         }
       ]
+    },
+    {
+      "id": "midnight-blue",
+      "name": "ミッドナイトブルー",
+      "nameSegments": ["ミッドナイト", "ブルー"],
+      "reading": "midnight blue",
+      "systematicName": "ごく暗い紫みの青",
+      "hex": "#001d42",
+      "examLevel": 2,
+      "munsell": "5PB 1.5/2",
+      "approximatePccs": [
+        {
+          "notation": "dk19",
+          "deltaE": 5.72
+        },
+        {
+          "notation": "dp19",
+          "deltaE": 7.42
+        },
+        {
+          "notation": "dk18",
+          "deltaE": 8.37
+        }
+      ]
     }
   ],
   "light-purple-blue-purple": [
-    {
-      "id": "fuji-iro",
-      "name": "藤色",
-      "reading": "ふじいろ",
-      "systematicName": "明るい紫",
-      "hex": "#bbb7da",
-      "examLevel": 2,
-      "munsell": "10PB 6.5/6.5",
-      "approximatePccs": [
-        {
-          "notation": "p21",
-          "deltaE": 2.36
-        },
-        {
-          "notation": "p20",
-          "deltaE": 3.09
-        }
-      ]
-    },
-    {
-      "id": "kikyo-iro",
-      "name": "桔梗色",
-      "reading": "ききょういろ",
-      "systematicName": "濃い紫",
-      "hex": "#5654a2",
-      "examLevel": 3,
-      "munsell": "9PB 3.5/13",
-      "approximatePccs": [
-        {
-          "notation": "sf20",
-          "deltaE": 4.31
-        },
-        {
-          "notation": "sf19",
-          "deltaE": 4.53
-        },
-        {
-          "notation": "b20",
-          "deltaE": 6.1
-        }
-      ]
-    },
-    {
-      "id": "kakitsubata-iro",
-      "name": "杜若色",
-      "reading": "かきつばたいろ",
-      "systematicName": "鮮やかな紫みの青",
-      "hex": "#4d4398",
-      "examLevel": 3,
-      "munsell": "7PB 4/10",
-      "approximatePccs": [
-        {
-          "notation": "d20",
-          "deltaE": 6.04
-        },
-        {
-          "notation": "s18",
-          "deltaE": 6.91
-        },
-        {
-          "notation": "d21",
-          "deltaE": 7.05
-        }
-      ]
-    },
     {
       "id": "lilac",
       "name": "ライラック",
@@ -2193,21 +2151,6 @@
         {
           "notation": "p22",
           "deltaE": 2.31
-        }
-      ]
-    },
-    {
-      "id": "wistaria",
-      "name": "ウイスタリア",
-      "reading": "wistaria",
-      "systematicName": "鮮やかな青紫",
-      "hex": "#8e8bc2",
-      "examLevel": 2,
-      "munsell": "10PB 5/12",
-      "approximatePccs": [
-        {
-          "notation": "lt20",
-          "deltaE": 4.83
         }
       ]
     },
@@ -2229,97 +2172,38 @@
           "deltaE": 2.99
         }
       ]
-    }
-  ],
-  "dark-purple-red-purple": [
+    },
     {
-      "id": "edomurasaki",
-      "name": "江戸紫",
-      "reading": "えどむらさき",
-      "systematicName": "暗い灰みの青みの紫",
-      "hex": "#734e95",
+      "id": "fuji-iro",
+      "name": "藤色",
+      "reading": "ふじいろ",
+      "systematicName": "明るい紫",
+      "hex": "#bbb7da",
       "examLevel": 2,
-      "munsell": "3P 3.5/7",
+      "munsell": "10PB 6.5/6.5",
       "approximatePccs": [
         {
-          "notation": "sf21",
-          "deltaE": 3.64
+          "notation": "p21",
+          "deltaE": 2.36
+        },
+        {
+          "notation": "p20",
+          "deltaE": 3.09
         }
       ]
     },
     {
-      "id": "kodai-murasaki",
-      "name": "古代紫",
-      "reading": "こだいむらさき",
-      "systematicName": "くすんだ紫",
-      "hex": "#895687",
+      "id": "wistaria",
+      "name": "ウイスタリア",
+      "reading": "wistaria",
+      "systematicName": "鮮やかな青紫",
+      "hex": "#8e8bc2",
       "examLevel": 2,
-      "munsell": "7.5P 4/6",
+      "munsell": "10PB 5/12",
       "approximatePccs": [
         {
-          "notation": "sf22",
-          "deltaE": 0.59
-        }
-      ]
-    },
-    {
-      "id": "ayame-iro",
-      "name": "菖蒲色",
-      "reading": "あやめいろ",
-      "systematicName": "鮮やかな青みの紫",
-      "hex": "#cc7db1",
-      "examLevel": 3,
-      "munsell": "10P 6/10",
-      "approximatePccs": [
-        {
-          "notation": "lt23",
-          "deltaE": 3.95
-        },
-        {
-          "notation": "lt24",
-          "deltaE": 5.88
-        }
-      ]
-    },
-    {
-      "id": "nasukon",
-      "name": "茄子紺",
-      "reading": "なすこん",
-      "systematicName": "ごく暗い紫",
-      "hex": "#4b1a47",
-      "examLevel": 3,
-      "munsell": "7.5P 2.5/2.5",
-      "approximatePccs": [
-        {
-          "notation": "dp22",
-          "deltaE": 6.44
-        },
-        {
-          "notation": "dp23",
-          "deltaE": 7.07
-        },
-        {
-          "notation": "dk23",
-          "deltaE": 7.15
-        }
-      ]
-    },
-    {
-      "id": "mauve",
-      "name": "モーブ",
-      "reading": "mauve",
-      "systematicName": "強い赤みの紫",
-      "hex": "#915da3",
-      "examLevel": 3,
-      "munsell": "5P 4.5/9",
-      "approximatePccs": [
-        {
-          "notation": "b21",
-          "deltaE": 4.06
-        },
-        {
-          "notation": "b22",
-          "deltaE": 4.13
+          "notation": "lt20",
+          "deltaE": 4.83
         }
       ]
     },
@@ -2347,6 +2231,50 @@
       ]
     },
     {
+      "id": "kikyo-iro",
+      "name": "桔梗色",
+      "reading": "ききょういろ",
+      "systematicName": "濃い紫",
+      "hex": "#5654a2",
+      "examLevel": 3,
+      "munsell": "9PB 3.5/13",
+      "approximatePccs": [
+        {
+          "notation": "sf20",
+          "deltaE": 4.31
+        },
+        {
+          "notation": "sf19",
+          "deltaE": 4.53
+        },
+        {
+          "notation": "b20",
+          "deltaE": 6.1
+        }
+      ]
+    }
+  ],
+  "dark-purple-red-purple": [
+    {
+      "id": "ayame-iro",
+      "name": "菖蒲色",
+      "reading": "あやめいろ",
+      "systematicName": "鮮やかな青みの紫",
+      "hex": "#cc7db1",
+      "examLevel": 3,
+      "munsell": "10P 6/10",
+      "approximatePccs": [
+        {
+          "notation": "lt23",
+          "deltaE": 3.95
+        },
+        {
+          "notation": "lt24",
+          "deltaE": 5.88
+        }
+      ]
+    },
+    {
       "id": "purple",
       "name": "パープル",
       "reading": "purple",
@@ -2368,6 +2296,78 @@
           "deltaE": 6.13
         }
       ]
+    },
+    {
+      "id": "mauve",
+      "name": "モーブ",
+      "reading": "mauve",
+      "systematicName": "強い赤みの紫",
+      "hex": "#915da3",
+      "examLevel": 3,
+      "munsell": "5P 4.5/9",
+      "approximatePccs": [
+        {
+          "notation": "b21",
+          "deltaE": 4.06
+        },
+        {
+          "notation": "b22",
+          "deltaE": 4.13
+        }
+      ]
+    },
+    {
+      "id": "kodai-murasaki",
+      "name": "古代紫",
+      "reading": "こだいむらさき",
+      "systematicName": "くすんだ紫",
+      "hex": "#895687",
+      "examLevel": 2,
+      "munsell": "7.5P 4/6",
+      "approximatePccs": [
+        {
+          "notation": "sf22",
+          "deltaE": 0.59
+        }
+      ]
+    },
+    {
+      "id": "edomurasaki",
+      "name": "江戸紫",
+      "reading": "えどむらさき",
+      "systematicName": "暗い灰みの青みの紫",
+      "hex": "#734e95",
+      "examLevel": 2,
+      "munsell": "3P 3.5/7",
+      "approximatePccs": [
+        {
+          "notation": "sf21",
+          "deltaE": 3.64
+        }
+      ]
+    },
+    {
+      "id": "nasukon",
+      "name": "茄子紺",
+      "reading": "なすこん",
+      "systematicName": "ごく暗い紫",
+      "hex": "#4b1a47",
+      "examLevel": 3,
+      "munsell": "7.5P 2.5/2.5",
+      "approximatePccs": [
+        {
+          "notation": "dp22",
+          "deltaE": 6.44
+        },
+        {
+          "notation": "dp23",
+          "deltaE": 7.07
+        },
+        {
+          "notation": "dk23",
+          "deltaE": 7.15
+        }
+      ]
     }
   ],
   "off-neutral": [
@@ -2383,6 +2383,25 @@
         {
           "notation": "W",
           "deltaE": 3.58
+        }
+      ]
+    },
+    {
+      "id": "ivory",
+      "name": "アイボリー",
+      "reading": "ivory",
+      "systematicName": "黄みの薄い灰色",
+      "hex": "#f8f5e3",
+      "examLevel": 3,
+      "munsell": "2.5Y 8.5/1.5",
+      "approximatePccs": [
+        {
+          "notation": "W",
+          "deltaE": 8.13
+        },
+        {
+          "notation": "Gy-9.0",
+          "deltaE": 8.67
         }
       ]
     },
@@ -2429,25 +2448,6 @@
         {
           "notation": "Gy-5.5",
           "deltaE": 8.29
-        }
-      ]
-    },
-    {
-      "id": "ivory",
-      "name": "アイボリー",
-      "reading": "ivory",
-      "systematicName": "黄みの薄い灰色",
-      "hex": "#f8f5e3",
-      "examLevel": 3,
-      "munsell": "2.5Y 8.5/1.5",
-      "approximatePccs": [
-        {
-          "notation": "W",
-          "deltaE": 8.13
-        },
-        {
-          "notation": "Gy-9.0",
-          "deltaE": 8.67
         }
       ]
     }
