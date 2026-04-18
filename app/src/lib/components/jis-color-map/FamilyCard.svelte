@@ -38,7 +38,7 @@
     text-decoration: none;
     color: inherit;
     border: 1px solid light-dark(#e0e0e0, #2e2e3e);
-    border-radius: 10px;
+    border-radius: 6px;
     overflow: hidden;
     transition:
       box-shadow 0.15s,
@@ -53,12 +53,11 @@
 
   .card-checker {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 0.5fr 1fr;
+    grid-template-rows: 1fr 0.5fr;
     flex-shrink: 0;
     aspect-ratio: 1;
     min-width: 88px;
-    filter: contrast(1.1) saturate(1.1);
   }
 
   .checker-cell {
@@ -88,13 +87,13 @@
 
   .label-en {
     font-size: 0.75rem;
-    color: light-dark(#555555, #999999);
+    color: var(--color-body);
     font-family: var(--font-mono);
   }
 
   .card-desc {
     font-size: 0.78rem;
-    color: light-dark(#555555, #999999);
+    color: var(--color-body);
     margin: 0;
     line-height: 1.5;
   }
