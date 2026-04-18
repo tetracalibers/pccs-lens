@@ -5,11 +5,13 @@
     "subfamilies": [
       {
         "id": "pink-red-purple",
-        "name": "ピンク・赤紫系"
+        "name": "ピンク・赤紫系",
+        "hintPCCSHue": { "from": 1, "to": 4 }
       },
       {
         "id": "orange-red",
-        "name": "オレンジ・赤系"
+        "name": "オレンジ・赤系",
+        "hintPCCSHue": { "from": 1, "to": 4 }
       }
     ]
   },
@@ -19,15 +21,18 @@
     "subfamilies": [
       {
         "id": "yellow-red-light-brown",
-        "name": "黄赤寄りの明るい茶系"
+        "name": "黄赤寄りの明るい茶系",
+        "hintPCCSHue": { "from": 2, "to": 5 }
       },
       {
         "id": "yellow-green-brown",
-        "name": "黄緑寄りの茶系"
+        "name": "黄緑寄りの茶系",
+        "hintPCCSHue": { "from": 5, "to": 9 }
       },
       {
         "id": "yellow-red-dark-brown",
-        "name": "黄赤寄りの暗い茶系"
+        "name": "黄赤寄りの暗い茶系",
+        "hintPCCSHue": { "from": 1, "to": 4 }
       }
     ]
   },
@@ -37,11 +42,13 @@
     "subfamilies": [
       {
         "id": "light-yellow",
-        "name": "薄めの黄系"
+        "name": "薄めの黄系",
+        "hintPCCSHue": { "from": 4, "to": 9 }
       },
       {
         "id": "dark-yellow",
-        "name": "濃いめの黄系"
+        "name": "濃いめの黄系",
+        "hintPCCSHue": { "from": 4, "to": 9 }
       }
     ]
   },
@@ -51,15 +58,18 @@
     "subfamilies": [
       {
         "id": "yellow-green",
-        "name": "黄緑系"
+        "name": "黄緑系",
+        "hintPCCSHue": { "from": 9, "to": 11 }
       },
       {
         "id": "light-blue-green",
-        "name": "薄めの緑・青緑系"
+        "name": "薄めの緑・青緑系",
+        "hintPCCSHue": { "from": 11, "to": 15 }
       },
       {
         "id": "dark-blue-green",
-        "name": "濃いめの緑・青緑系"
+        "name": "濃いめの緑・青緑系",
+        "hintPCCSHue": { "from": 12, "to": 14 }
       }
     ]
   },
@@ -69,15 +79,18 @@
     "subfamilies": [
       {
         "id": "water-light-blue-green",
-        "name": "水色・薄めの青緑系"
+        "name": "水色・薄めの青緑系",
+        "hintPCCSHue": { "from": 15, "to": 17 }
       },
       {
         "id": "blue-green",
-        "name": "青緑・青系"
+        "name": "青緑・青系",
+        "hintPCCSHue": { "from": 15, "to": 18 }
       },
       {
         "id": "blue-purple",
-        "name": "青紫系"
+        "name": "青紫系",
+        "hintPCCSHue": { "from": 17, "to": 20 }
       }
     ]
   },
@@ -87,11 +100,13 @@
     "subfamilies": [
       {
         "id": "light-purple-blue-purple",
-        "name": "薄紫・青紫系"
+        "name": "薄紫・青紫系",
+        "hintPCCSHue": { "from": 20, "to": 22 }
       },
       {
         "id": "dark-purple-red-purple",
-        "name": "濃い紫・赤紫系"
+        "name": "濃い紫・赤紫系",
+        "hintPCCSHue": { "from": 21, "to": 23 }
       }
     ]
   },
@@ -101,11 +116,13 @@
     "subfamilies": [
       {
         "id": "off-neutral",
-        "name": "準無彩色"
+        "name": "準無彩色",
+        "hintPCCSHue": { "from": 5, "to": 12 }
       },
       {
         "id": "neutral-gray",
-        "name": "無彩色・灰色系"
+        "name": "無彩色・灰色系",
+        "hintPCCSHue": { "from": 18, "to": 22 }
       }
     ]
   }

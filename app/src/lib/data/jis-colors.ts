@@ -50,6 +50,10 @@ export type JISApproximateResult = {
 export type JISSubfamily = {
   id: ColorSubfamily
   name: string
+  hintPCCSHue: {
+    from: number
+    to: number
+  }
 }
 
 export type JISColorFamily = {
