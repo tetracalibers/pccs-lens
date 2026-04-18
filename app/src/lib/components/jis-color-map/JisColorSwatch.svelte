@@ -29,7 +29,7 @@
 
   const fontSize = $derived.by(() => {
     const density = Math.max(maxDensityPerColor, totalLines)
-    if (density >= 5) return "var(--map-font-xs, 0.55rem)"
+    if (density >= 6) return "var(--map-font-xs, 0.55rem)"
     if (density >= 4) return "var(--map-font-s, 0.65rem)"
     return "var(--map-font-m, 0.75rem)"
   })
