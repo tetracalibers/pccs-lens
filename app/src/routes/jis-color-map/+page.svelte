@@ -20,6 +20,8 @@
   .header {
     margin-bottom: 1.5rem;
     padding: 0 1rem;
+    margin-inline: auto;
+    width: fit-content;
   }
 
   .subtitle {

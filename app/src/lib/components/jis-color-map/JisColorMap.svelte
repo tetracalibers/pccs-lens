@@ -199,6 +199,7 @@
     gap: 4px;
     width: max-content;
     padding: 0.5rem;
+    margin-inline: auto;
   }
 
   .corner {
