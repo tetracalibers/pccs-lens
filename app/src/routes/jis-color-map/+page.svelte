@@ -10,7 +10,6 @@
 <main>
   <div class="header">
     <Heading1 icon="mdi:palette-swatch" grayscale compact>慣用色名マップ</Heading1>
-    <p class="subtitle">JIS慣用色をマンセル色相・明度の2軸で俯瞰する</p>
   </div>
 
   <JisColorMap groupId="red" />
@@ -22,11 +21,5 @@
     padding: 0 1rem;
     margin-inline: auto;
     width: fit-content;
-  }
-
-  .subtitle {
-    color: light-dark(#555, #999);
-    font-size: 0.9rem;
-    margin: 0;
   }
 </style>
