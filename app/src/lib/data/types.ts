@@ -7,23 +7,11 @@ export type PCCSColor = {
   hueNumber: number | null
   isNeutral: boolean
   achromaticBucket: AchromaticBucket | null
-  munsell: string | null // 奇数番号の色相など、一般的ではない色はマンセル値データが見つからないため、nullの可能性がある
-}
-
-export type JISColor = {
-  name: string
-  reading: string
-  hex: string
-  examLevel: 2 | 3 | null
+  munsell?: string // 奇数番号の色相など、一般的ではない色はマンセル値データが見つからないため、値が未設定の場合がある
 }
 
 export type ApproximateResult = {
   color: PCCSColor
-  deltaE: number
-}
-
-export type JISApproximateResult = {
-  color: JISColor
   deltaE: number
 }
 

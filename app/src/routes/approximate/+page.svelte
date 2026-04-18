@@ -3,8 +3,9 @@
   import CopyButton from "$lib/components/CopyButton.svelte"
   import { findClosestPccs, findClosestJis } from "$lib/color/approximate"
   import { PCCS_CARD_199 } from "$lib/data/pccs"
-  import jisColors from "$lib/data/jis_colors.json"
-  import type { JISColor, ApproximateResult, JISApproximateResult } from "$lib/data/types"
+  import type { ApproximateResult } from "$lib/data/types"
+  import { JIS_COLORS } from "$lib/data/jis-colors"
+  import type { JISColor, JISApproximateResult } from "$lib/data/jis-colors"
   import { page } from "$app/state"
   import { replaceState } from "$app/navigation"
   import { tick } from "svelte"
@@ -12,7 +13,7 @@
   import Heading1 from "$lib/components/Heading1.svelte"
 
   const colors = PCCS_CARD_199
-  const jisColorList = jisColors as JISColor[]
+  const jisColorList: JISColor[] = JIS_COLORS
   const TOP_N = 6
   const JIS_TOP_N = 6
 

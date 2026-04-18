@@ -5,8 +5,7 @@
     "toneSymbol": "W",
     "hueNumber": null,
     "isNeutral": true,
-    "achromaticBucket": "W",
-    "munsell": null
+    "achromaticBucket": "W"
   },
   {
     "notation": "Gy-9.0",
@@ -14,8 +13,7 @@
     "toneSymbol": null,
     "hueNumber": null,
     "isNeutral": true,
-    "achromaticBucket": "ltGy",
-    "munsell": null
+    "achromaticBucket": "ltGy"
   },
   {
     "notation": "Gy-8.5",
@@ -32,8 +30,7 @@
     "toneSymbol": null,
     "hueNumber": null,
     "isNeutral": true,
-    "achromaticBucket": "ltGy",
-    "munsell": null
+    "achromaticBucket": "ltGy"
   },
   {
     "notation": "Gy-7.5",
@@ -50,8 +47,7 @@
     "toneSymbol": null,
     "hueNumber": null,
     "isNeutral": true,
-    "achromaticBucket": "ltGy",
-    "munsell": null
+    "achromaticBucket": "ltGy"
   },
   {
     "notation": "Gy-6.5",
@@ -68,8 +64,7 @@
     "toneSymbol": null,
     "hueNumber": null,
     "isNeutral": true,
-    "achromaticBucket": "mGy",
-    "munsell": null
+    "achromaticBucket": "mGy"
   },
   {
     "notation": "Gy-5.5",
@@ -86,8 +81,7 @@
     "toneSymbol": null,
     "hueNumber": null,
     "isNeutral": true,
-    "achromaticBucket": "mGy",
-    "munsell": null
+    "achromaticBucket": "mGy"
   },
   {
     "notation": "Gy-4.5",
@@ -104,8 +98,7 @@
     "toneSymbol": null,
     "hueNumber": null,
     "isNeutral": true,
-    "achromaticBucket": "mGy",
-    "munsell": null
+    "achromaticBucket": "mGy"
   },
   {
     "notation": "Gy-3.5",
@@ -122,8 +115,7 @@
     "toneSymbol": null,
     "hueNumber": null,
     "isNeutral": true,
-    "achromaticBucket": "dkGy",
-    "munsell": null
+    "achromaticBucket": "dkGy"
   },
   {
     "notation": "Gy-2.5",
@@ -140,8 +132,7 @@
     "toneSymbol": null,
     "hueNumber": null,
     "isNeutral": true,
-    "achromaticBucket": "dkGy",
-    "munsell": null
+    "achromaticBucket": "dkGy"
   },
   {
     "notation": "Bk",
@@ -149,7 +140,6 @@
     "toneSymbol": "Bk",
     "hueNumber": null,
     "isNeutral": true,
-    "achromaticBucket": "Bk",
-    "munsell": null
+    "achromaticBucket": "Bk"
   }
 ]

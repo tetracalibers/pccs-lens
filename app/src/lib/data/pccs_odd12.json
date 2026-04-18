@@ -5,8 +5,7 @@
     "toneSymbol": "b",
     "hueNumber": 1,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "b3",
@@ -14,8 +13,7 @@
     "toneSymbol": "b",
     "hueNumber": 3,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "b5",
@@ -23,8 +21,7 @@
     "toneSymbol": "b",
     "hueNumber": 5,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "b7",
@@ -32,8 +29,7 @@
     "toneSymbol": "b",
     "hueNumber": 7,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "b9",
@@ -41,8 +37,7 @@
     "toneSymbol": "b",
     "hueNumber": 9,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "b11",
@@ -50,8 +45,7 @@
     "toneSymbol": "b",
     "hueNumber": 11,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "b13",
@@ -59,8 +53,7 @@
     "toneSymbol": "b",
     "hueNumber": 13,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "b15",
@@ -68,8 +61,7 @@
     "toneSymbol": "b",
     "hueNumber": 15,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "b17",
@@ -77,8 +69,7 @@
     "toneSymbol": "b",
     "hueNumber": 17,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "b19",
@@ -86,8 +77,7 @@
     "toneSymbol": "b",
     "hueNumber": 19,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "b21",
@@ -95,8 +85,7 @@
     "toneSymbol": "b",
     "hueNumber": 21,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "b23",
@@ -104,8 +93,7 @@
     "toneSymbol": "b",
     "hueNumber": 23,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "s1",
@@ -113,8 +101,7 @@
     "toneSymbol": "s",
     "hueNumber": 1,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "s3",
@@ -122,8 +109,7 @@
     "toneSymbol": "s",
     "hueNumber": 3,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "s5",
@@ -131,8 +117,7 @@
     "toneSymbol": "s",
     "hueNumber": 5,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "s7",
@@ -140,8 +125,7 @@
     "toneSymbol": "s",
     "hueNumber": 7,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "s9",
@@ -149,8 +133,7 @@
     "toneSymbol": "s",
     "hueNumber": 9,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "s11",
@@ -158,8 +141,7 @@
     "toneSymbol": "s",
     "hueNumber": 11,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "s13",
@@ -167,8 +149,7 @@
     "toneSymbol": "s",
     "hueNumber": 13,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "s15",
@@ -176,8 +157,7 @@
     "toneSymbol": "s",
     "hueNumber": 15,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "s17",
@@ -185,8 +165,7 @@
     "toneSymbol": "s",
     "hueNumber": 17,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "s19",
@@ -194,8 +173,7 @@
     "toneSymbol": "s",
     "hueNumber": 19,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "s21",
@@ -203,8 +181,7 @@
     "toneSymbol": "s",
     "hueNumber": 21,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "s23",
@@ -212,8 +189,7 @@
     "toneSymbol": "s",
     "hueNumber": 23,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dp1",
@@ -221,8 +197,7 @@
     "toneSymbol": "dp",
     "hueNumber": 1,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dp3",
@@ -230,8 +205,7 @@
     "toneSymbol": "dp",
     "hueNumber": 3,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dp5",
@@ -239,8 +213,7 @@
     "toneSymbol": "dp",
     "hueNumber": 5,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dp7",
@@ -248,8 +221,7 @@
     "toneSymbol": "dp",
     "hueNumber": 7,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dp9",
@@ -257,8 +229,7 @@
     "toneSymbol": "dp",
     "hueNumber": 9,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dp11",
@@ -266,8 +237,7 @@
     "toneSymbol": "dp",
     "hueNumber": 11,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dp13",
@@ -275,8 +245,7 @@
     "toneSymbol": "dp",
     "hueNumber": 13,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dp15",
@@ -284,8 +253,7 @@
     "toneSymbol": "dp",
     "hueNumber": 15,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dp17",
@@ -293,8 +261,7 @@
     "toneSymbol": "dp",
     "hueNumber": 17,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dp19",
@@ -302,8 +269,7 @@
     "toneSymbol": "dp",
     "hueNumber": 19,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dp21",
@@ -311,8 +277,7 @@
     "toneSymbol": "dp",
     "hueNumber": 21,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dp23",
@@ -320,8 +285,7 @@
     "toneSymbol": "dp",
     "hueNumber": 23,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "lt1",
@@ -329,8 +293,7 @@
     "toneSymbol": "lt",
     "hueNumber": 1,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "lt3",
@@ -338,8 +301,7 @@
     "toneSymbol": "lt",
     "hueNumber": 3,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "lt5",
@@ -347,8 +309,7 @@
     "toneSymbol": "lt",
     "hueNumber": 5,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "lt7",
@@ -356,8 +317,7 @@
     "toneSymbol": "lt",
     "hueNumber": 7,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "lt9",
@@ -365,8 +325,7 @@
     "toneSymbol": "lt",
     "hueNumber": 9,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "lt11",
@@ -374,8 +333,7 @@
     "toneSymbol": "lt",
     "hueNumber": 11,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "lt13",
@@ -383,8 +341,7 @@
     "toneSymbol": "lt",
     "hueNumber": 13,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "lt15",
@@ -392,8 +349,7 @@
     "toneSymbol": "lt",
     "hueNumber": 15,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "lt17",
@@ -401,8 +357,7 @@
     "toneSymbol": "lt",
     "hueNumber": 17,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "lt19",
@@ -410,8 +365,7 @@
     "toneSymbol": "lt",
     "hueNumber": 19,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "lt21",
@@ -419,8 +373,7 @@
     "toneSymbol": "lt",
     "hueNumber": 21,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "lt23",
@@ -428,8 +381,7 @@
     "toneSymbol": "lt",
     "hueNumber": 23,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "sf1",
@@ -437,8 +389,7 @@
     "toneSymbol": "sf",
     "hueNumber": 1,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "sf3",
@@ -446,8 +397,7 @@
     "toneSymbol": "sf",
     "hueNumber": 3,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "sf5",
@@ -455,8 +405,7 @@
     "toneSymbol": "sf",
     "hueNumber": 5,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "sf7",
@@ -464,8 +413,7 @@
     "toneSymbol": "sf",
     "hueNumber": 7,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "sf9",
@@ -473,8 +421,7 @@
     "toneSymbol": "sf",
     "hueNumber": 9,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "sf11",
@@ -482,8 +429,7 @@
     "toneSymbol": "sf",
     "hueNumber": 11,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "sf13",
@@ -491,8 +437,7 @@
     "toneSymbol": "sf",
     "hueNumber": 13,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "sf15",
@@ -500,8 +445,7 @@
     "toneSymbol": "sf",
     "hueNumber": 15,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "sf17",
@@ -509,8 +453,7 @@
     "toneSymbol": "sf",
     "hueNumber": 17,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "sf19",
@@ -518,8 +461,7 @@
     "toneSymbol": "sf",
     "hueNumber": 19,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "sf21",
@@ -527,8 +469,7 @@
     "toneSymbol": "sf",
     "hueNumber": 21,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "sf23",
@@ -536,8 +477,7 @@
     "toneSymbol": "sf",
     "hueNumber": 23,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "d1",
@@ -545,8 +485,7 @@
     "toneSymbol": "d",
     "hueNumber": 1,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "d3",
@@ -554,8 +493,7 @@
     "toneSymbol": "d",
     "hueNumber": 3,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "d5",
@@ -563,8 +501,7 @@
     "toneSymbol": "d",
     "hueNumber": 5,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "d7",
@@ -572,8 +509,7 @@
     "toneSymbol": "d",
     "hueNumber": 7,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "d9",
@@ -581,8 +517,7 @@
     "toneSymbol": "d",
     "hueNumber": 9,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "d11",
@@ -590,8 +525,7 @@
     "toneSymbol": "d",
     "hueNumber": 11,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "d13",
@@ -599,8 +533,7 @@
     "toneSymbol": "d",
     "hueNumber": 13,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "d15",
@@ -608,8 +541,7 @@
     "toneSymbol": "d",
     "hueNumber": 15,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "d17",
@@ -617,8 +549,7 @@
     "toneSymbol": "d",
     "hueNumber": 17,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "d19",
@@ -626,8 +557,7 @@
     "toneSymbol": "d",
     "hueNumber": 19,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "d21",
@@ -635,8 +565,7 @@
     "toneSymbol": "d",
     "hueNumber": 21,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "d23",
@@ -644,8 +573,7 @@
     "toneSymbol": "d",
     "hueNumber": 23,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dk1",
@@ -653,8 +581,7 @@
     "toneSymbol": "dk",
     "hueNumber": 1,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dk3",
@@ -662,8 +589,7 @@
     "toneSymbol": "dk",
     "hueNumber": 3,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dk5",
@@ -671,8 +597,7 @@
     "toneSymbol": "dk",
     "hueNumber": 5,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dk7",
@@ -680,8 +605,7 @@
     "toneSymbol": "dk",
     "hueNumber": 7,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dk9",
@@ -689,8 +613,7 @@
     "toneSymbol": "dk",
     "hueNumber": 9,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dk11",
@@ -698,8 +621,7 @@
     "toneSymbol": "dk",
     "hueNumber": 11,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dk13",
@@ -707,8 +629,7 @@
     "toneSymbol": "dk",
     "hueNumber": 13,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dk15",
@@ -716,8 +637,7 @@
     "toneSymbol": "dk",
     "hueNumber": 15,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dk17",
@@ -725,8 +645,7 @@
     "toneSymbol": "dk",
     "hueNumber": 17,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dk19",
@@ -734,8 +653,7 @@
     "toneSymbol": "dk",
     "hueNumber": 19,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dk21",
@@ -743,8 +661,7 @@
     "toneSymbol": "dk",
     "hueNumber": 21,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dk23",
@@ -752,8 +669,7 @@
     "toneSymbol": "dk",
     "hueNumber": 23,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "p1",
@@ -761,8 +677,7 @@
     "toneSymbol": "p",
     "hueNumber": 1,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "p3",
@@ -770,8 +685,7 @@
     "toneSymbol": "p",
     "hueNumber": 3,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "p5",
@@ -779,8 +693,7 @@
     "toneSymbol": "p",
     "hueNumber": 5,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "p7",
@@ -788,8 +701,7 @@
     "toneSymbol": "p",
     "hueNumber": 7,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "p9",
@@ -797,8 +709,7 @@
     "toneSymbol": "p",
     "hueNumber": 9,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "p11",
@@ -806,8 +717,7 @@
     "toneSymbol": "p",
     "hueNumber": 11,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "p13",
@@ -815,8 +725,7 @@
     "toneSymbol": "p",
     "hueNumber": 13,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "p15",
@@ -824,8 +733,7 @@
     "toneSymbol": "p",
     "hueNumber": 15,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "p17",
@@ -833,8 +741,7 @@
     "toneSymbol": "p",
     "hueNumber": 17,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "p19",
@@ -842,8 +749,7 @@
     "toneSymbol": "p",
     "hueNumber": 19,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "p21",
@@ -851,8 +757,7 @@
     "toneSymbol": "p",
     "hueNumber": 21,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "p23",
@@ -860,8 +765,7 @@
     "toneSymbol": "p",
     "hueNumber": 23,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "ltg1",
@@ -869,8 +773,7 @@
     "toneSymbol": "ltg",
     "hueNumber": 1,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "ltg3",
@@ -878,8 +781,7 @@
     "toneSymbol": "ltg",
     "hueNumber": 3,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "ltg5",
@@ -887,8 +789,7 @@
     "toneSymbol": "ltg",
     "hueNumber": 5,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "ltg7",
@@ -896,8 +797,7 @@
     "toneSymbol": "ltg",
     "hueNumber": 7,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "ltg9",
@@ -905,8 +805,7 @@
     "toneSymbol": "ltg",
     "hueNumber": 9,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "ltg11",
@@ -914,8 +813,7 @@
     "toneSymbol": "ltg",
     "hueNumber": 11,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "ltg13",
@@ -923,8 +821,7 @@
     "toneSymbol": "ltg",
     "hueNumber": 13,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "ltg15",
@@ -932,8 +829,7 @@
     "toneSymbol": "ltg",
     "hueNumber": 15,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "ltg17",
@@ -941,8 +837,7 @@
     "toneSymbol": "ltg",
     "hueNumber": 17,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "ltg19",
@@ -950,8 +845,7 @@
     "toneSymbol": "ltg",
     "hueNumber": 19,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "ltg21",
@@ -959,8 +853,7 @@
     "toneSymbol": "ltg",
     "hueNumber": 21,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "ltg23",
@@ -968,8 +861,7 @@
     "toneSymbol": "ltg",
     "hueNumber": 23,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "g1",
@@ -977,8 +869,7 @@
     "toneSymbol": "g",
     "hueNumber": 1,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "g3",
@@ -986,8 +877,7 @@
     "toneSymbol": "g",
     "hueNumber": 3,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "g5",
@@ -995,8 +885,7 @@
     "toneSymbol": "g",
     "hueNumber": 5,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "g7",
@@ -1004,8 +893,7 @@
     "toneSymbol": "g",
     "hueNumber": 7,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "g9",
@@ -1013,8 +901,7 @@
     "toneSymbol": "g",
     "hueNumber": 9,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "g11",
@@ -1022,8 +909,7 @@
     "toneSymbol": "g",
     "hueNumber": 11,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "g13",
@@ -1031,8 +917,7 @@
     "toneSymbol": "g",
     "hueNumber": 13,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "g15",
@@ -1040,8 +925,7 @@
     "toneSymbol": "g",
     "hueNumber": 15,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "g17",
@@ -1049,8 +933,7 @@
     "toneSymbol": "g",
     "hueNumber": 17,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "g19",
@@ -1058,8 +941,7 @@
     "toneSymbol": "g",
     "hueNumber": 19,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "g21",
@@ -1067,8 +949,7 @@
     "toneSymbol": "g",
     "hueNumber": 21,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "g23",
@@ -1076,8 +957,7 @@
     "toneSymbol": "g",
     "hueNumber": 23,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dkg1",
@@ -1085,8 +965,7 @@
     "toneSymbol": "dkg",
     "hueNumber": 1,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dkg3",
@@ -1094,8 +973,7 @@
     "toneSymbol": "dkg",
     "hueNumber": 3,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dkg5",
@@ -1103,8 +981,7 @@
     "toneSymbol": "dkg",
     "hueNumber": 5,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dkg7",
@@ -1112,8 +989,7 @@
     "toneSymbol": "dkg",
     "hueNumber": 7,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dkg9",
@@ -1121,8 +997,7 @@
     "toneSymbol": "dkg",
     "hueNumber": 9,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dkg11",
@@ -1130,8 +1005,7 @@
     "toneSymbol": "dkg",
     "hueNumber": 11,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dkg13",
@@ -1139,8 +1013,7 @@
     "toneSymbol": "dkg",
     "hueNumber": 13,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dkg15",
@@ -1148,8 +1021,7 @@
     "toneSymbol": "dkg",
     "hueNumber": 15,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dkg17",
@@ -1157,8 +1029,7 @@
     "toneSymbol": "dkg",
     "hueNumber": 17,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dkg19",
@@ -1166,8 +1037,7 @@
     "toneSymbol": "dkg",
     "hueNumber": 19,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dkg21",
@@ -1175,8 +1045,7 @@
     "toneSymbol": "dkg",
     "hueNumber": 21,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   },
   {
     "notation": "dkg23",
@@ -1184,7 +1053,6 @@
     "toneSymbol": "dkg",
     "hueNumber": 23,
     "isNeutral": false,
-    "achromaticBucket": null,
-    "munsell": null
+    "achromaticBucket": null
   }
 ]

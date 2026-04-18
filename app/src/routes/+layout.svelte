@@ -18,7 +18,8 @@
   ]
   const contentItems = [
     { href: resolve("/color-theory"), path: "/color-theory", label: "色の理論" },
-    { href: resolve("/color-fields"), path: "/color-fields", label: "色の活用分野" }
+    { href: resolve("/color-fields"), path: "/color-fields", label: "色の活用分野" },
+    { href: resolve("/jis-color-map"), path: "/jis-color-map", label: "慣用色名" }
   ]
 
   const CONTENT_TOP_ROUTES = new Set(["/color-theory", "/color-fields"])
@@ -45,7 +46,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
   <link
-    href="https://fonts.googleapis.com/css2?family=Flow+Rounded&family=Rakkas&family=Delius&family=Reddit+Mono:wght@400..700&family=SUSE+Mono:wght@400;500&family=Zen+Kaku+Gothic+Antique:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@500&family=Flow+Rounded&family=Rakkas&family=Delius&family=Reddit+Mono:wght@400..700&family=SUSE+Mono:wght@400;500&family=Zen+Kaku+Gothic+Antique:wght@400;500&display=swap"
     rel="stylesheet"
   />
 </svelte:head>
@@ -195,6 +196,7 @@
     --font-fancy: "Delius", cursive;
     --font-classic: "Rakkas", serif;
     --font-anki-title: "Flow Rounded", system-ui;
+    --font-round: "Kiwi Maru", serif;
 
     font-family: "SUSE Mono", "Zen Kaku Gothic Antique", sans-serif;
     font-synthesis-weight: none;
@@ -219,6 +221,7 @@
   .container {
     margin: 3rem auto 4rem;
     padding: 1.5rem 1.5rem 0;
+    container-type: inline-size;
   }
 
   /* ===== サイトヘッダー ===== */
