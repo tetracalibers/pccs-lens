@@ -1,4 +1,5 @@
-import type { PCCSColor, JISColor, ApproximateResult, JISApproximateResult } from "$lib/data/types"
+import type { PCCSColor, ApproximateResult } from "$lib/data/types"
+import type { JISColor, JISApproximateResult } from "$lib/data/jis-colors"
 import chroma from "chroma-js"
 
 export function findClosestPccs(
