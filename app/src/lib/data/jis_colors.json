@@ -27,10 +27,7 @@
       {
         "id": "baby-pink",
         "name": "ベビーピンク",
-        "nameSegments": [
-          "ベビー",
-          "ピンク"
-        ],
+        "nameSegments": ["ベビー", "ピンク"],
         "reading": "baby pink",
         "systematicName": "薄い赤",
         "hex": "#fadbda",
@@ -61,10 +58,7 @@
       {
         "id": "rose-pink",
         "name": "ローズピンク",
-        "nameSegments": [
-          "ローズ",
-          "ピンク"
-        ],
+        "nameSegments": ["ローズ", "ピンク"],
         "reading": "rose pink",
         "systematicName": "明るい紫みの赤",
         "hex": "#f29c9f",
@@ -88,10 +82,7 @@
       {
         "id": "old-rose",
         "name": "オールドローズ",
-        "nameSegments": [
-          "オールド",
-          "ローズ"
-        ],
+        "nameSegments": ["オールド", "ローズ"],
         "reading": "old rose",
         "systematicName": "やわらかい赤",
         "hex": "#da8d93",
@@ -145,10 +136,7 @@
       {
         "id": "salmon-pink",
         "name": "サーモンピンク",
-        "nameSegments": [
-          "サーモン",
-          "ピンク"
-        ],
+        "nameSegments": ["サーモン", "ピンク"],
         "reading": "salmon pink",
         "systematicName": "やわらかい黄みの赤",
         "hex": "#f4a583",
@@ -286,10 +274,7 @@
       {
         "id": "poppy-red",
         "name": "ポピーレッド",
-        "nameSegments": [
-          "ポピー",
-          "レッド"
-        ],
+        "nameSegments": ["ポピー", "レッド"],
         "reading": "poppy red",
         "systematicName": "鮮やかな赤",
         "hex": "#e9474d",
@@ -343,10 +328,7 @@
       {
         "id": "wine-red",
         "name": "ワインレッド",
-        "nameSegments": [
-          "ワイン",
-          "レッド"
-        ],
+        "nameSegments": ["ワイン", "レッド"],
         "reading": "wine red",
         "systematicName": "濃い紫みの赤",
         "hex": "#932e44",
@@ -393,10 +375,7 @@
       {
         "id": "raw-sienna",
         "name": "ローシェンナ",
-        "nameSegments": [
-          "ロー",
-          "シェンナ"
-        ],
+        "nameSegments": ["ロー", "シェンナ"],
         "reading": "raw sienna",
         "systematicName": "強い黄赤",
         "hex": "#d98032",
@@ -431,10 +410,7 @@
       {
         "id": "burnt-sienna",
         "name": "バーントシェンナ",
-        "nameSegments": [
-          "バーント",
-          "シェンナ"
-        ],
+        "nameSegments": ["バーント", "シェンナ"],
         "reading": "burnt sienna",
         "systematicName": "くすんだ黄赤",
         "hex": "#b25532",
@@ -649,10 +625,7 @@
       {
         "id": "raw-umber",
         "name": "ローアンバー",
-        "nameSegments": [
-          "ロー",
-          "アンバー"
-        ],
+        "nameSegments": ["ロー", "アンバー"],
         "reading": "raw umber",
         "systematicName": "暗い黄",
         "hex": "#916f24",
@@ -722,10 +695,7 @@
       {
         "id": "burnt-umber",
         "name": "バーントアンバー",
-        "nameSegments": [
-          "バーント",
-          "アンバー"
-        ],
+        "nameSegments": ["バーント", "アンバー"],
         "reading": "burnt umber",
         "systematicName": "ごく暗い赤みの黄",
         "hex": "#7a5e3d",
@@ -932,10 +902,7 @@
       {
         "id": "lemon-yellow",
         "name": "レモンイエロー",
-        "nameSegments": [
-          "レモン",
-          "イエロー"
-        ],
+        "nameSegments": ["レモン", "イエロー"],
         "reading": "lemon yellow",
         "systematicName": "鮮やかな緑みの黄",
         "hex": "#fff33f",
@@ -970,10 +937,7 @@
       {
         "id": "cream-yellow",
         "name": "クリームイエロー",
-        "nameSegments": [
-          "クリーム",
-          "イエロー"
-        ],
+        "nameSegments": ["クリーム", "イエロー"],
         "reading": "cream yellow",
         "systematicName": "ごく薄い黄",
         "hex": "#fff2b8",
@@ -1031,10 +995,7 @@
       {
         "id": "ecru-beige",
         "name": "エクルベージュ",
-        "nameSegments": [
-          "エクル",
-          "ベージュ"
-        ],
+        "nameSegments": ["エクル", "ベージュ"],
         "reading": "ecru beige",
         "systematicName": "ごく薄い赤みの黄",
         "hex": "#f8eacf",
@@ -1100,10 +1061,7 @@
       {
         "id": "marigold",
         "name": "マリーゴールド",
-        "nameSegments": [
-          "マリー",
-          "ゴールド"
-        ],
+        "nameSegments": ["マリー", "ゴールド"],
         "reading": "marigold",
         "systematicName": "鮮やかな赤みの黄",
         "hex": "#f39800",
@@ -1184,10 +1142,7 @@
       {
         "id": "golden-yellow",
         "name": "ゴールデンイエロー",
-        "nameSegments": [
-          "ゴールデン",
-          "イエロー"
-        ],
+        "nameSegments": ["ゴールデン", "イエロー"],
         "reading": "golden yellow",
         "systematicName": "強い赤みの黄",
         "hex": "#f8b856",
@@ -1211,10 +1166,7 @@
       {
         "id": "naples-yellow",
         "name": "ネープルスイエロー",
-        "nameSegments": [
-          "ネープルス",
-          "イエロー"
-        ],
+        "nameSegments": ["ネープルス", "イエロー"],
         "reading": "naples yellow",
         "systematicName": "強い黄",
         "hex": "#fdd75c",
@@ -1238,10 +1190,7 @@
       {
         "id": "jaune-brillant",
         "name": "ジョンブリアン",
-        "nameSegments": [
-          "ジョン",
-          "ブリアン"
-        ],
+        "nameSegments": ["ジョン", "ブリアン"],
         "reading": "jaune brillant",
         "systematicName": "鮮やかな黄",
         "hex": "#ffdc00",
@@ -1291,10 +1240,7 @@
       {
         "id": "chartreuse-green",
         "name": "シャルトルーズグリーン",
-        "nameSegments": [
-          "シャルトルーズ",
-          "グリーン"
-        ],
+        "nameSegments": ["シャルトルーズ", "グリーン"],
         "reading": "chartreuse green",
         "systematicName": "明るい黄緑",
         "hex": "#d9e367",
@@ -1333,10 +1279,7 @@
       {
         "id": "leaf-green",
         "name": "リーフグリーン",
-        "nameSegments": [
-          "リーフ",
-          "グリーン"
-        ],
+        "nameSegments": ["リーフ", "グリーン"],
         "reading": "leaf green",
         "systematicName": "強い黄緑",
         "hex": "#9dc04c",
@@ -1360,10 +1303,7 @@
       {
         "id": "grass-green",
         "name": "グラスグリーン",
-        "nameSegments": [
-          "グラス",
-          "グリーン"
-        ],
+        "nameSegments": ["グラス", "グリーン"],
         "reading": "grass green",
         "systematicName": "くすんだ黄緑",
         "hex": "#7b8d41",
@@ -1452,10 +1392,7 @@
       {
         "id": "olive-green",
         "name": "オリーブグリーン",
-        "nameSegments": [
-          "オリーブ",
-          "グリーン"
-        ],
+        "nameSegments": ["オリーブ", "グリーン"],
         "reading": "olive green",
         "systematicName": "暗い灰みの黄緑",
         "hex": "#5f651e",
@@ -1521,10 +1458,7 @@
       {
         "id": "apple-green",
         "name": "アップルグリーン",
-        "nameSegments": [
-          "アップル",
-          "グリーン"
-        ],
+        "nameSegments": ["アップル", "グリーン"],
         "reading": "apple green",
         "systematicName": "やわらかい黄みの緑",
         "hex": "#a2cc89",
@@ -1544,10 +1478,7 @@
       {
         "id": "mint-green",
         "name": "ミントグリーン",
-        "nameSegments": [
-          "ミント",
-          "グリーン"
-        ],
+        "nameSegments": ["ミント", "グリーン"],
         "reading": "mint green",
         "systematicName": "明るい緑",
         "hex": "#98ce97",
@@ -1601,10 +1532,7 @@
       {
         "id": "nile-blue",
         "name": "ナイルブルー",
-        "nameSegments": [
-          "ナイル",
-          "ブルー"
-        ],
+        "nameSegments": ["ナイル", "ブルー"],
         "reading": "nile blue",
         "systematicName": "くすんだ青緑",
         "hex": "#259f94",
@@ -1624,10 +1552,7 @@
       {
         "id": "peacock-green",
         "name": "ピーコックグリーン",
-        "nameSegments": [
-          "ピーコック",
-          "グリーン"
-        ],
+        "nameSegments": ["ピーコック", "グリーン"],
         "reading": "peacock green",
         "systematicName": "鮮やかな青緑",
         "hex": "#00a496",
@@ -1647,10 +1572,7 @@
       {
         "id": "cobalt-green",
         "name": "コバルトグリーン",
-        "nameSegments": [
-          "コバルト",
-          "グリーン"
-        ],
+        "nameSegments": ["コバルト", "グリーン"],
         "reading": "cobalt green",
         "systematicName": "明るい緑",
         "hex": "#3ab483",
@@ -1674,10 +1596,7 @@
       {
         "id": "emerald-green",
         "name": "エメラルドグリーン",
-        "nameSegments": [
-          "エメラルド",
-          "グリーン"
-        ],
+        "nameSegments": ["エメラルド", "グリーン"],
         "reading": "emerald green",
         "systematicName": "強い緑",
         "hex": "#00aa6e",
@@ -1693,10 +1612,7 @@
       {
         "id": "malachite-green",
         "name": "マラカイトグリーン",
-        "nameSegments": [
-          "マラカイト",
-          "グリーン"
-        ],
+        "nameSegments": ["マラカイト", "グリーン"],
         "reading": "malachite green",
         "systematicName": "濃い緑",
         "hex": "#009854",
@@ -1781,10 +1697,7 @@
       {
         "id": "bottle-green",
         "name": "ボトルグリーン",
-        "nameSegments": [
-          "ボトル",
-          "グリーン"
-        ],
+        "nameSegments": ["ボトル", "グリーン"],
         "reading": "bottle green",
         "systematicName": "ごく暗い緑",
         "hex": "#005635",
@@ -1831,10 +1744,7 @@
       {
         "id": "baby-blue",
         "name": "ベビーブルー",
-        "nameSegments": [
-          "ベビー",
-          "ブルー"
-        ],
+        "nameSegments": ["ベビー", "ブルー"],
         "reading": "baby blue",
         "systematicName": "明るい灰みの青",
         "hex": "#bbe2f1",
@@ -1881,10 +1791,7 @@
       {
         "id": "sky-blue",
         "name": "スカイブルー",
-        "nameSegments": [
-          "スカイ",
-          "ブルー"
-        ],
+        "nameSegments": ["スカイ", "ブルー"],
         "reading": "sky blue",
         "systematicName": "明るい青",
         "hex": "#a0d8ef",
@@ -1969,10 +1876,7 @@
       {
         "id": "turquoise-blue",
         "name": "ターコイズブルー",
-        "nameSegments": [
-          "ターコイズ",
-          "ブルー"
-        ],
+        "nameSegments": ["ターコイズ", "ブルー"],
         "reading": "turquoise blue",
         "systematicName": "明るい緑みの青",
         "hex": "#00afcc",
@@ -2030,10 +1934,7 @@
       {
         "id": "marine-blue",
         "name": "マリンブルー",
-        "nameSegments": [
-          "マリン",
-          "ブルー"
-        ],
+        "nameSegments": ["マリン", "ブルー"],
         "reading": "marine blue",
         "systematicName": "濃い緑みの青",
         "hex": "#006788",
@@ -2072,10 +1973,7 @@
       {
         "id": "saxe-blue",
         "name": "サックスブルー",
-        "nameSegments": [
-          "サックス",
-          "ブルー"
-        ],
+        "nameSegments": ["サックス", "ブルー"],
         "reading": "saxe blue",
         "systematicName": "くすんだ青",
         "hex": "#3a8daa",
@@ -2110,10 +2008,7 @@
       {
         "id": "cerulean-blue",
         "name": "セルリアンブルー",
-        "nameSegments": [
-          "セルリアン",
-          "ブルー"
-        ],
+        "nameSegments": ["セルリアン", "ブルー"],
         "reading": "cerulean blue",
         "systematicName": "鮮やかな青",
         "hex": "#008db7",
@@ -2129,10 +2024,7 @@
       {
         "id": "cobalt-blue",
         "name": "コバルトブルー",
-        "nameSegments": [
-          "コバルト",
-          "ブルー"
-        ],
+        "nameSegments": ["コバルト", "ブルー"],
         "reading": "cobalt blue",
         "systematicName": "鮮やかな青",
         "hex": "#0068b7",
@@ -2209,10 +2101,7 @@
       {
         "id": "ultramarine-blue",
         "name": "ウルトラマリンブルー",
-        "nameSegments": [
-          "ウルトラマリン",
-          "ブルー"
-        ],
+        "nameSegments": ["ウルトラマリン", "ブルー"],
         "reading": "ultramarine blue",
         "systematicName": "濃い紫みの青",
         "hex": "#4052a2",
@@ -2236,10 +2125,7 @@
       {
         "id": "navy-blue",
         "name": "ネイビーブルー",
-        "nameSegments": [
-          "ネイビー",
-          "ブルー"
-        ],
+        "nameSegments": ["ネイビー", "ブルー"],
         "reading": "navy blue",
         "systematicName": "暗い紫みの青",
         "hex": "#1f2e55",
@@ -2255,10 +2141,7 @@
       {
         "id": "midnight-blue",
         "name": "ミッドナイトブルー",
-        "nameSegments": [
-          "ミッドナイト",
-          "ブルー"
-        ],
+        "nameSegments": ["ミッドナイト", "ブルー"],
         "reading": "midnight blue",
         "systematicName": "ごく暗い紫みの青",
         "hex": "#001d42",
@@ -2621,10 +2504,7 @@
       {
         "id": "silver-grey",
         "name": "シルバーグレイ",
-        "nameSegments": [
-          "シルバー",
-          "グレイ"
-        ],
+        "nameSegments": ["シルバー", "グレイ"],
         "reading": "silver grey",
         "systematicName": "明るい灰色",
         "hex": "#afafb0",
@@ -2640,10 +2520,7 @@
       {
         "id": "slate-grey",
         "name": "スレートグレイ",
-        "nameSegments": [
-          "スレート",
-          "グレイ"
-        ],
+        "nameSegments": ["スレート", "グレイ"],
         "reading": "slate grey",
         "systematicName": "暗い灰色",
         "hex": "#636062",
@@ -2659,10 +2536,7 @@
       {
         "id": "charcoal-grey",
         "name": "チャコールグレイ",
-        "nameSegments": [
-          "チャコール",
-          "グレイ"
-        ],
+        "nameSegments": ["チャコール", "グレイ"],
         "reading": "charcoal grey",
         "systematicName": "紫みの暗い灰色",
         "hex": "#4e4449",
@@ -2686,10 +2560,7 @@
       {
         "id": "lamp-black",
         "name": "ランプブラック",
-        "nameSegments": [
-          "ランプ",
-          "ブラック"
-        ],
+        "nameSegments": ["ランプ", "ブラック"],
         "reading": "lamp black",
         "systematicName": "黒",
         "hex": "#24130d",
