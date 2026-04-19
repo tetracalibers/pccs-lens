@@ -66,14 +66,13 @@
         {@const dim = !isHighlight && !isHint}
         <div
           class="grid-item"
-          class:dim
           style:grid-column={p.col}
           style:grid-row="{p.row + 1} / span {p.rowSpan}"
         >
           {#if isHint}
             <HintJisColorSwatch color={p.cell.colors[0]} />
           {:else}
-            <CompactJisColorSwatch colors={p.cell.colors} />
+            <CompactJisColorSwatch colors={p.cell.colors} variant={dim ? "outline" : "fill"} />
           {/if}
         </div>
       {:else}
@@ -81,11 +80,10 @@
         {@const dim = hueNum !== null && !hintHueSet.has(hueNum)}
         <div
           class="grid-item"
-          class:dim
           style:grid-column={p.col}
           style:grid-row="{p.row + 1} / span {p.rowSpan}"
         >
-          <PccsSwatch pccs={p.cell.pccs} compact />
+          <PccsSwatch pccs={p.cell.pccs} compact variant={dim ? "outline" : "fill"} />
         </div>
       {/if}
     {/each}
@@ -136,9 +134,5 @@
   .grid-item {
     min-width: 0;
     min-height: 0;
-  }
-
-  .grid-item.dim {
-    opacity: 0.2;
   }
 </style>

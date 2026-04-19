@@ -2,7 +2,12 @@
   import type { JISColor } from "$lib/data/jis-colors"
   import JisColorNameTooltip from "./JisColorNameTooltip.svelte"
 
-  let { colors }: { colors: JISColor[] } = $props()
+  interface Props {
+    colors: JISColor[]
+    variant?: "fill" | "outline"
+  }
+
+  let { colors, variant = "fill" }: Props = $props()
 
   const bgHex = $derived(colors[0].hex)
   const keyId = $derived(colors[0].id)
@@ -17,7 +22,8 @@
 
 <div
   class="swatch"
-  style:background-color={bgHex}
+  class:--_outline={variant === "outline"}
+  style:--_jis-color-hex={bgHex}
   style:anchor-name={anchorName}
   role="button"
   tabindex="0"
@@ -37,6 +43,13 @@
     border-radius: 6px;
     cursor: pointer;
     outline-offset: 2px;
+    background-color: var(--_jis-color-hex);
+  }
+
+  .--_outline {
+    background: none;
+    border: 1px solid var(--_jis-color-hex);
+    box-sizing: border-box;
   }
 
   .swatch:focus-visible {
