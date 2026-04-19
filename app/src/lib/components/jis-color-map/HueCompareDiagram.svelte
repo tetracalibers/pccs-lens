@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { MunsellPrimaryHueLabel } from "$lib/color/munsell"
+  import { PRIMARY_HUE_LABEL_SLUG, type MunsellPrimaryHueLabel } from "$lib/color/munsell"
   import type { HueCompareDiagramData } from "$lib/jis-color-map/compare"
 
   let { data }: { data: HueCompareDiagramData } = $props()
@@ -12,7 +12,11 @@
     紫: "#7e3f8f"
   }
 
-  const gradId = $derived(`hue-grad-${data.topLabel}-${data.bottomLabel}`)
+  const topSlug = $derived(PRIMARY_HUE_LABEL_SLUG[data.topLabel])
+  const bottomSlug = $derived(PRIMARY_HUE_LABEL_SLUG[data.bottomLabel])
+  const gradId = $derived(`hue-grad-${topSlug}-${bottomSlug}`)
+  const markerTopId = $derived(`hue-marker-top-${topSlug}-${bottomSlug}`)
+  const markerBottomId = $derived(`hue-marker-bottom-${topSlug}-${bottomSlug}`)
   const topHex = $derived(LABEL_HEX[data.topLabel])
   const bottomHex = $derived(LABEL_HEX[data.bottomLabel])
 </script>
@@ -26,15 +30,62 @@
     xmlns="http://www.w3.org/2000/svg"
   >
     <defs>
-      <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+      <linearGradient id={gradId} gradientUnits="userSpaceOnUse" x1="10" y1="6" x2="10" y2="94">
         <stop offset="0%" stop-color={topHex} />
         <stop offset="100%" stop-color={bottomHex} />
       </linearGradient>
+      <marker
+        id={markerTopId}
+        viewBox="0 0 10 10"
+        refX="5"
+        refY="5"
+        markerWidth="9"
+        markerHeight="12"
+        markerUnits="userSpaceOnUse"
+        orient="auto-start-reverse"
+      >
+        <path
+          d="M 1 1 L 5 5 L 1 9"
+          fill="none"
+          stroke={topHex}
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          vector-effect="non-scaling-stroke"
+        />
+      </marker>
+      <marker
+        id={markerBottomId}
+        viewBox="0 0 10 10"
+        refX="5"
+        refY="5"
+        markerWidth="9"
+        markerHeight="12"
+        markerUnits="userSpaceOnUse"
+        orient="auto-start-reverse"
+      >
+        <path
+          d="M 1 1 L 5 5 L 1 9"
+          fill="none"
+          stroke={bottomHex}
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          vector-effect="non-scaling-stroke"
+        />
+      </marker>
     </defs>
-    <!-- 両方向矢印: 上下に三角、中央に縦線 -->
-    <polygon points="10,2 5,10 15,10" fill={topHex} />
-    <rect x="8" y="10" width="4" height="80" fill="url(#{gradId})" />
-    <polygon points="10,98 5,90 15,90" fill={bottomHex} />
+    <line
+      x1="10"
+      y1="6"
+      x2="10"
+      y2="94"
+      stroke="url(#{gradId})"
+      stroke-width="2"
+      marker-start="url(#{markerTopId})"
+      marker-end="url(#{markerBottomId})"
+      vector-effect="non-scaling-stroke"
+    />
   </svg>
   <div class="label">{data.bottomLabel}</div>
 </div>

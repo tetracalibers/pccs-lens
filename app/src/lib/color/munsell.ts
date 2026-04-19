@@ -83,6 +83,14 @@ export const munsellHueFamily = (hue: string): string | null => {
 
 export type MunsellPrimaryHueLabel = "赤" | "黄" | "緑" | "青" | "紫"
 
+export const PRIMARY_HUE_LABEL_SLUG: Record<MunsellPrimaryHueLabel, string> = {
+  赤: "red",
+  黄: "yellow",
+  緑: "green",
+  青: "blue",
+  紫: "purple"
+}
+
 // 5原色の中心（rank 空間）: 5R=13, 5Y=33, 5G=53, 5B=73, 5P=93
 const PRIMARY_HUE_CENTERS: { label: MunsellPrimaryHueLabel; rank: number }[] = [
   { label: "赤", rank: 13 },
