@@ -34,6 +34,8 @@ export type JISColor = {
   nameSegments?: string[]
   reading: string
   systematicName: string
+  colorDescription: string
+  originDescription: string
   hex: string
   examLevel: 2 | 3 | null
   munsell: string
@@ -63,6 +65,8 @@ export type JISColorFamily = {
 
 export type JISCompareSection = {
   targets: string[]
+  hintJIS?: string[]
+  hintPCCSHue?: number[]
 }
 
 export type JISSubfamilyData = {
