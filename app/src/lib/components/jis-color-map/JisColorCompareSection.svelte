@@ -68,38 +68,36 @@
           <div class="munsell">{jis.munsell}</div>
         </div>
       </div>
-    {/each}
-    <div class="diagrams">
-      {#if hueDiagram}
-        <div class="diagram-slot">
-          <HueCompareDiagram data={hueDiagram} />
-        </div>
-      {/if}
-      {#if valueDiagram}
-        <div class="diagram-slot">
-          <ValueCompareDiagram data={valueDiagram} />
-        </div>
-      {/if}
-      {#if chromaDiagram}
-        <div class="diagram-slot">
-          <ChromaCompareDiagram data={chromaDiagram} {familyHex} />
-        </div>
-      {/if}
-    </div>
-    {#each targets as jis, i (jis.id)}
       <div class="desc" style:--_row-index={i + 1}>
         {#each splitDescription(jis.colorDescription) as line, li (li)}
           {line}{#if li < splitDescription(jis.colorDescription).length - 1}<br />{/if}
         {/each}
       </div>
     {/each}
+    <div class="diagrams">
+      <div class="diagram-slot">
+        {#if hueDiagram}
+          <HueCompareDiagram data={hueDiagram} />
+        {/if}
+      </div>
+      <div class="diagram-slot">
+        {#if valueDiagram}
+          <ValueCompareDiagram data={valueDiagram} />
+        {/if}
+      </div>
+      <div class="diagram-slot">
+        {#if chromaDiagram}
+          <ChromaCompareDiagram data={chromaDiagram} {familyHex} />
+        {/if}
+      </div>
+    </div>
   </div>
 </section>
 
 <style>
   .compare {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 2rem;
     padding: 1rem 0;
     border-top: 1px solid var(--color-border, #e0e0e0);
@@ -108,39 +106,38 @@
   @media (max-width: 640px) {
     .compare {
       grid-template-columns: 1fr;
-      gap: 1rem;
     }
-  }
-
-  .map-area {
-    min-width: 350px;
   }
 
   .list-area {
     display: grid;
-    gap: 1rem;
+    column-gap: 1.5rem;
+    row-gap: 1rem;
     min-width: 0;
     grid-template-rows: repeat(var(--_row-count), 1fr);
     grid-template-columns: auto 1fr auto;
     height: fit-content;
     align-items: center;
+    padding-block: 0.5rem;
   }
 
   .row {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr;
     align-items: center;
-    gap: 0.75rem;
+    row-gap: 0.5rem;
+    column-gap: 0.75rem;
     grid-row: var(--_row-index);
   }
 
   .level {
-    flex-shrink: 0;
     padding: 0.3rem;
     border-radius: 4px;
     font-size: 0.7rem;
     text-align: center;
     color: #1a1a2e;
     line-height: 1;
+    align-self: center;
   }
 
   .level-2 {
@@ -156,7 +153,6 @@
   }
 
   .preview {
-    flex-shrink: 0;
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 6px;
@@ -166,10 +162,9 @@
   .info {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    flex: 1;
-    text-align: center;
+    align-items: flex-start;
     min-width: 0;
+    grid-column: 1 / -1;
   }
 
   .name {
@@ -189,7 +184,8 @@
   }
 
   .diagrams {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 1rem;
     align-items: stretch;
     min-height: 7rem;
@@ -198,8 +194,7 @@
   }
 
   .diagram-slot {
-    flex: 0 0 auto;
-    display: flex;
+    min-width: 36px;
   }
 
   .desc {

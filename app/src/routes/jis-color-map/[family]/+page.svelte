@@ -71,10 +71,11 @@
 
   .compare-sections {
     margin-top: 2.5rem;
+    margin-inline: -1rem;
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
-    width: min(90cqw, 960px);
+    width: 100%;
   }
 
   .subfamily {
