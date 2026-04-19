@@ -45,11 +45,10 @@
         orient="auto-start-reverse"
       >
         <path
-          d="M 1 1 L 5 5 L 1 9"
+          d="M 1 1 L 4.5 4.5 A 0.7 0.7 0 0 1 4.5 5.5 L 1 9"
           fill="none"
           stroke={topHex}
           stroke-width="2"
-          stroke-linecap="round"
           stroke-linejoin="round"
           vector-effect="non-scaling-stroke"
         />
@@ -65,11 +64,10 @@
         orient="auto-start-reverse"
       >
         <path
-          d="M 1 1 L 5 5 L 1 9"
+          d="M 1 1 L 4.5 4.5 A 0.7 0.7 0 0 1 4.5 5.5 L 1 9"
           fill="none"
           stroke={bottomHex}
           stroke-width="2"
-          stroke-linecap="round"
           stroke-linejoin="round"
           vector-effect="non-scaling-stroke"
         />
