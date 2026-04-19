@@ -93,7 +93,8 @@
 <style>
   .scroll {
     overflow-x: auto;
-    padding-block: 0.5rem 0.5rem;
+    padding-block: 0.5rem;
+    max-width: 95cqw;
 
     --cell-size: 32px;
     --map-font-xs: calc(var(--cell-size) * 0.22);

@@ -67,11 +67,11 @@
           <div class="systematic">{jis.systematicName}</div>
           <div class="munsell">{jis.munsell}</div>
         </div>
-      </div>
-      <div class="desc" style:--_row-index={i + 1}>
-        {#each splitDescription(jis.colorDescription) as line, li (li)}
-          {line}{#if li < splitDescription(jis.colorDescription).length - 1}<br />{/if}
-        {/each}
+        <div class="desc" style:--_row-index={i + 1}>
+          {#each splitDescription(jis.colorDescription) as line, li (li)}
+            {line}{#if li < splitDescription(jis.colorDescription).length - 1}<br />{/if}
+          {/each}
+        </div>
       </div>
     {/each}
     <div class="diagrams">
@@ -98,7 +98,8 @@
   .compare {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+    row-gap: 2rem;
+    column-gap: 3rem;
     padding: 1rem 0;
     border-top: 1px solid var(--color-border, #e0e0e0);
   }
@@ -115,7 +116,7 @@
     row-gap: 1rem;
     min-width: 0;
     grid-template-rows: repeat(var(--_row-count), 1fr);
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: 1fr 1fr;
     height: fit-content;
     align-items: center;
     padding-block: 0.5rem;
@@ -153,7 +154,7 @@
   }
 
   .preview {
-    width: 2.5rem;
+    width: 100%;
     height: 2.5rem;
     border-radius: 6px;
     border: 1px solid var(--color-border, #d0d0d0);
@@ -198,10 +199,9 @@
   }
 
   .desc {
-    text-align: center;
     font-size: 0.6rem;
     line-height: 1.5;
     color: var(--color-body);
-    grid-row: var(--_row-index);
+    grid-column: 1 / -1;
   }
 </style>
