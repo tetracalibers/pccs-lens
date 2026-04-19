@@ -2,7 +2,12 @@
   import type { JISColor } from "$lib/data/jis-colors"
   import JisColorNameTooltip from "./JisColorNameTooltip.svelte"
 
-  let { color }: { color: JISColor } = $props()
+  interface Props {
+    color: JISColor
+    variant?: "fill" | "outline"
+  }
+
+  let { color, variant = "fill" }: Props = $props()
 
   const anchorName = $derived(`--jis-tt-${color.id}`)
   const popoverId = $derived(`jis-tt-${color.id}`)
@@ -12,15 +17,16 @@
   const show = () => popoverRef?.showPopover()
   const hide = () => popoverRef?.hidePopover()
 
-  // 縦長の亀甲型（上下が頂点、左右が平辺）
-  const POLY_POINTS = "50,5 93.3,27.5 93.3,72.5 50,95 6.7,72.5 6.7,27.5"
+  // 正六角形の亀甲型（上下が頂点、左右が平辺）
+  // 外接円半径 50、幅 = 50 * √3 ≒ 86.6、高さ = 100
+  const POLY_POINTS = "43.3,0 86.6,25 86.6,75 43.3,100 0,75 0,25"
 </script>
 
-<div class="wrap" style:anchor-name={anchorName}>
-  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<div class="wrap" style:anchor-name={anchorName} style:--_jis-color-hex={color.hex}>
+  <svg viewBox="0 0 86.6 100" xmlns="http://www.w3.org/2000/svg">
     <polygon
+      class:--_outline={variant === "outline"}
       points={POLY_POINTS}
-      fill={color.hex}
       tabindex="0"
       role="button"
       aria-describedby={popoverId}
@@ -52,6 +58,13 @@
   polygon {
     cursor: pointer;
     outline: none;
+    fill: var(--_jis-color-hex);
+  }
+
+  polygon.--_outline {
+    fill: none;
+    stroke: var(--_jis-color-hex);
+    stroke-width: 4;
   }
 
   polygon:focus-visible {
