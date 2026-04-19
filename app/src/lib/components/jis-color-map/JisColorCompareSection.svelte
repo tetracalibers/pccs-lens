@@ -100,7 +100,7 @@
   .compare {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 1.5rem;
+    gap: 2rem;
     padding: 1rem 0;
     border-top: 1px solid var(--color-border, #e0e0e0);
   }
@@ -113,7 +113,7 @@
   }
 
   .map-area {
-    min-width: 0;
+    min-width: 350px;
   }
 
   .list-area {
@@ -135,19 +135,20 @@
 
   .level {
     flex-shrink: 0;
-    padding: 0.15rem 0.3rem;
+    padding: 0.3rem;
     border-radius: 4px;
     font-size: 0.7rem;
     text-align: center;
-    color: #fff;
+    color: #1a1a2e;
+    line-height: 1;
   }
 
   .level-2 {
-    background-color: #d35400;
+    background-color: var(--color-grade-2);
   }
 
   .level-3 {
-    background-color: #2980b9;
+    background-color: var(--color-grade-3);
   }
 
   .level-none {
