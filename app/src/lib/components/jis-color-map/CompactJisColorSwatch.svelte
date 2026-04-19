@@ -48,7 +48,7 @@
 
   .--_outline {
     background: none;
-    border: 1px solid var(--_jis-color-hex);
+    border: 2px solid var(--_jis-color-hex);
     box-sizing: border-box;
   }
 

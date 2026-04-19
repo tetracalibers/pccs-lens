@@ -25,6 +25,10 @@
     box-sizing: border-box;
   }
 
+  .--_compact {
+    border-radius: 4px;
+  }
+
   .label {
     font-size: var(--map-font-m, 0.65rem);
     white-space: nowrap;
