@@ -46,14 +46,14 @@
         style:grid-column="1"
         style:grid-row="{vs.row + 1} / span {vs.rowSpan}"
       >
-        <ValueSwatch value={vs.value} scale={vs.rowSpan} />
+        <ValueSwatch value={vs.value} scale={vs.rowSpan} compact />
       </div>
     {/each}
 
     <!-- 等明度軸 -->
     {#each layout.equiAxis as ea (`${ea.col}:${ea.row}`)}
       <div class="grid-item" style:grid-column={ea.col} style:grid-row={ea.row + 1}>
-        <ValueSwatch value={ea.value} />
+        <ValueSwatch value={ea.value} compact />
       </div>
     {/each}
 
