@@ -1,16 +1,30 @@
 <script lang="ts">
   import { buildJisColorMap } from "$lib/jis-color-map/build-map"
   import { buildMapLayout } from "$lib/jis-color-map/layout"
-  import type { JISColorGroupId } from "$lib/data/jis-colors"
-  import { PCCS_HUE_MAP } from "$lib/data/pccs"
+  import type { ColorSubfamily } from "$lib/data/jis-colors"
   import ValueSwatch from "./ValueSwatch.svelte"
-  import JisColorSwatch from "./JisColorSwatch.svelte"
   import PccsSwatch from "./PccsSwatch.svelte"
+  import CompactJisColorSwatch from "./CompactJisColorSwatch.svelte"
+  import HintJisColorSwatch from "./HintJisColorSwatch.svelte"
 
-  let { groupId }: { groupId: JISColorGroupId } = $props()
+  let {
+    groupId,
+    highlightsJisIds,
+    hintJisIds,
+    hintPCCSHueNums
+  }: {
+    groupId: ColorSubfamily
+    highlightsJisIds: string[]
+    hintJisIds?: string[]
+    hintPCCSHueNums?: number[]
+  } = $props()
 
   const data = $derived(buildJisColorMap(groupId))
   const layout = $derived(buildMapLayout(data))
+
+  const highlightSet = $derived(new Set(highlightsJisIds))
+  const hintSet = $derived(new Set(hintJisIds ?? []))
+  const hintHueSet = $derived(new Set(hintPCCSHueNums ?? []))
 </script>
 
 <div class="scroll">
@@ -45,24 +59,35 @@
 
     <!-- セル -->
     {#each layout.placements as p (`${p.col}:${p.row}`)}
-      <div
-        class="grid-item"
-        style:grid-column={p.col}
-        style:grid-row="{p.row + 1} / span {p.rowSpan}"
-      >
-        {#if p.cell.kind === "jis"}
-          {@const pccs = p.cell.pccsHint
-            ? {
-                symbol:
-                  PCCS_HUE_MAP.get(p.cell.pccsHint.hueNumber!)?.symbol ?? p.cell.pccsHint.notation,
-                hex: p.cell.pccsHint.hex
-              }
-            : undefined}
-          <JisColorSwatch colors={p.cell.colors} {pccs} />
-        {:else}
+      {#if p.cell.kind === "jis"}
+        {@const firstId = p.cell.colors[0].id}
+        {@const isHighlight = highlightSet.has(firstId)}
+        {@const isHint = hintSet.has(firstId)}
+        {@const dim = !isHighlight && !isHint}
+        <div
+          class="grid-item"
+          class:dim
+          style:grid-column={p.col}
+          style:grid-row="{p.row + 1} / span {p.rowSpan}"
+        >
+          {#if isHint}
+            <HintJisColorSwatch color={p.cell.colors[0]} />
+          {:else}
+            <CompactJisColorSwatch colors={p.cell.colors} />
+          {/if}
+        </div>
+      {:else}
+        {@const hueNum = p.cell.pccs.hueNumber}
+        {@const dim = hueNum !== null && !hintHueSet.has(hueNum)}
+        <div
+          class="grid-item"
+          class:dim
+          style:grid-column={p.col}
+          style:grid-row="{p.row + 1} / span {p.rowSpan}"
+        >
           <PccsSwatch pccs={p.cell.pccs} />
-        {/if}
-      </div>
+        </div>
+      {/if}
     {/each}
   </div>
 </div>
@@ -70,29 +95,25 @@
 <style>
   .scroll {
     overflow-x: auto;
-    padding-block: 0.5rem 1.5rem;
-    padding-inline: 0;
-    max-width: 90cqw;
+    padding-block: 0.5rem 0.5rem;
 
-    --cell-size: 60px;
-    --map-font-xs: calc(var(--cell-size) * 0.12);
-    --map-font-s: calc(var(--cell-size) * 0.14);
-    --map-font-m: calc(var(--cell-size) * 0.16);
-    --map-font-l: calc(var(--cell-size) * 0.19);
+    --cell-size: 32px;
+    --map-font-xs: calc(var(--cell-size) * 0.22);
+    --map-font-s: calc(var(--cell-size) * 0.26);
+    --map-font-m: calc(var(--cell-size) * 0.3);
+    --map-font-l: calc(var(--cell-size) * 0.36);
   }
 
   @media (max-width: 640px) {
     .scroll {
-      --cell-size: 56px;
+      --cell-size: 28px;
     }
   }
 
   .map {
     display: grid;
-    gap: 4px;
+    gap: 2px;
     width: max-content;
-    margin-inline: auto;
-    padding-inline-end: 1rem;
   }
 
   .corner {
@@ -105,15 +126,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: var(--map-font-m);
+    font-size: var(--map-font-s);
     font-family: var(--font-mono);
     color: var(--color-body);
-    padding: 0.25rem 0;
+    padding: 0.2rem 0;
     white-space: nowrap;
   }
 
   .grid-item {
     min-width: 0;
     min-height: 0;
+  }
+
+  .grid-item.dim {
+    opacity: 0.2;
   }
 </style>

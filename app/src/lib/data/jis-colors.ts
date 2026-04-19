@@ -100,6 +100,23 @@ export const JIS_COLORS: JISColor[] = JIS_COLOR_FAMILIES.flatMap((f) =>
 
 export const JIS_HEX_BY_ID: Map<string, string> = new Map(JIS_COLORS.map((c) => [c.id, c.hex]))
 
+export const JIS_COLOR_BY_ID: Map<string, JISColor> = new Map(JIS_COLORS.map((c) => [c.id, c]))
+
+export const getJisColorById = (id: string): JISColor | undefined => JIS_COLOR_BY_ID.get(id)
+
+export const getJisColorsByIds = (ids: string[]): JISColor[] =>
+  ids.map((id) => JIS_COLOR_BY_ID.get(id)).filter((c): c is JISColor => c !== undefined)
+
+export const getCompareSectionsBySubfamily = (subfamilyId: ColorSubfamily): JISCompareSection[] =>
+  JIS_COLORS_BY_SUBFAMILY[subfamilyId]?.compareSections ?? []
+
+export const getFamilyIdBySubfamilyId = (subfamilyId: ColorSubfamily): ColorFamily | null => {
+  for (const family of JIS_COLOR_FAMILIES) {
+    if (family.subfamilies.some((s) => s.id === subfamilyId)) return family.id
+  }
+  return null
+}
+
 export type JISColorGroupId = ColorFamily | ColorSubfamily | "all"
 
 const FAMILY_IDS: Set<ColorFamily> = new Set(JIS_COLOR_FAMILIES.map((f) => f.id))
