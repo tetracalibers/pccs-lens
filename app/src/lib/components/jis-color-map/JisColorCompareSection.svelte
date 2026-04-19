@@ -47,58 +47,52 @@
       hintPCCSHueNums={section.hintPCCSHue}
     />
   </div>
-  <div class="list-area">
-    <div class="rows">
-      {#each targets as jis (jis.id)}
-        <div class="row">
-          {#if jis.examLevel !== null}
-            <span
-              class="level"
-              class:level-2={jis.examLevel === 2}
-              class:level-3={jis.examLevel === 3}
-            >
-              {jis.examLevel}級
-            </span>
-          {:else}
-            <span class="level level-none"></span>
-          {/if}
-          <span class="preview" style:background-color={jis.hex}></span>
-          <div class="info">
-            <div class="name">{jis.name}</div>
-            <div class="systematic">{jis.systematicName}</div>
-            <div class="munsell">{jis.munsell}</div>
-          </div>
+  <div class="list-area" style:--_row-count={targets.length}>
+    {#each targets as jis, i (jis.id)}
+      <div class="row" style:--_row-index={i + 1}>
+        {#if jis.examLevel !== null}
+          <span
+            class="level"
+            class:level-2={jis.examLevel === 2}
+            class:level-3={jis.examLevel === 3}
+          >
+            {jis.examLevel}級
+          </span>
+        {:else}
+          <span class="level level-none"></span>
+        {/if}
+        <span class="preview" style:background-color={jis.hex}></span>
+        <div class="info">
+          <div class="name">{jis.name}</div>
+          <div class="systematic">{jis.systematicName}</div>
+          <div class="munsell">{jis.munsell}</div>
         </div>
-      {/each}
-    </div>
-    {#if hueDiagram || valueDiagram || chromaDiagram}
-      <div class="diagrams">
-        {#if hueDiagram}
-          <div class="diagram-slot">
-            <HueCompareDiagram data={hueDiagram} />
-          </div>
-        {/if}
-        {#if valueDiagram}
-          <div class="diagram-slot">
-            <ValueCompareDiagram data={valueDiagram} />
-          </div>
-        {/if}
-        {#if chromaDiagram}
-          <div class="diagram-slot">
-            <ChromaCompareDiagram data={chromaDiagram} {familyHex} />
-          </div>
-        {/if}
       </div>
-    {/if}
-    <div class="descriptions">
-      {#each targets as jis (jis.id)}
-        <div class="desc">
-          {#each splitDescription(jis.colorDescription) as line, li (li)}
-            {line}{#if li < splitDescription(jis.colorDescription).length - 1}<br />{/if}
-          {/each}
+    {/each}
+    <div class="diagrams">
+      {#if hueDiagram}
+        <div class="diagram-slot">
+          <HueCompareDiagram data={hueDiagram} />
         </div>
-      {/each}
+      {/if}
+      {#if valueDiagram}
+        <div class="diagram-slot">
+          <ValueCompareDiagram data={valueDiagram} />
+        </div>
+      {/if}
+      {#if chromaDiagram}
+        <div class="diagram-slot">
+          <ChromaCompareDiagram data={chromaDiagram} {familyHex} />
+        </div>
+      {/if}
     </div>
+    {#each targets as jis, i (jis.id)}
+      <div class="desc" style:--_row-index={i + 1}>
+        {#each splitDescription(jis.colorDescription) as line, li (li)}
+          {line}{#if li < splitDescription(jis.colorDescription).length - 1}<br />{/if}
+        {/each}
+      </div>
+    {/each}
   </div>
 </section>
 
@@ -123,31 +117,27 @@
   }
 
   .list-area {
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: 1rem;
     min-width: 0;
-  }
-
-  .rows {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    grid-template-rows: repeat(var(--_row-count), 1fr);
+    grid-template-columns: auto 1fr auto;
+    height: fit-content;
+    align-items: center;
   }
 
   .row {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    grid-row: var(--_row-index);
   }
 
   .level {
     flex-shrink: 0;
-    width: 2.25rem;
     padding: 0.15rem 0.3rem;
     border-radius: 4px;
     font-size: 0.7rem;
-    font-family: var(--font-mono);
     text-align: center;
     color: #fff;
   }
@@ -182,17 +172,17 @@
   }
 
   .name {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 600;
   }
 
   .systematic {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     opacity: 0.85;
   }
 
   .munsell {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     font-family: var(--font-mono);
     opacity: 0.7;
   }
@@ -200,9 +190,10 @@
   .diagrams {
     display: flex;
     gap: 1rem;
-    justify-content: center;
     align-items: stretch;
     min-height: 7rem;
+    height: 100%;
+    grid-row: 1 / -1;
   }
 
   .diagram-slot {
@@ -210,16 +201,11 @@
     display: flex;
   }
 
-  .descriptions {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
   .desc {
     text-align: center;
-    font-size: 0.85rem;
+    font-size: 0.6rem;
     line-height: 1.5;
     color: var(--color-body);
+    grid-row: var(--_row-index);
   }
 </style>
