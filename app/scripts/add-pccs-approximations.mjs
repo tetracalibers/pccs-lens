@@ -55,7 +55,7 @@ async function main() {
   const pccsAll = await loadPccsAll()
   const jisPath = resolve(DATA_DIR, "jis_colors.json")
   const jisColorsBySubfamily = JSON.parse(await readFile(jisPath, "utf8"))
-  const allColors = Object.values(jisColorsBySubfamily).flat()
+  const allColors = Object.values(jisColorsBySubfamily).flatMap((sub) => sub.colors)
 
   for (const jis of allColors) {
     jis.approximatePccs = computeApproximatePccs(jis.hex, pccsAll)

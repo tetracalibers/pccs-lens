@@ -61,7 +61,11 @@ export type JISColorFamily = {
   subfamilies: JISSubfamily[]
 }
 
-export type JISColorsBySubfamily = Record<ColorSubfamily, JISColor[]>
+export type JISSubfamilyData = {
+  colors: JISColor[]
+}
+
+export type JISColorsBySubfamily = Record<ColorSubfamily, JISSubfamilyData>
 
 export const JIS_COLOR_FAMILIES: JISColorFamily[] = jisColorFamilyJson as JISColorFamily[]
 
@@ -72,7 +76,7 @@ export const JIS_COLORS_BY_GROUP: Map<ColorFamily | ColorSubfamily, JISColor[]> 
   for (const family of JIS_COLOR_FAMILIES) {
     const familyColors: JISColor[] = []
     for (const sub of family.subfamilies) {
-      const subColors = JIS_COLORS_BY_SUBFAMILY[sub.id] ?? []
+      const subColors = JIS_COLORS_BY_SUBFAMILY[sub.id]?.colors ?? []
       map.set(sub.id, subColors)
       familyColors.push(...subColors)
     }
@@ -82,7 +86,7 @@ export const JIS_COLORS_BY_GROUP: Map<ColorFamily | ColorSubfamily, JISColor[]> 
 })()
 
 export const JIS_COLORS: JISColor[] = JIS_COLOR_FAMILIES.flatMap((f) =>
-  f.subfamilies.flatMap((s) => JIS_COLORS_BY_SUBFAMILY[s.id] ?? [])
+  f.subfamilies.flatMap((s) => JIS_COLORS_BY_SUBFAMILY[s.id]?.colors ?? [])
 )
 
 export const JIS_HEX_BY_ID: Map<string, string> = new Map(JIS_COLORS.map((c) => [c.id, c.hex]))
