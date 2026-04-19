@@ -184,7 +184,6 @@
   .name {
     font-size: 0.95rem;
     font-weight: 600;
-    font-family: var(--font-round);
   }
 
   .systematic {

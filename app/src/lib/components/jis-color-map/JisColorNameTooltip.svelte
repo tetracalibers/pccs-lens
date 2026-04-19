@@ -51,7 +51,6 @@
     border-radius: 6px;
     background: var(--color-bg, #fff);
     color: var(--color-body, #222);
-    font-family: var(--font-round);
     font-size: 0.8rem;
     line-height: 1.3;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);

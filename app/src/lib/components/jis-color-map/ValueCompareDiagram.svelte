@@ -75,7 +75,6 @@
 
   .label {
     font-size: 0.75rem;
-    font-family: var(--font-round);
     color: var(--color-body);
     white-space: nowrap;
   }

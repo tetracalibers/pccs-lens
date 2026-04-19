@@ -88,7 +88,6 @@
     font-weight: 700;
     margin: 0;
     padding-bottom: 0.25rem;
-    border-bottom: 2px solid var(--color-border, #d0d0d0);
   }
 
   .compare-list {
