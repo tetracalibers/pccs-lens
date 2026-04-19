@@ -191,6 +191,13 @@
           }
         ]
       }
+    ],
+    "compareSections": [
+      { "targets": ["sakura-iro", "baby-pink"] },
+      { "targets": ["toki-iro", "rose-pink", "old-rose"] },
+      { "targets": ["sango-iro", "kobai-iro"] },
+      { "targets": ["salmon-pink"] },
+      { "targets": ["botan-iro", "magenta"] }
     ]
   },
   "orange-red": {
@@ -368,6 +375,12 @@
           }
         ]
       }
+    ],
+    "compareSections": [
+      { "targets": ["scarlet", "shu-iro", "vermilion"] },
+      { "targets": ["carmine", "poppy-red", "karakurenai-iro"] },
+      { "targets": ["akane-iro", "wine-red"] },
+      { "targets": ["bordeaux"] }
     ]
   },
   "yellow-red-light-brown": {
@@ -533,22 +546,13 @@
             "deltaE": 4.69
           }
         ]
-      },
-      {
-        "id": "amber",
-        "name": "アンバー",
-        "reading": "amber",
-        "systematicName": "くすんだ赤みの黄",
-        "hex": "#c28953",
-        "examLevel": 2,
-        "munsell": "8YR 5.5/6.5",
-        "approximatePccs": [
-          {
-            "notation": "sf6",
-            "deltaE": 5.18
-          }
-        ]
       }
+    ],
+    "compareSections": [
+      { "targets": ["raw-sienna"] },
+      { "targets": ["taisha-iro", "burnt-sienna", "terracotta"] },
+      { "targets": ["hiwada-iro", "renga-iro"] },
+      { "targets": ["bengara-iro", "suo"] }
     ]
   },
   "yellow-green-brown": {
@@ -596,6 +600,21 @@
           {
             "notation": "sf5",
             "deltaE": 6.72
+          }
+        ]
+      },
+      {
+        "id": "amber",
+        "name": "アンバー",
+        "reading": "amber",
+        "systematicName": "くすんだ赤みの黄",
+        "hex": "#c28953",
+        "examLevel": 2,
+        "munsell": "8YR 5.5/6.5",
+        "approximatePccs": [
+          {
+            "notation": "sf6",
+            "deltaE": 5.18
           }
         ]
       },
@@ -754,6 +773,12 @@
           }
         ]
       }
+    ],
+    "compareSections": [
+      { "targets": ["tan", "kohaku-iro", "amber", "odo-iro"] },
+      { "targets": ["raw-umber", "khaki", "kuchiba-iro"] },
+      { "targets": ["burnt-umber", "sepia"] },
+      { "targets": ["susutake-iro"] }
     ]
   },
   "yellow-red-dark-brown": {
@@ -876,6 +901,10 @@
           }
         ]
       }
+    ],
+    "compareSections": [
+      { "targets": ["kuri-iro", "ebicha", "tobi-iro"] },
+      { "targets": ["chocholate", "maroon", "burgundy"] }
     ]
   },
   "light-yellow": {
@@ -1031,6 +1060,12 @@
           }
         ]
       }
+    ],
+    "compareSections": [
+      { "targets": ["kihada-iro", "lemon-yellow", "canary-yellow"] },
+      { "targets": ["cream-yellow", "blond"] },
+      { "targets": ["beige", "ecru-beige"] },
+      { "targets": ["peach"] }
     ]
   },
   "dark-yellow": {
@@ -1233,6 +1268,13 @@
           }
         ]
       }
+    ],
+    "compareSections": [
+      { "targets": ["oni"] },
+      { "targets": ["marigold", "yamabuki-iro", "ukon-iro"] },
+      { "targets": ["koji-iro", "golden-yellow"] },
+      { "targets": ["naples-yellow", "jaune-brillant", "kariyasu-iro"] },
+      { "targets": ["karashi-iro"] }
     ]
   },
   "yellow-green": {
@@ -1451,6 +1493,12 @@
           }
         ]
       }
+    ],
+    "compareSections": [
+      { "targets": ["chartreuse-green", "moegi", "leaf-green"] },
+      { "targets": ["grass-green", "matsuba-iro"] },
+      { "targets": ["olive", "miru-iro"] },
+      { "targets": ["olive-green", "uguisu-iro", "hiwa-iro"] }
     ]
   },
   "light-blue-green": {
@@ -1565,6 +1613,11 @@
           }
         ]
       }
+    ],
+    "compareSections": [
+      { "targets": ["apple-green", "mint-green"] },
+      { "targets": ["wakatake-iro", "seiji-iro"] },
+      { "targets": ["nile-blue", "peacock-green"] }
     ]
   },
   "dark-blue-green": {
@@ -1737,6 +1790,12 @@
           }
         ]
       }
+    ],
+    "compareSections": [
+      { "targets": ["cobalt-green", "emerald-green"] },
+      { "targets": ["malachite-green", "tokiwa-iro"] },
+      { "targets": ["rokusho-iro", "viridian"] },
+      { "targets": ["bottle-green", "tetsu-iro"] }
     ]
   },
   "water-light-blue-green": {
@@ -1912,6 +1971,11 @@
           }
         ]
       }
+    ],
+    "compareSections": [
+      { "targets": ["baby-blue", "sora-iro", "sky-blue", "kamenozoki"] },
+      { "targets": ["shinbashi-iro", "asagi-iro"] },
+      { "targets": ["turquoise-blue", "cyan"] }
     ]
   },
   "blue-green": {
@@ -2037,6 +2101,11 @@
           }
         ]
       }
+    ],
+    "compareSections": [
+      { "targets": ["nando-iro", "marine-blue", "ai-iro"] },
+      { "targets": ["saxe-blue", "hanada-iro"] },
+      { "targets": ["cerulean-blue", "cobalt-blue"] }
     ]
   },
   "blue-purple": {
@@ -2162,6 +2231,11 @@
           }
         ]
       }
+    ],
+    "compareSections": [
+      { "targets": ["kakitsubata-iro", "ruri-iro"] },
+      { "targets": ["gunjo-iro", "ultramarine-blue"] },
+      { "targets": ["navy-blue", "midnight-blue"] }
     ]
   },
   "light-purple-blue-purple": {
@@ -2280,6 +2354,11 @@
           }
         ]
       }
+    ],
+    "compareSections": [
+      { "targets": ["lilac", "lavender"] },
+      { "targets": ["fuji-iro", "wistaria"] },
+      { "targets": ["violet", "kikyo-iro"] }
     ]
   },
   "dark-purple-red-purple": {
@@ -2398,6 +2477,12 @@
           }
         ]
       }
+    ],
+    "compareSections": [
+      { "targets": ["ayame-iro"] },
+      { "targets": ["purple", "mauve"] },
+      { "targets": ["kodai-murasaki", "edomurasaki"] },
+      { "targets": ["nasukon"] }
     ]
   },
   "off-neutral": {
@@ -2482,6 +2567,10 @@
           }
         ]
       }
+    ],
+    "compareSections": [
+      { "targets": ["kinari-iro", "ivory"] },
+      { "targets": ["chanezu", "rikyunezu"] }
     ]
   },
   "neutral-gray": {
@@ -2581,6 +2670,11 @@
           }
         ]
       }
+    ],
+    "compareSections": [
+      { "targets": ["ginnezu", "silver-grey"] },
+      { "targets": ["slate-grey", "charcoal-grey"] },
+      { "targets": ["lamp-black"] }
     ]
   }
 }

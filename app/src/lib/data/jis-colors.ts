@@ -61,8 +61,13 @@ export type JISColorFamily = {
   subfamilies: JISSubfamily[]
 }
 
+export type JISCompareSection = {
+  targets: string[]
+}
+
 export type JISSubfamilyData = {
   colors: JISColor[]
+  compareSections: JISCompareSection[]
 }
 
 export type JISColorsBySubfamily = Record<ColorSubfamily, JISSubfamilyData>
