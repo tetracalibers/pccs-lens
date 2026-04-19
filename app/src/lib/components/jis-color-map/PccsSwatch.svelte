@@ -3,14 +3,19 @@
   import { PCCS_HUE_MAP } from "$lib/data/pccs"
   import type { PCCSColor } from "$lib/data/types"
 
-  let { pccs }: { pccs: PCCSColor } = $props()
+  interface Props {
+    pccs: PCCSColor
+    compact?: boolean
+  }
+
+  let { pccs, compact = false }: Props = $props()
 
   const hueInfo = $derived(pccs.hueNumber !== null ? PCCS_HUE_MAP.get(pccs.hueNumber) : null)
   const symbol = $derived(hueInfo ? hueInfo.symbol : pccs.notation)
   const textColor = $derived(isLightColor(pccs.hex) ? "#333" : "#fff")
 </script>
 
-<div class="cell">
+<div class="cell" class:--_compact={compact}>
   <div class="swatch" style:background-color={pccs.hex} style:color={textColor}>
     {symbol}
   </div>
@@ -36,5 +41,9 @@
     letter-spacing: -0.02em;
     font-size: var(--map-font-l, 0.7rem);
     font-family: var(--font-mono);
+  }
+
+  .--_compact .swatch {
+    font-size: var(--map-font-m);
   }
 </style>

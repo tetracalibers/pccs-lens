@@ -85,7 +85,7 @@
           style:grid-column={p.col}
           style:grid-row="{p.row + 1} / span {p.rowSpan}"
         >
-          <PccsSwatch pccs={p.cell.pccs} />
+          <PccsSwatch pccs={p.cell.pccs} compact />
         </div>
       {/if}
     {/each}
