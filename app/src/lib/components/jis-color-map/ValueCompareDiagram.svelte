@@ -36,25 +36,52 @@
 <div class="diagram">
   <div class="label">{data.topLabel}</div>
   {#each segments as seg, i (i)}
-    <svg
-      class="arrow"
-      viewBox="0 0 20 100"
-      preserveAspectRatio="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg class="arrow" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="value-grad-{i}-{seg.dir}" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient
+          id="value-grad-{i}"
+          gradientUnits="userSpaceOnUse"
+          x1="0"
+          y1="0"
+          x2="0"
+          y2="100%"
+        >
           <stop offset="0%" stop-color={seg.topHex} />
           <stop offset="100%" stop-color={seg.bottomHex} />
         </linearGradient>
+        <marker
+          id="value-marker-{i}"
+          viewBox="0 0 7 7"
+          refX="3.5"
+          refY="3.5"
+          markerWidth="14"
+          markerHeight="14"
+          markerUnits="userSpaceOnUse"
+          orient="auto-start-reverse"
+        >
+          <polyline
+            points="0,3.5 3.5,1.75 0,0"
+            fill="none"
+            stroke={seg.dir === "up" ? seg.topHex : seg.bottomHex}
+            stroke-width="1.1667"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            transform="translate(1.1667 1.75)"
+          />
+        </marker>
       </defs>
-      {#if seg.dir === "up"}
-        <polygon points="10,2 5,10 15,10" fill={seg.topHex} />
-        <rect x="8" y="10" width="4" height="88" fill="url(#value-grad-{i}-up)" />
-      {:else}
-        <rect x="8" y="2" width="4" height="88" fill="url(#value-grad-{i}-down)" />
-        <polygon points="10,98 5,90 15,90" fill={seg.bottomHex} />
-      {/if}
+      <line
+        x1="50%"
+        y1="0"
+        x2="50%"
+        y2="100%"
+        stroke="url(#value-grad-{i})"
+        stroke-width="2.25"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        marker-start={seg.dir === "up" ? `url(#value-marker-${i})` : null}
+        marker-end={seg.dir === "down" ? `url(#value-marker-${i})` : null}
+      />
     </svg>
     {#if i === 0 && data.middleLabel}
       <div class="label">{data.middleLabel}</div>
@@ -70,7 +97,7 @@
     align-items: center;
     height: 100%;
     min-height: 6rem;
-    gap: 0.25rem;
+    gap: 0.5rem;
   }
 
   .label {
@@ -83,5 +110,6 @@
     flex: 1;
     width: 1.5rem;
     min-height: 0;
+    overflow: visible;
   }
 </style>

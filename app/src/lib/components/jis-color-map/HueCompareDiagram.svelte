@@ -23,66 +23,64 @@
 
 <div class="diagram">
   <div class="label">{data.topLabel}</div>
-  <svg
-    class="arrow"
-    viewBox="0 0 20 100"
-    preserveAspectRatio="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg class="arrow" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <linearGradient id={gradId} gradientUnits="userSpaceOnUse" x1="10" y1="6" x2="10" y2="94">
+      <linearGradient id={gradId} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="100%">
         <stop offset="0%" stop-color={topHex} />
         <stop offset="100%" stop-color={bottomHex} />
       </linearGradient>
       <marker
         id={markerTopId}
-        viewBox="0 0 10 10"
-        refX="5"
-        refY="5"
-        markerWidth="9"
-        markerHeight="12"
+        viewBox="0 0 7 7"
+        refX="3.5"
+        refY="3.5"
+        markerWidth="14"
+        markerHeight="14"
         markerUnits="userSpaceOnUse"
         orient="auto-start-reverse"
       >
-        <path
-          d="M 1 1 L 4.5 4.5 A 0.7 0.7 0 0 1 4.5 5.5 L 1 9"
+        <polyline
+          points="0,3.5 3.5,1.75 0,0"
           fill="none"
           stroke={topHex}
-          stroke-width="2"
+          stroke-width="1.1667"
+          stroke-linecap="round"
           stroke-linejoin="round"
-          vector-effect="non-scaling-stroke"
+          transform="translate(1.1667 1.75)"
         />
       </marker>
       <marker
         id={markerBottomId}
-        viewBox="0 0 10 10"
-        refX="5"
-        refY="5"
-        markerWidth="9"
-        markerHeight="12"
+        viewBox="0 0 7 7"
+        refX="3.5"
+        refY="3.5"
+        markerWidth="14"
+        markerHeight="14"
         markerUnits="userSpaceOnUse"
-        orient="auto-start-reverse"
+        orient="auto"
       >
-        <path
-          d="M 1 1 L 4.5 4.5 A 0.7 0.7 0 0 1 4.5 5.5 L 1 9"
+        <polyline
+          points="0,3.5 3.5,1.75 0,0"
           fill="none"
           stroke={bottomHex}
-          stroke-width="2"
+          stroke-width="1.1667"
+          stroke-linecap="round"
           stroke-linejoin="round"
-          vector-effect="non-scaling-stroke"
+          transform="translate(1.1667 1.75)"
         />
       </marker>
     </defs>
     <line
-      x1="10"
-      y1="6"
-      x2="10"
-      y2="94"
+      x1="50%"
+      y1="0"
+      x2="50%"
+      y2="100%"
       stroke="url(#{gradId})"
-      stroke-width="2"
+      stroke-width="2.25"
+      stroke-linecap="round"
+      stroke-linejoin="round"
       marker-start="url(#{markerTopId})"
       marker-end="url(#{markerBottomId})"
-      vector-effect="non-scaling-stroke"
     />
   </svg>
   <div class="label">{data.bottomLabel}</div>
@@ -95,7 +93,7 @@
     align-items: center;
     height: 100%;
     min-height: 6rem;
-    gap: 0.25rem;
+    gap: 0.5rem;
   }
 
   .label {
@@ -107,5 +105,6 @@
     flex: 1;
     width: 1.5rem;
     min-height: 0;
+    overflow: visible;
   }
 </style>
