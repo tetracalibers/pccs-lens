@@ -159,10 +159,7 @@ const nearestPrimaryInfo = (rank: number): NearestPrimaryInfo => {
   }
 }
 
-const adjacentPrimaryLabel = (
-  index: number,
-  offsetSign: 1 | -1 | 0
-): MunsellPrimaryHueLabel => {
+const adjacentPrimaryLabel = (index: number, offsetSign: 1 | -1 | 0): MunsellPrimaryHueLabel => {
   if (offsetSign === 0) return PRIMARY_HUE_CENTERS[index].label
   const n = PRIMARY_HUE_CENTERS.length
   const adj = offsetSign === 1 ? (index + 1) % n : (index - 1 + n) % n
