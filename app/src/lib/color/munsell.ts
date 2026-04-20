@@ -173,13 +173,35 @@ const inPrimaryCell = (rank: number, primaryIndex: number): boolean => {
   return cyclicDistance(rank, PRIMARY_HUE_CENTERS[primaryIndex].rank) <= PCCS_HUE_HALF_CELL
 }
 
+// 最近傍原色が異なる endpoint のラベル決定。
+// セル内なら原色ラベル。セル外でも偏り方向が相手の原色側を指していれば原色ラベル
+// （自身の原色側に留まっているとみなす）。それ以外は偏り方向の隣接原色ラベル。
+const labelForDifferentPrimary = (
+  rank: number,
+  info: NearestPrimaryInfo,
+  partnerIndex: number
+): MunsellPrimaryHueLabel => {
+  if (inPrimaryCell(rank, info.index)) return info.label
+  const n = PRIMARY_HUE_CENTERS.length
+  const adjIndex =
+    info.offsetSign === 1
+      ? (info.index + 1) % n
+      : info.offsetSign === -1
+        ? (info.index - 1 + n) % n
+        : info.index
+  if (adjIndex === partnerIndex) return info.label
+  return adjacentPrimaryLabel(info.index, info.offsetSign)
+}
+
 /**
  * 2つのマンセル色相に対し、PCCS 5原色ラベル（赤/黄/緑/青/紫）を比較用に付与する。
  * rank が完全一致する場合は null。
  *
- * 最近傍原色が異なる場合：
- * - PCCS 24色相のセル内にあれば原色ラベル、セル外なら偏り方向の隣接原色ラベル。
- * - 両者のラベルが衝突した場合は、自身の原色と一致する側を優先。
+ * 最近傍原色が異なる場合（labelForDifferentPrimary 参照）：
+ * - PCCS セル内なら原色ラベル。
+ * - セル外でも偏り方向が相手の原色側なら原色ラベル（例: 4GY vs 5GY → 黄/緑）。
+ * - それ以外は偏り方向の隣接原色ラベル（例: 5YR vs 2.5G → 赤/緑）。
+ * - 両者とも同じ中間原色に寄せた衝突時は、それぞれの最近傍原色にフォールバック。
  *
  * 最近傍原色が同じ場合：
  * - 一方が中心（offsetSign===0）: 中心側に原色ラベル、他方に偏り方向の隣接原色ラベル。
@@ -202,16 +224,9 @@ export const compareHueLabels = (
   const infoB = nearestPrimaryInfo(rankB)
 
   if (infoA.index !== infoB.index) {
-    const labelA = inPrimaryCell(rankA, infoA.index)
-      ? infoA.label
-      : adjacentPrimaryLabel(infoA.index, infoA.offsetSign)
-    const labelB = inPrimaryCell(rankB, infoB.index)
-      ? infoB.label
-      : adjacentPrimaryLabel(infoB.index, infoB.offsetSign)
-    if (labelA === labelB) {
-      if (labelA === infoA.label) return { a: labelA, b: infoB.label }
-      return { a: infoA.label, b: labelB }
-    }
+    const labelA = labelForDifferentPrimary(rankA, infoA, infoB.index)
+    const labelB = labelForDifferentPrimary(rankB, infoB, infoA.index)
+    if (labelA === labelB) return { a: infoA.label, b: infoB.label }
     return { a: labelA, b: labelB }
   }
 
