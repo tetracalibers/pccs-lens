@@ -1,9 +1,15 @@
 <script lang="ts">
-  let { value, scale = 1 }: { value: number; scale?: number } = $props()
+  interface Props {
+    value: number
+    scale?: number
+    compact?: boolean
+  }
+
+  let { value, scale = 1, compact = false }: Props = $props()
 </script>
 
-<div class="swatch" style:aspect-ratio="1 / {scale}">
-  <span class="label">明度{value.toFixed(1)}</span>
+<div class="swatch" style:aspect-ratio="1 / {scale}" class:--_compact={compact}>
+  <span class="label">{compact ? "" : "明度"}{value.toFixed(1)}</span>
 </div>
 
 <style>
@@ -19,8 +25,16 @@
     box-sizing: border-box;
   }
 
+  .--_compact {
+    border-radius: 4px;
+  }
+
   .label {
     font-size: var(--map-font-m, 0.65rem);
     white-space: nowrap;
+  }
+
+  .--_compact .label {
+    font-size: var(--map-font-s);
   }
 </style>
