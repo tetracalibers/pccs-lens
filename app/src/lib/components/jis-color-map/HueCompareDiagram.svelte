@@ -1,15 +1,16 @@
 <script lang="ts">
   import { PRIMARY_HUE_LABEL_SLUG, type MunsellPrimaryHueLabel } from "$lib/color/munsell"
+  import { PCCS_HEX_MAP } from "$lib/data/pccs"
   import type { HueCompareDiagramData } from "$lib/jis-color-map/compare"
 
   let { data }: { data: HueCompareDiagramData } = $props()
 
   const LABEL_HEX: Record<MunsellPrimaryHueLabel, string> = {
-    赤: "#e60033",
-    黄: "#ffd400",
-    緑: "#00a040",
-    青: "#0068b7",
-    紫: "#7e3f8f"
+    赤: PCCS_HEX_MAP.get("v2")!,
+    黄: PCCS_HEX_MAP.get("v8")!,
+    緑: PCCS_HEX_MAP.get("v12")!,
+    青: PCCS_HEX_MAP.get("v18")!,
+    紫: PCCS_HEX_MAP.get("v22")!
   }
 
   const topSlug = $derived(PRIMARY_HUE_LABEL_SLUG[data.topLabel])
@@ -22,7 +23,7 @@
 </script>
 
 <div class="diagram">
-  <div class="label">{data.topLabel}</div>
+  <div class="label" style="--_label-color: {topHex}">{data.topLabel}</div>
   <svg class="arrow" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id={gradId} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="100%">
@@ -83,7 +84,7 @@
       marker-end="url(#{markerBottomId})"
     />
   </svg>
-  <div class="label">{data.bottomLabel}</div>
+  <div class="label" style="--_label-color: {bottomHex}">{data.bottomLabel}</div>
 </div>
 
 <style>
@@ -98,7 +99,8 @@
 
   .label {
     font-size: 0.75rem;
-    color: var(--color-body);
+    font-weight: bold;
+    color: var(--_label-color);
   }
 
   .arrow {
