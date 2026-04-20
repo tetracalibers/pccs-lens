@@ -123,3 +123,31 @@ export const munsellPrimaryHueLabel = (hue: string): MunsellPrimaryHueLabel | nu
   }
   return best
 }
+
+/**
+ * subject の色相が reference と比較してどの primary hue 方向に寄っているかを返す。
+ * 色相環上で subject から reference への最短経路と「逆方向」にある一番近い primary を返す。
+ * 例: 5R(rank 13) と 7R(rank 15) → 5R は 赤 寄り、7R は 黄 寄り。
+ * 2 hue の rank が等しい場合は方向が定まらないため null。
+ */
+export const hueLeanLabel = (subject: string, reference: string): MunsellPrimaryHueLabel | null => {
+  const subjectRank = munsellHueRank(subject)
+  const referenceRank = munsellHueRank(reference)
+  if (subjectRank === null || referenceRank === null) return null
+  const forward = (((referenceRank - subjectRank) % 100) + 100) % 100
+  if (forward === 0) return null
+  // forward <= 50: reference は前方（昇順側）にあるので subject は後方（降順側）寄り
+  // forward > 50: reference は後方にあるので subject は前方寄り
+  const direction: 1 | -1 = forward <= 50 ? -1 : 1
+  let bestLabel: MunsellPrimaryHueLabel = PRIMARY_HUE_CENTERS[0].label
+  let bestDist = Infinity
+  for (const center of PRIMARY_HUE_CENTERS) {
+    const raw = direction === 1 ? center.rank - subjectRank : subjectRank - center.rank
+    const d = ((raw % 100) + 100) % 100
+    if (d < bestDist) {
+      bestDist = d
+      bestLabel = center.label
+    }
+  }
+  return bestLabel
+}

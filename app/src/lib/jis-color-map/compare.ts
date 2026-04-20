@@ -1,15 +1,17 @@
 import {
+  hueLeanLabel,
   munsellPrimaryHueLabel,
   parseMunsell,
   type MunsellPrimaryHueLabel
 } from "$lib/color/munsell"
 import type { JISColor } from "$lib/data/jis-colors"
 
-// 比較対象のパース結果（無彩色は chroma / primaryLabel が null）
+// 比較対象のパース結果（無彩色は chroma / hue / primaryLabel が null）
 type ParsedTarget = {
   color: JISColor
   value: number
   chroma: number | null
+  hue: string | null
   primaryLabel: MunsellPrimaryHueLabel | null
 }
 
@@ -19,12 +21,13 @@ const parseTargets = (targets: JISColor[]): ParsedTarget[] => {
     const parsed = parseMunsell(color.munsell)
     if (!parsed) continue
     if (parsed.isNeutral) {
-      result.push({ color, value: parsed.value, chroma: null, primaryLabel: null })
+      result.push({ color, value: parsed.value, chroma: null, hue: null, primaryLabel: null })
     } else {
       result.push({
         color,
         value: parsed.value,
         chroma: parsed.chroma,
+        hue: parsed.hue,
         primaryLabel: munsellPrimaryHueLabel(parsed.hue)
       })
     }
@@ -62,23 +65,27 @@ export type HueCompareDiagramData = {
 
 /**
  * 色み比較図データ。
- * targets の primaryLabel（最初/最後の有彩色）を取り、両者が異なれば図を出す。
+ * 有彩色 target の色相が完全に一致する場合のみ null を返す。
+ * それ以外は両端の有彩色について「相手と比べてどちら寄りか」を primaryLabel で返す。
+ * 例: 5R と 7R なら top=赤、bottom=黄（同じ R family 内でもわずかな偏りを拾う）。
  */
 export const buildHueCompareDiagram = (targets: JISColor[]): HueCompareDiagramData | null => {
   const parsed = parseTargets(targets)
   const chromatic = parsed.filter(
-    (p): p is ParsedTarget & { primaryLabel: MunsellPrimaryHueLabel } => p.primaryLabel !== null
+    (p): p is ParsedTarget & { hue: string; primaryLabel: MunsellPrimaryHueLabel } =>
+      p.hue !== null && p.primaryLabel !== null
   )
   if (chromatic.length < 2) return null
-  const topLabel = chromatic[0].primaryLabel
-  const bottomLabel = chromatic[chromatic.length - 1].primaryLabel
-  if (topLabel === bottomLabel) {
-    // 有彩色の primary label が全て同じ case: 差分ラベルのペアが取れない
-    // 2種以上のラベルがあれば差分あり判定されるはずだが、両端が同じなら中間からピックする
-    const labels = Array.from(new Set(chromatic.map((p) => p.primaryLabel)))
-    if (labels.length < 2) return null
-    return { topLabel: labels[0], bottomLabel: labels[1] }
-  }
+  const uniqHues = new Set(chromatic.map((p) => p.hue))
+  if (uniqHues.size < 2) return null
+
+  const top = chromatic[0]
+  const last = chromatic[chromatic.length - 1]
+  // 両端が同一色相でも中間に異なる色相があれば、それを相手として方向を算出する
+  const partner = last.hue !== top.hue ? last : chromatic.find((p) => p.hue !== top.hue)!
+  const topLabel = hueLeanLabel(top.hue, partner.hue)
+  const bottomLabel = hueLeanLabel(partner.hue, top.hue)
+  if (!topLabel || !bottomLabel) return null
   return { topLabel, bottomLabel }
 }
 

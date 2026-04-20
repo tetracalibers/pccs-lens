@@ -1043,7 +1043,7 @@
       },
       {
         "targets": ["chocholate", "maroon", "burgundy"],
-        "hintJIS": "ebicha",
+        "hintJIS": ["ebicha"],
         "hintPCCSHue": [2]
       }
     ]

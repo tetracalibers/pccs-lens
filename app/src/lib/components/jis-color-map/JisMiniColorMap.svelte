@@ -10,8 +10,8 @@
   let {
     groupId,
     highlightsJisIds,
-    hintJisIds,
-    hintPCCSHueNums
+    hintJisIds = [],
+    hintPCCSHueNums = []
   }: {
     groupId: ColorSubfamily
     highlightsJisIds: string[]
@@ -23,8 +23,8 @@
   const layout = $derived(buildMapLayout(data))
 
   const highlightSet = $derived(new Set(highlightsJisIds))
-  const hintSet = $derived(new Set(hintJisIds ?? []))
-  const hintHueSet = $derived(new Set(hintPCCSHueNums ?? []))
+  const hintSet = $derived(new Set(hintJisIds))
+  const hintHueSet = $derived(new Set(hintPCCSHueNums))
 </script>
 
 <div class="scroll">
