@@ -104,7 +104,7 @@
     border-top: 1px solid var(--color-border, #e0e0e0);
   }
 
-  @media (max-width: 640px) {
+  @media (max-width: 800px) {
     .compare {
       grid-template-columns: 1fr;
     }
