@@ -113,6 +113,8 @@
     display: grid;
     gap: 2px;
     width: max-content;
+    padding-inline-end: 4px;
+    box-sizing: border-box;
   }
 
   .corner {
