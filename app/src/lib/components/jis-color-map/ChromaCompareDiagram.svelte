@@ -9,6 +9,8 @@
     familyHex: string
   } = $props()
 
+  const uid = $props.id()
+
   const LOW_HEX = "#b8b8b8"
 
   const segments = $derived.by(() => {
@@ -37,7 +39,7 @@
     <svg class="arrow" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient
-          id="chroma-grad-{i}"
+          id="chroma-grad-{uid}-{i}"
           gradientUnits="userSpaceOnUse"
           x1="0"
           y1="0"
@@ -48,7 +50,7 @@
           <stop offset="100%" stop-color={seg.bottomHex} />
         </linearGradient>
         <marker
-          id="chroma-marker-{i}"
+          id="chroma-marker-{uid}-{i}"
           viewBox="0 0 7 7"
           refX="3.5"
           refY="3.5"
@@ -73,12 +75,12 @@
         y1="0"
         x2="50%"
         y2="100%"
-        stroke="url(#chroma-grad-{i})"
+        stroke="url(#chroma-grad-{uid}-{i})"
         stroke-width="2.25"
         stroke-linecap="round"
         stroke-linejoin="round"
-        marker-start={seg.dir === "up" ? `url(#chroma-marker-${i})` : null}
-        marker-end={seg.dir === "down" ? `url(#chroma-marker-${i})` : null}
+        marker-start={seg.dir === "up" ? `url(#chroma-marker-${uid}-${i})` : null}
+        marker-end={seg.dir === "down" ? `url(#chroma-marker-${uid}-${i})` : null}
       />
     </svg>
     {#if i === 0 && data.middleLabel}

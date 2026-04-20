@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { PRIMARY_HUE_LABEL_SLUG, type MunsellPrimaryHueLabel } from "$lib/color/munsell"
+  import type { MunsellPrimaryHueLabel } from "$lib/color/munsell"
   import { PCCS_HEX_MAP } from "$lib/data/pccs"
   import type { HueCompareDiagramData } from "$lib/jis-color-map/compare"
 
@@ -13,11 +13,10 @@
     紫: PCCS_HEX_MAP.get("v22")!
   }
 
-  const topSlug = $derived(PRIMARY_HUE_LABEL_SLUG[data.topLabel])
-  const bottomSlug = $derived(PRIMARY_HUE_LABEL_SLUG[data.bottomLabel])
-  const gradId = $derived(`hue-grad-${topSlug}-${bottomSlug}`)
-  const markerTopId = $derived(`hue-marker-top-${topSlug}-${bottomSlug}`)
-  const markerBottomId = $derived(`hue-marker-bottom-${topSlug}-${bottomSlug}`)
+  const uid = $props.id()
+  const gradId = `hue-grad-${uid}`
+  const markerTopId = `hue-marker-top-${uid}`
+  const markerBottomId = `hue-marker-bottom-${uid}`
   const topHex = $derived(LABEL_HEX[data.topLabel])
   const bottomHex = $derived(LABEL_HEX[data.bottomLabel])
 </script>
