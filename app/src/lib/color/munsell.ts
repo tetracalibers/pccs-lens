@@ -91,18 +91,26 @@ export const PRIMARY_HUE_LABEL_SLUG: Record<MunsellPrimaryHueLabel, string> = {
   紫: "purple"
 }
 
-// 5原色の中心（rank 空間）: 5R=13, 5Y=33, 5G=53, 5B=73, 5P=93
+// PCCSの心理的5原色に対応するマンセル色相の rank。
+// PCCS 2:R=4R(12), 8:Y=5Y(33), 12:G=3G(51), 18:B=3PB(81), 22:P=7P(95)。
+// 色相環順（昇順）に並べておき、隣接原色の取得はこの配列で行う。
 const PRIMARY_HUE_CENTERS: { label: MunsellPrimaryHueLabel; rank: number }[] = [
-  { label: "赤", rank: 13 },
+  { label: "赤", rank: 12 },
   { label: "黄", rank: 33 },
-  { label: "緑", rank: 53 },
-  { label: "青", rank: 73 },
-  { label: "紫", rank: 93 }
+  { label: "緑", rank: 51 },
+  { label: "青", rank: 81 },
+  { label: "紫", rank: 95 }
 ]
 
 const cyclicDistance = (a: number, b: number): number => {
   const d = Math.abs(a - b) % 100
   return Math.min(d, 100 - d)
+}
+
+// center → rank の符号付き最短差（(-50, 50] に正規化）。
+const cyclicSignedOffset = (center: number, rank: number): number => {
+  const diff = (((rank - center) % 100) + 100) % 100
+  return diff <= 50 ? diff : diff - 100
 }
 
 /**
@@ -124,30 +132,78 @@ export const munsellPrimaryHueLabel = (hue: string): MunsellPrimaryHueLabel | nu
   return best
 }
 
-/**
- * subject の色相が reference と比較してどの primary hue 方向に寄っているかを返す。
- * 色相環上で subject から reference への最短経路と「逆方向」にある一番近い primary を返す。
- * 例: 5R(rank 13) と 7R(rank 15) → 5R は 赤 寄り、7R は 黄 寄り。
- * 2 hue の rank が等しい場合は方向が定まらないため null。
- */
-export const hueLeanLabel = (subject: string, reference: string): MunsellPrimaryHueLabel | null => {
-  const subjectRank = munsellHueRank(subject)
-  const referenceRank = munsellHueRank(reference)
-  if (subjectRank === null || referenceRank === null) return null
-  const forward = (((referenceRank - subjectRank) % 100) + 100) % 100
-  if (forward === 0) return null
-  // forward <= 50: reference は前方（昇順側）にあるので subject は後方（降順側）寄り
-  // forward > 50: reference は後方にあるので subject は前方寄り
-  const direction: 1 | -1 = forward <= 50 ? -1 : 1
-  let bestLabel: MunsellPrimaryHueLabel = PRIMARY_HUE_CENTERS[0].label
-  let bestDist = Infinity
-  for (const center of PRIMARY_HUE_CENTERS) {
-    const raw = direction === 1 ? center.rank - subjectRank : subjectRank - center.rank
-    const d = ((raw % 100) + 100) % 100
-    if (d < bestDist) {
-      bestDist = d
-      bestLabel = center.label
+type NearestPrimaryInfo = {
+  index: number
+  label: MunsellPrimaryHueLabel
+  distance: number
+  offsetSign: 1 | -1 | 0
+}
+
+const nearestPrimaryInfo = (rank: number): NearestPrimaryInfo => {
+  let bestIndex = 0
+  let bestDistance = Infinity
+  let bestOffset = 0
+  for (let i = 0; i < PRIMARY_HUE_CENTERS.length; i++) {
+    const d = cyclicDistance(rank, PRIMARY_HUE_CENTERS[i].rank)
+    if (d < bestDistance) {
+      bestDistance = d
+      bestIndex = i
+      bestOffset = cyclicSignedOffset(PRIMARY_HUE_CENTERS[i].rank, rank)
     }
   }
-  return bestLabel
+  return {
+    index: bestIndex,
+    label: PRIMARY_HUE_CENTERS[bestIndex].label,
+    distance: bestDistance,
+    offsetSign: bestOffset > 0 ? 1 : bestOffset < 0 ? -1 : 0
+  }
+}
+
+const adjacentPrimaryLabel = (
+  index: number,
+  offsetSign: 1 | -1 | 0
+): MunsellPrimaryHueLabel => {
+  if (offsetSign === 0) return PRIMARY_HUE_CENTERS[index].label
+  const n = PRIMARY_HUE_CENTERS.length
+  const adj = offsetSign === 1 ? (index + 1) % n : (index - 1 + n) % n
+  return PRIMARY_HUE_CENTERS[adj].label
+}
+
+/**
+ * 2つのマンセル色相に対し、PCCS 5原色ラベル（赤/黄/緑/青/紫）を比較用に付与する。
+ * - 最近傍の原色が異なる場合は、それぞれの近傍原色ラベルを返す。
+ * - 最近傍原色が同じ場合、中心に近い方が原色ラベル、遠い方は偏り方向の隣接原色ラベル。
+ *   例: 3PB(18:B=青中心)と1PB → 3PB は「青」、1PB は「緑」（青より緑側に偏る）。
+ * - 中心からの距離が等しく、中心を挟んで両側にある場合は両者とも方向ラベル（例: 3R/5R → 紫/黄）。
+ * - rank が完全一致する場合は null。
+ */
+export const compareHueLabels = (
+  hueA: string,
+  hueB: string
+): { a: MunsellPrimaryHueLabel; b: MunsellPrimaryHueLabel } | null => {
+  const rankA = munsellHueRank(hueA)
+  const rankB = munsellHueRank(hueB)
+  if (rankA === null || rankB === null) return null
+  if (rankA === rankB) return null
+
+  const infoA = nearestPrimaryInfo(rankA)
+  const infoB = nearestPrimaryInfo(rankB)
+
+  if (infoA.index !== infoB.index) {
+    return { a: infoA.label, b: infoB.label }
+  }
+
+  if (infoA.distance < infoB.distance) {
+    return { a: infoA.label, b: adjacentPrimaryLabel(infoB.index, infoB.offsetSign) }
+  }
+  if (infoA.distance > infoB.distance) {
+    return { a: adjacentPrimaryLabel(infoA.index, infoA.offsetSign), b: infoB.label }
+  }
+  if (infoA.offsetSign !== infoB.offsetSign) {
+    return {
+      a: adjacentPrimaryLabel(infoA.index, infoA.offsetSign),
+      b: adjacentPrimaryLabel(infoB.index, infoB.offsetSign)
+    }
+  }
+  return null
 }

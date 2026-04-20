@@ -1,5 +1,5 @@
 import {
-  hueLeanLabel,
+  compareHueLabels,
   munsellPrimaryHueLabel,
   parseMunsell,
   type MunsellPrimaryHueLabel
@@ -66,8 +66,9 @@ export type HueCompareDiagramData = {
 /**
  * 色み比較図データ。
  * 有彩色 target の色相が完全に一致する場合のみ null を返す。
- * それ以外は両端の有彩色について「相手と比べてどちら寄りか」を primaryLabel で返す。
- * 例: 5R と 7R なら top=赤、bottom=黄（同じ R family 内でもわずかな偏りを拾う）。
+ * PCCS 5原色（4R/5Y/3G/3PB/7P）を基準に、両端それぞれにラベルを付ける。
+ * 同じ原色圏内なら中心に近い方が原色ラベル、遠い方は偏り方向の隣接原色ラベル。
+ * 例: 1PB と 3PB なら、3PB は 青（中心）、1PB は 緑（青より緑側へ偏る）。
  */
 export const buildHueCompareDiagram = (targets: JISColor[]): HueCompareDiagramData | null => {
   const parsed = parseTargets(targets)
@@ -83,10 +84,9 @@ export const buildHueCompareDiagram = (targets: JISColor[]): HueCompareDiagramDa
   const last = chromatic[chromatic.length - 1]
   // 両端が同一色相でも中間に異なる色相があれば、それを相手として方向を算出する
   const partner = last.hue !== top.hue ? last : chromatic.find((p) => p.hue !== top.hue)!
-  const topLabel = hueLeanLabel(top.hue, partner.hue)
-  const bottomLabel = hueLeanLabel(partner.hue, top.hue)
-  if (!topLabel || !bottomLabel) return null
-  return { topLabel, bottomLabel }
+  const labels = compareHueLabels(top.hue, partner.hue)
+  if (!labels) return null
+  return { topLabel: labels.a, bottomLabel: labels.b }
 }
 
 export type ValueCompareDiagramData = {
