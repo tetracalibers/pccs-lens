@@ -166,13 +166,28 @@ const adjacentPrimaryLabel = (index: number, offsetSign: 1 | -1 | 0): MunsellPri
   return PRIMARY_HUE_CENTERS[adj].label
 }
 
+// PCCS 24色相のセル幅の半分。原色中心からこの距離以内にあれば、その原色セル内とみなす。
+const PCCS_HUE_HALF_CELL = 100 / 48
+
+const inPrimaryCell = (rank: number, primaryIndex: number): boolean => {
+  return cyclicDistance(rank, PRIMARY_HUE_CENTERS[primaryIndex].rank) <= PCCS_HUE_HALF_CELL
+}
+
 /**
  * 2つのマンセル色相に対し、PCCS 5原色ラベル（赤/黄/緑/青/紫）を比較用に付与する。
- * - 最近傍の原色が異なる場合は、それぞれの近傍原色ラベルを返す。
- * - 最近傍原色が同じ場合、中心に近い方が原色ラベル、遠い方は偏り方向の隣接原色ラベル。
- *   例: 3PB(18:B=青中心)と1PB → 3PB は「青」、1PB は「緑」（青より緑側に偏る）。
- * - 中心からの距離が等しく、中心を挟んで両側にある場合は両者とも方向ラベル（例: 3R/5R → 紫/黄）。
- * - rank が完全一致する場合は null。
+ * rank が完全一致する場合は null。
+ *
+ * 最近傍原色が異なる場合：
+ * - PCCS 24色相のセル内にあれば原色ラベル、セル外なら偏り方向の隣接原色ラベル。
+ * - 両者のラベルが衝突した場合は、自身の原色と一致する側を優先。
+ *
+ * 最近傍原色が同じ場合：
+ * - 一方が中心（offsetSign===0）: 中心側に原色ラベル、他方に偏り方向の隣接原色ラベル。
+ *   例: 3PB(=青中心)と1PB → 青/緑。
+ * - 両者が中心を挟んで反対側（straddle）: 両者とも偏り方向の隣接原色ラベル。
+ *   例: 10R(黄側)と10RP(紫側) → 黄/紫、7.5P(赤側)と5P(青側) → 赤/青。
+ * - 同じ側にあり距離が異なる: 中心に近い方が原色、遠い方が偏り方向の隣接原色ラベル。
+ * - 同じ側で距離も等しい: null（比較不能）。
  */
 export const compareHueLabels = (
   hueA: string,
@@ -187,13 +202,23 @@ export const compareHueLabels = (
   const infoB = nearestPrimaryInfo(rankB)
 
   if (infoA.index !== infoB.index) {
-    return { a: infoA.label, b: infoB.label }
+    const labelA = inPrimaryCell(rankA, infoA.index)
+      ? infoA.label
+      : adjacentPrimaryLabel(infoA.index, infoA.offsetSign)
+    const labelB = inPrimaryCell(rankB, infoB.index)
+      ? infoB.label
+      : adjacentPrimaryLabel(infoB.index, infoB.offsetSign)
+    if (labelA === labelB) {
+      if (labelA === infoA.label) return { a: labelA, b: infoB.label }
+      return { a: infoA.label, b: labelB }
+    }
+    return { a: labelA, b: labelB }
   }
 
-  if (infoA.distance < infoB.distance) {
+  if (infoA.offsetSign === 0) {
     return { a: infoA.label, b: adjacentPrimaryLabel(infoB.index, infoB.offsetSign) }
   }
-  if (infoA.distance > infoB.distance) {
+  if (infoB.offsetSign === 0) {
     return { a: adjacentPrimaryLabel(infoA.index, infoA.offsetSign), b: infoB.label }
   }
   if (infoA.offsetSign !== infoB.offsetSign) {
@@ -201,6 +226,12 @@ export const compareHueLabels = (
       a: adjacentPrimaryLabel(infoA.index, infoA.offsetSign),
       b: adjacentPrimaryLabel(infoB.index, infoB.offsetSign)
     }
+  }
+  if (infoA.distance < infoB.distance) {
+    return { a: infoA.label, b: adjacentPrimaryLabel(infoB.index, infoB.offsetSign) }
+  }
+  if (infoA.distance > infoB.distance) {
+    return { a: adjacentPrimaryLabel(infoA.index, infoA.offsetSign), b: infoB.label }
   }
   return null
 }
