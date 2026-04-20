@@ -30,7 +30,7 @@
     const steps = forwardSteps <= backwardSteps ? forwardSteps : backwardSteps
     const labels: MunsellPrimaryHueLabel[] = []
     for (let i = 0; i <= steps; i++) {
-      labels.push(HUE_ORDER[((topIdx + step * i) % n + n) % n])
+      labels.push(HUE_ORDER[(((topIdx + step * i) % n) + n) % n])
     }
     return labels
   }
