@@ -19,7 +19,7 @@
     hintPCCSHueNums?: number[]
   } = $props()
 
-  const data = $derived(buildJisColorMap(groupId))
+  const data = $derived(buildJisColorMap(groupId, hintJisIds))
   const layout = $derived(buildMapLayout(data))
 
   const highlightSet = $derived(new Set(highlightsJisIds))
@@ -130,7 +130,8 @@
     font-size: var(--map-font-s);
     font-family: var(--font-mono);
     color: var(--color-body);
-    padding: 0.2rem 0;
+    padding-block-start: 0.2rem;
+    padding-block-end: 0.5rem;
     white-space: nowrap;
   }
 

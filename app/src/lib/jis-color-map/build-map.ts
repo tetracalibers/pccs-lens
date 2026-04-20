@@ -1,6 +1,7 @@
 import { munsellHueRank, parseMunsell, type MunsellColor } from "$lib/color/munsell"
 import {
   getJisColorsByGroup,
+  getJisColorsByIds,
   getSubfamiliesByGroup,
   type JISColor,
   type JISColorGroupId,
@@ -148,8 +149,14 @@ const buildCells = (
   return [...jisCells, ...pccsOnlyCells]
 }
 
-export const buildJisColorMap = (groupId: JISColorGroupId): JisColorMapData => {
-  const jisColors = getJisColorsByGroup(groupId)
+export const buildJisColorMap = (
+  groupId: JISColorGroupId,
+  hintJisIds: string[] = []
+): JisColorMapData => {
+  const groupJisColors = getJisColorsByGroup(groupId)
+  const groupIds = new Set(groupJisColors.map((c) => c.id))
+  const extraHintColors = getJisColorsByIds(hintJisIds).filter((c) => !groupIds.has(c.id))
+  const jisColors = [...groupJisColors, ...extraHintColors]
   const subfamilies = getSubfamiliesByGroup(groupId)
   const hintRange = computeHintRange(subfamilies)
   const helpPccsList = hintRange
