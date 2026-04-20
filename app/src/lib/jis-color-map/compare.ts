@@ -118,8 +118,8 @@ export const buildValueCompareDiagram = (targets: JISColor[]): ValueCompareDiagr
   const mid = (min + max) / 2
   const labelFor = (v: number): "高明度" | "低明度" => (v >= mid ? "高明度" : "低明度")
 
-  const topLabel = labelFor(values[0])
-  const bottomLabel = labelFor(values[values.length - 1])
+  let topLabel = labelFor(values[0])
+  let bottomLabel = labelFor(values[values.length - 1])
   let middleLabel: "高明度" | "低明度" | null = null
 
   if (parsed.length >= 3 && !isMonotone(values)) {
@@ -127,6 +127,10 @@ export const buildValueCompareDiagram = (targets: JISColor[]): ValueCompareDiagr
     const middles = values.slice(1, -1)
     const avg = middles.reduce((a, b) => a + b, 0) / middles.length
     middleLabel = avg >= mid ? "高明度" : "低明度"
+    // 中間ラベルがある場合、両端ラベルは中間と逆（対称パターンを強制）
+    const opposite: "高明度" | "低明度" = middleLabel === "高明度" ? "低明度" : "高明度"
+    topLabel = opposite
+    bottomLabel = opposite
   }
 
   return { topLabel, middleLabel, bottomLabel }
@@ -149,15 +153,20 @@ export const buildChromaCompareDiagram = (targets: JISColor[]): ChromaCompareDia
   const min = Math.min(...chromas)
   const max = Math.max(...chromas)
   const mid = (min + max) / 2
+  const labelFor = (v: number): "高彩度" | "低彩度" => (v >= mid ? "高彩度" : "低彩度")
 
-  const topLabel = "高彩度" as const
-  const bottomLabel = "低彩度" as const
+  let topLabel = labelFor(chromas[0])
+  let bottomLabel = labelFor(chromas[chromas.length - 1])
   let middleLabel: "高彩度" | "低彩度" | null = null
 
   if (chromatic.length >= 3 && !isMonotone(chromas)) {
     const middles = chromas.slice(1, -1)
     const avg = middles.reduce((a, b) => a + b, 0) / middles.length
     middleLabel = avg >= mid ? "高彩度" : "低彩度"
+    // 中間ラベルがある場合、両端ラベルは中間と逆（対称パターンを強制）
+    const opposite: "高彩度" | "低彩度" = middleLabel === "高彩度" ? "低彩度" : "高彩度"
+    topLabel = opposite
+    bottomLabel = opposite
   }
 
   return { topLabel, middleLabel, bottomLabel }

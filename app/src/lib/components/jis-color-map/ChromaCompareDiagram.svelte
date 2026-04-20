@@ -14,21 +14,18 @@
   const LOW_HEX = "#b8b8b8"
 
   const segments = $derived.by(() => {
-    if (data.middleLabel === null) {
-      return [{ dir: "up" as const, topHex: familyHex, bottomHex: LOW_HEX }]
-    }
     const valueOf = (l: "高彩度" | "低彩度") => (l === "高彩度" ? familyHex : LOW_HEX)
+    const makeSegment = (topL: "高彩度" | "低彩度", botL: "高彩度" | "低彩度") => ({
+      dir: (topL === "高彩度" ? "up" : "down") as "up" | "down",
+      topHex: valueOf(topL),
+      bottomHex: valueOf(botL)
+    })
+    if (data.middleLabel === null) {
+      return [makeSegment(data.topLabel, data.bottomLabel)]
+    }
     return [
-      {
-        dir: (data.middleLabel === "低彩度" ? "up" : "down") as "up" | "down",
-        topHex: valueOf(data.topLabel),
-        bottomHex: valueOf(data.middleLabel)
-      },
-      {
-        dir: (data.bottomLabel === "低彩度" ? "up" : "down") as "up" | "down",
-        topHex: valueOf(data.middleLabel),
-        bottomHex: valueOf(data.bottomLabel)
-      }
+      makeSegment(data.topLabel, data.middleLabel),
+      makeSegment(data.middleLabel, data.bottomLabel)
     ]
   })
 </script>
