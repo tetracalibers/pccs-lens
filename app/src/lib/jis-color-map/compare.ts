@@ -116,9 +116,10 @@ export const buildValueCompareDiagram = (targets: JISColor[]): ValueCompareDiagr
   const min = Math.min(...values)
   const max = Math.max(...values)
   const mid = (min + max) / 2
+  const labelFor = (v: number): "高明度" | "低明度" => (v >= mid ? "高明度" : "低明度")
 
-  const topLabel = "高明度" as const
-  const bottomLabel = "低明度" as const
+  const topLabel = labelFor(values[0])
+  const bottomLabel = labelFor(values[values.length - 1])
   let middleLabel: "高明度" | "低明度" | null = null
 
   if (parsed.length >= 3 && !isMonotone(values)) {
