@@ -25,7 +25,7 @@ const JIS_COLOR_ICON = {
   //
 
   sakura: "fluent-emoji-high-contrast:cherry-blossom",
-  flower: "game-icons:flowers",
+  flower: "game-icons:spoted-flower",
 
   // 珊瑚
   coral: "temaki:coral-reef",
