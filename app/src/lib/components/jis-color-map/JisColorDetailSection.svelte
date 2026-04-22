@@ -237,7 +237,7 @@
     background-image: linear-gradient(120deg, #f093fb 0%, #f5576c 100%);
   }
   .compare-link.--_brown::before {
-    background-image: linear-gradient(to top, #e6b980 0%, #eacda3 100%);
+    background-image: linear-gradient(to top, #c79081 0%, #dfa579 100%);
   }
   .compare-link.--_yellow::before {
     background-image: linear-gradient(to right, #f9d423 0%, #fff64e 100%);
