@@ -79,7 +79,7 @@
           </a>
         </div>
         <div class="exam-level">
-          <JisExamLevelBadge examLevel={jisColor.examLevel} />
+          <JisExamLevelBadge examLevel={jisColor.examLevel} size="M" />
         </div>
       </div>
     </article>
@@ -107,10 +107,10 @@
   }
 
   .entry-identity {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    min-width: 0;
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr auto;
+    height: 100%;
   }
 
   .icon-swatch-row {
@@ -120,13 +120,15 @@
   }
 
   .icon {
-    font-size: 1.75rem;
+    font-size: 2rem;
     display: inline-flex;
+    align-self: flex-start;
   }
 
   .swatch {
-    width: 5rem;
-    height: 2.5rem;
+    height: 100%;
+    min-width: 5rem;
+    aspect-ratio: 1;
     border-radius: 6px;
     border: 1px solid var(--color-border, #d0d0d0);
   }
@@ -136,6 +138,7 @@
     flex-direction: column;
     gap: 0.4rem;
     min-width: 0;
+    height: 100%;
   }
 
   .name-row {
@@ -145,7 +148,7 @@
   }
 
   .color-name {
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     font-weight: 700;
     margin: 0;
     scroll-margin-top: 4rem;
@@ -161,6 +164,7 @@
     gap: 2px;
     grid-auto-flow: column;
     grid-template-columns: 1fr 1fr 1fr;
+    margin-block-start: auto;
   }
 
   .entry-detail {
@@ -171,19 +175,21 @@
   }
 
   .origin-description {
-    font-size: 0.82rem;
+    font-size: 0.85rem;
     line-height: 1.6;
     color: var(--color-body);
     margin: 0;
+    min-height: 2lh;
   }
 
   .meta {
     display: grid;
     grid-template-columns: auto 1fr;
-    column-gap: 0.6rem;
+    column-gap: 1rem;
     row-gap: 0.2rem;
     margin: 0;
     font-size: 0.75rem;
+    line-height: 1.5;
   }
 
   .meta dt {
