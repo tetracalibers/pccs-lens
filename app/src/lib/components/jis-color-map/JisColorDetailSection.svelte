@@ -35,54 +35,52 @@
     {@const pccsList = resolvePccsList(jisColor)}
     {@const originSegments = splitOriginDescription(jisColor.originDescription)}
     <article class="entry">
-      <div class="entry-main">
-        <div class="entry-identity">
-          <div class="icon-swatch-row">
-            {#if iconId}
-              <span class="icon" style:color={jisColor.hex} aria-hidden="true">
-                <Icon icon={iconId} />
-              </span>
-            {/if}
-            <span class="swatch" style:background-color={jisColor.hex}></span>
-          </div>
-          <div class="name-block">
-            <div class="name-row">
-              <h3 class="color-name" id={jisColor.id}>{jisColor.name}</h3>
-              <span class="reading">{jisColor.reading}</span>
-            </div>
-            {#if pccsList.length > 0}
-              <div class="pccs-list">
-                {#each pccsList as pccs (pccs.notation)}
-                  <PCCSColorSwatch pccs={pccs.notation} />
-                {/each}
-              </div>
-            {/if}
-          </div>
-        </div>
-        <div class="entry-detail">
-          {#if originSegments.length > 0}
-            <p class="origin-description">
-              {#each originSegments as segment, i (i)}
-                {segment}{#if i < originSegments.length - 1}<br />{/if}
-              {/each}
-            </p>
+      <div class="entry-identity">
+        <div class="icon-swatch-row">
+          {#if iconId}
+            <span class="icon" style:color={jisColor.hex} aria-hidden="true">
+              <Icon icon={iconId} />
+            </span>
           {/if}
-          <dl class="meta">
-            <dt>系統色名</dt>
-            <dd>{jisColor.systematicName}</dd>
-            <dt>マンセル値</dt>
-            <dd class="munsell">{jisColor.munsell}</dd>
-          </dl>
+          <span class="swatch" style:background-color={jisColor.hex}></span>
         </div>
-        <div class="entry-category">
-          <div class="exam-level">
-            <JisExamLevelBadge examLevel={jisColor.examLevel} size="M" />
+        <div class="name-block">
+          <div class="name-row">
+            <h3 class="color-name" id={jisColor.id}>{jisColor.name}</h3>
+            <span class="reading">{jisColor.reading}</span>
           </div>
-          <a href={resolve("/jis-color-map/[family]", { family: family.id })} class="compare-link">
-            {family.name}を比較する
-            <Icon icon="mdi:arrow-right" />
-          </a>
+          {#if pccsList.length > 0}
+            <div class="pccs-list">
+              {#each pccsList as pccs (pccs.notation)}
+                <PCCSColorSwatch pccs={pccs.notation} />
+              {/each}
+            </div>
+          {/if}
         </div>
+      </div>
+      <div class="entry-detail">
+        {#if originSegments.length > 0}
+          <p class="origin-description">
+            {#each originSegments as segment, i (i)}
+              {segment}{#if i < originSegments.length - 1}<br />{/if}
+            {/each}
+          </p>
+        {/if}
+        <dl class="meta">
+          <dt>系統色名</dt>
+          <dd>{jisColor.systematicName}</dd>
+          <dt>マンセル値</dt>
+          <dd class="munsell">{jisColor.munsell}</dd>
+        </dl>
+      </div>
+      <div class="entry-category">
+        <div class="exam-level">
+          <JisExamLevelBadge examLevel={jisColor.examLevel} size="M" />
+        </div>
+        <a href={resolve("/jis-color-map/[family]", { family: family.id })} class="compare-link">
+          {family.name}を比較する
+          <Icon icon="mdi:arrow-right" />
+        </a>
       </div>
     </article>
   {/each}
@@ -90,27 +88,25 @@
 
 <style>
   .entries {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     gap: 1.5rem;
   }
 
   .entry {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+    column-gap: 1.5rem;
+    row-gap: 1rem;
+    align-items: start;
     border-top: 1px solid var(--color-border, #e0e0e0);
     padding-top: 1.25rem;
   }
 
-  .entry-main {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    column-gap: 1.5rem;
-    row-gap: 1rem;
-    align-items: start;
-  }
-
   .entry-identity {
     display: grid;
-    gap: 1.5rem;
+    gap: 0.5rem;
     grid-template-columns: 1fr auto;
     height: 100%;
   }
@@ -178,7 +174,7 @@
   .entry-detail {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1rem;
     min-width: 0;
     height: 100%;
     justify-content: space-between;
@@ -234,7 +230,7 @@
   }
 
   @media (max-width: 640px) {
-    .entry-main {
+    .entry {
       grid-template-columns: 1fr;
       row-gap: 0.75rem;
     }
