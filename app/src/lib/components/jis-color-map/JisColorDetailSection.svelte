@@ -157,7 +157,7 @@
     font-size: 1.1rem;
     font-weight: 700;
     margin: 0;
-    scroll-margin-top: 7rem;
+    scroll-margin-top: 120px;
   }
 
   .reading {
@@ -308,6 +308,10 @@
       display: flex;
       align-items: baseline;
       flex-wrap: wrap;
+    }
+
+    .color-name {
+      scroll-margin-top: 250px;
     }
 
     .pccs-list {
