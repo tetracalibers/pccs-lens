@@ -39,6 +39,7 @@ export type JISColor = {
   hex: string
   examLevel: 2 | 3 | null
   munsell: string
+  iconKey: string
   // 最低1件、最大3件
   approximatePccs: [JISApproximatePccs, ...JISApproximatePccs[]]
 }
