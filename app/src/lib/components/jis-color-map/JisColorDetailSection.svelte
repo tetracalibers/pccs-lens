@@ -106,8 +106,8 @@
 
   .entry-identity {
     display: grid;
-    gap: 0.5rem;
-    grid-template-columns: 1fr auto;
+    gap: 1.5rem;
+    grid-template-columns: min-content auto;
     height: 100%;
   }
 
@@ -140,7 +140,7 @@
   .name-block {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.75rem;
     min-width: 0;
     height: 100%;
   }
@@ -148,14 +148,13 @@
   .name-row {
     display: grid;
     column-gap: 0.6rem;
-    row-gap: 0.15rem;
   }
 
   .color-name {
     font-size: 1.1rem;
     font-weight: 700;
     margin: 0;
-    scroll-margin-top: 4rem;
+    scroll-margin-top: 7rem;
   }
 
   .reading {
@@ -167,8 +166,9 @@
     display: grid;
     gap: 2px;
     grid-auto-flow: column;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     margin-block-start: auto;
+    width: fit-content;
   }
 
   .entry-detail {
@@ -181,7 +181,7 @@
   }
 
   .origin-description {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     line-height: 1.6;
     color: var(--color-body);
     margin: 0;
@@ -219,6 +219,7 @@
     text-decoration: none;
     align-self: flex-start;
     padding-block: 0.2rem;
+    line-height: 1;
   }
 
   .compare-link:hover {
