@@ -237,9 +237,48 @@
       row-gap: 0.75rem;
     }
 
+    .entry {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      position: relative;
+    }
+
+    .entry-identity {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: subgrid;
+      grid-column: 1 / -1;
+      height: 100%;
+    }
+
+    .icon-swatch-row {
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-column: 1 / -1;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .swatch {
+      grid-column: 2;
+    }
+
+    .name-block {
+      grid-column: 2;
+    }
+
+    .entry-detail {
+      grid-column: 2;
+    }
+
+    .entry-category {
+      grid-column: 1 / -1;
+    }
+
     .exam-level {
-      justify-self: start;
-      grid-row: 1;
+      position: absolute;
+      top: 1.25rem;
+      right: 0;
     }
   }
 </style>
