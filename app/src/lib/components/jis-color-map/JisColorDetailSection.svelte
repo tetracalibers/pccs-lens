@@ -73,13 +73,15 @@
             <dt>マンセル値</dt>
             <dd class="munsell">{jisColor.munsell}</dd>
           </dl>
+        </div>
+        <div class="entry-category">
+          <div class="exam-level">
+            <JisExamLevelBadge examLevel={jisColor.examLevel} size="M" />
+          </div>
           <a href={resolve("/jis-color-map/[family]", { family: family.id })} class="compare-link">
             {family.name}を比較する
             <Icon icon="mdi:arrow-right" />
           </a>
-        </div>
-        <div class="exam-level">
-          <JisExamLevelBadge examLevel={jisColor.examLevel} size="M" />
         </div>
       </div>
     </article>
@@ -111,6 +113,12 @@
     gap: 1.5rem;
     grid-template-columns: 1fr auto;
     height: 100%;
+  }
+
+  .entry-category {
+    display: grid;
+    height: 100%;
+    align-content: space-between;
   }
 
   .icon-swatch-row {
@@ -170,8 +178,10 @@
   .entry-detail {
     display: flex;
     flex-direction: column;
-    gap: 0.65rem;
+    gap: 0.5rem;
     min-width: 0;
+    height: 100%;
+    justify-content: space-between;
   }
 
   .origin-description {
