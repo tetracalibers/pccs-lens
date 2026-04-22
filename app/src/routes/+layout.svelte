@@ -26,7 +26,9 @@
   const isContentPage = $derived(
     page.route.id !== null &&
       !CONTENT_TOP_ROUTES.has(page.route.id) &&
-      (page.route.id.startsWith("/color-theory") || page.route.id.startsWith("/color-fields"))
+      (page.route.id.startsWith("/color-theory") ||
+        page.route.id.startsWith("/color-fields") ||
+        page.route.id === "/jis-color-map/[family]")
   )
   $effect(() => {
     if (!isContentPage) ankiMode.reset()
