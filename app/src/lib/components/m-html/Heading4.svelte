@@ -1,16 +1,16 @@
 <script lang="ts">
   import { type Snippet } from "svelte"
+  import AnkiEnabledHeadingText from "../AnkiEnabledHeadingText.svelte"
   import { ankiMode } from "$lib/state/anki.svelte"
 
   let { children, title = "" }: { children?: Snippet; title?: string } = $props()
 
   const isAnki = $derived(ankiMode.isAnki)
-  const dummyText = $derived("X".repeat(title.length))
 </script>
 
-<h4 class:--anki={isAnki}>
+<h4>
   {#if isAnki && title}
-    {dummyText}
+    <AnkiEnabledHeadingText text={title} />
   {:else}
     {@render children?.()}
   {/if}
@@ -38,10 +38,5 @@
     margin-left: 2.5px;
     border-radius: 50%;
     background: linear-gradient(135deg, rgba(255, 107, 107, 0.5), rgba(199, 125, 255, 0.5));
-  }
-
-  .--anki {
-    font-family: var(--font-anki-title);
-    color: dimgray;
   }
 </style>

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { type Snippet } from "svelte"
   import GradeTag from "../m-directive/GradeTag.svelte"
+  import AnkiEnabledHeadingText from "../AnkiEnabledHeadingText.svelte"
   import { type AftGradeCSV, gradeCSV2Array } from "$lib/meta/grade"
   import { ankiMode } from "$lib/state/anki.svelte"
 
@@ -11,7 +12,6 @@
   }: { children?: Snippet; title?: string; grades?: string } = $props()
 
   const isAnki = $derived(ankiMode.isAnki)
-  const dummyText = $derived("X".repeat(title.length))
   const gradeList = $derived(grades ? gradeCSV2Array(grades as AftGradeCSV) : [])
 </script>
 
@@ -19,7 +19,7 @@
   <span class="dot"></span>
   {#if isAnki && title}
     <div>
-      <span class:--anki={isAnki}>{dummyText}</span>
+      <AnkiEnabledHeadingText text={title} />
       <div class="grade-tags">
         {#each gradeList as grade (grade)}
           <GradeTag {grade} />
@@ -52,11 +52,6 @@
     translate: 0 -5px;
     border-radius: 50%;
     background: linear-gradient(135deg, #ff6b6b, #c77dff);
-  }
-
-  .--anki {
-    font-family: var(--font-anki-title);
-    color: dimgray;
   }
 
   .grade-tags {
