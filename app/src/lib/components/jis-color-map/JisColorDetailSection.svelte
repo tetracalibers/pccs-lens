@@ -160,11 +160,12 @@
     font-weight: 700;
     margin: 0;
     scroll-margin-top: 120px;
+    color: var(--color-heading);
   }
 
   .reading {
     font-size: 0.7rem;
-    opacity: 0.8;
+    color: var(--color-body);
   }
 
   .pccs-list {
@@ -188,7 +189,7 @@
   .origin-description {
     font-size: 0.8rem;
     line-height: 1.6;
-    color: var(--color-body);
+    color: var(--color-heading);
     margin: 0;
     min-height: 2lh;
   }
@@ -204,11 +205,12 @@
   }
 
   .meta dt {
-    opacity: 0.7;
+    color: var(--color-body);
   }
 
   .meta dd {
     margin: 0;
+    color: var(--color-heading);
   }
 
   .munsell {
