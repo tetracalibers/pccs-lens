@@ -77,9 +77,12 @@
         <div class="exam-level">
           <JisExamLevelBadge examLevel={jisColor.examLevel} size="M" />
         </div>
-        <a href={resolve("/jis-color-map/[family]", { family: family.id })} class="compare-link">
-          {family.name}を比較する
-          <Icon icon="mdi:arrow-right" />
+        <a
+          href={resolve("/jis-color-map/[family]", { family: family.id })}
+          class={`compare-link --_${family.id}`}
+        >
+          {family.name}の比較
+          <Icon icon="ei:external-link" />
         </a>
       </div>
     </article>
@@ -213,18 +216,49 @@
 
   .compare-link {
     display: inline-flex;
-    align-items: center;
+    align-items: baseline;
     gap: 0.3rem;
     font-size: 0.8rem;
-    color: light-dark(#3a3af0, #a9b2ff);
     text-decoration: none;
     align-self: flex-start;
     padding-block: 0.2rem;
     line-height: 1;
+    color: var(--color-body);
+  }
+
+  .compare-link::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .compare-link.--_red::before {
+    background-image: linear-gradient(120deg, #f093fb 0%, #f5576c 100%);
+  }
+  .compare-link.--_brown::before {
+    background-image: linear-gradient(to top, #e6b980 0%, #eacda3 100%);
+  }
+  .compare-link.--_yellow::before {
+    background-image: linear-gradient(to right, #f9d423 0%, #fff64e 100%);
+  }
+  .compare-link.--_green::before {
+    background-image: linear-gradient(to top, #9be15d 0%, #00e3ae 100%);
+  }
+  .compare-link.--_blue::before {
+    background-image: linear-gradient(to top, #4481eb 0%, #04befe 100%);
+  }
+  .compare-link.--_purple::before {
+    background-image: linear-gradient(-225deg, #b19fff 0%, #eca1fe 100%);
+  }
+  .compare-link.--_neutral::before {
+    background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
   }
 
   .compare-link:hover {
     text-decoration: underline;
+    text-underline-offset: 4px;
   }
 
   .exam-level {
