@@ -240,7 +240,7 @@
 
     .entry {
       display: grid;
-      grid-template-columns: auto 1fr;
+      grid-template-columns: auto auto 1fr;
       column-gap: 0.5rem;
       position: relative;
     }
@@ -257,18 +257,33 @@
       display: grid;
       grid-template-columns: subgrid;
       grid-column: 1 / -1;
+      grid-row: 1;
+      gap: 1rem;
     }
 
     .swatch {
       grid-column: 2;
+      width: 100px;
     }
 
     .name-block {
-      grid-column: 2;
+      display: contents;
+    }
+
+    .name-row {
+      grid-column: 2 / -1;
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+    }
+
+    .pccs-list {
+      grid-column: 3;
+      grid-row: 1;
     }
 
     .entry-detail {
-      grid-column: 2;
+      grid-column: 2 / -1;
     }
 
     .entry-category {
