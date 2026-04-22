@@ -118,20 +118,17 @@ export const getFamilyIdBySubfamilyId = (subfamilyId: ColorSubfamily): ColorFami
   return null
 }
 
-export type JISColorGroupId = ColorFamily | ColorSubfamily | "all"
+export type JISColorGroupId = ColorFamily | ColorSubfamily
 
 const FAMILY_IDS: Set<ColorFamily> = new Set(JIS_COLOR_FAMILIES.map((f) => f.id))
 
 export const isColorFamily = (value: string): value is ColorFamily =>
   (FAMILY_IDS as Set<string>).has(value)
 
-export const getJisColorsByGroup = (groupId: JISColorGroupId): JISColor[] => {
-  if (groupId === "all") return JIS_COLORS
-  return JIS_COLORS_BY_GROUP.get(groupId) ?? []
-}
+export const getJisColorsByGroup = (groupId: JISColorGroupId): JISColor[] =>
+  JIS_COLORS_BY_GROUP.get(groupId) ?? []
 
 export const getSubfamiliesByGroup = (groupId: JISColorGroupId): JISSubfamily[] => {
-  if (groupId === "all") return JIS_COLOR_FAMILIES.flatMap((f) => f.subfamilies)
   if ((FAMILY_IDS as Set<string>).has(groupId)) {
     const family = JIS_COLOR_FAMILIES.find((f) => f.id === groupId)
     return family ? family.subfamilies : []
