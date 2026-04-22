@@ -15,7 +15,7 @@
   const gradeList = $derived(grades ? gradeCSV2Array(grades as AftGradeCSV) : [])
 </script>
 
-<h2>
+<h2 class:--_anki={isAnki}>
   <span class="dot"></span>
   {#if isAnki && title}
     <div>
@@ -38,10 +38,15 @@
     color: var(--color-heading);
     display: grid;
     grid-template-columns: auto 1fr;
-    align-items: baseline;
+    align-items: flex-start;
     gap: 0.55rem;
     line-height: 1.3;
     margin: 2rem 0 0.75rem;
+    min-height: 1lh;
+  }
+
+  h2.--_anki {
+    gap: 0.75rem;
   }
 
   .dot {
@@ -49,7 +54,7 @@
     flex-shrink: 0;
     width: 10px;
     height: 10px;
-    translate: 0 -5px;
+    translate: 0 11.5px;
     border-radius: 50%;
     background: linear-gradient(135deg, #ff6b6b, #c77dff);
   }
