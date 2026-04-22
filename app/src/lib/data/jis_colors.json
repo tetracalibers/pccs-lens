@@ -13,18 +13,9 @@
         "examLevel": 3,
         "munsell": "10RP 9/2.5",
         "approximatePccs": [
-          {
-            "notation": "W",
-            "deltaE": 7.28
-          },
-          {
-            "notation": "Gy-9.0",
-            "deltaE": 7.4
-          },
-          {
-            "notation": "Gy-8.5",
-            "deltaE": 9.19
-          }
+          { "notation": "W", "deltaE": 7.28 },
+          { "notation": "Gy-9.0", "deltaE": 7.4 },
+          { "notation": "Gy-8.5", "deltaE": 9.19 }
         ]
       },
       {
@@ -39,12 +30,7 @@
         "hex": "#fadbda",
         "examLevel": 3,
         "munsell": "4R 8.5/4",
-        "approximatePccs": [
-          {
-            "notation": "p4",
-            "deltaE": 9.22
-          }
-        ]
+        "approximatePccs": [{ "notation": "p4", "deltaE": 9.22 }]
       },
       {
         "id": "toki-iro",
@@ -57,12 +43,7 @@
         "hex": "#f4b3c2",
         "examLevel": 2,
         "munsell": "7RP 7.5/8",
-        "approximatePccs": [
-          {
-            "notation": "p2",
-            "deltaE": 1.3
-          }
-        ]
+        "approximatePccs": [{ "notation": "p2", "deltaE": 1.3 }]
       },
       {
         "id": "rose-pink",
@@ -77,18 +58,9 @@
         "examLevel": 2,
         "munsell": "10RP 7/8",
         "approximatePccs": [
-          {
-            "notation": "p3",
-            "deltaE": 6.31
-          },
-          {
-            "notation": "p2",
-            "deltaE": 8.02
-          },
-          {
-            "notation": "ltg3",
-            "deltaE": 8.56
-          }
+          { "notation": "p2", "deltaE": 8.02 },
+          { "notation": "lt2", "deltaE": 9.15 },
+          { "notation": "ltg2", "deltaE": 9.42 }
         ]
       },
       {
@@ -104,18 +76,8 @@
         "examLevel": 2,
         "munsell": "1R 6/6.5",
         "approximatePccs": [
-          {
-            "notation": "lt2",
-            "deltaE": 8.3
-          },
-          {
-            "notation": "ltg2",
-            "deltaE": 8.89
-          },
-          {
-            "notation": "lt1",
-            "deltaE": 9.09
-          }
+          { "notation": "lt2", "deltaE": 8.3 },
+          { "notation": "ltg2", "deltaE": 8.89 }
         ]
       },
       {
@@ -130,10 +92,9 @@
         "examLevel": 3,
         "munsell": "2.5R 7/11",
         "approximatePccs": [
-          {
-            "notation": "p3",
-            "deltaE": 4.13
-          }
+          { "notation": "ltg4", "deltaE": 7.16 },
+          { "notation": "p2", "deltaE": 9.7 },
+          { "notation": "p4", "deltaE": 9.94 }
         ]
       },
       {
@@ -148,10 +109,9 @@
         "examLevel": 3,
         "munsell": "2.5R 6.5/7.5",
         "approximatePccs": [
-          {
-            "notation": "p3",
-            "deltaE": 3.67
-          }
+          { "notation": "p2", "deltaE": 7.44 },
+          { "notation": "ltg4", "deltaE": 8.39 },
+          { "notation": "ltg2", "deltaE": 9.53 }
         ]
       },
       {
@@ -166,12 +126,7 @@
         "hex": "#f4a583",
         "examLevel": 3,
         "munsell": "8R 7.5/7.5",
-        "approximatePccs": [
-          {
-            "notation": "lt5",
-            "deltaE": 3.89
-          }
-        ]
+        "approximatePccs": [{ "notation": "p4", "deltaE": 10.6 }]
       },
       {
         "id": "botan-iro",
@@ -185,14 +140,8 @@
         "examLevel": 3,
         "munsell": "3RP 5/14",
         "approximatePccs": [
-          {
-            "notation": "b24",
-            "deltaE": 3.17
-          },
-          {
-            "notation": "lt24",
-            "deltaE": 4.31
-          }
+          { "notation": "b24", "deltaE": 3.17 },
+          { "notation": "lt24", "deltaE": 4.31 }
         ]
       },
       {
@@ -207,41 +156,17 @@
         "examLevel": 3,
         "munsell": "5RP 5/14",
         "approximatePccs": [
-          {
-            "notation": "b24",
-            "deltaE": 6.85
-          },
-          {
-            "notation": "b1",
-            "deltaE": 9.65
-          },
-          {
-            "notation": "sf24",
-            "deltaE": 9.73
-          }
+          { "notation": "b24", "deltaE": 6.85 },
+          { "notation": "sf24", "deltaE": 9.73 }
         ]
       }
     ],
     "compareSections": [
-      {
-        "targets": ["sakura-iro", "baby-pink"],
-        "hintPCCSHue": [2]
-      },
-      {
-        "targets": ["toki-iro", "rose-pink", "old-rose"],
-        "hintJIS": ["magenta"]
-      },
-      {
-        "targets": ["sango-iro", "kobai-iro"],
-        "hintJIS": ["rose-pink"]
-      },
-      {
-        "targets": ["salmon-pink"]
-      },
-      {
-        "targets": ["botan-iro", "magenta"],
-        "hintJIS": ["toki-iro"]
-      }
+      { "targets": ["sakura-iro", "baby-pink"], "hintPCCSHue": [2] },
+      { "targets": ["toki-iro", "rose-pink", "old-rose"], "hintJIS": ["magenta"] },
+      { "targets": ["sango-iro", "kobai-iro"], "hintJIS": ["rose-pink"] },
+      { "targets": ["salmon-pink"] },
+      { "targets": ["botan-iro", "magenta"], "hintJIS": ["toki-iro"] }
     ]
   },
   "orange-red": {
@@ -257,12 +182,7 @@
         "hex": "#ea5539",
         "examLevel": 3,
         "munsell": "7R 5/14",
-        "approximatePccs": [
-          {
-            "notation": "b4",
-            "deltaE": 2.97
-          }
-        ]
+        "approximatePccs": [{ "notation": "b4", "deltaE": 2.97 }]
       },
       {
         "id": "shu-iro",
@@ -276,18 +196,8 @@
         "examLevel": 3,
         "munsell": "6R 5.5/14",
         "approximatePccs": [
-          {
-            "notation": "v4",
-            "deltaE": 4.53
-          },
-          {
-            "notation": "s4",
-            "deltaE": 5.92
-          },
-          {
-            "notation": "v5",
-            "deltaE": 6.2
-          }
+          { "notation": "b4", "deltaE": 4.07 },
+          { "notation": "v4", "deltaE": 5.18 }
         ]
       },
       {
@@ -302,14 +212,8 @@
         "examLevel": 3,
         "munsell": "6R 5.5/14",
         "approximatePccs": [
-          {
-            "notation": "b4",
-            "deltaE": 4.07
-          },
-          {
-            "notation": "v4",
-            "deltaE": 5.18
-          }
+          { "notation": "b4", "deltaE": 4.07 },
+          { "notation": "v4", "deltaE": 5.18 }
         ]
       },
       {
@@ -323,16 +227,7 @@
         "hex": "#d7003a",
         "examLevel": 3,
         "munsell": "4R 4/14",
-        "approximatePccs": [
-          {
-            "notation": "v1",
-            "deltaE": 3.39
-          },
-          {
-            "notation": "s2",
-            "deltaE": 5.02
-          }
-        ]
+        "approximatePccs": [{ "notation": "v1", "deltaE": 3.39 }]
       },
       {
         "id": "poppy-red",
@@ -346,12 +241,7 @@
         "hex": "#e9474d",
         "examLevel": 2,
         "munsell": "4R 5/14",
-        "approximatePccs": [
-          {
-            "notation": "b2",
-            "deltaE": 3.03
-          }
-        ]
+        "approximatePccs": [{ "notation": "b2", "deltaE": 3.03 }]
       },
       {
         "id": "karakurenai-iro",
@@ -365,18 +255,8 @@
         "examLevel": 2,
         "munsell": "1.5R 5.5/13",
         "approximatePccs": [
-          {
-            "notation": "b2",
-            "deltaE": 5.29
-          },
-          {
-            "notation": "b1",
-            "deltaE": 5.87
-          },
-          {
-            "notation": "sf3",
-            "deltaE": 5.97
-          }
+          { "notation": "b2", "deltaE": 5.29 },
+          { "notation": "sf2", "deltaE": 6.13 }
         ]
       },
       {
@@ -390,12 +270,7 @@
         "hex": "#b7282d",
         "examLevel": 3,
         "munsell": "4R 3.5/11",
-        "approximatePccs": [
-          {
-            "notation": "s2",
-            "deltaE": 3.38
-          }
-        ]
+        "approximatePccs": [{ "notation": "d4", "deltaE": 5.25 }]
       },
       {
         "id": "wine-red",
@@ -409,16 +284,7 @@
         "hex": "#932e44",
         "examLevel": 3,
         "munsell": "10RP 3/9",
-        "approximatePccs": [
-          {
-            "notation": "d2",
-            "deltaE": 4.32
-          },
-          {
-            "notation": "s1",
-            "deltaE": 5.84
-          }
-        ]
+        "approximatePccs": [{ "notation": "d2", "deltaE": 4.32 }]
       },
       {
         "id": "bordeaux",
@@ -431,38 +297,14 @@
         "hex": "#600f18",
         "examLevel": 3,
         "munsell": "2.5R 2.5/3",
-        "approximatePccs": [
-          {
-            "notation": "dk3",
-            "deltaE": 5.98
-          },
-          {
-            "notation": "dk2",
-            "deltaE": 7.24
-          },
-          {
-            "notation": "dk1",
-            "deltaE": 8.39
-          }
-        ]
+        "approximatePccs": [{ "notation": "dk2", "deltaE": 7.24 }]
       }
     ],
     "compareSections": [
-      {
-        "targets": ["scarlet", "shu-iro", "vermilion"],
-        "hintPCCSHue": [3]
-      },
-      {
-        "targets": ["carmine", "poppy-red", "karakurenai-iro"],
-        "hintPCCSHue": [2]
-      },
-      {
-        "targets": ["akane-iro", "wine-red"],
-        "hintPCCSHue": [1, 2]
-      },
-      {
-        "targets": ["bordeaux"]
-      }
+      { "targets": ["scarlet", "shu-iro", "vermilion"], "hintPCCSHue": [3] },
+      { "targets": ["carmine", "poppy-red", "karakurenai-iro"], "hintPCCSHue": [2] },
+      { "targets": ["akane-iro", "wine-red"], "hintPCCSHue": [1, 2] },
+      { "targets": ["bordeaux"] }
     ]
   },
   "yellow-red-light-brown": {
@@ -480,10 +322,8 @@
         "examLevel": 2,
         "munsell": "4YR 5/9",
         "approximatePccs": [
-          {
-            "notation": "s6",
-            "deltaE": 3.31
-          }
+          { "notation": "sf6", "deltaE": 4.99 },
+          { "notation": "v6", "deltaE": 7.19 }
         ]
       },
       {
@@ -498,14 +338,8 @@
         "examLevel": 2,
         "munsell": "2.5YR 5/8.5",
         "approximatePccs": [
-          {
-            "notation": "s4",
-            "deltaE": 4.53
-          },
-          {
-            "notation": "d6",
-            "deltaE": 5.13
-          }
+          { "notation": "d6", "deltaE": 5.13 },
+          { "notation": "dp6", "deltaE": 7.07 }
         ]
       },
       {
@@ -520,12 +354,7 @@
         "hex": "#b25532",
         "examLevel": 2,
         "munsell": "10R 4.5/7.5",
-        "approximatePccs": [
-          {
-            "notation": "d6",
-            "deltaE": 1.41
-          }
-        ]
+        "approximatePccs": [{ "notation": "d6", "deltaE": 1.41 }]
       },
       {
         "id": "terracotta",
@@ -539,18 +368,8 @@
         "examLevel": 2,
         "munsell": "7.5R 4.5/8",
         "approximatePccs": [
-          {
-            "notation": "sf4",
-            "deltaE": 6.3
-          },
-          {
-            "notation": "d6",
-            "deltaE": 7.17
-          },
-          {
-            "notation": "sf3",
-            "deltaE": 8.04
-          }
+          { "notation": "sf4", "deltaE": 6.3 },
+          { "notation": "d6", "deltaE": 7.17 }
         ]
       },
       {
@@ -565,18 +384,8 @@
         "examLevel": 2,
         "munsell": "1YR 4.5/4",
         "approximatePccs": [
-          {
-            "notation": "d6",
-            "deltaE": 6.67
-          },
-          {
-            "notation": "d5",
-            "deltaE": 7.57
-          },
-          {
-            "notation": "dp5",
-            "deltaE": 9.22
-          }
+          { "notation": "d6", "deltaE": 6.67 },
+          { "notation": "dp6", "deltaE": 9.3 }
         ]
       },
       {
@@ -591,18 +400,8 @@
         "examLevel": 3,
         "munsell": "10R 4/7",
         "approximatePccs": [
-          {
-            "notation": "d6",
-            "deltaE": 5.9
-          },
-          {
-            "notation": "d5",
-            "deltaE": 6.14
-          },
-          {
-            "notation": "dp5",
-            "deltaE": 6.28
-          }
+          { "notation": "d6", "deltaE": 5.9 },
+          { "notation": "dp6", "deltaE": 8.59 }
         ]
       },
       {
@@ -617,18 +416,8 @@
         "examLevel": 2,
         "munsell": "8R 3.5/7",
         "approximatePccs": [
-          {
-            "notation": "dp4",
-            "deltaE": 5.03
-          },
-          {
-            "notation": "dp5",
-            "deltaE": 5.09
-          },
-          {
-            "notation": "dp3",
-            "deltaE": 6.89
-          }
+          { "notation": "dp4", "deltaE": 5.03 },
+          { "notation": "dk4", "deltaE": 7.51 }
         ]
       },
       {
@@ -642,33 +431,14 @@
         "hex": "#9e3d3e",
         "examLevel": 2,
         "munsell": "4R 4/7",
-        "approximatePccs": [
-          {
-            "notation": "d3",
-            "deltaE": 3.98
-          },
-          {
-            "notation": "d4",
-            "deltaE": 4.69
-          }
-        ]
+        "approximatePccs": [{ "notation": "d4", "deltaE": 4.69 }]
       }
     ],
     "compareSections": [
-      {
-        "targets": ["raw-sienna"]
-      },
-      {
-        "targets": ["taisha-iro", "burnt-sienna", "terracotta"],
-        "hintJIS": ["raw-sienna"]
-      },
-      {
-        "targets": ["hiwada-iro", "renga-iro"]
-      },
-      {
-        "targets": ["bengara-iro", "suo"],
-        "hintPCCSHue": [2]
-      }
+      { "targets": ["raw-sienna"] },
+      { "targets": ["taisha-iro", "burnt-sienna", "terracotta"], "hintJIS": ["raw-sienna"] },
+      { "targets": ["hiwada-iro", "renga-iro"] },
+      { "targets": ["bengara-iro", "suo"], "hintPCCSHue": [2] }
     ]
   },
   "yellow-green-brown": {
@@ -684,20 +454,7 @@
         "hex": "#c1813f",
         "examLevel": 2,
         "munsell": "6YR 5/6",
-        "approximatePccs": [
-          {
-            "notation": "sf6",
-            "deltaE": 5.61
-          },
-          {
-            "notation": "s6",
-            "deltaE": 7.11
-          },
-          {
-            "notation": "sf5",
-            "deltaE": 7.99
-          }
-        ]
+        "approximatePccs": [{ "notation": "sf6", "deltaE": 5.61 }]
       },
       {
         "id": "kohaku-iro",
@@ -710,20 +467,7 @@
         "hex": "#bf7834",
         "examLevel": 2,
         "munsell": "8YR 5.5/6.5",
-        "approximatePccs": [
-          {
-            "notation": "s6",
-            "deltaE": 6.01
-          },
-          {
-            "notation": "d7",
-            "deltaE": 6.62
-          },
-          {
-            "notation": "sf5",
-            "deltaE": 6.72
-          }
-        ]
+        "approximatePccs": [{ "notation": "sf6", "deltaE": 7.79 }]
       },
       {
         "id": "amber",
@@ -736,12 +480,7 @@
         "hex": "#bf7834",
         "examLevel": 2,
         "munsell": "8YR 5.5/6.5",
-        "approximatePccs": [
-          {
-            "notation": "sf6",
-            "deltaE": 5.18
-          }
-        ]
+        "approximatePccs": [{ "notation": "sf6", "deltaE": 7.79 }]
       },
       {
         "id": "odo-iro",
@@ -754,20 +493,7 @@
         "hex": "#c39043",
         "examLevel": 3,
         "munsell": "10YR 6/7.5",
-        "approximatePccs": [
-          {
-            "notation": "sf6",
-            "deltaE": 6.34
-          },
-          {
-            "notation": "sf7",
-            "deltaE": 6.34
-          },
-          {
-            "notation": "s7",
-            "deltaE": 6.6
-          }
-        ]
+        "approximatePccs": [{ "notation": "sf6", "deltaE": 6.34 }]
       },
       {
         "id": "khaki",
@@ -780,20 +506,7 @@
         "hex": "#bb9855",
         "examLevel": 3,
         "munsell": "1Y 5/5.5",
-        "approximatePccs": [
-          {
-            "notation": "sf7",
-            "deltaE": 7.04
-          },
-          {
-            "notation": "s7",
-            "deltaE": 8.7
-          },
-          {
-            "notation": "d8",
-            "deltaE": 9.38
-          }
-        ]
+        "approximatePccs": [{ "notation": "d8", "deltaE": 9.38 }]
       },
       {
         "id": "raw-umber",
@@ -808,18 +521,8 @@
         "examLevel": 2,
         "munsell": "2.5Y 4/6",
         "approximatePccs": [
-          {
-            "notation": "d8",
-            "deltaE": 6.52
-          },
-          {
-            "notation": "dp7",
-            "deltaE": 8.09
-          },
-          {
-            "notation": "dp8",
-            "deltaE": 8.76
-          }
+          { "notation": "d8", "deltaE": 6.52 },
+          { "notation": "dp8", "deltaE": 8.76 }
         ]
       },
       {
@@ -834,18 +537,8 @@
         "examLevel": 2,
         "munsell": "10YR 5/2",
         "approximatePccs": [
-          {
-            "notation": "d8",
-            "deltaE": 6.18
-          },
-          {
-            "notation": "d7",
-            "deltaE": 7.77
-          },
-          {
-            "notation": "g8",
-            "deltaE": 8.28
-          }
+          { "notation": "d8", "deltaE": 6.18 },
+          { "notation": "g8", "deltaE": 8.28 }
         ]
       },
       {
@@ -861,18 +554,8 @@
         "examLevel": 2,
         "munsell": "10YR 3/3",
         "approximatePccs": [
-          {
-            "notation": "g8",
-            "deltaE": 8.22
-          },
-          {
-            "notation": "dk6",
-            "deltaE": 8.22
-          },
-          {
-            "notation": "dk7",
-            "deltaE": 8.4
-          }
+          { "notation": "g8", "deltaE": 8.22 },
+          { "notation": "dk6", "deltaE": 8.22 }
         ]
       },
       {
@@ -886,12 +569,7 @@
         "hex": "#6f4e27",
         "examLevel": 3,
         "munsell": "10YR 2.5/2",
-        "approximatePccs": [
-          {
-            "notation": "dk6",
-            "deltaE": 2.8
-          }
-        ]
+        "approximatePccs": [{ "notation": "dk6", "deltaE": 2.8 }]
       },
       {
         "id": "susutake-iro",
@@ -905,40 +583,17 @@
         "examLevel": 2,
         "munsell": "9.5YR 3.5/1.5",
         "approximatePccs": [
-          {
-            "notation": "g5",
-            "deltaE": 8.47
-          },
-          {
-            "notation": "g6",
-            "deltaE": 8.91
-          },
-          {
-            "notation": "g4",
-            "deltaE": 9
-          }
+          { "notation": "g6", "deltaE": 8.91 },
+          { "notation": "g4", "deltaE": 9 }
         ]
       }
     ],
     "compareSections": [
-      {
-        "targets": ["tan", "kohaku-iro", "amber"],
-        "hintPCCSHue": [5, 6]
-      },
-      {
-        "targets": ["odo-iro", "khaki"]
-      },
-      {
-        "targets": ["raw-umber", "kuchiba-iro"]
-      },
-      {
-        "targets": ["burnt-umber", "sepia"],
-        "hintJIS": ["kuchiba-iro"]
-      },
-      {
-        "targets": ["susutake-iro"],
-        "hintJIS": ["burnt-umber"]
-      }
+      { "targets": ["tan", "kohaku-iro", "amber"], "hintPCCSHue": [5, 6] },
+      { "targets": ["odo-iro", "khaki"] },
+      { "targets": ["raw-umber", "kuchiba-iro"] },
+      { "targets": ["burnt-umber", "sepia"], "hintJIS": ["kuchiba-iro"] },
+      { "targets": ["susutake-iro"], "hintJIS": ["burnt-umber"] }
     ]
   },
   "yellow-red-dark-brown": {
@@ -954,16 +609,7 @@
         "hex": "#762e05",
         "examLevel": 3,
         "munsell": "2YR 3.5/4",
-        "approximatePccs": [
-          {
-            "notation": "dk5",
-            "deltaE": 5.96
-          },
-          {
-            "notation": "dk4",
-            "deltaE": 7.74
-          }
-        ]
+        "approximatePccs": [{ "notation": "dk4", "deltaE": 7.74 }]
       },
       {
         "id": "ebicha",
@@ -976,12 +622,7 @@
         "hex": "#814336",
         "examLevel": 2,
         "munsell": "8R 3/4.5",
-        "approximatePccs": [
-          {
-            "notation": "dk4",
-            "deltaE": 4.62
-          }
-        ]
+        "approximatePccs": [{ "notation": "dk4", "deltaE": 4.62 }]
       },
       {
         "id": "tobi-iro",
@@ -995,18 +636,8 @@
         "examLevel": 2,
         "munsell": "7.5R 3.5/5",
         "approximatePccs": [
-          {
-            "notation": "dk4",
-            "deltaE": 6.35
-          },
-          {
-            "notation": "d3",
-            "deltaE": 8.08
-          },
-          {
-            "notation": "d4",
-            "deltaE": 8.32
-          }
+          { "notation": "dk4", "deltaE": 6.35 },
+          { "notation": "d4", "deltaE": 8.32 }
         ]
       },
       {
@@ -1020,16 +651,7 @@
         "hex": "#612c16",
         "examLevel": 3,
         "munsell": "10R 2.5/2.5",
-        "approximatePccs": [
-          {
-            "notation": "dk4",
-            "deltaE": 5.44
-          },
-          {
-            "notation": "dk5",
-            "deltaE": 5.79
-          }
-        ]
+        "approximatePccs": [{ "notation": "dk4", "deltaE": 5.44 }]
       },
       {
         "id": "maroon",
@@ -1043,14 +665,8 @@
         "examLevel": 2,
         "munsell": "5R 2.5/6",
         "approximatePccs": [
-          {
-            "notation": "dk3",
-            "deltaE": 5.11
-          },
-          {
-            "notation": "dk4",
-            "deltaE": 7.19
-          }
+          { "notation": "dk4", "deltaE": 7.19 },
+          { "notation": "dk2", "deltaE": 8.87 }
         ]
       },
       {
@@ -1064,31 +680,12 @@
         "hex": "#561620",
         "examLevel": 2,
         "munsell": "10RP 2/2.5",
-        "approximatePccs": [
-          {
-            "notation": "dk2",
-            "deltaE": 5.12
-          },
-          {
-            "notation": "dk1",
-            "deltaE": 5.36
-          },
-          {
-            "notation": "dk3",
-            "deltaE": 6.99
-          }
-        ]
+        "approximatePccs": [{ "notation": "dk2", "deltaE": 5.12 }]
       }
     ],
     "compareSections": [
-      {
-        "targets": ["kuri-iro", "ebicha", "tobi-iro"]
-      },
-      {
-        "targets": ["chocholate", "maroon", "burgundy"],
-        "hintJIS": ["ebicha"],
-        "hintPCCSHue": [2]
-      }
+      { "targets": ["kuri-iro", "ebicha", "tobi-iro"] },
+      { "targets": ["chocholate", "maroon", "burgundy"], "hintJIS": ["ebicha"], "hintPCCSHue": [2] }
     ]
   },
   "light-yellow": {
@@ -1105,14 +702,8 @@
         "examLevel": 2,
         "munsell": "9Y 8/8",
         "approximatePccs": [
-          {
-            "notation": "lt8",
-            "deltaE": 2.54
-          },
-          {
-            "notation": "b8",
-            "deltaE": 3.78
-          }
+          { "notation": "lt8", "deltaE": 2.54 },
+          { "notation": "b8", "deltaE": 3.78 }
         ]
       },
       {
@@ -1127,12 +718,7 @@
         "hex": "#fff33f",
         "examLevel": 3,
         "munsell": "8Y 8/12",
-        "approximatePccs": [
-          {
-            "notation": "b8",
-            "deltaE": 0.83
-          }
-        ]
+        "approximatePccs": [{ "notation": "b8", "deltaE": 0.83 }]
       },
       {
         "id": "canary-yellow",
@@ -1146,14 +732,8 @@
         "examLevel": 3,
         "munsell": "7Y 8.5/10",
         "approximatePccs": [
-          {
-            "notation": "lt8",
-            "deltaE": 2.67
-          },
-          {
-            "notation": "b8",
-            "deltaE": 3.65
-          }
+          { "notation": "lt8", "deltaE": 2.67 },
+          { "notation": "b8", "deltaE": 3.65 }
         ]
       },
       {
@@ -1169,10 +749,8 @@
         "examLevel": 3,
         "munsell": "5Y 8.5/3.5",
         "approximatePccs": [
-          {
-            "notation": "p7",
-            "deltaE": 1.87
-          }
+          { "notation": "p6", "deltaE": 3.99 },
+          { "notation": "p8", "deltaE": 5.63 }
         ]
       },
       {
@@ -1186,16 +764,7 @@
         "hex": "#f7dc8d",
         "examLevel": 3,
         "munsell": "2Y 7.5/7",
-        "approximatePccs": [
-          {
-            "notation": "lt7",
-            "deltaE": 4.3
-          },
-          {
-            "notation": "p6",
-            "deltaE": 4.34
-          }
-        ]
+        "approximatePccs": [{ "notation": "p6", "deltaE": 4.34 }]
       },
       {
         "id": "beige",
@@ -1209,18 +778,8 @@
         "examLevel": 3,
         "munsell": "10YR 7/2.5",
         "approximatePccs": [
-          {
-            "notation": "p6",
-            "deltaE": 4.98
-          },
-          {
-            "notation": "ltg8",
-            "deltaE": 5.23
-          },
-          {
-            "notation": "p5",
-            "deltaE": 6.23
-          }
+          { "notation": "p6", "deltaE": 4.98 },
+          { "notation": "ltg8", "deltaE": 5.23 }
         ]
       },
       {
@@ -1236,18 +795,8 @@
         "examLevel": 2,
         "munsell": "7.5YR 8.5/4",
         "approximatePccs": [
-          {
-            "notation": "p5",
-            "deltaE": 8.05
-          },
-          {
-            "notation": "p6",
-            "deltaE": 8.54
-          },
-          {
-            "notation": "ltg8",
-            "deltaE": 9.56
-          }
+          { "notation": "p6", "deltaE": 8.54 },
+          { "notation": "ltg8", "deltaE": 9.56 }
         ]
       },
       {
@@ -1262,29 +811,17 @@
         "examLevel": 3,
         "munsell": "3YR 8/3.5",
         "approximatePccs": [
-          {
-            "notation": "p5",
-            "deltaE": 1.6
-          }
+          { "notation": "ltg6", "deltaE": 7.71 },
+          { "notation": "p4", "deltaE": 7.73 },
+          { "notation": "ltg8", "deltaE": 8.81 }
         ]
       }
     ],
     "compareSections": [
-      {
-        "targets": ["kihada-iro", "lemon-yellow", "canary-yellow"]
-      },
-      {
-        "targets": ["cream-yellow", "blond"],
-        "hintPCCSHue": [8]
-      },
-      {
-        "targets": ["beige", "ecru-beige"],
-        "hintJIS": ["karashi-iro"]
-      },
-      {
-        "targets": ["peach"],
-        "hintPCCSHue": [5]
-      }
+      { "targets": ["kihada-iro", "lemon-yellow", "canary-yellow"] },
+      { "targets": ["cream-yellow", "blond"], "hintPCCSHue": [8] },
+      { "targets": ["beige", "ecru-beige"], "hintJIS": ["karashi-iro"] },
+      { "targets": ["peach"], "hintPCCSHue": [5] }
     ]
   },
   "dark-yellow": {
@@ -1301,18 +838,8 @@
         "examLevel": 2,
         "munsell": "10R 6/12",
         "approximatePccs": [
-          {
-            "notation": "b5",
-            "deltaE": 4.31
-          },
-          {
-            "notation": "sf4",
-            "deltaE": 5.11
-          },
-          {
-            "notation": "sf5",
-            "deltaE": 6.11
-          }
+          { "notation": "sf4", "deltaE": 5.11 },
+          { "notation": "v5", "deltaE": 7.05 }
         ]
       },
       {
@@ -1327,12 +854,7 @@
         "hex": "#f39800",
         "examLevel": 3,
         "munsell": "8YR 7.5/13",
-        "approximatePccs": [
-          {
-            "notation": "b6",
-            "deltaE": 3.01
-          }
-        ]
+        "approximatePccs": [{ "notation": "b6", "deltaE": 3.01 }]
       },
       {
         "id": "yamabuki-iro",
@@ -1345,20 +867,7 @@
         "hex": "#f8b500",
         "examLevel": 3,
         "munsell": "10YR 7.5/13",
-        "approximatePccs": [
-          {
-            "notation": "b7",
-            "deltaE": 6.3
-          },
-          {
-            "notation": "v7",
-            "deltaE": 6.95
-          },
-          {
-            "notation": "sf7",
-            "deltaE": 8.56
-          }
-        ]
+        "approximatePccs": [{ "notation": "v7", "deltaE": 6.95 }]
       },
       {
         "id": "ukon-iro",
@@ -1371,16 +880,7 @@
         "hex": "#fabf13",
         "examLevel": 2,
         "munsell": "2Y 7.5/12",
-        "approximatePccs": [
-          {
-            "notation": "b7",
-            "deltaE": 3.27
-          },
-          {
-            "notation": "v7",
-            "deltaE": 3.94
-          }
-        ]
+        "approximatePccs": [{ "notation": "v7", "deltaE": 3.94 }]
       },
       {
         "id": "koji-iro",
@@ -1394,18 +894,8 @@
         "examLevel": 2,
         "munsell": "5.5YR 7.5/9",
         "approximatePccs": [
-          {
-            "notation": "lt6",
-            "deltaE": 5.51
-          },
-          {
-            "notation": "b6",
-            "deltaE": 6.66
-          },
-          {
-            "notation": "sf7",
-            "deltaE": 7.9
-          }
+          { "notation": "lt6", "deltaE": 5.51 },
+          { "notation": "b6", "deltaE": 6.66 }
         ]
       },
       {
@@ -1420,20 +910,7 @@
         "hex": "#f8b856",
         "examLevel": 2,
         "munsell": "7.5YR 7/10",
-        "approximatePccs": [
-          {
-            "notation": "lt6",
-            "deltaE": 6.07
-          },
-          {
-            "notation": "sf7",
-            "deltaE": 8.39
-          },
-          {
-            "notation": "lt7",
-            "deltaE": 8.61
-          }
-        ]
+        "approximatePccs": [{ "notation": "lt6", "deltaE": 6.07 }]
       },
       {
         "id": "naples-yellow",
@@ -1448,18 +925,9 @@
         "examLevel": 2,
         "munsell": "2.5Y 8/7.5",
         "approximatePccs": [
-          {
-            "notation": "lt7",
-            "deltaE": 3.8
-          },
-          {
-            "notation": "b7",
-            "deltaE": 5.21
-          },
-          {
-            "notation": "v7",
-            "deltaE": 5.64
-          }
+          { "notation": "v7", "deltaE": 5.64 },
+          { "notation": "v8", "deltaE": 7.79 },
+          { "notation": "lt8", "deltaE": 8.45 }
         ]
       },
       {
@@ -1474,12 +942,7 @@
         "hex": "#ffdc00",
         "examLevel": 2,
         "munsell": "5Y 8.5/14",
-        "approximatePccs": [
-          {
-            "notation": "v8",
-            "deltaE": 3.06
-          }
-        ]
+        "approximatePccs": [{ "notation": "v8", "deltaE": 3.06 }]
       },
       {
         "id": "kariyasu-iro",
@@ -1492,12 +955,7 @@
         "hex": "#f5e56b",
         "examLevel": 2,
         "munsell": "7Y 8.5/7",
-        "approximatePccs": [
-          {
-            "notation": "lt8",
-            "deltaE": 2.86
-          }
-        ]
+        "approximatePccs": [{ "notation": "lt8", "deltaE": 2.86 }]
       },
       {
         "id": "karashi-iro",
@@ -1510,34 +968,15 @@
         "hex": "#d2b74e",
         "examLevel": 3,
         "munsell": "3Y 7/6",
-        "approximatePccs": [
-          {
-            "notation": "sf8",
-            "deltaE": 2.7
-          }
-        ]
+        "approximatePccs": [{ "notation": "sf8", "deltaE": 2.7 }]
       }
     ],
     "compareSections": [
-      {
-        "targets": ["oni"],
-        "hintPCCSHue": [4]
-      },
-      {
-        "targets": ["marigold", "yamabuki-iro", "ukon-iro"],
-        "hintPCCSHue": [6, 7]
-      },
-      {
-        "targets": ["koji-iro", "golden-yellow"],
-        "hintJIS": ["marigold", "yamabuki-iro"]
-      },
-      {
-        "targets": ["naples-yellow", "jaune-brillant", "kariyasu-iro"],
-        "hintPCCSHue": [8]
-      },
-      {
-        "targets": ["karashi-iro"]
-      }
+      { "targets": ["oni"], "hintPCCSHue": [4] },
+      { "targets": ["marigold", "yamabuki-iro", "ukon-iro"], "hintPCCSHue": [6, 7] },
+      { "targets": ["koji-iro", "golden-yellow"], "hintJIS": ["marigold", "yamabuki-iro"] },
+      { "targets": ["naples-yellow", "jaune-brillant", "kariyasu-iro"], "hintPCCSHue": [8] },
+      { "targets": ["karashi-iro"] }
     ]
   },
   "yellow-green": {
@@ -1555,10 +994,9 @@
         "examLevel": 2,
         "munsell": "4GY 8/10",
         "approximatePccs": [
-          {
-            "notation": "lt9",
-            "deltaE": 2.4
-          }
+          { "notation": "v9", "deltaE": 6.62 },
+          { "notation": "lt8", "deltaE": 6.66 },
+          { "notation": "lt10", "deltaE": 7.65 }
         ]
       },
       {
@@ -1573,18 +1011,9 @@
         "examLevel": 3,
         "munsell": "4GY 6.5/9",
         "approximatePccs": [
-          {
-            "notation": "b10",
-            "deltaE": 3.65
-          },
-          {
-            "notation": "v10",
-            "deltaE": 4.02
-          },
-          {
-            "notation": "lt10",
-            "deltaE": 4.77
-          }
+          { "notation": "b10", "deltaE": 3.65 },
+          { "notation": "v10", "deltaE": 4.02 },
+          { "notation": "lt10", "deltaE": 4.77 }
         ]
       },
       {
@@ -1600,18 +1029,9 @@
         "examLevel": 2,
         "munsell": "5GY 6/7",
         "approximatePccs": [
-          {
-            "notation": "b10",
-            "deltaE": 5.57
-          },
-          {
-            "notation": "v10",
-            "deltaE": 6.18
-          },
-          {
-            "notation": "lt10",
-            "deltaE": 7.39
-          }
+          { "notation": "b10", "deltaE": 5.57 },
+          { "notation": "v10", "deltaE": 6.18 },
+          { "notation": "lt10", "deltaE": 7.39 }
         ]
       },
       {
@@ -1627,18 +1047,8 @@
         "examLevel": 2,
         "munsell": "5GY 5/5",
         "approximatePccs": [
-          {
-            "notation": "d9",
-            "deltaE": 6.03
-          },
-          {
-            "notation": "d10",
-            "deltaE": 6.35
-          },
-          {
-            "notation": "d11",
-            "deltaE": 7.21
-          }
+          { "notation": "d10", "deltaE": 6.35 },
+          { "notation": "dp10", "deltaE": 8.85 }
         ]
       },
       {
@@ -1652,20 +1062,7 @@
         "hex": "#839a5c",
         "examLevel": 3,
         "munsell": "7.5GY 5/4",
-        "approximatePccs": [
-          {
-            "notation": "sf11",
-            "deltaE": 8.38
-          },
-          {
-            "notation": "d9",
-            "deltaE": 8.91
-          },
-          {
-            "notation": "d11",
-            "deltaE": 9.58
-          }
-        ]
+        "approximatePccs": [{ "notation": "d10", "deltaE": 9.81 }]
       },
       {
         "id": "olive",
@@ -1678,16 +1075,7 @@
         "hex": "#72640a",
         "examLevel": 3,
         "munsell": "7.5Y 3.5/4",
-        "approximatePccs": [
-          {
-            "notation": "dk8",
-            "deltaE": 4.21
-          },
-          {
-            "notation": "dk9",
-            "deltaE": 6.16
-          }
-        ]
+        "approximatePccs": [{ "notation": "dk8", "deltaE": 4.21 }]
       },
       {
         "id": "miru-iro",
@@ -1701,18 +1089,9 @@
         "examLevel": 2,
         "munsell": "9.5Y 4.5/2.5",
         "approximatePccs": [
-          {
-            "notation": "dk9",
-            "deltaE": 5.47
-          },
-          {
-            "notation": "g9",
-            "deltaE": 7.2
-          },
-          {
-            "notation": "d10",
-            "deltaE": 7.45
-          }
+          { "notation": "d10", "deltaE": 7.45 },
+          { "notation": "dk8", "deltaE": 8.48 },
+          { "notation": "dk10", "deltaE": 9.56 }
         ]
       },
       {
@@ -1728,14 +1107,8 @@
         "examLevel": 3,
         "munsell": "2.5GY 3.5/3",
         "approximatePccs": [
-          {
-            "notation": "dk9",
-            "deltaE": 4.23
-          },
-          {
-            "notation": "dk10",
-            "deltaE": 5.44
-          }
+          { "notation": "dk10", "deltaE": 5.44 },
+          { "notation": "dk8", "deltaE": 7.76 }
         ]
       },
       {
@@ -1749,16 +1122,7 @@
         "hex": "#9d973b",
         "examLevel": 3,
         "munsell": "1GY 4.5/3.5",
-        "approximatePccs": [
-          {
-            "notation": "dp9",
-            "deltaE": 4.27
-          },
-          {
-            "notation": "d9",
-            "deltaE": 6.32
-          }
-        ]
+        "approximatePccs": [{ "notation": "sf10", "deltaE": 7.95 }]
       },
       {
         "id": "hiwa-iro",
@@ -1772,37 +1136,17 @@
         "examLevel": 2,
         "munsell": "1GY 7.5/8",
         "approximatePccs": [
-          {
-            "notation": "s8",
-            "deltaE": 5.92
-          },
-          {
-            "notation": "sf8",
-            "deltaE": 6.52
-          },
-          {
-            "notation": "sf9",
-            "deltaE": 7.17
-          }
+          { "notation": "sf8", "deltaE": 6.52 },
+          { "notation": "v8", "deltaE": 8.18 },
+          { "notation": "v9", "deltaE": 8.45 }
         ]
       }
     ],
     "compareSections": [
-      {
-        "targets": ["chartreuse-green", "moegi", "leaf-green"]
-      },
-      {
-        "targets": ["grass-green", "matsuba-iro"],
-        "hintJIS": ["leaf-green"]
-      },
-      {
-        "targets": ["olive", "miru-iro"],
-        "hintJIS": ["grass-green"]
-      },
-      {
-        "targets": ["olive-green", "uguisu-iro", "hiwa-iro"],
-        "hintJIS": ["miru-iro"]
-      }
+      { "targets": ["chartreuse-green", "moegi", "leaf-green"] },
+      { "targets": ["grass-green", "matsuba-iro"], "hintJIS": ["leaf-green"] },
+      { "targets": ["olive", "miru-iro"], "hintJIS": ["grass-green"] },
+      { "targets": ["olive-green", "uguisu-iro", "hiwa-iro"], "hintJIS": ["miru-iro"] }
     ]
   },
   "light-blue-green": {
@@ -1820,14 +1164,8 @@
         "examLevel": 2,
         "munsell": "10GY 8/5",
         "approximatePccs": [
-          {
-            "notation": "lt11",
-            "deltaE": 3.81
-          },
-          {
-            "notation": "lt12",
-            "deltaE": 5.5
-          }
+          { "notation": "lt12", "deltaE": 5.5 },
+          { "notation": "ltg10", "deltaE": 7.41 }
         ]
       },
       {
@@ -1843,18 +1181,8 @@
         "examLevel": 2,
         "munsell": "2.5G 7.5/8",
         "approximatePccs": [
-          {
-            "notation": "lt12",
-            "deltaE": 5.07
-          },
-          {
-            "notation": "lt13",
-            "deltaE": 5.77
-          },
-          {
-            "notation": "lt11",
-            "deltaE": 6.02
-          }
+          { "notation": "lt12", "deltaE": 5.07 },
+          { "notation": "ltg10", "deltaE": 7.37 }
         ]
       },
       {
@@ -1869,10 +1197,8 @@
         "examLevel": 3,
         "munsell": "6G 6/7.5",
         "approximatePccs": [
-          {
-            "notation": "lt13",
-            "deltaE": 2.2
-          }
+          { "notation": "sf12", "deltaE": 5.41 },
+          { "notation": "lt12", "deltaE": 7.07 }
         ]
       },
       {
@@ -1886,12 +1212,7 @@
         "hex": "#68b7a1",
         "examLevel": 3,
         "munsell": "7.5G 6.5/4",
-        "approximatePccs": [
-          {
-            "notation": "lt14",
-            "deltaE": 3.33
-          }
-        ]
+        "approximatePccs": [{ "notation": "lt14", "deltaE": 3.33 }]
       },
       {
         "id": "nile-blue",
@@ -1905,16 +1226,7 @@
         "hex": "#259f94",
         "examLevel": 2,
         "munsell": "10BG 5.5/5",
-        "approximatePccs": [
-          {
-            "notation": "b14",
-            "deltaE": 3.31
-          },
-          {
-            "notation": "sf15",
-            "deltaE": 4.93
-          }
-        ]
+        "approximatePccs": [{ "notation": "b14", "deltaE": 3.31 }]
       },
       {
         "id": "peacock-green",
@@ -1928,27 +1240,13 @@
         "hex": "#00a496",
         "examLevel": 2,
         "munsell": "7.5BG 4.5/9",
-        "approximatePccs": [
-          {
-            "notation": "b14",
-            "deltaE": 2.35
-          }
-        ]
+        "approximatePccs": [{ "notation": "b14", "deltaE": 2.35 }]
       }
     ],
     "compareSections": [
-      {
-        "targets": ["apple-green", "mint-green"]
-      },
-      {
-        "targets": ["wakatake-iro", "seiji-iro"],
-        "hintPCCSHue": [12]
-      },
-      {
-        "targets": ["nile-blue", "peacock-green"],
-        "hintJIS": ["seiji-iro"],
-        "hintPCCSHue": [14]
-      }
+      { "targets": ["apple-green", "mint-green"] },
+      { "targets": ["wakatake-iro", "seiji-iro"], "hintPCCSHue": [12] },
+      { "targets": ["nile-blue", "peacock-green"], "hintJIS": ["seiji-iro"], "hintPCCSHue": [14] }
     ]
   },
   "dark-blue-green": {
@@ -1966,18 +1264,8 @@
         "examLevel": 3,
         "munsell": "4G 7/9",
         "approximatePccs": [
-          {
-            "notation": "sf12",
-            "deltaE": 5.77
-          },
-          {
-            "notation": "b13",
-            "deltaE": 5.91
-          },
-          {
-            "notation": "sf13",
-            "deltaE": 6.25
-          }
+          { "notation": "sf12", "deltaE": 5.77 },
+          { "notation": "b12", "deltaE": 7.35 }
         ]
       },
       {
@@ -1992,12 +1280,7 @@
         "hex": "#00aa6e",
         "examLevel": 3,
         "munsell": "4G 6/8",
-        "approximatePccs": [
-          {
-            "notation": "b12",
-            "deltaE": 4.03
-          }
-        ]
+        "approximatePccs": [{ "notation": "b12", "deltaE": 4.03 }]
       },
       {
         "id": "malachite-green",
@@ -2012,18 +1295,9 @@
         "examLevel": 2,
         "munsell": "4G 4.5/9",
         "approximatePccs": [
-          {
-            "notation": "b12",
-            "deltaE": 5.05
-          },
-          {
-            "notation": "v13",
-            "deltaE": 5.69
-          },
-          {
-            "notation": "s12",
-            "deltaE": 7.02
-          }
+          { "notation": "b12", "deltaE": 5.05 },
+          { "notation": "v13", "deltaE": 5.69 },
+          { "notation": "v12", "deltaE": 7.04 }
         ]
       },
       {
@@ -2038,18 +1312,8 @@
         "examLevel": 2,
         "munsell": "3G 4.5/7",
         "approximatePccs": [
-          {
-            "notation": "s13",
-            "deltaE": 3.93
-          },
-          {
-            "notation": "s12",
-            "deltaE": 5.01
-          },
-          {
-            "notation": "d13",
-            "deltaE": 5.11
-          }
+          { "notation": "dp12", "deltaE": 5.54 },
+          { "notation": "v13", "deltaE": 7.83 }
         ]
       },
       {
@@ -2064,18 +1328,8 @@
         "examLevel": 2,
         "munsell": "4G 5/4",
         "approximatePccs": [
-          {
-            "notation": "d12",
-            "deltaE": 5.4
-          },
-          {
-            "notation": "v13",
-            "deltaE": 6.47
-          },
-          {
-            "notation": "s12",
-            "deltaE": 7
-          }
+          { "notation": "d12", "deltaE": 5.4 },
+          { "notation": "v13", "deltaE": 6.47 }
         ]
       },
       {
@@ -2089,12 +1343,7 @@
         "hex": "#008969",
         "examLevel": 3,
         "munsell": "8G 4/6",
-        "approximatePccs": [
-          {
-            "notation": "v13",
-            "deltaE": 3.98
-          }
-        ]
+        "approximatePccs": [{ "notation": "v13", "deltaE": 3.98 }]
       },
       {
         "id": "bottle-green",
@@ -2109,14 +1358,8 @@
         "examLevel": 2,
         "munsell": "5G 2.5/3",
         "approximatePccs": [
-          {
-            "notation": "dk13",
-            "deltaE": 5.06
-          },
-          {
-            "notation": "dk12",
-            "deltaE": 6.48
-          }
+          { "notation": "dk12", "deltaE": 6.48 },
+          { "notation": "dp12", "deltaE": 9.26 }
         ]
       },
       {
@@ -2130,20 +1373,7 @@
         "hex": "#005242",
         "examLevel": 2,
         "munsell": "2.5BG 2.5/2.5",
-        "approximatePccs": [
-          {
-            "notation": "dk13",
-            "deltaE": 5.53
-          },
-          {
-            "notation": "dk14",
-            "deltaE": 5.7
-          },
-          {
-            "notation": "dp13",
-            "deltaE": 8.03
-          }
-        ]
+        "approximatePccs": [{ "notation": "dk14", "deltaE": 5.7 }]
       }
     ],
     "compareSections": [
@@ -2157,14 +1387,8 @@
         "hintJIS": ["emerald-green"],
         "hintPCCSHue": [12]
       },
-      {
-        "targets": ["rokusho-iro", "viridian"],
-        "hintJIS": ["tokiwa-iro"]
-      },
-      {
-        "targets": ["bottle-green", "tetsu-iro"],
-        "hintJIS": ["tokiwa-iro"]
-      }
+      { "targets": ["rokusho-iro", "viridian"], "hintJIS": ["tokiwa-iro"] },
+      { "targets": ["bottle-green", "tetsu-iro"], "hintJIS": ["tokiwa-iro"] }
     ]
   },
   "water-light-blue-green": {
@@ -2182,18 +1406,8 @@
         "examLevel": 3,
         "munsell": "10B 7.5/3",
         "approximatePccs": [
-          {
-            "notation": "p17",
-            "deltaE": 4.23
-          },
-          {
-            "notation": "p16",
-            "deltaE": 4.39
-          },
-          {
-            "notation": "p15",
-            "deltaE": 6.02
-          }
+          { "notation": "p16", "deltaE": 4.39 },
+          { "notation": "p18", "deltaE": 6.54 }
         ]
       },
       {
@@ -2208,18 +1422,8 @@
         "examLevel": 3,
         "munsell": "9B 7.5/5.5",
         "approximatePccs": [
-          {
-            "notation": "p17",
-            "deltaE": 5.76
-          },
-          {
-            "notation": "p16",
-            "deltaE": 6.44
-          },
-          {
-            "notation": "p18",
-            "deltaE": 6.93
-          }
+          { "notation": "p16", "deltaE": 6.44 },
+          { "notation": "p18", "deltaE": 6.93 }
         ]
       },
       {
@@ -2235,18 +1439,8 @@
         "examLevel": 3,
         "munsell": "9B 7.5/5.5",
         "approximatePccs": [
-          {
-            "notation": "p17",
-            "deltaE": 5.76
-          },
-          {
-            "notation": "p16",
-            "deltaE": 6.44
-          },
-          {
-            "notation": "p18",
-            "deltaE": 6.93
-          }
+          { "notation": "p16", "deltaE": 6.44 },
+          { "notation": "p18", "deltaE": 6.93 }
         ]
       },
       {
@@ -2260,16 +1454,7 @@
         "hex": "#a2d7dd",
         "examLevel": 2,
         "munsell": "4.5B 7/4",
-        "approximatePccs": [
-          {
-            "notation": "p15",
-            "deltaE": 3.24
-          },
-          {
-            "notation": "p16",
-            "deltaE": 4.26
-          }
-        ]
+        "approximatePccs": [{ "notation": "p16", "deltaE": 4.26 }]
       },
       {
         "id": "shinbashi-iro",
@@ -2282,16 +1467,7 @@
         "hex": "#64bcc7",
         "examLevel": 2,
         "munsell": "2.5B 6.5/5.5",
-        "approximatePccs": [
-          {
-            "notation": "lt15",
-            "deltaE": 4.83
-          },
-          {
-            "notation": "lt16",
-            "deltaE": 6.66
-          }
-        ]
+        "approximatePccs": [{ "notation": "lt16", "deltaE": 6.66 }]
       },
       {
         "id": "asagi-iro",
@@ -2304,20 +1480,7 @@
         "hex": "#00a1ae",
         "examLevel": 3,
         "munsell": "2.5B 5/8",
-        "approximatePccs": [
-          {
-            "notation": "b15",
-            "deltaE": 7.16
-          },
-          {
-            "notation": "sf15",
-            "deltaE": 7.38
-          },
-          {
-            "notation": "sf16",
-            "deltaE": 8.83
-          }
-        ]
+        "approximatePccs": [{ "notation": "sf16", "deltaE": 8.83 }]
       },
       {
         "id": "turquoise-blue",
@@ -2331,16 +1494,7 @@
         "hex": "#00afcc",
         "examLevel": 3,
         "munsell": "5B 6/8",
-        "approximatePccs": [
-          {
-            "notation": "lt16",
-            "deltaE": 5.79
-          },
-          {
-            "notation": "lt17",
-            "deltaE": 7.69
-          }
-        ]
+        "approximatePccs": [{ "notation": "lt16", "deltaE": 5.79 }]
       },
       {
         "id": "cyan",
@@ -2353,30 +1507,13 @@
         "hex": "#00a0e9",
         "examLevel": 3,
         "munsell": "7.5B 6/10",
-        "approximatePccs": [
-          {
-            "notation": "lt18",
-            "deltaE": 6.6
-          },
-          {
-            "notation": "lt17",
-            "deltaE": 8.64
-          }
-        ]
+        "approximatePccs": [{ "notation": "lt18", "deltaE": 6.6 }]
       }
     ],
     "compareSections": [
-      {
-        "targets": ["baby-blue", "sora-iro", "sky-blue", "kamenozoki"]
-      },
-      {
-        "targets": ["shinbashi-iro", "asagi-iro"],
-        "hintJIS": ["kamenozoki"]
-      },
-      {
-        "targets": ["turquoise-blue", "cyan"],
-        "hintPCCSHue": [16]
-      }
+      { "targets": ["baby-blue", "sora-iro", "sky-blue", "kamenozoki"] },
+      { "targets": ["shinbashi-iro", "asagi-iro"], "hintJIS": ["kamenozoki"] },
+      { "targets": ["turquoise-blue", "cyan"], "hintPCCSHue": [16] }
     ]
   },
   "blue-green": {
@@ -2392,12 +1529,7 @@
         "hex": "#007d92",
         "examLevel": 2,
         "munsell": "4B 4/6",
-        "approximatePccs": [
-          {
-            "notation": "v15",
-            "deltaE": 3.41
-          }
-        ]
+        "approximatePccs": [{ "notation": "v15", "deltaE": 3.41 }]
       },
       {
         "id": "marine-blue",
@@ -2411,12 +1543,7 @@
         "hex": "#006788",
         "examLevel": 3,
         "munsell": "5B 3/7",
-        "approximatePccs": [
-          {
-            "notation": "d16",
-            "deltaE": 2.62
-          }
-        ]
+        "approximatePccs": [{ "notation": "d16", "deltaE": 2.62 }]
       },
       {
         "id": "ai-iro",
@@ -2430,18 +1557,8 @@
         "examLevel": 3,
         "munsell": "2PB 3/5",
         "approximatePccs": [
-          {
-            "notation": "v16",
-            "deltaE": 2.81
-          },
-          {
-            "notation": "s16",
-            "deltaE": 3.69
-          },
-          {
-            "notation": "d16",
-            "deltaE": 3.81
-          }
+          { "notation": "v16", "deltaE": 2.81 },
+          { "notation": "d16", "deltaE": 3.81 }
         ]
       },
       {
@@ -2456,12 +1573,7 @@
         "hex": "#3a8daa",
         "examLevel": 2,
         "munsell": "1PB 5/4.5",
-        "approximatePccs": [
-          {
-            "notation": "b16",
-            "deltaE": 4.13
-          }
-        ]
+        "approximatePccs": [{ "notation": "b16", "deltaE": 4.13 }]
       },
       {
         "id": "hanada-iro",
@@ -2474,16 +1586,7 @@
         "hex": "#2980af",
         "examLevel": 2,
         "munsell": "3PB 4/7.5",
-        "approximatePccs": [
-          {
-            "notation": "b16",
-            "deltaE": 3.77
-          },
-          {
-            "notation": "b17",
-            "deltaE": 4.05
-          }
-        ]
+        "approximatePccs": [{ "notation": "b16", "deltaE": 3.77 }]
       },
       {
         "id": "cerulean-blue",
@@ -2497,12 +1600,7 @@
         "hex": "#008db7",
         "examLevel": 2,
         "munsell": "9B 4.5/9",
-        "approximatePccs": [
-          {
-            "notation": "b16",
-            "deltaE": 2.54
-          }
-        ]
+        "approximatePccs": [{ "notation": "b16", "deltaE": 2.54 }]
       },
       {
         "id": "cobalt-blue",
@@ -2516,24 +1614,12 @@
         "hex": "#0068b7",
         "examLevel": 3,
         "munsell": "3PB 4/10",
-        "approximatePccs": [
-          {
-            "notation": "b18",
-            "deltaE": 3.58
-          }
-        ]
+        "approximatePccs": [{ "notation": "b18", "deltaE": 3.58 }]
       }
     ],
     "compareSections": [
-      {
-        "targets": ["nando-iro", "marine-blue", "ai-iro"],
-        "hintJIS": ["asagi-iro"]
-      },
-      {
-        "targets": ["saxe-blue", "hanada-iro"],
-        "hintJIS": ["nando-iro"],
-        "hintPCCSHue": [18]
-      },
+      { "targets": ["nando-iro", "marine-blue", "ai-iro"], "hintJIS": ["asagi-iro"] },
+      { "targets": ["saxe-blue", "hanada-iro"], "hintJIS": ["nando-iro"], "hintPCCSHue": [18] },
       {
         "targets": ["cerulean-blue", "cobalt-blue"],
         "hintJIS": ["cyan", "nando-iro", "hanada-iro"]
@@ -2554,18 +1640,8 @@
         "examLevel": 3,
         "munsell": "7PB 4/10",
         "approximatePccs": [
-          {
-            "notation": "d20",
-            "deltaE": 6.04
-          },
-          {
-            "notation": "s18",
-            "deltaE": 6.91
-          },
-          {
-            "notation": "d21",
-            "deltaE": 7.05
-          }
+          { "notation": "d20", "deltaE": 6.04 },
+          { "notation": "sf20", "deltaE": 7.5 }
         ]
       },
       {
@@ -2580,14 +1656,9 @@
         "examLevel": 3,
         "munsell": "6PB 3/8",
         "approximatePccs": [
-          {
-            "notation": "s17",
-            "deltaE": 3.77
-          },
-          {
-            "notation": "d17",
-            "deltaE": 5.43
-          }
+          { "notation": "v17", "deltaE": 6.14 },
+          { "notation": "d18", "deltaE": 6.97 },
+          { "notation": "dp18", "deltaE": 7.79 }
         ]
       },
       {
@@ -2602,10 +1673,9 @@
         "examLevel": 3,
         "munsell": "7.5PB 3.5/11",
         "approximatePccs": [
-          {
-            "notation": "b19",
-            "deltaE": 1.29
-          }
+          { "notation": "b18", "deltaE": 4.68 },
+          { "notation": "sf18", "deltaE": 4.71 },
+          { "notation": "b20", "deltaE": 7.02 }
         ]
       },
       {
@@ -2621,18 +1691,9 @@
         "examLevel": 3,
         "munsell": "7.5PB 3.5/11",
         "approximatePccs": [
-          {
-            "notation": "sf19",
-            "deltaE": 5.82
-          },
-          {
-            "notation": "s17",
-            "deltaE": 6.2
-          },
-          {
-            "notation": "sf20",
-            "deltaE": 7.47
-          }
+          { "notation": "sf20", "deltaE": 7.47 },
+          { "notation": "sf18", "deltaE": 7.65 },
+          { "notation": "v17", "deltaE": 8.34 }
         ]
       },
       {
@@ -2648,10 +1709,9 @@
         "examLevel": 3,
         "munsell": "6PB 2.5/4",
         "approximatePccs": [
-          {
-            "notation": "dk19",
-            "deltaE": 2.37
-          }
+          { "notation": "dk18", "deltaE": 6.34 },
+          { "notation": "dk20", "deltaE": 6.6 },
+          { "notation": "dp20", "deltaE": 7.15 }
         ]
       },
       {
@@ -2667,33 +1727,16 @@
         "examLevel": 2,
         "munsell": "5PB 1.5/2",
         "approximatePccs": [
-          {
-            "notation": "dk19",
-            "deltaE": 5.72
-          },
-          {
-            "notation": "dp19",
-            "deltaE": 7.42
-          },
-          {
-            "notation": "dk18",
-            "deltaE": 8.37
-          }
+          { "notation": "dk18", "deltaE": 8.37 },
+          { "notation": "dp20", "deltaE": 8.56 },
+          { "notation": "dk20", "deltaE": 9.82 }
         ]
       }
     ],
     "compareSections": [
-      {
-        "targets": ["kakitsubata-iro", "ruri-iro"]
-      },
-      {
-        "targets": ["gunjo-iro", "ultramarine-blue"],
-        "hintJIS": ["kakitsubata-iro", "lavender"]
-      },
-      {
-        "targets": ["navy-blue", "midnight-blue"],
-        "hintJIS": ["ruri-iro"]
-      }
+      { "targets": ["kakitsubata-iro", "ruri-iro"] },
+      { "targets": ["gunjo-iro", "ultramarine-blue"], "hintJIS": ["kakitsubata-iro", "lavender"] },
+      { "targets": ["navy-blue", "midnight-blue"], "hintJIS": ["ruri-iro"] }
     ]
   },
   "light-purple-blue-purple": {
@@ -2709,12 +1752,7 @@
         "hex": "#d1bada",
         "examLevel": 2,
         "munsell": "6P 7/6",
-        "approximatePccs": [
-          {
-            "notation": "p22",
-            "deltaE": 2.31
-          }
-        ]
+        "approximatePccs": [{ "notation": "p22", "deltaE": 2.31 }]
       },
       {
         "id": "lavender",
@@ -2727,16 +1765,7 @@
         "hex": "#c5b3d3",
         "examLevel": 3,
         "munsell": "5P 6/3",
-        "approximatePccs": [
-          {
-            "notation": "p22",
-            "deltaE": 2.02
-          },
-          {
-            "notation": "p21",
-            "deltaE": 2.99
-          }
-        ]
+        "approximatePccs": [{ "notation": "p22", "deltaE": 2.02 }]
       },
       {
         "id": "fuji-iro",
@@ -2749,16 +1778,7 @@
         "hex": "#bbb7da",
         "examLevel": 2,
         "munsell": "10PB 6.5/6.5",
-        "approximatePccs": [
-          {
-            "notation": "p21",
-            "deltaE": 2.36
-          },
-          {
-            "notation": "p20",
-            "deltaE": 3.09
-          }
-        ]
+        "approximatePccs": [{ "notation": "p20", "deltaE": 3.09 }]
       },
       {
         "id": "wistaria",
@@ -2771,12 +1791,7 @@
         "hex": "#8e8bc2",
         "examLevel": 2,
         "munsell": "10PB 5/12",
-        "approximatePccs": [
-          {
-            "notation": "lt20",
-            "deltaE": 4.83
-          }
-        ]
+        "approximatePccs": [{ "notation": "lt20", "deltaE": 4.83 }]
       },
       {
         "id": "violet",
@@ -2790,18 +1805,9 @@
         "examLevel": 3,
         "munsell": "2.5P 4/11",
         "approximatePccs": [
-          {
-            "notation": "sf21",
-            "deltaE": 5.03
-          },
-          {
-            "notation": "sf20",
-            "deltaE": 6.74
-          },
-          {
-            "notation": "b21",
-            "deltaE": 6.77
-          }
+          { "notation": "sf20", "deltaE": 6.74 },
+          { "notation": "b20", "deltaE": 8.18 },
+          { "notation": "d22", "deltaE": 9.75 }
         ]
       },
       {
@@ -2816,33 +1822,15 @@
         "examLevel": 3,
         "munsell": "9PB 3.5/13",
         "approximatePccs": [
-          {
-            "notation": "sf20",
-            "deltaE": 4.31
-          },
-          {
-            "notation": "sf19",
-            "deltaE": 4.53
-          },
-          {
-            "notation": "b20",
-            "deltaE": 6.1
-          }
+          { "notation": "sf20", "deltaE": 4.31 },
+          { "notation": "b20", "deltaE": 6.1 }
         ]
       }
     ],
     "compareSections": [
-      {
-        "targets": ["lilac", "lavender"]
-      },
-      {
-        "targets": ["fuji-iro", "wistaria"],
-        "hintJIS": ["lilac"]
-      },
-      {
-        "targets": ["violet", "kikyo-iro"],
-        "hintJIS": ["wistaria"]
-      }
+      { "targets": ["lilac", "lavender"] },
+      { "targets": ["fuji-iro", "wistaria"], "hintJIS": ["lilac"] },
+      { "targets": ["violet", "kikyo-iro"], "hintJIS": ["wistaria"] }
     ]
   },
   "dark-purple-red-purple": {
@@ -2859,14 +1847,8 @@
         "examLevel": 3,
         "munsell": "10P 6/10",
         "approximatePccs": [
-          {
-            "notation": "lt23",
-            "deltaE": 3.95
-          },
-          {
-            "notation": "lt24",
-            "deltaE": 5.88
-          }
+          { "notation": "lt24", "deltaE": 5.88 },
+          { "notation": "lt22", "deltaE": 7.6 }
         ]
       },
       {
@@ -2881,18 +1863,8 @@
         "examLevel": 3,
         "munsell": "7.5P 5/12",
         "approximatePccs": [
-          {
-            "notation": "b22",
-            "deltaE": 4.67
-          },
-          {
-            "notation": "lt22",
-            "deltaE": 5.65
-          },
-          {
-            "notation": "lt21",
-            "deltaE": 6.13
-          }
+          { "notation": "b22", "deltaE": 4.67 },
+          { "notation": "lt22", "deltaE": 5.65 }
         ]
       },
       {
@@ -2906,16 +1878,7 @@
         "hex": "#915da3",
         "examLevel": 3,
         "munsell": "5P 4.5/9",
-        "approximatePccs": [
-          {
-            "notation": "b21",
-            "deltaE": 4.06
-          },
-          {
-            "notation": "b22",
-            "deltaE": 4.13
-          }
-        ]
+        "approximatePccs": [{ "notation": "b22", "deltaE": 4.13 }]
       },
       {
         "id": "kodai-murasaki",
@@ -2928,12 +1891,7 @@
         "hex": "#895687",
         "examLevel": 2,
         "munsell": "7.5P 4/6",
-        "approximatePccs": [
-          {
-            "notation": "sf22",
-            "deltaE": 0.59
-          }
-        ]
+        "approximatePccs": [{ "notation": "sf22", "deltaE": 0.59 }]
       },
       {
         "id": "edomurasaki",
@@ -2947,10 +1905,9 @@
         "examLevel": 2,
         "munsell": "3P 3.5/7",
         "approximatePccs": [
-          {
-            "notation": "sf21",
-            "deltaE": 3.64
-          }
+          { "notation": "sf20", "deltaE": 7.35 },
+          { "notation": "sf22", "deltaE": 8.66 },
+          { "notation": "d22", "deltaE": 8.95 }
         ]
       },
       {
@@ -2965,37 +1922,17 @@
         "examLevel": 3,
         "munsell": "7.5P 2.5/2.5",
         "approximatePccs": [
-          {
-            "notation": "dp22",
-            "deltaE": 6.44
-          },
-          {
-            "notation": "dp23",
-            "deltaE": 7.07
-          },
-          {
-            "notation": "dk23",
-            "deltaE": 7.15
-          }
+          { "notation": "dp22", "deltaE": 6.44 },
+          { "notation": "dk22", "deltaE": 7.42 },
+          { "notation": "g20", "deltaE": 9.22 }
         ]
       }
     ],
     "compareSections": [
-      {
-        "targets": ["ayame-iro"],
-        "hintJIS": ["purple"]
-      },
-      {
-        "targets": ["purple", "mauve"],
-        "hintJIS": ["violet"]
-      },
-      {
-        "targets": ["kodai-murasaki", "edomurasaki"],
-        "hintJIS": ["purple", "violet"]
-      },
-      {
-        "targets": ["nasukon"]
-      }
+      { "targets": ["ayame-iro"], "hintJIS": ["purple"] },
+      { "targets": ["purple", "mauve"], "hintJIS": ["violet"] },
+      { "targets": ["kodai-murasaki", "edomurasaki"], "hintJIS": ["purple", "violet"] },
+      { "targets": ["nasukon"] }
     ]
   },
   "off-neutral": {
@@ -3011,12 +1948,7 @@
         "hex": "#fbfaf3",
         "examLevel": 3,
         "munsell": "10YR 9/1",
-        "approximatePccs": [
-          {
-            "notation": "W",
-            "deltaE": 3.58
-          }
-        ]
+        "approximatePccs": [{ "notation": "W", "deltaE": 3.58 }]
       },
       {
         "id": "ivory",
@@ -3030,14 +1962,8 @@
         "examLevel": 3,
         "munsell": "2.5Y 8.5/1.5",
         "approximatePccs": [
-          {
-            "notation": "W",
-            "deltaE": 8.13
-          },
-          {
-            "notation": "Gy-9.0",
-            "deltaE": 8.67
-          }
+          { "notation": "W", "deltaE": 8.13 },
+          { "notation": "Gy-9.0", "deltaE": 8.67 }
         ]
       },
       {
@@ -3052,18 +1978,9 @@
         "examLevel": 2,
         "munsell": "5YR 6/1",
         "approximatePccs": [
-          {
-            "notation": "Gy-6.5",
-            "deltaE": 6.66
-          },
-          {
-            "notation": "Gy-7.0",
-            "deltaE": 7.73
-          },
-          {
-            "notation": "Gy-6.0",
-            "deltaE": 7.79
-          }
+          { "notation": "Gy-6.5", "deltaE": 6.66 },
+          { "notation": "Gy-7.0", "deltaE": 7.73 },
+          { "notation": "Gy-6.0", "deltaE": 7.79 }
         ]
       },
       {
@@ -3078,28 +1995,15 @@
         "examLevel": 2,
         "munsell": "2.5G 5/1",
         "approximatePccs": [
-          {
-            "notation": "g9",
-            "deltaE": 7.41
-          },
-          {
-            "notation": "Gy-5.0",
-            "deltaE": 8.17
-          },
-          {
-            "notation": "Gy-5.5",
-            "deltaE": 8.29
-          }
+          { "notation": "Gy-5.0", "deltaE": 8.17 },
+          { "notation": "Gy-5.5", "deltaE": 8.29 },
+          { "notation": "g10", "deltaE": 8.86 }
         ]
       }
     ],
     "compareSections": [
-      {
-        "targets": ["kinari-iro", "ivory"]
-      },
-      {
-        "targets": ["chanezu", "rikyunezu"]
-      }
+      { "targets": ["kinari-iro", "ivory"] },
+      { "targets": ["chanezu", "rikyunezu"] }
     ]
   },
   "neutral-gray": {
@@ -3115,12 +2019,7 @@
         "hex": "#afafb0",
         "examLevel": 2,
         "munsell": "N6.5",
-        "approximatePccs": [
-          {
-            "notation": "Gy-7.0",
-            "deltaE": 0.82
-          }
-        ]
+        "approximatePccs": [{ "notation": "Gy-7.0", "deltaE": 0.82 }]
       },
       {
         "id": "silver-grey",
@@ -3134,12 +2033,7 @@
         "hex": "#afafb0",
         "examLevel": 3,
         "munsell": "N6.5",
-        "approximatePccs": [
-          {
-            "notation": "Gy-7.0",
-            "deltaE": 0.82
-          }
-        ]
+        "approximatePccs": [{ "notation": "Gy-7.0", "deltaE": 0.82 }]
       },
       {
         "id": "slate-grey",
@@ -3153,12 +2047,7 @@
         "hex": "#636062",
         "examLevel": 2,
         "munsell": "2.5PB 3.5/0.5",
-        "approximatePccs": [
-          {
-            "notation": "Gy-4.0",
-            "deltaE": 2.39
-          }
-        ]
+        "approximatePccs": [{ "notation": "Gy-4.0", "deltaE": 2.39 }]
       },
       {
         "id": "charcoal-grey",
@@ -3173,18 +2062,9 @@
         "examLevel": 3,
         "munsell": "5P 3/1",
         "approximatePccs": [
-          {
-            "notation": "Gy-3.0",
-            "deltaE": 6.82
-          },
-          {
-            "notation": "dkg6",
-            "deltaE": 7.29
-          },
-          {
-            "notation": "dkg24",
-            "deltaE": 7.49
-          }
+          { "notation": "Gy-3.0", "deltaE": 6.82 },
+          { "notation": "dkg6", "deltaE": 7.29 },
+          { "notation": "dkg24", "deltaE": 7.49 }
         ]
       },
       {
@@ -3200,31 +2080,16 @@
         "examLevel": 2,
         "munsell": "N1",
         "approximatePccs": [
-          {
-            "notation": "dkg4",
-            "deltaE": 8.15
-          },
-          {
-            "notation": "dkg3",
-            "deltaE": 8.25
-          },
-          {
-            "notation": "dkg2",
-            "deltaE": 8.8
-          }
+          { "notation": "dkg4", "deltaE": 8.15 },
+          { "notation": "dkg2", "deltaE": 8.8 },
+          { "notation": "dkg24", "deltaE": 9.78 }
         ]
       }
     ],
     "compareSections": [
-      {
-        "targets": ["ginnezu", "silver-grey"]
-      },
-      {
-        "targets": ["slate-grey", "charcoal-grey"]
-      },
-      {
-        "targets": ["lamp-black"]
-      }
+      { "targets": ["ginnezu", "silver-grey"] },
+      { "targets": ["slate-grey", "charcoal-grey"] },
+      { "targets": ["lamp-black"] }
     ]
   }
 }
