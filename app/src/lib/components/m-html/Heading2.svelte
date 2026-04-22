@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { getContext, type Snippet } from "svelte"
+  import { type Snippet } from "svelte"
   import GradeTag from "../m-directive/GradeTag.svelte"
   import { type AftGradeCSV, gradeCSV2Array } from "$lib/meta/grade"
+  import { ankiMode } from "$lib/state/anki.svelte"
 
   let {
     children,
@@ -9,8 +10,7 @@
     grades = ""
   }: { children?: Snippet; title?: string; grades?: string } = $props()
 
-  const ankiCtx = getContext<{ isAnki: boolean } | undefined>("anki-mode")
-  const isAnki = $derived(ankiCtx?.isAnki)
+  const isAnki = $derived(ankiMode.isAnki)
   const dummyText = $derived("X".repeat(title.length))
   const gradeList = $derived(grades ? gradeCSV2Array(grades as AftGradeCSV) : [])
 </script>

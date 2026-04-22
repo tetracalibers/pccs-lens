@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { getContext, type Snippet } from "svelte"
+  import { type Snippet } from "svelte"
+  import { ankiMode } from "$lib/state/anki.svelte"
 
   let { children, title = "" }: { children?: Snippet; title?: string } = $props()
 
-  const ankiCtx = getContext<{ isAnki: boolean } | undefined>("anki-mode")
-  const isAnki = $derived(ankiCtx?.isAnki)
+  const isAnki = $derived(ankiMode.isAnki)
   const dummyText = $derived("X".repeat(title.length))
 </script>
 

@@ -1,13 +1,11 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
-  import { getContext } from "svelte"
+  import { ankiMode } from "$lib/state/anki.svelte"
 
   let { children }: { children?: Snippet } = $props()
-
-  const ankiCtx = getContext<{ isAnki: boolean } | undefined>("anki-mode")
 </script>
 
-<span class="mark" class:anki={ankiCtx?.isAnki}>
+<span class="mark" class:anki={ankiMode.isAnki}>
   {@render children?.()}
 </span>
 
