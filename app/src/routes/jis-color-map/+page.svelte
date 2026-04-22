@@ -41,7 +41,7 @@
 
   <section class="section">
     <h2 class="section-heading">比較して覚える</h2>
-    <p class="section-desc">似た色を比較して覚えよう</p>
+    <p class="section-desc">似ている色を比べて覚えよう</p>
     <div class="grid">
       {#each familyCards as card (card.family.id)}
         <FamilyCard {...card} />
@@ -51,7 +51,7 @@
 
   <section class="section">
     <h2 class="section-heading">一覧で覚える</h2>
-    <p class="section-desc">名前の由来やPCCS近似値など、色の詳細を学ぼう</p>
+    <p class="section-desc">名前の由来やPCCS近似色など、色の詳細を学ぼう</p>
     <JisColorAllListCard checkerColors={allListCheckerColors} />
   </section>
 </main>
