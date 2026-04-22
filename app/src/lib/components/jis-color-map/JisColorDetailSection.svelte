@@ -5,8 +5,8 @@
   import { JIS_COLOR_ICON_MAP, type JISColorIconKey } from "$lib/data/jis-color-icon"
   import { PCCS_ALL_MAP } from "$lib/data/pccs"
   import type { PCCSColor } from "$lib/data/types"
-  import PccsSwatch from "./PccsSwatch.svelte"
   import JisExamLevelBadge from "./JisExamLevelBadge.svelte"
+  import PCCSColorSwatch from "$lib/demo/PCCSColor.svelte"
 
   interface Props {
     family: JISColorFamily
@@ -53,9 +53,7 @@
             {#if pccsList.length > 0}
               <div class="pccs-list">
                 {#each pccsList as pccs (pccs.notation)}
-                  <div class="pccs-cell">
-                    <PccsSwatch {pccs} compact />
-                  </div>
+                  <PCCSColorSwatch pccs={pccs.notation} />
                 {/each}
               </div>
             {/if}
@@ -127,7 +125,7 @@
   }
 
   .swatch {
-    width: 2.5rem;
+    width: 5rem;
     height: 2.5rem;
     border-radius: 6px;
     border: 1px solid var(--color-border, #d0d0d0);
@@ -141,11 +139,9 @@
   }
 
   .name-row {
-    display: flex;
-    align-items: baseline;
+    display: grid;
     column-gap: 0.6rem;
     row-gap: 0.15rem;
-    flex-wrap: wrap;
   }
 
   .color-name {
@@ -156,19 +152,15 @@
   }
 
   .reading {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     opacity: 0.8;
   }
 
   .pccs-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-  }
-
-  .pccs-cell {
-    width: 2.25rem;
-    height: 2.25rem;
+    display: grid;
+    gap: 2px;
+    grid-auto-flow: column;
+    grid-template-columns: 1fr 1fr 1fr;
   }
 
   .entry-detail {
