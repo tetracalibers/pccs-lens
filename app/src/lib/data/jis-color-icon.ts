@@ -118,7 +118,7 @@ const JIS_COLOR_ICON = {
   //
 
   // 空
-  sky: "arcticons:clear-outside",
+  sky: "fluent:weather-sunny-high-20-regular",
   // 太陽
   sun: "streamline-ultimate:mist-sun-bold",
   // 月
@@ -147,7 +147,7 @@ const JIS_COLOR_ICON = {
   stamp: "temaki:stamp",
 
   // 絵の具
-  artPaint: "pepicons-pop:paint-pallet-circle-filled",
+  artPaint: "pepicons-pencil:paint-pallet",
   // 塗料
   paint: "game-icons:paint-bucket",
 
