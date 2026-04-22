@@ -57,10 +57,13 @@ app/
 │   │   │   │   ├── FamilyCard.svelte              ファミリー別リンクカード
 │   │   │   │   ├── HintJisColorSwatch.svelte      ミニマップ用参考慣用色スウォッチ（正六角形）
 │   │   │   │   ├── HueCompareDiagram.svelte       色み比較図（比較セクション用）
+│   │   │   │   ├── JisColorAllListCard.svelte     全一覧リンクカード（7色チェッカー模様）
 │   │   │   │   ├── JisColorCompareSection.svelte  慣用色比較セクション本体
+│   │   │   │   ├── JisColorDetailSection.svelte   慣用色名詳細セクション（全一覧ページ用）
 │   │   │   │   ├── JisColorMap.svelte             慣用色名マップ
 │   │   │   │   ├── JisColorNameTooltip.svelte     色名ポップオーバー（Popover API + Anchor Positioning）
 │   │   │   │   ├── JisColorSwatch.svelte          慣用色スウォッチ
+│   │   │   │   ├── JisExamLevelBadge.svelte       級タグバッジ（2級/3級）
 │   │   │   │   ├── JisMiniColorMap.svelte         慣用色名ミニマップ（比較セクション内）
 │   │   │   │   ├── PccsSwatch.svelte              PCCS色相ヒントスウォッチ
 │   │   │   │   ├── ValueCompareDiagram.svelte     明度比較図（比較セクション用）
@@ -141,6 +144,8 @@ app/
 │   │   │   ├── family-checker.ts   ファミリーカード市松模様用2色ランダム選出
 │   │   │   ├── family-copy.ts      ファミリー説明文辞書・代表HEX辞書
 │   │   │   ├── layout.ts           マップのグリッドレイアウト計算（JisColorMap/JisMiniColorMapで共用）
+│   │   │   ├── sort.ts             慣用色の並び順ロジック（マンセル色相順・明度降順・彩度降順）
+│   │   │   ├── sort.spec.ts
 │   │   │   └── types.ts            マップ関連の型定義
 │   │   ├── layouts/                レイアウトコンポーネント
 │   │   │   ├── guide-content.svelte    ガイドコンテンツページ用レイアウト
@@ -214,8 +219,11 @@ app/
 │   │   ├── jis-color-map/          機能4：慣用色名マップ（/jis-color-map）
 │   │   │   ├── +page.svelte        ファミリー一覧ページ
 │   │   │   ├── +page.ts
-│   │   │   └── [family]/
-│   │   │       ├── +page.svelte    色みごとのマップページ（比較セクション含む）
+│   │   │   ├── [family]/
+│   │   │   │   ├── +page.svelte    色みごとのマップページ（比較セクション含む）
+│   │   │   │   └── +page.ts
+│   │   │   └── all/
+│   │   │       ├── +page.svelte    慣用色名 全一覧ページ（マンセル色相順）
 │   │   │       └── +page.ts
 │   │   └── patterns/
 │   │       ├── +page.svelte        機能3：配色パターン一覧（/patterns）
