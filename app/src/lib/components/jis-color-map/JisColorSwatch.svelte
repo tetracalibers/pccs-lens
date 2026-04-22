@@ -2,13 +2,13 @@
   import { isLightColor } from "$lib/color/utils"
   import type { JISColor } from "$lib/data/jis-colors"
 
-  let {
-    colors,
-    pccs
-  }: {
+  interface Props {
     colors: JISColor[]
     pccs?: { symbol: string; hex: string }
-  } = $props()
+    hideLabel?: boolean
+  }
+
+  let { colors, pccs, hideLabel = false }: Props = $props()
 
   const bgHex = $derived(colors[0].hex)
   const textColor = $derived(isLightColor(bgHex) ? "#333" : "#fff")
@@ -37,7 +37,12 @@
   const title = $derived(colors.map((c) => `${c.name}（${c.reading}）`).join(" / "))
 </script>
 
-<div class="cell">
+<div class="cell" class:--_hide-label={hideLabel}>
+  {#if pccs}
+    <div class="pccs" style:background-color={pccs.hex}>
+      <span class="pccs-symbol" style:color={pccsTextColor}>{pccs.symbol}</span>
+    </div>
+  {/if}
   {#if pccs}
     <div class="pccs" style:background-color={pccs.hex}>
       <span class="pccs-symbol" style:color={pccsTextColor}>{pccs.symbol}</span>
@@ -120,5 +125,9 @@
   .name {
     overflow: hidden;
     overflow-wrap: break-word;
+  }
+
+  .--_hide-label .name {
+    display: none;
   }
 </style>

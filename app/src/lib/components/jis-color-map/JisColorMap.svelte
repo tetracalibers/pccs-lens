@@ -6,11 +6,14 @@
   import ValueSwatch from "./ValueSwatch.svelte"
   import JisColorSwatch from "./JisColorSwatch.svelte"
   import PccsSwatch from "./PccsSwatch.svelte"
+  import { ankiMode } from "$lib/state/anki.svelte"
 
   let { groupId }: { groupId: JISColorGroupId } = $props()
 
   const data = $derived(buildJisColorMap(groupId))
   const layout = $derived(buildMapLayout(data))
+
+  const isAnki = $derived(ankiMode.isAnki)
 </script>
 
 <div class="scroll">
@@ -58,7 +61,7 @@
                 hex: p.cell.pccsHint.hex
               }
             : undefined}
-          <JisColorSwatch colors={p.cell.colors} {pccs} />
+          <JisColorSwatch colors={p.cell.colors} {pccs} hideLabel={isAnki} />
         {:else}
           <PccsSwatch pccs={p.cell.pccs} />
         {/if}
