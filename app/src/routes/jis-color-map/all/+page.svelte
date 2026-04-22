@@ -8,35 +8,27 @@
     JIS_COLOR_FAMILIES,
     JIS_COLORS_BY_GROUP,
     getSortedAllJisColors,
-    type ColorFamily,
-    type JISColor
+    type JISColorFamily
   } from "$lib/data/jis-colors"
   import { JIS_COLOR_ICON_MAP, type JISColorIconKey } from "$lib/data/jis-color-icon"
 
   const sortedColors = getSortedAllJisColors()
 
-  const familyIdByColorId = (() => {
-    const map = new SvelteMap<string, ColorFamily>()
+  const familyByColorId = (() => {
+    const map = new SvelteMap<string, JISColorFamily>()
     for (const family of JIS_COLOR_FAMILIES) {
       const colors = JIS_COLORS_BY_GROUP.get(family.id) ?? []
       for (const color of colors) {
-        map.set(color.id, family.id)
+        map.set(color.id, family)
       }
     }
     return map
   })()
 
-  const sortedColorsByFamily = (() => {
-    const map = new SvelteMap<ColorFamily, JISColor[]>()
-    for (const family of JIS_COLOR_FAMILIES) {
-      map.set(family.id, [])
-    }
-    for (const color of sortedColors) {
-      const familyId = familyIdByColorId.get(color.id)
-      if (familyId) map.get(familyId)?.push(color)
-    }
-    return map
-  })()
+  const entries = sortedColors.flatMap((jisColor) => {
+    const family = familyByColorId.get(jisColor.id)
+    return family ? [{ jisColor, family }] : []
+  })
 
   const crumbs = [{ label: "慣用色名マップ", href: resolve("/jis-color-map") }, { label: "すべて" }]
 
@@ -68,17 +60,7 @@
       {/each}
     </nav>
 
-    <div class="family-sections">
-      {#each JIS_COLOR_FAMILIES as family (family.id)}
-        {@const familyColors = sortedColorsByFamily.get(family.id) ?? []}
-        {#if familyColors.length > 0}
-          <section class="family-section">
-            <h2>{family.name}</h2>
-            <JisColorDetailSection {family} jisColors={familyColors} />
-          </section>
-        {/if}
-      {/each}
-    </div>
+    <JisColorDetailSection {entries} />
   </div>
 </main>
 
@@ -133,23 +115,5 @@
   .icon {
     font-size: 1.5rem;
     display: inline-flex;
-  }
-
-  .family-sections {
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
-  }
-
-  .family-section {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .family-section h2 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin: 0;
   }
 </style>

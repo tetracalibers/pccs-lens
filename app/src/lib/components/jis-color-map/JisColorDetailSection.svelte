@@ -9,11 +9,10 @@
   import PCCSColorSwatch from "$lib/demo/PCCSColor.svelte"
 
   interface Props {
-    family: JISColorFamily
-    jisColors: JISColor[]
+    entries: { jisColor: JISColor; family: JISColorFamily }[]
   }
 
-  let { family, jisColors }: Props = $props()
+  let { entries }: Props = $props()
 
   const splitOriginDescription = (text: string): string[] => {
     if (!text) return []
@@ -30,7 +29,7 @@
 </script>
 
 <div class="entries">
-  {#each jisColors as jisColor (jisColor.id)}
+  {#each entries as { jisColor, family } (jisColor.id)}
     {@const iconId = resolveIconId(jisColor.iconKey)}
     {@const pccsList = resolvePccsList(jisColor)}
     {@const originSegments = splitOriginDescription(jisColor.originDescription)}
