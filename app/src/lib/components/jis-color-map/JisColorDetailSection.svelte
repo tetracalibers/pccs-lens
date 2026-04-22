@@ -281,6 +281,7 @@
     .entry-identity {
       display: grid;
       column-gap: 0.5rem;
+      row-gap: 1.25rem;
       grid-template-columns: subgrid;
       grid-column: 1 / -1;
       height: 100%;
@@ -317,10 +318,13 @@
     .pccs-list {
       grid-column: 3;
       grid-row: 1;
+      padding-inline-start: 0.25rem;
     }
 
     .entry-detail {
       grid-column: 2 / -1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
     }
 
     .entry-category {
