@@ -16,9 +16,9 @@
   </div>
   <div class="card-body">
     <div class="card-title">
-      <span class="label-ja">慣用色名 全一覧</span>
+      <span class="label-ja">すべての慣用色名</span>
     </div>
-    <p class="card-desc">由来やPCCS近似値など、色の詳細を学ぼう</p>
+    <p class="card-desc">色彩検定で登場する慣用色名一覧</p>
   </div>
 </a>
 
@@ -53,6 +53,13 @@
 
   .checker-cell {
     display: block;
+  }
+
+  .checker-cell:nth-child(6) {
+    grid-column: 1;
+  }
+  .checker-cell:nth-child(7) {
+    grid-column: 3;
   }
 
   .card-body {

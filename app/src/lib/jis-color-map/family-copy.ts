@@ -1,13 +1,17 @@
 import type { ColorFamily } from "$lib/data/jis-colors"
 
+const formatFamilyDescription = (familyName: string): string => {
+  return `${familyName}の慣用色名マップ`
+}
+
 export const FAMILY_DESCRIPTIONS: Record<ColorFamily, string> = {
-  red: "赤系の慣用色",
-  brown: "茶系の慣用色",
-  yellow: "黄系の慣用色",
-  green: "緑系の慣用色",
-  blue: "青系の慣用色",
-  purple: "紫系の慣用色",
-  neutral: "無彩色・準無彩色の慣用色"
+  red: formatFamilyDescription("赤系"),
+  brown: formatFamilyDescription("茶系"),
+  yellow: formatFamilyDescription("黄系"),
+  green: formatFamilyDescription("緑系"),
+  blue: formatFamilyDescription("青系"),
+  purple: formatFamilyDescription("紫系"),
+  neutral: formatFamilyDescription("無彩色・準無彩色")
 }
 
 // 彩度比較図のグラデーション終端用の代表 HEX（高彩度側の色）

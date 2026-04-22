@@ -38,21 +38,21 @@
     return map
   })()
 
-  const crumbs = [{ label: "慣用色名マップ", href: resolve("/jis-color-map") }, { label: "全一覧" }]
+  const crumbs = [{ label: "慣用色名マップ", href: resolve("/jis-color-map") }, { label: "すべて" }]
 
   const resolveIconId = (iconKey: string): string | undefined =>
     JIS_COLOR_ICON_MAP.get(iconKey as JISColorIconKey)
 </script>
 
 <svelte:head>
-  <title>慣用色名 全一覧 — PCCS Lens</title>
+  <title>すべての慣用色名一覧 — PCCS Lens</title>
 </svelte:head>
 
 <main>
   <div class="main-inner">
     <div class="header">
       <Breadcrumb {crumbs} category="contents" />
-      <h1>慣用色名 全一覧</h1>
+      <h1>すべての慣用色名一覧</h1>
     </div>
 
     <nav class="icon-index" aria-label="慣用色名インデックス">
