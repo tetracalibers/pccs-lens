@@ -119,8 +119,6 @@ const JIS_COLOR_ICON = {
 
   // 空
   sky: "fluent:weather-sunny-high-20-regular",
-  // 太陽
-  sun: "streamline-ultimate:mist-sun-bold",
   // 月
   moon: "game-icons:moon",
   // 川
