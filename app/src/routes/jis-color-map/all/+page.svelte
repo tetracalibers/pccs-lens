@@ -86,7 +86,7 @@
   }
 
   main {
-    max-width: 960px;
+    max-width: min(800px, 95cqw);
     margin: 0 auto;
     padding-inline: 1rem;
   }
@@ -136,6 +136,7 @@
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
+    margin-inline: -1rem;
   }
 
   .family-section {

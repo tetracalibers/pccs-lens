@@ -131,6 +131,7 @@
 
   .swatch {
     height: 100%;
+    max-height: 100px;
     min-width: 5rem;
     aspect-ratio: 1;
     border-radius: 6px;
@@ -230,8 +231,8 @@
     justify-self: end;
   }
 
-  @media (max-width: 640px) {
-    .entry {
+  @media (max-width: 760px) {
+    .entries {
       grid-template-columns: 1fr;
       row-gap: 0.75rem;
     }
