@@ -117,6 +117,8 @@
     display: grid;
     height: 100%;
     align-content: space-between;
+    justify-content: flex-end;
+    justify-items: flex-end;
   }
 
   .icon-swatch-row {
@@ -258,10 +260,6 @@
   .compare-link:hover {
     text-decoration: underline;
     text-underline-offset: 4px;
-  }
-
-  .exam-level {
-    justify-self: end;
   }
 
   @media (max-width: 760px) {
