@@ -49,34 +49,36 @@
 </svelte:head>
 
 <main>
-  <div class="header">
-    <Breadcrumb {crumbs} category="contents" />
-    <h1>慣用色名 全一覧</h1>
-  </div>
+  <div class="main-inner">
+    <div class="header">
+      <Breadcrumb {crumbs} category="contents" />
+      <h1>慣用色名 全一覧</h1>
+    </div>
 
-  <nav class="icon-index" aria-label="慣用色名インデックス">
-    {#each sortedColors as jisColor (jisColor.id)}
-      {@const iconId = resolveIconId(jisColor.iconKey)}
-      {#if iconId}
-        <a href="#{jisColor.id}" class="icon-anchor" aria-label={jisColor.name}>
-          <span class="icon" style:color={jisColor.hex} aria-hidden="true">
-            <Icon icon={iconId} />
-          </span>
-        </a>
-      {/if}
-    {/each}
-  </nav>
+    <nav class="icon-index" aria-label="慣用色名インデックス">
+      {#each sortedColors as jisColor (jisColor.id)}
+        {@const iconId = resolveIconId(jisColor.iconKey)}
+        {#if iconId}
+          <a href="#{jisColor.id}" class="icon-anchor" aria-label={jisColor.name}>
+            <span class="icon" style:color={jisColor.hex} aria-hidden="true">
+              <Icon icon={iconId} />
+            </span>
+          </a>
+        {/if}
+      {/each}
+    </nav>
 
-  <div class="family-sections">
-    {#each JIS_COLOR_FAMILIES as family (family.id)}
-      {@const familyColors = sortedColorsByFamily.get(family.id) ?? []}
-      {#if familyColors.length > 0}
-        <section class="family-section">
-          <h2>{family.name}</h2>
-          <JisColorDetailSection {family} jisColors={familyColors} />
-        </section>
-      {/if}
-    {/each}
+    <div class="family-sections">
+      {#each JIS_COLOR_FAMILIES as family (family.id)}
+        {@const familyColors = sortedColorsByFamily.get(family.id) ?? []}
+        {#if familyColors.length > 0}
+          <section class="family-section">
+            <h2>{family.name}</h2>
+            <JisColorDetailSection {family} jisColors={familyColors} />
+          </section>
+        {/if}
+      {/each}
+    </div>
   </div>
 </main>
 
@@ -91,6 +93,10 @@
     padding-inline: 1rem;
   }
 
+  .main-inner {
+    margin-inline: -1rem;
+  }
+
   .header {
     margin-bottom: 1.5rem;
   }
@@ -102,12 +108,9 @@
   }
 
   .icon-index {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
     gap: 0.5rem;
-    padding: 1rem;
-    border: 1px solid var(--color-border, #e0e0e0);
-    border-radius: 8px;
     margin-bottom: 2.5rem;
   }
 
@@ -136,7 +139,6 @@
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
-    margin-inline: -1rem;
   }
 
   .family-section {
