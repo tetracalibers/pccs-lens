@@ -17,14 +17,12 @@ async function readJson(filename) {
 }
 
 async function loadPccsAll() {
-  const [v24, s12, even12, odd12, neutral] = await Promise.all([
+  const [v24, even12, neutral] = await Promise.all([
     readJson("pccs_v24.json"),
-    readJson("pccs_s12.json"),
     readJson("pccs_even12.json"),
-    readJson("pccs_odd12.json"),
     readJson("pccs_neutral.json")
   ])
-  return [...v24, ...s12, ...even12, ...odd12, ...neutral]
+  return [...v24, ...even12, ...neutral]
 }
 
 function computeApproximatePccs(jisHex, pccsAll) {

@@ -15,6 +15,7 @@
   import HueCompareDiagram from "./HueCompareDiagram.svelte"
   import ValueCompareDiagram from "./ValueCompareDiagram.svelte"
   import ChromaCompareDiagram from "./ChromaCompareDiagram.svelte"
+  import JisExamLevelBadge from "./JisExamLevelBadge.svelte"
 
   let {
     subfamilyId,
@@ -50,17 +51,7 @@
   <div class="list-area" style:--_row-count={targets.length}>
     {#each targets as jis, i (jis.id)}
       <div class="row" style:--_row-index={i + 1}>
-        {#if jis.examLevel !== null}
-          <span
-            class="level"
-            class:level-2={jis.examLevel === 2}
-            class:level-3={jis.examLevel === 3}
-          >
-            {jis.examLevel}級
-          </span>
-        {:else}
-          <span class="level level-none"></span>
-        {/if}
+        <JisExamLevelBadge examLevel={jis.examLevel} />
         <span class="preview" style:background-color={jis.hex}></span>
         <div class="info">
           <div class="name">{jis.name}</div>
@@ -129,28 +120,6 @@
     row-gap: 0.5rem;
     column-gap: 0.75rem;
     grid-row: var(--_row-index);
-  }
-
-  .level {
-    padding: 0.3rem;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    text-align: center;
-    color: #1a1a2e;
-    line-height: 1;
-    align-self: center;
-  }
-
-  .level-2 {
-    background-color: var(--color-grade-2);
-  }
-
-  .level-3 {
-    background-color: var(--color-grade-3);
-  }
-
-  .level-none {
-    visibility: hidden;
   }
 
   .preview {

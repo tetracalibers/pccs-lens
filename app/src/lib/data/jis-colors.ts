@@ -1,5 +1,6 @@
 import jisColorsJson from "./jis_colors.json"
 import jisColorFamilyJson from "./jis_color_family.json"
+import { sortJisColors } from "$lib/jis-color-map/sort"
 
 export type ColorFamily = "red" | "brown" | "yellow" | "green" | "blue" | "purple" | "neutral"
 
@@ -39,6 +40,7 @@ export type JISColor = {
   hex: string
   examLevel: 2 | 3 | null
   munsell: string
+  iconKey: string
   // 最低1件、最大3件
   approximatePccs: [JISApproximatePccs, ...JISApproximatePccs[]]
 }
@@ -117,20 +119,19 @@ export const getFamilyIdBySubfamilyId = (subfamilyId: ColorSubfamily): ColorFami
   return null
 }
 
-export type JISColorGroupId = ColorFamily | ColorSubfamily | "all"
+export type JISColorGroupId = ColorFamily | ColorSubfamily
 
 const FAMILY_IDS: Set<ColorFamily> = new Set(JIS_COLOR_FAMILIES.map((f) => f.id))
 
 export const isColorFamily = (value: string): value is ColorFamily =>
   (FAMILY_IDS as Set<string>).has(value)
 
-export const getJisColorsByGroup = (groupId: JISColorGroupId): JISColor[] => {
-  if (groupId === "all") return JIS_COLORS
-  return JIS_COLORS_BY_GROUP.get(groupId) ?? []
-}
+export const getJisColorsByGroup = (groupId: JISColorGroupId): JISColor[] =>
+  JIS_COLORS_BY_GROUP.get(groupId) ?? []
+
+export const getSortedAllJisColors = (): JISColor[] => sortJisColors(JIS_COLORS)
 
 export const getSubfamiliesByGroup = (groupId: JISColorGroupId): JISSubfamily[] => {
-  if (groupId === "all") return JIS_COLOR_FAMILIES.flatMap((f) => f.subfamilies)
   if ((FAMILY_IDS as Set<string>).has(groupId)) {
     const family = JIS_COLOR_FAMILIES.find((f) => f.id === groupId)
     return family ? family.subfamilies : []
