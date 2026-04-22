@@ -13,13 +13,6 @@ created: 2026/04/21 06:08:44
 - 今回新規実装するsvelteコンポーネントは @app/src/lib/components/jis-color-map 配下に配置する
 - このメモの中に書かれたコードはすべて疑似コードであり、変数名、プロパティ名、Props名などは仮称なので、適切な命名を考えて実装する
 
-## データ
-
-### allオプションの廃止
-
-- @app/src/lib/data/jis-colors.ts の`JISColorGroupId`から`"all"`を削除する
-- 慣用色名マップコンポーネントやページのスラッグでも`all`は指定できないようにする
-
 ## コンポーネント
 
 ### 新規作成：慣用色名詳細セクション
@@ -36,7 +29,7 @@ interface Props {
 ```
 <div class="横並び（スマホでは縦並び）">
   <div class="横並び">
-    <Icon icon={jisColor.icon} />
+    <Icon icon={JIS_COLOR_ICON_MAP.get(jisColor.iconKey)} />
     <角丸正方形色スウォッチ />
     <div>
       <h2 id={jisColor.id}>{jisColor.name}</h2>
@@ -69,6 +62,7 @@ interface Props {
 
 - 慣用色の`jisColor.name`表示要素には`id`属性を付与する（ページ上部のアイコン群からこの`id`の要素にリンクする）
 - 級タグは @app/src/lib/components/jis-color-map/JisColorCompareSection.svelte と同様のスタイルのものを、コンポーネントとして共通化する
+- `jisColor.originDescription`に空白が含まれている場合は、その空白位置で改行して表示する
 
 ### 新規作成：慣用色名一覧リストページへのリンクカード
 
@@ -79,7 +73,7 @@ interface Props {
 
 ### 新規作成：慣用色名一覧リストページ（`/jis-color-map/all`）
 
-- パンくずリスト・ページ見出しの下に、各慣用色で塗りつぶしたアイコン（アイコンIDは`jisColor.icon`）を並べて表示する
+- パンくずリスト・ページ見出しの下に、各慣用色で塗りつぶしたアイコン（アイコンIDは`JIS_COLOR_ICON_MAP.get(jisColor.iconKey)`）を並べて表示する
 - アイコンをクリックすると、その慣用色名の詳細セクションに飛べる
 - アイコン群の下に、慣用色名詳細セクションを並べる
 - アイコンも慣用色名詳細セクションも、マンセル色相順（起点は2RP）に並べる
