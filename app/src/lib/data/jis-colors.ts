@@ -1,5 +1,6 @@
 import jisColorsJson from "./jis_colors.json"
 import jisColorFamilyJson from "./jis_color_family.json"
+import { sortJisColors } from "$lib/jis-color-map/sort"
 
 export type ColorFamily = "red" | "brown" | "yellow" | "green" | "blue" | "purple" | "neutral"
 
@@ -127,6 +128,8 @@ export const isColorFamily = (value: string): value is ColorFamily =>
 
 export const getJisColorsByGroup = (groupId: JISColorGroupId): JISColor[] =>
   JIS_COLORS_BY_GROUP.get(groupId) ?? []
+
+export const getSortedAllJisColors = (): JISColor[] => sortJisColors(JIS_COLORS)
 
 export const getSubfamiliesByGroup = (groupId: JISColorGroupId): JISSubfamily[] => {
   if ((FAMILY_IDS as Set<string>).has(groupId)) {
