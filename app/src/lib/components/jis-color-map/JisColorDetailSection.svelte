@@ -235,17 +235,19 @@
     .entries {
       grid-template-columns: 1fr;
       row-gap: 0.75rem;
+      column-gap: 0.5rem;
     }
 
     .entry {
       display: grid;
-      grid-template-columns: max-content 1fr;
+      grid-template-columns: auto 1fr;
+      column-gap: 0.5rem;
       position: relative;
     }
 
     .entry-identity {
       display: grid;
-      gap: 1.5rem;
+      column-gap: 0.5rem;
       grid-template-columns: subgrid;
       grid-column: 1 / -1;
       height: 100%;
@@ -255,8 +257,6 @@
       display: grid;
       grid-template-columns: subgrid;
       grid-column: 1 / -1;
-      align-items: center;
-      gap: 1.5rem;
     }
 
     .swatch {
@@ -275,10 +275,18 @@
       grid-column: 1 / -1;
     }
 
+    .origin-description {
+      min-height: auto;
+    }
+
     .exam-level {
       position: absolute;
       top: 1.25rem;
       right: 0;
+    }
+
+    .compare-link {
+      justify-content: flex-end;
     }
   }
 </style>
