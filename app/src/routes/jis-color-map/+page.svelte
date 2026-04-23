@@ -17,8 +17,8 @@
 
   const ALL_LIST_CHECKER_COLOR_IDS = [
     "botan-iro",
-    "burnt-umber",
-    "marigold",
+    "terracotta",
+    "jaune-brillant",
     "leaf-green",
     "cyan",
     "wistaria"
