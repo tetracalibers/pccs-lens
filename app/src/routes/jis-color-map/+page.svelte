@@ -50,7 +50,7 @@
   </section>
 
   <section class="section">
-    <h2 class="section-heading">一覧で覚える</h2>
+    <h2 class="section-heading">一覧で学ぶ</h2>
     <p class="section-desc">名前の由来やPCCS近似色など、色の詳細を学ぼう</p>
     <JisColorAllListCard checkerColors={allListCheckerColors} />
   </section>
