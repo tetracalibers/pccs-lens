@@ -1,15 +1,14 @@
 <script lang="ts">
   import { isLightColor } from "$lib/color/utils"
   import { PCCS_HEX_MAP } from "$lib/data/pccs"
-  import { getContext } from "svelte"
+  import { ankiMode } from "$lib/state/anki.svelte"
 
   let { pccs }: { pccs: string } = $props()
 
   const color = $derived(PCCS_HEX_MAP.get(pccs)!)
   const isLightBg = $derived(isLightColor(color))
 
-  const ankiCtx = getContext<{ isAnki: boolean } | undefined>("anki-mode")
-  const isAnki = $derived(ankiCtx?.isAnki)
+  const isAnki = $derived(ankiMode.isAnki)
 </script>
 
 <div

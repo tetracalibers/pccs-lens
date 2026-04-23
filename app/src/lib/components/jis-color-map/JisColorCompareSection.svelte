@@ -16,6 +16,8 @@
   import ValueCompareDiagram from "./ValueCompareDiagram.svelte"
   import ChromaCompareDiagram from "./ChromaCompareDiagram.svelte"
   import JisExamLevelBadge from "./JisExamLevelBadge.svelte"
+  import { ankiMode } from "$lib/state/anki.svelte"
+  import AnkiEnabledHeadingText from "../AnkiEnabledHeadingText.svelte"
 
   let {
     subfamilyId,
@@ -37,6 +39,8 @@
     if (!text) return []
     return text.split(/\s+/).filter((s) => s.length > 0)
   }
+
+  const isAnki = $derived(ankiMode.isAnki)
 </script>
 
 <section class="compare">
@@ -54,7 +58,13 @@
         <JisExamLevelBadge examLevel={jis.examLevel} />
         <span class="preview" style:background-color={jis.hex}></span>
         <div class="info">
-          <div class="name">{jis.name}</div>
+          <div class="name">
+            {#if isAnki}
+              <AnkiEnabledHeadingText text={jis.name} round />
+            {:else}
+              {jis.name}
+            {/if}
+          </div>
           <div class="systematic">{jis.systematicName}</div>
           <div class="munsell">{jis.munsell}</div>
         </div>
@@ -140,6 +150,7 @@
   .name {
     font-size: 0.9rem;
     font-weight: 600;
+    line-height: 1.5;
   }
 
   .systematic {

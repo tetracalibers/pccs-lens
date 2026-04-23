@@ -37,7 +37,6 @@
 
 <script lang="ts">
   import type { Snippet } from "svelte"
-  import { setContext } from "svelte"
   import Heading1 from "$lib/components/Heading1.svelte"
   import type { GuideFrontmatter } from "$lib/meta/guide-pages"
   import Breadcrumb from "$lib/components/Breadcrumb.svelte"
@@ -47,12 +46,6 @@
   import { ankiMode } from "$lib/state/anki.svelte"
 
   let { title, grades, basic, draft, children }: GuideFrontmatter & { children: Snippet } = $props()
-
-  setContext("anki-mode", {
-    get isAnki() {
-      return ankiMode.isAnki
-    }
-  })
 
   const isAnki = $derived(ankiMode.isAnki)
 

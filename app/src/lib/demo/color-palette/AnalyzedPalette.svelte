@@ -3,7 +3,7 @@
   import ToneDiagram from "$lib/components/analyze/ToneDiagram.svelte"
   import { PCCS_ALL_MAP } from "$lib/data/pccs"
   import type { PCCSColor } from "$lib/data/types"
-  import { getContext } from "svelte"
+  import { ankiMode } from "$lib/state/anki.svelte"
   import ColorPalettePreview from "./ColorPalettePreview.svelte"
 
   interface Props {
@@ -22,8 +22,7 @@
       .filter((c): c is PCCSColor => c !== undefined)
   })
 
-  const ankiCtx = getContext<{ isAnki: boolean } | undefined>("anki-mode")
-  const isAnki = $derived(ankiCtx?.isAnki)
+  const isAnki = $derived(ankiMode.isAnki)
 </script>
 
 <div class="analyzed-palette-root" class:--_anki={isAnki}>

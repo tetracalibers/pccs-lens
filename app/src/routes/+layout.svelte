@@ -26,7 +26,9 @@
   const isContentPage = $derived(
     page.route.id !== null &&
       !CONTENT_TOP_ROUTES.has(page.route.id) &&
-      (page.route.id.startsWith("/color-theory") || page.route.id.startsWith("/color-fields"))
+      (page.route.id.startsWith("/color-theory") ||
+        page.route.id.startsWith("/color-fields") ||
+        page.route.id === "/jis-color-map/[family]")
   )
   $effect(() => {
     if (!isContentPage) ankiMode.reset()
@@ -46,7 +48,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
   <link
-    href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@500&family=Flow+Rounded&family=Rakkas&family=Delius&family=Reddit+Mono:wght@400..700&family=SUSE+Mono:wght@400;500&family=Zen+Kaku+Gothic+Antique:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@500&family=Flow+Circular&family=Flow+Rounded&family=Rakkas&family=Delius&family=Reddit+Mono:wght@400..700&family=SUSE+Mono:wght@400;500&family=Zen+Kaku+Gothic+Antique:wght@400;500&display=swap"
     rel="stylesheet"
   />
 </svelte:head>
@@ -196,6 +198,7 @@
     --font-fancy: "Delius", cursive;
     --font-classic: "Rakkas", serif;
     --font-anki-title: "Flow Rounded", system-ui;
+    --font-anki-round: "Flow Circular", system-ui;
     --font-round: "Kiwi Maru", serif;
 
     font-family: "SUSE Mono", "Zen Kaku Gothic Antique", sans-serif;

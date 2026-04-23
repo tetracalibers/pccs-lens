@@ -2,7 +2,7 @@
   import { resolve } from "$app/paths"
 
   interface Props {
-    checkerColors: [string, string, string, string, string, string, string]
+    checkerColors: string[]
   }
 
   let { checkerColors }: Props = $props()
@@ -57,9 +57,6 @@
 
   .checker-cell:nth-child(6) {
     grid-column: 1;
-  }
-  .checker-cell:nth-child(7) {
-    grid-column: 3;
   }
 
   .card-body {

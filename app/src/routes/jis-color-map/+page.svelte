@@ -2,32 +2,41 @@
   import Heading1 from "$lib/components/Heading1.svelte"
   import FamilyCard from "$lib/components/jis-color-map/FamilyCard.svelte"
   import JisColorAllListCard from "$lib/components/jis-color-map/JisColorAllListCard.svelte"
-  import { JIS_COLOR_FAMILIES, JIS_COLORS_BY_GROUP, type ColorFamily } from "$lib/data/jis-colors"
-  import { pickCheckerboardColors } from "$lib/jis-color-map/family-checker"
+  import { JIS_COLOR_FAMILIES, JIS_HEX_BY_ID, type ColorFamily } from "$lib/data/jis-colors"
   import { FAMILY_DESCRIPTIONS } from "$lib/jis-color-map/family-copy"
 
-  const familyCards = JIS_COLOR_FAMILIES.map((family) => ({
-    family,
-    labelEn: family.id,
-    description: FAMILY_DESCRIPTIONS[family.id],
-    checkerColors: pickCheckerboardColors(family.id)
-  }))
-
-  const pickOneHexFromFamily = (familyId: ColorFamily): string => {
-    const colors = JIS_COLORS_BY_GROUP.get(familyId) ?? []
-    if (colors.length === 0) return "#cccccc"
-    return colors[Math.floor(Math.random() * colors.length)].hex
+  const CHECKER_COLOR_IDS: Record<ColorFamily, [string, string]> = {
+    red: ["botan-iro", "carmine"],
+    brown: ["burnt-umber", "kohaku-iro"],
+    yellow: ["marigold", "jaune-brillant"],
+    green: ["leaf-green", "tokiwa-iro"],
+    blue: ["cyan", "ruri-iro"],
+    purple: ["lilac", "kikyo-iro"],
+    neutral: ["ivory", "lamp-black"]
   }
 
-  const allListCheckerColors = JIS_COLOR_FAMILIES.map((f) => pickOneHexFromFamily(f.id)) as [
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string
+  const ALL_LIST_CHECKER_COLOR_IDS = [
+    "botan-iro",
+    "terracotta",
+    "jaune-brillant",
+    "leaf-green",
+    "cyan",
+    "wistaria"
   ]
+
+  const hexById = (id: string): string => JIS_HEX_BY_ID.get(id) ?? "#cccccc"
+
+  const familyCards = JIS_COLOR_FAMILIES.map((family) => {
+    const [id1, id2] = CHECKER_COLOR_IDS[family.id]
+    return {
+      family,
+      labelEn: family.id,
+      description: FAMILY_DESCRIPTIONS[family.id],
+      checkerColors: [hexById(id1), hexById(id2)] as [string, string]
+    }
+  })
+
+  const allListCheckerColors = ALL_LIST_CHECKER_COLOR_IDS.map((id) => hexById(id))
 </script>
 
 <svelte:head>
@@ -50,7 +59,7 @@
   </section>
 
   <section class="section">
-    <h2 class="section-heading">一覧で覚える</h2>
+    <h2 class="section-heading">一覧で学ぶ</h2>
     <p class="section-desc">名前の由来やPCCS近似色など、色の詳細を学ぼう</p>
     <JisColorAllListCard checkerColors={allListCheckerColors} />
   </section>
