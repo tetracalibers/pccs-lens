@@ -112,8 +112,8 @@
     --color-muted: light-dark(#eeeeee, #252535);
   }
 
-  section {
-    margin-bottom: 2rem;
+  section:not(:last-child) {
+    margin-block-end: 2rem;
   }
 
   section:first-of-type {

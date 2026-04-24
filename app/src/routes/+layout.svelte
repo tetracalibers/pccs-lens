@@ -228,7 +228,7 @@
 
   /* ===== メインコンテンツラッパー ===== */
   .container {
-    margin: 3rem auto 4rem;
+    margin: 3rem auto;
     padding: 1.5rem 1.5rem 0;
     container-type: inline-size;
   }
