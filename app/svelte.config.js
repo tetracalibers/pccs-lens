@@ -41,7 +41,8 @@ const config = {
         "guide-map": fileURLToPath(new URL("./src/lib/layouts/guide-map.svelte", import.meta.url)),
         "guide-content": fileURLToPath(
           new URL("./src/lib/layouts/guide-content.svelte", import.meta.url)
-        )
+        ),
+        concept: fileURLToPath(new URL("./src/lib/layouts/concept.svelte", import.meta.url))
       },
       remarkPlugins: [
         remarkBreaks,
