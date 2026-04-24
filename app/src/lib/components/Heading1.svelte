@@ -21,10 +21,12 @@
     font-weight: 900;
     margin: 3.5rem 0 1.25rem;
     color: var(--color-heading);
-    display: flex;
-    gap: 1rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: flex-start;
+    gap: 0.55rem;
     line-height: 1.2;
-    margin-inline-start: -8px;
+    min-height: 1lh;
   }
 
   h1.compact {
@@ -37,7 +39,8 @@
 
     color: var(--_icon-color);
     flex-shrink: 0;
-    font-size: 3rem;
+    font-size: 1.5em;
+    translate: 0 -2px;
   }
 
   h1.grayscale :global(svg) {
