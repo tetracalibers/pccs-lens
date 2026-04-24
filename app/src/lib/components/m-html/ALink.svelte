@@ -1,28 +1,20 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
   import { resolve } from "$app/paths"
-  import type { RouteIdWithSearchOrHash } from "$app/types"
-  import type { PathnameWithSearchOrHash } from "$app/types"
   import Icon from "@iconify/svelte"
 
   interface Props {
-    href:
-      | `http://${string}`
-      | `https://${string}`
-      | RouteIdWithSearchOrHash
-      | PathnameWithSearchOrHash
+    href: string
     children?: Snippet
   }
 
   let { children, href }: Props = $props()
 
-  const isAbsoluteLink = $derived(/^https?:\/\//.test(href))
+  const isAbsoluteLink = $derived(href.startsWith("http://") || href.startsWith("https://"))
 
   // hrefが相対リンクの場合、resolveする
   const resolvedHref = $derived(() => {
-    if (isAbsoluteLink) {
-      return href
-    }
+    if (isAbsoluteLink) return href
     // @ts-ignore
     return resolve(href)
   })
@@ -35,16 +27,15 @@
   class:--_external={isAbsoluteLink}
 >
   {@render children?.()}
-  {#if isAbsoluteLink}
-    <Icon icon="ei:external-link" />
-  {/if}
+  <Icon icon={isAbsoluteLink ? "ei:external-link" : "material-symbols-light:book-5-outline"} />
 </a>
 
 <style>
   a {
     color: var(--color-heading);
     text-underline-offset: 4px;
-    text-decoration-style: dotted;
+    text-decoration-style: solid;
+    text-decoration-thickness: 1px;
     display: inline-flex;
     width: fit-content;
   }
