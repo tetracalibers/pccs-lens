@@ -24,11 +24,12 @@
 
   const CONTENT_TOP_ROUTES = new Set(["/color-theory", "/color-fields"])
   const isContentPage = $derived(
-    page.route.id !== null &&
+    (page.route.id !== null &&
       !CONTENT_TOP_ROUTES.has(page.route.id) &&
       (page.route.id.startsWith("/color-theory") ||
         page.route.id.startsWith("/color-fields") ||
-        page.route.id === "/jis-color-map/[family]")
+        page.route.id === "/jis-color-map/[family]")) ||
+      page.route.id === "/concept"
   )
   $effect(() => {
     if (!isContentPage) ankiMode.reset()
