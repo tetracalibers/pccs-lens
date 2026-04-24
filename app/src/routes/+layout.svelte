@@ -538,15 +538,31 @@
 
   /* ===== サイトフッター ===== */
   .site-footer {
-    border-top: 1px dashed light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.15));
-    transition: border-color 0.4s;
     margin-block-end: 1rem;
     margin-inline: 1rem;
+    position: relative;
+  }
+
+  .site-footer::before {
+    content: "";
+    border-image-source: linear-gradient(
+      to right,
+      #dfe9f3 0%,
+      rgba(255, 255, 255, 0.25) 50%,
+      #dfe9f3 100%
+    );
+    border-image-slice: 1;
+    border-block-start: 1px solid;
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+
+  :global(.dark) .site-footer::before {
+    opacity: 0.4;
   }
 
   .footer-inner {
-    max-width: 960px;
-    margin: 0 auto;
     padding: 1.25rem 1.5rem;
     display: flex;
     align-items: center;
@@ -554,20 +570,38 @@
   }
 
   .footer-link {
+    --_bg-opacity: 0.75;
+    --_bg-dot-size: 4px;
+
     color: var(--color-body);
     text-decoration: none;
     font-size: 0.82rem;
-    padding-block: 4px;
-    background-image: linear-gradient(135deg, rgb(199, 125, 255), rgb(77, 150, 255));
+    padding-block: 8px;
+    background-image:
+      radial-gradient(
+        circle closest-side,
+        rgba(199, 125, 255, var(--_bg-opacity)),
+        rgba(77, 150, 255, var(--_bg-opacity)) 95%,
+        transparent 100%
+      ),
+      linear-gradient(
+        135deg,
+        rgba(199, 125, 255, var(--_bg-opacity)),
+        rgba(77, 150, 255, var(--_bg-opacity))
+      );
     background-repeat: no-repeat;
-    background-size: 0 1.5px;
-    background-position: 0 100%;
+    background-size:
+      var(--_bg-dot-size) var(--_bg-dot-size),
+      0 1.5px;
+    background-position: 50% 100%;
     transition:
       color 0.15s,
-      background-size 0.15s;
+      background-size 0.25s;
   }
 
   .footer-link:hover {
-    background-size: 100% 1.5px;
+    background-size:
+      0 0,
+      100% 1.5px;
   }
 </style>
