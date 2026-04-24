@@ -187,6 +187,12 @@
 
 <div class="container">{@render children()}</div>
 
+<footer class="site-footer">
+  <div class="footer-inner">
+    <a href={resolve("/concept")} class="footer-link">このサイトについて</a>
+  </div>
+</footer>
+
 <style>
   /* ===== グローバル ===== */
   :global(:root) {
@@ -528,5 +534,39 @@
     background: inherit;
     border-radius: 0 0 4px 4px;
     opacity: 1;
+  }
+
+  /* ===== サイトフッター ===== */
+  .site-footer {
+    border-top: 1px solid light-dark(rgba(0, 0, 0, 0.07), rgba(255, 255, 255, 0.06));
+    transition: border-color 0.4s;
+    margin-block-end: 1rem;
+  }
+
+  .footer-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .footer-link {
+    color: var(--color-body);
+    text-decoration: none;
+    font-size: 0.82rem;
+    padding-block: 4px;
+    background-image: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #c77dff);
+    background-repeat: no-repeat;
+    background-size: 0 1.5px;
+    background-position: 0 100%;
+    transition:
+      color 0.15s,
+      background-size 0.15s;
+  }
+
+  .footer-link:hover {
+    background-size: 100% 1.5px;
   }
 </style>
