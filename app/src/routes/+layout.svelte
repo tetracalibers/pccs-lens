@@ -40,8 +40,7 @@
     isNavOpen = false
   }
 
-  // `/concept`ページではフッターを表示しない
-  const isShowFooter = $derived(page.route.id !== "/concept")
+  const isConceptPage = $derived(page.route.id === "/concept")
 </script>
 
 <svelte:head>
@@ -191,13 +190,13 @@
 
 <div class="container">{@render children()}</div>
 
-{#if isShowFooter}
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <a href={resolve("/concept")} class="footer-link">このサイトについて</a>
-    </div>
-  </footer>
-{/if}
+<footer class="site-footer">
+  <div class="footer-inner">
+    <a href={isConceptPage ? resolve("/") : resolve("/concept")} class="footer-link">
+      {isConceptPage ? "トップページへ" : "このサイトについて"}
+    </a>
+  </div>
+</footer>
 
 <style>
   /* ===== グローバル ===== */
