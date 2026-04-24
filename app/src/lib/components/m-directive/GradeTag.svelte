@@ -31,7 +31,7 @@
     font-weight: 600;
     letter-spacing: 0.04em;
     line-height: 1;
-    padding: 3px 8px;
+    padding: 4px 6px;
     border-radius: 4px;
     color: #1a1a2e;
     flex-shrink: 0;
@@ -43,7 +43,6 @@
     background: #ff7675;
     color: #ffffff;
     font-size: 0.82rem;
-    padding: 4px 6px;
     display: inline-flex;
     gap: 2px;
     justify-content: center;
