@@ -12,7 +12,7 @@
 
 <h1 class:grayscale class:compact>
   <Icon {icon} />
-  {@render children?.()}
+  <span class="heading-text">{@render children?.()}</span>
 </h1>
 
 <style>
@@ -22,7 +22,6 @@
     margin: 3.5rem 0 1.25rem;
     color: var(--color-heading);
     display: flex;
-    align-items: center;
     gap: 1rem;
     line-height: 1.2;
     margin-inline-start: -8px;
@@ -55,5 +54,9 @@
 
   :global(.light) h1::before {
     opacity: 1;
+  }
+
+  .heading-text {
+    align-self: center;
   }
 </style>
