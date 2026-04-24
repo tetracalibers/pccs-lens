@@ -538,9 +538,10 @@
 
   /* ===== サイトフッター ===== */
   .site-footer {
-    border-top: 1px solid light-dark(rgba(0, 0, 0, 0.07), rgba(255, 255, 255, 0.06));
+    border-top: 1px dashed light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.15));
     transition: border-color 0.4s;
     margin-block-end: 1rem;
+    margin-inline: 1rem;
   }
 
   .footer-inner {
@@ -557,7 +558,7 @@
     text-decoration: none;
     font-size: 0.82rem;
     padding-block: 4px;
-    background-image: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #c77dff);
+    background-image: linear-gradient(135deg, rgb(199, 125, 255), rgb(77, 150, 255));
     background-repeat: no-repeat;
     background-size: 0 1.5px;
     background-position: 0 100%;
