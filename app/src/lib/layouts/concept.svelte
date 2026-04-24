@@ -11,6 +11,7 @@
   import Example from "$lib/components/m-directive/Example.svelte"
   import ComingSoon from "$lib/components/m-directive/ComingSoon.svelte"
   import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
+  import Mark from "$lib/components/m-directive/Mark.svelte"
 
   /* eslint-disable no-import-assign */
   export {
@@ -24,7 +25,8 @@
     Note,
     Example,
     ComingSoon,
-    GradeTag
+    GradeTag,
+    Mark
   }
   /* eslint-enable no-import-assign */
 </script>
