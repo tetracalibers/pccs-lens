@@ -19,7 +19,7 @@
   const contentItems = [
     { href: resolve("/color-theory"), path: "/color-theory", label: "色の理論" },
     { href: resolve("/color-fields"), path: "/color-fields", label: "色の活用分野" },
-    { href: resolve("/jis-color-map"), path: "/jis-color-map", label: "慣用色名" }
+    { href: resolve("/jis-color-map"), path: "/jis-color-map", label: "慣用色名マップ" }
   ]
 
   const CONTENT_TOP_ROUTES = new Set(["/color-theory", "/color-fields"])
