@@ -199,7 +199,7 @@
   // 「色相環」ラベル: スクリーン上では赤道楕円の v12（#33A23D）〜v9（#CCE700）の弧と平行で、内側に寄せた弧をなぞる。
   // text 側に scale(1, k) を当てて文字を縦圧縮するため、ディスク座標側の ry は eRy/k に拡げておく
   // （k 倍された結果ちょうど eRy ベースの弧になる）。INNER_RATIO で円周より内側に縮める
-  const HUE_RING_LABEL_SCALE_Y = 0.55
+  const HUE_RING_LABEL_SCALE_Y = 0.75
   const HUE_RING_LABEL_INNER_RATIO = 0.85
 
   let hueRingLabelRxPre = $derived(R * HUE_RING_LABEL_INNER_RATIO)
@@ -297,16 +297,16 @@
   </defs>
 
   <!-- 球の外形 -->
-  <circle {cx} {cy} r={R} fill="none" stroke="#999" stroke-width="1.5" />
+  <circle {cx} {cy} r={R} fill="none" stroke="slategray" stroke-width="1.5" />
 
   <!-- 色相環の領域を示す薄い塗り（赤道楕円） -->
-  <ellipse {cx} {cy} rx={R} ry={eRy} fill="rgba(120, 120, 120, 0.18)" />
+  <ellipse {cx} {cy} rx={R} ry={eRy} fill="lightslategray" fill-opacity="0.2" />
 
   <!-- 赤道（後ろ半分・破線） -->
   <path
     d={`M ${cx + R} ${cy} A ${R} ${eRy} 0 0 1 ${cx - R} ${cy}`}
     fill="none"
-    stroke="#aaa"
+    stroke="slategray"
     stroke-width="1"
     stroke-dasharray="4 4"
   />
@@ -315,14 +315,14 @@
   <path
     d={`M ${cx - R} ${cy} A ${R} ${eRy} 0 0 1 ${cx + R} ${cy}`}
     fill="none"
-    stroke="#aaa"
+    stroke="slategray"
     stroke-width="1"
     stroke-dasharray="4 4"
   />
 
   <!-- 後ろ側の色相点（小さく描画） -->
   {#each hueDots.filter((d) => !d.isFront) as dot (dot.num)}
-    <circle cx={dot.x} cy={dot.y} r="6" fill={dot.color} />
+    <circle cx={dot.x} cy={dot.y} r="6" fill={dot.color} stroke="#fff" stroke-width="0.8" />
   {/each}
 
   <!-- 彩度の変化矢印（V=5 グレイ円 → v14 bG）。両端は円のエッジから離して被りを防ぐ -->
@@ -338,7 +338,7 @@
   />
 
   <!-- 赤の等色相面の領域を示す薄い塗り（右半円） -->
-  <path d={redPlanePath} fill="rgba(168, 50, 62, 0.12)" />
+  <path d={redPlanePath} fill="#e52838" fill-opacity="0.15" />
 
   <!-- 赤の等色相面（sRGBガモットに沿った自然な形でドットを配置） -->
   {#each denseRedDots as dot (dot.key)}
@@ -368,7 +368,7 @@
       r={dot.num === 14 ? LIGHTNESS_DOT_R : 9}
       fill={dot.color}
       stroke="#fff"
-      stroke-width="1.2"
+      stroke-width="0.8"
     />
   {/each}
 
@@ -394,10 +394,10 @@
   />
 
   <!-- 明度スケールの白/黒ラベル（明度スケール円(r=13)と被らないよう、円の上下端からさらに離す） -->
-  <text class="cs-scale-mark" x={cx} y={axisTopY - LIGHTNESS_DOT_R - 6} text-anchor="middle">
+  <text class="cs-scale-mark" x={cx} y={axisTopY - LIGHTNESS_DOT_R - 8} text-anchor="middle">
     白
   </text>
-  <text class="cs-scale-mark" x={cx} y={axisBottomY + LIGHTNESS_DOT_R + 16} text-anchor="middle">
+  <text class="cs-scale-mark" x={cx} y={axisBottomY + LIGHTNESS_DOT_R + 18} text-anchor="middle">
     黒
   </text>
 
@@ -437,7 +437,7 @@
 
   <!-- 「赤の等色相面」ラベル（等色相面の上半分の円周に沿わせる、内側に少し寄せた弧上） -->
   <text class="cs-plane-label" text-anchor="middle">
-    <textPath href="#cs-red-plane-label-path" startOffset="50%">赤の等色相面</textPath>
+    <textPath href="#cs-red-plane-label-path" startOffset="50%">等色相面</textPath>
   </text>
 </svg>
 
@@ -455,18 +455,20 @@
 
   .cs-scale-mark {
     font-size: 13px;
-    fill: #333;
+    fill: var(--color-body);
   }
 
   .cs-plane-label {
-    font-size: 13px;
-    fill: #a8323e;
+    letter-spacing: 4px;
+    font-size: 14px;
+    fill: var(--color-body);
   }
 
   /* 色相環ラベルは平面上に貼り付くように垂直方向に圧縮するため、フォントを大きめに設定 */
   .cs-hue-ring-label {
-    font-size: 18px;
-    fill: #444;
-    translate: 0 -0.3em;
+    font-size: 16px;
+    fill: var(--color-body);
+    translate: 0 -0.45em;
+    letter-spacing: 4px;
   }
 </style>
