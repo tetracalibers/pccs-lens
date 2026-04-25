@@ -136,6 +136,9 @@
   let lightArrowX = $derived(cx - LIGHTNESS_DOT_R - 28)
   let lightArrowYTop = $derived(axisTopY - 4)
   let lightArrowYBot = $derived(axisBottomY + 4)
+  // 明度の変化ラベルの回転中心（矢印の左隣・上部寄り）
+  let lightLabelPivotX = $derived(lightArrowX - 14)
+  let lightLabelPivotY = $derived(lightArrowYTop + 60)
 </script>
 
 <svg
@@ -271,13 +274,13 @@
   <text class="cs-scale-mark" x={cx} y={axisTopY - 6} text-anchor="middle">白</text>
   <text class="cs-scale-mark" x={cx} y={axisBottomY + 16} text-anchor="middle">黒</text>
 
-  <!-- 「明度の変化」ラベル（縦書き相当・90°回転） -->
+  <!-- 「明度の変化」ラベル（-90°回転して矢印に沿わせる。上部寄りで矢じり・色相環の塗りと被らない位置） -->
   <text
     class="cs-label"
-    x={lightArrowX - 8}
-    y={cy}
+    x={lightLabelPivotX}
+    y={lightLabelPivotY}
     text-anchor="middle"
-    transform="rotate(-90 {lightArrowX - 8} {cy})"
+    transform="rotate(-90 {lightLabelPivotX} {lightLabelPivotY})"
   >
     明度の変化
   </text>
