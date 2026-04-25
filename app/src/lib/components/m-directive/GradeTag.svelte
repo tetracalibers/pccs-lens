@@ -4,7 +4,12 @@
 
   type Grade = "basic" | AftGrade
 
-  let { grade }: { grade: Grade } = $props()
+  interface Props {
+    grade: Grade
+    compactH?: boolean
+  }
+
+  let { grade, compactH = false }: Props = $props()
 
   const labels: Record<Grade, string> = {
     basic: "便利",
@@ -15,7 +20,7 @@
   }
 </script>
 
-<span class="grade-tag" data-grade={grade}>
+<span class="grade-tag" data-grade={grade} class:--_compact-h={compactH}>
   {#if grade === "basic"}
     <Icon icon="solar:star-shine-bold" class="grade-tag-icon" />
   {/if}
@@ -31,7 +36,7 @@
     font-weight: 600;
     letter-spacing: 0.04em;
     line-height: 1;
-    padding: 4px 6px;
+    padding: 4px 8px;
     border-radius: 4px;
     color: #1a1a2e;
     flex-shrink: 0;
@@ -39,10 +44,15 @@
     box-sizing: border-box;
   }
 
+  .grade-tag.--_compact-h {
+    padding-block: 3px;
+  }
+
   .grade-tag[data-grade="basic"] {
     background: #ff7675;
     color: #ffffff;
     font-size: 0.82rem;
+    padding: 4px 6px;
     display: inline-flex;
     gap: 2px;
     justify-content: center;
