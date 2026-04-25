@@ -270,8 +270,8 @@
     y1={cy}
     x2={satLineEndX}
     y2={cy}
-    stroke="#444"
-    stroke-width="1.5"
+    stroke="var(--canvas-pen-pink)"
+    stroke-width="2"
     marker-start="url(#cs-arrow-start)"
     marker-end="url(#cs-arrow-end)"
   />
@@ -312,13 +312,7 @@
   {/each}
 
   <!-- 色相変化の弧矢印 -->
-  <path
-    d={hueArcPath}
-    fill="none"
-    stroke="#444"
-    stroke-width="1.5"
-    marker-end="url(#cs-arrow-end)"
-  />
+  <path d={hueArcPath} fill="none" stroke="#444" stroke-width="2" marker-end="url(#cs-arrow-end)" />
 
   <!-- 明度の変化矢印（縦・両端矢印） -->
   <line
@@ -326,8 +320,8 @@
     y1={lightArrowYTop}
     x2={lightArrowX}
     y2={lightArrowYBot}
-    stroke="#444"
-    stroke-width="1.5"
+    stroke="var(--canvas-pen-water)"
+    stroke-width="2"
     marker-start="url(#cs-arrow-start)"
     marker-end="url(#cs-arrow-end)"
   />
@@ -347,6 +341,7 @@
     y={lightLabelPivotY}
     text-anchor="middle"
     transform="rotate(-90 {lightLabelPivotX} {lightLabelPivotY})"
+    fill="var(--canvas-pen-water)"
   >
     明度の変化
   </text>
@@ -357,7 +352,9 @@
   </text>
 
   <!-- 「彩度の変化」ラベル（彩度矢印の中点・線の上側） -->
-  <text class="cs-label" x={satMidX} y={cy - 12} text-anchor="middle">彩度の変化</text>
+  <text class="cs-label" x={satMidX} y={cy - 12} text-anchor="middle" fill="var(--canvas-pen-pink)">
+    彩度の変化
+  </text>
 
   <!-- 「色相環」ラベル（ディスク平面に書かれた弧上の文字を斜め上から見た見た目）。
        未投影の円弧パスを textPath で辿り、translate + scaleY で平面の透視を当てる -->
@@ -385,7 +382,7 @@
 
   .cs-label {
     font-size: 14px;
-    fill: #333;
+    font-weight: bold;
   }
 
   .cs-scale-mark {
