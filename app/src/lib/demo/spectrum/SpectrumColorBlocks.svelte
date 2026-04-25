@@ -10,6 +10,7 @@
     nmStart: number
     nmEnd: number
     fill: string
+    textFill: string
   }
 
   // ===== SVG dimensions =====
@@ -53,14 +54,15 @@
   const gradientOffset = (nm: number): number => (nm - NM_MIN) / (NM_MAX - NM_MIN)
 
   // ===== 色ブロック =====
+  // 各ブロックの fill は、その範囲内に存在するスペクトル帯のグラデーションストップ色を採用
   const colorBlocks: ColorBlock[] = [
-    { label: "青紫", nmStart: 380, nmEnd: 430, fill: "#6A00FF" },
-    { label: "藍", nmStart: 430, nmEnd: 460, fill: "#003CFF" },
-    { label: "青", nmStart: 460, nmEnd: 500, fill: "#0094FF" },
-    { label: "緑", nmStart: 500, nmEnd: 570, fill: "#00E600" },
-    { label: "黄", nmStart: 570, nmEnd: 590, fill: "#FFE600" },
-    { label: "橙", nmStart: 590, nmEnd: 610, fill: "#FF7F00" },
-    { label: "赤", nmStart: 610, nmEnd: 780, fill: "#FF0000" }
+    { label: "青紫", nmStart: 380, nmEnd: 420, fill: "#4B0082", textFill: "white" },
+    { label: "藍", nmStart: 420, nmEnd: 450, fill: "#0000FF", textFill: "white" },
+    { label: "青", nmStart: 450, nmEnd: 490, fill: "#00BFFF", textFill: "black" },
+    { label: "緑", nmStart: 490, nmEnd: 560, fill: "#00FF00", textFill: "black" },
+    { label: "黄", nmStart: 560, nmEnd: 625, fill: "#FFFF00", textFill: "black" },
+    { label: "橙", nmStart: 625, nmEnd: 685, fill: "#FF7F00", textFill: "black" },
+    { label: "赤", nmStart: 685, nmEnd: 780, fill: "#FF0000", textFill: "white" }
   ]
 
   const LAST_BLOCK = colorBlocks.length - 1
@@ -108,7 +110,7 @@
         x={cx}
         y={BLOCK_TOP + BLOCK_HEIGHT / 2}
         font-size="18"
-        fill="white"
+        fill={block.textFill}
         text-anchor="middle"
         dominant-baseline="central"
       >
