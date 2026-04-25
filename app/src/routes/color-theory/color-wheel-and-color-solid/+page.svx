@@ -9,17 +9,25 @@ draft: true
 
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
-  import ColorSolidDiagram from "$lib/demo/color-solid/PCCSColorSolidDiagram.svelte"
+  import ColorSolidSphere from "$lib/demo/color-solid/ColorSolidSphere.svelte"
+  import SpectrumColorBlocks from "$lib/demo/spectrum/SpectrumColorBlocks.svelte"
 </script>
 
 ## :WithGradeTag[スペクトルと色相環]{grades="3,uc"}
 
-::ComingSoon
+太陽光などの白い光を分解すると、さまざまな色の虹のような連なり（グラデーション）となり、これを:Mark[スペクトル]といいます。
+
+<SpectrumColorBlocks></SpectrumColorBlocks>
+
+スペクトルのうち、赤・緑・青っぽく見える箇所の間に注目すると、それぞれの色が混ざり合っていることがわかります。例えば、赤と緑の間には黄色っぽい色が、緑と青の間には青緑（シアン）っぽい色が見られます。
+このような白い光に含まれる色（スペクトルを構成する色）に加えて、人間の眼はスペクトルの両端の色を混ぜた色も感じ取ることができます。
+
+そこで、スペクトルの両端の色を混ぜた色も含めて、連続的な色の変化を表現するため、スペクトルを円形にし、両端の赤と青紫の間に:Mark[紫]と:Mark[赤紫]を加えたものが考案され、これを:Mark[色相環]といいます。
 
 ## :WithGradeTag[立体で表す三属性の関係]{grades="3,uc"}
 
 <SVGWrapper maxW={500}>
-  <ColorSolidDiagram />
+  <ColorSolidSphere />
 </SVGWrapper>
 
 ### 色立体の断面
