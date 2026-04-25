@@ -58,8 +58,8 @@
   const colorBlocks: ColorBlock[] = [
     { label: "青紫", nmStart: 380, nmEnd: 400, fill: "#4B0082", textFill: "white" },
     { label: "藍", nmStart: 400, nmEnd: 420, fill: "#1E00CD", textFill: "white" },
-    { label: "青", nmStart: 420, nmEnd: 490, fill: "#0000FF", textFill: "white" },
-    { label: "緑", nmStart: 490, nmEnd: 585, fill: "#00FF00", textFill: "black" },
+    { label: "青", nmStart: 420, nmEnd: 480, fill: "#0000FF", textFill: "white" },
+    { label: "緑", nmStart: 480, nmEnd: 585, fill: "#00FF00", textFill: "black" },
     { label: "黄", nmStart: 585, nmEnd: 625, fill: "#FFFF00", textFill: "black" },
     { label: "橙", nmStart: 625, nmEnd: 685, fill: "#FF7F00", textFill: "black" },
     { label: "赤", nmStart: 685, nmEnd: 780, fill: "#FF0000", textFill: "white" }
