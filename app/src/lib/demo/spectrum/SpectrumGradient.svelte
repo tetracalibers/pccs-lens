@@ -8,20 +8,14 @@
   const NM_MAX = 780
 
   const gradientStops: GradientStop[] = [
-    { nm: 380, color: "#6a00ff" },
-    { nm: 430, color: "#4b00ff" },
-    { nm: 430, color: "#4b00ff" },
-    { nm: 460, color: "#003cff" },
-    { nm: 460, color: "#003cff" },
-    { nm: 500, color: "#00b7ff" },
-    { nm: 500, color: "#00b7ff" },
-    { nm: 530, color: "#00ff80" },
-    { nm: 570, color: "#00ff00" },
-    { nm: 570, color: "#00ff00" },
-    { nm: 590, color: "#ffff00" },
-    { nm: 590, color: "#ffff00" },
-    { nm: 610, color: "#ff7f00" },
-    { nm: 610, color: "#ff7f00" },
+    { nm: 380, color: "#4b0082" },
+    { nm: 430, color: "#0000ff" },
+    { nm: 480, color: "#00bfff" },
+    { nm: 510, color: "#00ff80" },
+    { nm: 550, color: "#00ff00" },
+    { nm: 600, color: "#ffff00" },
+    { nm: 640, color: "#ffb000" },
+    { nm: 670, color: "#ff7f00" },
     { nm: 700, color: "#ff0000" },
     { nm: 780, color: "#7a0000" }
   ]
