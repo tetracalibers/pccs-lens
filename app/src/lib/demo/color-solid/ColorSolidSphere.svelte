@@ -417,10 +417,10 @@
 
   <!-- 明度スケールの白/黒ラベル（明度スケール円(r=13)と被らないよう、円の上下端からさらに離す） -->
   <text class="cs-scale-mark" x={cx} y={axisTopY - LIGHTNESS_DOT_R - 8} text-anchor="middle">
-    白
+    高明度
   </text>
   <text class="cs-scale-mark" x={cx} y={axisBottomY + LIGHTNESS_DOT_R + 18} text-anchor="middle">
-    黒
+    低明度
   </text>
 
   <!-- 「明度の変化」ラベル（-90°回転して矢印に沿わせる。上部寄りで矢じり・色相環の塗りと被らない位置） -->
