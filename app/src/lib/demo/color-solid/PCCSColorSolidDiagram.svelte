@@ -2,12 +2,8 @@
   import chroma from "chroma-js"
   import { PCCS_HUE_MAP } from "$lib/data/pccs"
 
-  interface Props {
-    /** 球の半径（px） */
-    sphereRadius?: number
-  }
-
-  let { sphereRadius = 220 }: Props = $props()
+  // 球の半径（固定値）
+  const R = 220
 
   // PAD_X / PAD_Y は図全体（球外の矢印・ラベル類を含む）の外側パディング
   const PAD_X = 20
@@ -19,9 +15,8 @@
   const HUE_ARC_RADIUS_OUTSET = 26 // 色相変化矢印楕円の rx と R との差
   const LIGHTNESS_DOT_R = 13
 
-  let R = $derived(sphereRadius)
   // 透視で潰した赤道楕円のy半径
-  let eRy = $derived(R * 0.26)
+  const eRy = R * 0.26
 
   // 球の中心から見た「図の各方向への最遠描画距離」（球外側へはみ出す要素を含む bounding box）
   // 左: 色相変化矢印の start（角度 0.94π）が最も左に出る
