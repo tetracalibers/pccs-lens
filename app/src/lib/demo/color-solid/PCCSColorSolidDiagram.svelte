@@ -217,8 +217,8 @@
     stroke-width="1.4"
   />
 
-  <!-- 前側の色相点 -->
-  {#each hueDots.filter((d) => d.isFront) as dot (dot.num)}
+  <!-- 前側の色相点（num 2 = R は等色相面のピーク彩度ドットと重なるため非表示） -->
+  {#each hueDots.filter((d) => d.isFront && d.num !== 2) as dot (dot.num)}
     <circle cx={dot.x} cy={dot.y} r="9" fill={dot.color} stroke="#fff" stroke-width="1.2" />
   {/each}
 
