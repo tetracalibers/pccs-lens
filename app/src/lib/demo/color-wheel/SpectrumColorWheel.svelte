@@ -67,7 +67,9 @@
     }
   }
   function toHex(v: number): string {
-    return Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, "0")
+    return Math.round(Math.max(0, Math.min(255, v)))
+      .toString(16)
+      .padStart(2, "0")
   }
   function colorAt(nm: number): string {
     if (nm <= gradientStops[0].nm) return gradientStops[0].color
@@ -150,27 +152,27 @@
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" {viewBox}>
-    <!-- 円形に折り曲げたスペクトル帯 (両端に隙間あり) -->
-    {#each wedges as wedge, i (i)}
-      <path d={wedge.d} fill={wedge.color} />
-    {/each}
+  <!-- 円形に折り曲げたスペクトル帯 (両端に隙間あり) -->
+  {#each wedges as wedge, i (i)}
+    <path d={wedge.d} fill={wedge.color} />
+  {/each}
 
-    <!-- 開口部の円 (赤紫 / 紫) と ラベル -->
-    {#each gapCircles as circle (circle.label)}
-      {@const center = pointOnCircle(circle.angleDeg, R_MEAN)}
-      <circle cx={center[0]} cy={center[1]} r={CIRCLE_RADIUS} fill={circle.fill} />
-      <text
-        x={center[0]}
-        y={center[1] + CIRCLE_RADIUS + GAP_CIRCLE_TO_LABEL}
-        font-size={LABEL_FONT_SIZE}
-        fill="var(--color-body)"
-        text-anchor="middle"
-        dominant-baseline="hanging"
-      >
-        {circle.label}
-      </text>
-    {/each}
-  </svg>
+  <!-- 開口部の円 (赤紫 / 紫) と ラベル -->
+  {#each gapCircles as circle (circle.label)}
+    {@const center = pointOnCircle(circle.angleDeg, R_MEAN)}
+    <circle cx={center[0]} cy={center[1]} r={CIRCLE_RADIUS} fill={circle.fill} />
+    <text
+      x={center[0]}
+      y={center[1] + CIRCLE_RADIUS + GAP_CIRCLE_TO_LABEL}
+      font-size={LABEL_FONT_SIZE}
+      fill="var(--color-body)"
+      text-anchor="middle"
+      dominant-baseline="hanging"
+    >
+      {circle.label}
+    </text>
+  {/each}
+</svg>
 
 <style>
   svg {

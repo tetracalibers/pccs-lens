@@ -72,40 +72,40 @@
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" {viewBox}>
-    <defs>
-      <!-- 可視光スペクトルグラデーション -->
-      <linearGradient id="visibleSpectrumColorBlocks" x1="0" y1="0" x2="1" y2="0">
-        {#each gradientStops as stop, i (i)}
-          <stop offset={gradientOffset(stop.nm)} stop-color={stop.color} />
-        {/each}
-      </linearGradient>
-    </defs>
+  <defs>
+    <!-- 可視光スペクトルグラデーション -->
+    <linearGradient id="visibleSpectrumColorBlocks" x1="0" y1="0" x2="1" y2="0">
+      {#each gradientStops as stop, i (i)}
+        <stop offset={gradientOffset(stop.nm)} stop-color={stop.color} />
+      {/each}
+    </linearGradient>
+  </defs>
 
-    <!-- スペクトル帯 -->
-    <rect
-      x={X_START}
-      y={BAND_TOP}
-      width={SPECTRUM_W}
-      height={BAND_HEIGHT}
-      fill="url(#visibleSpectrumColorBlocks)"
-    />
+  <!-- スペクトル帯 -->
+  <rect
+    x={X_START}
+    y={BAND_TOP}
+    width={SPECTRUM_W}
+    height={BAND_HEIGHT}
+    fill="url(#visibleSpectrumColorBlocks)"
+  />
 
-    <!-- 色ブロック (円) と ラベル -->
-    {#each colorBlocks as block (block.label)}
-      {@const cx = xAt(block.nm)}
-      <circle {cx} cy={CIRCLE_CY} r={CIRCLE_RADIUS} fill={block.fill} />
-      <text
-        x={cx}
-        y={LABEL_Y}
-        font-size={LABEL_FONT_SIZE}
-        fill="var(--color-body)"
-        text-anchor="middle"
-        dominant-baseline="hanging"
-      >
-        {block.label}
-      </text>
-    {/each}
-  </svg>
+  <!-- 色ブロック (円) と ラベル -->
+  {#each colorBlocks as block (block.label)}
+    {@const cx = xAt(block.nm)}
+    <circle {cx} cy={CIRCLE_CY} r={CIRCLE_RADIUS} fill={block.fill} />
+    <text
+      x={cx}
+      y={LABEL_Y}
+      font-size={LABEL_FONT_SIZE}
+      fill="var(--color-body)"
+      text-anchor="middle"
+      dominant-baseline="hanging"
+    >
+      {block.label}
+    </text>
+  {/each}
+</svg>
 
 <style>
   svg {
