@@ -10,7 +10,7 @@ draft: true
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
   import ColorSolidSphere from "$lib/demo/color-solid/ColorSolidSphere.svelte"
-  import SpectrumColorBlocks from "$lib/demo/spectrum/SpectrumColorBlocks.svelte"
+  import SpectrumColorBlocks from "$lib/demo/color-wheel/SpectrumColorBlocks.svelte"
 </script>
 
 ## :WithGradeTag[スペクトルと色相環]{grades="3,uc"}
