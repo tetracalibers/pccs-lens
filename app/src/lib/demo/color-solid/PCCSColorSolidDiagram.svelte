@@ -151,6 +151,25 @@
     `M ${hueArcStartX} ${hueArcStartY} A ${hueArcRx} ${hueArcRy} 0 0 0 ${hueArcEndX} ${hueArcEndY}`
   )
 
+  // 色相変化矢印のグラデーション。前面側で弧の角度範囲内にある色相点の色を、
+  // 弧上での角度位置に応じた offset で並べ、終端は赤(#e52838)で締める
+  const HUE_GRADIENT_END_COLOR = "#e52838"
+  const TWO_PI = 2 * Math.PI
+  let hueGradientStops: { offset: number; color: string }[] = $derived.by(() => {
+    const span = HUE_ARC_START_ANGLE - HUE_ARC_END_ANGLE
+    const stops: { offset: number; color: string }[] = []
+    for (const [num, data] of PCCS_HUE_MAP.entries()) {
+      // hueAngle は num に応じて負値も返すため、[0, 2π) に正規化してから範囲判定
+      const a = ((hueAngle(num) % TWO_PI) + TWO_PI) % TWO_PI
+      if (a > HUE_ARC_START_ANGLE || a < HUE_ARC_END_ANGLE) continue
+      // 弧の始点(0.94π)を offset=0、終点(0.18π)を offset=1 にマッピング
+      stops.push({ offset: (HUE_ARC_START_ANGLE - a) / span, color: data.color })
+    }
+    stops.sort((s1, s2) => s1.offset - s2.offset)
+    stops.push({ offset: 1, color: HUE_GRADIENT_END_COLOR })
+    return stops
+  })
+
   // 「色相の変化」ラベルが沿うパス: 色相変化矢印より少し外側（下側）の楕円弧で、矢印の左半分（start → 弧の底）に対応
   // textPath の文字はパスの「内側（弧の中心方向＝矢印側）」に乗るため、可視ギャップ12pxを得るには
   // パス自体を「12px（=ギャップ）+ 文字の高さ ≈ 14px」分だけ外側に置く
@@ -206,16 +225,29 @@
 >
   <defs>
     <!-- 開いた V 字の矢印マーカー（SpectrumRange と統一）。色ごとに別 ID で定義 -->
-    <!-- 暗灰色: 色相変化弧の終点 -->
-    <marker id="cs-aR-d" markerWidth="9" markerHeight="10" refX="8" refY="5" orient="auto">
+    <!-- 赤: 色相変化弧の終点（グラデーション終端色 #e52838 と一致させる） -->
+    <marker id="cs-aR-r" markerWidth="9" markerHeight="10" refX="8" refY="5" orient="auto">
       <polyline
         points="1,1 8,5 1,9"
         fill="none"
-        stroke="#444"
+        stroke={HUE_GRADIENT_END_COLOR}
         stroke-width="1"
         stroke-linejoin="round"
       />
     </marker>
+    <!-- 色相変化弧用のグラデーション。弧の始点→終点を結ぶ直線方向に沿って色補間する -->
+    <linearGradient
+      id="cs-hue-arc-gradient"
+      gradientUnits="userSpaceOnUse"
+      x1={hueArcStartX}
+      y1={hueArcStartY}
+      x2={hueArcEndX}
+      y2={hueArcEndY}
+    >
+      {#each hueGradientStops as stop, i (i)}
+        <stop offset={stop.offset} stop-color={stop.color} />
+      {/each}
+    </linearGradient>
     <!-- ピンク: 彩度変化矢印の両端 -->
     <marker id="cs-aL-p" markerWidth="9" markerHeight="10" refX="1" refY="5" orient="auto">
       <polyline
@@ -340,8 +372,14 @@
     />
   {/each}
 
-  <!-- 色相変化の弧矢印 -->
-  <path d={hueArcPath} fill="none" stroke="#444" stroke-width="2" marker-end="url(#cs-aR-d)" />
+  <!-- 色相変化の弧矢印（前面側の色相点の色で補間し、終端は #e52838 にする） -->
+  <path
+    d={hueArcPath}
+    fill="none"
+    stroke="url(#cs-hue-arc-gradient)"
+    stroke-width="2"
+    marker-end="url(#cs-aR-r)"
+  />
 
   <!-- 明度の変化矢印（縦・両端矢印） -->
   <line
