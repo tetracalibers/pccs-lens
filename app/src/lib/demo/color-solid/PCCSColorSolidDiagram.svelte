@@ -216,6 +216,9 @@
     />
   {/each}
 
+  <!-- 明度軸（球の縦中心軸）。明度スケール円の背面に描画し、円の隙間から軸が覗くようにする -->
+  <line x1={cx} y1={axisTopY} x2={cx} y2={axisBottomY} stroke="#666" stroke-width="1" />
+
   <!-- 明度スケール（円の縦並び） -->
   {#each lightnessCircles as c (c.V)}
     <circle {cx} cy={c.y} r={LIGHTNESS_DOT_R} fill={c.hex} stroke="#444" stroke-width="0.8" />
