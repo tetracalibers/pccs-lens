@@ -54,13 +54,13 @@
   const gradientOffset = (nm: number): number => (nm - NM_MIN) / (NM_MAX - NM_MIN)
 
   // ===== 色ブロック =====
-  // 各ブロックの fill は、その範囲内に存在するスペクトル帯のグラデーションストップ色を採用
+  // 各ブロックの fill は、その範囲内のスペクトル帯の代表色 (グラデーションストップ or 中点の補間色)
   const colorBlocks: ColorBlock[] = [
-    { label: "青紫", nmStart: 380, nmEnd: 420, fill: "#4B0082", textFill: "white" },
-    { label: "藍", nmStart: 420, nmEnd: 450, fill: "#0000FF", textFill: "white" },
-    { label: "青", nmStart: 450, nmEnd: 490, fill: "#00BFFF", textFill: "black" },
-    { label: "緑", nmStart: 490, nmEnd: 560, fill: "#00FF00", textFill: "black" },
-    { label: "黄", nmStart: 560, nmEnd: 625, fill: "#FFFF00", textFill: "black" },
+    { label: "青紫", nmStart: 380, nmEnd: 400, fill: "#4B0082", textFill: "white" },
+    { label: "藍", nmStart: 400, nmEnd: 420, fill: "#1E00CD", textFill: "white" },
+    { label: "青", nmStart: 420, nmEnd: 490, fill: "#0000FF", textFill: "white" },
+    { label: "緑", nmStart: 490, nmEnd: 585, fill: "#00FF00", textFill: "black" },
+    { label: "黄", nmStart: 585, nmEnd: 625, fill: "#FFFF00", textFill: "black" },
     { label: "橙", nmStart: 625, nmEnd: 685, fill: "#FF7F00", textFill: "black" },
     { label: "赤", nmStart: 685, nmEnd: 780, fill: "#FF0000", textFill: "white" }
   ]
