@@ -34,7 +34,7 @@
   const CIRCLE_RADIUS = 22
   const CIRCLE_CY = BAND_BOTTOM + GAP_BAND_TO_CIRCLE + CIRCLE_RADIUS
   const GAP_CIRCLE_TO_LABEL = 12
-  const LABEL_FONT_SIZE = 18
+  const LABEL_FONT_SIZE = 22
   const LABEL_Y = CIRCLE_CY + CIRCLE_RADIUS + GAP_CIRCLE_TO_LABEL // 文字上端 (dominant-baseline="hanging")
   const HEIGHT = LABEL_Y + LABEL_FONT_SIZE + 6
 
