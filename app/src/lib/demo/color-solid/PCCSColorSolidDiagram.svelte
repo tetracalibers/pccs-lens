@@ -108,8 +108,12 @@
     })
   )
 
-  // 彩度の変化矢印のターゲット（前面・左下の色相点）。num 11 = G
-  let satTarget = $derived(hueDots.find((d) => d.num === 11)!)
+  // 彩度の変化矢印は中央のグレイ円（V=5, #808080）と赤道左端の v14（bG, #008678）を結ぶ
+  // 円と矢印が被らないよう、両端を円エッジから離す。終点側は矢じりの突出分も含む
+  let satTarget = $derived(hueDots.find((d) => d.num === 14)!)
+  let satLineStartX = $derived(cx - LIGHTNESS_DOT_R - 4)
+  let satLineEndX = $derived(satTarget.x + LIGHTNESS_DOT_R + 6)
+  let satMidX = $derived((satLineStartX + satLineEndX) / 2)
 
   // 色相変化の弧（赤道の前面に少し外側）
   const HUE_ARC_START_ANGLE = Math.PI * 0.94
@@ -129,10 +133,6 @@
   let lightArrowX = $derived(cx - LIGHTNESS_DOT_R - 28)
   let lightArrowYTop = $derived(axisTopY - 4)
   let lightArrowYBot = $derived(axisBottomY + 4)
-
-  // 彩度矢印の中点（ラベル配置用）
-  let satMidX = $derived((cx + satTarget.x) / 2)
-  let satMidY = $derived((cy + satTarget.y) / 2)
 </script>
 
 <svg
@@ -193,12 +193,12 @@
     <circle cx={dot.x} cy={dot.y} r="6" fill={dot.color} />
   {/each}
 
-  <!-- 彩度の変化矢印（中心 → 前面の色相点）。中央のグレイ円より下に置き、円のエッジから出る見た目にする -->
+  <!-- 彩度の変化矢印（V=5 グレイ円 → v14 bG）。両端は円のエッジから離して被りを防ぐ -->
   <line
-    x1={cx}
+    x1={satLineStartX}
     y1={cy}
-    x2={satTarget.x}
-    y2={satTarget.y}
+    x2={satLineEndX}
+    y2={cy}
     stroke="#444"
     stroke-width="1.5"
     marker-end="url(#cs-arrow-end)"
@@ -277,8 +277,8 @@
     色相の変化
   </text>
 
-  <!-- 「彩度の変化」ラベル（彩度矢印の中点付近） -->
-  <text class="cs-label" x={satMidX - 6} y={satMidY - 10} text-anchor="end">彩度の変化</text>
+  <!-- 「彩度の変化」ラベル（彩度矢印の中点・線の上側） -->
+  <text class="cs-label" x={satMidX} y={cy - 12} text-anchor="middle">彩度の変化</text>
 
   <!-- 「赤の等色相面」ラベル -->
   <text class="cs-plane-label" x={cx + R * 0.55} y={axisTopY - 6} text-anchor="middle">
