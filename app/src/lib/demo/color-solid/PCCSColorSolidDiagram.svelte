@@ -205,27 +205,56 @@
   aria-label="PCCSの色立体（明度・色相・彩度の三軸）"
 >
   <defs>
-    <marker
-      id="cs-arrow-end"
-      viewBox="0 0 10 10"
-      refX="8"
-      refY="5"
-      markerWidth="9"
-      markerHeight="9"
-      orient="auto"
-    >
-      <path d="M0 0 L10 5 L0 10 z" fill="#444" />
+    <!-- 開いた V 字の矢印マーカー（SpectrumRange と統一）。色ごとに別 ID で定義 -->
+    <!-- 暗灰色: 色相変化弧の終点 -->
+    <marker id="cs-aR-d" markerWidth="9" markerHeight="10" refX="8" refY="5" orient="auto">
+      <polyline
+        points="1,1 8,5 1,9"
+        fill="none"
+        stroke="#444"
+        stroke-width="1"
+        stroke-linejoin="round"
+      />
     </marker>
-    <marker
-      id="cs-arrow-start"
-      viewBox="0 0 10 10"
-      refX="2"
-      refY="5"
-      markerWidth="9"
-      markerHeight="9"
-      orient="auto"
-    >
-      <path d="M10 0 L0 5 L10 10 z" fill="#444" />
+    <!-- ピンク: 彩度変化矢印の両端 -->
+    <marker id="cs-aL-p" markerWidth="9" markerHeight="10" refX="1" refY="5" orient="auto">
+      <polyline
+        points="8,1 1,5 8,9"
+        fill="none"
+        stroke="var(--canvas-pen-pink)"
+        stroke-width="1"
+        stroke-linejoin="round"
+      />
+    </marker>
+    <marker id="cs-aR-p" markerWidth="9" markerHeight="10" refX="8" refY="5" orient="auto">
+      <polyline
+        points="1,1 8,5 1,9"
+        fill="none"
+        stroke="var(--canvas-pen-pink)"
+        stroke-width="1"
+        stroke-linejoin="round"
+      />
+    </marker>
+    <!-- 水色: 明度変化矢印の両端 -->
+    <marker id="cs-aL-w" markerWidth="9" markerHeight="10" refX="1" refY="5" orient="auto">
+      <polyline
+        points="8,1 1,5 8,9"
+        fill="none"
+        stroke="var(--canvas-pen-water)"
+        stroke-width="1"
+        stroke-linejoin="round"
+        stroke-linecap="round"
+      />
+    </marker>
+    <marker id="cs-aR-w" markerWidth="9" markerHeight="10" refX="8" refY="5" orient="auto">
+      <polyline
+        points="1,1 8,5 1,9"
+        fill="none"
+        stroke="var(--canvas-pen-water)"
+        stroke-width="1"
+        stroke-linejoin="round"
+        stroke-linecap="round"
+      />
     </marker>
     <!-- 「色相環」ラベルが沿う円弧（ディスク座標、未投影）。テキスト要素側の transform で平面の透視を当てる -->
     <path id="cs-hue-ring-label-path" d={hueRingLabelPath} />
@@ -272,8 +301,8 @@
     y2={cy}
     stroke="var(--canvas-pen-pink)"
     stroke-width="2"
-    marker-start="url(#cs-arrow-start)"
-    marker-end="url(#cs-arrow-end)"
+    marker-start="url(#cs-aL-p)"
+    marker-end="url(#cs-aR-p)"
   />
 
   <!-- 赤の等色相面の領域を示す薄い塗り（右半円） -->
@@ -312,7 +341,7 @@
   {/each}
 
   <!-- 色相変化の弧矢印 -->
-  <path d={hueArcPath} fill="none" stroke="#444" stroke-width="2" marker-end="url(#cs-arrow-end)" />
+  <path d={hueArcPath} fill="none" stroke="#444" stroke-width="2" marker-end="url(#cs-aR-d)" />
 
   <!-- 明度の変化矢印（縦・両端矢印） -->
   <line
@@ -322,8 +351,8 @@
     y2={lightArrowYBot}
     stroke="var(--canvas-pen-water)"
     stroke-width="2"
-    marker-start="url(#cs-arrow-start)"
-    marker-end="url(#cs-arrow-end)"
+    marker-start="url(#cs-aL-w)"
+    marker-end="url(#cs-aR-w)"
   />
 
   <!-- 明度スケールの白/黒ラベル（明度スケール円(r=13)と被らないよう、円の上下端からさらに離す） -->
