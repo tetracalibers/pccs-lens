@@ -381,7 +381,6 @@
     display: block;
     max-width: 100%;
     height: auto;
-    font-family: var(--font-sans, sans-serif);
   }
 
   .cs-label {
@@ -392,7 +391,6 @@
   .cs-scale-mark {
     font-size: 13px;
     fill: #333;
-    font-weight: 600;
   }
 
   .cs-plane-label {
@@ -402,7 +400,7 @@
 
   /* 色相環ラベルは平面上に貼り付くように垂直方向に圧縮するため、フォントを大きめに設定 */
   .cs-hue-ring-label {
-    font-size: 22px;
+    font-size: 18px;
     fill: #444;
     translate: 0 -0.3em;
   }
