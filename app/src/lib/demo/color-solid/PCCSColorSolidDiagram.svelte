@@ -207,6 +207,7 @@
     y2={cy}
     stroke="#444"
     stroke-width="1.5"
+    marker-start="url(#cs-arrow-start)"
     marker-end="url(#cs-arrow-end)"
   />
 
