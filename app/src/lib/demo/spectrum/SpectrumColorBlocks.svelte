@@ -7,10 +7,9 @@
 
   interface ColorBlock {
     label: string
-    nmStart: number
-    nmEnd: number
+    /** スペクトル帯における代表色の波長 (この点に円の中心を配置) */
+    nm: number
     fill: string
-    textFill: string
   }
 
   // ===== SVG dimensions =====
@@ -31,11 +30,18 @@
   const BAND_TOP = 0
   const BAND_HEIGHT = 150
   const BAND_BOTTOM = BAND_TOP + BAND_HEIGHT
-  const GAP_BAND_TO_BLOCK = 18 // スペクトル帯 → 色ブロック間の余白 (px)
-  const BLOCK_TOP = BAND_BOTTOM + GAP_BAND_TO_BLOCK
-  const BLOCK_HEIGHT = 52
-  const BLOCK_GAP = 1 // 隣接ブロック間の隙間 (px)
-  const HEIGHT = BLOCK_TOP + BLOCK_HEIGHT
+  const GAP_BAND_TO_CIRCLE = 18 // スペクトル帯 → 円間の余白 (px)
+  const CIRCLE_RADIUS = 22
+  const CIRCLE_CY = BAND_BOTTOM + GAP_BAND_TO_CIRCLE + CIRCLE_RADIUS
+  const GAP_CIRCLE_TO_LABEL = 12
+  const LABEL_FONT_SIZE = 18
+  const LABEL_Y = CIRCLE_CY + CIRCLE_RADIUS + GAP_CIRCLE_TO_LABEL // 文字上端 (dominant-baseline="hanging")
+  const HEIGHT = LABEL_Y + LABEL_FONT_SIZE + 6
+
+  // ===== ViewBox =====
+  // 円ラベル (text-anchor="middle") が viewBox 端で切れないよう左右に padding を設ける
+  const PADDING_X = 24
+  const viewBox = `${-PADDING_X} 0 ${WIDTH + 2 * PADDING_X} ${HEIGHT}`
 
   // ===== グラデーションストップ =====
   const gradientStops: GradientStop[] = [
@@ -53,35 +59,20 @@
 
   const gradientOffset = (nm: number): number => (nm - NM_MIN) / (NM_MAX - NM_MIN)
 
-  // ===== 色ブロック =====
-  // 各ブロックの fill は、その範囲内のスペクトル帯の代表色 (グラデーションストップ or 中点の補間色)
+  // ===== 色ブロック (円) =====
   const colorBlocks: ColorBlock[] = [
-    { label: "青紫", nmStart: 380, nmEnd: 400, fill: "#4B0082", textFill: "white" },
-    { label: "藍", nmStart: 400, nmEnd: 420, fill: "#1E00CD", textFill: "white" },
-    { label: "青", nmStart: 420, nmEnd: 480, fill: "#0000FF", textFill: "white" },
-    { label: "緑", nmStart: 480, nmEnd: 585, fill: "#00FF00", textFill: "black" },
-    { label: "黄", nmStart: 585, nmEnd: 620, fill: "#FFFF00", textFill: "black" },
-    { label: "橙", nmStart: 620, nmEnd: 680, fill: "#FF7F00", textFill: "black" },
-    { label: "赤", nmStart: 680, nmEnd: 780, fill: "#FF0000", textFill: "white" }
+    { label: "青紫", nm: 380, fill: "#4B0082" },
+    { label: "藍", nm: 410, fill: "#1E00CD" },
+    { label: "青", nm: 430, fill: "#0000FF" },
+    { label: "緑", nm: 550, fill: "#00FF00" },
+    { label: "黄", nm: 600, fill: "#FFFF00" },
+    { label: "橙", nm: 670, fill: "#FF7F00" },
+    { label: "赤", nm: 700, fill: "#FF0000" }
   ]
-
-  const LAST_BLOCK = colorBlocks.length - 1
-
-  /** ブロックの左端 x (先頭以外は隙間分ずらす) */
-  const blockX = (nmStart: number, i: number): number => xAt(nmStart) + (i === 0 ? 0 : BLOCK_GAP)
-  /** ブロックの右端 x (末尾以外は隙間分縮める) */
-  const blockEndX = (nmEnd: number, i: number): number =>
-    xAt(nmEnd) - (i === LAST_BLOCK ? 0 : BLOCK_GAP)
-  /** ブロックの幅 */
-  const blockW = (nmStart: number, nmEnd: number, i: number): number =>
-    blockEndX(nmEnd, i) - blockX(nmStart, i)
-  /** ラベル中心 x */
-  const blockCX = (nmStart: number, nmEnd: number, i: number): number =>
-    (blockX(nmStart, i) + blockEndX(nmEnd, i)) / 2
 </script>
 
 <div class="wrapper">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {WIDTH} {HEIGHT}">
+  <svg xmlns="http://www.w3.org/2000/svg" {viewBox}>
     <defs>
       <!-- 可視光スペクトルグラデーション -->
       <linearGradient id="visibleSpectrumColorBlocks" x1="0" y1="0" x2="1" y2="0">
@@ -100,19 +91,17 @@
       fill="url(#visibleSpectrumColorBlocks)"
     />
 
-    <!-- 色ブロック -->
-    {#each colorBlocks as block, i (block.nmStart)}
-      {@const bx = blockX(block.nmStart, i)}
-      {@const bw = blockW(block.nmStart, block.nmEnd, i)}
-      {@const cx = blockCX(block.nmStart, block.nmEnd, i)}
-      <rect x={bx} y={BLOCK_TOP} width={bw} height={BLOCK_HEIGHT} fill={block.fill} rx="4" />
+    <!-- 色ブロック (円) と ラベル -->
+    {#each colorBlocks as block (block.label)}
+      {@const cx = xAt(block.nm)}
+      <circle {cx} cy={CIRCLE_CY} r={CIRCLE_RADIUS} fill={block.fill} />
       <text
         x={cx}
-        y={BLOCK_TOP + BLOCK_HEIGHT / 2}
-        font-size="18"
-        fill={block.textFill}
+        y={LABEL_Y}
+        font-size={LABEL_FONT_SIZE}
+        fill="var(--color-body)"
         text-anchor="middle"
-        dominant-baseline="central"
+        dominant-baseline="hanging"
       >
         {block.label}
       </text>
