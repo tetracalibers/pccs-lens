@@ -9,16 +9,37 @@
 
   let { sphereRadius = 220 }: Props = $props()
 
-  const PAD_X = 130
-  const PAD_Y = 70
+  // PAD_X / PAD_Y は図全体（球外の矢印・ラベル類を含む）の外側パディング
+  const PAD_X = 20
+  const PAD_Y = 10
+
+  // 後方で使う角度・寸法定数を先に宣言しておく（leftExtra / topExtra / bottomExtra 計算で参照するため）
+  const HUE_ARC_START_ANGLE = Math.PI * 0.94
+  const HUE_ARC_END_ANGLE = Math.PI * 0.18
+  const HUE_ARC_RADIUS_OUTSET = 26 // 色相変化矢印楕円の rx と R との差
+  const LIGHTNESS_DOT_R = 13
 
   let R = $derived(sphereRadius)
-  let W = $derived(R * 2 + PAD_X * 2)
-  let H = $derived(R * 2 + PAD_Y * 2)
-  let cx = $derived(W / 2)
-  let cy = $derived(H / 2)
   // 透視で潰した赤道楕円のy半径
   let eRy = $derived(R * 0.26)
+
+  // 球の中心から見た「図の各方向への最遠描画距離」（球外側へはみ出す要素を含む bounding box）
+  // 左: 色相変化矢印の start（角度 0.94π）が最も左に出る
+  let leftExtra = $derived(
+    Math.ceil((R + HUE_ARC_RADIUS_OUTSET) * Math.abs(Math.cos(HUE_ARC_START_ANGLE)) + 3)
+  )
+  // 右: 球外形＋ストロークの余裕のみ
+  let rightExtra = $derived(R + 2)
+  // 上: 「白」ラベル(明度スケール円(r=13)の上、+6px gap、ascender ~11px)
+  let topExtra = $derived(R + LIGHTNESS_DOT_R + 6 + 11)
+  // 下: 「黒」ラベル(明度スケール円の下、+16px gap、descender ~3px)
+  let bottomExtra = $derived(R + LIGHTNESS_DOT_R + 16 + 3)
+
+  // SVG 全体のサイズと球中心。図の bounding box に PAD を足したもの
+  let W = $derived(leftExtra + rightExtra + PAD_X * 2)
+  let H = $derived(topExtra + bottomExtra + PAD_Y * 2)
+  let cx = $derived(PAD_X + leftExtra)
+  let cy = $derived(PAD_Y + topExtra)
 
   // 色相番号 → 角度。num 2（R / 赤）を3時方向（右）に置き、右側半円に赤の等色相面を展開する
   const TOP_HUE_NUM = 20
@@ -87,9 +108,8 @@
     return dots
   })
 
-  // 明度スケール（円の縦並び）
+  // 明度スケール（円の縦並び）。LIGHTNESS_DOT_R は先頭で宣言済み
   const NUM_LIGHTNESS_CIRCLES = 11
-  const LIGHTNESS_DOT_R = 13
 
   let axisTopY = $derived(cy - R)
   let axisBottomY = $derived(cy + R)
@@ -125,11 +145,8 @@
     `M ${cx} ${cy - redPlaneLabelR} A ${redPlaneLabelR} ${redPlaneLabelR} 0 0 1 ${cx + redPlaneLabelR} ${cy}`
   )
 
-  // 色相変化の弧（赤道の前面に少し外側）
-  const HUE_ARC_START_ANGLE = Math.PI * 0.94
-  const HUE_ARC_END_ANGLE = Math.PI * 0.18
-
-  let hueArcRx = $derived(R + 26)
+  // 色相変化の弧（赤道の前面に少し外側）。HUE_ARC_* と HUE_ARC_RADIUS_OUTSET は先頭で宣言済み
+  let hueArcRx = $derived(R + HUE_ARC_RADIUS_OUTSET)
   let hueArcRy = $derived(eRy + 18)
   let hueArcStartX = $derived(cx + hueArcRx * Math.cos(HUE_ARC_START_ANGLE))
   let hueArcStartY = $derived(cy + hueArcRy * Math.sin(HUE_ARC_START_ANGLE))
