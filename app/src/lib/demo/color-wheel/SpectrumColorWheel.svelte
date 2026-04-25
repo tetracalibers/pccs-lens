@@ -31,9 +31,9 @@
   ]
 
   // ===== SVG dimensions =====
-  const SIZE = 600
-  const CX = SIZE / 2
-  const CY = SIZE / 2
+  // CX, CY は環の中心. ViewBox は内容のバウンディングボックスにフィットさせる.
+  const CX = 300
+  const CY = 300
 
   // ===== 色相環の幾何学パラメータ =====
   const BAND_THICKNESS = 70
@@ -128,9 +128,25 @@
   const LABEL_FONT_SIZE = 22
   const GAP_CIRCLE_TO_LABEL = 12
 
-  // ===== ViewBox =====
-  const PADDING = 16
-  const viewBox = `${-PADDING} ${-PADDING} ${SIZE + 2 * PADDING} ${SIZE + 2 * PADDING}`
+  // ===== ViewBox (内容のバウンディングボックスにフィット) =====
+  // 帯は 0° / 180° / 270° で R_OUTER に達するため, X 範囲 = [CX - R_OUTER, CX + R_OUTER],
+  // Y_min = CY - R_OUTER. Y_max は一番下のラベル底端から決まる.
+  const labelBottomY = Math.max(
+    ...gapCircles.map(
+      (c) =>
+        CY +
+        R_MEAN * Math.sin(deg2rad(c.angleDeg)) +
+        CIRCLE_RADIUS +
+        GAP_CIRCLE_TO_LABEL +
+        LABEL_FONT_SIZE
+    )
+  )
+  const PADDING = 4
+  const VB_X = CX - R_OUTER - PADDING
+  const VB_Y = CY - R_OUTER - PADDING
+  const VB_W = 2 * R_OUTER + 2 * PADDING
+  const VB_H = labelBottomY - (CY - R_OUTER) + 2 * PADDING
+  const viewBox = `${VB_X} ${VB_Y} ${VB_W} ${VB_H}`
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" {viewBox}>
