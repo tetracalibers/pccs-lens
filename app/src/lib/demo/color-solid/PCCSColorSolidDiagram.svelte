@@ -139,6 +139,24 @@
     `M ${hueArcStartX} ${hueArcStartY} A ${hueArcRx} ${hueArcRy} 0 0 0 ${hueArcEndX} ${hueArcEndY}`
   )
 
+  // 「色相の変化」ラベルが沿うパス: 色相変化矢印より少し外側（下側）の楕円弧で、矢印の左半分（start → 弧の底）に対応
+  // textPath の文字はパスの「内側（弧の中心方向＝矢印側）」に乗るため、可視ギャップ12pxを得るには
+  // パス自体を「12px（=ギャップ）+ 文字の高さ ≈ 14px」分だけ外側に置く
+  const HUE_LABEL_GAP = 12
+  const HUE_LABEL_FONT_HEIGHT = 14
+  const HUE_LABEL_OFFSET = HUE_LABEL_GAP + HUE_LABEL_FONT_HEIGHT
+  let hueLabelRx = $derived(hueArcRx + HUE_LABEL_OFFSET)
+  let hueLabelRy = $derived(hueArcRy + HUE_LABEL_OFFSET)
+  let hueLabelStartX = $derived(cx + hueLabelRx * Math.cos(HUE_ARC_START_ANGLE))
+  let hueLabelStartY = $derived(cy + hueLabelRy * Math.sin(HUE_ARC_START_ANGLE))
+  // 弧の底（角度 π/2）= 矢印の左右半分の境界
+  let hueLabelEndX = $derived(cx + hueLabelRx * Math.cos(Math.PI / 2))
+  let hueLabelEndY = $derived(cy + hueLabelRy * Math.sin(Math.PI / 2))
+  // 矢印と同じ sweep=0（CCW = θ 減少方向）。始点 0.94π → 弧底 0.5π
+  let hueLabelPath = $derived(
+    `M ${hueLabelStartX} ${hueLabelStartY} A ${hueLabelRx} ${hueLabelRy} 0 0 0 ${hueLabelEndX} ${hueLabelEndY}`
+  )
+
   // 明度の変化矢印（明度スケールの左隣に縦の双方向矢印）
   let lightArrowX = $derived(cx - LIGHTNESS_DOT_R - 28)
   let lightArrowYTop = $derived(axisTopY - 4)
@@ -201,6 +219,8 @@
     <path id="cs-hue-ring-label-path" d={hueRingLabelPath} />
     <!-- 「赤の等色相面」ラベルが沿う、等色相面の上半分の円周より少し内側の弧 -->
     <path id="cs-red-plane-label-path" d={redPlaneLabelPath} />
+    <!-- 「色相の変化」ラベルが沿う、色相変化矢印の左半分の少し外側の弧 -->
+    <path id="cs-hue-arrow-label-path" d={hueLabelPath} />
   </defs>
 
   <!-- 球の外形 -->
@@ -315,9 +335,9 @@
     明度の変化
   </text>
 
-  <!-- 「色相の変化」ラベル（弧矢印の終点付近） -->
-  <text class="cs-label" x={hueArcEndX + 6} y={hueArcEndY + 18} text-anchor="start">
-    色相の変化
+  <!-- 「色相の変化」ラベル（矢印の左半分の少し外側の弧に沿う） -->
+  <text class="cs-label" text-anchor="middle">
+    <textPath href="#cs-hue-arrow-label-path" startOffset="50%">色相の変化</textPath>
   </text>
 
   <!-- 「彩度の変化」ラベル（彩度矢印の中点・線の上側） -->
