@@ -18,7 +18,7 @@ draft: true
 
 ## :WithGradeTag[立体で表す三属性の関係]{grades="3,uc"}
 
-<SVGWrapper>
+<SVGWrapper maxW={500}>
   <ColorSolidDiagram />
 </SVGWrapper>
 
