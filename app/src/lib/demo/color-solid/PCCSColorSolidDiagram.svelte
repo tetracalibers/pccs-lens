@@ -118,6 +118,13 @@
   // 赤の等色相面（右半円）パス
   let redPlanePath = $derived(`M ${cx} ${axisTopY} A ${R} ${R} 0 0 1 ${cx} ${axisBottomY} Z`)
 
+  // 「赤の等色相面」ラベルが沿う内側円弧。右半円の上半分（top → right）の少し内側
+  const RED_PLANE_LABEL_R_RATIO = 0.9
+  let redPlaneLabelR = $derived(R * RED_PLANE_LABEL_R_RATIO)
+  let redPlaneLabelPath = $derived(
+    `M ${cx} ${cy - redPlaneLabelR} A ${redPlaneLabelR} ${redPlaneLabelR} 0 0 1 ${cx + redPlaneLabelR} ${cy}`
+  )
+
   // 色相変化の弧（赤道の前面に少し外側）
   const HUE_ARC_START_ANGLE = Math.PI * 0.94
   const HUE_ARC_END_ANGLE = Math.PI * 0.18
@@ -192,6 +199,8 @@
     </marker>
     <!-- 「色相環」ラベルが沿う円弧（ディスク座標、未投影）。テキスト要素側の transform で平面の透視を当てる -->
     <path id="cs-hue-ring-label-path" d={hueRingLabelPath} />
+    <!-- 「赤の等色相面」ラベルが沿う、等色相面の上半分の円周より少し内側の弧 -->
+    <path id="cs-red-plane-label-path" d={redPlaneLabelPath} />
   </defs>
 
   <!-- 球の外形 -->
@@ -325,9 +334,9 @@
     <textPath href="#cs-hue-ring-label-path" startOffset="50%">色相環</textPath>
   </text>
 
-  <!-- 「赤の等色相面」ラベル -->
-  <text class="cs-plane-label" x={cx + R * 0.55} y={axisTopY - 6} text-anchor="middle">
-    赤の等色相面
+  <!-- 「赤の等色相面」ラベル（等色相面の上半分の円周に沿わせる、内側に少し寄せた弧上） -->
+  <text class="cs-plane-label" text-anchor="middle">
+    <textPath href="#cs-red-plane-label-path" startOffset="50%">赤の等色相面</textPath>
   </text>
 </svg>
 
