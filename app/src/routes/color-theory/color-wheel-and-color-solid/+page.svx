@@ -38,7 +38,7 @@ draft: true
 
 色の三属性（色相・明度・彩度）の関係は、3次元空間で表すことができます。
 
-<SVGWrapper maxW={500}>
+<SVGWrapper maxW={580}>
   <ColorSolidSphere />
 </SVGWrapper>
 

@@ -6,7 +6,7 @@
   const R = 220
 
   // PAD_X / PAD_Y は図全体（球外の矢印・ラベル類を含む）の外側パディング
-  const PAD_X = 20
+  const PAD_X = 0
   const PAD_Y = 10
 
   // 後方で使う角度・寸法定数を先に宣言しておく（leftExtra / topExtra / bottomExtra 計算で参照するため）
@@ -15,16 +15,23 @@
   const HUE_ARC_RADIUS_OUTSET = 26 // 色相変化矢印楕円の rx と R との差
   const LIGHTNESS_DOT_R = 13
 
+  // 「高彩度」ラベル: 赤道左端の v14 (bG) 円と、赤の最大彩度ドット (#e52838) の外側に置く
+  const SAT_LABEL_GAP = 6
+  const SAT_LABEL_WIDTH = 50
+
   // 透視で潰した赤道楕円のy半径
   const eRy = R * 0.26
 
   // 球の中心から見た「図の各方向への最遠描画距離」（球外側へはみ出す要素を含む bounding box）
-  // 左: 色相変化矢印の start（角度 0.94π）が最も左に出る
+  // 左: 色相変化矢印の start（角度 0.94π）と v14 円の左外「高彩度」ラベルのうち、外に出る方
   let leftExtra = $derived(
-    Math.ceil((R + HUE_ARC_RADIUS_OUTSET) * Math.abs(Math.cos(HUE_ARC_START_ANGLE)) + 3)
+    Math.max(
+      Math.ceil((R + HUE_ARC_RADIUS_OUTSET) * Math.abs(Math.cos(HUE_ARC_START_ANGLE)) + 3),
+      R + LIGHTNESS_DOT_R + SAT_LABEL_GAP + SAT_LABEL_WIDTH
+    )
   )
-  // 右: 球外形＋ストロークの余裕のみ
-  let rightExtra = $derived(R + 2)
+  // 右: 赤の最大彩度ドットの右外「高彩度」ラベル
+  let rightExtra = $derived(R + LIGHTNESS_DOT_R + SAT_LABEL_GAP + SAT_LABEL_WIDTH)
   // 上: 「白」ラベル(明度スケール円(r=13)の上、+6px gap、ascender ~11px)
   let topExtra = $derived(R + LIGHTNESS_DOT_R + 6 + 11)
   // 下: 「黒」ラベル(明度スケール円の下、+16px gap、descender ~3px)
@@ -416,11 +423,31 @@
   />
 
   <!-- 明度スケールの白/黒ラベル（明度スケール円(r=13)と被らないよう、円の上下端からさらに離す） -->
-  <text class="cs-scale-mark" x={cx} y={axisTopY - LIGHTNESS_DOT_R - 8} text-anchor="middle">
+  <text class="cs-scale-mark" x={cx} y={axisTopY - LIGHTNESS_DOT_R - 10} text-anchor="middle">
     高明度
   </text>
-  <text class="cs-scale-mark" x={cx} y={axisBottomY + LIGHTNESS_DOT_R + 18} text-anchor="middle">
+  <text class="cs-scale-mark" x={cx} y={axisBottomY + LIGHTNESS_DOT_R + 20} text-anchor="middle">
     低明度
+  </text>
+
+  <!-- 高彩度ラベル: 赤道左端の v14 (bG, #008678) 円の左外と、赤の最大彩度ドット (#e52838) の右外 -->
+  <text
+    class="cs-scale-mark"
+    x={cx - R - LIGHTNESS_DOT_R - SAT_LABEL_GAP}
+    y={cy}
+    text-anchor="end"
+    dominant-baseline="middle"
+  >
+    高彩度
+  </text>
+  <text
+    class="cs-scale-mark"
+    x={cx + R + LIGHTNESS_DOT_R + SAT_LABEL_GAP}
+    y={cy}
+    text-anchor="start"
+    dominant-baseline="middle"
+  >
+    高彩度
   </text>
 
   <!-- 「明度の変化」ラベル（-90°回転して矢印に沿わせる。上部寄りで矢じり・色相環の塗りと被らない位置） -->
