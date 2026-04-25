@@ -115,6 +115,9 @@
   let satLineEndX = $derived(satTarget.x + LIGHTNESS_DOT_R + 6)
   let satMidX = $derived((satLineStartX + satLineEndX) / 2)
 
+  // 赤の等色相面（右半円）パス
+  let redPlanePath = $derived(`M ${cx} ${axisTopY} A ${R} ${R} 0 0 1 ${cx} ${axisBottomY} Z`)
+
   // 色相変化の弧（赤道の前面に少し外側）
   const HUE_ARC_START_ANGLE = Math.PI * 0.94
   const HUE_ARC_END_ANGLE = Math.PI * 0.18
@@ -206,6 +209,9 @@
     stroke-width="1.5"
     marker-end="url(#cs-arrow-end)"
   />
+
+  <!-- 赤の等色相面の領域を示す薄い塗り（右半円） -->
+  <path d={redPlanePath} fill="rgba(168, 50, 62, 0.12)" />
 
   <!-- 赤の等色相面（sRGBガモットに沿った自然な形でドットを配置） -->
   {#each denseRedDots as dot (dot.key)}
