@@ -42,16 +42,20 @@
   const R_MEAN = (R_OUTER + R_INNER) / 2
   const CIRCLE_RADIUS = BAND_THICKNESS / 2
 
-  // 開口部 (gap) は左下 (SVG y-down 座標で 135°)
-  const GAP_CENTER_DEG = 135
   const GAP_DEG = 50
   const GAP_HALF = GAP_DEG / 2
 
-  // 帯の掃引: 赤端 (780nm) → gap の上側 (西寄り), 青紫端 (380nm) → gap の下側 (南寄り)
-  // CW (角度増加) で (360 - GAP_DEG)° 掃引する
-  const SWEEP_START = GAP_CENTER_DEG + GAP_HALF
-  const SWEEP_END = SWEEP_START + (360 - GAP_DEG)
-  const SWEEP_RANGE = SWEEP_END - SWEEP_START
+  // 黄色 (600nm = #ffff00) を真上 (SVG y-down 座標で 270°) に配置するため,
+  // 掃引開始角度を逆算する. 帯は赤端 (780nm) から CW に (360 - GAP_DEG)° 掃引し,
+  // 青紫端 (380nm) で終わる.
+  const TOP_ANGLE_DEG = 270
+  const YELLOW_NM = 600
+  const SWEEP_RANGE = 360 - GAP_DEG
+  const SWEEP_START = TOP_ANGLE_DEG - ((NM_MAX - YELLOW_NM) / (NM_MAX - NM_MIN)) * SWEEP_RANGE
+  const SWEEP_END = SWEEP_START + SWEEP_RANGE
+
+  // 開口部の中心角度 (黄色が真上の制約から導出. ≒ 105.5°, 下方向やや左寄り)
+  const GAP_CENTER_DEG = SWEEP_START - GAP_HALF
 
   // ===== 色補間 (グラデーションストップ間を線形補間) =====
   function hexToRgb(hex: string): { r: number; g: number; b: number } {
