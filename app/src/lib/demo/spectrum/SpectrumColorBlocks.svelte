@@ -60,9 +60,9 @@
     { label: "藍", nmStart: 400, nmEnd: 420, fill: "#1E00CD", textFill: "white" },
     { label: "青", nmStart: 420, nmEnd: 480, fill: "#0000FF", textFill: "white" },
     { label: "緑", nmStart: 480, nmEnd: 585, fill: "#00FF00", textFill: "black" },
-    { label: "黄", nmStart: 585, nmEnd: 625, fill: "#FFFF00", textFill: "black" },
-    { label: "橙", nmStart: 625, nmEnd: 685, fill: "#FF7F00", textFill: "black" },
-    { label: "赤", nmStart: 685, nmEnd: 780, fill: "#FF0000", textFill: "white" }
+    { label: "黄", nmStart: 585, nmEnd: 620, fill: "#FFFF00", textFill: "black" },
+    { label: "橙", nmStart: 620, nmEnd: 680, fill: "#FF7F00", textFill: "black" },
+    { label: "赤", nmStart: 680, nmEnd: 780, fill: "#FF0000", textFill: "white" }
   ]
 
   const LAST_BLOCK = colorBlocks.length - 1
