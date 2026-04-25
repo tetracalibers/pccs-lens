@@ -26,6 +26,7 @@
     align-items: flex-start;
     gap: 0.55rem;
     line-height: 1.2;
+    margin-inline-start: -8px;
     min-height: 1lh;
   }
 
