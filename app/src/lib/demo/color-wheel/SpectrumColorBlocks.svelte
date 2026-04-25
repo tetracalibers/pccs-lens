@@ -71,8 +71,7 @@
   ]
 </script>
 
-<div class="wrapper">
-  <svg xmlns="http://www.w3.org/2000/svg" {viewBox}>
+<svg xmlns="http://www.w3.org/2000/svg" {viewBox}>
     <defs>
       <!-- 可視光スペクトルグラデーション -->
       <linearGradient id="visibleSpectrumColorBlocks" x1="0" y1="0" x2="1" y2="0">
@@ -107,14 +106,9 @@
       </text>
     {/each}
   </svg>
-</div>
 
 <style>
-  .wrapper {
-    width: 100%;
-  }
-
-  .wrapper svg {
+  svg {
     display: block;
     width: 100%;
     height: auto;

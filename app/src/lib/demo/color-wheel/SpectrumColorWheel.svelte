@@ -133,8 +133,7 @@
   const viewBox = `${-PADDING} ${-PADDING} ${SIZE + 2 * PADDING} ${SIZE + 2 * PADDING}`
 </script>
 
-<div class="wrapper">
-  <svg xmlns="http://www.w3.org/2000/svg" {viewBox}>
+<svg xmlns="http://www.w3.org/2000/svg" {viewBox}>
     <!-- 円形に折り曲げたスペクトル帯 (両端に隙間あり) -->
     {#each wedges as wedge, i (i)}
       <path d={wedge.d} fill={wedge.color} />
@@ -156,14 +155,9 @@
       </text>
     {/each}
   </svg>
-</div>
 
 <style>
-  .wrapper {
-    width: 100%;
-  }
-
-  .wrapper svg {
+  svg {
     display: block;
     width: 100%;
     height: auto;
