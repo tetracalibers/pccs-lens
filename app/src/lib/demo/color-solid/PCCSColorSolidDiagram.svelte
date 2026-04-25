@@ -294,6 +294,25 @@
     <path id="cs-red-plane-label-path" d={redPlaneLabelPath} />
     <!-- 「色相の変化」ラベルが沿う、色相変化矢印の左半分の少し外側の弧 -->
     <path id="cs-hue-arrow-label-path" d={hueLabelPath} />
+    <!-- 「色相の変化」ラベル用マスク。
+         Safari/WebKit は <text>+<textPath> の fill に paint server (gradient) を直接指定すると、
+         textPath 変形前の水平 bbox を基準にクリップして末尾の文字が描画されない既知の挙動がある。
+         そこでテキスト形状をマスクとして使い、gradient で塗った <rect> を切り抜く方式に切り替える。
+         マスク内の text は solid color (white) なので paint-server bbox 問題は発生しない -->
+    <mask
+      id="cs-hue-arrow-label-mask"
+      maskUnits="userSpaceOnUse"
+      maskContentUnits="userSpaceOnUse"
+      x="0"
+      y="0"
+      width={W}
+      height={H}
+    >
+      <rect x="0" y="0" width={W} height={H} fill="black" />
+      <text class="cs-label" text-anchor="middle" fill="white">
+        <textPath href="#cs-hue-arrow-label-path" startOffset="50%">色相の変化</textPath>
+      </text>
+    </mask>
   </defs>
 
   <!-- 球の外形 -->
@@ -417,10 +436,16 @@
   </text>
 
   <!-- 「色相の変化」ラベル（矢印の左半分の少し外側の弧に沿う）。
-       矢印と同じグラデーションを fill に適用し、ラベル位置に対応する色味で描画する -->
-  <text class="cs-label" text-anchor="middle" fill="url(#cs-hue-arc-gradient)">
-    <textPath href="#cs-hue-arrow-label-path" startOffset="50%">色相の変化</textPath>
-  </text>
+       gradient で塗った rect をテキスト形状のマスクで切り抜くことで、矢印と同じ gradient を適用する。
+       <text> の fill に直接 url(#...) を指定すると Safari で末尾文字が見切れるための回避策（defs 内マスク参照） -->
+  <rect
+    x="0"
+    y="0"
+    width={W}
+    height={H}
+    fill="url(#cs-hue-arc-gradient)"
+    mask="url(#cs-hue-arrow-label-mask)"
+  />
 
   <!-- 「彩度の変化」ラベル（彩度矢印の中点・線の上側） -->
   <text class="cs-label" x={satMidX} y={cy - 12} text-anchor="middle" fill="var(--canvas-pen-pink)">
