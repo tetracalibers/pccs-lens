@@ -140,11 +140,24 @@
   let lightLabelPivotX = $derived(lightArrowX - 14)
   let lightLabelPivotY = $derived(lightArrowYTop + 60)
 
-  // 「色相環」ラベルの中心位置（彩度矢印の下、色相環平面の左寄り）
-  // 縦スケール 0.55 → 斜め上から見下ろした程度の透視感（赤道の eRy/R≈0.26 ほど潰さず可読性を確保）
-  let hueRingLabelCenterX = $derived(cx - R * 0.4)
-  let hueRingLabelCenterY = $derived(cy + eRy * 0.5)
+  // 「色相環」ラベル: スクリーン上では赤道楕円の v12（#33A23D）〜v9（#CCE700）の弧と平行で、内側に寄せた弧をなぞる。
+  // text 側に scale(1, k) を当てて文字を縦圧縮するため、ディスク座標側の ry は eRy/k に拡げておく
+  // （k 倍された結果ちょうど eRy ベースの弧になる）。INNER_RATIO で円周より内側に縮める
   const HUE_RING_LABEL_SCALE_Y = 0.55
+  const HUE_RING_LABEL_INNER_RATIO = 0.85
+
+  let hueRingLabelRxPre = $derived(R * HUE_RING_LABEL_INNER_RATIO)
+  let hueRingLabelRyPre = $derived((eRy / HUE_RING_LABEL_SCALE_Y) * HUE_RING_LABEL_INNER_RATIO)
+  let hueRingLabelStartAngle = $derived(hueAngle(12))
+  let hueRingLabelEndAngle = $derived(hueAngle(9))
+  let hueRingLabelStartX = $derived(hueRingLabelRxPre * Math.cos(hueRingLabelStartAngle))
+  let hueRingLabelStartY = $derived(hueRingLabelRyPre * Math.sin(hueRingLabelStartAngle))
+  let hueRingLabelEndX = $derived(hueRingLabelRxPre * Math.cos(hueRingLabelEndAngle))
+  let hueRingLabelEndY = $derived(hueRingLabelRyPre * Math.sin(hueRingLabelEndAngle))
+  // v12 (角度 150°) → v9 (角度 105°) は θ 減少方向（SVG y-down では CCW = sweep=0）
+  let hueRingLabelPath = $derived(
+    `M ${hueRingLabelStartX} ${hueRingLabelStartY} A ${hueRingLabelRxPre} ${hueRingLabelRyPre} 0 0 0 ${hueRingLabelEndX} ${hueRingLabelEndY}`
+  )
 </script>
 
 <svg
@@ -177,6 +190,8 @@
     >
       <path d="M10 0 L0 5 L10 10 z" fill="#444" />
     </marker>
+    <!-- 「色相環」ラベルが沿う円弧（ディスク座標、未投影）。テキスト要素側の transform で平面の透視を当てる -->
+    <path id="cs-hue-ring-label-path" d={hueRingLabelPath} />
   </defs>
 
   <!-- 球の外形 -->
@@ -299,14 +314,15 @@
   <!-- 「彩度の変化」ラベル（彩度矢印の中点・線の上側） -->
   <text class="cs-label" x={satMidX} y={cy - 12} text-anchor="middle">彩度の変化</text>
 
-  <!-- 「色相環」ラベル（彩度矢印の下、色相環平面に貼り付くように垂直スケールで圧縮） -->
+  <!-- 「色相環」ラベル（ディスク平面に書かれた弧上の文字を斜め上から見た見た目）。
+       未投影の円弧パスを textPath で辿り、translate + scaleY で平面の透視を当てる -->
   <text
     class="cs-hue-ring-label"
     text-anchor="middle"
     dominant-baseline="middle"
-    transform="translate({hueRingLabelCenterX} {hueRingLabelCenterY}) scale(1 {HUE_RING_LABEL_SCALE_Y})"
+    transform="translate({cx} {cy}) scale(1 {HUE_RING_LABEL_SCALE_Y})"
   >
-    色相環
+    <textPath href="#cs-hue-ring-label-path" startOffset="50%">色相環</textPath>
   </text>
 
   <!-- 「赤の等色相面」ラベル -->
@@ -341,7 +357,8 @@
 
   /* 色相環ラベルは平面上に貼り付くように垂直方向に圧縮するため、フォントを大きめに設定 */
   .cs-hue-ring-label {
-    font-size: 26px;
+    font-size: 22px;
     fill: #444;
+    translate: 0 -0.3em;
   }
 </style>
