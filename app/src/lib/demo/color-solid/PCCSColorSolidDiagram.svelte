@@ -139,6 +139,12 @@
   // 明度の変化ラベルの回転中心（矢印の左隣・上部寄り）
   let lightLabelPivotX = $derived(lightArrowX - 14)
   let lightLabelPivotY = $derived(lightArrowYTop + 60)
+
+  // 「色相環」ラベルの中心位置（彩度矢印の下、色相環平面の左寄り）
+  // 縦スケール 0.55 → 斜め上から見下ろした程度の透視感（赤道の eRy/R≈0.26 ほど潰さず可読性を確保）
+  let hueRingLabelCenterX = $derived(cx - R * 0.4)
+  let hueRingLabelCenterY = $derived(cy + eRy * 0.5)
+  const HUE_RING_LABEL_SCALE_Y = 0.55
 </script>
 
 <svg
@@ -293,8 +299,15 @@
   <!-- 「彩度の変化」ラベル（彩度矢印の中点・線の上側） -->
   <text class="cs-label" x={satMidX} y={cy - 12} text-anchor="middle">彩度の変化</text>
 
-  <!-- 「色相環」ラベル（赤道楕円の上、背面の頂点付近） -->
-  <text class="cs-label" x={cx} y={cy - eRy - 14} text-anchor="middle">色相環</text>
+  <!-- 「色相環」ラベル（彩度矢印の下、色相環平面に貼り付くように垂直スケールで圧縮） -->
+  <text
+    class="cs-hue-ring-label"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    transform="translate({hueRingLabelCenterX} {hueRingLabelCenterY}) scale(1 {HUE_RING_LABEL_SCALE_Y})"
+  >
+    色相環
+  </text>
 
   <!-- 「赤の等色相面」ラベル -->
   <text class="cs-plane-label" x={cx + R * 0.55} y={axisTopY - 6} text-anchor="middle">
@@ -324,5 +337,11 @@
   .cs-plane-label {
     font-size: 13px;
     fill: #a8323e;
+  }
+
+  /* 色相環ラベルは平面上に貼り付くように垂直方向に圧縮するため、フォントを大きめに設定 */
+  .cs-hue-ring-label {
+    font-size: 26px;
+    fill: #444;
   }
 </style>
