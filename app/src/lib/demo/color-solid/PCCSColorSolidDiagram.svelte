@@ -340,15 +340,18 @@
   <!-- 赤の等色相面の領域を示す薄い塗り（右半円） -->
   <path d={redPlanePath} fill="#e52838" fill-opacity="0.15" />
 
-  <!-- 赤の等色相面（sRGBガモットに沿った自然な形でドットを配置） -->
+  <!-- 赤の等色相面（sRGBガモットに沿った自然な形でドットを配置）。
+       V=5・ピーク彩度のドット（hex が #e52838）は色相環の num=2 (R) と同じ位置に重なるため、
+       他の色相点と同様に白ストロークで強調する -->
   {#each denseRedDots as dot (dot.key)}
+    {@const onHueRing = dot.hex === HUE_GRADIENT_END_COLOR}
     <circle
       cx={dot.x}
       cy={dot.y}
       r={LIGHTNESS_DOT_R}
       fill={dot.hex}
-      stroke="#444"
-      stroke-width="0.8"
+      stroke={onHueRing ? "#fff" : "#444"}
+      stroke-width={onHueRing ? 1.2 : 0.8}
     />
   {/each}
 
