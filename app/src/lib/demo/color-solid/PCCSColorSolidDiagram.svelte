@@ -37,17 +37,20 @@
     isFront: boolean
   }
 
+  // 描画順は深さ（y昇順 = 奥→手前）。同じ前面/背面グループ内でも、より奥にあるものが先に描かれて手前のものに覆われるようにする
   let hueDots: HueDot[] = $derived(
-    Array.from(PCCS_HUE_MAP.entries()).map(([num, data]) => {
-      const a = hueAngle(num)
-      return {
-        num,
-        color: data.color,
-        x: cx + R * Math.cos(a),
-        y: cy + eRy * Math.sin(a),
-        isFront: Math.sin(a) >= -0.001
-      }
-    })
+    Array.from(PCCS_HUE_MAP.entries())
+      .map(([num, data]) => {
+        const a = hueAngle(num)
+        return {
+          num,
+          color: data.color,
+          x: cx + R * Math.cos(a),
+          y: cy + eRy * Math.sin(a),
+          isFront: Math.sin(a) >= -0.001
+        }
+      })
+      .sort((a, b) => a.y - b.y)
   )
 
   // 赤の等色相面（chroma-js のLCH空間でsRGBガモット内のみサンプル）
