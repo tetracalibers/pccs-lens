@@ -180,8 +180,9 @@
   <path
     d={`M ${cx - R} ${cy} A ${R} ${eRy} 0 0 1 ${cx + R} ${cy}`}
     fill="none"
-    stroke="#444"
-    stroke-width="1.4"
+    stroke="#aaa"
+    stroke-width="1"
+    stroke-dasharray="4 4"
   />
 
   <!-- 後ろ側の色相点（小さく描画） -->
