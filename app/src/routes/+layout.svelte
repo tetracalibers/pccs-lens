@@ -467,7 +467,7 @@
     font-weight: 800;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: light-dark(#aaa, #555);
+    color: light-dark(#aaa, #7b7b7b);
     margin: 8px 0 4px;
   }
 
