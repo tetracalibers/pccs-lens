@@ -413,8 +413,9 @@
     明度の変化
   </text>
 
-  <!-- 「色相の変化」ラベル（矢印の左半分の少し外側の弧に沿う） -->
-  <text class="cs-label" text-anchor="middle">
+  <!-- 「色相の変化」ラベル（矢印の左半分の少し外側の弧に沿う）。
+       矢印と同じグラデーションを fill に適用し、ラベル位置に対応する色味で描画する -->
+  <text class="cs-label" text-anchor="middle" fill="url(#cs-hue-arc-gradient)">
     <textPath href="#cs-hue-arrow-label-path" startOffset="50%">色相の変化</textPath>
   </text>
 
