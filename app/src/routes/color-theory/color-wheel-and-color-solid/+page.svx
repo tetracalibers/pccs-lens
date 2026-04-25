@@ -1,0 +1,27 @@
+---
+layout: guide-content
+title: 色相環と色立体
+
+grades: ["3", "uc"]
+
+draft: true
+---
+
+<script>
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import ColorSolidDiagram from "$lib/demo/color-solid/PCCSColorSolidDiagram.svelte"
+</script>
+
+## :WithGradeTag[スペクトルと色相環]{grades="3,uc"}
+
+::ComingSoon
+
+## :WithGradeTag[立体で表す三属性の関係]{grades="3,uc"}
+
+<SVGWrapper>
+  <ColorSolidDiagram />
+</SVGWrapper>
+
+### 色立体の断面
+
+::ComingSoon
