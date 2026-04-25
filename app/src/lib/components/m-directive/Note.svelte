@@ -1,10 +1,15 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
 
-  let { children }: { children?: Snippet } = $props()
+  interface Props {
+    children?: Snippet
+    title?: string
+  }
+
+  let { children, title = "Note" }: Props = $props()
 </script>
 
-<div class="note">
+<div class="note" data-title={title}>
   {@render children?.()}
 </div>
 
@@ -20,7 +25,7 @@
   }
 
   .note::before {
-    content: "Note";
+    content: attr(data-title);
     display: block;
     font-size: 0.68rem;
     font-weight: 700;

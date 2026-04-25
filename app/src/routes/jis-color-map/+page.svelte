@@ -79,7 +79,9 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    margin-bottom: 2.5rem;
+  }
+  .section:not(:last-child) {
+    margin-block-end: 2.5rem;
   }
 
   .section-heading {

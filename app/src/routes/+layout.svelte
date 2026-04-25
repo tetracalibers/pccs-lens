@@ -19,16 +19,17 @@
   const contentItems = [
     { href: resolve("/color-theory"), path: "/color-theory", label: "色の理論" },
     { href: resolve("/color-fields"), path: "/color-fields", label: "色の活用分野" },
-    { href: resolve("/jis-color-map"), path: "/jis-color-map", label: "慣用色名" }
+    { href: resolve("/jis-color-map"), path: "/jis-color-map", label: "慣用色名マップ" }
   ]
 
   const CONTENT_TOP_ROUTES = new Set(["/color-theory", "/color-fields"])
   const isContentPage = $derived(
-    page.route.id !== null &&
+    (page.route.id !== null &&
       !CONTENT_TOP_ROUTES.has(page.route.id) &&
       (page.route.id.startsWith("/color-theory") ||
         page.route.id.startsWith("/color-fields") ||
-        page.route.id === "/jis-color-map/[family]")
+        page.route.id === "/jis-color-map/[family]")) ||
+      page.route.id === "/concept"
   )
   $effect(() => {
     if (!isContentPage) ankiMode.reset()
@@ -38,6 +39,8 @@
   function closeNav() {
     isNavOpen = false
   }
+
+  const isConceptPage = $derived(page.route.id === "/concept")
 </script>
 
 <svelte:head>
@@ -187,6 +190,14 @@
 
 <div class="container">{@render children()}</div>
 
+<footer class="site-footer">
+  <div class="footer-inner">
+    <a href={isConceptPage ? resolve("/") : resolve("/concept")} class="footer-link">
+      {isConceptPage ? "トップページへ" : "このサイトについて"}
+    </a>
+  </div>
+</footer>
+
 <style>
   /* ===== グローバル ===== */
   :global(:root) {
@@ -222,7 +233,7 @@
 
   /* ===== メインコンテンツラッパー ===== */
   .container {
-    margin: 3rem auto 4rem;
+    margin: 3rem auto;
     padding: 1.5rem 1.5rem 0;
     container-type: inline-size;
   }
@@ -456,7 +467,7 @@
     font-weight: 800;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: light-dark(#aaa, #555);
+    color: light-dark(#aaa, #7b7b7b);
     margin: 8px 0 4px;
   }
 
@@ -528,5 +539,74 @@
     background: inherit;
     border-radius: 0 0 4px 4px;
     opacity: 1;
+  }
+
+  /* ===== サイトフッター ===== */
+  .site-footer {
+    margin-block-end: 1rem;
+    margin-inline: 1rem;
+    position: relative;
+  }
+
+  .site-footer::before {
+    content: "";
+    border-image-source: linear-gradient(
+      to right,
+      #dfe9f3 0%,
+      rgba(255, 255, 255, 0.25) 50%,
+      #dfe9f3 100%
+    );
+    border-image-slice: 1;
+    border-block-start: 1px solid;
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+
+  :global(.dark) .site-footer::before {
+    opacity: 0.4;
+  }
+
+  .footer-inner {
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .footer-link {
+    --_bg-opacity: 0.75;
+    --_bg-dot-size: 4px;
+
+    color: var(--color-body);
+    text-decoration: none;
+    font-size: 0.82rem;
+    padding-block: 8px;
+    background-image:
+      radial-gradient(
+        circle closest-side,
+        rgba(199, 125, 255, var(--_bg-opacity)),
+        rgba(77, 150, 255, var(--_bg-opacity)) 95%,
+        transparent 100%
+      ),
+      linear-gradient(
+        135deg,
+        rgba(199, 125, 255, var(--_bg-opacity)),
+        rgba(77, 150, 255, var(--_bg-opacity))
+      );
+    background-repeat: no-repeat;
+    background-size:
+      var(--_bg-dot-size) var(--_bg-dot-size),
+      0 1.5px;
+    background-position: 50% 100%;
+    transition:
+      color 0.15s,
+      background-size 0.25s;
+  }
+
+  .footer-link:hover {
+    background-size:
+      0 0,
+      100% 1.5px;
   }
 </style>

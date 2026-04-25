@@ -11,7 +11,7 @@
   <span class="text">{@render children?.()}</span>
   <div class="grade-tags">
     {#each gradeList as grade (grade)}
-      <GradeTag {grade} />
+      <GradeTag {grade} compactH />
     {/each}
   </div>
 </div>
