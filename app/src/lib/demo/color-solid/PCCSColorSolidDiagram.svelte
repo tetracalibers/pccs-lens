@@ -194,12 +194,19 @@
 
   <!-- 赤の等色相面（sRGBガモットに沿った自然な形でドットを配置） -->
   {#each denseRedDots as dot (dot.key)}
-    <circle cx={dot.x} cy={dot.y} r={LIGHTNESS_DOT_R} fill={dot.hex} stroke="#444" stroke-width="0.8" />
+    <circle
+      cx={dot.x}
+      cy={dot.y}
+      r={LIGHTNESS_DOT_R}
+      fill={dot.hex}
+      stroke="#444"
+      stroke-width="0.8"
+    />
   {/each}
 
   <!-- 明度スケール（円の縦並び） -->
   {#each lightnessCircles as c (c.V)}
-    <circle cx={cx} cy={c.y} r={LIGHTNESS_DOT_R} fill={c.hex} stroke="#444" stroke-width="0.8" />
+    <circle {cx} cy={c.y} r={LIGHTNESS_DOT_R} fill={c.hex} stroke="#444" stroke-width="0.8" />
   {/each}
 
   <!-- 赤道（前半分・実線） -->
@@ -246,21 +253,23 @@
     x={lightArrowX - 8}
     y={cy}
     text-anchor="middle"
-    transform="rotate(-90 {lightArrowX - 8} {cy})">明度の変化</text
+    transform="rotate(-90 {lightArrowX - 8} {cy})"
   >
+    明度の変化
+  </text>
 
   <!-- 「色相の変化」ラベル（弧矢印の終点付近） -->
-  <text class="cs-label" x={hueArcEndX + 6} y={hueArcEndY + 18} text-anchor="start"
-    >色相の変化</text
-  >
+  <text class="cs-label" x={hueArcEndX + 6} y={hueArcEndY + 18} text-anchor="start">
+    色相の変化
+  </text>
 
   <!-- 「彩度の変化」ラベル（彩度矢印の中点付近） -->
   <text class="cs-label" x={satMidX - 6} y={satMidY - 10} text-anchor="end">彩度の変化</text>
 
   <!-- 「赤の等色相面」ラベル -->
-  <text class="cs-plane-label" x={cx + R * 0.55} y={axisTopY - 6} text-anchor="middle"
-    >赤の等色相面</text
-  >
+  <text class="cs-plane-label" x={cx + R * 0.55} y={axisTopY - 6} text-anchor="middle">
+    赤の等色相面
+  </text>
 </svg>
 
 <style>
