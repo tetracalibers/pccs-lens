@@ -170,6 +170,9 @@
   <!-- 球の外形 -->
   <circle {cx} {cy} r={R} fill="none" stroke="#999" stroke-width="1.5" />
 
+  <!-- 色相環の領域を示す薄い塗り（赤道楕円） -->
+  <ellipse {cx} {cy} rx={R} ry={eRy} fill="rgba(120, 120, 120, 0.18)" />
+
   <!-- 赤道（後ろ半分・破線） -->
   <path
     d={`M ${cx + R} ${cy} A ${R} ${eRy} 0 0 1 ${cx - R} ${cy}`}
@@ -279,6 +282,9 @@
 
   <!-- 「彩度の変化」ラベル（彩度矢印の中点・線の上側） -->
   <text class="cs-label" x={satMidX} y={cy - 12} text-anchor="middle">彩度の変化</text>
+
+  <!-- 「色相環」ラベル（赤道楕円の上、背面の頂点付近） -->
+  <text class="cs-label" x={cx} y={cy - eRy - 14} text-anchor="middle">色相環</text>
 
   <!-- 「赤の等色相面」ラベル -->
   <text class="cs-plane-label" x={cx + R * 0.55} y={axisTopY - 6} text-anchor="middle">
