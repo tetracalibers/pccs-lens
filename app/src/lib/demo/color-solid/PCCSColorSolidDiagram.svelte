@@ -176,9 +176,17 @@
     stroke-dasharray="4 4"
   />
 
-  <!-- 後ろ側の色相点（小さく薄く描画） -->
+  <!-- 赤道（前半分・実線） -->
+  <path
+    d={`M ${cx - R} ${cy} A ${R} ${eRy} 0 0 1 ${cx + R} ${cy}`}
+    fill="none"
+    stroke="#444"
+    stroke-width="1.4"
+  />
+
+  <!-- 後ろ側の色相点（小さく描画） -->
   {#each hueDots.filter((d) => !d.isFront) as dot (dot.num)}
-    <circle cx={dot.x} cy={dot.y} r="6" fill={dot.color} opacity="0.5" />
+    <circle cx={dot.x} cy={dot.y} r="6" fill={dot.color} />
   {/each}
 
   <!-- 彩度の変化矢印（中心 → 前面の色相点）。中央のグレイ円より下に置き、円のエッジから出る見た目にする -->
@@ -208,14 +216,6 @@
   {#each lightnessCircles as c (c.V)}
     <circle {cx} cy={c.y} r={LIGHTNESS_DOT_R} fill={c.hex} stroke="#444" stroke-width="0.8" />
   {/each}
-
-  <!-- 赤道（前半分・実線） -->
-  <path
-    d={`M ${cx - R} ${cy} A ${R} ${eRy} 0 0 1 ${cx + R} ${cy}`}
-    fill="none"
-    stroke="#444"
-    stroke-width="1.4"
-  />
 
   <!-- 前側の色相点（num 2 = R は等色相面のピーク彩度ドットと重なるため非表示） -->
   {#each hueDots.filter((d) => d.isFront && d.num !== 2) as dot (dot.num)}
