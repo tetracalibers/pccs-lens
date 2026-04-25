@@ -224,9 +224,16 @@
     <circle {cx} cy={c.y} r={LIGHTNESS_DOT_R} fill={c.hex} stroke="#444" stroke-width="0.8" />
   {/each}
 
-  <!-- 前側の色相点（num 2 = R は等色相面のピーク彩度ドットと重なるため非表示） -->
+  <!-- 前側の色相点（num 2 = R は等色相面のピーク彩度ドットと重なるため非表示。num 14 は赤道端で v2 と対称位置にあるため等色相面ドットと同じ半径） -->
   {#each hueDots.filter((d) => d.isFront && d.num !== 2) as dot (dot.num)}
-    <circle cx={dot.x} cy={dot.y} r="9" fill={dot.color} stroke="#fff" stroke-width="1.2" />
+    <circle
+      cx={dot.x}
+      cy={dot.y}
+      r={dot.num === 14 ? LIGHTNESS_DOT_R : 9}
+      fill={dot.color}
+      stroke="#fff"
+      stroke-width="1.2"
+    />
   {/each}
 
   <!-- 色相変化の弧矢印 -->
