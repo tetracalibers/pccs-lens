@@ -11,20 +11,32 @@ draft: true
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
   import ColorSolidSphere from "$lib/demo/color-solid/ColorSolidSphere.svelte"
   import SpectrumColorBlocks from "$lib/demo/color-wheel/SpectrumColorBlocks.svelte"
+  import SpectrumColorWheel from "$lib/demo/color-wheel/SpectrumColorWheel.svelte"
 </script>
 
 ## :WithGradeTag[スペクトルと色相環]{grades="3,uc"}
 
 太陽光などの白い光を分解すると、さまざまな色の虹のような連なり（グラデーション）となり、これを:Mark[スペクトル]といいます。
 
-<SpectrumColorBlocks></SpectrumColorBlocks>
+<SVGWrapper>
+  <SpectrumColorBlocks />
+</SVGWrapper>
 
-スペクトルのうち、赤・緑・青っぽく見える箇所の間に注目すると、それぞれの色が混ざり合っていることがわかります。例えば、赤と緑の間には黄色っぽい色が、緑と青の間には青緑（シアン）っぽい色が見られます。
-このような白い光に含まれる色（スペクトルを構成する色）に加えて、人間の眼はスペクトルの両端の色を混ぜた色も感じ取ることができます。
+スペクトルのうち、赤・緑・青らしく見える範囲の間に注目すると、それぞれの色が混ざり合っていることがわかります。例えば、赤と緑の間には黄色が、緑と青の間にはシアン（青緑）が見られます。
+しかし、スペクトルのそれぞれ両端付近である赤と青を混ぜた色は、スペクトルの中には存在しません。
 
-そこで、スペクトルの両端の色を混ぜた色も含めて、連続的な色の変化を表現するため、スペクトルを円形にし、両端の赤と青紫の間に:Mark[紫]と:Mark[赤紫]を加えたものが考案され、これを:Mark[色相環]といいます。
+人間の眼は、スペクトルを構成する色（白い光に含まれる色）に加えて、スペクトルの両端の色を混ぜた色も感じ取ることができます。
+そこで、スペクトルの両端の色を混ぜた色も含めて、連続的な色の変化を表現するため、スペクトルを円形にし、両端の赤と青紫の間に:Mark[赤紫]と:Mark[紫]を加えたものが考案され、これを:Mark[色相環]といいます。
+
+<SVGWrapper maxW={350}>
+  <SpectrumColorWheel />
+</SVGWrapper>
+
+色相環はすべての色相を色の変化の順に一覧できるものですが、どのような名前で色相を区切るか？どの色相を一番上に配置するか？など、細かいルールは:Mark[表色系]によって異なります。
 
 ## :WithGradeTag[立体で表す三属性の関係]{grades="3,uc"}
+
+色の三属性（色相・明度・彩度）の関係は、3次元空間で表すことができます。
 
 <SVGWrapper maxW={500}>
   <ColorSolidSphere />
