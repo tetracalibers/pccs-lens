@@ -39,14 +39,7 @@
 {#snippet content()}
   {#each newOddTicks as hue (hue)}
     {@const e = tickEndpoints(hueAngle(hue))}
-    <line
-      x1={e.x1}
-      y1={e.y1}
-      x2={e.x2}
-      y2={e.y2}
-      stroke={COL_LINE}
-      stroke-width={STROKE_WIDTH}
-    />
+    <line x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2} stroke={COL_LINE} stroke-width={STROKE_WIDTH} />
   {/each}
   {#each plainLabels as item (item.hue)}
     {@const p = letterPosition(item.hue)}
