@@ -23,10 +23,9 @@
   // O/P 系の追加に伴う奇数目盛り (5: O 自身, 21/23: P 系両端)
   const newOddTicks = [5, 21, 23]
 
-  const circledLetters = [
-    { hue: 5, letter: "O" },
-    { hue: 22, letter: "P" }
-  ]
+  // 奇数番号 (5) は丸で囲まない. 偶数番号 (22) のみ丸で囲む.
+  const plainLetters = [{ hue: 5, letter: "O" }]
+  const circledLetters = [{ hue: 22, letter: "P" }]
 
   const arcs = [
     { from: 4, to: 6 },
@@ -42,6 +41,19 @@
   {#each newOddTicks as hue (hue)}
     {@const e = tickEndpoints(hueAngle(hue))}
     <line x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2} stroke={COL_LINE} stroke-width={STROKE_WIDTH} />
+  {/each}
+  {#each plainLetters as item (item.hue)}
+    {@const p = letterPosition(item.hue)}
+    <text
+      x={p.x}
+      y={p.y}
+      font-size={LETTER_FONT_SIZE}
+      fill={COL_TEXT}
+      text-anchor="middle"
+      dominant-baseline="central"
+    >
+      {item.letter}
+    </text>
   {/each}
   {#each circledLetters as item (item.hue)}
     {@const p = letterPosition(item.hue)}

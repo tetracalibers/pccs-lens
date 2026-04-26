@@ -14,10 +14,10 @@
   // の小文字 + 円弧の文字の大文字.
   const plainLabels = [
     { hue: 1, label: "pR" },
-    { hue: 3, label: "oR" },
+    { hue: 3, label: "yR" },
     { hue: 4, label: "rO" },
     { hue: 6, label: "yO" },
-    { hue: 7, label: "oY" },
+    { hue: 7, label: "rY" },
     { hue: 9, label: "gY" },
     { hue: 11, label: "yG" },
     { hue: 13, label: "bG" },
