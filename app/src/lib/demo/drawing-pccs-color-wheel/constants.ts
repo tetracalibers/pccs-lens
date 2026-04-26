@@ -1,3 +1,5 @@
+import { PCCS_HEX_MAP } from "$lib/data/pccs"
+
 // ===== SVG dimensions =====
 export const VIEW_SIZE = 420
 
@@ -30,6 +32,11 @@ export const LETTER_RADIUS = R + TICK_HALF + LETTER_CIRCLE_R + 8
 // ===== Arc =====
 /** 円弧 (○系のグルーピング) を描く半径. 数字のさらに内側. */
 export const ARC_RADIUS = NUM_RADIUS - NUM_FONT_SIZE * 1.5
+/**
+ * 円弧の描画色に使う PCCS トーン.
+ * 高彩度: v / b / s / dp / 中彩度: lt / sf / d / dk / 低彩度: p / ltg / g / dkg
+ */
+export const ARC_TONE = "b"
 
 /**
  * 角度から目盛り (円周をまたぐ短い線分) の両端座標を返す.
@@ -73,6 +80,11 @@ export function letterPosition(hue: number): { x: number; y: number } {
     x: CX + LETTER_RADIUS * Math.cos(r),
     y: CY + LETTER_RADIUS * Math.sin(r)
   }
+}
+
+/** 中心となる丸囲み色相 hue から円弧の描画色 (HEX) を返す. ARC_TONE で指定したトーンを参照. */
+export function arcColor(centerHue: number): string {
+  return PCCS_HEX_MAP.get(`${ARC_TONE}${centerHue}`) ?? COL_LINE
 }
 
 /**

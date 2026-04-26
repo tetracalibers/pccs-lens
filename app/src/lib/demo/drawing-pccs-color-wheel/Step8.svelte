@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
-  import { PCCS_HUE_MAP } from "$lib/data/pccs"
   import {
     COL_LINE,
     COL_TEXT,
@@ -8,6 +7,7 @@
     LETTER_FONT_SIZE,
     NUM_FONT_SIZE,
     STROKE_WIDTH,
+    arcColor,
     arcPath,
     hueAngle,
     letterPosition,
@@ -96,7 +96,7 @@
     <path
       d={arcPath(arc.from, arc.to)}
       fill="none"
-      stroke={PCCS_HUE_MAP.get(arc.centerHue)!.color}
+      stroke={arcColor(arc.centerHue)}
       stroke-width={STROKE_WIDTH}
     />
   {/each}
