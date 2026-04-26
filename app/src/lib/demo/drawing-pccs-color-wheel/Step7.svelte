@@ -36,6 +36,41 @@
 </script>
 
 {#snippet defs()}
+  {#each arcs as arc (arc.centerHue)}
+    {@const c = arcColor(arc.centerHue)}
+    <marker
+      id="arc-arrow-start-{arc.centerHue}"
+      markerWidth="6"
+      markerHeight="6"
+      refX="1"
+      refY="3"
+      orient="auto"
+    >
+      <polyline
+        points="5,1 1,3 5,5"
+        fill="none"
+        stroke={c}
+        stroke-width="1"
+        stroke-linejoin="round"
+      />
+    </marker>
+    <marker
+      id="arc-arrow-end-{arc.centerHue}"
+      markerWidth="6"
+      markerHeight="6"
+      refX="5"
+      refY="3"
+      orient="auto"
+    >
+      <polyline
+        points="1,1 5,3 1,5"
+        fill="none"
+        stroke={c}
+        stroke-width="1"
+        stroke-linejoin="round"
+      />
+    </marker>
+  {/each}
   {@render extraDefs?.()}
 {/snippet}
 
@@ -69,6 +104,8 @@
       fill="none"
       stroke={arcColor(arc.centerHue)}
       stroke-width={STROKE_WIDTH}
+      marker-start="url(#arc-arrow-start-{arc.centerHue})"
+      marker-end="url(#arc-arrow-end-{arc.centerHue})"
     />
   {/each}
   {@render extraContent?.()}
