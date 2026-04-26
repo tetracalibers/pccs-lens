@@ -14,6 +14,12 @@ draft: true
   import Step2 from "$lib/demo/drawing-pccs-color-wheel/Step2.svelte"
   import Step3 from "$lib/demo/drawing-pccs-color-wheel/Step3.svelte"
   import Step4 from "$lib/demo/drawing-pccs-color-wheel/Step4.svelte"
+  import Step5 from "$lib/demo/drawing-pccs-color-wheel/Step5.svelte"
+  import Step6 from "$lib/demo/drawing-pccs-color-wheel/Step6.svelte"
+  import Step7 from "$lib/demo/drawing-pccs-color-wheel/Step7.svelte"
+  import Step8 from "$lib/demo/drawing-pccs-color-wheel/Step8.svelte"
+  import Step9 from "$lib/demo/drawing-pccs-color-wheel/Step9.svelte"
+  import Step10 from "$lib/demo/drawing-pccs-color-wheel/Step10.svelte"
 </script>
 
 色彩検定では、PCCS色相環を描けるようになっておく必要があります。
@@ -51,20 +57,28 @@ draft: true
 
 まず、`2`・`8`・`12`・`18`の位置に、それぞれ`R`・`Y`・`G`・`B`を記入します。わかりやすく丸で囲んでおきます。
 
-TODO: 図5
+<SVGWrapper maxW={360}>
+  <Step5 />
+</SVGWrapper>
 
 `17 / 18`はどちらも`B`なので、`17`にも`B`を丸囲みで記入します。
 
-TODO: 図6
+<SVGWrapper maxW={360}>
+  <Step6 />
+</SVGWrapper>
 
 `2`の周りを`R`系、`8`の周りを`Y`系、`12`の周りを`G`系、`17 / 18`の周りを`B`系として、円弧を描きます。両側1目盛りずつを円弧で結ぶようにし、必要なところには奇数の目盛りも書き入れます。
 
-TODO: 図7
+<SVGWrapper maxW={360}>
+  <Step7 />
+</SVGWrapper>
 
 円の左上と左下に着目して、`5`には`O`を、`22`には`P`を丸囲みで記入します。
 `5`の周りは`O`系、`22`の周りは`P`系として、円弧も描いておきます。
 
-TODO: 図8
+<SVGWrapper maxW={360}>
+  <Step8 />
+</SVGWrapper>
 
 ここまで描けたら、円弧に含まれない目盛りを見ていきます。以降は丸で囲まずに色を書き入れます。
 
@@ -75,12 +89,16 @@ TODO: 図8
 
 アルファベットの順番は、反時計回りになっていることに注意しましょう。
 
-TODO: 図9
+<SVGWrapper maxW={360}>
+  <Step9 />
+</SVGWrapper>
 
 最後に、まだアルファベットが記入されていない目盛りの色を埋めます。
 自分が属する円弧のアルファベットの大文字の前に、最寄りの丸囲みアルファベットの小文字をつけたものが入ります。
 
-TODO: 図10
+<SVGWrapper maxW={360}>
+  <Step10 />
+</SVGWrapper>
 
 これで完成です🎉
 
