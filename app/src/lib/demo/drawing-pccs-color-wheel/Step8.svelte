@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
+  import { PCCS_HUE_MAP } from "$lib/data/pccs"
   import {
     COL_LINE,
     COL_TEXT,
@@ -29,9 +30,10 @@
   const plainLetters = [{ hue: 5, letter: "O" }]
   const circledLetters = [{ hue: 22, letter: "P" }]
 
+  // 円弧の色は中心となる丸囲み色相 (奇数の O も含む) の色.
   const arcs = [
-    { from: 4, to: 6 },
-    { from: 21, to: 23 }
+    { from: 4, to: 6, centerHue: 5 },
+    { from: 21, to: 23, centerHue: 22 }
   ]
 </script>
 
@@ -91,7 +93,12 @@
     </text>
   {/each}
   {#each arcs as arc (arc.from)}
-    <path d={arcPath(arc.from, arc.to)} fill="none" stroke={COL_LINE} stroke-width={STROKE_WIDTH} />
+    <path
+      d={arcPath(arc.from, arc.to)}
+      fill="none"
+      stroke={PCCS_HUE_MAP.get(arc.centerHue)!.color}
+      stroke-width={STROKE_WIDTH}
+    />
   {/each}
   {@render extraContent?.()}
 {/snippet}

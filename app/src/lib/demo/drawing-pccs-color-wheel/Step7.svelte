@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
+  import { PCCS_HUE_MAP } from "$lib/data/pccs"
   import {
     COL_LINE,
     COL_TEXT,
@@ -22,12 +23,12 @@
   // R/Y/G 系の両側 + B 系の右端 (17 は Step6 で追加済み)
   const newOddTicks = [1, 3, 7, 9, 11, 13, 19]
 
-  // 4つの円弧 (各円系の両端を結ぶ)
+  // 4つの円弧 (各円系の両端を結ぶ). 円弧の色は中心となる丸囲み色相の色.
   const arcs = [
-    { from: 1, to: 3 },
-    { from: 7, to: 9 },
-    { from: 11, to: 13 },
-    { from: 16, to: 19 }
+    { from: 1, to: 3, centerHue: 2 },
+    { from: 7, to: 9, centerHue: 8 },
+    { from: 11, to: 13, centerHue: 12 },
+    { from: 16, to: 19, centerHue: 18 }
   ]
 </script>
 
@@ -53,7 +54,12 @@
     </text>
   {/each}
   {#each arcs as arc (arc.from)}
-    <path d={arcPath(arc.from, arc.to)} fill="none" stroke={COL_LINE} stroke-width={STROKE_WIDTH} />
+    <path
+      d={arcPath(arc.from, arc.to)}
+      fill="none"
+      stroke={PCCS_HUE_MAP.get(arc.centerHue)!.color}
+      stroke-width={STROKE_WIDTH}
+    />
   {/each}
   {@render extraContent?.()}
 {/snippet}
