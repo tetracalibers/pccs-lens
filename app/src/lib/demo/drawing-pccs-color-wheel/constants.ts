@@ -16,9 +16,9 @@ export const COL_LINE = "var(--color-body)"
 export const COL_TEXT = "var(--color-body)"
 
 // ===== Number labels =====
-export const NUM_FONT_SIZE = 22
+export const NUM_FONT_SIZE = 16
 /** 数字ラベルを配置する半径 (円の外側) */
-export const NUM_RADIUS = R + 22
+export const NUM_RADIUS = R + NUM_FONT_SIZE * 1.7
 
 // ===== Letter labels (R, Y, G, B, O, P, V, YR, pR, ...) =====
 export const LETTER_FONT_SIZE = 18
