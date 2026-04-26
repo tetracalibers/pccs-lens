@@ -9,6 +9,11 @@ draft: true
 
 <script>
   import imgMidoriDiaryTemplate from "$lib/assets/midori-diary-template.png?enhanced"
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import Step1 from "$lib/demo/drawing-pccs-color-wheel/Step1.svelte"
+  import Step2 from "$lib/demo/drawing-pccs-color-wheel/Step2.svelte"
+  import Step3 from "$lib/demo/drawing-pccs-color-wheel/Step3.svelte"
+  import Step4 from "$lib/demo/drawing-pccs-color-wheel/Step4.svelte"
 </script>
 
 色彩検定では、PCCS色相環を描けるようになっておく必要があります。
@@ -18,19 +23,27 @@ draft: true
 
 まずは円を描いて、十字に目盛りを入れます。
 
-TODO: 図1
+<SVGWrapper maxW={360}>
+  <Step1 />
+</SVGWrapper>
 
 十字の目盛りの間に、さらに2つずつ目盛りを書き入れていきます。
 
-TODO: 図2
+<SVGWrapper maxW={360}>
+  <Step2 />
+</SVGWrapper>
 
 円を時計と見立てて、9時の位置に`2`を記入します。
 
-TODO: 図3
+<SVGWrapper maxW={360}>
+  <Step3 />
+</SVGWrapper>
 
 先ほど書いた`2`を基準にして、時計回りに`24`までの偶数を順に書き込みます。
 
-TODO: 図4
+<SVGWrapper maxW={360}>
+  <Step4 />
+</SVGWrapper>
 
 ## 色を当てはめる
 
