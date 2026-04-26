@@ -108,8 +108,8 @@ export function fillBandPath(fromHue: number, toHue: number): string {
   if (toAng <= fromAng) toAng += 360
   const sRad = (fromAng * Math.PI) / 180
   const eRad = (toAng * Math.PI) / 180
-  const rOuter = R + TICK_HALF
-  const rInner = R - TICK_HALF
+  const rOuter = R + TICK_HALF - TICK_HALF * 0.5
+  const rInner = R - TICK_HALF + TICK_HALF * 0.5
   const oSx = CX + rOuter * Math.cos(sRad)
   const oSy = CY + rOuter * Math.sin(sRad)
   const oEx = CX + rOuter * Math.cos(eRad)
