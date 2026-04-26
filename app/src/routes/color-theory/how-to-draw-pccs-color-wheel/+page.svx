@@ -3,8 +3,6 @@ layout: guide-content
 title: PCCS色相環の描き方
 
 grades: ["3"]
-
-draft: true
 ---
 
 <script>
