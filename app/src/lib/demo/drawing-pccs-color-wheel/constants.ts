@@ -1,5 +1,6 @@
 // ===== SVG dimensions =====
-export const VIEW_SIZE = 400
+/** アルファベットラベルが数字の外側に出る分の余白を確保する. */
+export const VIEW_SIZE = 460
 
 // ===== Geometry =====
 export const CX = VIEW_SIZE / 2
@@ -24,12 +25,12 @@ export const NUM_RADIUS = R + NUM_FONT_SIZE * 1.7
 export const LETTER_FONT_SIZE = 18
 /** 円で囲むときの円の半径 */
 export const LETTER_CIRCLE_R = 14
-/** アルファベットラベルを配置する半径 (円の内側) */
-export const LETTER_RADIUS = R - 28
+/** アルファベットラベルを配置する半径 (数字の外側). 数字テキスト外端と丸囲み内端の隙間を 6px 確保. */
+export const LETTER_RADIUS = NUM_RADIUS + NUM_FONT_SIZE / 2 + LETTER_CIRCLE_R + 6
 
 // ===== Arc =====
-/** 円弧 (○系のグルーピング) を描く半径. 主目盛りの外端と一致させる. */
-export const ARC_RADIUS = R + TICK_HALF
+/** 円弧 (○系のグルーピング) を描く半径. 主目盛りの内端と一致させる (円の内側). */
+export const ARC_RADIUS = R - TICK_HALF
 
 /**
  * 角度から目盛り (円周をまたぐ短い線分) の両端座標を返す.
@@ -66,7 +67,7 @@ export function hueAngle(hue: number): number {
   return (180 + (hue - 2) * 15 + 360 * 10) % 360
 }
 
-/** PCCS 番号からアルファベットラベルの中心座標を返す (円の内側). */
+/** PCCS 番号からアルファベットラベルの中心座標を返す (数字の外側). */
 export function letterPosition(hue: number): { x: number; y: number } {
   const r = (hueAngle(hue) * Math.PI) / 180
   return {
@@ -76,7 +77,7 @@ export function letterPosition(hue: number): { x: number; y: number } {
 }
 
 /**
- * 主円の外周に沿った円弧パスの d 属性を返す.
+ * 主円の内側に沿った円弧パスの d 属性を返す.
  * fromHue → toHue を時計回り (角度増加方向) に描画.
  */
 export function arcPath(fromHue: number, toHue: number): string {

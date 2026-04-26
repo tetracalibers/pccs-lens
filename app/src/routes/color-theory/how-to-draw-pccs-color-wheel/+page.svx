@@ -29,25 +29,25 @@ draft: true
 
 まずは円を描いて、十字に目盛りを入れます。
 
-<SVGWrapper maxW={360}>
+<SVGWrapper maxW={400}>
   <Step1 />
 </SVGWrapper>
 
 十字の目盛りの間に、さらに2つずつ目盛りを書き入れていきます。
 
-<SVGWrapper maxW={360}>
+<SVGWrapper maxW={400}>
   <Step2 />
 </SVGWrapper>
 
 円を時計と見立てて、9時の位置に`2`を記入します。
 
-<SVGWrapper maxW={360}>
+<SVGWrapper maxW={400}>
   <Step3 />
 </SVGWrapper>
 
 先ほど書いた`2`を基準にして、時計回りに`24`までの偶数を順に書き込みます。
 
-<SVGWrapper maxW={360}>
+<SVGWrapper maxW={400}>
   <Step4 />
 </SVGWrapper>
 
@@ -58,19 +58,19 @@ draft: true
 まず、`2`・`8`・`12`・`18`の位置に、それぞれ`R`・`Y`・`G`・`B`を記入します。
 これらはわかりやすく丸で囲んでおきます。
 
-<SVGWrapper maxW={360}>
+<SVGWrapper maxW={400}>
   <Step5 />
 </SVGWrapper>
 
 `17 / 18`はどちらも`B`なので、`17`にも`B`を丸囲みで記入します。
 
-<SVGWrapper maxW={360}>
+<SVGWrapper maxW={400}>
   <Step6 />
 </SVGWrapper>
 
 `2`の周りを`R`系、`8`の周りを`Y`系、`12`の周りを`G`系、`17 / 18`の周りを`B`系として、円弧を描きます。両側1目盛りずつを円弧で結ぶようにし、必要なところには奇数の目盛りも書き入れます。
 
-<SVGWrapper maxW={360}>
+<SVGWrapper maxW={400}>
   <Step7 />
 </SVGWrapper>
 
@@ -79,7 +79,7 @@ draft: true
 
 `5`の周りは`O`系、`22`の周りは`P`系として、円弧も描いておきます。
 
-<SVGWrapper maxW={360}>
+<SVGWrapper maxW={400}>
   <Step8 />
 </SVGWrapper>
 
@@ -92,14 +92,14 @@ draft: true
 
 アルファベットの順番は、反時計回りになっていることに注意しましょう。
 
-<SVGWrapper maxW={360}>
+<SVGWrapper maxW={400}>
   <Step9 />
 </SVGWrapper>
 
 最後に、まだアルファベットが記入されていない目盛りの色を埋めます。
 自分が属する円弧のアルファベットの大文字の前に、最寄りの丸囲みアルファベットの小文字をつけたものが入ります。
 
-<SVGWrapper maxW={360}>
+<SVGWrapper maxW={400}>
   <Step10 />
 </SVGWrapper>
 
