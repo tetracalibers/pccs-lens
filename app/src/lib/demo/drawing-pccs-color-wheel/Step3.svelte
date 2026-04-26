@@ -24,7 +24,7 @@
     y={pos.y}
     font-size={NUM_FONT_SIZE}
     fill={COL_TEXT}
-    text-anchor="middle"
+    text-anchor="start"
     dominant-baseline="central"
   >
     2
