@@ -13,9 +13,10 @@
   interface Props {
     extraDefs?: Snippet
     extraContent?: Snippet
+    extraUnderlay?: Snippet
   }
 
-  let { extraDefs, extraContent }: Props = $props()
+  let { extraDefs, extraContent, extraUnderlay }: Props = $props()
 
   const circledLetters = [
     { hue: 2, letter: "R" },
@@ -54,4 +55,4 @@
   {@render extraContent?.()}
 {/snippet}
 
-<Step4 extraDefs={defs} extraContent={content} />
+<Step4 extraDefs={defs} extraContent={content} {extraUnderlay} />

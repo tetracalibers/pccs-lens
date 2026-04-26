@@ -6,9 +6,10 @@
   interface Props {
     extraDefs?: Snippet
     extraContent?: Snippet
+    extraUnderlay?: Snippet
   }
 
-  let { extraDefs, extraContent }: Props = $props()
+  let { extraDefs, extraContent, extraUnderlay }: Props = $props()
 
   // 主目盛りの間に2つずつ追加 (30° 間隔, 計8本)
   const minorTickAngles = [30, 60, 120, 150, 210, 240, 300, 330]
@@ -26,4 +27,4 @@
   {@render extraContent?.()}
 {/snippet}
 
-<Step1 extraDefs={defs} extraContent={content} />
+<Step1 extraDefs={defs} extraContent={content} {extraUnderlay} />

@@ -16,9 +16,10 @@
   interface Props {
     extraDefs?: Snippet
     extraContent?: Snippet
+    extraUnderlay?: Snippet
   }
 
-  let { extraDefs, extraContent }: Props = $props()
+  let { extraDefs, extraContent, extraUnderlay }: Props = $props()
 
   // 円弧に含まれない目盛りのうち, まだ目盛り自体が無いもの
   const newOddTicks = [15]
@@ -71,4 +72,4 @@
   {@render extraContent?.()}
 {/snippet}
 
-<Step8 extraDefs={defs} extraContent={content} />
+<Step8 extraDefs={defs} extraContent={content} {extraUnderlay} />

@@ -17,9 +17,10 @@
   interface Props {
     extraDefs?: Snippet
     extraContent?: Snippet
+    extraUnderlay?: Snippet
   }
 
-  let { extraDefs, extraContent }: Props = $props()
+  let { extraDefs, extraContent, extraUnderlay }: Props = $props()
 
   const tick17 = tickEndpoints(hueAngle(17))
   const num17 = numberPosition(hueAngle(17))
@@ -70,4 +71,4 @@
   {@render extraContent?.()}
 {/snippet}
 
-<Step5 extraDefs={defs} extraContent={content} />
+<Step5 extraDefs={defs} extraContent={content} {extraUnderlay} />

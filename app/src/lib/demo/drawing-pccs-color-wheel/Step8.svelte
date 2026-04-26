@@ -9,6 +9,8 @@
     STROKE_WIDTH,
     arcColor,
     arcPath,
+    fillBandPath,
+    fillColor,
     hueAngle,
     letterPosition,
     numberPosition,
@@ -19,9 +21,10 @@
   interface Props {
     extraDefs?: Snippet
     extraContent?: Snippet
+    extraUnderlay?: Snippet
   }
 
-  let { extraDefs, extraContent }: Props = $props()
+  let { extraDefs, extraContent, extraUnderlay }: Props = $props()
 
   // O/P 系の追加に伴う奇数目盛り (5: O 自身, 21/23: P 系両端)
   const newOddTicks = [5, 21, 23]
@@ -39,6 +42,13 @@
 
 {#snippet defs()}
   {@render extraDefs?.()}
+{/snippet}
+
+{#snippet underlay()}
+  {#each arcs as arc (arc.from)}
+    <path d={fillBandPath(arc.from, arc.to)} fill={fillColor(arc.centerHue)} />
+  {/each}
+  {@render extraUnderlay?.()}
 {/snippet}
 
 {#snippet content()}
@@ -103,4 +113,4 @@
   {@render extraContent?.()}
 {/snippet}
 
-<Step7 extraDefs={defs} extraContent={content} />
+<Step7 extraDefs={defs} extraContent={content} extraUnderlay={underlay} />

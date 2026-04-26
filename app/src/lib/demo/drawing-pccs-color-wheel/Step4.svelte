@@ -6,9 +6,10 @@
   interface Props {
     extraDefs?: Snippet
     extraContent?: Snippet
+    extraUnderlay?: Snippet
   }
 
-  let { extraDefs, extraContent }: Props = $props()
+  let { extraDefs, extraContent, extraUnderlay }: Props = $props()
 
   // `2` は Step3 で描画済み. `4`〜`24` を 9時 (180°) から時計回りに 30° 刻みで配置.
   const remainingNumbers = Array.from({ length: 11 }, (_, i) => {
@@ -41,4 +42,4 @@
   {@render extraContent?.()}
 {/snippet}
 
-<Step3 extraDefs={defs} extraContent={content} />
+<Step3 extraDefs={defs} extraContent={content} {extraUnderlay} />

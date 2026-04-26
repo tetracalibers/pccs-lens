@@ -5,9 +5,11 @@
   interface Props {
     extraDefs?: Snippet
     extraContent?: Snippet
+    /** 円や目盛りより下のレイヤーに描画する要素 (例: 円周上の塗りつぶしバンド). */
+    extraUnderlay?: Snippet
   }
 
-  let { extraDefs, extraContent }: Props = $props()
+  let { extraDefs, extraContent, extraUnderlay }: Props = $props()
 
   // 12時, 3時, 6時, 9時 (SVG y-down: 270°, 0°, 90°, 180°)
   const majorTickAngles = [270, 0, 90, 180]
@@ -17,6 +19,8 @@
   <defs>
     {@render extraDefs?.()}
   </defs>
+
+  {@render extraUnderlay?.()}
 
   <!-- 円 -->
   <circle cx={CX} cy={CY} r={R} fill="none" stroke={COL_LINE} stroke-width={STROKE_WIDTH} />

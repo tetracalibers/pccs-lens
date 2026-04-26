@@ -6,9 +6,10 @@
   interface Props {
     extraDefs?: Snippet
     extraContent?: Snippet
+    extraUnderlay?: Snippet
   }
 
-  let { extraDefs, extraContent }: Props = $props()
+  let { extraDefs, extraContent, extraUnderlay }: Props = $props()
 
   // 9時 = 180°
   const pos = numberPosition(180)
@@ -32,4 +33,4 @@
   {@render extraContent?.()}
 {/snippet}
 
-<Step2 extraDefs={defs} extraContent={content} />
+<Step2 extraDefs={defs} extraContent={content} {extraUnderlay} />

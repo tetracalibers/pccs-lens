@@ -6,9 +6,10 @@
   interface Props {
     extraDefs?: Snippet
     extraContent?: Snippet
+    extraUnderlay?: Snippet
   }
 
-  let { extraDefs, extraContent }: Props = $props()
+  let { extraDefs, extraContent, extraUnderlay }: Props = $props()
 
   // 残りの目盛り. ラベル = 最寄りの「丸囲みアルファベット (同じ円弧の文字を除く)」
   // の小文字 + 円弧の文字の大文字.
@@ -49,4 +50,4 @@
   {@render extraContent?.()}
 {/snippet}
 
-<Step9 extraDefs={defs} extraContent={content} />
+<Step9 extraDefs={defs} extraContent={content} {extraUnderlay} />

@@ -88,6 +88,41 @@ export function arcColor(centerHue: number): string {
 }
 
 /**
+ * 円周上の塗りつぶしバンドに使う PCCS トーン.
+ * 高彩度: v / b / s / dp / 中彩度: lt / sf / d / dk / 低彩度: p / ltg / g / dkg
+ */
+export const FILL_TONE = "lt"
+
+/** 中心となる丸囲み色相 hue から塗りつぶしバンドの色 (HEX) を返す. FILL_TONE で指定したトーンを参照. */
+export function fillColor(centerHue: number): string {
+  return PCCS_HEX_MAP.get(`${FILL_TONE}${centerHue}`) ?? COL_LINE
+}
+
+/**
+ * 円周上を塗りつぶすバンド (ドーナツくさび形) パスの d 属性を返す.
+ * 内径 R - TICK_HALF, 外径 R + TICK_HALF (主目盛りの長さと一致).
+ */
+export function fillBandPath(fromHue: number, toHue: number): string {
+  const fromAng = hueAngle(fromHue)
+  let toAng = hueAngle(toHue)
+  if (toAng <= fromAng) toAng += 360
+  const sRad = (fromAng * Math.PI) / 180
+  const eRad = (toAng * Math.PI) / 180
+  const rOuter = R + TICK_HALF
+  const rInner = R - TICK_HALF
+  const oSx = CX + rOuter * Math.cos(sRad)
+  const oSy = CY + rOuter * Math.sin(sRad)
+  const oEx = CX + rOuter * Math.cos(eRad)
+  const oEy = CY + rOuter * Math.sin(eRad)
+  const iEx = CX + rInner * Math.cos(eRad)
+  const iEy = CY + rInner * Math.sin(eRad)
+  const iSx = CX + rInner * Math.cos(sRad)
+  const iSy = CY + rInner * Math.sin(sRad)
+  const largeArc = toAng - fromAng > 180 ? 1 : 0
+  return `M ${oSx} ${oSy} A ${rOuter} ${rOuter} 0 ${largeArc} 1 ${oEx} ${oEy} L ${iEx} ${iEy} A ${rInner} ${rInner} 0 ${largeArc} 0 ${iSx} ${iSy} Z`
+}
+
+/**
  * 数字のさらに内側に沿った円弧パスの d 属性を返す.
  * fromHue → toHue を時計回り (角度増加方向) に描画.
  */
