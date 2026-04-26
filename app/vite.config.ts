@@ -1,12 +1,13 @@
 import { defineConfig } from "vitest/config"
 import { playwright } from "@vitest/browser-playwright"
 import { sveltekit } from "@sveltejs/kit/vite"
+import { enhancedImages } from "@sveltejs/enhanced-img"
 
 export default defineConfig({
   define: {
     __GITHUB_PAGES__: JSON.stringify(process.env.GITHUB_PAGES === "true")
   },
-  plugins: [sveltekit()],
+  plugins: [enhancedImages(), sveltekit()],
   test: {
     expect: { requireAssertions: true },
     projects: [
