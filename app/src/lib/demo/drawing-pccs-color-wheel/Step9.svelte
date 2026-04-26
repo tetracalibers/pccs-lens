@@ -4,9 +4,11 @@
     COL_LINE,
     COL_TEXT,
     LETTER_FONT_SIZE,
+    NUM_FONT_SIZE,
     STROKE_WIDTH,
     hueAngle,
     letterPosition,
+    numberPosition,
     tickEndpoints
   } from "./constants"
   import Step8 from "./Step8.svelte"
@@ -38,8 +40,20 @@
 
 {#snippet content()}
   {#each newOddTicks as hue (hue)}
-    {@const e = tickEndpoints(hueAngle(hue))}
+    {@const ang = hueAngle(hue)}
+    {@const e = tickEndpoints(ang)}
+    {@const np = numberPosition(ang)}
     <line x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2} stroke={COL_LINE} stroke-width={STROKE_WIDTH} />
+    <text
+      x={np.x}
+      y={np.y}
+      font-size={NUM_FONT_SIZE}
+      fill={COL_TEXT}
+      text-anchor="middle"
+      dominant-baseline="central"
+    >
+      {hue}
+    </text>
   {/each}
   {#each plainLabels as item (item.hue)}
     {@const p = letterPosition(item.hue)}

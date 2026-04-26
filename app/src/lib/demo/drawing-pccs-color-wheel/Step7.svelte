@@ -1,6 +1,15 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
-  import { COL_LINE, STROKE_WIDTH, arcPath, hueAngle, tickEndpoints } from "./constants"
+  import {
+    COL_LINE,
+    COL_TEXT,
+    NUM_FONT_SIZE,
+    STROKE_WIDTH,
+    arcPath,
+    hueAngle,
+    numberPosition,
+    tickEndpoints
+  } from "./constants"
   import Step6 from "./Step6.svelte"
 
   interface Props {
@@ -28,8 +37,20 @@
 
 {#snippet content()}
   {#each newOddTicks as hue (hue)}
-    {@const e = tickEndpoints(hueAngle(hue))}
+    {@const ang = hueAngle(hue)}
+    {@const e = tickEndpoints(ang)}
+    {@const np = numberPosition(ang)}
     <line x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2} stroke={COL_LINE} stroke-width={STROKE_WIDTH} />
+    <text
+      x={np.x}
+      y={np.y}
+      font-size={NUM_FONT_SIZE}
+      fill={COL_TEXT}
+      text-anchor="middle"
+      dominant-baseline="central"
+    >
+      {hue}
+    </text>
   {/each}
   {#each arcs as arc (arc.from)}
     <path d={arcPath(arc.from, arc.to)} fill="none" stroke={COL_LINE} stroke-width={STROKE_WIDTH} />
