@@ -517,14 +517,15 @@
     letter-spacing: 4px;
     font-size: 14px;
     font-family: var(--font-round);
-    fill: var(--color-body);
+    fill: #e52838;
+    fill-opacity: 0.75;
   }
 
   /* 色相環ラベルは平面上に貼り付くように垂直方向に圧縮するため、フォントを大きめに設定 */
   .cs-hue-ring-label {
     font-size: 16px;
     font-family: var(--font-round);
-    fill: var(--color-body);
+    fill: lightslategray;
     translate: 0 -0.45em;
     letter-spacing: 4px;
   }
