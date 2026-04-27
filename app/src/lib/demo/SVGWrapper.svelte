@@ -17,6 +17,7 @@
 <style>
   .svg-wrapper {
     width: 100%;
+    box-sizing: border-box;
   }
 
   .svg-wrapper :global(svg) {

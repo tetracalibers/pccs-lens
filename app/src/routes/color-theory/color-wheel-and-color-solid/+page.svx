@@ -18,7 +18,7 @@ draft: true
 
 太陽光などの白い光を分解すると、さまざまな色の虹のような連なり（グラデーション）となり、これを:Mark[スペクトル]といいます。
 
-<SVGWrapper>
+<SVGWrapper maxW={600}>
   <SpectrumColorBlocks />
 </SVGWrapper>
 
@@ -28,7 +28,7 @@ draft: true
 人間の眼は、スペクトルを構成する色（白い光に含まれる色）に加えて、スペクトルの両端の色を混ぜた色も感じ取ることができます。
 そこで、スペクトルの両端の色を混ぜた色も含めて、連続的な色の変化を表現するため、スペクトルを円形にし、両端の赤と青紫の間に:Mark[赤紫]と:Mark[紫]を加えたものが考案され、これを:Mark[色相環]といいます。
 
-<SVGWrapper maxW={350}>
+<SVGWrapper maxW={350} style="padding-inline: 1rem;">
   <SpectrumColorWheel />
 </SVGWrapper>
 
