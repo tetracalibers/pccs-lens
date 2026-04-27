@@ -4,6 +4,7 @@
   import Heading4 from "$lib/components/m-html/Heading4.svelte"
   import Ulist from "$lib/components/m-html/Ulist.svelte"
   import Olist from "$lib/components/m-html/Olist.svelte"
+  import ALink from "$lib/components/m-html/ALink.svelte"
 
   import Mark from "$lib/components/m-directive/Mark.svelte"
   import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
@@ -14,6 +15,7 @@
   import CardGrid from "$lib/components/m-directive/CardGrid.svelte"
   import TermCard from "$lib/components/m-directive/TermCard.svelte"
   import ComingSoon from "$lib/components/m-directive/ComingSoon.svelte"
+  import EnhancedImage from "$lib/components/m-directive/EnhancedImage.svelte"
 
   /* eslint-disable no-import-assign */
   export {
@@ -22,6 +24,7 @@
     Heading4 as h4,
     Ulist as ul,
     Olist as ol,
+    ALink as a,
     Mark,
     GradeTag,
     WithGradeTag,
@@ -30,7 +33,8 @@
     Example,
     CardGrid,
     TermCard,
-    ComingSoon
+    ComingSoon,
+    EnhancedImage as EImage
   }
   /* eslint-enable no-import-assign */
 </script>
@@ -110,6 +114,22 @@
     margin: 0.75rem 0;
     font-size: 0.9rem;
     line-height: 1.9;
+  }
+
+  main :global(code) {
+    font-family: var(--font-mono);
+    padding-inline: 4px;
+    display: inline-block;
+    color: light-dark(#6b23a8, #e8c8ff);
+    background-color: light-dark(rgba(107, 35, 168, 0.1), rgba(232, 200, 255, 0.3));
+    line-height: 1.3;
+    border-radius: 4px;
+  }
+
+  main :global(img) {
+    width: 100%;
+    height: auto;
+    margin: 0.75rem auto;
   }
 
   main :global(.mermaid-diagram) {

@@ -1,0 +1,116 @@
+---
+layout: guide-content
+title: PCCS色相環の描き方
+
+grades: ["3"]
+---
+
+<script>
+  import imgMidoriDiaryTemplate from "$lib/assets/midori-diary-template.png?enhanced"
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import Step1 from "$lib/demo/drawing-pccs-color-wheel/Step1.svelte"
+  import Step2 from "$lib/demo/drawing-pccs-color-wheel/Step2.svelte"
+  import Step3 from "$lib/demo/drawing-pccs-color-wheel/Step3.svelte"
+  import Step4 from "$lib/demo/drawing-pccs-color-wheel/Step4.svelte"
+  import Step5 from "$lib/demo/drawing-pccs-color-wheel/Step5.svelte"
+  import Step6 from "$lib/demo/drawing-pccs-color-wheel/Step6.svelte"
+  import Step7 from "$lib/demo/drawing-pccs-color-wheel/Step7.svelte"
+  import Step8 from "$lib/demo/drawing-pccs-color-wheel/Step8.svelte"
+  import Step9 from "$lib/demo/drawing-pccs-color-wheel/Step9.svelte"
+  import Step10 from "$lib/demo/drawing-pccs-color-wheel/Step10.svelte"
+</script>
+
+色彩検定では、PCCS色相環を描けるようになっておく必要があります。
+さまざまな覚え方がありますが、ここでは筆者が実際に繰り返し描いて練習した方法を紹介します。
+
+## テンプレート円を描く
+
+まずは円を描いて、十字に目盛りを入れます。
+
+<SVGWrapper maxW={400}>
+  <Step1 />
+</SVGWrapper>
+
+十字の目盛りの間に、さらに2つずつ目盛りを書き入れていきます。
+
+<SVGWrapper maxW={400}>
+  <Step2 />
+</SVGWrapper>
+
+円を時計と見立てて、9時の位置に`2`を記入します。
+
+<SVGWrapper maxW={400}>
+  <Step3 />
+</SVGWrapper>
+
+先ほど書いた`2`を基準にして、時計回りに`24`までの偶数を順に書き込みます。
+
+<SVGWrapper maxW={400}>
+  <Step4 />
+</SVGWrapper>
+
+## 色を当てはめる
+
+テンプレートとなる円が描けたら、次は円周上に色を配置していきます。
+
+まず、`2`・`8`・`12`・`18`の位置に、それぞれ`R`・`Y`・`G`・`B`を記入します。
+これらはわかりやすく丸で囲んでおきます。
+
+<SVGWrapper maxW={400}>
+  <Step5 />
+</SVGWrapper>
+
+`17・18`はどちらも`B`なので、`17`にも`B`を丸囲みで記入します。
+
+<SVGWrapper maxW={400}>
+  <Step6 />
+</SVGWrapper>
+
+`2`の周りを`R`系、`8`の周りを`Y`系、`12`の周りを`G`系、`17・18`の周りを`B`系として、円弧を描きます。両側1目盛りずつを円弧で結ぶようにし、必要なところには奇数の目盛りも書き入れます。
+
+<SVGWrapper maxW={400}>
+  <Step7 />
+</SVGWrapper>
+
+円の左上と左下に着目して、`5`には`O`を、`22`には`P`を記入します。
+このとき、偶数番号である`P`は丸で囲みますが、奇数番号である`O`は丸で囲まないようにします。
+
+`5`の周りは`O`系、`22`の周りは`P`系として、円弧も描いておきます。
+
+<SVGWrapper maxW={400}>
+  <Step8 />
+</SVGWrapper>
+
+ここまで描けたら、円弧に含まれない目盛りを見ていきます。以降は丸で囲まずに色を書き入れます。
+
+円の一番下である`20`には`V`を記入し、その他の円弧に含まれない目盛り`10`・`14`・`15`・`24`には、両隣のアルファベットを組み合わせた色が入ります。
+
+- `10`は`Y`と`R`の間なので`YR`
+- `14・15`は`B`と`G`の間なので`BG`
+- `24`は`R`と`P`の間なので`RP`
+
+アルファベットの順番は、反時計回りになっていることに注意しましょう。
+
+<SVGWrapper maxW={400}>
+  <Step9 />
+</SVGWrapper>
+
+最後に、まだアルファベットが記入されていない目盛りの色を埋めます。
+自分が属する円弧のアルファベットの大文字の前に、最寄りの丸囲みアルファベットの小文字をつけたものが入ります。
+
+<SVGWrapper maxW={400}>
+  <Step10 />
+</SVGWrapper>
+
+これで完成です🎉
+
+## おすすめの文房具
+
+PCCS色相環をノートに綺麗に描きたいときは、時計のテンプレートを使うのがおすすめです。
+筆者はミドリ社のタイムログ柄ダイヤリーテンプレートを使っています。
+
+- [ダイアリーテンプレート 真鍮 タイムログ柄](https://www.midori-store.net/SHOP/35633006.html)
+
+::EImage{src="{imgMidoriDiaryTemplate}" alt="ミドリ社のタイムログ柄ダイヤリーテンプレート" maxWidth="450px"}
+
+奇数番号の色相も細かく描きたいときは24等分された外側の円、偶数番号の色相だけを並べてコンパクトに描きたいときは12等分された真ん中の円、というように使い分けることができるため、とても便利です。

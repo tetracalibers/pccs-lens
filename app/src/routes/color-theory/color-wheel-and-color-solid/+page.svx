@@ -1,0 +1,81 @@
+---
+layout: guide-content
+title: 色相環と色立体
+
+grades: ["3", "uc"]
+---
+
+<script>
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import ColorSolidSphere from "$lib/demo/color-solid/ColorSolidSphere.svelte"
+  import SpectrumColorBlocks from "$lib/demo/color-wheel/SpectrumColorBlocks.svelte"
+  import SpectrumColorWheel from "$lib/demo/color-wheel/SpectrumColorWheel.svelte"
+  import HueRingCrossSection from "$lib/demo/color-solid/HueRingCrossSection.svelte"
+  import HuePlaneCrossSection from "$lib/demo/color-solid/HuePlaneCrossSection.svelte"
+</script>
+
+## :WithGradeTag[スペクトルと色相環]{grades="3,uc"}
+
+太陽光などの白い光を分解すると、さまざまな色の虹のような連なり（グラデーション）となり、これを:Mark[スペクトル]といいます。
+
+<SVGWrapper maxW={600}>
+  <SpectrumColorBlocks />
+</SVGWrapper>
+
+スペクトルのうち、赤・緑・青らしく見える範囲の間に注目すると、それぞれの色が混ざり合っていることがわかります。例えば、赤と緑の間には黄色が、緑と青の間にはシアン（青緑）が見られます。
+しかし、スペクトルのそれぞれ両端付近である赤と青を混ぜた色は、スペクトルの中には存在しません。
+
+人間の眼は、スペクトルを構成する色（白い光に含まれる色）に加えて、スペクトルの両端の色を混ぜた色も感じ取ることができます。
+そこで、スペクトルの両端の色を混ぜた色も含めて、連続的な色の変化を表現するため、スペクトルを円形にし、両端の赤と青紫の間に:Mark[赤紫]と:Mark[紫]を加えたものが考案され、これを:Mark[色相環]といいます。
+
+<SVGWrapper maxW={350} style="padding-inline: 1rem;">
+  <SpectrumColorWheel />
+</SVGWrapper>
+
+色相環はすべての色相を色の変化の順に一覧できるものですが、どのような名前で色相を区切るか？どの色相を一番上に配置するか？など、細かいルールは:Mark[表色系]によって異なります。
+
+## :WithGradeTag[立体で表す三属性の関係]{grades="3,uc"}
+
+色の三属性（色相・明度・彩度）の関係は、3次元空間で表すことができます。
+三属性の関係に沿って色を配置していくと立体ができ、これを:Mark[色立体]といいます。
+
+色立体では、縦軸を:Mark[明度]、横軸を:Mark[彩度]とし、:Mark[色相]は水平方向に切った円の円周上に配置することが一般的です。
+
+<SVGWrapper maxW={580}>
+  <ColorSolidSphere />
+</SVGWrapper>
+
+立体を縦に貫く中心軸は、上に行くほど明度が高くなるように:Mark[無彩色]を並べた軸（:Mark[明度スケール]）です。この軸により、:Mark[明度]は上下の位置（高さ）で表すことができます。
+
+:Mark[彩度]は、この無彩色軸から横方向にどれだけ離れているか？で表します。
+無彩色軸に近い色ほど彩度が:Mark[低く]、無彩色軸から離れるほど彩度が:Mark[高く]なり、無彩色軸上の色は彩度が:Mark[0]、無彩色軸から最も離れた円周上の色が:Mark[最高]彩度となります。
+
+- 色相の違いは横方向にどれだけ回転したか？という:Mark[角度]で表す
+- 明度の違いは:Mark[高さ]で表す
+- 彩度の違いは中心軸からの:Mark[水平距離]で表す
+
+ここではわかりやすく球で解説しましたが、色立体の形状も:Mark[表色系]によって異なります。
+
+## :WithGradeTag[色立体の断面]{grades="3,uc"}
+
+色立体を切断すると平面が現れます。断面として現れるこれらの平面には、どのように切ったかによって異なる名前がついています。
+
+### 横に切った断面：色相環
+
+色立体を横に切ると、円周上に異なる色相が並んだ円が現れます。これは:Mark[色相環]です。
+
+<SVGWrapper maxW={350} style="padding-inline: 1rem;">
+  <HueRingCrossSection />
+</SVGWrapper>
+
+### 縦に切った断面：等色相面
+
+色立体を中心軸を通るように縦に切ると、同じ色相で明度・彩度が異なる色が並んだ平面が現れます。
+
+<SVGWrapper maxW={300} style="padding-inline: 2rem;">
+  <HuePlaneCrossSection />
+</SVGWrapper>
+
+このような、色相が等しい色を1つの面として表したものを:Mark[等色相面]といい、:Mark[縦]に明度が異なる色、:Mark[横]に彩度が異なる色が並びます。
+
+色立体は、縦に貫く:Mark[無彩色]軸を中心として、その周囲をぐるっと回るように、いろいろな色相の:Mark[等色相面]を並べたものともいえます。

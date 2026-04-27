@@ -40,11 +40,11 @@
 </script>
 
 <svelte:head>
-  <title>このサイトについて — PCCS Lens</title>
+  <title>このサイトの歩き方 — PCCS Lens</title>
 </svelte:head>
 
 <main>
-  <Heading1 icon="hugeicons:message-question" grayscale>このサイトについて</Heading1>
+  <Heading1 icon="hugeicons:message-question" grayscale>このサイトの歩き方</Heading1>
   <div>{@render children()}</div>
 </main>
 

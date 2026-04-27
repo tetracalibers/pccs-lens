@@ -193,7 +193,7 @@
 <footer class="site-footer">
   <div class="footer-inner">
     <a href={isConceptPage ? resolve("/") : resolve("/concept")} class="footer-link">
-      {isConceptPage ? "トップページへ" : "このサイトについて"}
+      {isConceptPage ? "トップページへ" : "このサイトの歩き方"}
     </a>
   </div>
 </footer>

@@ -118,7 +118,7 @@
 
   // ===== 色ブロック =====
   const colorBlocks: ColorBlock[] = [
-    { label: "紫", nmStart: 380, nmEnd: 430, fill: "#6A00FF" },
+    { label: "青紫", nmStart: 380, nmEnd: 430, fill: "#6A00FF" },
     { label: "藍", nmStart: 430, nmEnd: 460, fill: "#003CFF" },
     { label: "青", nmStart: 460, nmEnd: 500, fill: "#0094FF" },
     { label: "緑", nmStart: 500, nmEnd: 570, fill: "#00E600" },
