@@ -4,16 +4,24 @@
 
 ## 想定するユースケース
 
-- [色彩検定](https://www.aft.or.jp/)の勉強
+- [色彩検定](https://www.aft.or.jp/)の学習
 - [PCCS](https://ja.wikipedia.org/wiki/PCCS)に基づく配色検討
 
-## 機能構成
+## コンテンツ開発
 
-- F1：色のPCCS／慣用色近似機能（`/approximate`）
-- F2：配色の分析機能（`/analyze`）
-- F3：イメージ別配色シミュレーション機能（`/patterns`）
+### ページの作成
 
-## 開発フロー
+- `/create-color-theory-page`スキルにページタイトルを渡して作成する
+
+### SVG図版の作成
+
+- `/svg-diagram-component`スキルに図の内容を渡して作成する
+
+### Mermaid図版の作成
+
+- `Anki_`で始まるノードは暗記モード時にテキストが隠れるようになる
+
+## 機能開発
 
 ### 1. ブレインストリーミング
 
