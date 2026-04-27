@@ -4,25 +4,24 @@
   // ===== レイアウト定数 =====
   const R = 220 // 半径（ColorSolidSphere と同じ）
   const LIGHTNESS_DOT_R = 13 // 明度スケール円・等色相面ドットの半径
+  const PAD = 8 // 図全体の breathing 余白
 
-  // 余白（明度高低ラベル・高彩度ラベルの bbox を含む）
-  const LEFT_PAD = 20 // 「高明度/低明度」ラベルが軸中心で center-anchor で収まる程度の余白
-  const TOP_LABEL_GAP = 10
-  const TOP_LABEL_ASCENDER = 11
-  const BOTTOM_LABEL_GAP = 20
-  const BOTTOM_LABEL_DESCENDER = 3
-  const SAT_LABEL_GAP = 6
-  const SAT_LABEL_WIDTH = 50
+  // 「無彩色軸」ラベル
+  const TITLE_GAP = 10 // ラベルと最上段スケール円との縦間隔
+  const TITLE_ASCENDER = 11 // font-size 13 の ascender 想定
+  const TITLE_HALF_WIDTH = 26 // 「無彩色軸」(4文字, font-size 13) の概算半幅
 
   // ===== SVG サイズと中心 =====
-  const TOP_PAD = LIGHTNESS_DOT_R + TOP_LABEL_GAP + TOP_LABEL_ASCENDER
-  const BOTTOM_PAD = LIGHTNESS_DOT_R + BOTTOM_LABEL_GAP + BOTTOM_LABEL_DESCENDER
-  const RIGHT_PAD = LIGHTNESS_DOT_R + SAT_LABEL_GAP + SAT_LABEL_WIDTH
+  // 明度軸から各方向への最遠描画距離
+  const TOP_FROM_AXIS = LIGHTNESS_DOT_R + TITLE_GAP + TITLE_ASCENDER
+  const BOTTOM_FROM_AXIS = LIGHTNESS_DOT_R
+  const LEFT_FROM_AXIS = Math.max(LIGHTNESS_DOT_R, TITLE_HALF_WIDTH)
+  const RIGHT_FROM_AXIS = R + LIGHTNESS_DOT_R // 半円 + 最大彩度ドット
 
-  const cx = LEFT_PAD + LIGHTNESS_DOT_R // 明度軸の x（図の左寄り）
-  const cy = TOP_PAD + R
-  const W = cx + R + RIGHT_PAD
-  const H = TOP_PAD + 2 * R + BOTTOM_PAD
+  const cx = PAD + LEFT_FROM_AXIS // 明度軸 x
+  const cy = PAD + TOP_FROM_AXIS + R // 半円中心 y
+  const W = cx + RIGHT_FROM_AXIS + PAD
+  const H = cy + R + BOTTOM_FROM_AXIS + PAD
 
   const axisTopY = cy - R
   const axisBottomY = cy + R
@@ -82,19 +81,9 @@
   const planePath = `M ${cx} ${axisTopY} A ${R} ${R} 0 0 1 ${cx} ${axisBottomY} Z`
   // 半円の弧（断面の輪郭。軸側は明度軸線で表現するためここでは弧のみ）
   const planeArcPath = `M ${cx} ${axisTopY} A ${R} ${R} 0 0 1 ${cx} ${axisBottomY}`
-
-  // 「等色相面」ラベルが沿う、円周より少し内側の弧（上端 → 右端）
-  const PLANE_LABEL_R_RATIO = 0.9
-  const planeLabelR = R * PLANE_LABEL_R_RATIO
-  const planeLabelPath = `M ${cx} ${cy - planeLabelR} A ${planeLabelR} ${planeLabelR} 0 0 1 ${cx + planeLabelR} ${cy}`
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}">
-  <defs>
-    <!-- 「等色相面」ラベルが沿う弧 -->
-    <path id="ehp-plane-label-path" d={planeLabelPath} />
-  </defs>
-
   <!-- 等色相面の薄い塗り（半円） -->
   <path d={planePath} fill={PLANE_FILL} fill-opacity="0.15" />
 
@@ -124,8 +113,8 @@
     <circle {cx} cy={c.y} r={LIGHTNESS_DOT_R} fill={c.hex} stroke="#444" stroke-width="0.8" />
   {/each}
 
-  <!-- 明度の高低ラベル -->
-  <text class="ehp-mark" x={cx} y={axisTopY - LIGHTNESS_DOT_R - 10} text-anchor="middle">
+  <!-- 無彩色軸ラベル（最上段グレイ円の真上） -->
+  <text class="ehp-mark" x={cx} y={axisTopY - LIGHTNESS_DOT_R - TITLE_GAP} text-anchor="middle">
     無彩色軸
   </text>
 </svg>
