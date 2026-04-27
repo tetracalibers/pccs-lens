@@ -126,26 +126,7 @@
 
   <!-- 明度の高低ラベル -->
   <text class="ehp-mark" x={cx} y={axisTopY - LIGHTNESS_DOT_R - 10} text-anchor="middle">
-    高明度
-  </text>
-  <text class="ehp-mark" x={cx} y={axisBottomY + LIGHTNESS_DOT_R + 20} text-anchor="middle">
-    低明度
-  </text>
-
-  <!-- 高彩度ラベル（半円の右端の最大彩度ドットの右外） -->
-  <text
-    class="ehp-mark"
-    x={cx + R + LIGHTNESS_DOT_R + SAT_LABEL_GAP}
-    y={cy}
-    text-anchor="start"
-    dominant-baseline="middle"
-  >
-    高彩度
-  </text>
-
-  <!-- 「等色相面」ラベル（半円の上半分の円周より少し内側の弧上） -->
-  <text class="ehp-plane-label" text-anchor="middle">
-    <textPath href="#ehp-plane-label-path" startOffset="50%">等色相面</textPath>
+    無彩色軸
   </text>
 </svg>
 
@@ -153,13 +134,5 @@
   .ehp-mark {
     font-size: 13px;
     fill: var(--color-body);
-  }
-
-  .ehp-plane-label {
-    letter-spacing: 4px;
-    font-size: 14px;
-    font-family: var(--font-round);
-    fill: #e52838;
-    fill-opacity: 0.75;
   }
 </style>

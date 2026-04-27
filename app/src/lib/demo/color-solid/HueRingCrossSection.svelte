@@ -66,4 +66,14 @@
       stroke-width="0.8"
     />
   {/each}
+
+  <!-- 無彩色軸ラベル（中心グレイ円の真上） -->
+  <text class="hr-mark" x={cx} y={cy - CENTER_DOT_R - 10} text-anchor="middle">無彩色軸</text>
 </svg>
+
+<style>
+  .hr-mark {
+    font-size: 18px;
+    fill: var(--color-body);
+  }
+</style>
