@@ -43,15 +43,15 @@
 </script>
 
 <div class="stage">
-  {#if phase === "playing"}
+  {#if phase !== "finished"}
     <div class="circle" style:background-color={RED}></div>
   {/if}
 
   {#if phase === "playing"}
     <button class="corner-btn top-left" type="button" onclick={stop} aria-label="停止">
-      <Icon icon="solar:stop-circle-bold" width="32" height="32" />
+      <Icon icon="mdi:motion-pause-outline" width="32" height="32" />
     </button>
-    <div class="countdown top-right" aria-live="polite">{remaining}</div>
+    <div class="countdown top-right" aria-live="polite">{remaining}s</div>
   {:else if phase === "finished"}
     <button class="corner-btn top-left" type="button" onclick={start} aria-label="もう一度再生">
       <Icon icon="solar:restart-circle-bold" width="32" height="32" />
@@ -61,7 +61,7 @@
   {#if phase === "idle"}
     <div class="overlay">
       <button class="play-btn" type="button" onclick={start} aria-label="再生">
-        <Icon icon="solar:play-circle-bold" width="84" height="84" />
+        <Icon icon="mdi:motion-play-outline" width="84" height="84" />
       </button>
     </div>
   {/if}
@@ -71,9 +71,10 @@
   .stage {
     position: relative;
     width: 100%;
+    max-width: 450px;
     aspect-ratio: 16 / 9;
     background-color: #ffffff;
-    border: 2px solid #000000;
+    border: 1px solid #000000;
     overflow: hidden;
     box-sizing: border-box;
     margin-block: 1rem;
@@ -92,7 +93,7 @@
   .overlay {
     position: absolute;
     inset: 0;
-    background-color: rgba(240, 240, 240, 0.6);
+    background-color: rgba(0, 0, 0, 0.6);
     display: grid;
     place-items: center;
   }
@@ -102,17 +103,9 @@
     border: none;
     cursor: pointer;
     padding: 0;
-    color: #2a2a2a;
+    color: #ffffff;
     display: grid;
     place-items: center;
-    transition:
-      color 0.15s,
-      transform 0.15s;
-  }
-
-  .play-btn:hover {
-    color: #000000;
-    transform: scale(1.05);
   }
 
   .corner-btn {
@@ -124,11 +117,6 @@
     color: #2a2a2a;
     display: grid;
     place-items: center;
-    transition: color 0.15s;
-  }
-
-  .corner-btn:hover {
-    color: #000000;
   }
 
   .top-left {
