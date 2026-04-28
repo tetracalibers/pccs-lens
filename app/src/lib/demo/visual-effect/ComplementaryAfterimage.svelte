@@ -59,7 +59,7 @@
     <div class="countdown top-right" aria-live="polite">{remaining}s</div>
   {:else if phase === "finished"}
     <button class="corner-btn top-left" type="button" onclick={start} aria-label="もう一度再生">
-      <Icon icon="solar:restart-circle-bold" width="32" height="32" />
+      <Icon icon="fluent:replay-28-regular" width="32" height="32" />
     </button>
   {/if}
 </div>
@@ -68,13 +68,15 @@
   .stage {
     position: relative;
     width: 100%;
-    max-width: 450px;
+    height: 250px;
     aspect-ratio: 16 / 9;
-    background-color: #ffffff;
-    border: 1px solid #000000;
+    background-color: #fff;
+    border: 1px solid light-dark(#091e4221, #ffffff5e);
     overflow: hidden;
     box-sizing: border-box;
     margin-block: 1rem;
+    border-radius: 6px;
+    container-type: size;
   }
 
   .circle {
@@ -82,7 +84,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 38%;
+    width: 70cqh;
     aspect-ratio: 1 / 1;
     border-radius: 50%;
   }
@@ -92,28 +94,29 @@
     background: none;
     border: none;
     cursor: pointer;
-    padding: 0.4rem;
-    color: #2a2a2a;
+    color: var(--color-body--light);
+    padding: 0;
     display: grid;
     place-items: center;
   }
 
   .top-left {
-    top: 0.5rem;
-    left: 0.5rem;
+    top: 0.75rem;
+    left: 0.75rem;
   }
 
   .top-right {
-    top: 0.5rem;
-    right: 0.5rem;
+    top: 0.75rem;
+    right: 0.75rem;
   }
 
   .countdown {
     position: absolute;
-    color: #2a2a2a;
+    color: var(--color-body--light);
     font-family: var(--font-mono);
-    font-size: 1.4rem;
-    padding: 0.4rem 0.75rem;
+    font-size: 1.2rem;
+    padding: 0;
+    padding-block-start: 0.25lh;
     min-width: 2.5rem;
     text-align: center;
     font-variant-numeric: tabular-nums;
