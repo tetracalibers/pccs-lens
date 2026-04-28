@@ -20,7 +20,6 @@
   const COLOR_ABSORB = "var(--canvas-pen-water)" // 吸収ラベル・矢印の色（水色）
   const COLOR_REFLECT = "var(--canvas-pen-orange)" // 反射ラベル・矢印の色（オレンジ）
   const COLOR_BAR_BORDER = "rgba(255,255,255,0.7)" // スペクトル帯の枠線の色
-  const COLOR_LABEL_OUTLINE = "rgba(255,255,255,0.9)" // C/M/Y ラベルの縁取りの色
 
   // ── Types ─────────────────────────────────────────────────────────────────
   type RegionKind = "absorb" | "reflect"
@@ -60,7 +59,7 @@
   const rows: Row[] = [
     {
       label: "C",
-      labelColor: PCCS_HEX_MAP.get("v16")!,
+      labelColor: PCCS_HEX_MAP.get("b16")!,
       reflectLabels: ["B", "G"],
       regions: [
         { kind: "reflect", span: 2 / 3 },
@@ -69,7 +68,7 @@
     },
     {
       label: "M",
-      labelColor: PCCS_HEX_MAP.get("v24")!,
+      labelColor: PCCS_HEX_MAP.get("b24")!,
       reflectLabels: ["B", "R"],
       regions: [
         { kind: "reflect", span: 1 / 3 },
@@ -269,22 +268,7 @@
       />
     {/each}
 
-    <!-- C/M/Y ラベル（バー右側・垂直中央）: 縁取りを下に敷いてから塗り色で上描き -->
-    <text
-      x={LABEL_X}
-      y={barCenterY(i)}
-      text-anchor="middle"
-      dominant-baseline="middle"
-      fill="none"
-      stroke={COLOR_LABEL_OUTLINE}
-      stroke-width="3"
-      stroke-linejoin="round"
-      font-size="44"
-      font-weight="bold"
-      font-family="var(--font-classic)"
-    >
-      {row.label}
-    </text>
+    <!-- C/M/Y ラベル（バー右側・垂直中央） -->
     <text
       x={LABEL_X}
       y={barCenterY(i)}

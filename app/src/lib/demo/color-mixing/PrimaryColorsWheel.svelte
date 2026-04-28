@@ -65,20 +65,16 @@
 
   // ===== 原色カラーマップ（PCCS_HEX_MAP から取得）=====
   const PRIMARY_COLORS: Record<string, string> = {
-    R: PCCS_HEX_MAP.get("v3")!,
-    G: PCCS_HEX_MAP.get("v12")!,
-    B: PCCS_HEX_MAP.get("v19")!,
-    C: PCCS_HEX_MAP.get("v16")!,
-    M: PCCS_HEX_MAP.get("v24")!,
+    R: PCCS_HEX_MAP.get("b3")!,
+    G: PCCS_HEX_MAP.get("b12")!,
+    B: PCCS_HEX_MAP.get("b19")!,
+    C: PCCS_HEX_MAP.get("b16")!,
+    M: PCCS_HEX_MAP.get("b24")!,
     Y: PCCS_HEX_MAP.get("v8")!
   }
 
   /** 原色ラベルの塗り色。原色でない場合は本文色にフォールバック */
   const primaryColor = (text: string): string => PRIMARY_COLORS[text] ?? "var(--color-body)"
-
-  // ===== ラベル縁取り =====
-  const COLOR_LABEL_OUTLINE = "#fff"
-  const OUTLINE_STROKE_WIDTH = 3
 
   // ===== 12等分ラベル（Y を 0 番として時計回り）=====
   const PRIMARY_SET = new Set(["Y", "G", "C", "M"])
@@ -201,22 +197,6 @@
     {#each hueLabels as lbl (lbl.index)}
       {@const p = pointAt(lbl.index, lbl.radius)}
       {#if lbl.isPrimary}
-        <!-- 縁取り -->
-        <text
-          x={p.x}
-          y={p.y}
-          text-anchor="middle"
-          dominant-baseline="central"
-          font-size={FONT_SIZE_PRIMARY}
-          font-weight="bold"
-          font-family="var(--font-classic)"
-          fill="none"
-          stroke={COLOR_LABEL_OUTLINE}
-          stroke-width={OUTLINE_STROKE_WIDTH}
-          stroke-linejoin="round"
-        >
-          {lbl.text}
-        </text>
         <!-- 塗り -->
         <text
           x={p.x}
@@ -248,22 +228,6 @@
     <!-- 追加原色ラベル（R・B）-->
     {#each extraPrimaries as prim (prim.text)}
       {@const p = pointAt(prim.index, LABEL_R_PRIMARY)}
-      <!-- 縁取り -->
-      <text
-        x={p.x}
-        y={p.y}
-        text-anchor="middle"
-        dominant-baseline="central"
-        font-size={FONT_SIZE_PRIMARY}
-        font-weight="bold"
-        font-family="var(--font-classic)"
-        fill="none"
-        stroke={COLOR_LABEL_OUTLINE}
-        stroke-width={OUTLINE_STROKE_WIDTH}
-        stroke-linejoin="round"
-      >
-        {prim.text}
-      </text>
       <!-- 塗り -->
       <text
         x={p.x}

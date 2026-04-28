@@ -44,7 +44,6 @@
   const COLOR_ABSORB = "var(--canvas-pen-water)"
   const COLOR_REFLECT = "var(--canvas-pen-orange)"
   const COLOR_BAR_BORDER = "rgba(255,255,255,0.7)"
-  const COLOR_LABEL_OUTLINE = "rgba(255,255,255,0.9)"
   const COLOR_CENTER = "var(--canvas-pen-pink)"
 
   // ── Types ─────────────────────────────────────────────────────────────────
@@ -80,13 +79,13 @@
   const rows: RowDef[] = [
     {
       leftLabel: "R",
-      leftColor: PCCS_HEX_MAP.get("v3")!,
+      leftColor: PCCS_HEX_MAP.get("b3")!,
       leftRegions: [
         { kind: "absorb", span: 2 / 3 },
         { kind: "reflect", span: 1 / 3 }
       ],
       rightLabel: "C",
-      rightColor: PCCS_HEX_MAP.get("v16")!,
+      rightColor: PCCS_HEX_MAP.get("b16")!,
       rightRegions: [
         { kind: "reflect", span: 2 / 3 },
         { kind: "absorb", span: 1 / 3 }
@@ -94,14 +93,14 @@
     },
     {
       leftLabel: "G",
-      leftColor: PCCS_HEX_MAP.get("v12")!,
+      leftColor: PCCS_HEX_MAP.get("b12")!,
       leftRegions: [
         { kind: "absorb", span: 1 / 3 },
         { kind: "reflect", span: 1 / 3 },
         { kind: "absorb", span: 1 / 3 }
       ],
       rightLabel: "M",
-      rightColor: PCCS_HEX_MAP.get("v24")!,
+      rightColor: PCCS_HEX_MAP.get("b24")!,
       rightRegions: [
         { kind: "reflect", span: 1 / 3 },
         { kind: "absorb", span: 1 / 3 },
@@ -110,7 +109,7 @@
     },
     {
       leftLabel: "B",
-      leftColor: PCCS_HEX_MAP.get("v19")!,
+      leftColor: PCCS_HEX_MAP.get("b19")!,
       leftRegions: [
         { kind: "reflect", span: 1 / 3 },
         { kind: "absorb", span: 2 / 3 }
@@ -352,22 +351,7 @@
       />
     {/each}
 
-    <!-- 左ラベル（R/G/B）: 縁取り + 塗り色 -->
-    <text
-      x={LEFT_LABEL_X}
-      y={bCenterY}
-      text-anchor="middle"
-      dominant-baseline="middle"
-      fill="none"
-      stroke={COLOR_LABEL_OUTLINE}
-      stroke-width="3"
-      stroke-linejoin="round"
-      font-size="34"
-      font-weight="bold"
-      font-family="var(--font-classic)"
-    >
-      {row.leftLabel}
-    </text>
+    <!-- 左ラベル（R/G/B）: 塗り色 -->
     <text
       x={LEFT_LABEL_X}
       y={bCenterY}
@@ -381,22 +365,7 @@
       {row.leftLabel}
     </text>
 
-    <!-- 右ラベル（C/M/Y）: 縁取り + 塗り色 -->
-    <text
-      x={RIGHT_LABEL_X}
-      y={bCenterY}
-      text-anchor="middle"
-      dominant-baseline="middle"
-      fill="none"
-      stroke={COLOR_LABEL_OUTLINE}
-      stroke-width="3"
-      stroke-linejoin="round"
-      font-size="34"
-      font-weight="bold"
-      font-family="var(--font-classic)"
-    >
-      {row.rightLabel}
-    </text>
+    <!-- 右ラベル（C/M/Y）: 塗り色 -->
     <text
       x={RIGHT_LABEL_X}
       y={bCenterY}
