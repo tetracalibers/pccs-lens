@@ -5,14 +5,15 @@
   type ColorsListItem = {
     pccs: string
     name: string
+    labelPccs: string
   }
 
   let { colors }: { colors: ColorsListItem[] } = $props()
 </script>
 
 <ul class="list">
-  {#each colors as { pccs, name } (name)}
-    <li style:--_pccs-color={PCCS_HEX_MAP.get(pccs)!}>
+  {#each colors as { pccs, name, labelPccs } (name)}
+    <li style:--_pccs-color={PCCS_HEX_MAP.get(labelPccs)!}>
       <span class="label">{name}</span>
       <PCCSColor {pccs} />
     </li>
@@ -38,9 +39,5 @@
     font-family: var(--font-classic);
     font-size: 1.25rem;
     color: var(--_pccs-color);
-
-    /** 白く縁取り */
-    -webkit-text-stroke: 2px #fff;
-    paint-order: stroke fill;
   }
 </style>

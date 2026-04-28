@@ -20,7 +20,6 @@
   const COLOR_ABSORB = "var(--canvas-pen-water)" // 吸収ラベル・矢印の色（水色）
   const COLOR_REFLECT = "var(--canvas-pen-orange)" // 反射ラベル・矢印の色（オレンジ）
   const COLOR_BAR_BORDER = "rgba(255,255,255,0.7)" // スペクトル帯の枠線の色
-  const COLOR_LABEL_OUTLINE = "rgba(255,255,255,0.9)" // R/G/B ラベルの縁取りの色
 
   // ── Types ─────────────────────────────────────────────────────────────────
   type RegionKind = "absorb" | "reflect"
@@ -53,7 +52,7 @@
   const rows: Row[] = [
     {
       label: "R",
-      labelColor: PCCS_HEX_MAP.get("v3")!,
+      labelColor: PCCS_HEX_MAP.get("b3")!,
       regions: [
         { kind: "absorb", span: 2 / 3 },
         { kind: "reflect", span: 1 / 3 }
@@ -61,7 +60,7 @@
     },
     {
       label: "G",
-      labelColor: PCCS_HEX_MAP.get("v12")!,
+      labelColor: PCCS_HEX_MAP.get("b12")!,
       regions: [
         { kind: "absorb", span: 1 / 3 },
         { kind: "reflect", span: 1 / 3 },
@@ -70,7 +69,7 @@
     },
     {
       label: "B",
-      labelColor: PCCS_HEX_MAP.get("v19")!,
+      labelColor: PCCS_HEX_MAP.get("b19")!,
       regions: [
         { kind: "reflect", span: 1 / 3 },
         { kind: "absorb", span: 2 / 3 }
@@ -240,22 +239,7 @@
       />
     {/each}
 
-    <!-- R/G/B ラベル（バー垂直中央）: 白縁取りを下に敷いてから塗り色で上描き -->
-    <text
-      x={LABEL_X}
-      y={barCenterY(i)}
-      text-anchor="middle"
-      dominant-baseline="middle"
-      fill="none"
-      stroke={COLOR_LABEL_OUTLINE}
-      stroke-width="3"
-      stroke-linejoin="round"
-      font-size="44"
-      font-weight="bold"
-      font-family="var(--font-classic)"
-    >
-      {row.label}
-    </text>
+    <!-- R/G/B ラベル（バー垂直中央） -->
     <text
       x={LABEL_X}
       y={barCenterY(i)}
