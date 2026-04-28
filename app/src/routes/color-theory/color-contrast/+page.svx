@@ -1,15 +1,11 @@
 ---
 layout: guide-content
-title: 色の対比
+title: 色の対比と三属性
 
 grades: ["3"]
 
 draft: true
 ---
-
-<script>
-  import ComplementaryAfterimage from "$lib/demo/visual-effect/ComplementaryAfterimage.svelte"
-</script>
 
 ## :WithGradeTag[色の対比とは]{grades="3"}
 
@@ -50,31 +46,7 @@ graph LR
     B3 --- B4["補色対比"]
 ```
 
-## :WithGradeTag[心理補色と補色残像]{grades="3"}
-
-ある色を一定時間見つめた後に、白などの:Mark[無彩色]に目を移すと、見ていた色の:Mark[補色]がぼんやりと見えます。
-
-:::Tips
-左上の再生ボタンをクリックして、赤い円を30秒間見つめてみよう
-（30秒後、赤い円が消えます。白い背景にぼんやりと緑の円が見えるはず…）
-:::
-
-<ComplementaryAfterimage></ComplementaryAfterimage>
-
-これは:Mark[継時対比]の一種で、人間が色を見るときは、目の前にある色だけでなく、その反対の色も知覚していることから起こる現象です。
-実際に見た色と反対の色が見えることから、この現象は:Mark[陰性残像]（:Mark[負]の残像）と呼ばれます。また、:Mark[補色残像]と呼ばれることもあります。
-
-:::Note
-陰性残像に対して、実際に見た色と同じ色が見える場合は、:Mark[陽性残像]（:Mark[正]の残像）と呼ばれます。
-陽性残像は、暗い環境で何らかの強い光（例：花火など）を短い時間見たときに現れるものです。実際に見た色との差異がないため、色の対比には含まれません。
-:::
-
-このように、特定の色を見続けた後に残像として現れる色は、:Mark[心理補色]と呼ばれます。
-
-:::Note
-[混色の章](/color-theory/color-mixing-basics/)では、混ぜ合わせると無彩色になる色を補色と呼んでいました。
-このような補色は心理補色と区別するため、:Mark[物理補色]と呼ぶこともあります。
-:::
+ここでは、色の三属性による同時対比について詳しく見ていきます。
 
 ## :WithGradeTag[色相対比]{grades="3"}
 
@@ -89,9 +61,5 @@ graph LR
 ::ComingSoon
 
 ## :WithGradeTag[補色対比]{grades="3"}
-
-::ComingSoon
-
-## :WithGradeTag[縁辺対比]{grades="3"}
 
 ::ComingSoon
