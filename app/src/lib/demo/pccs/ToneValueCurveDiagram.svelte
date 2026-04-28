@@ -4,11 +4,14 @@
   import { isLightColor } from "$lib/color/utils"
   import type { PCCSColor } from "$lib/data/types"
 
+  type Props = {
+    tones: string[]
+  }
+
+  const { tones }: Props = $props()
+
   // 横軸の色相番号（左から 24, 2, 4, ..., 22）
   const HUE_ORDER = [24, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22]
-
-  // トーン（偶数色相を持つもの）
-  const TONES = ["p", "v", "dp", "dk", "dkg"]
 
   // --- レイアウト定数 ---
   const COL_W = 64
@@ -38,21 +41,23 @@
   type SwatchPoint = { x: number; y: number; color: PCCSColor }
   type ToneSeries = { tone: string; points: SwatchPoint[]; curveColor: string }
 
-  const SERIES: ToneSeries[] = TONES.map((tone) => {
-    const points: SwatchPoint[] = []
-    for (const hue of HUE_ORDER) {
-      const c = PCCS_ALL.find((x) => x.toneSymbol === tone && x.hueNumber === hue)
-      if (!c || !c.munsell) continue
-      const m = parseMunsell(c.munsell)
-      if (!m) continue
-      points.push({ x: xOf(hue), y: yOf(m.value), color: c })
-    }
-    return {
-      tone,
-      points,
-      curveColor: PCCS_HEX_MAP.get(`${tone}24`) ?? "#888"
-    }
-  })
+  const SERIES: ToneSeries[] = $derived(
+    tones.map((tone) => {
+      const points: SwatchPoint[] = []
+      for (const hue of HUE_ORDER) {
+        const c = PCCS_ALL.find((x) => x.toneSymbol === tone && x.hueNumber === hue)
+        if (!c || !c.munsell) continue
+        const m = parseMunsell(c.munsell)
+        if (!m) continue
+        points.push({ x: xOf(hue), y: yOf(m.value), color: c })
+      }
+      return {
+        tone,
+        points,
+        curveColor: PCCS_HEX_MAP.get(`${tone}24`) ?? "#888"
+      }
+    })
+  )
 
   // Catmull-Rom → 三次ベジェ変換で滑らかな曲線を生成
   function smoothPath(points: { x: number; y: number }[]): string {
