@@ -1,5 +1,6 @@
 <script lang="ts">
   import { PCCS_HEX_MAP } from "$lib/data/pccs"
+  import { ankiMode } from "$lib/state/anki.svelte"
 
   // ── 寸法・レイアウト定数 ──
   const SIZE = 900 // SVG の一辺（px）
@@ -120,6 +121,8 @@
       { id: `${a}${b}-${b}`, ...pos[b], clipId: `clip${a.toUpperCase()}` }
     ])
   )
+
+  const isAnki = $derived(ankiMode.isAnki)
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {SIZE} {SIZE}" width={SIZE} height={SIZE}>
@@ -196,7 +199,7 @@
       font-weight="bold"
       fill={COLOR.label}
     >
-      {lbl.text}
+      {isAnki ? "" : lbl.text}
     </text>
   {/each}
 
@@ -212,7 +215,7 @@
       font-weight="bold"
       fill={COLOR.label}
     >
-      {is.label}
+      {isAnki ? "" : is.label}
     </text>
   {/each}
 </svg>

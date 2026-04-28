@@ -45,7 +45,7 @@
   const COLOR_REFLECT = "var(--canvas-pen-orange)"
   const COLOR_BAR_BORDER = "rgba(255,255,255,0.7)"
   const COLOR_LABEL_OUTLINE = "rgba(255,255,255,0.9)"
-  const COLOR_CENTER = "#d04070"
+  const COLOR_CENTER = "var(--canvas-pen-pink)"
 
   // ── Types ─────────────────────────────────────────────────────────────────
   type RegionKind = "absorb" | "reflect"
