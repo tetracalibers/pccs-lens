@@ -47,7 +47,12 @@
     <div class="circle" style:background-color={RED}></div>
   {/if}
 
-  {#if phase === "playing"}
+  {#if phase === "idle"}
+    <button class="corner-btn top-left" type="button" onclick={start} aria-label="再生">
+      <Icon icon="mdi:motion-play-outline" width="32" height="32" />
+    </button>
+    <div class="countdown top-right">{DURATION_SEC}s</div>
+  {:else if phase === "playing"}
     <button class="corner-btn top-left" type="button" onclick={stop} aria-label="停止">
       <Icon icon="mdi:motion-pause-outline" width="32" height="32" />
     </button>
@@ -56,14 +61,6 @@
     <button class="corner-btn top-left" type="button" onclick={start} aria-label="もう一度再生">
       <Icon icon="solar:restart-circle-bold" width="32" height="32" />
     </button>
-  {/if}
-
-  {#if phase === "idle"}
-    <div class="overlay">
-      <button class="play-btn" type="button" onclick={start} aria-label="再生">
-        <Icon icon="mdi:motion-play-outline" width="84" height="84" />
-      </button>
-    </div>
   {/if}
 </div>
 
@@ -88,24 +85,6 @@
     width: 38%;
     aspect-ratio: 1 / 1;
     border-radius: 50%;
-  }
-
-  .overlay {
-    position: absolute;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.6);
-    display: grid;
-    place-items: center;
-  }
-
-  .play-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    color: #ffffff;
-    display: grid;
-    place-items: center;
   }
 
   .corner-btn {
