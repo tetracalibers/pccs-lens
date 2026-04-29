@@ -74,20 +74,22 @@ graph LR
 背景との明度差を強調するため、図が背景から離れようとしている様子に注目してください。
 
 ::::CardGrid
-:::TermCard
+:::TermCard{textCentering}
 
-- 無彩色で、背景が図より明るい場合の例
-- 図はますます暗く見える
+### 背景が図より明るい
 
 <ToneContrast figure="Gy-5.5" ground="Gy-8.5" />
 
-:::
-:::TermCard
+図はますます:Mark[暗く]見える
 
-- 無彩色で、背景が図より暗い場合の例
-- 図はますます明るく見える
+:::
+:::TermCard{textCentering}
+
+### 背景が図より暗い
 
 <ToneContrast figure="Gy-5.5" ground="Gy-2.5" />
+
+図はますます:Mark[明るく]見える
 
 :::
 ::::
@@ -95,20 +97,22 @@ graph LR
 明度対比は、無彩色だけでなく、有彩色でも起こる現象です。
 
 ::::CardGrid
-:::TermCard
+:::TermCard{textCentering}
 
-- 有彩色で、背景が図より明るい場合の例
-- 図はますます暗く見える
+### 背景が図より明るい
 
 <ToneContrast figure="sf24" ground="lt24" />
 
-:::
-:::TermCard
+図はますます:Mark[暗く]見える
 
-- 有彩色で、背景が図より暗い場合の例
-- 図はますます明るく見える
+:::
+:::TermCard{textCentering}
+
+### 背景が図より暗い
 
 <ToneContrast figure="sf24" ground="dk24" />
+
+図はますます:Mark[明るく]見える
 
 :::
 ::::

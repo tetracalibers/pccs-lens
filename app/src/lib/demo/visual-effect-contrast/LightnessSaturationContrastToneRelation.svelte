@@ -32,12 +32,12 @@
   const ARROW_OFFSET = 8 // セル端から矢印開始点までの距離
   const ARROW_LENGTH = 50
   const LABEL_GAP = 6
-  const LABEL_FONT_SIZE = 13
+  const LABEL_FONT_SIZE = 18
 
   // ===== 線幅 =====
   const OUTLINE_STROKE_WIDTH = 1.5
   const DIVIDER_STROKE_WIDTH = 1.2
-  const ARROW_STROKE_WIDTH = 1.5
+  const ARROW_STROKE_WIDTH = 2
 
   // ===== 色 =====
   const COL_OUTLINE = "var(--color-body)"
@@ -165,13 +165,21 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {SVG_W} {SVG_H}">
   <defs>
-    <marker id="contrast-arrow-end" markerWidth="9" markerHeight="10" refX="8" refY="5" orient="auto">
+    <marker
+      id="contrast-arrow-end"
+      markerWidth="9"
+      markerHeight="10"
+      refX="8"
+      refY="5"
+      orient="auto"
+    >
       <polyline
         points="1,1 8,5 1,9"
         fill="none"
         stroke={COL_ARROW}
         stroke-width="1"
         stroke-linejoin="round"
+        stroke-linecap="round"
       />
     </marker>
   </defs>
@@ -206,12 +214,7 @@
   {/if}
 
   {#if figureCell}
-    <foreignObject
-      x={figureCell.cx - SQ / 2}
-      y={figureCell.cy - SQ / 2}
-      width={SQ}
-      height={SQ}
-    >
+    <foreignObject x={figureCell.cx - SQ / 2} y={figureCell.cy - SQ / 2} width={SQ} height={SQ}>
       <div
         xmlns="http://www.w3.org/1999/xhtml"
         style="width: 100%; height: 100%; color: {figureHex}; display: grid; place-items: center;"
@@ -237,6 +240,7 @@
       text-anchor={arrow.labelPos.anchor}
       dominant-baseline="middle"
       font-size={LABEL_FONT_SIZE}
+      font-weight="bold"
       fill={COL_LABEL}
     >
       {arrow.label}
