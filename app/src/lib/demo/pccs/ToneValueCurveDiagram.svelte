@@ -183,8 +183,7 @@
 <style>
   .scroll-wrapper {
     width: 100%;
-    padding-inline: 1rem;
-    padding-block: 2rem;
+    padding: 1rem;
     box-sizing: border-box;
     overflow-x: auto;
   }
@@ -192,6 +191,7 @@
   svg {
     display: block;
     max-height: 550px;
+    max-width: 610px;
     width: auto;
     margin-inline: auto;
   }
