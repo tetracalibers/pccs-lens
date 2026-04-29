@@ -27,12 +27,11 @@
   const INNER_PAD = 10 // セル群と輪郭線の間の余白
 
   // ===== 矢印・ラベル定数 =====
-  const ARROW_PAD_X = 130 // 横向き矢印のためのSVG左右パディング
-  const ARROW_PAD_Y = 50 // 縦向き矢印のためのSVG上下パディング
   const ARROW_OFFSET = 8 // セル端から矢印開始点までの距離
   const ARROW_LENGTH = 50
   const LABEL_GAP = 6
-  const LABEL_FONT_SIZE = 18
+  const LABEL_FONT_SIZE = 16
+  const VIEWBOX_MARGIN = 4 // viewBox外周の余白
 
   // ===== 線幅 =====
   const OUTLINE_STROKE_WIDTH = 1.5
@@ -46,26 +45,22 @@
   const COL_LABEL = "var(--color-body)"
 
   // ===== セル中心座標 =====
-  const X0 = ARROW_PAD_X + INNER_PAD + SQ / 2
+  const X0 = INNER_PAD + SQ / 2
   const X1 = X0 + SQ + COL_GAP_ACH
   const X2 = X1 + SQ + COL_GAP
   const X3 = X2 + SQ + COL_GAP
   const X4 = X3 + SQ + COL_GAP
-  const Y0 = ARROW_PAD_Y + INNER_PAD + SQ / 2
+  const Y0 = INNER_PAD + SQ / 2
 
   // ===== 輪郭線（左フラット・右セミサークルのかまぼこ形） =====
-  const OUTLINE_X = ARROW_PAD_X
-  const OUTLINE_Y = ARROW_PAD_Y
+  const OUTLINE_X = 0
+  const OUTLINE_Y = 0
   const OUTLINE_W = 2 * INNER_PAD + (X4 - X0) + SQ
   const OUTLINE_H = 2 * INNER_PAD + 4 * S + SQ
   const OUTLINE_R = OUTLINE_H / 2
 
   // ===== 仕切り線X座標（無彩色列と有彩色列の中間） =====
   const DIVIDER_X = X0 + SQ / 2 + COL_GAP_ACH / 2
-
-  // ===== SVGサイズ =====
-  const SVG_W = OUTLINE_W + 2 * ARROW_PAD_X
-  const SVG_H = OUTLINE_H + 2 * ARROW_PAD_Y
 
   // ===== セル定義 =====
   const CELLS: ToneCell[] = [
@@ -161,9 +156,51 @@
 
   // 輪郭線パス：左辺直線 + 右側半円
   const outlinePath = `M ${OUTLINE_X} ${OUTLINE_Y} L ${OUTLINE_X + OUTLINE_W - OUTLINE_R} ${OUTLINE_Y} A ${OUTLINE_R} ${OUTLINE_R} 0 0 1 ${OUTLINE_X + OUTLINE_W - OUTLINE_R} ${OUTLINE_Y + OUTLINE_H} L ${OUTLINE_X} ${OUTLINE_Y + OUTLINE_H} Z`
+
+  // ===== viewBox（実コンテンツにフィットさせる） =====
+  const viewBox = $derived.by(() => {
+    let minX = OUTLINE_X
+    let maxX = OUTLINE_X + OUTLINE_W
+    let minY = OUTLINE_Y
+    let maxY = OUTLINE_Y + OUTLINE_H
+
+    if (arrow) {
+      minX = Math.min(minX, arrow.line.x1, arrow.line.x2)
+      maxX = Math.max(maxX, arrow.line.x1, arrow.line.x2)
+      minY = Math.min(minY, arrow.line.y1, arrow.line.y2)
+      maxY = Math.max(maxY, arrow.line.y1, arrow.line.y2)
+
+      // ラベル境界（日本語想定で 1 文字 ≒ font-size 幅）
+      const labelWidth = arrow.label.length * LABEL_FONT_SIZE
+      const labelHalfHeight = LABEL_FONT_SIZE / 2 + 2
+      const lp = arrow.labelPos
+      const lbMinX =
+        lp.anchor === "middle"
+          ? lp.x - labelWidth / 2
+          : lp.anchor === "start"
+            ? lp.x
+            : lp.x - labelWidth
+      const lbMaxX =
+        lp.anchor === "middle"
+          ? lp.x + labelWidth / 2
+          : lp.anchor === "start"
+            ? lp.x + labelWidth
+            : lp.x
+      minX = Math.min(minX, lbMinX)
+      maxX = Math.max(maxX, lbMaxX)
+      minY = Math.min(minY, lp.y - labelHalfHeight)
+      maxY = Math.max(maxY, lp.y + labelHalfHeight)
+    }
+
+    const x = minX - VIEWBOX_MARGIN
+    const y = minY - VIEWBOX_MARGIN
+    const w = maxX - minX + 2 * VIEWBOX_MARGIN
+    const h = maxY - minY + 2 * VIEWBOX_MARGIN
+    return `${x} ${y} ${w} ${h}`
+  })
 </script>
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {SVG_W} {SVG_H}">
+<svg xmlns="http://www.w3.org/2000/svg" {viewBox}>
   <defs>
     <marker
       id="contrast-arrow-end"

@@ -37,4 +37,8 @@
   .preview {
     max-width: 200px;
   }
+
+  .tone-relation {
+    max-width: 200px;
+  }
 </style>
