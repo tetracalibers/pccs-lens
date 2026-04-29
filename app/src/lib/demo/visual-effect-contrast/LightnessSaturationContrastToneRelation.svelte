@@ -29,7 +29,7 @@
   // ===== 矢印・ラベル定数 =====
   const ARROW_OFFSET = 8 // セル端から矢印開始点までの距離
   const ARROW_LENGTH = 50
-  const LABEL_GAP = 6
+  const LABEL_GAP = 8 // 矢印先端とラベル端の視覚的余白（全方向共通）
   const LABEL_FONT_SIZE = 16
   const VIEWBOX_MARGIN = 4 // viewBox外周の余白
 
@@ -100,32 +100,44 @@
   const groundCell = $derived(findCell(notationToCellKey(ground)))
 
   // ===== 矢印仕様 =====
+  type LabelAnchor = "middle" | "start" | "end"
+  type LabelBaseline = "central" | "hanging"
   type ArrowSpec = {
     label: string
     line: { x1: number; y1: number; x2: number; y2: number }
-    labelPos: { x: number; y: number; anchor: "middle" | "start" | "end" }
+    labelPos: { x: number; y: number; anchor: LabelAnchor; baseline: LabelBaseline }
   }
 
   function computeArrow(fig: ToneCell, gnd: ToneCell): ArrowSpec | null {
     if (fig.cx === gnd.cx && fig.cy !== gnd.cy) {
       // 縦に並ぶ
       if (fig.cy < gnd.cy) {
-        // 図が上 → 上向き矢印
+        // 図が上 → 上向き矢印（central: テキスト中心が y）
         const startY = fig.cy - SQ / 2 - ARROW_OFFSET
         const endY = startY - ARROW_LENGTH
         return {
           label: "明るく見える",
           line: { x1: fig.cx, y1: startY, x2: fig.cx, y2: endY },
-          labelPos: { x: fig.cx, y: endY - LABEL_GAP, anchor: "middle" }
+          labelPos: {
+            x: fig.cx,
+            y: endY - LABEL_GAP - LABEL_FONT_SIZE / 2,
+            anchor: "middle",
+            baseline: "central"
+          }
         }
       }
-      // 図が下 → 下向き矢印
+      // 図が下 → 下向き矢印（hanging: テキスト上端が y）
       const startY = fig.cy + SQ / 2 + ARROW_OFFSET
       const endY = startY + ARROW_LENGTH
       return {
         label: "暗く見える",
         line: { x1: fig.cx, y1: startY, x2: fig.cx, y2: endY },
-        labelPos: { x: fig.cx, y: endY + LABEL_GAP + LABEL_FONT_SIZE, anchor: "middle" }
+        labelPos: {
+          x: fig.cx,
+          y: endY + LABEL_GAP + LABEL_FONT_SIZE / 2,
+          anchor: "middle",
+          baseline: "hanging"
+        }
       }
     }
     if (fig.cy === gnd.cy && fig.cx !== gnd.cx) {
@@ -137,7 +149,7 @@
         return {
           label: "鮮やかに見える",
           line: { x1: startX, y1: fig.cy, x2: endX, y2: fig.cy },
-          labelPos: { x: endX + LABEL_GAP, y: fig.cy, anchor: "start" }
+          labelPos: { x: endX + LABEL_GAP, y: fig.cy, anchor: "start", baseline: "central" }
         }
       }
       // 図が左 → 左向き矢印
@@ -146,7 +158,7 @@
       return {
         label: "くすんで見える",
         line: { x1: startX, y1: fig.cy, x2: endX, y2: fig.cy },
-        labelPos: { x: endX - LABEL_GAP, y: fig.cy, anchor: "end" }
+        labelPos: { x: endX - LABEL_GAP, y: fig.cy, anchor: "end", baseline: "central" }
       }
     }
     return null
@@ -300,7 +312,7 @@
       x={arrow.labelPos.x}
       y={arrow.labelPos.y}
       text-anchor={arrow.labelPos.anchor}
-      dominant-baseline="middle"
+      dominant-baseline={arrow.labelPos.baseline}
       font-size={LABEL_FONT_SIZE}
       font-weight="bold"
       fill={COL_LABEL}
