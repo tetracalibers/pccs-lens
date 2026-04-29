@@ -36,7 +36,13 @@
   // ===== 線幅 =====
   const OUTLINE_STROKE_WIDTH = 1.5
   const DIVIDER_STROKE_WIDTH = 1.2
-  const ARROW_STROKE_WIDTH = 2
+  const ARROW_STROKE_WIDTH = 2.5
+
+  // ===== 矢の形状 =====
+  const ARROW_HEAD_VIEWBOX = 7 // marker viewBox の一辺
+  const ARROW_HEAD_SIZE = 20 // 矢先のレンダリングサイズ（user space）
+  // marker 内 polyline の stroke-width。線本体と見た目の太さを一致させる
+  const ARROW_HEAD_STROKE = (ARROW_STROKE_WIDTH * ARROW_HEAD_VIEWBOX) / ARROW_HEAD_SIZE
 
   // ===== 色 =====
   const COL_OUTLINE = "var(--color-body)"
@@ -216,11 +222,11 @@
   <defs>
     <marker
       id="contrast-arrow-end"
-      viewBox="0 0 7 7"
-      refX="3.5"
-      refY="3.5"
-      markerWidth="14"
-      markerHeight="14"
+      viewBox="0 0 {ARROW_HEAD_VIEWBOX} {ARROW_HEAD_VIEWBOX}"
+      refX={ARROW_HEAD_VIEWBOX / 2}
+      refY={ARROW_HEAD_VIEWBOX / 2}
+      markerWidth={ARROW_HEAD_SIZE}
+      markerHeight={ARROW_HEAD_SIZE}
       markerUnits="userSpaceOnUse"
       orient="auto-start-reverse"
     >
@@ -228,7 +234,7 @@
         points="0,3.5 3.5,1.75 0,0"
         fill="none"
         stroke={COL_ARROW}
-        stroke-width="1.1667"
+        stroke-width={ARROW_HEAD_STROKE}
         stroke-linecap="round"
         stroke-linejoin="round"
         transform="translate(1.1667 1.75)"
