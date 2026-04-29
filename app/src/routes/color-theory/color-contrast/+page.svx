@@ -8,7 +8,9 @@ draft: true
 ---
 
 <script>
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
   import ToneContrast from "$lib/demo/visual-effect-contrast/LightnessSaturationContrastDiagram.svelte"
+  import ContrastPreview from "$lib/demo/visual-effect-contrast/LightnessSaturationContrastPreview.svelte"
 </script>
 
 ## :WithGradeTag[色の対比とは]{grades="3"}
@@ -57,9 +59,12 @@ graph LR
 対比の具体例に入る前に、これから使うことになる用語を解説します。
 
 デザインなどで用いられる視覚的な表現では、主体となるものを:Mark[図]、背景となるものを:Mark[地]と呼びます。
-例えば、背景色の上に文字が書かれている場合、文字が:Mark[図]で背景色が:Mark[地]になります。
 
-- TODO：背景色の上に文字が書かれている例の図解
+<SVGWrapper maxW={250}>
+  <ContrastPreview figure="sf24" ground="dk24" figureLabel="図" groundLabel="地" iconId="bi:star-fill" />
+</SVGWrapper>
+
+例えば、背景色の上に文字が書かれている場合は、文字が:Mark[図]で背景色が:Mark[地]になります。
 
 対比の具体例では、大きな面積の背景（:Mark[地]）に囲まれた:Mark[図]の色が、背景色の影響を受けて、どのように変化して見えるかを観察していきましょう。
 
