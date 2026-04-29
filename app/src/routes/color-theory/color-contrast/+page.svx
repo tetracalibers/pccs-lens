@@ -10,6 +10,7 @@ draft: true
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
   import ToneContrast from "$lib/demo/visual-effect-contrast/LightnessSaturationContrastDiagram.svelte"
+  import HueContrast from "$lib/demo/visual-effect-contrast/HueContrastDiagram.svelte"
   import ContrastPreview from "$lib/demo/visual-effect-contrast/ContrastColorPreview.svelte"
 </script>
 
@@ -172,4 +173,13 @@ TODO: 彩度差が大きいほど彩度対比は強くなる
 
 ## :WithGradeTag[色相対比]{grades="3"}
 
-::ComingSoon
+色相が異なる2色が接したときに、色相差が強調されて色みがずれて見える現象を:Mark[色相対比]といいます。
+
+::::CardGrid
+:::TermCard{textCentering}
+<HueContrast figure="v5" ground="v2" />
+:::
+:::TermCard{textCentering}
+<HueContrast figure="v5" ground="v8" />
+:::
+::::
