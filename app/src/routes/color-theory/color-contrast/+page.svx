@@ -10,7 +10,7 @@ draft: true
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
   import ToneContrast from "$lib/demo/visual-effect-contrast/LightnessSaturationContrastDiagram.svelte"
-  import ContrastPreview from "$lib/demo/visual-effect-contrast/LightnessSaturationContrastPreview.svelte"
+  import ContrastPreview from "$lib/demo/visual-effect-contrast/ContrastColorPreview.svelte"
 </script>
 
 ## :WithGradeTag[色の対比とは]{grades="3"}

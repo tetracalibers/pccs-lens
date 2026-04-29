@@ -1,7 +1,7 @@
 <script lang="ts">
   import SVGWrapper from "../SVGWrapper.svelte"
-  import LightnessSaturationContrastPreview from "./LightnessSaturationContrastPreview.svelte"
-  import LightnessSaturationContrastToneRelation from "./LightnessSaturationContrastToneRelation.svelte"
+  import LightnessSaturationContrastPreview from "./ContrastColorPreview.svelte"
+  import LightnessSaturationContrastToneRelation from "./ContrastToneRelation.svelte"
 
   let {
     figure,
