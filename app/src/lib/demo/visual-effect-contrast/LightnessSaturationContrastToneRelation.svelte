@@ -22,9 +22,9 @@
   const SQ = 36
   const VGAP = 4
   const S = SQ + VGAP // Col0 セル中心間の縦距離
-  const COL_GAP_ACH = 12 // 無彩色列と有彩色1列目の隙間
+  const COL_GAP_ACH = 20 // 無彩色列と有彩色1列目の隙間
   const COL_GAP = 4 // 有彩色列同士の隙間
-  const INNER_PAD = 16 // セル群と輪郭線の間の余白
+  const INNER_PAD = 10 // セル群と輪郭線の間の余白
 
   // ===== 矢印・ラベル定数 =====
   const ARROW_PAD_X = 130 // 横向き矢印のためのSVG左右パディング
@@ -202,6 +202,31 @@
     stroke={COL_DIVIDER}
     stroke-width={DIVIDER_STROKE_WIDTH}
   />
+
+  <!-- DEBUG: 全セルを薄く表示 -->
+  {#each CELLS as cell (cell.key)}
+    <rect
+      x={cell.cx - SQ / 2}
+      y={cell.cy - SQ / 2}
+      width={SQ}
+      height={SQ}
+      fill="none"
+      stroke={COL_OUTLINE}
+      stroke-width="1"
+      opacity="0.3"
+    />
+    <text
+      x={cell.cx}
+      y={cell.cy}
+      text-anchor="middle"
+      dominant-baseline="central"
+      font-size="11"
+      fill={COL_OUTLINE}
+      opacity="0.5"
+    >
+      {cell.key}
+    </text>
+  {/each}
 
   {#if groundCell}
     <rect
