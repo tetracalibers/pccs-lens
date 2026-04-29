@@ -27,7 +27,7 @@
   const INNER_PAD = 10 // セル群と輪郭線の間の余白
 
   // ===== 矢印・ラベル定数 =====
-  const ARROW_OFFSET = 8 // セル端から矢印開始点までの距離
+  const ARROW_OFFSET = 3 // セル端から矢印開始点までの距離
   const ARROW_LENGTH = 50
   const LABEL_GAP = 8 // 矢印先端とラベル端の視覚的余白（全方向共通）
   const LABEL_FONT_SIZE = 16
@@ -272,6 +272,7 @@
       stroke={COL_OUTLINE}
       stroke-width="1"
       opacity="0.3"
+      rx="4"
     />
     <text
       x={cell.cx}
