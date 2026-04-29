@@ -39,6 +39,7 @@
   }
 
   .hue-relation {
-    max-width: 200px;
+    max-width: 250px;
+    margin-block-end: -1rem;
   }
 </style>

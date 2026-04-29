@@ -21,13 +21,13 @@
   // ===== サイズ定数 =====
   const WHEEL_RADIUS = 100
   const WHEEL_STROKE_WIDTH = 1.5
-  const MARKER_SIZE = 28
+  const MARKER_SIZE = 32
   const LABEL_FONT_SIZE = 18
   const LABEL_GAP = 6 // マーカー外側の端からラベル内側の端までの間隔
-  const LABEL_TO_ARC_GAP = 10 // ラベル外側の端から円弧矢印までの間隔
+  const LABEL_TO_ARC_GAP = 12 // ラベル外側の端から円弧矢印までの間隔
   // ラベルテキストを矩形と見なすときの 1 文字あたりの幅をフォントサイズに対する比率で近似
   const LABEL_CHAR_WIDTH_RATIO = 0.6
-  const VIEWBOX_MARGIN = 8
+  const VIEWBOX_MARGIN = 0
 
   // ===== 円弧矢印（A→D, 矢はC方向）: ContrastToneRelation と同等 =====
   const ARC_STROKE_WIDTH = 2.5
@@ -235,6 +235,7 @@
         stroke={COL_LINE}
         stroke-width="1"
         stroke-linejoin="round"
+        stroke-linecap="round"
       />
     </marker>
   </defs>
