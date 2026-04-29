@@ -101,6 +101,9 @@
   const arcHex = $derived(
     midHue !== null ? (PCCS_HEX_MAP.get(`b${midHue}`) ?? "#000000") : "#000000"
   )
+  // 同一ページに複数のコンポーネントが並んだとき、矢印の色が混ざらないように
+  // marker id に色を含めて一意化する。
+  const arcMarkerId = $derived(`hue-arc-arrow-${arcHex.replace("#", "")}`)
 
   // ===== 角度 =====
   const figureAngle = $derived(figureHue !== null ? hueAngle(figureHue) : null)
@@ -177,7 +180,7 @@
   <defs>
     <!-- A→D 円弧用矢（C 方向）: ContrastToneRelation 形状 -->
     <marker
-      id="hue-arc-arrow"
+      id={arcMarkerId}
       viewBox="0 0 {ARC_ARROW_HEAD_VIEWBOX} {ARC_ARROW_HEAD_VIEWBOX}"
       refX={ARC_ARROW_HEAD_VIEWBOX / 2}
       refY={ARC_ARROW_HEAD_VIEWBOX / 2}
@@ -342,7 +345,7 @@
       stroke={arcHex}
       stroke-width={ARC_STROKE_WIDTH}
       stroke-linecap="round"
-      marker-end="url(#hue-arc-arrow)"
+      marker-end="url(#{arcMarkerId})"
     />
   {/if}
 </svg>
