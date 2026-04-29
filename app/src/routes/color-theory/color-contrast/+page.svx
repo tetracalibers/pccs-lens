@@ -135,12 +135,41 @@ graph LR
 
 ## :WithGradeTag[彩度対比]{grades="3"}
 
+彩度が異なる2色が接したときに、彩度差が強調されて見える現象を:Mark[彩度対比]といいます。
+
+- 背景の彩度が:Mark[低い]とき、図の色は実際よりも鮮やかに見える
+- 背景の彩度が:Mark[高い]とき、図の色は実際よりもくすんで見える
+
+彩度対比をトーンマップで見ると、図の色が左右に移動する形で見え方が変化します。
+背景との彩度差を強調するため、図が背景から離れようとしている様子に注目してください。
+
+::::CardGrid
+:::TermCard{textCentering}
+
+### 背景が図よりくすんでいる
+
+<ToneContrast figure="d2" ground="g2" />
+
+図の赤みがより:Mark[強く]見える
+
+:::
+:::TermCard{textCentering}
+
+### 背景が図より鮮やか
+
+<ToneContrast figure="d2" ground="v2" />
+
+図の赤みがより:Mark[弱く]見える
+
+:::
+::::
+
+TODO: 彩度差が大きいほど彩度対比は強くなる
+
+## :WithGradeTag[補色対比]{grades="3"}
+
 ::ComingSoon
 
 ## :WithGradeTag[色相対比]{grades="3"}
-
-::ComingSoon
-
-## :WithGradeTag[補色対比]{grades="3"}
 
 ::ComingSoon
