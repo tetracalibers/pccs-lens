@@ -6,9 +6,10 @@
 
   type Props = {
     tones: string[]
+    hideAxis?: boolean
   }
 
-  const { tones }: Props = $props()
+  const { tones, hideAxis = false }: Props = $props()
 
   // 横軸の色相番号（左から 24, 2, 4, ..., 22）
   const HUE_ORDER = [24, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22]
@@ -19,23 +20,46 @@
   const CIRCLE_R = 18
   const VALUE_MIN = 1
   const VALUE_MAX = 9.5
-  const PLOT_H = 650
-  const PLOT_TOP_PAD = 0
+  const UNIT_H = 650 / (VALUE_MAX - VALUE_MIN)
   const AXIS_GAP = 12
   const LABEL_GAP = 18
   const LABEL_FONT = 13
 
+  // tones に含まれる偶数色相の色の明度範囲
+  const valueRange = $derived.by(() => {
+    let min = Infinity
+    let max = -Infinity
+    for (const tone of tones) {
+      for (const hue of HUE_ORDER) {
+        const c = PCCS_ALL.find((x) => x.toneSymbol === tone && x.hueNumber === hue)
+        if (!c || !c.munsell) continue
+        const m = parseMunsell(c.munsell)
+        if (!m) continue
+        if (m.value < min) min = m.value
+        if (m.value > max) max = m.value
+      }
+    }
+    return {
+      min: min === Infinity ? VALUE_MIN : min,
+      max: max === -Infinity ? VALUE_MAX : max
+    }
+  })
+
+  // 中身（最高明度のスウォッチの上端）が y=0 になるよう全体をシフトするためのオフセット
+  const Y_OFFSET = $derived((VALUE_MAX - valueRange.max) * UNIT_H - CIRCLE_R)
+  // スウォッチがちょうど収まるプロット高さ
+  const PLOT_H = $derived((valueRange.max - valueRange.min) * UNIT_H + CIRCLE_R * 2)
+
   const SVG_W = X_PAD * 2 + COL_W * HUE_ORDER.length
-  const H_AXIS_Y = PLOT_TOP_PAD + PLOT_H
-  const SVG_H = H_AXIS_Y + AXIS_GAP + LABEL_GAP + LABEL_FONT
+  const H_AXIS_Y = $derived(PLOT_H)
+  const SVG_H = $derived(hideAxis ? PLOT_H : H_AXIS_Y + AXIS_GAP + LABEL_GAP + LABEL_FONT)
 
   function xOf(hue: number): number {
     return X_PAD + COL_W * HUE_ORDER.indexOf(hue) + COL_W / 2
   }
 
   function yOf(value: number): number {
-    const t = (value - VALUE_MIN) / (VALUE_MAX - VALUE_MIN)
-    return PLOT_TOP_PAD + PLOT_H * (1 - t)
+    return (VALUE_MAX - value) * UNIT_H - Y_OFFSET
   }
 
   type SwatchPoint = { x: number; y: number; color: PCCSColor }
@@ -86,29 +110,31 @@
     role="img"
     aria-label="PCCSトーンごとの明度カーブ図"
   >
-    <!-- 横軸（色相） -->
-    <line
-      x1={X_PAD}
-      y1={H_AXIS_Y}
-      x2={SVG_W - X_PAD}
-      y2={H_AXIS_Y}
-      stroke="var(--color-body)"
-      stroke-width="1"
-    />
+    {#if !hideAxis}
+      <!-- 横軸（色相） -->
+      <line
+        x1={X_PAD}
+        y1={H_AXIS_Y}
+        x2={SVG_W - X_PAD}
+        y2={H_AXIS_Y}
+        stroke="var(--color-body)"
+        stroke-width="1"
+      />
 
-    <!-- 横軸ラベル（色相番号） -->
-    {#each HUE_ORDER as hue (hue)}
-      <text
-        x={xOf(hue)}
-        y={H_AXIS_Y + AXIS_GAP + LABEL_GAP}
-        text-anchor="middle"
-        font-size={LABEL_FONT}
-        font-family="var(--font-mono)"
-        style="fill: var(--color-body);"
-      >
-        {hue}
-      </text>
-    {/each}
+      <!-- 横軸ラベル（色相番号） -->
+      {#each HUE_ORDER as hue (hue)}
+        <text
+          x={xOf(hue)}
+          y={H_AXIS_Y + AXIS_GAP + LABEL_GAP}
+          text-anchor="middle"
+          font-size={LABEL_FONT}
+          font-family="var(--font-mono)"
+          style="fill: var(--color-body);"
+        >
+          {hue}
+        </text>
+      {/each}
+    {/if}
 
     <!-- 各トーンの滑らかな曲線（スウォッチの背面に描画） -->
     {#each SERIES as series (series.tone)}
