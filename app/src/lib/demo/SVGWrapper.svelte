@@ -20,7 +20,7 @@
     box-sizing: border-box;
   }
 
-  .svg-wrapper :global(svg) {
+  .svg-wrapper :global(> svg) {
     display: block;
     width: 100%;
     height: auto;
