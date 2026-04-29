@@ -1,16 +1,6 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
-  import {
-    COL_LINE,
-    COL_TEXT,
-    LETTER_FONT_SIZE,
-    NUM_FONT_SIZE,
-    STROKE_WIDTH,
-    hueAngle,
-    letterPosition,
-    numberPosition,
-    tickEndpoints
-  } from "./constants"
+  import { LETTER_FONT_SIZE, COL_TEXT, letterPosition } from "./constants"
   import Step8 from "./Step8.svelte"
 
   interface Props {
@@ -20,9 +10,6 @@
   }
 
   let { extraDefs, extraContent, extraUnderlay }: Props = $props()
-
-  // 円弧に含まれない目盛りのうち, まだ目盛り自体が無いもの
-  const newOddTicks = [15]
 
   // 丸囲みなしのラベル. 24 (RP) はソース文に明記されていないが
   // 円弧に含まれず, 同じ規則 (両隣のアルファベットを反時計回り順) で埋まる位置.
@@ -40,22 +27,6 @@
 {/snippet}
 
 {#snippet content()}
-  {#each newOddTicks as hue (hue)}
-    {@const ang = hueAngle(hue)}
-    {@const e = tickEndpoints(ang)}
-    {@const np = numberPosition(ang)}
-    <line x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2} stroke={COL_LINE} stroke-width={STROKE_WIDTH} />
-    <text
-      x={np.x}
-      y={np.y}
-      font-size={NUM_FONT_SIZE}
-      fill={COL_TEXT}
-      text-anchor="middle"
-      dominant-baseline="central"
-    >
-      {hue}
-    </text>
-  {/each}
   {#each plainLabels as item (item.hue)}
     {@const p = letterPosition(item.hue)}
     <text
