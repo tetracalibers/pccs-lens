@@ -47,11 +47,14 @@
 
   // 中身（最高明度のスウォッチの上端）が y=0 になるよう全体をシフトするためのオフセット
   const Y_OFFSET = $derived((VALUE_MAX - valueRange.max) * UNIT_H - CIRCLE_R)
-  // スウォッチがちょうど収まるプロット高さ
-  const PLOT_H = $derived((valueRange.max - valueRange.min) * UNIT_H + CIRCLE_R * 2)
+  // スウォッチがちょうど収まる高さ
+  const SWATCH_BOTTOM_Y = $derived((valueRange.max - valueRange.min) * UNIT_H + CIRCLE_R * 2)
+  // 横軸（VALUE_MIN の位置）の Y 座標
+  const AXIS_Y = $derived((VALUE_MAX - VALUE_MIN) * UNIT_H - Y_OFFSET)
 
   const SVG_W = X_PAD * 2 + COL_W * HUE_ORDER.length
-  const H_AXIS_Y = $derived(PLOT_H)
+  const PLOT_H = $derived(hideAxis ? SWATCH_BOTTOM_Y : Math.max(SWATCH_BOTTOM_Y, AXIS_Y))
+  const H_AXIS_Y = $derived(AXIS_Y)
   const SVG_H = $derived(hideAxis ? PLOT_H : H_AXIS_Y + AXIS_GAP + LABEL_GAP + LABEL_FONT)
 
   function xOf(hue: number): number {
