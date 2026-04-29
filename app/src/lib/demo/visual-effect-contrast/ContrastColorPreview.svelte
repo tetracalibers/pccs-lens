@@ -47,6 +47,7 @@
       text-anchor="end"
       dominant-baseline="alphabetic"
       font-size={GROUND_LABEL_FONT_SIZE}
+      font-weight="bold"
       fill={groundLabelColor}
     >
       {isAnki ? "" : groundLabel}
@@ -69,6 +70,7 @@
       text-anchor="middle"
       dominant-baseline="hanging"
       font-size={FIGURE_LABEL_FONT_SIZE}
+      font-weight="bold"
       fill={figureLabelColor}
     >
       {isAnki ? "" : figureLabel}
