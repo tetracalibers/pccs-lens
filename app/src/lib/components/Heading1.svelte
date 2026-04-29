@@ -62,6 +62,5 @@
 
   .heading-text {
     align-self: center;
-    word-break: auto-phrase;
   }
 </style>
