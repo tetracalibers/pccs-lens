@@ -31,8 +31,7 @@
   const ARC_STROKE_WIDTH = 2.5
   const ARC_ARROW_HEAD_VIEWBOX = 7
   const ARC_ARROW_HEAD_SIZE = 20
-  const ARC_ARROW_HEAD_STROKE =
-    (ARC_STROKE_WIDTH * ARC_ARROW_HEAD_VIEWBOX) / ARC_ARROW_HEAD_SIZE
+  const ARC_ARROW_HEAD_STROKE = (ARC_STROKE_WIDTH * ARC_ARROW_HEAD_VIEWBOX) / ARC_ARROW_HEAD_SIZE
 
   // ===== 直線矢印（B→C, 点線）: SpectrumRange と同等 =====
   const LINE_STROKE_WIDTH = 2
@@ -83,21 +82,15 @@
 
   const compHue = $derived(groundHue !== null ? complementHue(groundHue) : null)
   const midHue = $derived(
-    groundHue !== null && figureHue !== null
-      ? midHueNearFigure(groundHue, figureHue)
-      : null
+    groundHue !== null && figureHue !== null ? midHueNearFigure(groundHue, figureHue) : null
   )
 
   // ===== 色 =====
   const figureHex = $derived(PCCS_HEX_MAP.get(figure) ?? "#000000")
   const groundHex = $derived(PCCS_HEX_MAP.get(ground) ?? "#ffffff")
-  const cNotation = $derived(
-    groundTone && compHue !== null ? `${groundTone}${compHue}` : null
-  )
+  const cNotation = $derived(groundTone && compHue !== null ? `${groundTone}${compHue}` : null)
   const cHex = $derived(cNotation ? (PCCS_HEX_MAP.get(cNotation) ?? "#000000") : "#000000")
-  const dHex = $derived(
-    midHue !== null ? (PCCS_HEX_MAP.get(`v${midHue}`) ?? "#000000") : "#000000"
-  )
+  const dHex = $derived(midHue !== null ? (PCCS_HEX_MAP.get(`v${midHue}`) ?? "#000000") : "#000000")
   const arcHex = $derived(
     midHue !== null ? (PCCS_HEX_MAP.get(`b${midHue}`) ?? "#000000") : "#000000"
   )
@@ -149,12 +142,7 @@
 
   // ===== A→D 円弧（矢は C 側）=====
   const adArcPath = $derived.by(() => {
-    if (
-      figureAngle === null ||
-      midAngle === null ||
-      figureHue === null ||
-      compHue === null
-    )
+    if (figureAngle === null || midAngle === null || figureHue === null || compHue === null)
       return null
     const sp = pointAt(figureAngle, arcRadius)
     const ep = pointAt(midAngle, arcRadius)
