@@ -121,7 +121,7 @@
       const endY = startY + ARROW_LENGTH
       return { line: { x1: fig.cx, y1: startY, x2: fig.cx, y2: endY } }
     }
-    if (fig.cy === gnd.cy && fig.cx !== gnd.cx) {
+    if (fig.cx !== gnd.cx) {
       // 横に並ぶ
       if (fig.cx > gnd.cx) {
         // 図が右 → 右向き矢印
