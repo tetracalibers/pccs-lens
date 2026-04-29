@@ -41,8 +41,8 @@
   // ===== 色 =====
   const COL_OUTLINE = "var(--color-body)"
   const COL_DIVIDER = "var(--color-body)"
-  const COL_ARROW = "var(--color-body)"
-  const COL_LABEL = "var(--color-body)"
+  const COL_ARROW = "var(--canvas-pen-pink)"
+  const COL_LABEL = "var(--canvas-pen-pink)"
 
   // ===== セル中心座標 =====
   const X0 = INNER_PAD + SQ / 2
@@ -216,19 +216,22 @@
   <defs>
     <marker
       id="contrast-arrow-end"
-      markerWidth="9"
-      markerHeight="10"
-      refX="8"
-      refY="5"
-      orient="auto"
+      viewBox="0 0 7 7"
+      refX="3.5"
+      refY="3.5"
+      markerWidth="14"
+      markerHeight="14"
+      markerUnits="userSpaceOnUse"
+      orient="auto-start-reverse"
     >
       <polyline
-        points="1,1 8,5 1,9"
+        points="0,3.5 3.5,1.75 0,0"
         fill="none"
         stroke={COL_ARROW}
-        stroke-width="1"
-        stroke-linejoin="round"
+        stroke-width="1.1667"
         stroke-linecap="round"
+        stroke-linejoin="round"
+        transform="translate(1.1667 1.75)"
       />
     </marker>
   </defs>
@@ -306,6 +309,8 @@
       y2={arrow.line.y2}
       stroke={COL_ARROW}
       stroke-width={ARROW_STROKE_WIDTH}
+      stroke-linecap="round"
+      stroke-linejoin="round"
       marker-end="url(#contrast-arrow-end)"
     />
     <text
