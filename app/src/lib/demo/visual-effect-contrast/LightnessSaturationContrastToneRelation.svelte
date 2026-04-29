@@ -26,11 +26,9 @@
   const COL_GAP = 4 // 有彩色列同士の隙間
   const INNER_PAD = 10 // セル群と輪郭線の間の余白
 
-  // ===== 矢印・ラベル定数 =====
+  // ===== 矢印定数 =====
   const ARROW_OFFSET = 3 // セル端から矢印開始点までの距離
   const ARROW_LENGTH = 50
-  const LABEL_GAP = 8 // 矢印先端とラベル端の視覚的余白（全方向共通）
-  const LABEL_FONT_SIZE = 16
   const VIEWBOX_MARGIN = 4 // viewBox外周の余白
 
   // ===== 線幅 =====
@@ -48,7 +46,6 @@
   const COL_OUTLINE = "var(--color-body)"
   const COL_DIVIDER = "var(--color-body)"
   const COL_ARROW = "var(--canvas-pen-pink)"
-  const COL_LABEL = "var(--canvas-pen-pink)"
 
   // ===== セル中心座標 =====
   const X0 = INNER_PAD + SQ / 2
@@ -106,45 +103,23 @@
   const groundCell = $derived(findCell(notationToCellKey(ground)))
 
   // ===== 矢印仕様 =====
-  type LabelAnchor = "middle" | "start" | "end"
-  type LabelBaseline = "central" | "hanging"
   type ArrowSpec = {
-    label: string
     line: { x1: number; y1: number; x2: number; y2: number }
-    labelPos: { x: number; y: number; anchor: LabelAnchor; baseline: LabelBaseline }
   }
 
   function computeArrow(fig: ToneCell, gnd: ToneCell): ArrowSpec | null {
     if (fig.cx === gnd.cx && fig.cy !== gnd.cy) {
       // 縦に並ぶ
       if (fig.cy < gnd.cy) {
-        // 図が上 → 上向き矢印（central: テキスト中心が y）
+        // 図が上 → 上向き矢印
         const startY = fig.cy - SQ / 2 - ARROW_OFFSET
         const endY = startY - ARROW_LENGTH
-        return {
-          label: "明るく見える",
-          line: { x1: fig.cx, y1: startY, x2: fig.cx, y2: endY },
-          labelPos: {
-            x: fig.cx,
-            y: endY - LABEL_GAP - LABEL_FONT_SIZE / 2,
-            anchor: "middle",
-            baseline: "central"
-          }
-        }
+        return { line: { x1: fig.cx, y1: startY, x2: fig.cx, y2: endY } }
       }
-      // 図が下 → 下向き矢印（hanging: テキスト上端が y）
+      // 図が下 → 下向き矢印
       const startY = fig.cy + SQ / 2 + ARROW_OFFSET
       const endY = startY + ARROW_LENGTH
-      return {
-        label: "暗く見える",
-        line: { x1: fig.cx, y1: startY, x2: fig.cx, y2: endY },
-        labelPos: {
-          x: fig.cx,
-          y: endY + LABEL_GAP + LABEL_FONT_SIZE / 2,
-          anchor: "middle",
-          baseline: "hanging"
-        }
-      }
+      return { line: { x1: fig.cx, y1: startY, x2: fig.cx, y2: endY } }
     }
     if (fig.cy === gnd.cy && fig.cx !== gnd.cx) {
       // 横に並ぶ
@@ -152,20 +127,12 @@
         // 図が右 → 右向き矢印
         const startX = fig.cx + SQ / 2 + ARROW_OFFSET
         const endX = startX + ARROW_LENGTH
-        return {
-          label: "鮮やかに見える",
-          line: { x1: startX, y1: fig.cy, x2: endX, y2: fig.cy },
-          labelPos: { x: endX + LABEL_GAP, y: fig.cy, anchor: "start", baseline: "central" }
-        }
+        return { line: { x1: startX, y1: fig.cy, x2: endX, y2: fig.cy } }
       }
       // 図が左 → 左向き矢印
       const startX = fig.cx - SQ / 2 - ARROW_OFFSET
       const endX = startX - ARROW_LENGTH
-      return {
-        label: "くすんで見える",
-        line: { x1: startX, y1: fig.cy, x2: endX, y2: fig.cy },
-        labelPos: { x: endX - LABEL_GAP, y: fig.cy, anchor: "end", baseline: "central" }
-      }
+      return { line: { x1: startX, y1: fig.cy, x2: endX, y2: fig.cy } }
     }
     return null
   }
@@ -187,27 +154,6 @@
       maxX = Math.max(maxX, arrow.line.x1, arrow.line.x2)
       minY = Math.min(minY, arrow.line.y1, arrow.line.y2)
       maxY = Math.max(maxY, arrow.line.y1, arrow.line.y2)
-
-      // ラベル境界（日本語想定で 1 文字 ≒ font-size 幅）
-      const labelWidth = arrow.label.length * LABEL_FONT_SIZE
-      const labelHalfHeight = LABEL_FONT_SIZE / 2 + 2
-      const lp = arrow.labelPos
-      const lbMinX =
-        lp.anchor === "middle"
-          ? lp.x - labelWidth / 2
-          : lp.anchor === "start"
-            ? lp.x
-            : lp.x - labelWidth
-      const lbMaxX =
-        lp.anchor === "middle"
-          ? lp.x + labelWidth / 2
-          : lp.anchor === "start"
-            ? lp.x + labelWidth
-            : lp.x
-      minX = Math.min(minX, lbMinX)
-      maxX = Math.max(maxX, lbMaxX)
-      minY = Math.min(minY, lp.y - labelHalfHeight)
-      maxY = Math.max(maxY, lp.y + labelHalfHeight)
     }
 
     const x = minX - VIEWBOX_MARGIN
@@ -320,16 +266,5 @@
       stroke-linejoin="round"
       marker-end="url(#contrast-arrow-end)"
     />
-    <text
-      x={arrow.labelPos.x}
-      y={arrow.labelPos.y}
-      text-anchor={arrow.labelPos.anchor}
-      dominant-baseline={arrow.labelPos.baseline}
-      font-size={LABEL_FONT_SIZE}
-      font-weight="bold"
-      fill={COL_LABEL}
-    >
-      {arrow.label}
-    </text>
   {/if}
 </svg>
