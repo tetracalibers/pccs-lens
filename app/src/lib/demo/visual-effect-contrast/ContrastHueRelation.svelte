@@ -49,15 +49,22 @@
   // ===== ヘルパー =====
   const hueAngle = (num: number) => TOP_ANGLE + (num - TOP_HUE_NUM) * ANGLE_PER_HUE
 
-  const complementHue = (hue: number) => ((hue - 1 + 12) % HUE_COUNT) + 1
+  const complementHue = (hue: number) => ((hue - 1 + HUE_COUNT / 2) % HUE_COUNT) + 1
 
-  /** 短い方の弧を進む向きで、from と to の中間色相番号を返す（最近傍に丸め） */
-  function midHueAlongShortPath(from: number, to: number): number {
-    let diff = (to - from + HUE_COUNT) % HUE_COUNT
-    if (diff > HUE_COUNT / 2) diff -= HUE_COUNT
-    const raw = from - 1 + diff / 2
-    const mid = ((Math.round(raw) % HUE_COUNT) + HUE_COUNT) % HUE_COUNT
-    return mid + 1
+  function arcDist(a: number, b: number): number {
+    const d = (a - b + HUE_COUNT) % HUE_COUNT
+    return Math.min(d, HUE_COUNT - d)
+  }
+
+  /**
+   * 地と地の補色の中間色相のうち、図と同じ側（図に近い方）にある方を返す。
+   * 地と補色は色相環上で 12 離れているため中間候補は 2 つあり、
+   * 図に近い方を選ぶ。
+   */
+  function midHueNearFigure(groundHue: number, figureHue: number): number {
+    const cand1 = ((groundHue - 1 + HUE_COUNT / 4) % HUE_COUNT) + 1
+    const cand2 = ((groundHue - 1 - HUE_COUNT / 4 + HUE_COUNT) % HUE_COUNT) + 1
+    return arcDist(cand1, figureHue) <= arcDist(cand2, figureHue) ? cand1 : cand2
   }
 
   /** SVG 弧の sweep-flag: from → to を短い方の弧で進む向き */
@@ -76,7 +83,9 @@
 
   const compHue = $derived(groundHue !== null ? complementHue(groundHue) : null)
   const midHue = $derived(
-    figureHue !== null && compHue !== null ? midHueAlongShortPath(figureHue, compHue) : null
+    groundHue !== null && figureHue !== null
+      ? midHueNearFigure(groundHue, figureHue)
+      : null
   )
 
   // ===== 色 =====
