@@ -22,9 +22,11 @@
   const WHEEL_RADIUS = 100
   const WHEEL_STROKE_WIDTH = 1.5
   const MARKER_SIZE = 28
-  const LABEL_OFFSET = 22 // 色相環からラベル中心までの距離
-  const LABEL_FONT_SIZE = 13
-  const ARC_OFFSET = 26 // ラベル中心から円弧矢印までの距離
+  const LABEL_FONT_SIZE = 18
+  const LABEL_GAP = 6 // マーカー外側の端からラベル内側の端までの間隔
+  const LABEL_TO_ARC_GAP = 10 // ラベル外側の端から円弧矢印までの間隔
+  // ラベルテキストを矩形と見なすときの 1 文字あたりの幅をフォントサイズに対する比率で近似
+  const LABEL_CHAR_WIDTH_RATIO = 0.6
   const VIEWBOX_MARGIN = 8
 
   // ===== 円弧矢印（A→D, 矢はC方向）: ContrastToneRelation と同等 =====
@@ -110,12 +112,43 @@
   const cLabel = $derived(cNotation ?? "")
   const dLabel = $derived(midHue !== null ? (PCCS_HUE_MAP.get(midHue)?.symbol ?? "") : "")
 
+  // ===== ラベル配置 =====
+  // テキスト矩形の中心から、放射方向（角度 angle に向かう方向）への張り出し量を概算で返す。
+  // text-anchor="middle" / dominant-baseline="central" を前提とした水平テキスト用。
+  function labelRadialExtent(text: string, angle: number | null): number {
+    if (angle === null || !text) return 0
+    const halfW = (text.length * LABEL_FONT_SIZE * LABEL_CHAR_WIDTH_RATIO) / 2
+    const halfH = LABEL_FONT_SIZE / 2
+    return halfW * Math.abs(Math.cos(angle)) + halfH * Math.abs(Math.sin(angle))
+  }
+
+  const aLabelExtent = $derived(labelRadialExtent(aLabel, figureAngle))
+  const bLabelExtent = $derived(labelRadialExtent(bLabel, groundAngle))
+  const cLabelExtent = $derived(labelRadialExtent(cLabel, compAngle))
+  const dLabelExtent = $derived(labelRadialExtent(dLabel, midAngle))
+
+  // ラベル中心の配置半径（マーカー外側端からラベル内側端までを LABEL_GAP に保つ）
+  const markerOuterRadius = WHEEL_RADIUS + MARKER_SIZE / 2
+  const aLabelRadius = $derived(markerOuterRadius + LABEL_GAP + aLabelExtent)
+  const bLabelRadius = $derived(markerOuterRadius + LABEL_GAP + bLabelExtent)
+  const cLabelRadius = $derived(markerOuterRadius + LABEL_GAP + cLabelExtent)
+  const dLabelRadius = $derived(markerOuterRadius + LABEL_GAP + dLabelExtent)
+
   // ===== サイズ =====
-  const arcRadius = WHEEL_RADIUS + LABEL_OFFSET + ARC_OFFSET
-  const SVG_HALF = arcRadius + ARC_ARROW_HEAD_SIZE / 2 + VIEWBOX_MARGIN
-  const SIZE = SVG_HALF * 2
-  const cx = SVG_HALF
-  const cy = SVG_HALF
+  // 円弧矢印は全ラベルの外側に配置する
+  const maxLabelOuterEdge = $derived(
+    Math.max(
+      aLabelRadius + aLabelExtent,
+      bLabelRadius + bLabelExtent,
+      cLabelRadius + cLabelExtent,
+      dLabelRadius + dLabelExtent
+    )
+  )
+  const arcRadius = $derived(maxLabelOuterEdge + LABEL_TO_ARC_GAP)
+  const svgHalf = $derived(arcRadius + ARC_ARROW_HEAD_SIZE / 2 + VIEWBOX_MARGIN)
+  const SIZE = $derived(svgHalf * 2)
+  const cx = $derived(svgHalf)
+  const cy = $derived(svgHalf)
 
   function pointAt(angle: number, radius: number) {
     return {
@@ -157,11 +190,10 @@
   const dPos = $derived(midAngle !== null ? pointAt(midAngle, WHEEL_RADIUS) : null)
 
   // ===== ラベル位置 =====
-  const labelRadius = WHEEL_RADIUS + LABEL_OFFSET
-  const aLabelPos = $derived(figureAngle !== null ? pointAt(figureAngle, labelRadius) : null)
-  const bLabelPos = $derived(groundAngle !== null ? pointAt(groundAngle, labelRadius) : null)
-  const cLabelPos = $derived(compAngle !== null ? pointAt(compAngle, labelRadius) : null)
-  const dLabelPos = $derived(midAngle !== null ? pointAt(midAngle, labelRadius) : null)
+  const aLabelPos = $derived(figureAngle !== null ? pointAt(figureAngle, aLabelRadius) : null)
+  const bLabelPos = $derived(groundAngle !== null ? pointAt(groundAngle, bLabelRadius) : null)
+  const cLabelPos = $derived(compAngle !== null ? pointAt(compAngle, cLabelRadius) : null)
+  const dLabelPos = $derived(midAngle !== null ? pointAt(midAngle, dLabelRadius) : null)
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {SIZE} {SIZE}">
