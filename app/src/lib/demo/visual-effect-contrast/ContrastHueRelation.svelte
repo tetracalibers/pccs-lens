@@ -46,6 +46,7 @@
   const COL_WHEEL_OUTLINE = "var(--color-body)"
   const COL_LABEL = "var(--color-body)"
   const COL_LINE = "var(--color-body)"
+  const COL_ARROW = "var(--canvas-pen-pink)"
 
   // ===== ヘルパー =====
   const hueAngle = (num: number) => TOP_ANGLE + (num - TOP_HUE_NUM) * ANGLE_PER_HUE
@@ -93,12 +94,6 @@
   const cNotation = $derived(groundTone && compHue !== null ? `${groundTone}${compHue}` : null)
   const cHex = $derived(cNotation ? (PCCS_HEX_MAP.get(cNotation) ?? "#000000") : "#000000")
   const dHex = $derived(midHue !== null ? (PCCS_HEX_MAP.get(`v${midHue}`) ?? "#000000") : "#000000")
-  const arcHex = $derived(
-    midHue !== null ? (PCCS_HEX_MAP.get(`b${midHue}`) ?? "#000000") : "#000000"
-  )
-  // 同一ページに複数のコンポーネントが並んだとき、矢印の色が混ざらないように
-  // marker id に色を含めて一意化する。
-  const arcMarkerId = $derived(`hue-arc-arrow-${arcHex.replace("#", "")}`)
 
   // ===== 角度 =====
   const figureAngle = $derived(figureHue !== null ? hueAngle(figureHue) : null)
@@ -200,7 +195,7 @@
   <defs>
     <!-- A→D 円弧用矢（C 方向）: ContrastToneRelation 形状 -->
     <marker
-      id={arcMarkerId}
+      id="hue-arc-arrow"
       viewBox="0 0 {ARC_ARROW_HEAD_VIEWBOX} {ARC_ARROW_HEAD_VIEWBOX}"
       refX={ARC_ARROW_HEAD_VIEWBOX / 2}
       refY={ARC_ARROW_HEAD_VIEWBOX / 2}
@@ -212,7 +207,7 @@
       <polyline
         points="0,3.5 3.5,1.75 0,0"
         fill="none"
-        stroke={arcHex}
+        stroke={COL_ARROW}
         stroke-width={ARC_ARROW_HEAD_STROKE}
         stroke-linecap="round"
         stroke-linejoin="round"
@@ -363,10 +358,10 @@
     <path
       d={adArcPath}
       fill="none"
-      stroke={arcHex}
+      stroke={COL_ARROW}
       stroke-width={ARC_STROKE_WIDTH}
       stroke-linecap="round"
-      marker-end="url(#{arcMarkerId})"
+      marker-end="url(#hue-arc-arrow)"
     />
   {/if}
 </svg>
