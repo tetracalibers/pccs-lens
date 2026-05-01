@@ -8,25 +8,20 @@
   let { children }: Props = $props()
 </script>
 
-<blockquote>
-  {@render children?.()}
-</blockquote>
+<div class="blockquote-wrapper">
+  <blockquote>
+    {@render children?.()}
+  </blockquote>
+</div>
 
 <style>
-  blockquote {
+  .blockquote-wrapper {
     position: relative;
-    padding-block: 1rem;
-    padding-block-start: 2rem;
-    padding-inline-start: 2rem;
-    padding-inline-end: 1.5rem;
-    box-sizing: border-box;
-    color: var(--color-body);
-    background: #e0e0e0;
     margin-inline: 1rem;
     margin-block: 1.5rem;
   }
 
-  blockquote:before {
+  .blockquote-wrapper:before {
     display: inline-block;
     position: absolute;
     top: -0.85rem;
@@ -40,14 +35,16 @@
     z-index: 2;
   }
 
-  blockquote:after {
-    position: absolute;
-    content: "";
-    left: 0;
-    top: 0;
-    border-width: 0 0 40px 40px;
-    border-style: solid;
-    border-color: transparent var(--color-bg);
+  blockquote {
+    padding-block: 1rem;
+    padding-block-start: 2rem;
+    padding-inline-start: 2rem;
+    padding-inline-end: 1.5rem;
+    box-sizing: border-box;
+    color: var(--color-body);
+    background: #e0e0e0;
+    margin: 0;
+    clip-path: polygon(40px 0, 100% 0, 100% 100%, 0 100%, 0 40px);
   }
 
   blockquote :global(p) {
