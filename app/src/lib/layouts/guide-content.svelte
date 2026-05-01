@@ -120,10 +120,7 @@
     font-family: var(--font-mono);
     padding-inline: 4px;
     display: inline-block;
-    color: light-dark(#6b23a8, #e8c8ff);
-    background-color: light-dark(rgba(107, 35, 168, 0.1), rgba(232, 200, 255, 0.3));
     line-height: 1.3;
-    border-radius: 4px;
   }
 
   main :global(img) {

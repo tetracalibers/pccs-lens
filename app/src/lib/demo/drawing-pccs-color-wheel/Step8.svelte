@@ -26,8 +26,8 @@
 
   let { extraDefs, extraContent, extraUnderlay }: Props = $props()
 
-  // O/P 系の追加に伴う奇数目盛り (5: O 自身, 21/23: P 系両端)
-  const newOddTicks = [5, 21, 23]
+  // O/P 系の追加に伴う奇数目盛り (5: O 自身, 21/23: P 系両端) と, 円弧に含まれない 15
+  const newOddTicks = [5, 15, 21, 23]
 
   // 奇数番号 (5) は丸で囲まない. 偶数番号 (22) のみ丸で囲む.
   const plainLetters = [{ hue: 5, letter: "O" }]

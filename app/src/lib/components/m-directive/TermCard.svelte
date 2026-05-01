@@ -2,14 +2,17 @@
   import type { Snippet } from "svelte"
   import Heading3 from "../m-html/Heading3.svelte"
 
-  let {
-    children,
-    centering = false,
-    title
-  }: { children?: Snippet; centering?: boolean; title: string } = $props()
+  interface Props {
+    children?: Snippet
+    centering?: boolean
+    textCentering?: boolean
+    title: string
+  }
+
+  let { children, centering = false, textCentering = false, title }: Props = $props()
 </script>
 
-<section class="term-card" class:centering>
+<section class="term-card" class:centering class:text-centering={textCentering}>
   {#if title}
     <Heading3 {title}>{title}</Heading3>
   {/if}
@@ -64,5 +67,9 @@
   }
   .term-card :global(p:has(+ ul)) {
     margin-block: 0;
+  }
+
+  .term-card.text-centering :global(:is(p)) {
+    justify-self: center;
   }
 </style>

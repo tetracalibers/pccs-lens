@@ -11,7 +11,8 @@
 
 <style>
   .mark {
-    font-weight: 700;
+    font-weight: 500;
+    font-family: var(--font-mark);
     color: light-dark(#6b23a8, #e8c8ff);
     display: inline-block;
     margin-inline: 0.1rem;

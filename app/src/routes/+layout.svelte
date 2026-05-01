@@ -211,6 +211,7 @@
     --font-anki-title: "Flow Rounded", system-ui;
     --font-anki-round: "Flow Circular", system-ui;
     --font-round: "Kiwi Maru", serif;
+    --font-mark: "Reddit Mono", "Zen Kaku Gothic Antique";
 
     font-family: "SUSE Mono", "Zen Kaku Gothic Antique", sans-serif;
     font-synthesis-weight: none;

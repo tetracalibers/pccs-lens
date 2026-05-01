@@ -1,0 +1,185 @@
+---
+layout: guide-content
+title: 色の対比と三属性
+
+grades: ["3"]
+
+draft: true
+---
+
+<script>
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import ToneContrast from "$lib/demo/visual-effect-contrast/LightnessSaturationContrastDiagram.svelte"
+  import HueContrast from "$lib/demo/visual-effect-contrast/HueContrastDiagram.svelte"
+  import ContrastPreview from "$lib/demo/visual-effect-contrast/ContrastColorPreview.svelte"
+</script>
+
+## :WithGradeTag[色の対比とは]{grades="3"}
+
+並べられた色や前後して見せられた色の違いが強調されて見える現象を色の:Mark[対比]といいます。
+
+対比とは、英訳すると:Mark[コントラスト]です。
+明暗や色の違いがはっきりしている色の組み合わせを指して「コントラストが強い」などと言いますが、色の対比は、目が受容した色の色相・彩度・明度の差が強調されて脳に伝わることで発生する、実際よりもコントラストが強く見える現象です。
+
+## :WithGradeTag[色の対比現象の分類]{grades="3"}
+
+色の対比現象は、大きく2種類に分けることができます。
+
+- :Mark[同時対比]：周辺の色や隣接する色（:Mark[空間]的な近接）によって起こる
+- :Mark[継時対比]：複数の色を前後して見ること（:Mark[時間]的な近接）で起こる
+
+:Mark[同時]対比は、複数の色を同時に見ることで発生します。
+
+一方で、:Mark[継時]対比は、ある色を見た後に他の色を見ることで発生するものです。
+たとえば、同じ色であっても、鮮やかな色を見た後だと少しくすんで見えることがあります。
+
+同時対比と継時対比には、それぞれ次のようなさまざまな対比現象があります。
+
+```mermaid
+graph LR
+    Root["色の対比"] --- Anki_A["継時対比"]
+    Root --- Anki_B["同時対比"]
+    
+    %% 継時対比
+    Anki_A --- A1["残像（陽性残像）"]
+    Anki_A --- A2["補色残像（陰性残像）"]
+    
+    %% 同時対比
+    Anki_B --- B1["色相対比"]
+    Anki_B --- B2["明度対比"]
+    Anki_B --- B3["彩度対比"]
+    Anki_B --- B5["縁辺対比"]
+    
+    B3 --- B4["補色対比"]
+```
+
+ここでは、色の三属性（色相・明度・彩度）による同時対比について詳しく見ていきます。
+
+## :WithGradeTag[図と地]{grades="3"}
+
+対比の具体例に入る前に、これから使うことになる用語を解説します。
+
+デザインなどで用いられる視覚的な表現では、主体となるものを:Mark[図]、背景となるものを:Mark[地]と呼びます。
+
+<SVGWrapper maxW={250}>
+  <ContrastPreview figure="sf24" ground="dk24" figureLabel="図" groundLabel="地" iconId="bi:star-fill" />
+</SVGWrapper>
+
+例えば、背景色の上に文字が書かれている場合は、文字が:Mark[図]で背景色が:Mark[地]になります。
+
+対比の具体例では、大きな面積の背景（:Mark[地]）に囲まれた:Mark[図]の色が、背景色の影響を受けて、どのように変化して見えるかを観察していきましょう。
+
+## :WithGradeTag[明度対比]{grades="3"}
+
+明度が異なる2色が接したときに、明度差が強調されて見える現象を:Mark[明度対比]といいます。
+
+- 背景の明度が:Mark[低い]とき、図の色は実際よりも明るく見える
+- 背景の明度が:Mark[高い]とき、図の色は実際よりも暗く見える
+
+明度対比をトーンマップで見ると、図の色が上下に移動する形で見え方が変化します。
+背景との明度差を強調するため、図が背景から離れようとしている様子に注目してください。
+
+::::CardGrid
+:::TermCard{textCentering}
+
+### 背景が図より明るい
+
+<ToneContrast figure="Gy-5.5" ground="Gy-8.5" />
+
+図はますます:Mark[暗く]見える
+
+:::
+:::TermCard{textCentering}
+
+### 背景が図より暗い
+
+<ToneContrast figure="Gy-5.5" ground="Gy-2.5" />
+
+図はますます:Mark[明るく]見える
+
+:::
+::::
+
+明度対比は、無彩色だけでなく、有彩色でも起こる現象です。
+
+::::CardGrid
+:::TermCard{textCentering}
+
+### 背景が図より明るい
+
+<ToneContrast figure="sf24" ground="lt24" />
+
+図はますます:Mark[暗く]見える
+
+:::
+:::TermCard{textCentering}
+
+### 背景が図より暗い
+
+<ToneContrast figure="sf24" ground="dk24" />
+
+図はますます:Mark[明るく]見える
+
+:::
+::::
+
+明度対比により、同じ文字色であっても、背景が暗くなるほど文字色が明るくはっきり見える
+
+- TODO：suisui p63
+- 文字色をGy-7.5にする
+- 無彩色の場合、背景色をBk -> Gy-3.0 -> Gy-4.0 -> Gy-6.0 -> Gy-8.0 -> Wと変化させる
+- 有彩色の場合、背景色をdk2 -> d2 -> sf2 -> lt2と変化させる
+
+明度対比を活用して、明度の異なる色を同じ明るさに見せることもできる
+
+- TODO：具体的にどうするかを言葉で説明
+
+## :WithGradeTag[彩度対比]{grades="3"}
+
+彩度が異なる2色が接したときに、彩度差が強調されて見える現象を:Mark[彩度対比]といいます。
+
+- 背景の彩度が:Mark[低い]とき、図の色は実際よりも鮮やかに見える
+- 背景の彩度が:Mark[高い]とき、図の色は実際よりもくすんで見える
+
+彩度対比をトーンマップで見ると、図の色が左右に移動する形で見え方が変化します。
+背景との彩度差を強調するため、図が背景から離れようとしている様子に注目してください。
+
+::::CardGrid
+:::TermCard{textCentering}
+
+### 背景が図よりくすんでいる
+
+<ToneContrast figure="d2" ground="g2" />
+
+図の赤みがより:Mark[強く]見える
+
+:::
+:::TermCard{textCentering}
+
+### 背景が図より鮮やか
+
+<ToneContrast figure="d2" ground="v2" />
+
+図の赤みがより:Mark[弱く]見える
+
+:::
+::::
+
+TODO: 彩度差が大きいほど彩度対比は強くなる
+
+## :WithGradeTag[補色対比]{grades="3"}
+
+::ComingSoon
+
+## :WithGradeTag[色相対比]{grades="3"}
+
+色相が異なる2色が接したときに、色相差が強調されて色みがずれて見える現象を:Mark[色相対比]といいます。
+
+::::CardGrid
+:::TermCard{textCentering}
+<HueContrast figure="v5" ground="v2" />
+:::
+:::TermCard{textCentering}
+<HueContrast figure="v5" ground="v8" />
+:::
+::::

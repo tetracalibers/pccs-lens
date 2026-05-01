@@ -4,11 +4,15 @@
   import { isLightColor } from "$lib/color/utils"
   import type { PCCSColor } from "$lib/data/types"
 
+  type Props = {
+    tones: string[]
+    hideAxis?: boolean
+  }
+
+  const { tones, hideAxis = false }: Props = $props()
+
   // 横軸の色相番号（左から 24, 2, 4, ..., 22）
   const HUE_ORDER = [24, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22]
-
-  // トーン（偶数色相を持つもの）
-  const TONES = ["p", "v", "dp", "dk", "dkg"]
 
   // --- レイアウト定数 ---
   const COL_W = 64
@@ -16,43 +20,71 @@
   const CIRCLE_R = 18
   const VALUE_MIN = 1
   const VALUE_MAX = 9.5
-  const PLOT_H = 650
-  const PLOT_TOP_PAD = 0
+  const UNIT_H = 650 / (VALUE_MAX - VALUE_MIN)
   const AXIS_GAP = 12
   const LABEL_GAP = 18
   const LABEL_FONT = 13
 
+  // tones に含まれる偶数色相の色の明度範囲
+  const valueRange = $derived.by(() => {
+    let min = Infinity
+    let max = -Infinity
+    for (const tone of tones) {
+      for (const hue of HUE_ORDER) {
+        const c = PCCS_ALL.find((x) => x.toneSymbol === tone && x.hueNumber === hue)
+        if (!c || !c.munsell) continue
+        const m = parseMunsell(c.munsell)
+        if (!m) continue
+        if (m.value < min) min = m.value
+        if (m.value > max) max = m.value
+      }
+    }
+    return {
+      min: min === Infinity ? VALUE_MIN : min,
+      max: max === -Infinity ? VALUE_MAX : max
+    }
+  })
+
+  // 中身（最高明度のスウォッチの上端）が y=0 になるよう全体をシフトするためのオフセット
+  const Y_OFFSET = $derived((VALUE_MAX - valueRange.max) * UNIT_H - CIRCLE_R)
+  // スウォッチがちょうど収まる高さ
+  const SWATCH_BOTTOM_Y = $derived((valueRange.max - valueRange.min) * UNIT_H + CIRCLE_R * 2)
+  // 横軸（VALUE_MIN の位置）の Y 座標
+  const AXIS_Y = $derived((VALUE_MAX - VALUE_MIN) * UNIT_H - Y_OFFSET)
+
   const SVG_W = X_PAD * 2 + COL_W * HUE_ORDER.length
-  const H_AXIS_Y = PLOT_TOP_PAD + PLOT_H
-  const SVG_H = H_AXIS_Y + AXIS_GAP + LABEL_GAP + LABEL_FONT
+  const PLOT_H = $derived(hideAxis ? SWATCH_BOTTOM_Y : Math.max(SWATCH_BOTTOM_Y, AXIS_Y))
+  const H_AXIS_Y = $derived(AXIS_Y)
+  const SVG_H = $derived(hideAxis ? PLOT_H : H_AXIS_Y + AXIS_GAP + LABEL_GAP + LABEL_FONT)
 
   function xOf(hue: number): number {
     return X_PAD + COL_W * HUE_ORDER.indexOf(hue) + COL_W / 2
   }
 
   function yOf(value: number): number {
-    const t = (value - VALUE_MIN) / (VALUE_MAX - VALUE_MIN)
-    return PLOT_TOP_PAD + PLOT_H * (1 - t)
+    return (VALUE_MAX - value) * UNIT_H - Y_OFFSET
   }
 
   type SwatchPoint = { x: number; y: number; color: PCCSColor }
   type ToneSeries = { tone: string; points: SwatchPoint[]; curveColor: string }
 
-  const SERIES: ToneSeries[] = TONES.map((tone) => {
-    const points: SwatchPoint[] = []
-    for (const hue of HUE_ORDER) {
-      const c = PCCS_ALL.find((x) => x.toneSymbol === tone && x.hueNumber === hue)
-      if (!c || !c.munsell) continue
-      const m = parseMunsell(c.munsell)
-      if (!m) continue
-      points.push({ x: xOf(hue), y: yOf(m.value), color: c })
-    }
-    return {
-      tone,
-      points,
-      curveColor: PCCS_HEX_MAP.get(`${tone}24`) ?? "#888"
-    }
-  })
+  const SERIES: ToneSeries[] = $derived(
+    tones.map((tone) => {
+      const points: SwatchPoint[] = []
+      for (const hue of HUE_ORDER) {
+        const c = PCCS_ALL.find((x) => x.toneSymbol === tone && x.hueNumber === hue)
+        if (!c || !c.munsell) continue
+        const m = parseMunsell(c.munsell)
+        if (!m) continue
+        points.push({ x: xOf(hue), y: yOf(m.value), color: c })
+      }
+      return {
+        tone,
+        points,
+        curveColor: PCCS_HEX_MAP.get(`${tone}24`) ?? "#888"
+      }
+    })
+  )
 
   // Catmull-Rom → 三次ベジェ変換で滑らかな曲線を生成
   function smoothPath(points: { x: number; y: number }[]): string {
@@ -81,29 +113,31 @@
     role="img"
     aria-label="PCCSトーンごとの明度カーブ図"
   >
-    <!-- 横軸（色相） -->
-    <line
-      x1={X_PAD}
-      y1={H_AXIS_Y}
-      x2={SVG_W - X_PAD}
-      y2={H_AXIS_Y}
-      stroke="var(--color-body)"
-      stroke-width="1"
-    />
+    {#if !hideAxis}
+      <!-- 横軸（色相） -->
+      <line
+        x1={X_PAD}
+        y1={H_AXIS_Y}
+        x2={SVG_W - X_PAD}
+        y2={H_AXIS_Y}
+        stroke="var(--color-body)"
+        stroke-width="1"
+      />
 
-    <!-- 横軸ラベル（色相番号） -->
-    {#each HUE_ORDER as hue (hue)}
-      <text
-        x={xOf(hue)}
-        y={H_AXIS_Y + AXIS_GAP + LABEL_GAP}
-        text-anchor="middle"
-        font-size={LABEL_FONT}
-        font-family="var(--font-mono)"
-        style="fill: var(--color-body);"
-      >
-        {hue}
-      </text>
-    {/each}
+      <!-- 横軸ラベル（色相番号） -->
+      {#each HUE_ORDER as hue (hue)}
+        <text
+          x={xOf(hue)}
+          y={H_AXIS_Y + AXIS_GAP + LABEL_GAP}
+          text-anchor="middle"
+          font-size={LABEL_FONT}
+          font-family="var(--font-mono)"
+          style="fill: var(--color-body);"
+        >
+          {hue}
+        </text>
+      {/each}
+    {/if}
 
     <!-- 各トーンの滑らかな曲線（スウォッチの背面に描画） -->
     {#each SERIES as series (series.tone)}
@@ -152,8 +186,7 @@
 <style>
   .scroll-wrapper {
     width: 100%;
-    padding-inline: 1rem;
-    padding-block: 2rem;
+    padding: 1rem;
     box-sizing: border-box;
     overflow-x: auto;
   }
@@ -161,6 +194,7 @@
   svg {
     display: block;
     max-height: 550px;
+    max-width: 610px;
     width: auto;
     margin-inline: auto;
   }
