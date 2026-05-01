@@ -224,7 +224,14 @@
       {@const color = isReflect ? COLOR_REFLECT : COLOR_ABSORB}
       {@const labelText = isReflect ? "反射" : "吸収"}
       {@const markerId = isReflect ? "reflect" : "absorb"}
-      <text x={region.centerX} y={textY} text-anchor="middle" fill={color} font-size="20">
+      <text
+        x={region.centerX}
+        y={textY}
+        text-anchor="middle"
+        fill={color}
+        font-size="20"
+        font-weight="bold"
+      >
         {labelText}
       </text>
       <line

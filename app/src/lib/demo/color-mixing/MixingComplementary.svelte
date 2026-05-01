@@ -298,6 +298,7 @@
     text-anchor="middle"
     fill={COLOR_CENTER}
     font-size="18"
+    font-weight="bold"
   >
     補色の関係
   </text>
@@ -316,7 +317,14 @@
       {@const isReflect = region.kind === "reflect"}
       {@const color = isReflect ? COLOR_REFLECT : COLOR_ABSORB}
       {@const markerId = isReflect ? "reflect" : "absorb"}
-      <text x={region.centerX} y={textY} text-anchor="middle" fill={color} font-size="18">
+      <text
+        x={region.centerX}
+        y={textY}
+        text-anchor="middle"
+        fill={color}
+        font-size="18"
+        font-weight="bold"
+      >
         {isReflect ? "反射" : "吸収"}
       </text>
       <line
@@ -336,7 +344,14 @@
       {@const isReflect = region.kind === "reflect"}
       {@const color = isReflect ? COLOR_REFLECT : COLOR_ABSORB}
       {@const markerId = isReflect ? "reflect" : "absorb"}
-      <text x={region.centerX} y={textY} text-anchor="middle" fill={color} font-size="18">
+      <text
+        x={region.centerX}
+        y={textY}
+        text-anchor="middle"
+        fill={color}
+        font-size="18"
+        font-weight="bold"
+      >
         {isReflect ? "反射" : "吸収"}
       </text>
       <line
@@ -434,7 +449,8 @@
     y={BTM_LABEL_Y}
     text-anchor="middle"
     fill={COLOR_REFLECT}
-    font-size="16"
+    font-size="18"
+    font-weight="bold"
   >
     反射を重ねて白へ
   </text>
@@ -511,7 +527,8 @@
     y={BTM_LABEL_Y}
     text-anchor="middle"
     fill={COLOR_ABSORB}
-    font-size="16"
+    font-size="18"
+    font-weight="bold"
   >
     吸収を重ねて黒へ
   </text>
