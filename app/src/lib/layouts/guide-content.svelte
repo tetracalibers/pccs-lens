@@ -123,6 +123,15 @@
     line-height: 1.3;
   }
 
+  main :global(pre) {
+    color: var(--color-body);
+  }
+  main :global(pre.language-math) {
+    width: fit-content;
+    margin-inline: auto;
+    margin-block: 2rem;
+  }
+
   main :global(img) {
     width: 100%;
     height: auto;
