@@ -5,6 +5,7 @@
   import Ulist from "$lib/components/m-html/Ulist.svelte"
   import Olist from "$lib/components/m-html/Olist.svelte"
   import ALink from "$lib/components/m-html/ALink.svelte"
+  import Blockquote from "$lib/components/m-html/Blockquote.svelte"
 
   import Mark from "$lib/components/m-directive/Mark.svelte"
   import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
@@ -25,6 +26,7 @@
     Ulist as ul,
     Olist as ol,
     ALink as a,
+    Blockquote as blockquote,
     Mark,
     GradeTag,
     WithGradeTag,
@@ -110,7 +112,7 @@
     margin-inline-start: -4px;
   }
 
-  main :global(p) {
+  :where(main :global(p)) {
     color: light-dark(#556070, #f0f0f0);
     color: var(--color-body);
     margin: 0.75rem 0;

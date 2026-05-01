@@ -209,6 +209,7 @@
   }
 
   :global(body) {
+    --font-ja: "Zen Kaku Gothic Antique", sans-serif;
     --font-mono: "Reddit Mono", monospace;
     --font-fancy: "Delius", cursive;
     --font-classic: "Rakkas", serif;
