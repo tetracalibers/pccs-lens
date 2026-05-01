@@ -49,6 +49,8 @@
   import DraftTag from "$lib/components/DraftTag.svelte"
   import { ankiMode } from "$lib/state/anki.svelte"
 
+  import "katex/dist/katex.min.css"
+
   let { title, grades, basic, draft, children }: GuideFrontmatter & { children: Snippet } = $props()
 
   const isAnki = $derived(ankiMode.isAnki)
@@ -130,6 +132,25 @@
     width: fit-content;
     margin-inline: auto;
     margin-block: 2rem;
+  }
+
+  main :global(figure.math-display) {
+    width: fit-content;
+    margin-inline: auto;
+    margin-block: 2rem;
+    color: var(--color-body);
+    max-width: 100%;
+  }
+
+  main :global(.katex *) {
+    font-family: var(--font-math-base), KaTeX_Main;
+  }
+  main :global(.katex .mrel) {
+    font-family: "KaTeX_Main";
+  }
+
+  main :global(.math-inline .katex *) {
+    font-size: 1rem;
   }
 
   main :global(img) {

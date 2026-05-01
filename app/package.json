@@ -37,6 +37,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-svelte": "^3.14.0",
     "globals": "^17.3.0",
+    "katex": "^0.16.45",
     "mdast-util-directive": "^3.1.0",
     "mdast-util-frontmatter": "^2.0.1",
     "mdast-util-to-string": "^4.0.0",

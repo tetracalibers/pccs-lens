@@ -54,6 +54,10 @@
     href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@500&family=Flow+Circular&family=Flow+Rounded&family=Rakkas&family=Delius&family=Reddit+Mono:wght@400..700&family=SUSE+Mono:wght@400;500&family=Zen+Kaku+Gothic+Antique:wght@400;500&display=swap"
     rel="stylesheet"
   />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;1,300&display=swap&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]()≡"
+    rel="stylesheet"
+  />
 </svelte:head>
 
 <header class="site-header">
@@ -212,6 +216,7 @@
     --font-anki-round: "Flow Circular", system-ui;
     --font-round: "Kiwi Maru", serif;
     --font-mark: "Reddit Mono", "Zen Kaku Gothic Antique";
+    --font-math-base: "DM Mono", monospace;
 
     font-family: "SUSE Mono", "Zen Kaku Gothic Antique", sans-serif;
     font-synthesis-weight: none;

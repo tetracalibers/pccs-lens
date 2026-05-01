@@ -2,6 +2,7 @@ import { mdsvex } from "mdsvex"
 import adapter from "@sveltejs/adapter-static"
 import { fileURLToPath } from "url"
 import remarkBreaks from "remark-breaks"
+import remarkMath from "./src/lib/remark/math.js"
 import remarkDirective from "./src/lib/remark/directive.js"
 import remarkCustomDirectives from "./src/lib/remark/custom-directives.js"
 import remarkMermaid from "./src/lib/remark/mermaid.js"
@@ -48,6 +49,7 @@ const config = {
         concept: fileURLToPath(new URL("./src/lib/layouts/concept.svelte", import.meta.url))
       },
       remarkPlugins: [
+        remarkMath,
         remarkBreaks,
         remarkDirective,
         [remarkCustomDirectives, directives],
