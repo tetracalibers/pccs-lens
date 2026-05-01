@@ -1,0 +1,24 @@
+---
+layout: guide-content
+title: 光の成分と反射率
+
+grades: ["2", "3", "uc"]
+
+draft: true
+---
+
+## :WithGradeTag[分光とスペクトル]{grades="3"}
+
+::ComingSoon
+
+## :WithGradeTag[分光分布]{grades="3"}
+
+::ComingSoon
+
+## :WithGradeTag[分光反射率]{grades="3,uc"}
+
+::ComingSoon
+
+## :WithGradeTag[光源・物体・視覚の関係]{grades="2"}
+
+::ComingSoon
