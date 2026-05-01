@@ -145,9 +145,6 @@
   main :global(.katex *) {
     font-family: var(--font-math-base), KaTeX_Main;
   }
-  main :global(.katex .mrel) {
-    font-family: "KaTeX_Main";
-  }
 
   main :global(.math-inline .katex *) {
     font-size: 1rem;
