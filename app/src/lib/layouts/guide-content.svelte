@@ -130,11 +130,6 @@
   main :global(pre) {
     color: var(--color-body);
   }
-  main :global(pre.language-math) {
-    width: fit-content;
-    margin-inline: auto;
-    margin-block: 2rem;
-  }
 
   main :global(figure.math-display) {
     margin-inline: auto;

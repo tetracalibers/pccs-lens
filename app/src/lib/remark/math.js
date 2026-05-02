@@ -48,7 +48,7 @@ function paragraphRawText(node) {
  * remark plugin: $$...$$ をビルド時に KaTeX でレンダして HTML ノードに置換する。
  * - 段落全体が $$...$$ → display モード
  * - text ノード内の $$...$$ → inline モード
- * ```math コードブロックは触らない（既存の pre.language-math スタイルでコード表示）
+ * ```math コードブロックは触らない
  *
  * mdsvex 0.12 のバンドル済み unified v9 パイプラインは data.micromarkExtensions を
  * 読まないため、remark-math@6 が機能しない。本プラグインは AST トランスフォーマとして
