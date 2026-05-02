@@ -42,6 +42,7 @@
 
   // ===== 帯の境界値を生成 =====
   const INNER_T_START = INNER_T_CENTER - (N_BANDS * INNER_BAND_WIDTH) / 2
+  const INNER_T_END = INNER_T_START + N_BANDS * INNER_BAND_WIDTH
   const BAND_TS = Array.from(
     { length: N_BANDS + 1 },
     (_, i) => INNER_T_START + i * INNER_BAND_WIDTH
@@ -87,10 +88,26 @@
       <polygon points={PRISM_POINTS} />
     </clipPath>
 
-    <!-- ガラス内の霞み (内部スペクトルに適用) -->
+    <!-- ガラス内の霞み (内部スペクトル "blurred" 層に適用) -->
     <filter id="hazy">
       <feGaussianBlur stdDeviation={INNER_HAZE_BLUR} />
     </filter>
+
+    <!-- シャープ層用マスク: 入射点 (白=表示) → 右面 (黒=非表示) -->
+    <linearGradient
+      id="sharpMaskGrad"
+      gradientUnits="userSpaceOnUse"
+      x1={ENTRY_X}
+      y1={ENTRY_Y}
+      x2={faceX(INNER_T_END)}
+      y2={faceY(INNER_T_END)}
+    >
+      <stop offset="0" stop-color="white" />
+      <stop offset="1" stop-color="black" />
+    </linearGradient>
+    <mask id="sharpMask">
+      <rect x="0" y="0" width={WIDTH} height={HEIGHT} fill="url(#sharpMaskGrad)" />
+    </mask>
 
     <!-- 入射白色光: 源 (透明) → 入射点 (白) -->
     <linearGradient
@@ -101,8 +118,8 @@
       x2={ENTRY_X}
       y2={ENTRY_Y}
     >
-      <stop offset="0%" stop-color="white" stop-opacity="0" />
-      <stop offset="100%" stop-color="white" stop-opacity="0.8" />
+      <stop offset="0" stop-color="white" stop-opacity="0" />
+      <stop offset="1" stop-color="white" stop-opacity="0.8" />
     </linearGradient>
 
     <!-- 内部のスペクトル帯: 入射点 (白) → 各帯の右面側中点 (色) -->
@@ -142,8 +159,40 @@
 
   <!-- 暗室の背景 -->
   <rect x="0" y="0" width={WIDTH} height={HEIGHT} fill="black" />
-  
-  <!-- 入射白色光 (左下から斜めにプリズムへ) -->
+
+  <!-- プリズム本体 (枠線なし、塗りのみ) -->
+  <polygon points={PRISM_POINTS} fill="url(#glass)" stroke="none" />
+
+  <!-- 内部スペクトル (blurred 層): プリズム全体に霞みを敷く -->
+  <g clip-path="url(#prismClip)" filter="url(#hazy)">
+    {#each BAND_INDICES as i (i)}
+      <polygon
+        points="{ENTRY_X},{ENTRY_Y} {faceX(BAND_TS[i])},{faceY(BAND_TS[i])} {faceX(BAND_TS[i + 1])},{faceY(BAND_TS[i + 1])}"
+        fill="url(#inner-{i})"
+      />
+    {/each}
+  </g>
+
+  <!-- 内部スペクトル (sharp 層): マスクで入射点側のみ上書きし、左端を鮮明に -->
+  <g clip-path="url(#prismClip)" mask="url(#sharpMask)">
+    {#each BAND_INDICES as i (i)}
+      <polygon
+        points="{ENTRY_X},{ENTRY_Y} {faceX(BAND_TS[i])},{faceY(BAND_TS[i])} {faceX(BAND_TS[i + 1])},{faceY(BAND_TS[i + 1])}"
+        fill="url(#inner-{i})"
+      />
+    {/each}
+  </g>
+
+  <!-- プリズムから出るスペクトル帯 -->
+  {#each BAND_INDICES as i (i)}
+    <polygon
+      points="{faceX(BAND_TS[i])},{faceY(BAND_TS[i])} {faceX(BAND_TS[i + 1])},{faceY(BAND_TS[i + 1])} {OUT_END_X},{OUT_END_BOUNDARY_YS[i + 1]} {OUT_END_X},{OUT_END_BOUNDARY_YS[i]}"
+      fill="url(#outer-{i})"
+      fill-opacity="0.9"
+    />
+  {/each}
+
+  <!-- 入射白色光 (入射点で終端、最後に描画してシャープな先端を保つ) -->
   <line
     x1={SOURCE_X}
     y1={SOURCE_Y}
@@ -153,26 +202,4 @@
     stroke-width={STROKE_LIGHT}
     stroke-linecap="round"
   />
-  
-  <!-- プリズム本体 (枠線なし、塗りのみ) -->
-  <polygon points={PRISM_POINTS} fill="url(#glass)" stroke="none" />
-
-  <!-- プリズム内のスペクトル帯 (霞みフィルタ + プリズム形状でクリップ) -->
-  <g clip-path="url(#prismClip)" filter="url(#hazy)">
-    {#each BAND_INDICES as i (i)}
-      <polygon
-        points="{ENTRY_X},{ENTRY_Y} {faceX(BAND_TS[i])},{faceY(BAND_TS[i])} {faceX(BAND_TS[i + 1])},{faceY(BAND_TS[i + 1])}"
-        fill="url(#inner-{i})"
-      />
-    {/each}
-  </g>
-  
-  <!-- プリズムから出るスペクトル帯 (右面のセグメントが幅広に広がる帯になる) -->
-  {#each BAND_INDICES as i (i)}
-    <polygon
-      points="{faceX(BAND_TS[i])},{faceY(BAND_TS[i])} {faceX(BAND_TS[i + 1])},{faceY(BAND_TS[i + 1])} {OUT_END_X},{OUT_END_BOUNDARY_YS[i + 1]} {OUT_END_X},{OUT_END_BOUNDARY_YS[i]}"
-      fill="url(#outer-{i})"
-      fill-opacity="0.9"
-    />
-  {/each}
 </svg>
