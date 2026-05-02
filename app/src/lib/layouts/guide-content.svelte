@@ -137,11 +137,12 @@
   }
 
   main :global(figure.math-display) {
-    width: fit-content;
     margin-inline: auto;
-    margin-block: 2rem;
+    margin-block: 1rem;
     color: var(--color-body);
     max-width: 100%;
+    overflow-x: auto;
+    box-sizing: border-box;
   }
 
   main :global(.katex *) {
