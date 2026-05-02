@@ -152,7 +152,7 @@
     border-radius: 0.25rem;
     padding-inline: 1rem;
     padding-block: 0.5rem;
-}
+  }
 
   main :global(figure.code-with-title figcaption) {
     padding-block: 0.2rem;
@@ -161,7 +161,7 @@
     opacity: 0.8;
     padding: 0.35rem;
   }
-  
+
   main :global(figure.code-with-title pre) {
     margin-block: 0.5rem 0;
   }

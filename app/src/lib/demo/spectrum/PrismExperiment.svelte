@@ -185,7 +185,11 @@
   <g clip-path="url(#prismClip)" filter="url(#hazy)">
     {#each BAND_INDICES as i (i)}
       <polygon
-        points="{entryBoundaryX(i)},{entryBoundaryY(i)} {faceX(BAND_TS[i])},{faceY(BAND_TS[i])} {faceX(BAND_TS[i + 1])},{faceY(BAND_TS[i + 1])} {entryBoundaryX(i + 1)},{entryBoundaryY(i + 1)}"
+        points="{entryBoundaryX(i)},{entryBoundaryY(i)} {faceX(BAND_TS[i])},{faceY(
+          BAND_TS[i]
+        )} {faceX(BAND_TS[i + 1])},{faceY(BAND_TS[i + 1])} {entryBoundaryX(i + 1)},{entryBoundaryY(
+          i + 1
+        )}"
         fill="url(#inner-{i})"
       />
     {/each}
@@ -195,7 +199,11 @@
   <g clip-path="url(#prismClip)" mask="url(#sharpMask)">
     {#each BAND_INDICES as i (i)}
       <polygon
-        points="{entryBoundaryX(i)},{entryBoundaryY(i)} {faceX(BAND_TS[i])},{faceY(BAND_TS[i])} {faceX(BAND_TS[i + 1])},{faceY(BAND_TS[i + 1])} {entryBoundaryX(i + 1)},{entryBoundaryY(i + 1)}"
+        points="{entryBoundaryX(i)},{entryBoundaryY(i)} {faceX(BAND_TS[i])},{faceY(
+          BAND_TS[i]
+        )} {faceX(BAND_TS[i + 1])},{faceY(BAND_TS[i + 1])} {entryBoundaryX(i + 1)},{entryBoundaryY(
+          i + 1
+        )}"
         fill="url(#inner-{i})"
       />
     {/each}
@@ -204,7 +212,9 @@
   <!-- プリズムから出るスペクトル帯 -->
   {#each BAND_INDICES as i (i)}
     <polygon
-      points="{faceX(BAND_TS[i])},{faceY(BAND_TS[i])} {faceX(BAND_TS[i + 1])},{faceY(BAND_TS[i + 1])} {OUT_END_X},{OUT_END_BOUNDARY_YS[i + 1]} {OUT_END_X},{OUT_END_BOUNDARY_YS[i]}"
+      points="{faceX(BAND_TS[i])},{faceY(BAND_TS[i])} {faceX(BAND_TS[i + 1])},{faceY(
+        BAND_TS[i + 1]
+      )} {OUT_END_X},{OUT_END_BOUNDARY_YS[i + 1]} {OUT_END_X},{OUT_END_BOUNDARY_YS[i]}"
       fill="url(#outer-{i})"
       fill-opacity="0.9"
     />
