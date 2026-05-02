@@ -70,6 +70,24 @@
   /** プリズム内スペクトルの霞み量 (feGaussianBlur stdDeviation) */
   const INNER_HAZE_BLUR = 2
 
+  // ===== 入射点を入射光と同じ幅の線分として扱う (左端の幅を白色光に合わせる) =====
+  const LIGHT_DX = ENTRY_X - SOURCE_X
+  const LIGHT_DY = ENTRY_Y - SOURCE_Y
+  const LIGHT_LEN = Math.hypot(LIGHT_DX, LIGHT_DY)
+  /** 入射光に直交する単位ベクトル × 半幅 (画面上 "上" 方向を正とする) */
+  const ENTRY_PERP_X = (LIGHT_DY / LIGHT_LEN) * (STROKE_LIGHT / 2)
+  const ENTRY_PERP_Y = (-LIGHT_DX / LIGHT_LEN) * (STROKE_LIGHT / 2)
+  /** 入射線分の上端 (画面上の上側 = 小さい y、赤側) と下端 (紫側) */
+  const ENTRY_TOP_X = ENTRY_X + ENTRY_PERP_X
+  const ENTRY_TOP_Y = ENTRY_Y + ENTRY_PERP_Y
+  const ENTRY_BOT_X = ENTRY_X - ENTRY_PERP_X
+  const ENTRY_BOT_Y = ENTRY_Y - ENTRY_PERP_Y
+  /** 入射線分上の i 番目 (0..N_BANDS) の境界点 */
+  const entryBoundaryX = (i: number): number =>
+    ENTRY_TOP_X + (i / N_BANDS) * (ENTRY_BOT_X - ENTRY_TOP_X)
+  const entryBoundaryY = (i: number): number =>
+    ENTRY_TOP_Y + (i / N_BANDS) * (ENTRY_BOT_Y - ENTRY_TOP_Y)
+
   // ===== プリズム形状を文字列化 (polygon と clipPath で共用) =====
   const PRISM_POINTS = `${PRISM_APEX_X},${PRISM_APEX_Y} ${PRISM_BL_X},${PRISM_BL_Y} ${PRISM_BR_X},${PRISM_BR_Y}`
 </script>
@@ -167,7 +185,7 @@
   <g clip-path="url(#prismClip)" filter="url(#hazy)">
     {#each BAND_INDICES as i (i)}
       <polygon
-        points="{ENTRY_X},{ENTRY_Y} {faceX(BAND_TS[i])},{faceY(BAND_TS[i])} {faceX(BAND_TS[i + 1])},{faceY(BAND_TS[i + 1])}"
+        points="{entryBoundaryX(i)},{entryBoundaryY(i)} {faceX(BAND_TS[i])},{faceY(BAND_TS[i])} {faceX(BAND_TS[i + 1])},{faceY(BAND_TS[i + 1])} {entryBoundaryX(i + 1)},{entryBoundaryY(i + 1)}"
         fill="url(#inner-{i})"
       />
     {/each}
@@ -177,7 +195,7 @@
   <g clip-path="url(#prismClip)" mask="url(#sharpMask)">
     {#each BAND_INDICES as i (i)}
       <polygon
-        points="{ENTRY_X},{ENTRY_Y} {faceX(BAND_TS[i])},{faceY(BAND_TS[i])} {faceX(BAND_TS[i + 1])},{faceY(BAND_TS[i + 1])}"
+        points="{entryBoundaryX(i)},{entryBoundaryY(i)} {faceX(BAND_TS[i])},{faceY(BAND_TS[i])} {faceX(BAND_TS[i + 1])},{faceY(BAND_TS[i + 1])} {entryBoundaryX(i + 1)},{entryBoundaryY(i + 1)}"
         fill="url(#inner-{i})"
       />
     {/each}
