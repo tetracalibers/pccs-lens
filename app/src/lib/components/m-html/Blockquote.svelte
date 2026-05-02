@@ -24,27 +24,25 @@
   .blockquote-wrapper:before {
     display: inline-block;
     position: absolute;
-    top: -0.85rem;
-    left: -0.75rem;
+    top: -1rem;
+    left: -1.2rem;
     content: "“";
     font-family: var(--font-ja);
-    color: #e0e0e0;
+    color: light-dark(#e0e0e0, var(--color-body--dark));
     font-size: 4rem;
     line-height: 1;
     font-style: italic;
-    z-index: 2;
   }
 
   blockquote {
-    padding-block: 1rem;
+    padding-block-end: 1.5rem;
     padding-block-start: 2rem;
     padding-inline-start: 2rem;
     padding-inline-end: 1.5rem;
     box-sizing: border-box;
-    color: var(--color-body);
-    background: #e0e0e0;
+    background: light-dark(#f1f1f194, #7b7b7b61);
     margin: 0;
-    clip-path: polygon(40px 0, 100% 0, 100% 100%, 0 100%, 0 40px);
+    clip-path: polygon(2rem 0, 100% 0, 100% 100%, 0 100%, 0 2rem);
   }
 
   blockquote :global(p) {
