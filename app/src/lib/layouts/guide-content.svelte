@@ -131,6 +131,41 @@
     color: var(--color-body);
   }
 
+  main :global(pre.language-math) {
+    width: fit-content;
+    margin-inline: auto;
+    margin-block: 1.5rem;
+    font-size: 1.1rem;
+  }
+  main :global(pre.language-math code) {
+    font-family: var(--font-math-base), var(--font-ja-base);
+  }
+
+  main :global(figure.code-with-title) {
+    width: fit-content;
+    margin-inline: auto;
+    margin-block: 1rem;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.25rem;
+    align-items: center;
+    border-radius: 0.25rem;
+    padding-inline: 1rem;
+    padding-block: 0.5rem;
+}
+
+  main :global(figure.code-with-title figcaption) {
+    padding-block: 0.2rem;
+    font-size: 0.8rem;
+    color: var(--color-body);
+    opacity: 0.8;
+    padding: 0.35rem;
+  }
+  
+  main :global(figure.code-with-title pre) {
+    margin-block: 0.5rem 0;
+  }
+
   main :global(figure.math-display) {
     margin-inline: auto;
     margin-block: 1rem;
