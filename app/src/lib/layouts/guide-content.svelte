@@ -139,7 +139,6 @@
   main :global(figure.math-display) {
     margin-inline: auto;
     margin-block: 1rem;
-    color: var(--color-body);
     max-width: 100%;
     overflow-x: auto;
     box-sizing: border-box;
@@ -147,6 +146,7 @@
 
   main :global(.katex *) {
     font-family: var(--font-math-base), KaTeX_Main;
+    color: var(--color-body);
   }
 
   main :global(.math-inline .katex *) {

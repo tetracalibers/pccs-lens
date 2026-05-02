@@ -217,7 +217,7 @@
     --font-anki-round: "Flow Circular", system-ui;
     --font-round: "Kiwi Maru", serif;
     --font-mark: "Reddit Mono", "Zen Kaku Gothic Antique";
-    --font-math-base: "DM Mono", monospace;
+    --font-math-base: "DM Mono";
 
     font-family: "SUSE Mono", "Zen Kaku Gothic Antique", sans-serif;
     font-synthesis-weight: none;
