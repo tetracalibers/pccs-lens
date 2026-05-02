@@ -7,15 +7,44 @@ grades: ["2", "3", "uc"]
 draft: true
 ---
 
+<script>
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import PrismExperiment from "$lib/demo/spectrum/PrismExperiment.svelte"
+</script>
+
+## :WithGradeTag[ニュートンのプリズム実験]{grades="3"}
+
+[可視光](/color-theory/electromagnetic-waves/)の存在を発見したのは、イギリスの物理学者:Mark[アイザック・ニュートン]です。
+彼は暗室に置いた:Mark[プリズム]（ガラスの三角柱）に太陽の光（白色光）を通し、:Mark[スペクトル]（虹のような色の帯）を映し出すことに成功しました。
+
+<SVGWrapper>
+  <PrismExperiment />
+</SVGWrapper>
+
+また、スペクトルを再度プリズムに通して元の白色光に戻すことにも成功し、太陽光にはさまざまな色光が含まれていることを証明しました。太陽光には可視範囲のすべての波長の光が含まれているため、この実験によって可視光を発見したといえます。
+
 ## :WithGradeTag[分光とスペクトル]{grades="3"}
 
-::ComingSoon
+太陽の光のような白色光は、複数の波長の光が組み合わされた:Mark[複合光]です。
+光は波長によって:Mark[屈折率]が異なるため、複合光を:Mark[プリズム]に通すと、含まれている各波長の光に分けることができます。分かれた光の帯を:Mark[スペクトル]といい、スペクトルを構成する、各色の単一波長だけをもつ光を:Mark[単色光]といいます。
+
+:::Note
+一般に、:Mark[スペクトル]とは、光や音など複雑な組成を持つものを成分ごとに分解し、量や強度の順に並べたり、それを図示したものを指します。
+:::
+
+このように、複合光を波長ごとの単色光に分けることを:Mark[分光]といいます。
 
 ## :WithGradeTag[分光分布]{grades="3"}
 
-::ComingSoon
+どの波長の光がどれくらい強く含まれているか？という、光の成分を表すグラフが:Mark[分光分布]です。
 
-## :WithGradeTag[分光反射率]{grades="3,uc"}
+- 横軸：:Mark[波長]
+- 縦軸：:Mark[比エネルギー]（光の強さ）
+
+TODO: 白熱電球の分光分布から、黄み〜赤みを帯びた光であることを説明する
+TODO: 太陽光の分光分布から、白色光であることを説明する
+
+## :WithGradeTag[分光反射率曲線]{grades="3,uc"}
 
 ::ComingSoon
 
