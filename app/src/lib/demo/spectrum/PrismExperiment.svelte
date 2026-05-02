@@ -1,7 +1,7 @@
 <script lang="ts">
   // ===== SVG dimensions =====
   const WIDTH = 960
-  const HEIGHT = 600
+  const HEIGHT = 500
 
   // ===== Prism geometry (apex-up triangle) =====
   const PRISM_APEX_X = 480
@@ -32,7 +32,7 @@
   /** プリズム内: 各色帯の幅 (右面上の t-fraction) */
   const INNER_BAND_WIDTH = 0.03
   /** プリズム外: 各色帯の幅 (キャンバス右端での pixel) */
-  const OUTER_BAND_WIDTH = 25
+  const OUTER_BAND_WIDTH = 20
 
   // ===== スペクトルの中心位置 =====
   /** プリズム内: スペクトル全体の中心 (右面上の t) */
