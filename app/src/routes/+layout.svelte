@@ -55,7 +55,7 @@
     rel="stylesheet"
   />
   <link
-    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;1,300&display=swap&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]()≡"
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;1,300&display=swap&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]()≡,"
     rel="stylesheet"
   />
 </svelte:head>
