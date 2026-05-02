@@ -66,7 +66,7 @@
   const faceY = (t: number): number => PRISM_APEX_Y + t * (PRISM_BR_Y - PRISM_APEX_Y)
 
   // ===== Stroke widths / 効果 =====
-  const STROKE_LIGHT = 3
+  const STROKE_LIGHT = 4
   /** プリズム内スペクトルの霞み量 (feGaussianBlur stdDeviation) */
   const INNER_HAZE_BLUR = 2
 
