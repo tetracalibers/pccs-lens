@@ -7,6 +7,7 @@ import remarkDirective from "./src/lib/remark/directive.js"
 import remarkCustomDirectives from "./src/lib/remark/custom-directives.js"
 import remarkMermaid from "./src/lib/remark/mermaid.js"
 import remarkHeadingTitle from "./src/lib/remark/heading-title.js"
+import remarkCodeTitle from "./src/lib/remark/code-title.js"
 
 const isGithubPages = process.env.GITHUB_PAGES === "true"
 
@@ -54,7 +55,8 @@ const config = {
         remarkDirective,
         [remarkCustomDirectives, directives],
         remarkHeadingTitle,
-        remarkMermaid
+        remarkMermaid,
+        remarkCodeTitle
       ]
     })
   ],
