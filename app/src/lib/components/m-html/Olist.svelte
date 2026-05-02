@@ -10,7 +10,7 @@
 
 <style>
   ol {
-    margin: 0.75rem 0;
+    margin: 1rem 0;
     margin-inline-start: 0.75rem;
     padding: 0;
     list-style: none;

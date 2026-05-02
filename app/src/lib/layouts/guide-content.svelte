@@ -5,6 +5,7 @@
   import Ulist from "$lib/components/m-html/Ulist.svelte"
   import Olist from "$lib/components/m-html/Olist.svelte"
   import ALink from "$lib/components/m-html/ALink.svelte"
+  import Blockquote from "$lib/components/m-html/Blockquote.svelte"
 
   import Mark from "$lib/components/m-directive/Mark.svelte"
   import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
@@ -25,6 +26,7 @@
     Ulist as ul,
     Olist as ol,
     ALink as a,
+    Blockquote as blockquote,
     Mark,
     GradeTag,
     WithGradeTag,
@@ -48,6 +50,8 @@
   import { sortGrades } from "$lib/meta/grade"
   import DraftTag from "$lib/components/DraftTag.svelte"
   import { ankiMode } from "$lib/state/anki.svelte"
+
+  import "katex/dist/katex.min.css"
 
   let { title, grades, basic, draft, children }: GuideFrontmatter & { children: Snippet } = $props()
 
@@ -108,7 +112,7 @@
     margin-inline-start: -4px;
   }
 
-  main :global(p) {
+  :where(main :global(p)) {
     color: light-dark(#556070, #f0f0f0);
     color: var(--color-body);
     margin: 0.75rem 0;
@@ -121,6 +125,27 @@
     padding-inline: 4px;
     display: inline-block;
     line-height: 1.3;
+  }
+
+  main :global(pre) {
+    color: var(--color-body);
+  }
+
+  main :global(figure.math-display) {
+    margin-inline: auto;
+    margin-block: 1rem;
+    max-width: 100%;
+    overflow-x: auto;
+    box-sizing: border-box;
+  }
+
+  main :global(.katex *) {
+    font-family: var(--font-math-base), KaTeX_Main;
+    color: var(--color-body);
+  }
+
+  main :global(.math-inline .katex *) {
+    font-size: 1rem;
   }
 
   main :global(img) {
