@@ -4,7 +4,8 @@
 
   const FIRST_PHASE_SEC = 5
   const TOTAL_DURATION_SEC = FIRST_PHASE_SEC * 2
-  const ROT_SPEED_DEG_PER_SEC = 720
+  const ROT_SPEED_RPM = 360
+  const ROT_SPEED_DEG_PER_SEC = (ROT_SPEED_RPM * 360) / 60
 
   let angle = $state(0)
   let rafId: number | null = null
