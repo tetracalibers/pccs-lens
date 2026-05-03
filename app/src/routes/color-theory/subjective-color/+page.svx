@@ -1,0 +1,42 @@
+---
+layout: guide-content
+title: 主観色
+
+grades: ["3"]
+
+draft: true
+---
+
+<script>
+  import SVGWrapper from '$lib/demo/SVGWrapper.svelte'
+  import LuckieshMossFigure from '$lib/demo/subjective-color/LuckieshMossFigure.svelte'
+  import SkinnerFigure from '$lib/demo/subjective-color/SkinnerFigure.svelte'
+</script>
+
+物理的には色みのない対象（白黒で描かれた図）に、何らかの色みを感じる現象を:Mark[主観色]といいます。
+
+:::Note
+主観色は、はっきりと見えるものではなく、うっすらと色みを感じるような見え方をします。
+:::
+
+主観色を観察するための図を、いくつか見ていきましょう。
+
+## :WithGradeTag[ラッキーシュ＆モス図形]{grades="3"}
+
+- 細かな白黒の縞模様に対して直角方向に、薄いパステル調のオレンジや青緑の色の流れが感じられる。
+
+<SVGWrapper maxW={400}>
+  <LuckieshMossFigure />
+</SVGWrapper>
+
+## :WithGradeTag[スキナー図形]{grades="3"}
+
+- 白い円の中それぞれに、薄い赤・黄・緑・青などの色が感じられる。
+
+<SVGWrapper maxW={400}>
+  <SkinnerFigure />
+</SVGWrapper>
+
+## :WithGradeTag[ベンハムトップ]{grades="3"}
+
+::ComingSoon
