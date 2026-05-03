@@ -10,9 +10,10 @@
     onPlay?: () => void
     onStop?: () => void
     onFinish?: () => void
+    height?: number
   }
 
-  let { children, duration = 30, onPlay, onStop, onFinish }: Props = $props()
+  let { children, duration = 30, onPlay, onStop, onFinish, height = 250 }: Props = $props()
 
   let phase: Phase = $state("idle")
   let remaining: number = $state(0)
@@ -52,7 +53,7 @@
   })
 </script>
 
-<div class="stage">
+<div class="stage" style:--_height={height + "px"}>
   {@render children({ phase, remaining })}
 
   {#if phase === "idle"}
@@ -76,7 +77,7 @@
   .stage {
     position: relative;
     width: 100%;
-    height: 250px;
+    height: var(--_height);
     aspect-ratio: 16 / 9;
     background-color: #fff;
     border: 1px solid light-dark(#091e4221, #ffffff5e);

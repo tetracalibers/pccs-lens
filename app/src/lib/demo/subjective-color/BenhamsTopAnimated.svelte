@@ -57,6 +57,7 @@
   onPlay={handlePlay}
   onStop={handleStop}
   onFinish={handleFinish}
+  height={380}
 >
   <div class="rotator" style:transform="rotate({angle}deg)">
     <BenhamsTop />
