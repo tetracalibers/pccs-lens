@@ -6,7 +6,7 @@
   import Olist from "$lib/components/m-html/Olist.svelte"
   import ALink from "$lib/components/m-html/ALink.svelte"
 
-  import Tips from "$lib/components/m-directive/Tips.svelte"
+  import Action from "$lib/components/m-directive/Action.svelte"
   import Note from "$lib/components/m-directive/Note.svelte"
   import Example from "$lib/components/m-directive/Example.svelte"
   import ComingSoon from "$lib/components/m-directive/ComingSoon.svelte"
@@ -21,7 +21,7 @@
     Ulist as ul,
     Olist as ol,
     ALink as a,
-    Tips,
+    Action,
     Note,
     Example,
     ComingSoon,
