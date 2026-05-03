@@ -19,7 +19,7 @@ title: 色の理論一覧
 
 ### 色を言葉で表す
 
-- :PageDraft{title="色名の種類" grades="1,uc"}
+- :PageLink{slug="color-name-types"}
 - :PageDraft{title="物体色の色名" grades="1"}
 - :PageDraft{title="光源色の色名" grades="1"}
 - :PageDraft{title="基本色彩語" grades="1,uc"}
