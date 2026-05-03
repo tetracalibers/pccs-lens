@@ -43,8 +43,8 @@
 
   // ===== Tick / label sizes =====
   const TICK_LENGTH = 8
-  const FONT_SIZE_TICK_LABEL = 18
-  const FONT_SIZE_AXIS_LABEL = 20
+  const FONT_SIZE_TICK_LABEL = 24
+  const FONT_SIZE_AXIS_LABEL = 30
 
   // ===== ラベル位置オフセット =====
   const X_TICK_LABEL_OFFSET = 26 // PLOT_BOTTOM から数値ラベル中心まで
@@ -222,6 +222,6 @@
     fill={COL_LABEL}
     writing-mode="tb-rl"
   >
-    比エネルギー (%)
+    比エネルギー（％）
   </text>
 </svg>
