@@ -11,7 +11,7 @@ title: 色の理論一覧
 
 - :PageLink{slug="color-three-attributes"}
 - :PageLink{slug="pccs-basics"}
-- :PageDraft{title="表色系の分類" grades="3,2"}
+- :PageLink{slug="color-system-types"}
 - :PageLink{slug="color-wheel-and-color-solid"}
 - :PageLink{slug="pccs-color-system"}
 - :PageLink{slug="how-to-draw-pccs-color-wheel"}
