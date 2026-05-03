@@ -11,6 +11,7 @@ draft: true
   import SVGWrapper from '$lib/demo/SVGWrapper.svelte'
   import LuckieshMossFigure from '$lib/demo/subjective-color/LuckieshMossFigure.svelte'
   import SkinnerFigure from '$lib/demo/subjective-color/SkinnerFigure.svelte'
+  import BenhamsTop from '$lib/demo/subjective-color/BenhamsTop.svelte'
 </script>
 
 物理的には色みのない対象（白黒で描かれた図）に、何らかの色みを感じる現象を:Mark[主観色]といいます。
@@ -39,4 +40,6 @@ draft: true
 
 ## :WithGradeTag[ベンハムトップ]{grades="3"}
 
-::ComingSoon
+<SVGWrapper maxW={400}>
+  <BenhamsTop />
+</SVGWrapper>
