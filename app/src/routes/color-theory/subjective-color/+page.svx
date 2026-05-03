@@ -1,0 +1,52 @@
+---
+layout: guide-content
+title: 主観色
+
+grades: ["3"]
+
+draft: true
+---
+
+<script>
+  import SVGWrapper from '$lib/demo/SVGWrapper.svelte'
+  import LuckieshMossFigure from '$lib/demo/subjective-color/LuckieshMossFigure.svelte'
+  import SkinnerFigure from '$lib/demo/subjective-color/SkinnerFigure.svelte'
+  import BenhamsTopAnimated from '$lib/demo/subjective-color/BenhamsTopAnimated.svelte'
+</script>
+
+物理的には色みのない対象（白黒で描かれた図）に、何らかの色みを感じる現象を:Mark[主観色]といいます。
+
+主観色を観察するための図を、いくつか見ていきましょう。
+
+:::Note
+主観色は、はっきりと見えるものではなく、うっすらと色みを感じるような見え方をします。
+:::
+
+## :WithGradeTag[ラッキーシュ＆モス図形]{grades="3"}
+
+- 細かな白黒の縞模様に対して直角方向に、薄いパステル調のオレンジや青緑の色の流れが感じられる
+
+<SVGWrapper maxW={400}>
+  <LuckieshMossFigure />
+</SVGWrapper>
+
+## :WithGradeTag[スキナー図形]{grades="3"}
+
+- 白い円の中それぞれに、薄い赤・黄・緑・青などの色が感じられる
+
+<SVGWrapper maxW={400}>
+  <SkinnerFigure />
+</SVGWrapper>
+
+## :WithGradeTag[ベンハムトップ]{grades="3"}
+
+- ベンハムこまとも呼ばれる
+- 駒のように回すと主観色を見ることができる
+- 時計回りに回すと、中心の縞から順に赤、黄、緑、青に色づいて見え、反時計回りに回すと、色の順序が逆に見える
+
+<BenhamsTopAnimated></BenhamsTopAnimated>
+
+## :WithGradeTag[主観色はなぜ起こるのか]{grades="3"}
+
+- 静止画による主観色は、図を見る際の微細な眼球運動が要因の一つと考えられている
+- ベンハムトップのような運動を伴う図における主観色は、S・M・Lの3種類の錐体の反応速度の差などが関与していると考えられているが、それだけでは説明できないとする見解もある

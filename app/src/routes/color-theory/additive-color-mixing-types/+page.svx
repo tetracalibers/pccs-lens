@@ -1,0 +1,25 @@
+---
+layout: guide-content
+title: さまざまな加法混色
+
+grades: ["3"]
+
+draft: true
+---
+
+## :WithGradeTag[加法混色の種類]{grades="3"}
+
+```mermaid
+graph LR
+    A["加法混色"] --- Anki_B["同時加法混色"]
+    A --- Anki_C["併置加法混色"]
+    A --- Anki_D["継時加法混色"]
+```
+
+## :WithGradeTag[併置加法混色]{grades="3"}
+
+::ComingSoon
+
+## :WithGradeTag[継時加法混色]{grades="3"}
+
+::ComingSoon
