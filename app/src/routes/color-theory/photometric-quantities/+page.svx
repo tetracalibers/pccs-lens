@@ -1,0 +1,24 @@
+---
+layout: guide-content
+title: 照明の明るさを表す量
+
+grades: ["2", "1"]
+
+draft: true
+---
+
+## :WithGradeTag[照度]{grades="2"}
+
+::ComingSoon
+
+## :WithGradeTag[光束]{grades="1"}
+
+::ComingSoon
+
+## :WithGradeTag[光度]{grades="1"}
+
+::ComingSoon
+
+## :WithGradeTag[輝度]{grades="1"}
+
+::ComingSoon
