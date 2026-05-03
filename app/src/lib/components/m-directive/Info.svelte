@@ -1,20 +1,15 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
-  
-  interface Props {
-    children?: Snippet
-    title?: string
-  }
 
-  let { children, title = "Tips" }: Props = $props()
+  let { children }: { children?: Snippet } = $props()
 </script>
 
-<div class="tips" data-title={title}>
+<div class="info">
   {@render children?.()}
 </div>
 
 <style>
-  .tips {
+  .info {
     margin: 1.05rem 0;
     padding: 0.2rem 0 0.2rem 1rem;
     border-left: 2px solid transparent;
@@ -24,8 +19,8 @@
     line-height: 1.7;
   }
 
-  .tips::before {
-    content: attr(data-title);
+  .info::before {
+    content: "Info";
     display: block;
     font-size: 0.68rem;
     font-weight: 700;
@@ -36,7 +31,7 @@
     opacity: 0.85;
   }
 
-  .tips :global(p) {
+  .info :global(p) {
     margin: 0;
     font-size: inherit;
     line-height: inherit;

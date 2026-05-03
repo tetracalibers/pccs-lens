@@ -10,7 +10,7 @@
   import Mark from "$lib/components/m-directive/Mark.svelte"
   import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
   import WithGradeTag from "$lib/components/m-directive/WithGradeTag.svelte"
-  import Tips from "$lib/components/m-directive/Tips.svelte"
+  import Info from "$lib/components/m-directive/Info.svelte"
   import Note from "$lib/components/m-directive/Note.svelte"
   import Example from "$lib/components/m-directive/Example.svelte"
   import Action from "$lib/components/m-directive/Action.svelte"
@@ -31,7 +31,7 @@
     Mark,
     GradeTag,
     WithGradeTag,
-    Tips,
+    Info,
     Note,
     Example,
     Action,
