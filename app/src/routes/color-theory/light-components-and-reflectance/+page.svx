@@ -10,6 +10,8 @@ draft: true
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
   import PrismExperiment from "$lib/demo/spectrum/PrismExperiment.svelte"
+  import Sunlight from "$lib/demo/spectral-distribution/SunlightSpectralDistribution.svelte"
+  import IncandescentBulb from "$lib/demo/spectral-distribution/IncandescentBulbSpectralDistribution.svelte"
 </script>
 
 ## :WithGradeTag[ニュートンのプリズム実験]{grades="3"}
@@ -21,7 +23,7 @@ draft: true
   <PrismExperiment />
 </SVGWrapper>
 
-また、スペクトルを再度プリズムに通して元の白色光に戻すことにも成功し、太陽光にはさまざまな色光が含まれていることを証明しました。太陽光には可視範囲のすべての波長の光が含まれているため、この実験によって可視光を発見したといえます。
+また、スペクトルを再度プリズムに通して元の白色光に戻すことにも成功し、太陽光にはさまざまな色光が含まれていることを証明しました。太陽光には可視範囲のすべての波長の光が含まれているため、この実験によって可視光を解明したともいえます。
 
 ## :WithGradeTag[分光とスペクトル]{grades="3"}
 
@@ -41,13 +43,44 @@ draft: true
 - 横軸：:Mark[波長]
 - 縦軸：:Mark[比エネルギー]（光の強さ）
 
-TODO: 白熱電球の分光分布から、黄み〜赤みを帯びた光であることを説明する
-TODO: 太陽光の分光分布から、白色光であることを説明する
+波長が同じであれば、比エネルギーが:Mark[大きい]ほど、明るく感じます。
+
+::::CardGrid
+:::TermCard{title="太陽光の分光分布"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <Sunlight />
+</SVGWrapper>
+
+可視範囲のすべての波長をほぼ均等に含んでいることから、:Mark[白色光]（光なので実際は無色）であることがわかります。
+:::
+:::TermCard{title="白熱電球の分光分布"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <IncandescentBulb />
+</SVGWrapper>
+
+特に長波長を多く含んでいることから、:Mark[黄]み〜:Mark[赤]みを帯びた光色であることがわかります。
+::::
 
 ## :WithGradeTag[分光反射率曲線]{grades="3,uc"}
+
+物体がどの波長の光をどれくらい反射したか？という、物体の色の成分を表すグラフが:Mark[分光反射率曲線]です。
+
+- 横軸：:Mark[波長]
+- 縦軸：:Mark[反射率]
+
+:::Note
+物体が透明な場合は、反射率ではなく透過率を表した、:Mark[分光透過率曲線]になります。
+:::
+
+::ComingSoon
+
+## :WithGradeTag[分光反射率と色の三属性]{grades="2"}
 
 ::ComingSoon
 
 ## :WithGradeTag[光源・物体・視覚の関係]{grades="2"}
+
+物体の色は、光の中にどの波長がどれくらい含まれているか、そしてその中のどの波長がどれくらい反射したかによって決まります。
+具体的には、波長ごとに比エネルギーと反射率を掛け合わせた値が大きいほど、その波長の光が強く眼に届くことになります。
 
 ::ComingSoon
