@@ -3,22 +3,195 @@ layout: guide-content
 title: 光の成分と反射率
 
 grades: ["2", "3", "uc"]
-
-draft: true
 ---
+
+<script>
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import PrismExperiment from "$lib/demo/spectrum/PrismExperiment.svelte"
+  
+  // 分光分布
+  import Sunlight from "$lib/demo/spectral-distribution/SunlightSpectralDistribution.svelte"
+  import IncandescentBulb from "$lib/demo/spectral-distribution/IncandescentBulbSpectralDistribution.svelte"
+  
+  // 分光反射率曲線
+  import RedRef from "$lib/demo/spectral-reflectance/RedReflectance.svelte"
+  import GreenRef from "$lib/demo/spectral-reflectance/GreenReflectance.svelte"
+  import BlueRef from "$lib/demo/spectral-reflectance/BlueReflectance.svelte"
+  import YellowRef from "$lib/demo/spectral-reflectance/YellowReflectance.svelte"
+  import WhiteRef from "$lib/demo/spectral-reflectance/WhiteReflectance.svelte"
+  import BlackRef from "$lib/demo/spectral-reflectance/BlackReflectance.svelte"
+  import GrayRef from "$lib/demo/spectral-reflectance/GrayReflectance.svelte"
+  import BluishGrayRef from "$lib/demo/spectral-reflectance/BluishGrayReflectance.svelte"
+</script>
+
+## :WithGradeTag[ニュートンのプリズム実験]{grades="3"}
+
+[可視光](/color-theory/electromagnetic-waves/)の存在を発見したのは、イギリスの物理学者:Mark[アイザック・ニュートン]です。
+彼は暗室に置いた:Mark[プリズム]（ガラスの三角柱）に太陽の光（白色光）を通し、:Mark[スペクトル]（虹のような色の帯）を映し出すことに成功しました。
+
+<SVGWrapper>
+  <PrismExperiment />
+</SVGWrapper>
+
+また、スペクトルを再度プリズムに通して元の白色光に戻すことにも成功し、太陽光にはさまざまな色光が含まれていることを証明しました。太陽光には可視範囲のすべての波長の光が含まれているため、この実験によって可視光を解明したともいえます。
 
 ## :WithGradeTag[分光とスペクトル]{grades="3"}
 
-::ComingSoon
+太陽の光のような白色光は、複数の波長の光が組み合わされた:Mark[複合光]です。
+光は波長によって:Mark[屈折率]が異なるため、複合光を:Mark[プリズム]に通すと、含まれている各波長の光に分けることができます。分かれた光の帯を:Mark[スペクトル]といい、スペクトルを構成する、各色の単一波長だけをもつ光を:Mark[単色光]といいます。
+
+:::Note
+一般に、:Mark[スペクトル]とは、光や音など複雑な組成を持つものを成分ごとに分解し、量や強度の順に並べたり、それを図示したものを指します。
+:::
+
+このように、複合光を波長ごとの単色光に分けることを:Mark[分光]といいます。
 
 ## :WithGradeTag[分光分布]{grades="3"}
 
-::ComingSoon
+どの波長の光がどれくらい強く含まれているか？という、光の成分を表すグラフが:Mark[分光分布]です。
 
-## :WithGradeTag[分光反射率]{grades="3,uc"}
+- 横軸：:Mark[波長]
+- 縦軸：:Mark[比エネルギー]（光の強さ）
 
-::ComingSoon
+波長が同じであれば、比エネルギーが:Mark[大きい]ほど、明るく感じます。
+
+::::CardGrid
+:::TermCard{title="太陽光の分光分布"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <Sunlight />
+</SVGWrapper>
+
+可視範囲のすべての波長をほぼ均等に含んでいることから、:Mark[白色光]（光なので実際は無色）であることがわかります。
+:::
+:::TermCard{title="白熱電球の分光分布"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <IncandescentBulb />
+</SVGWrapper>
+
+特に長波長を多く含んでいることから、:Mark[黄]み〜:Mark[赤]みを帯びた光色であることがわかります。
+::::
+
+## :WithGradeTag[分光反射率曲線]{grades="3,uc"}
+
+物体がどの波長の光をどれくらい反射したか？という、物体の色の成分を表すグラフが:Mark[分光反射率曲線]です。
+
+- 横軸：:Mark[波長]
+- 縦軸：:Mark[反射率]
+
+[色と光の関係](/color-theory/how-color-works/)で学んだように、私たちは物体の表面で:Mark[反射]されて目に届いた光だけを目にしているので、反射率の分布を見ることで、その物体の色を知ることができます。
+
+::::CardGrid
+:::TermCard{title="赤"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <RedRef />
+</SVGWrapper>
+
+赤く見える物体は、:Mark[長波長]の光を多く反射していることがわかります。
+:::
+:::TermCard{title="緑"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <GreenRef />
+</SVGWrapper>
+
+緑に見える物体は、:Mark[中波長]の光を多く反射していることがわかります。
+:::
+:::TermCard{title="青"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <BlueRef />
+</SVGWrapper>
+
+青く見える物体は、:Mark[短波長]の光を多く反射していることがわかります。
+:::
+:::TermCard{title="黄"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <YellowRef />
+</SVGWrapper>
+
+黄に見える物体は、:Mark[中波長]と:Mark[長波長]の光を多く反射していることがわかります。
+これは、黄が:Mark[緑]と:Mark[赤]の[加法混色](/color-theory/color-mixing-basics/)で得られる色であるからです。
+:::
+:::TermCard{title="白"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <WhiteRef />
+</SVGWrapper>
+
+白く見える物体は、可視範囲のすべての波長の光をほぼ均等に反射していることがわかります。
+:::
+:::TermCard{title="黒"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <BlackRef />
+</SVGWrapper>
+
+黒く見える物体は、ほとんど光を反射していません。（可視範囲のすべての波長の光をほぼ均等に:Mark[吸収]しています。）
+:::
+::::
+
+透明な物体の場合は、反射率ではなく透過率を表した、:Mark[分光透過率曲線]になります。
+
+## :WithGradeTag[分光反射率と色の三属性]{grades="2"}
+
+分光反射率曲線から、その物体の色の三属性を読みとることもできます。
+
+- 色相：反射している:Mark[波長]からわかる
+- 明度：全体的な反射率の:Mark[高さ]からわかる
+- 彩度：反射率の:Mark[高低差]からわかる
+
+### 明度を読みとる
+
+反射率が全体的に高い色は、:Mark[明度]が高い色です。
+特に、:Mark[無彩色]は分光反射率曲線が水平に近いため、その高さで明度を判断できます。
+
+::::CardGrid
+:::TermCard{title="白"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <WhiteRef />
+</SVGWrapper>
+:::
+:::TermCard{title="灰"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <GrayRef />
+</SVGWrapper>
+:::
+::::
+
+ただし、:Mark[有彩色]では各波長に対する[眼の感度](/color-theory/photoreceptor-types-and-distribution/)も関係するため、反射率の高さと明度は一致しません。
+
+### 彩度を読みとる
+
+分光反射率曲線の高低差が大きい色ほど、:Mark[彩度]が高い色になります。
+
+- 高低差が大きい：:Mark[高彩度]色
+- 高低差が小さい：:Mark[低彩度]色
+
+ある波長だけ強く反射し、他の波長はあまり反射しない場合、反射している波長の色みだけが強く感じられ、他の色みはあまり混ざらないからです。
+
+::::CardGrid
+:::TermCard{title="青"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <BlueRef />
+</SVGWrapper>
+:::
+:::TermCard{title="青みがかった灰"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <BluishGrayRef />
+</SVGWrapper>
+:::
+::::
 
 ## :WithGradeTag[光源・物体・視覚の関係]{grades="2"}
 
-::ComingSoon
+私たちは物体からの反射光を見て色を認識していますが、その反射光は、次の2つの要素によって決まります。
+
+1. 光の中にどの波長がどれくらい含まれているか（:Mark[光源]の特性）
+2. そのうち、物体がどの波長をどれくらい反射したか（:Mark[物体]の反射特性）
+
+1は:Mark[分光分布]で表され、2は:Mark[分光反射率]で表されるものです。
+
+具体的には、:Mark[波長]ごとに光源の:Mark[比エネルギー]と物体の:Mark[反射率]を掛け合わせた値が大きいほど、その波長の光が強く眼に届く（その色が強く見える）ことになります。
+
+> 反射光の分光分布 $$=$$ 光源の:Mark[分光分布] $$\times$$ 物体の:Mark[分光反射率]
+
+たとえば、昼光（自然光）の下でリンゴを見たとき、リンゴからの反射光（眼に入る光）の分光分布は、昼光の分光分布とリンゴの分光反射率を掛け合わせたものとして計算できます。
+
+この式は、同じ物体であっても、どんな光源の下で見るかによって、眼に入る光の波長の分布（見える色）が変わることを示しています。
+光源の種類によってどのように色の見え方が変わるかについては、:Mark[照明]の章で学びます。

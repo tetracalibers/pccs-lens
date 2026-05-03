@@ -209,17 +209,19 @@
   }
 
   :global(body) {
-    --font-ja: "Zen Kaku Gothic Antique", sans-serif;
-    --font-mono: "Reddit Mono", monospace;
+    --font-ja-base: "Zen Kaku Gothic Antique";
+    --font-ja: var(--font-ja-base), sans-serif;
+    --font-mono-base: "Reddit Mono";
+    --font-mono: var(--font-mono-base), monospace;
     --font-fancy: "Delius", cursive;
     --font-classic: "Rakkas", serif;
     --font-anki-title: "Flow Rounded", system-ui;
     --font-anki-round: "Flow Circular", system-ui;
     --font-round: "Kiwi Maru", serif;
-    --font-mark: "Reddit Mono", "Zen Kaku Gothic Antique";
+    --font-mark: var(--font-mono-base), var(--font-ja-base);
     --font-math-base: "DM Mono";
 
-    font-family: "SUSE Mono", "Zen Kaku Gothic Antique", sans-serif;
+    font-family: "SUSE Mono", var(--font-ja-base), sans-serif;
     font-synthesis-weight: none;
     margin: 0;
 
