@@ -51,7 +51,7 @@
   <defs>
     <!-- 大円の内側に小円を切り取るためのクリップ領域 -->
     <clipPath id="skinner-clip">
-      <circle cx={CENTER} cy={CENTER} r={OUTER_RADIUS} />
+      <circle cx={CENTER} cy={CENTER} r={OUTER_RADIUS + 1} />
     </clipPath>
   </defs>
 
