@@ -13,7 +13,7 @@
     margin: 1.05rem 0;
     padding: 0.2rem 0 0.2rem 1rem;
     border-left: 2px solid transparent;
-    border-image: linear-gradient(180deg, #ff9a9e, #f953c6) 1;
+    border-image: linear-gradient(to top, #ff9a9e, #f953c6) 1;
     position: relative;
     font-size: 0.88rem;
     line-height: 1.7;
