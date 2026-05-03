@@ -223,8 +223,8 @@
     text-anchor="middle"
     font-size={FONT_SIZE_AXIS_LABEL}
     fill={COL_LABEL}
-    writing-mode="tb-rl"
+    writing-mode="vertical-rl"
   >
-    反射率（％）
+    反射率 (%)
   </text>
 </svg>

@@ -219,8 +219,8 @@
     text-anchor="middle"
     font-size={FONT_SIZE_AXIS_LABEL}
     fill={COL_LABEL}
-    writing-mode="tb-rl"
+    writing-mode="vertical-rl"
   >
-    比エネルギー（％）
+    比エネルギー (%)
   </text>
 </svg>
