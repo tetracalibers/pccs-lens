@@ -10,8 +10,20 @@ draft: true
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
   import PrismExperiment from "$lib/demo/spectrum/PrismExperiment.svelte"
+  
+  // 分光分布
   import Sunlight from "$lib/demo/spectral-distribution/SunlightSpectralDistribution.svelte"
   import IncandescentBulb from "$lib/demo/spectral-distribution/IncandescentBulbSpectralDistribution.svelte"
+  
+  // 分光反射率曲線
+  import RedRef from "$lib/demo/spectral-reflectance/RedReflectance.svelte"
+  import GreenRef from "$lib/demo/spectral-reflectance/GreenReflectance.svelte"
+  import BlueRef from "$lib/demo/spectral-reflectance/BlueReflectance.svelte"
+  import YellowRef from "$lib/demo/spectral-reflectance/YellowReflectance.svelte"
+  import WhiteRef from "$lib/demo/spectral-reflectance/WhiteReflectance.svelte"
+  import BlackRef from "$lib/demo/spectral-reflectance/BlackReflectance.svelte"
+  import GrayRef from "$lib/demo/spectral-reflectance/GrayReflectance.svelte"
+  import BluishGrayRef from "$lib/demo/spectral-reflectance/BluishGrayReflectance.svelte"
 </script>
 
 ## :WithGradeTag[ニュートンのプリズム実験]{grades="3"}
@@ -68,19 +80,109 @@ draft: true
 - 横軸：:Mark[波長]
 - 縦軸：:Mark[反射率]
 
-:::Note
-物体が透明な場合は、反射率ではなく透過率を表した、:Mark[分光透過率曲線]になります。
-:::
+[色と光の関係](/color-theory/how-color-works/)で学んだように、私たちは物体の表面で:Mark[反射]されて目に届いた光だけを目にしているので、反射率の分布を見ることで、その物体の色を知ることができます。
 
-::ComingSoon
+::::CardGrid
+:::TermCard{title="赤"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <RedRef />
+</SVGWrapper>
+
+赤く見える物体は、:Mark[長波長]の光を多く反射していることがわかります。
+:::
+:::TermCard{title="緑"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <GreenRef />
+</SVGWrapper>
+
+緑に見える物体は、:Mark[中波長]の光を多く反射していることがわかります。
+:::
+:::TermCard{title="青"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <BlueRef />
+</SVGWrapper>
+
+青く見える物体は、:Mark[短波長]の光を多く反射していることがわかります。
+:::
+:::TermCard{title="黄"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <YellowRef />
+</SVGWrapper>
+
+黄に見える物体は、:Mark[中波長]と:Mark[長波長]の光を多く反射していることがわかります。
+これは、黄が:Mark[緑]と:Mark[赤]の[加法混色](/color-theory/color-mixing-basics/)で得られる色であるからです。
+:::
+:::TermCard{title="白"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <WhiteRef />
+</SVGWrapper>
+
+白く見える物体は、可視範囲のすべての波長の光をほぼ均等に反射していることがわかります。
+:::
+:::TermCard{title="黒"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <BlackRef />
+</SVGWrapper>
+
+黒く見える物体は、ほとんど光を反射していません。（可視範囲のすべての波長の光をほぼ均等に:Mark[吸収]しています。）
+:::
+::::
+
+透明な物体の場合は、反射率ではなく透過率を表した、:Mark[分光透過率曲線]になります。
 
 ## :WithGradeTag[分光反射率と色の三属性]{grades="2"}
 
-::ComingSoon
+分光反射率曲線から、その物体の色の三属性を読みとることもできます。
+
+- 色相：反射している:Mark[波長]からわかる
+- 明度：全体的な反射率の:Mark[高さ]からわかる
+- 彩度：反射率の:Mark[高低差]からわかる
+
+### 明度を読みとる
+
+反射率が全体的に高い色は、:Mark[明度]が高い色です。
+特に、:Mark[無彩色]は分光反射率曲線が水平に近いため、その高さで明度を判断できます。
+
+::::CardGrid
+:::TermCard{title="白"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <WhiteRef />
+</SVGWrapper>
+:::
+:::TermCard{title="灰"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <GrayRef />
+</SVGWrapper>
+:::
+::::
+
+ただし、:Mark[有彩色]では各波長に対する[眼の感度](/color-theory/photoreceptor-types-and-distribution/)も関係するため、反射率の高さと明度は一致しません。
+
+### 彩度を読みとる
+
+分光反射率曲線の高低差が大きい色ほど、:Mark[彩度]が高い色になります。
+
+- 高低差が大きい：:Mark[高彩度]色
+- 高低差が小さい：:Mark[低彩度]色
+
+ある波長だけ強く反射し、他の波長はあまり反射しない場合、反射している波長の色みだけが強く感じられ、他の色みはあまり混ざらないからです。
+
+::::CardGrid
+:::TermCard{title="青"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <BlueRef />
+</SVGWrapper>
+:::
+:::TermCard{title="青みがかった灰"}
+<SVGWrapper style="margin-block-end: -0.5rem;">
+  <BluishGrayRef />
+</SVGWrapper>
+:::
+::::
 
 ## :WithGradeTag[光源・物体・視覚の関係]{grades="2"}
 
 物体の色は、光の中にどの波長がどれくらい含まれているか、そしてその中のどの波長がどれくらい反射したかによって決まります。
-具体的には、波長ごとに比エネルギーと反射率を掛け合わせた値が大きいほど、その波長の光が強く眼に届くことになります。
+具体的には、波長ごとに光源の:Mark[比エネルギー]と物体の:Mark[反射率]を掛け合わせた値が大きいほど、その波長の光が強く眼に届く（その色が強く見える）ことになります。
 
 ::ComingSoon
