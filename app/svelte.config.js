@@ -17,6 +17,7 @@ const directives = {
     { name: "Tips", replaceTo: "svelte-component" },
     { name: "Note", replaceTo: "svelte-component" },
     { name: "Example", replaceTo: "svelte-component" },
+    { name: "Action", replaceTo: "svelte-component" },
     { name: "CardGrid", replaceTo: "svelte-component" },
     { name: "TermCard", replaceTo: "svelte-component" }
   ],
