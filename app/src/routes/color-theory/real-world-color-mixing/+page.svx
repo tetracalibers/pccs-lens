@@ -6,13 +6,18 @@ grades: ["3"]
 draft: true
 ---
 
-## :WithGradeTag[加法混色の種類]{grades="3"}
+## :WithGradeTag[カラーモニタ]{grades="3"}
 
-```mermaid
-graph LR
-    A["加法混色"] --- Anki_B["同時加法混色"]
-    A --- Anki_C["併置加法混色"]
-    A --- Anki_D["継時加法混色"]
-```
+::ComingSoon
+
+## :WithGradeTag[カラー印刷]{grades="3"}
+
+::ComingSoon
+
+## :WithGradeTag[織物]{grades="3"}
+
+::ComingSoon
+
+## :WithGradeTag[絵の具]{grades="3"}
 
 ::ComingSoon

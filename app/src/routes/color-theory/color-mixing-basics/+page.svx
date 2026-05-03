@@ -1,6 +1,6 @@
 ---
 layout: guide-content
-title: 混色で色をつくる
+title: 加法混色と減法混色
 
 grades: ["3"]
 ---
