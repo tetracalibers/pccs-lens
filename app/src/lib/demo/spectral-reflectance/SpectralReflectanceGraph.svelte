@@ -77,8 +77,7 @@
   const gradientOffset = (nm: number): number => (nm - NM_MIN) / (NM_MAX - NM_MIN)
 
   // ===== 座標変換 =====
-  const xAt = (nm: number): number =>
-    PLOT_LEFT + ((nm - NM_MIN) / (NM_MAX - NM_MIN)) * PLOT_WIDTH
+  const xAt = (nm: number): number => PLOT_LEFT + ((nm - NM_MIN) / (NM_MAX - NM_MIN)) * PLOT_WIDTH
   const yAt = (value: number): number =>
     PLOT_BOTTOM - ((value - VALUE_MIN) / (VALUE_MAX - VALUE_MIN)) * PLOT_HEIGHT
 
