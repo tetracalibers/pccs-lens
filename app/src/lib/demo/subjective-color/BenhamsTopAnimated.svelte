@@ -2,8 +2,8 @@
   import PlaybackStage from "$lib/demo/PlaybackStage.svelte"
   import BenhamsTop from "./BenhamsTop.svelte"
 
-  const FIRST_PHASE_SEC = 10
-  const TOTAL_DURATION_SEC = 20
+  const FIRST_PHASE_SEC = 5
+  const TOTAL_DURATION_SEC = FIRST_PHASE_SEC * 2
   const ROT_SPEED_DEG_PER_SEC = 720
 
   let angle = $state(0)
