@@ -6,13 +6,11 @@
   // ===== Colors =====
   const COL_BG = "#ffffff"
   const COL_INK = "#000000"
-  const COL_FRAME = "var(--color-body)"
 
   // ===== Layout constants =====
   const OUTER_RADIUS = 150 // 黒い大円の半径
   const DOT_RADIUS = 10 // 白い小円の半径
   const DOT_PITCH = 30 // 小円の中心間隔（縦・横とも同じ）
-  const FRAME_STROKE_WIDTH = 1
 
   // ===== 小円の中心座標を生成 =====
   // 大円の中心を基準に、縦横グリッド状に配置する。
@@ -45,11 +43,8 @@
     </clipPath>
   </defs>
 
-  <!-- 白背景 -->
-  <rect x="0" y="0" width={SIZE} height={SIZE} fill={COL_BG} />
-
   <!-- 黒い大円 -->
-  <circle cx={CENTER} cy={CENTER} r={OUTER_RADIUS} fill={COL_INK} />
+  <circle cx={CENTER} cy={CENTER} r={OUTER_RADIUS} fill={COL_INK} stroke="none" />
 
   <!-- 縦横グリッド状に並ぶ白い小円（大円の縁で見切れる） -->
   <g clip-path="url(#skinner-clip)">
@@ -57,15 +52,4 @@
       <circle cx={dot.cx} cy={dot.cy} r={DOT_RADIUS} fill={COL_BG} />
     {/each}
   </g>
-
-  <!-- 図領域を示す薄い枠 -->
-  <circle
-    cx={CENTER}
-    cy={CENTER}
-    r={OUTER_RADIUS}
-    fill="none"
-    stroke={COL_FRAME}
-    stroke-width={FRAME_STROKE_WIDTH}
-    opacity="0.4"
-  />
 </svg>
