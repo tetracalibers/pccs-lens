@@ -11,6 +11,7 @@
 <style>
   .info {
     margin: 1.05rem 0;
+    margin-inline-start: 0.25rem;
     padding: 0.2rem 0 0.2rem 1rem;
     border-left: 2px solid transparent;
     border-image: linear-gradient(180deg, #7b8eb8, #4d6090) 1;
