@@ -2,6 +2,11 @@
   import chroma from "chroma-js"
   import { hierarchy, partition, type HierarchyRectangularNode } from "d3-hierarchy"
   import { arc } from "d3-shape"
+  import {
+    MUNSELL_HUE_FAMILIES,
+    getMunsellHueHex,
+    munsellHueLabelAt
+  } from "$lib/data/munsell-hue"
 
   // ===== SVG 中心 =====
   const CX = 360
@@ -22,58 +27,15 @@
   const FONT_SIZE_INNER = 15
   const FONT_SIZE_OUTER = 10
 
-  // ===== 色 (LCH) =====
-  const LCH_L = 62
-  const LCH_C = 62
-
   // ===== ストローク =====
   const STROKE_WIDTH = 0.6
   const STROKE_COLOR = "#fff"
 
-  // ===== Munsell 色相族 =====
-  const FAMILIES = ["R", "YR", "Y", "GY", "G", "BG", "B", "PB", "P", "RP"] as const
-
-  // 外側 100 色相 idx 0..99 → ラベル "1R", "2R", ..., "10R", "1YR", ..., "10RP"
-  function outerLabel(idx: number): string {
-    const num = (idx % 10) + 1
-    const fam = FAMILIES[Math.floor(idx / 10)]
-    return `${num}${fam}`
-  }
-
-  // ===== Munsell idx (0..99) → LCH 色相角 =====
-  // 主要色相 5X_k を 10 点の anchor として配置し、線形補間する。
-  const ANCHORS: { idx: number; lch: number }[] = [
-    { idx: 4, lch: 30 }, // 5R
-    { idx: 14, lch: 60 }, // 5YR
-    { idx: 24, lch: 95 }, // 5Y
-    { idx: 34, lch: 130 }, // 5GY
-    { idx: 44, lch: 160 }, // 5G
-    { idx: 54, lch: 200 }, // 5BG
-    { idx: 64, lch: 250 }, // 5B
-    { idx: 74, lch: 285 }, // 5PB
-    { idx: 84, lch: 320 }, // 5P
-    { idx: 94, lch: 350 } // 5RP
-  ]
-
-  function lchHue(idx: number): number {
-    // anchor を巡回参照できるよう [4, 104) に正規化
-    let i = idx < ANCHORS[0].idx ? idx + 100 : idx
-    for (let k = 0; k < ANCHORS.length; k++) {
-      const a = ANCHORS[k]
-      const b =
-        k < ANCHORS.length - 1
-          ? ANCHORS[k + 1]
-          : { idx: ANCHORS[0].idx + 100, lch: ANCHORS[0].lch + 360 }
-      if (i >= a.idx && i < b.idx) {
-        const t = (i - a.idx) / (b.idx - a.idx)
-        return (((a.lch + t * (b.lch - a.lch)) % 360) + 360) % 360
-      }
-    }
-    return 0
-  }
+  // ガモット外などで未登録の場合のフォールバック色
+  const FALLBACK_HEX = "#888"
 
   function colorFor(idx: number): string {
-    return chroma.lch(LCH_L, LCH_C, lchHue(idx)).hex()
+    return getMunsellHueHex(munsellHueLabelAt(idx)) ?? FALLBACK_HEX
   }
 
   function textColorOn(hex: string): string {
@@ -91,14 +53,14 @@
   function buildInnerSegments(): InnerDatum[] {
     const segments: InnerDatum[] = []
     for (let k = 0; k < 10; k++) {
-      const fam = FAMILIES[k]
+      const fam = MUNSELL_HUE_FAMILIES[k]
       const c5 = 4 + 10 * k
       segments.push({
         name: `5${fam}`,
         hueIndex: c5,
         children: [-2, -1, 0, 1, 2].map((d) => {
           const idx = (c5 + d + 100) % 100
-          return { name: outerLabel(idx), hueIndex: idx, value: 1 }
+          return { name: munsellHueLabelAt(idx), hueIndex: idx, value: 1 }
         })
       })
       const c10 = 9 + 10 * k
@@ -107,7 +69,7 @@
         hueIndex: c10,
         children: [-2, -1, 0, 1, 2].map((d) => {
           const idx = (c10 + d + 100) % 100
-          return { name: outerLabel(idx), hueIndex: idx, value: 1 }
+          return { name: munsellHueLabelAt(idx), hueIndex: idx, value: 1 }
         })
       })
     }
