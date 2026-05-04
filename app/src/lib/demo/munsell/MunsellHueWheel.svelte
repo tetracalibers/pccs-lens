@@ -184,12 +184,13 @@
     return ((deg % 360) + 360) % 360
   }
 
-  // テキストが radial 方向（中心→外）に読めるよう回転、下半分は反転して上下逆さま回避
+  // テキストが radial 方向（中心→外）に読めるよう回転。
+  // 上半分（n<180、12 時側）はそのまま、下半分（n>=180、6 時側）は 180° 反転して
+  // 上下逆さまを回避する。反転境界が 6 時方向に来るため、3 時/9 時付近で
+  // 隣接ラベルの向きが食い違うことがなくなる。
   function labelRotation(midAngleDeg: number): number {
-    let rot = midAngleDeg - 90
     const n = normDeg(midAngleDeg)
-    if (n > 90 && n < 270) rot += 180
-    return rot
+    return n < 180 ? midAngleDeg - 90 : midAngleDeg + 90
   }
 
   // ===== ViewBox =====
