@@ -188,6 +188,8 @@
     notation: string
     hex: string
     symbol: string
+    /** 対応する Munsell 外側色相 idx（0..99） */
+    hueIdx: number
     cx: number
     cy: number
     /** ラベル位置・回転計算用の中心角（12 時 = 0、CW 正、度） */
@@ -220,6 +222,7 @@
         notation: bNotation,
         hex,
         symbol,
+        hueIdx: idx,
         cx,
         cy,
         midAngleDeg: node.midAngleDeg,
@@ -231,6 +234,10 @@
   }
 
   const pccsDots = buildPccsDots()
+
+  // PCCS 対応のある外側色相 idx 集合（外側ラベル絞り込み用）
+  const pccsOuterIdxSet = new Set(pccsDots.map((d) => d.hueIdx))
+  const labeledOuterNodes = outerNodes.filter((n) => pccsOuterIdxSet.has(n.hueIndex))
 
   // ===== ViewBox =====
   const PADDING = 16
@@ -247,8 +254,8 @@
     {/each}
   </g>
 
-  <!-- 外側 100 色相のラベル（外周寄りに配置） -->
-  {#each outerNodes as node (node.key)}
+  <!-- 外側ラベル（PCCS 対応のある色相のみ、外周寄りに配置） -->
+  {#each labeledOuterNodes as node (node.key)}
     {@const [lx, ly] = pointAt(node.midAngleDeg, R_OUTER_LABEL)}
     <text
       x={lx}
