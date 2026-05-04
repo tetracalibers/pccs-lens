@@ -79,7 +79,7 @@
       }
     })
   })
-  
+
   const isAnki = $derived(ankiMode.isAnki)
 </script>
 
