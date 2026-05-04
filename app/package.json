@@ -46,6 +46,7 @@
     "mdsvex": "^0.12.6",
     "micromark-extension-directive": "^4.0.0",
     "micromark-extension-frontmatter": "^2.0.0",
+    "munsell": "^1.1.6",
     "playwright": "^1.58.2",
     "prettier": "^3.8.1",
     "prettier-plugin-svelte": "^3.4.1",
