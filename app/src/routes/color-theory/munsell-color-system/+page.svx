@@ -10,6 +10,7 @@ draft: true
 <script>
   import SVGWrapper from '$lib/demo/SVGWrapper.svelte'
   import MunsellHueWheel from '$lib/demo/munsell/MunsellHueWheel.svelte'
+  import MunsellHueWithPCCSHue from '$lib/demo/munsell/MunsellHueWithPCCSHue.svelte'
 </script>
 
 ## :WithGradeTag[マンセル表色系とは]{grades="2"}
@@ -24,13 +25,15 @@ draft: true
 
 ## :WithGradeTag[PCCSとの対応]{grades="2"}
 
-::ComingSoon
+<SVGWrapper>
+  <MunsellHueWithPCCSHue />
+</SVGWrapper>
 
 ## :WithGradeTag[明度と彩度]{grades="2"}
 
 ::ComingSoon
 
-## :WithGradeTag[色立体と等色相面]{grades="2"}
+## :WithGradeTag[色立体と等色相面・等明度面]{grades="2"}
 
 ::ComingSoon
 
