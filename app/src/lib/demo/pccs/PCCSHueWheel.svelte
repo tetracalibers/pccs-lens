@@ -2,6 +2,7 @@
   import { arc } from "d3-shape"
   import { PCCS_HUE_MAP } from "$lib/data/pccs"
   import { isLightColor } from "$lib/color/utils"
+  import { ankiMode } from "$lib/state/anki.svelte"
 
   interface Props {
     /** 色相環の外側の円の半径（px） */
@@ -78,6 +79,8 @@
       }
     })
   })
+  
+  const isAnki = $derived(ankiMode.isAnki)
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" {viewBox} role="img" aria-label="PCCS色相環">
@@ -90,7 +93,7 @@
   {#each segments as seg (seg.key)}
     {@const [lx, ly] = pointAt(seg.midAngleDeg, midRadius)}
     <text class="symbol" x={lx} y={ly} font-size={FONT_SIZE_LABEL} fill={seg.textColor}>
-      {seg.symbol}
+      {isAnki ? "" : seg.symbol}
     </text>
   {/each}
 </svg>
