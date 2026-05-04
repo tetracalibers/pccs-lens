@@ -1,7 +1,8 @@
 <script lang="ts">
   import { arc } from "d3-shape"
   import { getMunsellHueHex, munsellHueLabelAt } from "$lib/data/munsell-hue"
-
+  import { ankiMode } from "$lib/state/anki.svelte"
+  
   // ===== SVG 中心 =====
   const CX = 360
   const CY = 360
@@ -82,6 +83,8 @@
   const PADDING = 16
   const VB_R = R_OUTER + PADDING
   const viewBox = `${CX - VB_R} ${CY - VB_R} ${2 * VB_R} ${2 * VB_R}`
+  
+  const isAnki = $derived(ankiMode.isAnki)
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" {viewBox}>
@@ -105,7 +108,7 @@
       text-anchor="middle"
       dominant-baseline="central"
     >
-      {seg.label}
+      {isAnki ? "" : seg.label}
     </text>
   {/each}
 </svg>
