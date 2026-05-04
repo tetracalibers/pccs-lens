@@ -51,7 +51,6 @@
   onPlay={handlePlay}
   onStop={handleStop}
   onFinish={handleFinish}
-  height={380}
 >
   <div class="rotator" style:transform="rotate({angle}deg)">
     <SuccessiveMixingDisc />
@@ -63,7 +62,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 80cqh;
+    width: 70cqh;
     aspect-ratio: 1 / 1;
     translate: -50% -50%;
   }
