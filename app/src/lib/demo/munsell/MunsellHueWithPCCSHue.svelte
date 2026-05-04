@@ -2,7 +2,7 @@
   import { hierarchy, partition, type HierarchyRectangularNode } from "d3-hierarchy"
   import { arc } from "d3-shape"
   import { MUNSELL_HUE_FAMILIES, getMunsellHueHex, munsellHueLabelAt } from "$lib/data/munsell-hue"
-  import { PCCS_V24 } from "$lib/data/pccs"
+  import { PCCS_V24, PCCS_HEX_MAP } from "$lib/data/pccs"
 
   // ===== SVG 中心 =====
   const CX = 360
@@ -175,15 +175,19 @@
   function buildPccsDots(): PccsDot[] {
     const byIdx = new Map(outerNodes.map((n) => [n.hueIndex, n]))
     const dots: PccsDot[] = []
+    // 配置位置は v トーン側に揃った Munsell データを利用し、表示色のみ b トーンに差し替える
     for (const c of PCCS_V24) {
-      if (!c.munsell) continue
+      if (!c.munsell || c.hueNumber === null) continue
       const huePart = c.munsell.split(/\s+/)[0]
       const idx = munsellHueToOuterIdx(huePart)
       if (idx === null) continue
       const node = byIdx.get(idx)
       if (!node) continue
+      const bNotation = `b${c.hueNumber}`
+      const hex = PCCS_HEX_MAP.get(bNotation)
+      if (!hex) continue
       const [cx, cy] = pointAt(node.midAngleDeg, R_PCCS_DOT)
-      dots.push({ notation: c.notation, hex: c.hex, cx, cy })
+      dots.push({ notation: bNotation, hex, cx, cy })
     }
     return dots
   }
