@@ -8,9 +8,9 @@
   const CY = 360
 
   // ===== 半径（同心二重ドーナツ）=====
-  const R_INNER_INNER = 130
-  const R_INNER_OUTER = 230
-  const R_OUTER_OUTER = 320
+  const R_INNER_INNER = 110
+  const R_INNER_OUTER = 180
+  const R_OUTER_OUTER = 280
 
   // ===== 角度オフセット =====
   // d3.arc は 12 時方向 = 0、CW を正方向とする。
@@ -20,7 +20,11 @@
 
   // ===== フォント =====
   const FONT_SIZE_INNER = 15
-  const FONT_SIZE_OUTER = 10
+  const FONT_SIZE_OUTER = 12
+
+  // ===== 外側ラベルの配置半径（外周から内側へ inset）=====
+  const OUTER_LABEL_INSET = FONT_SIZE_OUTER * 2
+  const R_OUTER_LABEL = R_OUTER_OUTER - OUTER_LABEL_INSET
 
   // ===== ストローク =====
   const STROKE_WIDTH = 0.6
@@ -161,9 +165,9 @@
     {/each}
   </g>
 
-  <!-- 外側 100 色相のラベル（扇形の中央に配置） -->
+  <!-- 外側 100 色相のラベル（外周寄りに配置） -->
   {#each outerNodes as node (node.key)}
-    {@const [lx, ly] = pointAt(node.midAngleDeg, node.midRadius)}
+    {@const [lx, ly] = pointAt(node.midAngleDeg, R_OUTER_LABEL)}
     <text
       x={lx}
       y={ly}
