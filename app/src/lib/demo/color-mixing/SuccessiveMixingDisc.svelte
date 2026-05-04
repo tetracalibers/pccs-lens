@@ -7,10 +7,8 @@
 
   // ===== Layout constants =====
   const RADIUS = 150
-  const OUTLINE_STROKE_WIDTH = 1.5
 
   // ===== Colors =====
-  const COL_OUTLINE = "var(--color-body)"
   const COL_A = PCCS_HEX_MAP.get("v2")!
   const COL_B = PCCS_HEX_MAP.get("v8")!
   const COL_C = PCCS_HEX_MAP.get("v18")!
@@ -39,13 +37,4 @@
   {#each COLORS as color, i (i)}
     <path d={sectorPath(i)} fill={color} />
   {/each}
-
-  <circle
-    cx={CENTER}
-    cy={CENTER}
-    r={RADIUS}
-    fill="none"
-    stroke={COL_OUTLINE}
-    stroke-width={OUTLINE_STROKE_WIDTH}
-  />
 </svg>
