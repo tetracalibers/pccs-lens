@@ -8,7 +8,7 @@
   const CY = 460
 
   // ===== マンセル設定 =====
-  const VALUE = 6
+  const VALUE = 5
   /** 色相数（2.5 ステップ × 40） */
   const HUE_COUNT = 40
   /** 彩度ステップ（マンセル標準は 2 刻み） */
