@@ -2,6 +2,7 @@
   import chroma from "chroma-js"
   import { hierarchy, partition, type HierarchyRectangularNode } from "d3-hierarchy"
   import { arc } from "d3-shape"
+  import { munsellToHex } from "munsell"
 
   // ===== SVG 中心 =====
   const CX = 360
@@ -23,9 +24,10 @@
   const FONT_SIZE_INNER = 15
   const FONT_SIZE_OUTER = 10
 
-  // ===== 色 (LCH) =====
-  const LCH_L = 62
-  const LCH_C = 62
+  // ===== Munsell の代表値 (V/C) =====
+  // 全 100 色相を共通の明度・彩度で取り、色相環としての見た目を揃える
+  const MUNSELL_VALUE = 5
+  const MUNSELL_CHROMA = 10
 
   // ===== ストローク =====
   const STROKE_WIDTH = 0.6
@@ -44,40 +46,14 @@
     return `${num}${fam}`
   }
 
-  // ===== Munsell idx (0..99) → LCH 色相角 =====
-  // 主要色相 5X_k を 10 点の anchor として配置し、線形補間する。
-  const ANCHORS: { idx: number; lch: number }[] = [
-    { idx: 4, lch: 30 }, // 5R
-    { idx: 14, lch: 60 }, // 5YR
-    { idx: 24, lch: 95 }, // 5Y
-    { idx: 34, lch: 130 }, // 5GY
-    { idx: 44, lch: 160 }, // 5G
-    { idx: 54, lch: 200 }, // 5BG
-    { idx: 64, lch: 250 }, // 5B
-    { idx: 74, lch: 285 }, // 5PB
-    { idx: 84, lch: 320 }, // 5P
-    { idx: 94, lch: 350 } // 5RP
-  ]
-
-  function lchHue(idx: number): number {
-    // anchor を巡回参照できるよう [4, 104) に正規化
-    let i = idx < ANCHORS[0].idx ? idx + 100 : idx
-    for (let k = 0; k < ANCHORS.length; k++) {
-      const a = ANCHORS[k]
-      const b =
-        k < ANCHORS.length - 1
-          ? ANCHORS[k + 1]
-          : { idx: ANCHORS[0].idx + 100, lch: ANCHORS[0].lch + 360 }
-      if (i >= a.idx && i < b.idx) {
-        const t = (i - a.idx) / (b.idx - a.idx)
-        return (((a.lch + t * (b.lch - a.lch)) % 360) + 360) % 360
-      }
-    }
-    return 0
+  // ===== Munsell idx (0..99) → Munsell 表記 → HEX =====
+  // idx 0..9 = 1R..10R, idx 10..19 = 1YR..10YR, ..., idx 99 = 10RP
+  function munsellNotation(idx: number): string {
+    return `${outerLabel(idx)} ${MUNSELL_VALUE}/${MUNSELL_CHROMA}`
   }
 
   function colorFor(idx: number): string {
-    return chroma.lch(LCH_L, LCH_C, lchHue(idx)).hex()
+    return munsellToHex(munsellNotation(idx))
   }
 
   function textColorOn(hex: string): string {
