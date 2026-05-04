@@ -1,0 +1,63 @@
+---
+layout: guide-content
+title: マンセル表色系
+
+grades: ["2"]
+
+draft: true
+---
+
+<script>
+  import SVGWrapper from '$lib/demo/SVGWrapper.svelte'
+  import MunsellPrimaryHueWheel from '$lib/demo/munsell/MunsellPrimaryHueWheel.svelte'
+  import MunsellTenHueWheel from '$lib/demo/munsell/MunsellTenHueWheel.svelte'
+  import MunsellHueWheel from '$lib/demo/munsell/MunsellHueWheel.svelte'
+  import MunsellHueWithPCCSHue from '$lib/demo/munsell/MunsellHueWithPCCSHue.svelte'
+  import MunsellValue5Plane from '$lib/demo/munsell/MunsellValue5Plane.svelte'
+</script>
+
+## :WithGradeTag[マンセル表色系とは]{grades="2"}
+
+::ComingSoon
+
+## :WithGradeTag[マンセル色相環]{grades="2"}
+
+::::CardGrid
+:::TermCard
+<SVGWrapper maxW={380}>
+  <MunsellPrimaryHueWheel />
+</SVGWrapper>
+:::
+:::TermCard
+<SVGWrapper maxW={380}>
+  <MunsellTenHueWheel />
+</SVGWrapper>
+::::
+
+<SVGWrapper>
+  <MunsellHueWheel />
+</SVGWrapper>
+
+## :WithGradeTag[PCCSとの対応]{grades="2"}
+
+<SVGWrapper>
+  <MunsellHueWithPCCSHue />
+</SVGWrapper>
+
+## :WithGradeTag[マンセル表色系の明度と彩度]{grades="2"}
+
+::ComingSoon
+
+## :WithGradeTag[色立体と等色相面・等明度面]{grades="2"}
+
+<SVGWrapper maxW={500}>
+  <MunsellValue5Plane />
+</SVGWrapper>
+
+## :WithGradeTag[色の表示方法]{grades="2"}
+
+::ComingSoon
+
+## :WithGradeTag[マンセル表色系の色票集]{grades="2"}
+
+::ComingSoon

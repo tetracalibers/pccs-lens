@@ -9,10 +9,51 @@ draft: true
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
   import PCCSHueWheel from "$lib/demo/pccs/PCCSHueWheel.svelte"
+  import PCCSPrimaryHueWheel from "$lib/demo/pccs/PCCSPrimaryHueWheel.svelte"
+  import PCCSPrimaryComplementHueWheel from "$lib/demo/pccs/PCCSPrimaryComplementHueWheel.svelte"
+  import PCCSEvenHueWheel from "$lib/demo/pccs/PCCSEvenHueWheel.svelte"
 </script>
 
-## :WithGradeTag[PCCSの色相と色相環]{grades="3"}
+## :WithGradeTag[PCCSとは]{grades="3"}
+
+::ComingSoon
+
+## :WithGradeTag[PCCSの色相環]{grades="3"}
+
+::::CardGrid{lastWide}
+:::TermCard
+<SVGWrapper maxW={380}>
+  <PCCSPrimaryHueWheel />
+</SVGWrapper>
+:::
+:::TermCard
+<SVGWrapper maxW={380}>
+  <PCCSPrimaryComplementHueWheel />
+</SVGWrapper>
+:::
+:::TermCard
+<SVGWrapper maxW={380}>
+  <PCCSEvenHueWheel />
+</SVGWrapper>
+:::
+::::
 
 <SVGWrapper maxW={500}>
   <PCCSHueWheel />
 </SVGWrapper>
+
+## :WithGradeTag[PCCSの明度と彩度]{grades="3"}
+
+::ComingSoon
+
+## :WithGradeTag[色立体と等色相面]{grades="3"}
+
+::ComingSoon
+
+## :WithGradeTag[色の表示方法]{grades="3"}
+
+::ComingSoon
+
+## :WithGradeTag[PCCSの色票集]{grades="3"}
+
+::ComingSoon

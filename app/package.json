@@ -16,7 +16,8 @@
     "test": "npm run test:unit -- --run",
     "deploy": "npm run build && wrangler deploy",
     "cf-typegen": "wrangler types",
-    "data:pccs-approx": "node scripts/add-pccs-approximations.mjs && prettier --write src/lib/data/jis_colors.json"
+    "data:pccs-approx": "node scripts/add-pccs-approximations.mjs && prettier --write src/lib/data/jis_colors.json",
+    "data:munsell-hue": "node scripts/generate-munsell-hue.mjs && prettier --write src/lib/data/munsell_hue.json"
   },
   "devDependencies": {
     "@eslint/compat": "^2.0.2",
@@ -28,6 +29,8 @@
     "@sveltejs/vite-plugin-svelte": "^6.2.4",
     "@svgdotjs/svg.js": "^3.2.5",
     "@types/chroma-js": "^3.1.2",
+    "@types/d3-hierarchy": "^3.1.7",
+    "@types/d3-shape": "^3.1.8",
     "@types/node": "^22",
     "@types/randomcolor": "^0.5.9",
     "@vitest/browser-playwright": "^4.0.18",
@@ -44,6 +47,7 @@
     "mdsvex": "^0.12.6",
     "micromark-extension-directive": "^4.0.0",
     "micromark-extension-frontmatter": "^2.0.0",
+    "munsell": "^1.1.6",
     "playwright": "^1.58.2",
     "prettier": "^3.8.1",
     "prettier-plugin-svelte": "^3.4.1",
@@ -64,5 +68,9 @@
     "vite": {
       "rollup": "npm:@rollup/wasm-node"
     }
+  },
+  "dependencies": {
+    "d3-hierarchy": "^3.1.2",
+    "d3-shape": "^3.2.0"
   }
 }

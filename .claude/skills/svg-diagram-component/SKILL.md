@@ -159,6 +159,18 @@ const ARROW_HEAD_H = 10   // markerHeight（縦幅）
 - 不要なラッパー要素を含めないため、基本的に `<style>` ブロックは不要
 - `<svg>` 自体に対するスタイルが必要な場合のみ最小限に記述する
 
+### スペクトルのグラデーション
+
+スペクトル（可視光の波長分布）を表すグラデーションの描画を指示された場合は、`app/src/lib/demo/spectrum/SpectrumGradient.svelte` と同様のグラデーション（`gradientStops` の波長と色の対応）を採用する。
+
+### 縦書きテキスト
+
+テキストを縦書きにするよう指示された場合は、`<text>` 要素に `writing-mode="vertical-rl"` 属性を付与して実現する。
+
+### 文字色のコントラスト確保
+
+塗りつぶし色の明暗差が場合によって大きく、文字が読みづらくなる可能性がある場合は、`app/src/lib/color/utils.ts` の `isLightColor` 関数によって文字色を出し分ける。指示がない限り、コンポーネント内で chroma.js の `luminance` 関数を直接使わない。
+
 ## 実装テンプレート
 
 ```svelte

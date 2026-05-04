@@ -15,7 +15,7 @@ title: 色の理論一覧
 - :PageLink{slug="color-wheel-and-color-solid"}
 - :PageLink{slug="pccs-color-system"}
 - :PageLink{slug="how-to-draw-pccs-color-wheel"}
-- :PageDraft{title="マンセル表色系" grades="2"}
+- :PageLink{slug="munsell-color-system"}
 
 ### 色を言葉で表す
 
