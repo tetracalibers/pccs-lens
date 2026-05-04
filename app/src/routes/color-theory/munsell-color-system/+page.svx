@@ -44,7 +44,7 @@ draft: true
   <MunsellHueWithPCCSHue />
 </SVGWrapper>
 
-## :WithGradeTag[明度と彩度]{grades="2"}
+## :WithGradeTag[マンセル表色系の明度と彩度]{grades="2"}
 
 ::ComingSoon
 
