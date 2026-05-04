@@ -1,5 +1,4 @@
 <script lang="ts">
-  import chroma from "chroma-js"
   import { hierarchy, partition, type HierarchyRectangularNode } from "d3-hierarchy"
   import { arc } from "d3-shape"
   import { MUNSELL_HUE_FAMILIES, getMunsellHueHex, munsellHueLabelAt } from "$lib/data/munsell-hue"
@@ -32,10 +31,6 @@
 
   function colorFor(idx: number): string {
     return getMunsellHueHex(munsellHueLabelAt(idx)) ?? FALLBACK_HEX
-  }
-
-  function textColorOn(hex: string): string {
-    return chroma(hex).luminance() > 0.55 ? "#222" : "#fff"
   }
 
   // ===== d3-hierarchy のためのデータ構築 =====
@@ -173,7 +168,7 @@
       x={lx}
       y={ly}
       font-size={FONT_SIZE_OUTER}
-      fill={textColorOn(node.color)}
+      fill="#fff"
       text-anchor="middle"
       dominant-baseline="central"
       transform="rotate({labelRotation(node.midAngleDeg)} {lx} {ly})"
@@ -190,7 +185,7 @@
       y={ly}
       font-size={FONT_SIZE_INNER}
       font-weight="600"
-      fill={textColorOn(node.color)}
+      fill="#fff"
       text-anchor="middle"
       dominant-baseline="central"
       transform="rotate({labelRotation(node.midAngleDeg)} {lx} {ly})"
