@@ -50,7 +50,7 @@ draft: true
 
 ## :WithGradeTag[色立体と等色相面・等明度面]{grades="2"}
 
-:::TermCard{title="明度5の等明度面"}
+:::TermCard{title="明度6の等明度面"}
 <SVGWrapper maxW={500}>
   <MunsellValue5Plane />
 </SVGWrapper>

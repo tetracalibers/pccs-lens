@@ -10,7 +10,7 @@
   const CY = 460
 
   // ===== マンセル設定 =====
-  const VALUE = 5
+  const VALUE = 6
   /** 色相数（2.5 ステップ × 40） */
   const HUE_COUNT = 40
   /** 彩度ステップ（マンセル標準は 2 刻み） */
@@ -214,7 +214,7 @@
     text-anchor="middle"
     dominant-baseline="central"
   >
-    N5
+    N{VALUE}
   </text>
 
   <!-- 各色相の彩度リング（その色相の最高彩度まで） -->
