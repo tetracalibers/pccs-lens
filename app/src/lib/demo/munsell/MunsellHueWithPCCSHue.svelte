@@ -41,7 +41,7 @@
   const STROKE_COLOR = "#fff"
 
   // ===== 対応する PCCS 色相がない外側扇形の透過度 =====
-  const FADED_OPACITY = 0.8
+  const FADED_OPACITY = 0.7
 
   // ガモット外などで未登録の場合のフォールバック色
   const FALLBACK_HEX = "#888"
