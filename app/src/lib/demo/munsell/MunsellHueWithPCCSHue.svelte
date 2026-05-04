@@ -41,6 +41,9 @@
   const STROKE_WIDTH = 0.6
   const STROKE_COLOR = "#fff"
 
+  // ===== 対応する PCCS 色相がない外側扇形の透過度 =====
+  const FADED_OPACITY = 0.8
+
   // ガモット外などで未登録の場合のフォールバック色
   const FALLBACK_HEX = "#888"
 
@@ -246,11 +249,17 @@
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" {viewBox}>
-  <!-- 内側 20 色相 + 外側 100 色相のセグメント -->
+  <!-- 内側 20 色相 + 外側 100 色相のセグメント。PCCS 対応のない外側は薄く表示 -->
   <!-- d3.arc は原点中心にパスを生成するので translate で中心を揃える -->
   <g transform="translate({CX} {CY})">
     {#each drawNodes as node (node.key)}
-      <path d={node.path} fill={node.color} stroke={STROKE_COLOR} stroke-width={STROKE_WIDTH} />
+      <path
+        d={node.path}
+        fill={node.color}
+        stroke={STROKE_COLOR}
+        stroke-width={STROKE_WIDTH}
+        opacity={node.depth === 2 && !pccsOuterIdxSet.has(node.hueIndex) ? FADED_OPACITY : 1}
+      />
     {/each}
   </g>
 
