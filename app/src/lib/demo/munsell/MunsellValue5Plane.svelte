@@ -134,9 +134,37 @@
   const cells = buildDrawCells()
 
   // ===== ViewBox =====
+  // 等明度面の外縁は色相ごとの最高彩度差で凹凸する。最大彩度（R_OUTER）で
+  // 正方形にすると上下に大きな余白が出るため、外周をサンプリングして
+  // 上下/左右それぞれの最大半径方向の伸びを求める。
+  // 円の中心を SVG の中心に保つため、viewBox は (CX, CY) を中心に対称にする
+  // （幅は完全フィットしないが、上下方向の高さは縮められる）。
+  function computeHalfExtents(): { halfW: number; halfH: number } {
+    let halfW = R_CENTER
+    let halfH = R_CENTER
+    const slotAngle = (2 * Math.PI) / HUE_COUNT
+    const SAMPLES_PER_SLOT = 32
+    for (let k = 0; k < HUE_COUNT; k++) {
+      const rings = Math.floor(MAX_CHROMA_AT_V5[k] / CHROMA_STEP)
+      const r = R_CENTER + rings * RING_W
+      const start = k * slotAngle + ANGLE_OFFSET
+      const end = (k + 1) * slotAngle + ANGLE_OFFSET
+      for (let i = 0; i <= SAMPLES_PER_SLOT; i++) {
+        const t = start + ((end - start) * i) / SAMPLES_PER_SLOT
+        const ax = Math.abs(r * Math.sin(t))
+        const ay = Math.abs(r * Math.cos(t))
+        if (ax > halfW) halfW = ax
+        if (ay > halfH) halfH = ay
+      }
+    }
+    return { halfW, halfH }
+  }
+
   const PADDING = 4
-  const VB_R = R_OUTER + PADDING
-  const viewBox = `${CX - VB_R} ${CY - VB_R} ${2 * VB_R} ${2 * VB_R}`
+  const { halfW, halfH } = computeHalfExtents()
+  const vbW = 2 * (halfW + PADDING)
+  const vbH = 2 * (halfH + PADDING)
+  const viewBox = `${CX - halfW - PADDING} ${CY - halfH - PADDING} ${vbW} ${vbH}`
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" {viewBox}>
