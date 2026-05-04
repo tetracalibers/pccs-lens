@@ -28,10 +28,8 @@
    * Y/GY 付近は 14、P 付近は 40 まで伸び、これが等明度面の凹凸を生む。
    */
   const MAX_CHROMA_AT_V5: readonly number[] = [
-    28, 28, 28, 28, 26, 20, 18, 16, 16, 14,
-    14, 14, 14, 14, 16, 20, 32, 32, 32, 32,
-    32, 32, 30, 26, 24, 20, 20, 20, 22, 24,
-    32, 34, 36, 38, 40, 40, 40, 36, 32, 30
+    28, 28, 28, 28, 26, 20, 18, 16, 16, 14, 14, 14, 14, 14, 16, 20, 32, 32, 32, 32, 32, 32, 30, 26,
+    24, 20, 20, 20, 22, 24, 32, 34, 36, 38, 40, 40, 40, 36, 32, 30
   ]
   const MAX_CHROMA_OVERALL = Math.max(...MAX_CHROMA_AT_V5)
   /** 全色相を通じた最大リング数（=最大彩度に到達する色相のリング数） */
@@ -179,12 +177,7 @@
   <!-- 各色相の彩度リング（その色相の最高彩度まで） -->
   <g transform="translate({CX} {CY})">
     {#each cells as cell (cell.key)}
-      <path
-        d={cell.path}
-        fill={cell.fill}
-        stroke={STROKE_COLOR}
-        stroke-width={STROKE_WIDTH}
-      />
+      <path d={cell.path} fill={cell.fill} stroke={STROKE_COLOR} stroke-width={STROKE_WIDTH} />
     {/each}
   </g>
 </svg>

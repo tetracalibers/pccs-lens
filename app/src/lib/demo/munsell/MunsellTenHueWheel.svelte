@@ -73,7 +73,7 @@
   const PADDING = 16
   const VB_R = R_OUTER + PADDING
   const viewBox = `${CX - VB_R} ${CY - VB_R} ${2 * VB_R} ${2 * VB_R}`
-  
+
   const isAnki = $derived(ankiMode.isAnki)
 </script>
 
