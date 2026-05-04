@@ -11,7 +11,6 @@
   const R_INNER_INNER = 130
   const R_INNER_OUTER = 230
   const R_OUTER_OUTER = 320
-  const R_LABEL_OUTER = R_OUTER_OUTER + 14
 
   // ===== 角度オフセット =====
   // d3.arc は 12 時方向 = 0、CW を正方向とする。
@@ -30,9 +29,6 @@
   // ===== ストローク =====
   const STROKE_WIDTH = 0.6
   const STROKE_COLOR = "#fff"
-
-  // ===== ラベル色 =====
-  const COL_LABEL_OUTER = "var(--color-body)"
 
   // ===== Munsell 色相族 =====
   const FAMILIES = ["R", "YR", "Y", "GY", "G", "BG", "B", "PB", "P", "RP"] as const
@@ -198,7 +194,7 @@
 
   // ===== ViewBox =====
   const PADDING = 16
-  const VB_R = R_LABEL_OUTER + FONT_SIZE_OUTER * 2.4 + PADDING
+  const VB_R = R_OUTER_OUTER + PADDING
   const viewBox = `${CX - VB_R} ${CY - VB_R} ${2 * VB_R} ${2 * VB_R}`
 </script>
 
@@ -216,14 +212,14 @@
     {/each}
   </g>
 
-  <!-- 外側 100 色相のラベル（環の外側に放射状） -->
+  <!-- 外側 100 色相のラベル（扇形の中央に配置） -->
   {#each outerNodes as node (node.key)}
-    {@const [lx, ly] = pointAt(node.midAngleDeg, R_LABEL_OUTER + FONT_SIZE_OUTER * 0.9)}
+    {@const [lx, ly] = pointAt(node.midAngleDeg, node.midRadius)}
     <text
       x={lx}
       y={ly}
       font-size={FONT_SIZE_OUTER}
-      fill={COL_LABEL_OUTER}
+      fill={textColorOn(node.color)}
       text-anchor="middle"
       dominant-baseline="central"
       transform="rotate({labelRotation(node.midAngleDeg)} {lx} {ly})"
@@ -232,7 +228,7 @@
     </text>
   {/each}
 
-  <!-- 内側 20 色相のラベル（セグメント中央に配置） -->
+  <!-- 内側 20 色相のラベル（扇形の中央に配置） -->
   {#each innerNodes as node (node.key)}
     {@const [lx, ly] = pointAt(node.midAngleDeg, node.midRadius)}
     <text
