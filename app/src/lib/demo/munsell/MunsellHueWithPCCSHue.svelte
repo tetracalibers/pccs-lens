@@ -20,7 +20,7 @@
   const PCCS_SQUARE_CORNER = 6 // 角丸の半径
 
   // ===== PCCS色相記号ラベルのレイアウト（正方形の中央に配置）=====
-  const PCCS_LABEL_FONT_SIZE = 12
+  const PCCS_LABEL_FONT_SIZE = 11
 
   // ===== 角度オフセット =====
   // d3.arc は 12 時方向 = 0、CW を正方向とする。
@@ -299,6 +299,7 @@
       x={dot.cx}
       y={dot.cy}
       font-size={PCCS_LABEL_FONT_SIZE}
+      font-weight="600"
       fill={textColorOn(dot.hex)}
       text-anchor="middle"
       dominant-baseline="central"
