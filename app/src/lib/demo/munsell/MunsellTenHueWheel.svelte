@@ -7,8 +7,8 @@
   const CY = 360
 
   // ===== 半径（MunsellHueWheel の内側リングと同じ）=====
-  const R_INNER = 110
-  const R_OUTER = 180
+  const R_INNER = 100
+  const R_OUTER = 145
 
   // ===== 内側リングのセグメント仕様（MunsellHueWheel と同じ）=====
   // 20 セグメント、各 18°。先頭（5R）が [0°, 18°] を占める。
