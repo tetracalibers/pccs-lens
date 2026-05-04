@@ -3,13 +3,12 @@
 
   interface Props {
     children?: Snippet
-    title?: string
   }
 
-  let { children, title = "Note" }: Props = $props()
+  let { children }: Props = $props()
 </script>
 
-<div class="note" data-title={title}>
+<div class="note">
   {@render children?.()}
 </div>
 
@@ -26,7 +25,7 @@
   }
 
   .note::before {
-    content: attr(data-title);
+    content: "Note";
     display: block;
     font-size: 0.68rem;
     font-weight: 700;
