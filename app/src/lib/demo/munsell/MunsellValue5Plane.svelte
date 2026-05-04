@@ -38,12 +38,10 @@
   const RING_COUNT = MAX_CHROMA_OVERALL / CHROMA_STEP
 
   // ===== 半径 =====
-  const R_CENTER =12
-  const RING_W = 15
+  // 中央の無彩色円の直径と各彩度帯の幅を揃えるため、R_CENTER = RING_W / 2 とする
+  const RING_W = 16
+  const R_CENTER = RING_W / 2
   const R_OUTER = R_CENTER + RING_COUNT * RING_W
-
-  // ===== フォント =====
-  const FONT_SIZE_CENTER = 10
 
   // ===== ストローク =====
   const STROKE_WIDTH = 0.6
@@ -177,16 +175,6 @@
     stroke={STROKE_COLOR}
     stroke-width={STROKE_WIDTH}
   />
-  <text
-    x={CX}
-    y={CY}
-    font-size={FONT_SIZE_CENTER}
-    fill="#fff"
-    text-anchor="middle"
-    dominant-baseline="central"
-  >
-    N{VALUE}
-  </text>
 
   <!-- 各色相の彩度リング（その色相の最高彩度まで） -->
   <g transform="translate({CX} {CY})">
