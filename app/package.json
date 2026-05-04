@@ -16,7 +16,8 @@
     "test": "npm run test:unit -- --run",
     "deploy": "npm run build && wrangler deploy",
     "cf-typegen": "wrangler types",
-    "data:pccs-approx": "node scripts/add-pccs-approximations.mjs && prettier --write src/lib/data/jis_colors.json"
+    "data:pccs-approx": "node scripts/add-pccs-approximations.mjs && prettier --write src/lib/data/jis_colors.json",
+    "data:munsell-hue": "node scripts/generate-munsell-hue.mjs && prettier --write src/lib/data/munsell_hue.json"
   },
   "devDependencies": {
     "@eslint/compat": "^2.0.2",
