@@ -2,7 +2,7 @@
   import { hierarchy, partition, type HierarchyRectangularNode } from "d3-hierarchy"
   import { arc } from "d3-shape"
   import { MUNSELL_HUE_FAMILIES, getMunsellHueHex, munsellHueLabelAt } from "$lib/data/munsell-hue"
-  import { PCCS_V24, PCCS_HEX_MAP } from "$lib/data/pccs"
+  import { PCCS_V24, PCCS_HEX_MAP, PCCS_HUE_MAP } from "$lib/data/pccs"
 
   // ===== SVG 中心 =====
   const CX = 360
@@ -14,10 +14,14 @@
   const R_OUTER_OUTER = 280
 
   // ===== PCCS vトーン円のレイアウト =====
-  const PCCS_DOT_RADIUS = 14
-  const PCCS_DOT_GAP = 8 // 外側リング外端から PCCS 円までの隙間
+  const PCCS_DOT_RADIUS = 20
+  const PCCS_DOT_GAP = 12 // 外側リング外端から PCCS 円までの隙間
   const PCCS_DOT_STROKE_WIDTH = 0.8
   const PCCS_DOT_STROKE_COLOR = "var(--color-body)"
+
+  // ===== PCCS色相記号ラベルのレイアウト =====
+  const PCCS_LABEL_FONT_SIZE = 13
+  const PCCS_LABEL_GAP = 6 // PCCS円の外端からラベル中心までの隙間
 
   // ===== 角度オフセット =====
   // d3.arc は 12 時方向 = 0、CW を正方向とする。
@@ -157,6 +161,18 @@
     return n < 180 ? midAngleDeg - 90 : midAngleDeg + 90
   }
 
+  // テキストが円周（接線）方向に読めるよう回転。
+  // 12 時側半分（n in [0,90] ∪ [270,360]）は CW 接線のまま（文字頂は外向き）、
+  // 6 時側半分（n in (90,270)）は 180° 反転して上下逆さまを回避（文字頂は中心向き）。
+  // 反転境界は 3 時/9 時付近に来る。
+  // - 12 時付近の 2:R は反転されず横書きで読める
+  // - 9 時付近の 20:V は反転側に入り文字頂が中心を向く
+  function circumferentialRotation(midAngleDeg: number): number {
+    const n = normDeg(midAngleDeg)
+    if (n > 90 && n < 270) return midAngleDeg + 180
+    return midAngleDeg
+  }
+
   // ===== PCCS vトーン円の配置 =====
   // 例: "10RP 4/13.5" → "10RP" → 外側 idx 99
   function munsellHueToOuterIdx(hueStr: string): number | null {
@@ -168,9 +184,20 @@
     return famIdx * 10 + (num - 1)
   }
 
-  type PccsDot = { notation: string; hex: string; cx: number; cy: number }
+  type PccsDot = {
+    notation: string
+    hex: string
+    symbol: string
+    cx: number
+    cy: number
+    /** ラベル位置・回転計算用の中心角（12 時 = 0、CW 正、度） */
+    midAngleDeg: number
+    labelX: number
+    labelY: number
+  }
 
   const R_PCCS_DOT = R_OUTER_OUTER + PCCS_DOT_GAP + PCCS_DOT_RADIUS
+  const R_PCCS_LABEL = R_PCCS_DOT + PCCS_DOT_RADIUS + PCCS_LABEL_GAP + PCCS_LABEL_FONT_SIZE / 2
 
   function buildPccsDots(): PccsDot[] {
     const byIdx = new Map(outerNodes.map((n) => [n.hueIndex, n]))
@@ -186,8 +213,19 @@
       const bNotation = `b${c.hueNumber}`
       const hex = PCCS_HEX_MAP.get(bNotation)
       if (!hex) continue
+      const symbol = PCCS_HUE_MAP.get(c.hueNumber)?.symbol ?? `${c.hueNumber}`
       const [cx, cy] = pointAt(node.midAngleDeg, R_PCCS_DOT)
-      dots.push({ notation: bNotation, hex, cx, cy })
+      const [labelX, labelY] = pointAt(node.midAngleDeg, R_PCCS_LABEL)
+      dots.push({
+        notation: bNotation,
+        hex,
+        symbol,
+        cx,
+        cy,
+        midAngleDeg: node.midAngleDeg,
+        labelX,
+        labelY
+      })
     }
     return dots
   }
@@ -196,7 +234,7 @@
 
   // ===== ViewBox =====
   const PADDING = 16
-  const VB_R = R_PCCS_DOT + PCCS_DOT_RADIUS + PCCS_DOT_STROKE_WIDTH + PADDING
+  const VB_R = R_PCCS_LABEL + PCCS_LABEL_FONT_SIZE / 2 + PADDING
   const viewBox = `${CX - VB_R} ${CY - VB_R} ${2 * VB_R} ${2 * VB_R}`
 </script>
 
@@ -242,7 +280,7 @@
     </text>
   {/each}
 
-  <!-- PCCS vトーン 24色（対応する Munsell 色相位置に配置） -->
+  <!-- PCCS bトーン 24色（対応する Munsell 色相位置に配置） -->
   {#each pccsDots as dot (dot.notation)}
     <circle
       cx={dot.cx}
@@ -252,5 +290,20 @@
       stroke={PCCS_DOT_STROKE_COLOR}
       stroke-width={PCCS_DOT_STROKE_WIDTH}
     />
+  {/each}
+
+  <!-- PCCS色相記号ラベル（PCCS円の外側、円周方向に配置） -->
+  {#each pccsDots as dot (`${dot.notation}-label`)}
+    <text
+      x={dot.labelX}
+      y={dot.labelY}
+      font-size={PCCS_LABEL_FONT_SIZE}
+      fill="var(--color-body)"
+      text-anchor="middle"
+      dominant-baseline="central"
+      transform="rotate({circumferentialRotation(dot.midAngleDeg)} {dot.labelX} {dot.labelY})"
+    >
+      {dot.symbol}
+    </text>
   {/each}
 </svg>
