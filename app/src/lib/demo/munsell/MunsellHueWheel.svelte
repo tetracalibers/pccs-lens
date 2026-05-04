@@ -2,11 +2,7 @@
   import chroma from "chroma-js"
   import { hierarchy, partition, type HierarchyRectangularNode } from "d3-hierarchy"
   import { arc } from "d3-shape"
-  import {
-    MUNSELL_HUE_FAMILIES,
-    getMunsellHueHex,
-    munsellHueLabelAt
-  } from "$lib/data/munsell-hue"
+  import { MUNSELL_HUE_FAMILIES, getMunsellHueHex, munsellHueLabelAt } from "$lib/data/munsell-hue"
 
   // ===== SVG 中心 =====
   const CX = 360
@@ -166,12 +162,7 @@
   <!-- d3.arc は原点中心にパスを生成するので translate で中心を揃える -->
   <g transform="translate({CX} {CY})">
     {#each drawNodes as node (node.key)}
-      <path
-        d={node.path}
-        fill={node.color}
-        stroke={STROKE_COLOR}
-        stroke-width={STROKE_WIDTH}
-      />
+      <path d={node.path} fill={node.color} stroke={STROKE_COLOR} stroke-width={STROKE_WIDTH} />
     {/each}
   </g>
 
