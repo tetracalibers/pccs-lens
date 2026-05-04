@@ -9,6 +9,8 @@ draft: true
 
 <script>
   import SVGWrapper from '$lib/demo/SVGWrapper.svelte'
+  import MunsellPrimaryHueWheel from '$lib/demo/munsell/MunsellPrimaryHueWheel.svelte'
+  import MunsellTenHueWheel from '$lib/demo/munsell/MunsellTenHueWheel.svelte'
   import MunsellHueWheel from '$lib/demo/munsell/MunsellHueWheel.svelte'
   import MunsellHueWithPCCSHue from '$lib/demo/munsell/MunsellHueWithPCCSHue.svelte'
 </script>
@@ -18,6 +20,18 @@ draft: true
 ::ComingSoon
 
 ## :WithGradeTag[マンセル色相環]{grades="2"}
+
+::::CardGrid
+:::TermCard
+<SVGWrapper maxW={380}>
+  <MunsellPrimaryHueWheel />
+</SVGWrapper>
+:::
+:::TermCard
+<SVGWrapper maxW={380}>
+  <MunsellTenHueWheel />
+</SVGWrapper>
+::::
 
 <SVGWrapper>
   <MunsellHueWheel />
