@@ -11,6 +11,7 @@ draft: true
   import PCCSHueWheel from "$lib/demo/pccs/PCCSHueWheel.svelte"
   import PCCSPrimaryHueWheel from "$lib/demo/pccs/PCCSPrimaryHueWheel.svelte"
   import PCCSPrimaryComplementHueWheel from "$lib/demo/pccs/PCCSPrimaryComplementHueWheel.svelte"
+  import PCCSEvenHueWheel from "$lib/demo/pccs/PCCSEvenHueWheel.svelte"
 </script>
 
 ## :WithGradeTag[PCCSとは]{grades="3"}
@@ -19,7 +20,7 @@ draft: true
 
 ## :WithGradeTag[PCCSの色相環]{grades="3"}
 
-::::CardGrid
+::::CardGrid{lastWide}
 :::TermCard
 <SVGWrapper maxW={380}>
   <PCCSPrimaryHueWheel />
@@ -28,6 +29,11 @@ draft: true
 :::TermCard
 <SVGWrapper maxW={380}>
   <PCCSPrimaryComplementHueWheel />
+</SVGWrapper>
+:::
+:::TermCard
+<SVGWrapper maxW={380}>
+  <PCCSEvenHueWheel />
 </SVGWrapper>
 :::
 ::::
