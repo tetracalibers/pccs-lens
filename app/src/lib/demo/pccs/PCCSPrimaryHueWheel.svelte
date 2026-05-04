@@ -35,9 +35,9 @@
   const STROKE_WIDTH = 1
   const STROKE_COLOR = "var(--color-body)"
 
-  // ===== 外周円の破線（dash, gap の長さ）=====
-  const OUTER_CIRCLE_DASH = 4
-  const OUTER_CIRCLE_GAP = 4
+  // ===== 中心円の破線（dash, gap の長さ）=====
+  const CENTER_CIRCLE_DASH = 4
+  const CENTER_CIRCLE_GAP = 4
 
   // ガモット外などで未登録の場合のフォールバック色
   const FALLBACK_HEX = "#888"
@@ -100,15 +100,15 @@
   <!-- 心理四原色のセグメント（その他の色相位置は空欄）-->
   <!-- d3.arc は原点中心にパスを生成するので translate で中心を揃える -->
   <g transform="translate({CX} {CY})">
-    <!-- セグメントの外周に沿う円（破線）-->
+    <!-- 各色相セグメントの中心を通る円（破線）-->
     <circle
       cx="0"
       cy="0"
-      r={R_OUTER}
+      r={MID_RADIUS}
       fill="none"
       stroke={STROKE_COLOR}
       stroke-width={STROKE_WIDTH}
-      stroke-dasharray="{OUTER_CIRCLE_DASH} {OUTER_CIRCLE_GAP}"
+      stroke-dasharray="{CENTER_CIRCLE_DASH} {CENTER_CIRCLE_GAP}"
     />
     {#each segments as seg (seg.key)}
       <path d={seg.path} fill={seg.color} stroke={STROKE_COLOR} stroke-width={STROKE_WIDTH} />
