@@ -5,13 +5,13 @@
 
   // ===== 色 =====
   const COL_BG = "#ffffff"
-  const COL_C = "#00AEEF"
-  const COL_M = "#EC008C"
-  const COL_Y = "#FFF200"
-  const COL_K = "#1a1a1a"
+  const COL_C = "#00CFF5"
+  const COL_M = "#FF0099"
+  const COL_Y = "#FFE800"
+  const COL_K = "#000000"
 
   // ===== ドット =====
-  const DOT_OPACITY = 0.75
+  const DOT_OPACITY = 0.85
 
   // ===== 半径レンジ =====
   const LARGE_R_MIN = 22
@@ -24,10 +24,12 @@
   const K_SMALL_R_MAX = 10
 
   // ===== ドット数 =====
-  const CMY_LARGE_COUNT = 5
-  const CMY_SMALL_COUNT = 16
-  const K_LARGE_COUNT = 3
-  const K_SMALL_COUNT = 11
+  // 全体の密度をまとめて調整するスケール係数（1で標準）
+  const DENSITY = 1.4
+  const CMY_LARGE_COUNT = Math.round(8 * DENSITY)
+  const CMY_SMALL_COUNT = Math.round(26 * DENSITY)
+  const K_LARGE_COUNT = Math.round(5 * DENSITY)
+  const K_SMALL_COUNT = Math.round(18 * DENSITY)
 
   type Dot = { cx: number; cy: number; r: number }
 
