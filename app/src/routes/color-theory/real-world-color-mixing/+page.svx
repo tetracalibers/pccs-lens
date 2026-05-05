@@ -18,7 +18,7 @@ draft: true
 
 ## :WithGradeTag[カラー印刷]{grades="3"}
 
-<SVGWrapper>
+<SVGWrapper maxW={250}>
   <CMYKHalftone />
 </SVGWrapper>
 

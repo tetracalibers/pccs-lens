@@ -5,31 +5,42 @@
 
   // ===== 色 =====
   const COL_BG = "#ffffff"
-  const COL_C = "#00CFF5"
-  const COL_M = "#FF0099"
-  const COL_Y = "#FFE800"
-  const COL_K = "#000000"
+  const COL_C = "cyan"
+  const COL_M = "magenta"
+  const COL_Y = "yellow"
+  const COL_K = "black"
 
   // ===== ドット =====
-  const DOT_OPACITY = 0.85
+  const DOT_OPACITY = 1
 
   // ===== 半径レンジ =====
-  const LARGE_R_MIN = 22
-  const LARGE_R_MAX = 36
-  const SMALL_R_MIN = 4
-  const SMALL_R_MAX = 13
-  const K_LARGE_R_MIN = 16
-  const K_LARGE_R_MAX = 28
-  const K_SMALL_R_MIN = 3
-  const K_SMALL_R_MAX = 10
+  // 全体の円サイズをまとめて調整するスケール係数（1で標準）
+  const RADIUS_SCALE = 0.7
+  // 大小差の度合いをまとめて調整するスケール係数（1で標準, 0で全円が平均サイズに揃う）
+  const RADIUS_VARIANCE = 0.4
+
+  // 平均値を保ったまま min/max の幅を VARIANCE 倍に伸縮し、最後に SCALE を掛ける
+  function scaledRange(min: number, max: number): [number, number] {
+    const center = (min + max) / 2
+    const half = (max - min) / 2
+    return [
+      (center - half * RADIUS_VARIANCE) * RADIUS_SCALE,
+      (center + half * RADIUS_VARIANCE) * RADIUS_SCALE
+    ]
+  }
+
+  const [LARGE_R_MIN, LARGE_R_MAX] = scaledRange(34, 52)
+  const [SMALL_R_MIN, SMALL_R_MAX] = scaledRange(12, 22)
+  const [K_LARGE_R_MIN, K_LARGE_R_MAX] = scaledRange(14, 24)
+  const [K_SMALL_R_MIN, K_SMALL_R_MAX] = scaledRange(4, 9)
 
   // ===== ドット数 =====
   // 全体の密度をまとめて調整するスケール係数（1で標準）
-  const DENSITY = 1.4
-  const CMY_LARGE_COUNT = Math.round(8 * DENSITY)
-  const CMY_SMALL_COUNT = Math.round(26 * DENSITY)
-  const K_LARGE_COUNT = Math.round(5 * DENSITY)
-  const K_SMALL_COUNT = Math.round(18 * DENSITY)
+  const DENSITY = 2.6
+  const CMY_LARGE_COUNT = Math.round(5 * DENSITY)
+  const CMY_SMALL_COUNT = Math.round(10 * DENSITY)
+  const K_LARGE_COUNT = Math.round(3 * DENSITY)
+  const K_SMALL_COUNT = Math.round(7 * DENSITY)
 
   type Dot = { cx: number; cy: number; r: number }
 
@@ -80,7 +91,7 @@
     SMALL_R_MAX
   )
   const magentaDots = generateDots(
-    31,
+    34,
     CMY_LARGE_COUNT,
     CMY_SMALL_COUNT,
     LARGE_R_MIN,
