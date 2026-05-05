@@ -10,9 +10,6 @@
   const COL_Y = "yellow"
   const COL_K = "black"
 
-  // ===== ドット =====
-  const DOT_OPACITY = 1
-
   // ===== 半径レンジ =====
   // 全体の円サイズをまとめて調整するスケール係数（1で標準）
   const RADIUS_SCALE = 0.7
@@ -131,22 +128,22 @@
 
   <!-- CMYKドット（重なりが減法混色になるよう multiply で合成） -->
   <g clip-path="url(#cmyk-halftone-clip)">
-    <g opacity={DOT_OPACITY} style="mix-blend-mode: multiply">
+    <g style="mix-blend-mode: multiply">
       {#each cyanDots as d, i (`c-${i}`)}
         <circle cx={d.cx} cy={d.cy} r={d.r} fill={COL_C} />
       {/each}
     </g>
-    <g opacity={DOT_OPACITY} style="mix-blend-mode: multiply">
+    <g style="mix-blend-mode: multiply">
       {#each magentaDots as d, i (`m-${i}`)}
         <circle cx={d.cx} cy={d.cy} r={d.r} fill={COL_M} />
       {/each}
     </g>
-    <g opacity={DOT_OPACITY} style="mix-blend-mode: multiply">
+    <g style="mix-blend-mode: multiply">
       {#each yellowDots as d, i (`y-${i}`)}
         <circle cx={d.cx} cy={d.cy} r={d.r} fill={COL_Y} />
       {/each}
     </g>
-    <g opacity={DOT_OPACITY} style="mix-blend-mode: multiply">
+    <g style="mix-blend-mode: multiply">
       {#each blackDots as d, i (`k-${i}`)}
         <circle cx={d.cx} cy={d.cy} r={d.r} fill={COL_K} />
       {/each}
