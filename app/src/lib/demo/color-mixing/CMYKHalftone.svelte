@@ -47,7 +47,7 @@
     largeMin: number,
     largeMax: number,
     smallMin: number,
-    smallMax: number,
+    smallMax: number
   ): Dot[] {
     const rng = makeRng(seed)
     const dots: Dot[] = []
@@ -55,14 +55,14 @@
       dots.push({
         cx: rng() * WIDTH,
         cy: rng() * HEIGHT,
-        r: largeMin + rng() * (largeMax - largeMin),
+        r: largeMin + rng() * (largeMax - largeMin)
       })
     }
     for (let i = 0; i < smallCount; i++) {
       dots.push({
         cx: rng() * WIDTH,
         cy: rng() * HEIGHT,
-        r: smallMin + rng() * (smallMax - smallMin),
+        r: smallMin + rng() * (smallMax - smallMin)
       })
     }
     return dots
@@ -75,7 +75,7 @@
     LARGE_R_MIN,
     LARGE_R_MAX,
     SMALL_R_MIN,
-    SMALL_R_MAX,
+    SMALL_R_MAX
   )
   const magentaDots = generateDots(
     31,
@@ -84,7 +84,7 @@
     LARGE_R_MIN,
     LARGE_R_MAX,
     SMALL_R_MIN,
-    SMALL_R_MAX,
+    SMALL_R_MAX
   )
   const yellowDots = generateDots(
     53,
@@ -93,7 +93,7 @@
     LARGE_R_MIN,
     LARGE_R_MAX,
     SMALL_R_MIN,
-    SMALL_R_MAX,
+    SMALL_R_MAX
   )
   const blackDots = generateDots(
     73,
@@ -102,7 +102,7 @@
     K_LARGE_R_MIN,
     K_LARGE_R_MAX,
     K_SMALL_R_MIN,
-    K_SMALL_R_MAX,
+    K_SMALL_R_MAX
   )
 </script>
 
