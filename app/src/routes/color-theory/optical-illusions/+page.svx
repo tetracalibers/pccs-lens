@@ -1,0 +1,54 @@
+---
+layout: guide-content
+title: 錯視
+
+grades: ["2"]
+
+draft: true
+---
+
+## :WithGradeTag[錯視とは]{grades="2"}
+
+::ComingSoon
+
+## :WithGradeTag[格子で発生する錯視]{grades="2"}
+
+### ハーマングリッド
+
+::ComingSoon
+
+### エーレンシュタイン効果
+
+::ComingSoon
+
+### ネオンカラー効果
+
+::ComingSoon
+
+## :WithGradeTag[色の境界で発生する錯視]{grades="2"}
+
+### マッハバンド
+
+::ComingSoon
+
+### 側抑制のはたらき
+
+::ComingSoon
+
+## :WithGradeTag[錯視から学ぶ見やすさ]{grades="2"}
+
+### リープマン効果
+
+::ComingSoon
+
+## :WithGradeTag[錯視を利用した表現]{grades="2"}
+
+### 透明視
+
+::ComingSoon
+
+## :WithGradeTag[その他の錯視]{grades="2"}
+
+### マッカロー効果
+
+::ComingSoon
