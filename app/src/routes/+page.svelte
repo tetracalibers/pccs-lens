@@ -133,7 +133,7 @@
           </div>
           <div class="guide-body">
             <div class="tool-glass-tags">
-              <GradeTag grade="basic" glow />
+              <GradeTag grade="basic" variant="light" />
             </div>
             <h2>PCCSとは？</h2>
             <p>色相とトーンで体系化された、色のイメージを反映できる色の表し方。まずはここから。</p>
@@ -156,7 +156,7 @@
             <div class="tool-glass-body">
               <div class="tool-glass-tags">
                 {#each content.grades as grade (grade)}
-                  <GradeTag {grade} glow />
+                  <GradeTag {grade} variant="light" />
                 {/each}
               </div>
               <h3>{content.title}</h3>
@@ -180,7 +180,7 @@
             <div class="tool-glass-body">
               <div class="tool-glass-tags">
                 {#each tool.grades as grade (grade)}
-                  <GradeTag {grade} glow />
+                  <GradeTag {grade} variant="light" />
                 {/each}
               </div>
               <h3>{tool.title}</h3>

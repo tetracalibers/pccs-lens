@@ -4,13 +4,15 @@
 
   export type Grade = "basic" | AftGrade
 
+  export type Variant = "default" | "light"
+
   interface Props {
     grade: Grade
     compactH?: boolean
-    glow?: boolean
+    variant?: Variant
   }
 
-  let { grade, compactH = false, glow = false }: Props = $props()
+  let { grade, compactH = false, variant = "default" }: Props = $props()
 
   const labels: Record<Grade, string> = {
     basic: "便利",
@@ -21,7 +23,7 @@
   }
 </script>
 
-<span class="grade-tag" data-grade={grade} class:--_compact-h={compactH} class:--_glow={glow}>
+<span class="grade-tag" data-grade={grade} data-variant={variant} class:--_compact-h={compactH}>
   {#if grade === "basic"}
     <Icon icon="solar:star-shine-bold" class="grade-tag-icon" />
   {/if}
@@ -91,7 +93,7 @@
     background: var(--_color);
   }
 
-  .grade-tag.--_glow {
+  .grade-tag[data-variant="light"] {
     background: transparent;
     border: 1px solid var(--_color);
     color: oklch(from var(--_color) calc(l * 0.9) c h);
