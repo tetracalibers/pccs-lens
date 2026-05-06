@@ -32,7 +32,7 @@
 </script>
 
 <svelte:head>
-  <title>配色シミュレータ — PCCS Lens</title>
+  <title>配色シミュレータ — Color Prism</title>
 </svelte:head>
 
 <main>

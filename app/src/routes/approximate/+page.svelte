@@ -39,7 +39,7 @@
 </script>
 
 <svelte:head>
-  <title>色のPCCS近似 - PCCS Lens</title>
+  <title>色のPCCS近似 - Color Prism</title>
 </svelte:head>
 
 <main>

@@ -98,7 +98,7 @@
 </script>
 
 <svelte:head>
-  <title>{theme.labelJa} — 配色シミュレータ — PCCS Lens</title>
+  <title>{theme.labelJa} — 配色シミュレータ — Color Prism</title>
 </svelte:head>
 
 <main>

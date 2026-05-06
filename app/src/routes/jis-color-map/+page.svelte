@@ -40,7 +40,7 @@
 </script>
 
 <svelte:head>
-  <title>慣用色名マップ — PCCS Lens</title>
+  <title>慣用色名マップ — Color Prism</title>
 </svelte:head>
 
 <main>

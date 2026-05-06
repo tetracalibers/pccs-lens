@@ -21,7 +21,7 @@
 </script>
 
 <svelte:head>
-  <title>{family.name}の慣用色名マップ — PCCS Lens</title>
+  <title>{family.name}の慣用色名マップ — Color Prism</title>
 </svelte:head>
 
 <main>

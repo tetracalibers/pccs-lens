@@ -40,7 +40,7 @@
 </script>
 
 <svelte:head>
-  <title>このサイトの歩き方 — PCCS Lens</title>
+  <title>このサイトの歩き方 — Color Prism</title>
 </svelte:head>
 
 <main>

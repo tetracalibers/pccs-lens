@@ -1,6 +1,7 @@
 <script lang="ts">
   import { resolve } from "$app/paths"
   import GradeTag, { type Grade } from "$lib/components/m-directive/GradeTag.svelte"
+  import StartHereTag from "$lib/components/site-top/StartHereTag.svelte"
 
   const hueOrbs = [
     { color: "#ff6b6b", x: 15, y: 20, size: 160 },
@@ -75,7 +76,7 @@
 </script>
 
 <svelte:head>
-  <title>PCCS Lens</title>
+  <title>Color Prism</title>
 </svelte:head>
 
 <div class="page">
@@ -98,13 +99,13 @@
   <main>
     <!-- Hero -->
     <header class="hero">
-      <div class="hero-eyebrow">Color Theory System</div>
+      <div class="hero-eyebrow">HOW WE SEE COLOR</div>
       <h1>
-        <span class="h1-pccs">PCCS</span>
-        <span class="h1-lens">Lens</span>
+        <span class="h1-pccs">Color</span>
+        <span class="h1-lens">Prism</span>
       </h1>
-      <p class="tagline">色をPCCSというレンズを通して見る</p>
-      <p class="subtitle">見て・触って学ぶ、色彩のしくみ</p>
+      <p class="tagline">見て・触って学ぶ、色彩の総合サイト</p>
+      <p class="subtitle">色のしくみを分解し、見方を変える</p>
       <div class="hue-strip">
         {#each ["#e03131", "#f76707", "#f59f00", "#94d82d", "#2f9e44", "#0c8599", "#1971c2", "#3b5bdb", "#6741d9", "#9c36b5", "#c2255c", "#e84393"] as c (c)}
           <div class="hue-seg" style="background:{c}"></div>
@@ -114,7 +115,7 @@
 
     <!-- Guide -->
     <section class="guide-section">
-      <a href={resolve("/color-theory/pccs-basics")} class="guide-card">
+      <a href={resolve("/concept")} class="guide-card">
         <div class="guide-card-inner">
           <div class="guide-visual">
             <div class="guide-orb-ring">
@@ -128,16 +129,15 @@
                   "
                 ></div>
               {/each}
-              <div class="ring-center">PCCS</div>
             </div>
           </div>
           <div class="guide-body">
             <div class="tool-glass-tags">
-              <GradeTag grade="basic" variant="light" />
+              <StartHereTag />
             </div>
-            <h2>PCCSとは？</h2>
-            <p>色相とトーンで体系化された、色のイメージを反映できる色の表し方。まずはここから。</p>
-            <span class="neon-cta">学習を始める</span>
+            <h2>このサイトの歩き方</h2>
+            <p>色のしくみを体験しながら学ぶ。このサイトでできる学びや体験を紹介します。</p>
+            <span class="neon-cta">探索を始める</span>
           </div>
         </div>
       </a>
@@ -234,18 +234,18 @@
   }
 
   .hero-eyebrow {
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: light-dark(#999, #7b7b7b);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: light-dark(lightslategray, gray);
     margin-bottom: 1rem;
   }
 
   .hero h1 {
     display: flex;
     justify-content: center;
-    gap: 0.5rem;
-    font-size: 4rem;
+    row-gap: 0.5rem;
+    column-gap: 1rem;
+    font-size: 3rem;
     font-weight: 900;
     margin: 0 0 1rem;
     letter-spacing: -0.03em;
@@ -284,9 +284,10 @@
   }
 
   .subtitle {
-    font-size: 0.88rem;
-    color: light-dark(#777, #7b7b7b);
+    font-size: 0.85rem;
+    color: var(--color-body);
     margin: 0 0 1.5rem;
+    opacity: 0.8;
     line-height: 1.7;
   }
 
@@ -364,13 +365,6 @@
     border-radius: 50%;
   }
 
-  .ring-center {
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: light-dark(#999, #aaa);
-    letter-spacing: 0.05em;
-  }
-
   .guide-body {
     flex: 1;
   }
@@ -392,7 +386,7 @@
   .neon-cta {
     font-size: 0.85rem;
     font-weight: 700;
-    background: linear-gradient(90deg, #ffd93d, #ff6b6b);
+    background: linear-gradient(215deg, #d69ef8, #ff6b6b);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

@@ -16,7 +16,7 @@
   import Heading1 from "$lib/components/Heading1.svelte"
 
   let { title, children }: { title?: string; children: Snippet } = $props()
-  const pageTitle = $derived(title ? `${title} - PCCS Lens` : "PCCS Lens")
+  const pageTitle = $derived(title ? `${title} - Color Prism` : "Color Prism")
 </script>
 
 <svelte:head>
