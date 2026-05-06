@@ -51,8 +51,8 @@
 
   .grade-tag[data-grade="basic"] {
     --_color: #ff7675;
-    --_glow-color: rgba(255, 118, 117, 0.7);
-    background: #ff7675;
+    --_glow-color: rgb(from var(--_color) r g b / 0.7);
+    background: var(--_color);
     color: #ffffff;
     font-size: 0.82rem;
     padding: 4px 6px;
@@ -68,27 +68,27 @@
   }
 
   .grade-tag[data-grade="3"] {
-    --_color: #c4b5fd;
-    --_glow-color: rgba(196, 181, 253, 0.7);
-    background: #c4b5fd;
+    --_color: var(--color-grade-3);
+    --_glow-color: rgb(from var(--_color) r g b / 0.7);
+    background: var(--_color);
   }
 
   .grade-tag[data-grade="2"] {
-    --_color: #6ee7b7;
-    --_glow-color: rgba(110, 231, 183, 0.7);
-    background: #6ee7b7;
+    --_color: var(--color-grade-2);
+    --_glow-color: rgb(from var(--_color) r g b / 0.7);
+    background: var(--_color);
   }
 
   .grade-tag[data-grade="1"] {
-    --_color: #fde68a;
-    --_glow-color: rgba(253, 230, 138, 0.7);
-    background: #fde68a;
+    --_color: var(--color-grade-1);
+    --_glow-color: rgb(from var(--_color) r g b / 0.7);
+    background: var(--_color);
   }
 
   .grade-tag[data-grade="uc"] {
-    --_color: #93c5fd;
-    --_glow-color: rgba(147, 197, 253, 0.7);
-    background: #93c5fd;
+    --_color: var(--color-grade-uc);
+    --_glow-color: rgb(from var(--_color) r g b / 0.7);
+    background: var(--_color);
   }
 
   .grade-tag.--_glow {
@@ -97,6 +97,6 @@
     color: oklch(from var(--_color) calc(l * 0.9) c h);
     font-size: 0.75rem;
     border-radius: 20px;
-    background-color: rgb(from var(--_color) r g b / 10%);
+    background-color: oklch(from var(--_color) l c h / 10%);
   }
 </style>
