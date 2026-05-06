@@ -98,5 +98,6 @@
     font-size: 0.75rem;
     border-radius: 20px;
     background-color: oklch(from var(--_color) l c h / 10%);
+    padding: 4px 8px;
   }
 </style>
