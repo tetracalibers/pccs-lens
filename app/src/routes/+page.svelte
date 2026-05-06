@@ -100,8 +100,8 @@
     <header class="hero">
       <div class="hero-eyebrow">Color Theory System</div>
       <h1>
-        <span class="h1-pccs">PCCS</span>
-        <span class="h1-lens">Lens</span>
+        <span class="h1-pccs">Color</span>
+        <span class="h1-lens">Prism</span>
       </h1>
       <p class="tagline">色をPCCSというレンズを通して見る</p>
       <p class="subtitle">見て・触って学ぶ、色彩のしくみ</p>
@@ -244,8 +244,9 @@
   .hero h1 {
     display: flex;
     justify-content: center;
-    gap: 0.5rem;
-    font-size: 4rem;
+    row-gap: 0.5rem;
+    column-gap: 1rem;
+    font-size: 3rem;
     font-weight: 900;
     margin: 0 0 1rem;
     letter-spacing: -0.03em;
