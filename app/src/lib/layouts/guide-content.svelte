@@ -59,7 +59,7 @@
 
   const isAnki = $derived(ankiMode.isAnki)
 
-  const pageTitle = $derived(title ? `${title} - PCCS Lens` : "PCCS Lens")
+  const pageTitle = $derived(title ? `${title} - Color Prism` : "Color Prism")
   const gradeList = $derived(sortGrades(grades))
 </script>
 

@@ -76,7 +76,7 @@
 </script>
 
 <svelte:head>
-  <title>PCCS Lens</title>
+  <title>Color Prism</title>
 </svelte:head>
 
 <div class="page">

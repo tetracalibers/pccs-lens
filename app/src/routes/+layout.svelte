@@ -77,7 +77,7 @@
         <span class="g-bar g2"></span>
         <span class="g-bar g3"></span>
       </button>
-      <a href={resolve("/")} class="site-name" aria-label="PCCS Lens トップへ">
+      <a href={resolve("/")} class="site-name" aria-label="Color Prism トップへ">
         <span class="site-name-pccs">Color</span>
         <span class="site-name-lens">Prism</span>
       </a>

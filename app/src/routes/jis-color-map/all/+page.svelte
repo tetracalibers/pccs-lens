@@ -37,7 +37,7 @@
 </script>
 
 <svelte:head>
-  <title>すべての慣用色名一覧 — PCCS Lens</title>
+  <title>すべての慣用色名一覧 — Color Prism</title>
 </svelte:head>
 
 <main>

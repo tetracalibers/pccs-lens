@@ -1,11 +1,4 @@
-# PCCS Lens
-
-主にPCCSで色を扱う際に便利なツールを集めたWebアプリ
-
-## 想定するユースケース
-
-- [色彩検定](https://www.aft.or.jp/)の学習
-- [PCCS](https://ja.wikipedia.org/wiki/PCCS)に基づく配色検討
+# Color Prism
 
 ## コンテンツ開発
 

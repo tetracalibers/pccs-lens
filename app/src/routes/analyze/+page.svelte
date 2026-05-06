@@ -79,7 +79,7 @@
 </script>
 
 <svelte:head>
-  <title>PCCSによる配色の分析 - PCCS Lens</title>
+  <title>PCCSによる配色の分析 - Color Prism</title>
 </svelte:head>
 
 <main>
