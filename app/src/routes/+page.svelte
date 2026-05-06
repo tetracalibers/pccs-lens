@@ -99,7 +99,7 @@
   <main>
     <!-- Hero -->
     <header class="hero">
-      <div class="hero-eyebrow">Color Theory System</div>
+      <div class="hero-eyebrow">HOW WE SEE COLOR</div>
       <h1>
         <span class="h1-pccs">Color</span>
         <span class="h1-lens">Prism</span>
@@ -234,10 +234,9 @@
   }
 
   .hero-eyebrow {
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: light-dark(#999, #7b7b7b);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: light-dark(lightslategray, gray);
     margin-bottom: 1rem;
   }
 
@@ -285,9 +284,10 @@
   }
 
   .subtitle {
-    font-size: 0.88rem;
-    color: light-dark(#777, #7b7b7b);
+    font-size: 0.85rem;
+    color: var(--color-body);
     margin: 0 0 1.5rem;
+    opacity: 0.8;
     line-height: 1.7;
   }
 
