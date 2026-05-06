@@ -132,7 +132,9 @@
             </div>
           </div>
           <div class="guide-body">
-            <span class="glass-tag">学ぶ</span>
+            <div class="tool-glass-tags">
+              <GradeTag grade="basic" glow />
+            </div>
             <h2>PCCSとは？</h2>
             <p>色相とトーンで体系化された、色のイメージを反映できる色の表し方。まずはここから。</p>
             <span class="neon-cta">学習を始める</span>
@@ -371,19 +373,6 @@
 
   .guide-body {
     flex: 1;
-  }
-
-  .glass-tag {
-    display: inline-block;
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: light-dark(#9a6700, #e89c00);
-    border: 1px solid light-dark(#f59f0066, #ffd93d55);
-    border-radius: 20px;
-    padding: 2px 8px;
-    margin-bottom: 0.5rem;
-    letter-spacing: 0.05em;
-    background: light-dark(#fff3cd, #ffd93d11);
   }
 
   .guide-body h2 {
