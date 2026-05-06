@@ -1,6 +1,7 @@
 <script lang="ts">
   import { resolve } from "$app/paths"
   import GradeTag, { type Grade } from "$lib/components/m-directive/GradeTag.svelte"
+  import StartHereTag from "$lib/components/site-top/StartHereTag.svelte"
 
   const hueOrbs = [
     { color: "#ff6b6b", x: 15, y: 20, size: 160 },
@@ -114,7 +115,7 @@
 
     <!-- Guide -->
     <section class="guide-section">
-      <a href={resolve("/color-theory/pccs-basics")} class="guide-card">
+      <a href={resolve("/concept")} class="guide-card">
         <div class="guide-card-inner">
           <div class="guide-visual">
             <div class="guide-orb-ring">
@@ -132,11 +133,11 @@
           </div>
           <div class="guide-body">
             <div class="tool-glass-tags">
-              <GradeTag grade="basic" variant="light" />
+              <StartHereTag />
             </div>
-            <h2>PCCSとは？</h2>
-            <p>色相とトーンで体系化された、色のイメージを反映できる色の表し方。まずはここから。</p>
-            <span class="neon-cta">学習を始める</span>
+            <h2>このサイトの歩き方</h2>
+            <p>色のしくみを体験しながら学ぶ。このサイトでできる学びや体験を紹介します。</p>
+            <span class="neon-cta">探索を始める</span>
           </div>
         </div>
       </a>
@@ -385,7 +386,7 @@
   .neon-cta {
     font-size: 0.85rem;
     font-weight: 700;
-    background: linear-gradient(90deg, #ffd93d, #ff6b6b);
+    background: linear-gradient(215deg, #d69ef8, #ff6b6b);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
