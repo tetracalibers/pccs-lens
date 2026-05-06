@@ -2,14 +2,15 @@
   import Icon from "@iconify/svelte"
   import type { AftGrade } from "$lib/meta/grade"
 
-  type Grade = "basic" | AftGrade
+  export type Grade = "basic" | AftGrade
 
   interface Props {
     grade: Grade
     compactH?: boolean
+    glow?: boolean
   }
 
-  let { grade, compactH = false }: Props = $props()
+  let { grade, compactH = false, glow = false }: Props = $props()
 
   const labels: Record<Grade, string> = {
     basic: "便利",
@@ -20,7 +21,7 @@
   }
 </script>
 
-<span class="grade-tag" data-grade={grade} class:--_compact-h={compactH}>
+<span class="grade-tag" data-grade={grade} class:--_compact-h={compactH} class:--_glow={glow}>
   {#if grade === "basic"}
     <Icon icon="solar:star-shine-bold" class="grade-tag-icon" />
   {/if}
@@ -49,6 +50,8 @@
   }
 
   .grade-tag[data-grade="basic"] {
+    --_color: #ff7675;
+    --_glow-color: rgba(255, 118, 117, 0.7);
     background: #ff7675;
     color: #ffffff;
     font-size: 0.82rem;
@@ -65,18 +68,35 @@
   }
 
   .grade-tag[data-grade="3"] {
+    --_color: #c4b5fd;
+    --_glow-color: rgba(196, 181, 253, 0.7);
     background: #c4b5fd;
   }
 
   .grade-tag[data-grade="2"] {
+    --_color: #6ee7b7;
+    --_glow-color: rgba(110, 231, 183, 0.7);
     background: #6ee7b7;
   }
 
   .grade-tag[data-grade="1"] {
+    --_color: #fde68a;
+    --_glow-color: rgba(253, 230, 138, 0.7);
     background: #fde68a;
   }
 
   .grade-tag[data-grade="uc"] {
+    --_color: #93c5fd;
+    --_glow-color: rgba(147, 197, 253, 0.7);
     background: #93c5fd;
+  }
+
+  .grade-tag.--_glow {
+    background: transparent;
+    border: 1px solid var(--_color);
+    color: oklch(from var(--_color) calc(l * 0.9) c h);
+    font-size: 0.75rem;
+    border-radius: 20px;
+    background-color: rgb(from var(--_color) r g b / 10%);
   }
 </style>
