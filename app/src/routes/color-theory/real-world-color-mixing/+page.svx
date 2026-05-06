@@ -3,8 +3,14 @@ layout: guide-content
 title: 実世界でみられる混色
 
 grades: ["3"]
+
 draft: true
 ---
+
+<script>
+  import SVGWrapper from '$lib/demo/SVGWrapper.svelte'
+  import CMYKHalftone from '$lib/demo/color-mixing/CMYKHalftone.svelte'
+</script>
 
 ## :WithGradeTag[カラーモニタ]{grades="3"}
 
@@ -12,7 +18,9 @@ draft: true
 
 ## :WithGradeTag[カラー印刷]{grades="3"}
 
-::ComingSoon
+<SVGWrapper maxW={250}>
+  <CMYKHalftone />
+</SVGWrapper>
 
 ## :WithGradeTag[織物]{grades="3"}
 

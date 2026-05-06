@@ -1,5 +1,6 @@
 <script lang="ts">
   import { resolve } from "$app/paths"
+  import GradeTag, { type Grade } from "$lib/components/m-directive/GradeTag.svelte"
 
   const hueOrbs = [
     { color: "#ff6b6b", x: 15, y: 20, size: 160 },
@@ -9,14 +10,23 @@
     { color: "#c77dff", x: 35, y: 65, size: 90 }
   ]
 
-  const contents = [
+  interface CardItem {
+    href: string
+    gradient: string
+    glow: string
+    title: string
+    desc: string
+    grades: Grade[]
+  }
+
+  const contents: CardItem[] = [
     {
       href: resolve("/color-theory"),
       gradient: "linear-gradient(135deg, #ff6b6b, #ffd93d)",
       glow: "#ff6b6b",
       title: "色の理論",
       desc: "色彩検定3級・2級・1級・UC級に対応した色彩学の解説",
-      tag: "学ぶ"
+      grades: ["3", "2", "1", "uc"]
     },
     {
       href: resolve("/color-fields"),
@@ -24,7 +34,7 @@
       glow: "#6bcb77",
       title: "色の活用分野",
       desc: "デザイン・ビジネス・ファッション・インテリア・景観色彩など",
-      tag: "学ぶ"
+      grades: ["3", "2", "1", "uc"]
     },
     {
       href: resolve("/jis-color-map"),
@@ -32,18 +42,18 @@
       glow: "#c77dff",
       title: "慣用色名マップ",
       desc: "慣用色を色相・明度の2軸で眺め、比較して覚える",
-      tag: "比べる"
+      grades: ["3", "2"]
     }
   ]
 
-  const tools = [
+  const tools: CardItem[] = [
     {
       href: resolve("/approximate"),
       gradient: "linear-gradient(135deg, #ff6b6b, #ffd93d)",
       glow: "#ff6b6b",
       title: "色のPCCS近似",
       desc: "入力した色に近いPCCS値と慣用色名を調べる",
-      tag: "調べる"
+      grades: ["3", "2"]
     },
     {
       href: resolve("/analyze"),
@@ -51,7 +61,7 @@
       glow: "#6bcb77",
       title: "配色の分析",
       desc: "PCCSの色相・トーンに基づいて配色を分析する",
-      tag: "調べる"
+      grades: ["3", "2"]
     },
     {
       href: resolve("/patterns"),
@@ -59,7 +69,7 @@
       glow: "#c77dff",
       title: "配色シミュレータ",
       desc: "イメージに合う色の組み合わせを実験する",
-      tag: "遊ぶ"
+      grades: ["2"]
     }
   ]
 </script>
@@ -122,7 +132,9 @@
             </div>
           </div>
           <div class="guide-body">
-            <span class="glass-tag">学ぶ</span>
+            <div class="tool-glass-tags">
+              <GradeTag grade="basic" variant="light" />
+            </div>
             <h2>PCCSとは？</h2>
             <p>色相とトーンで体系化された、色のイメージを反映できる色の表し方。まずはここから。</p>
             <span class="neon-cta">学習を始める</span>
@@ -142,12 +154,11 @@
           <a href={content.href} class="tool-glass" style="--glow: {content.glow}">
             <div class="tool-gradient-bar" style="background: {content.gradient}"></div>
             <div class="tool-glass-body">
-              <span
-                class="tool-glass-tag"
-                style="color: {content.glow}; border-color: {content.glow}55"
-              >
-                {content.tag}
-              </span>
+              <div class="tool-glass-tags">
+                {#each content.grades as grade (grade)}
+                  <GradeTag {grade} variant="light" />
+                {/each}
+              </div>
               <h3>{content.title}</h3>
               <p>{content.desc}</p>
             </div>
@@ -167,9 +178,11 @@
           <a href={tool.href} class="tool-glass" style="--glow: {tool.glow}">
             <div class="tool-gradient-bar" style="background: {tool.gradient}"></div>
             <div class="tool-glass-body">
-              <span class="tool-glass-tag" style="color: {tool.glow}; border-color: {tool.glow}55">
-                {tool.tag}
-              </span>
+              <div class="tool-glass-tags">
+                {#each tool.grades as grade (grade)}
+                  <GradeTag {grade} variant="light" />
+                {/each}
+              </div>
               <h3>{tool.title}</h3>
               <p>{tool.desc}</p>
             </div>
@@ -362,19 +375,6 @@
     flex: 1;
   }
 
-  .glass-tag {
-    display: inline-block;
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: light-dark(#9a6700, #e89c00);
-    border: 1px solid light-dark(#f59f0066, #ffd93d55);
-    border-radius: 20px;
-    padding: 2px 8px;
-    margin-bottom: 0.5rem;
-    letter-spacing: 0.05em;
-    background: light-dark(#fff3cd, #ffd93d11);
-  }
-
   .guide-body h2 {
     font-size: 1.2rem;
     font-weight: 700;
@@ -477,22 +477,10 @@
     padding: 1.1rem;
   }
 
-  .tool-glass-tag {
-    display: inline-block;
-    font-size: 0.68rem;
-    font-weight: 700;
-    border: 1px solid;
-    border-radius: 20px;
-    padding: 2px 7px;
-    margin-bottom: 0.5rem;
-    letter-spacing: 0.05em;
-    background: transparent;
-  }
-
-  @media (prefers-color-scheme: light) {
-    .tool-glass-tag {
-      background: color-mix(in srgb, var(--glow) 8%, transparent);
-    }
+  .tool-glass-tags {
+    display: inline-flex;
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
   }
 
   .tool-glass-body h3 {

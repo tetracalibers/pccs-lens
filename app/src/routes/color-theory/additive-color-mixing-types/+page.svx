@@ -7,6 +7,12 @@ grades: ["3"]
 draft: true
 ---
 
+<script>
+  import SVGWrapper from '$lib/demo/SVGWrapper.svelte'
+  import PartitiveMixing from "$lib/demo/color-mixing/PartitiveMixing.svelte"
+  import SuccessiveMixing from "$lib/demo/color-mixing/SuccessiveMixing.svelte"
+</script>
+
 ## :WithGradeTag[加法混色の種類]{grades="3"}
 
 ```mermaid
@@ -16,10 +22,18 @@ graph LR
     A --- Anki_D["継時加法混色"]
 ```
 
-## :WithGradeTag[併置加法混色]{grades="3"}
+## :WithGradeTag[同時加法混色]{grades="3"}
 
 ::ComingSoon
+
+## :WithGradeTag[併置加法混色]{grades="3"}
+
+<SVGWrapper>
+  <PartitiveMixing />
+</SVGWrapper>
 
 ## :WithGradeTag[継時加法混色]{grades="3"}
 
-::ComingSoon
+<SVGWrapper>
+  <SuccessiveMixing />
+</SVGWrapper>

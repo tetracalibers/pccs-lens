@@ -2,14 +2,17 @@
   import Icon from "@iconify/svelte"
   import type { AftGrade } from "$lib/meta/grade"
 
-  type Grade = "basic" | AftGrade
+  export type Grade = "basic" | AftGrade
+
+  export type Variant = "default" | "light"
 
   interface Props {
     grade: Grade
     compactH?: boolean
+    variant?: Variant
   }
 
-  let { grade, compactH = false }: Props = $props()
+  let { grade, compactH = false, variant = "default" }: Props = $props()
 
   const labels: Record<Grade, string> = {
     basic: "便利",
@@ -20,7 +23,7 @@
   }
 </script>
 
-<span class="grade-tag" data-grade={grade} class:--_compact-h={compactH}>
+<span class="grade-tag" data-grade={grade} data-variant={variant} class:--_compact-h={compactH}>
   {#if grade === "basic"}
     <Icon icon="solar:star-shine-bold" class="grade-tag-icon" />
   {/if}
@@ -49,7 +52,9 @@
   }
 
   .grade-tag[data-grade="basic"] {
-    background: #ff7675;
+    --_color: #ff7675;
+    --_glow-color: rgb(from var(--_color) r g b / 0.7);
+    background: var(--_color);
     color: #ffffff;
     font-size: 0.82rem;
     padding: 4px 6px;
@@ -65,18 +70,36 @@
   }
 
   .grade-tag[data-grade="3"] {
-    background: #c4b5fd;
+    --_color: var(--color-grade-3);
+    --_glow-color: rgb(from var(--_color) r g b / 0.7);
+    background: var(--_color);
   }
 
   .grade-tag[data-grade="2"] {
-    background: #6ee7b7;
+    --_color: var(--color-grade-2);
+    --_glow-color: rgb(from var(--_color) r g b / 0.7);
+    background: var(--_color);
   }
 
   .grade-tag[data-grade="1"] {
-    background: #fde68a;
+    --_color: var(--color-grade-1);
+    --_glow-color: rgb(from var(--_color) r g b / 0.7);
+    background: var(--_color);
   }
 
   .grade-tag[data-grade="uc"] {
-    background: #93c5fd;
+    --_color: var(--color-grade-uc);
+    --_glow-color: rgb(from var(--_color) r g b / 0.7);
+    background: var(--_color);
+  }
+
+  .grade-tag[data-variant="light"] {
+    background: transparent;
+    border: 1px solid var(--_color);
+    color: oklch(from var(--_color) calc(l * 0.9) c h);
+    font-size: 0.75rem;
+    border-radius: 20px;
+    background-color: oklch(from var(--_color) l c h / 10%);
+    padding: 4px 8px;
   }
 </style>

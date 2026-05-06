@@ -5,9 +5,15 @@ title: 色の活用分野
 
 ## デザイン
 
-### ビジュアルとメディアデザイン
+### ビジュアルデザイン
 
-::ComingSoon
+- :PageDraft{title="ビジュアルデザインと色彩" grades="2"}
+- :PageDraft{title="メディアデザインの概念" grades="2"}
+
+### コンピュータによる色彩設計
+
+- :PageDraft{title="カラーマネジメント" grades="2"}
+- :PageDraft{title="デジタル画像" grades="2"}
 
 ### 色のユニバーサルデザイン
 
@@ -19,12 +25,52 @@ title: 色の活用分野
 
 ## ファッション
 
-::ComingSoon
+### カラーコーディネート
+
+- :PageDraft{title="ファッション色彩の考え方" grades="3"}
+
+### トレンドとスタイル分類
+
+- :PageDraft{title="ファッションカラー" grades="2"}
+- :PageDraft{title="ファッショントレンド" grades="2"}
+- :PageDraft{title="国別スタイル" grades="2"}
+- :PageDraft{title="ファッション史とスタイル" grades="2"}
+- :PageDraft{title="マーケット分類とスタイル" grades="2"}
+- :PageDraft{title="ファッションイメージ" grades="2"}
+
+### ファッションの配色
+
+- :PageDraft{title="色相・トーンによるカラーコーディネート" grades="3"}
+- :PageDraft{title="ファッション配色の事例" grades="2"}
 
 ## インテリア
 
-::ComingSoon
+### インテリアデザイン
+
+- :PageDraft{title="インテリアデザインの基本" grades="3"}
+- :PageDraft{title="インテリア概念の成立" grades="2"}
+- :PageDraft{title="インテリア色彩の考え方" grades="2"}
+- :PageDraft{title="インテリアと心理効果・視覚効果" grades="3"}
+
+### インテリアエレメント
+
+- :PageDraft{title="インテリアエレメントの分類" grades="2"}
+- :PageDraft{title="インテリアエレメントの配色" grades="2,3"}
+
+### 空間のゾーニング
+
+- :PageDraft{title="インテリア空間のゾーニング" grades="2"}
+- :PageDraft{title="パブリック空間の配色" grades="2"}
+- :PageDraft{title="プライベート空間の配色" grades="2"}
+- :PageDraft{title="サービス空間の配色" grades="2"}
+
+### インテリアスタイル
+
+- :PageDraft{title="色相・トーンによるインテリアの配色形式" grades="3"}
+- :PageDraft{title="インテリアスタイル" grades="2"}
 
 ## 景観色彩
 
-::ComingSoon
+- :PageDraft{title="景観色彩の考え方" grades="2"}
+- :PageDraft{title="景観色彩設計の配慮事項" grades="2"}
+- :PageDraft{title="住宅の色彩設計プロセス" grades="2"}
