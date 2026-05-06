@@ -128,7 +128,6 @@
                   "
                 ></div>
               {/each}
-              <div class="ring-center">PCCS</div>
             </div>
           </div>
           <div class="guide-body">
@@ -363,13 +362,6 @@
     width: 10px;
     height: 10px;
     border-radius: 50%;
-  }
-
-  .ring-center {
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: light-dark(#999, #aaa);
-    letter-spacing: 0.05em;
   }
 
   .guide-body {
