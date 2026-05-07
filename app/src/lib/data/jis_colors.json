@@ -9,13 +9,12 @@
         "colorDescription": "紫みが感じられる 高明度・低彩度の淡い色",
         "originDescription": "満開の山桜の花のような 淡いピンク",
         "iconKey": "sakura",
-        "cmyk": "3,16,8,0",
-        "_rgb": "rgb(253, 226, 229)",
-        "rgb": "rgb(245, 221, 223)",
+        "cmyk": "0,15,5,0",
+        "rgb": "rgb(253, 226, 229)",
         "hex": "#fdeeef",
         "examLevel": 3,
         "munsell": "10RP 9/2.5",
-        "approximatePccs": [{ "notation": "Gy-9.0", "deltaE": 10.06 }]
+        "approximatePccs": [{ "notation": "Gy-9.0", "deltaE": 11.11 }]
       },
       {
         "id": "baby-pink",
@@ -26,17 +25,12 @@
         "colorDescription": "純粋な赤2:Rに白を混ぜて 薄くしたような色",
         "originDescription": "乳幼児服の色として よく使われているピンク",
         "iconKey": "baby",
-        "cmyk": "1,28,16,0",
-        "_rgb": "rgb(252, 210, 219)",
-        "rgb": "rgb(249, 202, 199)",
+        "cmyk": "0,25,5,0",
+        "rgb": "rgb(252, 210, 219)",
         "hex": "#fadbda",
         "examLevel": 3,
         "munsell": "4R 8.5/4",
-        "approximatePccs": [
-          { "notation": "p4", "deltaE": 7.71 },
-          { "notation": "ltg4", "deltaE": 7.8 },
-          { "notation": "p2", "deltaE": 8.82 }
-        ]
+        "approximatePccs": [{ "notation": "p2", "deltaE": 8.34 }]
       },
       {
         "id": "toki-iro",
@@ -46,13 +40,12 @@
         "colorDescription": "マゼンタを明るく淡くした ような紫寄りのピンク",
         "originDescription": "トキが飛ぶときには ピンク色の羽が見える",
         "iconKey": "bird",
-        "cmyk": "1,48,12,0",
-        "_rgb": "rgb(249, 179, 180)",
-        "rgb": "rgb(247, 163, 184)",
+        "cmyk": "0,40,20,0",
+        "rgb": "rgb(249, 179, 180)",
         "hex": "#f4b3c2",
         "examLevel": 2,
         "munsell": "7RP 7.5/8",
-        "approximatePccs": [{ "notation": "p2", "deltaE": 4.06 }]
+        "approximatePccs": [{ "notation": "p2", "deltaE": 5.26 }]
       },
       {
         "id": "rose-pink",
@@ -63,16 +56,15 @@
         "colorDescription": "鴇色よりやや暗く 赤みが強い",
         "originDescription": "花の名前に由来する、 最古の英語色名",
         "iconKey": "flower",
-        "cmyk": "4,53,25,0",
-        "_rgb": "rgb(236, 136, 160)",
-        "rgb": "rgb(235, 150, 160)",
+        "cmyk": "5,60,20,0",
+        "rgb": "rgb(236, 136, 160)",
         "hex": "#f29c9f",
         "examLevel": 2,
         "munsell": "10RP 7/8",
         "approximatePccs": [
-          { "notation": "p2", "deltaE": 7.95 },
-          { "notation": "ltg2", "deltaE": 7.98 },
-          { "notation": "lt2", "deltaE": 8.57 }
+          { "notation": "lt2", "deltaE": 7.79 },
+          { "notation": "lt24", "deltaE": 8.25 },
+          { "notation": "ltg2", "deltaE": 9.46 }
         ]
       },
       {
@@ -84,13 +76,12 @@
         "colorDescription": "ローズピンクより くすみと灰みが感じられる",
         "originDescription": "オールドは くすみのあるグレイッシュな色",
         "iconKey": "flower",
-        "cmyk": "23,59,38,0",
-        "_rgb": "rgb(186, 114, 129)",
-        "rgb": "rgb(198, 128, 135)",
+        "cmyk": "15,60,30,20",
+        "rgb": "rgb(186, 114, 129)",
         "hex": "#da8d93",
         "examLevel": 2,
         "munsell": "1R 6/6.5",
-        "approximatePccs": [{ "notation": "sf2", "deltaE": 9.11 }]
+        "approximatePccs": [{ "notation": "sf2", "deltaE": 7.18 }]
       },
       {
         "id": "sango-iro",
@@ -100,13 +91,12 @@
         "colorDescription": "紅梅色より明るく 紫みはほとんど感じられない",
         "originDescription": "ピンク系の珊瑚は 装飾品として珍重された",
         "iconKey": "coral",
-        "cmyk": "0,61,35,0",
-        "_rgb": "rgb(248, 157, 149)",
-        "rgb": "rgb(255, 137, 144)",
+        "cmyk": "0,50,35,0",
+        "rgb": "rgb(248, 157, 149)",
         "hex": "#f4ada3",
         "examLevel": 3,
         "munsell": "2.5R 7/11",
-        "approximatePccs": [{ "notation": "lt2", "deltaE": 4.52 }]
+        "approximatePccs": [{ "notation": "lt4", "deltaE": 7.55 }]
       },
       {
         "id": "kobai-iro",
@@ -116,15 +106,15 @@
         "colorDescription": "珊瑚色と同色相だがやや暗い ローズピンクよりやや淡い",
         "originDescription": "紅梅の花に 由来するピンク",
         "iconKey": "flower",
-        "cmyk": "12,57,36,0",
-        "_rgb": "rgb(236, 104, 134)",
-        "rgb": "rgb(219, 138, 141)",
+        "cmyk": "5,75,30,0",
+        "rgb": "rgb(236, 104, 134)",
         "hex": "#f3a7a5",
         "examLevel": 3,
         "munsell": "2.5R 6.5/7.5",
         "approximatePccs": [
-          { "notation": "lt2", "deltaE": 7.49 },
-          { "notation": "lt4", "deltaE": 9.53 }
+          { "notation": "lt2", "deltaE": 5.81 },
+          { "notation": "lt24", "deltaE": 8.19 },
+          { "notation": "sf2", "deltaE": 8.3 }
         ]
       },
       {
@@ -136,16 +126,12 @@
         "colorDescription": "ピンク系の中では 圧倒的に黄に近い",
         "originDescription": "鮭の切り身に 由来する色名",
         "iconKey": "fish",
-        "cmyk": "0,46,41,0",
-        "_rgb": "rgb(247, 147, 137)",
-        "rgb": "rgb(251, 165, 146)",
+        "cmyk": "0,55,40,0",
+        "rgb": "rgb(247, 147, 137)",
         "hex": "#f4a583",
         "examLevel": 3,
         "munsell": "8R 7.5/7.5",
-        "approximatePccs": [
-          { "notation": "lt4", "deltaE": 8.75 },
-          { "notation": "ltg4", "deltaE": 9.83 }
-        ]
+        "approximatePccs": [{ "notation": "lt4", "deltaE": 5.01 }]
       },
       {
         "id": "botan-iro",
@@ -155,16 +141,12 @@
         "colorDescription": "鴇色より濃い赤紫",
         "originDescription": "牡丹の中でも あざやかな赤紫の花色",
         "iconKey": "flower",
-        "cmyk": "21,85,0,0",
-        "_rgb": "rgb(217, 89, 162)",
-        "rgb": "rgb(200, 72, 151)",
+        "cmyk": "15,80,0,0",
+        "rgb": "rgb(217, 89, 162)",
         "hex": "#e55a9b",
         "examLevel": 3,
         "munsell": "3RP 5/14",
-        "approximatePccs": [
-          { "notation": "b24", "deltaE": 5.85 },
-          { "notation": "sf24", "deltaE": 8.25 }
-        ]
+        "approximatePccs": [{ "notation": "b24", "deltaE": 3.67 }]
       },
       {
         "id": "magenta",
@@ -174,13 +156,12 @@
         "colorDescription": "牡丹色と同じ鮮やかさ マゼンタの方が赤みが強い",
         "originDescription": "マゼンタの戦地での勝利と同時に 発見された合成染料",
         "iconKey": "printer",
-        "cmyk": "15,86,14,0",
-        "_rgb": "rgb(230, 0, 112)",
-        "rgb": "rgb(207, 68, 135)",
+        "cmyk": "5,100,20,0",
+        "rgb": "rgb(230, 0, 112)",
         "hex": "#e4007f",
         "examLevel": 3,
         "munsell": "5RP 5/14",
-        "approximatePccs": [{ "notation": "b24", "deltaE": 4.15 }]
+        "approximatePccs": [{ "notation": "b24", "deltaE": 8.51 }]
       }
     ],
     "compareSections": [
@@ -201,16 +182,12 @@
         "colorDescription": "3:yRと同じ色",
         "originDescription": "ペルシャ語の織物に由来 日本語では緋色",
         "iconKey": "thread",
-        "cmyk": "9,87,80,0",
-        "_rgb": "rgb(241, 40, 36)",
-        "rgb": "rgb(218, 67, 58)",
+        "cmyk": "0,95,95,0",
+        "rgb": "rgb(241, 40, 36)",
         "hex": "#ea5539",
         "examLevel": 3,
         "munsell": "7R 5/14",
-        "approximatePccs": [
-          { "notation": "v2", "deltaE": 4.76 },
-          { "notation": "v3", "deltaE": 6.8 }
-        ]
+        "approximatePccs": [{ "notation": "v3", "deltaE": 2.18 }]
       },
       {
         "id": "shu-iro",
@@ -220,13 +197,16 @@
         "colorDescription": "スカーレットより 赤みが強く明るい",
         "originDescription": "朱肉として使われた 銀朱の色",
         "iconKey": "stamp",
-        "cmyk": "2,83,67,0",
-        "_rgb": "rgb(233, 63, 21)",
-        "rgb": "rgb(233, 81, 78)",
+        "cmyk": "0,90,100,5",
+        "rgb": "rgb(233, 63, 21)",
         "hex": "#eb613b",
         "examLevel": 3,
         "munsell": "6R 5.5/14",
-        "approximatePccs": [{ "notation": "b2", "deltaE": 4.46 }]
+        "approximatePccs": [
+          { "notation": "v4", "deltaE": 4.17 },
+          { "notation": "v3", "deltaE": 5.24 },
+          { "notation": "b4", "deltaE": 6.09 }
+        ]
       },
       {
         "id": "vermilion",
@@ -236,13 +216,16 @@
         "colorDescription": "朱色と同じ色",
         "originDescription": "朱色と同じ色 絵の具の色名としても使われる",
         "iconKey": "artPaint",
-        "cmyk": "2,83,67,0",
-        "_rgb": "rgb(235, 77, 49)",
-        "rgb": "rgb(233, 81, 78)",
+        "cmyk": "0,85,85,5",
+        "rgb": "rgb(235, 77, 49)",
         "hex": "#eb613b",
         "examLevel": 3,
         "munsell": "6R 5.5/14",
-        "approximatePccs": [{ "notation": "b2", "deltaE": 4.46 }]
+        "approximatePccs": [
+          { "notation": "b4", "deltaE": 3.19 },
+          { "notation": "v4", "deltaE": 4.2 },
+          { "notation": "v3", "deltaE": 4.76 }
+        ]
       },
       {
         "id": "carmine",
@@ -252,17 +235,12 @@
         "colorDescription": "2:Rよりやや暗い",
         "originDescription": "サボテンの寄生虫から採れる染料 日本語では真紅",
         "iconKey": "cactus",
-        "cmyk": "21,97,74,5",
-        "_rgb": "rgb(206, 0, 75)",
-        "rgb": "rgb(188, 22, 59)",
+        "cmyk": "10,100,55,10",
+        "rgb": "rgb(206, 0, 75)",
         "hex": "#d7003a",
         "examLevel": 3,
         "munsell": "4R 4/14",
-        "approximatePccs": [
-          { "notation": "v1", "deltaE": 4.64 },
-          { "notation": "d4", "deltaE": 6.8 },
-          { "notation": "dp2", "deltaE": 6.87 }
-        ]
+        "approximatePccs": [{ "notation": "v1", "deltaE": 2.62 }]
       },
       {
         "id": "poppy-red",
@@ -273,16 +251,15 @@
         "colorDescription": "2:Rよりやや明るい",
         "originDescription": "ポピーの赤い花の色 ポピーは日本語ではヒナゲシ",
         "iconKey": "flower",
-        "cmyk": "9,88,61,0",
-        "_rgb": "rgb(224, 64, 37)",
-        "rgb": "rgb(218, 64, 81)",
+        "cmyk": "10,90,95,0",
+        "rgb": "rgb(224, 64, 37)",
         "hex": "#e9474d",
         "examLevel": 2,
         "munsell": "4R 5/14",
         "approximatePccs": [
-          { "notation": "b2", "deltaE": 5.89 },
-          { "notation": "v1", "deltaE": 6.82 },
-          { "notation": "sf2", "deltaE": 7.09 }
+          { "notation": "v3", "deltaE": 4.88 },
+          { "notation": "v2", "deltaE": 6.06 },
+          { "notation": "v4", "deltaE": 6.33 }
         ]
       },
       {
@@ -293,13 +270,16 @@
         "colorDescription": "ポピーレッドよりやや明るく わずかに紫みを感じる",
         "originDescription": "紅花の赤の美称は 呉から渡来した染料「呉藍」",
         "iconKey": "flower",
-        "cmyk": "5,81,42,0",
-        "_rgb": "rgb(203, 10, 26)",
-        "rgb": "rgb(226, 85, 110)",
+        "cmyk": "15,100,100,5",
+        "rgb": "rgb(203, 10, 26)",
         "hex": "#e95464",
         "examLevel": 2,
         "munsell": "1.5R 5.5/13",
-        "approximatePccs": [{ "notation": "sf2", "deltaE": 4.65 }]
+        "approximatePccs": [
+          { "notation": "v2", "deltaE": 7.32 },
+          { "notation": "dp4", "deltaE": 8.4 },
+          { "notation": "d4", "deltaE": 8.95 }
+        ]
       },
       {
         "id": "akane-iro",
@@ -309,13 +289,15 @@
         "colorDescription": "2:Rに黒を少し 混ぜたような色",
         "originDescription": "茜は根が赤い 最古の植物染料の一つ",
         "iconKey": "plant",
-        "cmyk": "37,95,77,10",
-        "_rgb": "rgb(189, 0, 57)",
-        "rgb": "rgb(158, 34, 56)",
+        "cmyk": "0,100,60,30",
+        "rgb": "rgb(189, 0, 57)",
         "hex": "#b7282d",
         "examLevel": 3,
         "munsell": "4R 3.5/11",
-        "approximatePccs": [{ "notation": "dp2", "deltaE": 3.3 }]
+        "approximatePccs": [
+          { "notation": "v1", "deltaE": 4.91 },
+          { "notation": "dp2", "deltaE": 6.45 }
+        ]
       },
       {
         "id": "wine-red",
@@ -326,16 +308,14 @@
         "colorDescription": "1:pRに黒を少し 混ぜたような色",
         "originDescription": "赤ワインの色を表す 英語の色名",
         "iconKey": "wine",
-        "cmyk": "48,95,64,19",
-        "_rgb": "rgb(134, 0, 60)",
-        "rgb": "rgb(132, 32, 66)",
+        "cmyk": "40,100,60,30",
+        "rgb": "rgb(134, 0, 60)",
         "hex": "#932e44",
         "examLevel": 3,
         "munsell": "10RP 3/9",
         "approximatePccs": [
-          { "notation": "dk24", "deltaE": 8.23 },
-          { "notation": "d2", "deltaE": 8.32 },
-          { "notation": "dk2", "deltaE": 8.61 }
+          { "notation": "dp24", "deltaE": 8.92 },
+          { "notation": "dp2", "deltaE": 9.88 }
         ]
       },
       {
@@ -346,16 +326,14 @@
         "colorDescription": "黒に近い暗さの中に 赤みと紫みが感じられる",
         "originDescription": "フランス・ボルドー産の 赤ワインに由来",
         "iconKey": "wine",
-        "cmyk": "66,81,72,39",
-        "_rgb": "rgb(134, 0, 60)",
-        "rgb": "rgb(84, 51, 56)",
+        "cmyk": "40,100,60,30",
+        "rgb": "rgb(134, 0, 60)",
         "hex": "#600f18",
         "examLevel": 3,
         "munsell": "2.5R 2.5/3",
         "approximatePccs": [
-          { "notation": "dk24", "deltaE": 6.25 },
-          { "notation": "dk2", "deltaE": 6.59 },
-          { "notation": "dkg2", "deltaE": 8.14 }
+          { "notation": "dp24", "deltaE": 8.92 },
+          { "notation": "dp2", "deltaE": 9.88 }
         ]
       }
     ],
@@ -377,7 +355,6 @@
         "colorDescription": "彩度が高く 黄が強く感じられる",
         "originDescription": "シエナの地で採れる土は 絵の具の原料とされた",
         "iconKey": "shovel",
-        "_rgb": "rgb(217, 128, 50)",
         "rgb": "rgb(181, 101, 44)",
         "hex": "#d98032",
         "examLevel": 2,
@@ -385,8 +362,7 @@
         "approximatePccs": [
           { "notation": "d6", "deltaE": 7.93 },
           { "notation": "dp6", "deltaE": 9.01 }
-        ],
-        "cmyk": "31,70,91,2"
+        ]
       },
       {
         "id": "taisha-iro",
@@ -396,13 +372,11 @@
         "colorDescription": "ローシェンナに暗い赤を 少し加えたような色",
         "originDescription": "酸化鉄を含む土から造られる 絵の具の総称",
         "iconKey": "shovel",
-        "_rgb": "rgb(187, 84, 31)",
         "rgb": "rgb(182, 100, 56)",
         "hex": "#bb541f",
         "examLevel": 2,
         "munsell": "2.5YR 5/8.5",
-        "approximatePccs": [{ "notation": "d6", "deltaE": 4.98 }],
-        "cmyk": "31,71,86,1"
+        "approximatePccs": [{ "notation": "d6", "deltaE": 4.98 }]
       },
       {
         "id": "burnt-sienna",
@@ -413,13 +387,11 @@
         "colorDescription": "代赭より くすんだ赤みを感じる",
         "originDescription": "シエナで採れる土を焼いた 赤みのある褐色の絵の具",
         "iconKey": "shovel",
-        "_rgb": "rgb(178, 85, 50)",
         "rgb": "rgb(165, 87, 64)",
         "hex": "#b25532",
         "examLevel": 2,
         "munsell": "10R 4.5/7.5",
-        "approximatePccs": [{ "notation": "d6", "deltaE": 3.77 }],
-        "cmyk": "39,76,81,3"
+        "approximatePccs": [{ "notation": "d6", "deltaE": 3.77 }]
       },
       {
         "id": "terracotta",
@@ -429,13 +401,11 @@
         "colorDescription": "バーントシェンナより 赤寄りでくすみが薄い",
         "originDescription": "イタリア語で「焼いた土」 素焼きの陶器の色",
         "iconKey": "pottery",
-        "_rgb": "rgb(190, 109, 85)",
         "rgb": "rgb(169, 83, 72)",
         "hex": "#be6d55",
         "examLevel": 2,
         "munsell": "7.5R 4.5/8",
-        "approximatePccs": [{ "notation": "d4", "deltaE": 4.41 }],
-        "cmyk": "37,79,74,2"
+        "approximatePccs": [{ "notation": "d4", "deltaE": 4.41 }]
       },
       {
         "id": "hiwada-iro",
@@ -445,7 +415,6 @@
         "colorDescription": "黒に近い暗さというより グレイが感じられる",
         "originDescription": "ヒノキの樹皮のような茶色 蘇芳による染色の色名",
         "iconKey": "trunk",
-        "_rgb": "rgb(150, 80, 54)",
         "rgb": "rgb(142, 98, 84)",
         "hex": "#965036",
         "examLevel": 2,
@@ -453,8 +422,7 @@
         "approximatePccs": [
           { "notation": "g4", "deltaE": 8.34 },
           { "notation": "g6", "deltaE": 8.43 }
-        ],
-        "cmyk": "49,67,69,5"
+        ]
       },
       {
         "id": "renga-iro",
@@ -464,7 +432,6 @@
         "colorDescription": "桧皮色と明度は同じくらい 桧皮色より鮮やか",
         "originDescription": "レンガの中でも 赤レンガに由来する色",
         "iconKey": "brick",
-        "_rgb": "rgb(162, 72, 43)",
         "rgb": "rgb(148, 75, 56)",
         "hex": "#a2482b",
         "examLevel": 3,
@@ -473,8 +440,7 @@
           { "notation": "d6", "deltaE": 8.25 },
           { "notation": "d4", "deltaE": 8.38 },
           { "notation": "dk4", "deltaE": 8.57 }
-        ],
-        "cmyk": "45,80,84,8"
+        ]
       },
       {
         "id": "bengara-iro",
@@ -484,13 +450,11 @@
         "colorDescription": "鮮やかだが暗く 深い赤みが感じられる",
         "originDescription": "ベンガル地方で産出する 天然の酸化鉄から造られる顔料",
         "iconKey": "shovel",
-        "_rgb": "rgb(143, 45, 18)",
         "rgb": "rgb(135, 61, 52)",
         "hex": "#8f2d12",
         "examLevel": 2,
         "munsell": "8R 3.5/7",
-        "approximatePccs": [{ "notation": "dk4", "deltaE": 5.1 }],
-        "cmyk": "48,85,84,14"
+        "approximatePccs": [{ "notation": "dk4", "deltaE": 5.1 }]
       },
       {
         "id": "suo",
@@ -500,16 +464,12 @@
         "colorDescription": "2:Rに灰を混ぜたような色 弁柄色よりやや明るい",
         "originDescription": "マメ科の植物「蘇芳」を 原料とする染色の色",
         "iconKey": "plant",
-        "_rgb": "rgb(149, 57, 87)",
-        "rgb": "rgb(149, 73, 76)",
+        "rgb": "rgb(149, 57, 87)",
         "hex": "#9e3d3e",
-        "cmyk": "45,82,69,7",
+        "cmyk": "50,90,60,0",
         "examLevel": 2,
         "munsell": "4R 4/7",
-        "approximatePccs": [
-          { "notation": "d2", "deltaE": 4.84 },
-          { "notation": "d4", "deltaE": 7.01 }
-        ]
+        "approximatePccs": [{ "notation": "d2", "deltaE": 3.91 }]
       }
     ],
     "compareSections": [
@@ -529,13 +489,11 @@
         "colorDescription": "色相は5:Oと6:yOの中間 くすみを感じるやや暗い橙",
         "originDescription": "なめした革の色 なめすにはタンニンの汁を使う",
         "iconKey": "leather",
-        "_rgb": "rgb(193, 129, 63)",
         "rgb": "rgb(163, 110, 67)",
         "hex": "#c1813f",
         "examLevel": 2,
         "munsell": "6YR 5/6",
-        "approximatePccs": [{ "notation": "d6", "deltaE": 10.28 }],
-        "cmyk": "41,63,82,2"
+        "approximatePccs": [{ "notation": "d6", "deltaE": 10.28 }]
       },
       {
         "id": "kohaku-iro",
@@ -545,16 +503,12 @@
         "colorDescription": "タンより わずかに明るく鮮やか",
         "originDescription": "琥珀は植物の樹脂が 化石になったもの",
         "iconKey": "fossil",
-        "cmyk": "36,57,83,0",
-        "_rgb": "rgb(192, 137, 67)",
-        "rgb": "rgb(175, 124, 68)",
+        "cmyk": "0,40,75,35",
+        "rgb": "rgb(192, 137, 67)",
         "hex": "#bf7834",
         "examLevel": 2,
         "munsell": "8YR 5.5/6.5",
-        "approximatePccs": [
-          { "notation": "d8", "deltaE": 8.6 },
-          { "notation": "sf6", "deltaE": 9.49 }
-        ]
+        "approximatePccs": [{ "notation": "sf6", "deltaE": 5.49 }]
       },
       {
         "id": "amber",
@@ -564,16 +518,12 @@
         "colorDescription": "琥珀色と同じ色",
         "originDescription": "琥珀のような色を指す色名",
         "iconKey": "fossil",
-        "cmyk": "36,57,83,0",
-        "_rgb": "rgb(200, 136, 77)",
-        "rgb": "rgb(175, 124, 68)",
+        "cmyk": "0,45,70,30",
+        "rgb": "rgb(200, 136, 77)",
         "hex": "#bf7834",
         "examLevel": 2,
         "munsell": "8YR 5.5/6.5",
-        "approximatePccs": [
-          { "notation": "d8", "deltaE": 8.6 },
-          { "notation": "sf6", "deltaE": 9.49 }
-        ]
+        "approximatePccs": [{ "notation": "sf6", "deltaE": 3.97 }]
       },
       {
         "id": "odo-iro",
@@ -583,17 +533,12 @@
         "colorDescription": "黄が強く感じられる",
         "originDescription": "天然の土に由来する色名 英語ではイエローオーカー",
         "iconKey": "shovel",
-        "cmyk": "30,49,86,0",
-        "_rgb": "rgb(204, 144, 65)",
-        "rgb": "rgb(188, 139, 61)",
+        "cmyk": "25,50,85,0",
+        "rgb": "rgb(204, 144, 65)",
         "hex": "#c39043",
         "examLevel": 3,
         "munsell": "10YR 6/7.5",
-        "approximatePccs": [
-          { "notation": "sf6", "deltaE": 7.55 },
-          { "notation": "dp8", "deltaE": 8.61 },
-          { "notation": "d8", "deltaE": 8.96 }
-        ]
+        "approximatePccs": [{ "notation": "sf6", "deltaE": 4.05 }]
       },
       {
         "id": "khaki",
@@ -603,13 +548,15 @@
         "colorDescription": "黄土色より黄みが弱く 暗く濁って見える",
         "originDescription": "イギリス軍が採用した軍服の色 意味はちり・ほこりのような",
         "iconKey": "army",
-        "cmyk": "46,57,87,3",
-        "_rgb": "rgb(99, 92, 54)",
-        "rgb": "rgb(151, 116, 59)",
+        "cmyk": "60,55,85,30",
+        "rgb": "rgb(99, 92, 54)",
         "hex": "#bb9855",
         "examLevel": 3,
         "munsell": "1Y 5/5.5",
-        "approximatePccs": [{ "notation": "d8", "deltaE": 4.86 }]
+        "approximatePccs": [
+          { "notation": "dk10", "deltaE": 6.36 },
+          { "notation": "dk8", "deltaE": 6.9 }
+        ]
       },
       {
         "id": "raw-umber",
@@ -620,16 +567,12 @@
         "colorDescription": "黄に黒を混ぜたような色 赤みや灰みはない",
         "originDescription": "イギリス・ウンブリア地方で 採れる土が「アンバー」",
         "iconKey": "shovel",
-        "cmyk": "54,63,97,14",
-        "_rgb": "rgb(142, 97, 66)",
-        "rgb": "rgb(121, 92, 27)",
+        "cmyk": "15,50,65,50",
+        "rgb": "rgb(142, 97, 66)",
         "hex": "#916f24",
         "examLevel": 2,
         "munsell": "2.5Y 4/6",
-        "approximatePccs": [
-          { "notation": "dk8", "deltaE": 5.37 },
-          { "notation": "dk6", "deltaE": 7.7 }
-        ]
+        "approximatePccs": [{ "notation": "d6", "deltaE": 10.11 }]
       },
       {
         "id": "kuchiba-iro",
@@ -639,13 +582,12 @@
         "colorDescription": "赤みがあり、ローアンバーより やや明るくグレイッシュ",
         "originDescription": "朽ちた葉に由来する色名 晩秋の季節感が感じられる",
         "iconKey": "fallenLeaf",
-        "cmyk": "53,54,65,3",
-        "_rgb": "rgb(168, 137, 91)",
-        "rgb": "rgb(135, 119, 100)",
+        "cmyk": "35,45,70,10",
+        "rgb": "rgb(168, 137, 91)",
         "hex": "#917347",
         "examLevel": 2,
         "munsell": "10YR 5/2",
-        "approximatePccs": [{ "notation": "g8", "deltaE": 3.52 }]
+        "approximatePccs": [{ "notation": "d8", "deltaE": 6.07 }]
       },
       {
         "id": "burnt-umber",
@@ -656,17 +598,12 @@
         "colorDescription": "朽葉色より暗い 灰みがなく赤みがわかりやすい",
         "originDescription": "ウンブリア地方の土を焼き 暗褐色にした絵の具の色",
         "iconKey": "shovel",
-        "cmyk": "65,70,86,33",
-        "_rgb": "rgb(94, 50, 53)",
-        "rgb": "rgb(89, 68, 44)",
+        "cmyk": "50,75,65,50",
+        "rgb": "rgb(94, 50, 53)",
         "hex": "#7a5e3d",
         "examLevel": 2,
         "munsell": "10YR 3/3",
-        "approximatePccs": [
-          { "notation": "dk6", "deltaE": 7.7 },
-          { "notation": "dkg8", "deltaE": 7.82 },
-          { "notation": "dkg6", "deltaE": 9.07 }
-        ]
+        "approximatePccs": [{ "notation": "dk2", "deltaE": 3.4 }]
       },
       {
         "id": "sepia",
@@ -676,13 +613,12 @@
         "colorDescription": "バーントアンバーにさらに 黒を混ぜたような暗い色",
         "originDescription": "イカが墨を出す墨汁嚢から 造られた絵の具に由来",
         "iconKey": "squid",
-        "cmyk": "70,72,82,44",
-        "_rgb": "rgb(68, 56, 24)",
-        "rgb": "rgb(72, 57, 43)",
+        "cmyk": "60,60,90,60",
+        "rgb": "rgb(68, 56, 24)",
         "hex": "#6f4e27",
         "examLevel": 3,
         "munsell": "10YR 2.5/2",
-        "approximatePccs": [{ "notation": "dkg6", "deltaE": 4.3 }]
+        "approximatePccs": [{ "notation": "dkg8", "deltaE": 5.4 }]
       },
       {
         "id": "susutake-iro",
@@ -692,16 +628,15 @@
         "colorDescription": "バーントアンバーより暗く グレイッシュで黄みが弱い",
         "originDescription": "煤けて赤黒くなった 竹の色を表す",
         "iconKey": "bamboo",
-        "cmyk": "66,66,74,24",
-        "_rgb": "rgb(91, 85, 58)",
-        "rgb": "rgb(94, 81, 69)",
+        "cmyk": "55,50,75,45",
+        "rgb": "rgb(91, 85, 58)",
         "hex": "#6b5146",
         "examLevel": 2,
         "munsell": "9.5YR 3.5/1.5",
         "approximatePccs": [
-          { "notation": "dkg6", "deltaE": 8.02 },
-          { "notation": "Gy-3.5", "deltaE": 8.35 },
-          { "notation": "dkg8", "deltaE": 8.82 }
+          { "notation": "dkg8", "deltaE": 7.43 },
+          { "notation": "dk10", "deltaE": 8.73 },
+          { "notation": "dkg10", "deltaE": 9.63 }
         ]
       }
     ],
@@ -723,13 +658,12 @@
         "colorDescription": "鳶色と毎度が同じだが 栗色の方が灰みで暗く見える",
         "originDescription": "熟した栗の実に由来する色",
         "iconKey": "chestnut",
-        "cmyk": "57,76,81,19",
-        "_rgb": "rgb(114, 44, 7)",
-        "rgb": "rgb(116, 73, 58)",
+        "cmyk": "20,80,95,60",
+        "rgb": "rgb(114, 44, 7)",
         "hex": "#762e05",
         "examLevel": 3,
         "munsell": "2YR 3.5/4",
-        "approximatePccs": [{ "notation": "dk4", "deltaE": 6.78 }]
+        "approximatePccs": [{ "notation": "dk4", "deltaE": 7.11 }]
       },
       {
         "id": "ebicha",
@@ -739,16 +673,12 @@
         "colorDescription": "鳶色より暗くくすんで見える",
         "originDescription": "山葡萄の実の色 葡萄の古い呼び名は「えび」",
         "iconKey": "grape",
-        "cmyk": "58,83,81,26",
-        "_rgb": "rgb(85, 18, 0)",
-        "rgb": "rgb(108, 57, 52)",
+        "cmyk": "40,90,100,65",
+        "rgb": "rgb(85, 18, 0)",
         "hex": "#814336",
         "examLevel": 2,
         "munsell": "8R 3/4.5",
-        "approximatePccs": [
-          { "notation": "dk4", "deltaE": 5.26 },
-          { "notation": "dk2", "deltaE": 6.11 }
-        ]
+        "approximatePccs": [{ "notation": "dk4", "deltaE": 9.66 }]
       },
       {
         "id": "tobi-iro",
@@ -758,15 +688,15 @@
         "colorDescription": "海老茶より 強く赤みを感じられる",
         "originDescription": "トビ（トンビ）の羽のような色",
         "iconKey": "bird",
-        "cmyk": "54,81,78,16",
-        "_rgb": "rgb(80, 46, 44)",
-        "rgb": "rgb(124, 68, 62)",
+        "cmyk": "50,70,65,60",
+        "rgb": "rgb(80, 46, 44)",
         "hex": "#8b4239",
         "examLevel": 2,
         "munsell": "7.5R 3.5/5",
         "approximatePccs": [
-          { "notation": "dk4", "deltaE": 6.21 },
-          { "notation": "g2", "deltaE": 8.89 }
+          { "notation": "dk2", "deltaE": 6.76 },
+          { "notation": "dkg2", "deltaE": 8.37 },
+          { "notation": "dkg4", "deltaE": 8.44 }
         ]
       },
       {
@@ -777,7 +707,6 @@
         "colorDescription": "海老茶ほど赤みはなく 暗く深い",
         "originDescription": "チョコレートの色",
         "iconKey": "chocolate",
-        "_rgb": "rgb(97, 44, 22)",
         "rgb": "rgb(81, 53, 48)",
         "hex": "#612c16",
         "examLevel": 3,
@@ -786,8 +715,7 @@
           { "notation": "dkg4", "deltaE": 7.21 },
           { "notation": "dkg2", "deltaE": 7.82 },
           { "notation": "dkg6", "deltaE": 8.13 }
-        ],
-        "cmyk": "67,78,79,41"
+        ]
       },
       {
         "id": "maroon",
@@ -797,13 +725,11 @@
         "colorDescription": "暗いが彩度が高く 2:Rに近い赤みが感じられる",
         "originDescription": "スペイン産の大粒の栗に由来 栗色よりも赤みが強い",
         "iconKey": "chestnut",
-        "_rgb": "rgb(106, 24, 22)",
         "rgb": "rgb(101, 40, 46)",
         "hex": "#6a1816",
         "examLevel": 2,
         "munsell": "5R 2.5/6",
-        "approximatePccs": [{ "notation": "dk2", "deltaE": 1.27 }],
-        "cmyk": "58,89,79,35"
+        "approximatePccs": [{ "notation": "dk2", "deltaE": 1.27 }]
       },
       {
         "id": "burgundy",
@@ -813,16 +739,14 @@
         "colorDescription": "紫みを感じる暗い赤茶色",
         "originDescription": "フランスのブルゴーニュ産の 赤ワインに由来する色",
         "iconKey": "wine",
-        "cmyk": "71,81,70,51",
-        "_rgb": "rgb(102, 15, 19)",
-        "rgb": "rgb(67, 42, 49)",
+        "cmyk": "60,100,100,30",
+        "rgb": "rgb(102, 15, 19)",
         "hex": "#561620",
         "examLevel": 2,
         "munsell": "10RP 2/2.5",
         "approximatePccs": [
-          { "notation": "dkg2", "deltaE": 4.76 },
-          { "notation": "dkg24", "deltaE": 5.95 },
-          { "notation": "dkg4", "deltaE": 6.57 }
+          { "notation": "dk4", "deltaE": 8.88 },
+          { "notation": "dk2", "deltaE": 9.04 }
         ]
       }
     ],
@@ -841,13 +765,16 @@
         "colorDescription": "緑みが強く やや淡い色",
         "originDescription": "ミカン科の樹木である キハダの樹皮の色",
         "iconKey": "trunk",
-        "cmyk": "20,13,79,0",
-        "_rgb": "rgb(227, 200, 39)",
-        "rgb": "rgb(213, 204, 86)",
+        "cmyk": "15,20,90,0",
+        "rgb": "rgb(227, 200, 39)",
         "hex": "#fef263",
         "examLevel": 2,
         "munsell": "9Y 8/8",
-        "approximatePccs": [{ "notation": "sf8", "deltaE": 4.88 }]
+        "approximatePccs": [
+          { "notation": "v7", "deltaE": 6.3 },
+          { "notation": "sf8", "deltaE": 6.35 },
+          { "notation": "v8", "deltaE": 7.4 }
+        ]
       },
       {
         "id": "lemon-yellow",
@@ -858,17 +785,12 @@
         "colorDescription": "黄檗色より黄に近く鮮やか",
         "originDescription": "合成染料による 鮮やかな緑みの黄の絵の具",
         "iconKey": "artPaint",
-        "cmyk": "16,14,95,1",
-        "_rgb": "rgb(254, 231, 0)",
-        "rgb": "rgb(221, 203, 0)",
+        "cmyk": "5,5,100,0",
+        "rgb": "rgb(254, 231, 0)",
         "hex": "#fff33f",
         "examLevel": 3,
         "munsell": "8Y 8/12",
-        "approximatePccs": [
-          { "notation": "v8", "deltaE": 6.78 },
-          { "notation": "sf8", "deltaE": 7.31 },
-          { "notation": "v7", "deltaE": 8.28 }
-        ]
+        "approximatePccs": [{ "notation": "v8", "deltaE": 0.48 }]
       },
       {
         "id": "canary-yellow",
@@ -878,17 +800,12 @@
         "colorDescription": "レモンイエローより明るく淡い 緑みはあまり感じられない",
         "originDescription": "カナリヤ諸島が原産の カナリヤという鳥に由来",
         "iconKey": "bird",
-        "cmyk": "10,11,84,0",
-        "_rgb": "rgb(254, 240, 0)",
-        "rgb": "rgb(236, 215, 64)",
+        "cmyk": "5,0,90,0",
+        "rgb": "rgb(254, 240, 0)",
         "hex": "#fff262",
         "examLevel": 3,
         "munsell": "7Y 8.5/10",
-        "approximatePccs": [
-          { "notation": "v8", "deltaE": 5.06 },
-          { "notation": "b8", "deltaE": 6.47 },
-          { "notation": "lt8", "deltaE": 7.03 }
-        ]
+        "approximatePccs": [{ "notation": "b8", "deltaE": 1.4 }]
       },
       {
         "id": "cream-yellow",
@@ -899,7 +816,6 @@
         "colorDescription": "純粋な黄8:Yに 白を混ぜて淡くした色",
         "originDescription": "乳製品のクリームの色",
         "iconKey": "milk",
-        "_rgb": "rgb(255, 242, 184)",
         "rgb": "rgb(227, 214, 163)",
         "hex": "#fff2b8",
         "examLevel": 3,
@@ -907,8 +823,7 @@
         "approximatePccs": [
           { "notation": "ltg8", "deltaE": 4.73 },
           { "notation": "p6", "deltaE": 5.36 }
-        ],
-        "cmyk": "12,14,43,0"
+        ]
       },
       {
         "id": "blond",
@@ -918,7 +833,6 @@
         "colorDescription": "クリームイエローより 赤みがありやや暗い",
         "originDescription": "金髪を表す色名",
         "iconKey": "hair",
-        "_rgb": "rgb(247, 220, 141)",
         "rgb": "rgb(221, 181, 99)",
         "hex": "#f7dc8d",
         "examLevel": 3,
@@ -927,8 +841,7 @@
           { "notation": "sf8", "deltaE": 8.2 },
           { "notation": "ltg8", "deltaE": 9.79 },
           { "notation": "lt6", "deltaE": 9.88 }
-        ],
-        "cmyk": "14,31,71,0"
+        ]
       },
       {
         "id": "beige",
@@ -938,16 +851,12 @@
         "colorDescription": "赤みがありグレイッシュな黄 芥子色を淡くした色に近い",
         "originDescription": "未加工・未漂白・未染色の毛織物 高級色のシンボル",
         "iconKey": "cloth",
-        "cmyk": "28,33,46,0",
-        "_rgb": "rgb(209, 185, 154)",
-        "rgb": "rgb(191, 171, 144)",
+        "cmyk": "0,15,30,25",
+        "rgb": "rgb(209, 185, 154)",
         "hex": "#eedcb3",
         "examLevel": 3,
         "munsell": "10YR 7/2.5",
-        "approximatePccs": [
-          { "notation": "ltg6", "deltaE": 5.82 },
-          { "notation": "ltg8", "deltaE": 8.59 }
-        ]
+        "approximatePccs": [{ "notation": "ltg6", "deltaE": 2.21 }]
       },
       {
         "id": "ecru-beige",
@@ -958,16 +867,15 @@
         "colorDescription": "ベージュより白に近く 赤みがある淡い色",
         "originDescription": "エクルは「生の」 ベイジュは「未加工の羊毛」",
         "iconKey": "wool",
-        "cmyk": "4,23,37,0",
-        "_rgb": "rgb(236, 204, 150)",
-        "rgb": "rgb(244, 207, 169)",
+        "cmyk": "5,20,45,5",
+        "rgb": "rgb(236, 204, 150)",
         "hex": "#f8eacf",
         "examLevel": 2,
         "munsell": "7.5YR 8.5/4",
         "approximatePccs": [
-          { "notation": "ltg6", "deltaE": 5.87 },
-          { "notation": "ltg8", "deltaE": 7.77 },
-          { "notation": "p4", "deltaE": 7.88 }
+          { "notation": "ltg8", "deltaE": 4.75 },
+          { "notation": "p6", "deltaE": 6.34 },
+          { "notation": "ltg6", "deltaE": 6.41 }
         ]
       },
       {
@@ -978,13 +886,12 @@
         "colorDescription": "橙5:Oに白を混ぜたような色 淡い黄みとピンクにも近い赤み",
         "originDescription": "英語で桃の果肉を表す色名",
         "iconKey": "fruit",
-        "cmyk": "9,29,32,0",
-        "_rgb": "rgb(255, 217, 192)",
-        "rgb": "rgb(231, 192, 172)",
+        "cmyk": "0,20,25,0",
+        "rgb": "rgb(255, 217, 192)",
         "hex": "#fbd8b5",
         "examLevel": 3,
         "munsell": "3YR 8/3.5",
-        "approximatePccs": [{ "notation": "p4", "deltaE": 4.26 }]
+        "approximatePccs": [{ "notation": "p4", "deltaE": 4.29 }]
       }
     ],
     "compareSections": [
@@ -1004,15 +911,15 @@
         "colorDescription": "4:rOより少し明るい 彩度はわずかに落ちる",
         "originDescription": "皇太子の正式な礼服の色 紅花の赤×クチナシの黄色",
         "iconKey": "crown",
-        "cmyk": "4,70,78,0",
-        "_rgb": "rgb(247, 126, 74)",
-        "rgb": "rgb(233, 111, 66)",
+        "cmyk": "0,65,75,0",
+        "rgb": "rgb(247, 126, 74)",
         "hex": "#ee7948",
         "examLevel": 2,
         "munsell": "10R 6/12",
         "approximatePccs": [
-          { "notation": "sf4", "deltaE": 4.6 },
-          { "notation": "v5", "deltaE": 6.21 }
+          { "notation": "sf4", "deltaE": 6.71 },
+          { "notation": "v5", "deltaE": 7.58 },
+          { "notation": "v6", "deltaE": 9.49 }
         ]
       },
       {
@@ -1024,13 +931,11 @@
         "colorDescription": "6:yOを少し明るくした色",
         "originDescription": "マリーゴールドの花に由来 西洋の山吹色という位置付け",
         "iconKey": "flower",
-        "_rgb": "rgb(243, 152, 0)",
         "rgb": "rgb(255, 168, 14)",
         "hex": "#f39800",
         "examLevel": 3,
         "munsell": "8YR 7.5/13",
-        "approximatePccs": [{ "notation": "b6", "deltaE": 5.53 }],
-        "cmyk": "0,43,95,0"
+        "approximatePccs": [{ "notation": "b6", "deltaE": 5.53 }]
       },
       {
         "id": "yamabuki-iro",
@@ -1040,16 +945,12 @@
         "colorDescription": "マリーゴールドより黄みが強い 彩度・明度は同じ",
         "originDescription": "黄色い花に由来する、 唯一の日本の伝統色名",
         "iconKey": "flower",
-        "cmyk": "2,39,95,0",
-        "_rgb": "rgb(255, 194, 0)",
-        "rgb": "rgb(247, 173, 0)",
+        "cmyk": "0,30,95,0",
+        "rgb": "rgb(255, 194, 0)",
         "hex": "#f8b500",
         "examLevel": 3,
         "munsell": "10YR 7.5/13",
-        "approximatePccs": [
-          { "notation": "b6", "deltaE": 9 },
-          { "notation": "v7", "deltaE": 9.68 }
-        ]
+        "approximatePccs": [{ "notation": "v7", "deltaE": 3.43 }]
       },
       {
         "id": "ukon-iro",
@@ -1059,13 +960,12 @@
         "colorDescription": "7:rYの彩度を少し低くした色 山吹色より純粋な黄に近い",
         "originDescription": "ウコンの根で染めた黄色 たくあんやカレー粉にも使われる",
         "iconKey": "plant",
-        "cmyk": "6,34,94,0",
-        "_rgb": "rgb(234, 178, 38)",
-        "rgb": "rgb(236, 178, 0)",
+        "cmyk": "10,35,90,0",
+        "rgb": "rgb(234, 178, 38)",
         "hex": "#fabf13",
         "examLevel": 2,
         "munsell": "2Y 7.5/12",
-        "approximatePccs": [{ "notation": "v7", "deltaE": 6.81 }]
+        "approximatePccs": [{ "notation": "v7", "deltaE": 7.42 }]
       },
       {
         "id": "koji-iro",
@@ -1075,13 +975,12 @@
         "colorDescription": "マリーゴールドより 赤みが強くやや薄い色",
         "originDescription": "熟した柑子みかんの実に由来 黄赤を代表する古名",
         "iconKey": "orange",
-        "cmyk": "1,43,68,0",
-        "_rgb": "rgb(238, 124, 0)",
-        "rgb": "rgb(249, 169, 98)",
+        "cmyk": "5,65,100,0",
+        "rgb": "rgb(238, 124, 0)",
         "hex": "#f6ad48",
         "examLevel": 2,
         "munsell": "5.5YR 7.5/9",
-        "approximatePccs": [{ "notation": "lt6", "deltaE": 3.28 }]
+        "approximatePccs": [{ "notation": "v6", "deltaE": 3.2 }]
       },
       {
         "id": "golden-yellow",
@@ -1092,7 +991,6 @@
         "colorDescription": "柑子色を明るくした色に近い 山吹色より赤みを感じる",
         "originDescription": "金色を感じさせる黄色の色名 聖人の光輪を描くために使われた",
         "iconKey": "crown",
-        "_rgb": "rgb(248, 184, 86)",
         "rgb": "rgb(233, 158, 66)",
         "hex": "#f8b856",
         "examLevel": 2,
@@ -1101,8 +999,7 @@
           { "notation": "b6", "deltaE": 5.35 },
           { "notation": "sf6", "deltaE": 5.37 },
           { "notation": "lt6", "deltaE": 6.83 }
-        ],
-        "cmyk": "6,46,82,0"
+        ]
       },
       {
         "id": "naples-yellow",
@@ -1113,15 +1010,14 @@
         "colorDescription": "8:Yに近いが やや赤寄りで薄めの色",
         "originDescription": "意味は「ナポリの黄色」 中世から使われていた",
         "iconKey": "knight",
-        "cmyk": "8,26,69,0",
-        "_rgb": "rgb(255, 207, 111)",
-        "rgb": "rgb(235, 195, 103)",
+        "cmyk": "0,25,65,0",
+        "rgb": "rgb(255, 207, 111)",
         "hex": "#fdd75c",
         "examLevel": 2,
         "munsell": "2.5Y 8/7.5",
         "approximatePccs": [
-          { "notation": "sf8", "deltaE": 7.89 },
-          { "notation": "v7", "deltaE": 8.84 }
+          { "notation": "v7", "deltaE": 8.23 },
+          { "notation": "p6", "deltaE": 9.17 }
         ]
       },
       {
@@ -1133,7 +1029,6 @@
         "colorDescription": "純粋な黄 8:Yよりさらに鮮やか",
         "originDescription": "フランス語で「輝かしい黄色」 ネープルスイエローより明るく鮮やか",
         "iconKey": "artPaint",
-        "_rgb": "rgb(255, 220, 0)",
         "rgb": "rgb(250, 212, 0)",
         "hex": "#ffdc00",
         "examLevel": 2,
@@ -1141,8 +1036,7 @@
         "approximatePccs": [
           { "notation": "v7", "deltaE": 3.62 },
           { "notation": "v8", "deltaE": 4.86 }
-        ],
-        "cmyk": "4,16,92,0"
+        ]
       },
       {
         "id": "kariyasu-iro",
@@ -1152,16 +1046,14 @@
         "colorDescription": "緑みが感じられる やや薄めの黄",
         "originDescription": "刈りやすいイネ科の草 黄色の染色材料",
         "iconKey": "rice",
-        "cmyk": "11,12,67,0",
-        "_rgb": "rgb(242, 228, 21)",
-        "rgb": "rgb(231, 215, 113)",
+        "cmyk": "10,5,90,0",
+        "rgb": "rgb(242, 228, 21)",
         "hex": "#f5e56b",
         "examLevel": 2,
         "munsell": "7Y 8.5/7",
         "approximatePccs": [
-          { "notation": "lt8", "deltaE": 6.14 },
-          { "notation": "sf8", "deltaE": 7.27 },
-          { "notation": "p6", "deltaE": 8.98 }
+          { "notation": "v8", "deltaE": 2.73 },
+          { "notation": "b8", "deltaE": 2.99 }
         ]
       },
       {
@@ -1172,16 +1064,14 @@
         "colorDescription": "彩度が低く、黄にしては暗め 濁ったように見える",
         "originDescription": "練りからしの色 英語ではマスタードイエロー",
         "iconKey": "chiliPepper",
-        "cmyk": "24,34,71,0",
-        "_rgb": "rgb(223, 185, 100)",
-        "rgb": "rgb(201, 170, 98)",
+        "cmyk": "15,30,70,0",
+        "rgb": "rgb(223, 185, 100)",
         "hex": "#d2b74e",
         "examLevel": 3,
         "munsell": "3Y 7/6",
         "approximatePccs": [
-          { "notation": "sf8", "deltaE": 8.12 },
-          { "notation": "ltg8", "deltaE": 9.87 },
-          { "notation": "ltg6", "deltaE": 9.94 }
+          { "notation": "sf8", "deltaE": 7.34 },
+          { "notation": "ltg8", "deltaE": 9.62 }
         ]
       }
     ],
@@ -1204,7 +1094,6 @@
         "colorDescription": "明るく鮮やかな マスカットのような色",
         "originDescription": "シャルトルーズ修道院で造られる 黄緑色のリキュールに由来",
         "iconKey": "cocktail",
-        "_rgb": "rgb(217, 227, 103)",
         "rgb": "rgb(188, 212, 63)",
         "hex": "#d9e367",
         "examLevel": 2,
@@ -1213,8 +1102,7 @@
           { "notation": "v10", "deltaE": 5.6 },
           { "notation": "b10", "deltaE": 5.79 },
           { "notation": "v9", "deltaE": 5.84 }
-        ],
-        "cmyk": "32,2,88,0"
+        ]
       },
       {
         "id": "moegi",
@@ -1224,17 +1112,12 @@
         "colorDescription": "シャトルーズグリーンから 明度をやや低くした色",
         "originDescription": "春の若葉の新鮮さや 若々しさを象徴する色",
         "iconKey": "sprout",
-        "cmyk": "48,18,96,1",
-        "_rgb": "rgb(116, 182, 56)",
-        "rgb": "rgb(148, 171, 41)",
+        "cmyk": "60,5,95,0",
+        "rgb": "rgb(116, 182, 56)",
         "hex": "#afd147",
         "examLevel": 3,
         "munsell": "4GY 6.5/9",
-        "approximatePccs": [
-          { "notation": "sf10", "deltaE": 6.69 },
-          { "notation": "v11", "deltaE": 9.67 },
-          { "notation": "v10", "deltaE": 9.99 }
-        ]
+        "approximatePccs": [{ "notation": "v11", "deltaE": 2.01 }]
       },
       {
         "id": "leaf-green",
@@ -1245,13 +1128,11 @@
         "colorDescription": "萌黄より緑みが強く 彩度がやや低い",
         "originDescription": "木の葉の緑に由来 英語の黄緑色の色名を代表する",
         "iconKey": "leaf",
-        "_rgb": "rgb(157, 192, 76)",
         "rgb": "rgb(133, 157, 65)",
         "hex": "#9dc04c",
         "examLevel": 2,
         "munsell": "5GY 6/7",
-        "approximatePccs": [{ "notation": "v11", "deltaE": 10.62 }],
-        "cmyk": "54,26,89,0"
+        "approximatePccs": [{ "notation": "v11", "deltaE": 10.62 }]
       },
       {
         "id": "grass-green",
@@ -1262,13 +1143,12 @@
         "colorDescription": "リーフグリーンに 黒を混ぜたような色",
         "originDescription": "グラスとは草のこと 牧草の色ともされる",
         "iconKey": "grass",
-        "cmyk": "63,42,87,3",
-        "_rgb": "rgb(154, 199, 123)",
-        "rgb": "rgb(112, 128, 68)",
+        "cmyk": "45,5,65,0",
+        "rgb": "rgb(154, 199, 123)",
         "hex": "#7b8d41",
         "examLevel": 2,
         "munsell": "5GY 5/5",
-        "approximatePccs": [{ "notation": "d10", "deltaE": 2.11 }]
+        "approximatePccs": [{ "notation": "lt12", "deltaE": 4.87 }]
       },
       {
         "id": "matsuba-iro",
@@ -1278,13 +1158,11 @@
         "colorDescription": "グラスグリーンのくすみはそのまま 少し淡くした色",
         "originDescription": "松の葉に由来する色名 冬でも葉が落ちない長寿の象徴",
         "iconKey": "pottedPlant",
-        "_rgb": "rgb(131, 154, 92)",
         "rgb": "rgb(104, 129, 88)",
         "hex": "#839a5c",
         "examLevel": 3,
         "munsell": "7.5GY 5/4",
-        "approximatePccs": [{ "notation": "d12", "deltaE": 4.09 }],
-        "cmyk": "66,41,77,2"
+        "approximatePccs": [{ "notation": "d12", "deltaE": 4.09 }]
       },
       {
         "id": "olive",
@@ -1294,16 +1172,12 @@
         "colorDescription": "黄みが強く感じられる 暗い割には彩度が高く、濃い",
         "originDescription": "オリーブの実に由来 旧約聖書の創世記にも登場する",
         "iconKey": "olive",
-        "cmyk": "65,61,92,24",
-        "_rgb": "rgb(158, 152, 30)",
-        "rgb": "rgb(93, 84, 38)",
+        "cmyk": "45,35,100,5",
+        "rgb": "rgb(158, 152, 30)",
         "hex": "#72640a",
         "examLevel": 3,
         "munsell": "7.5Y 3.5/4",
-        "approximatePccs": [
-          { "notation": "dk10", "deltaE": 4.43 },
-          { "notation": "dk8", "deltaE": 5.34 }
-        ]
+        "approximatePccs": [{ "notation": "sf10", "deltaE": 7.5 }]
       },
       {
         "id": "miru-iro",
@@ -1313,16 +1187,14 @@
         "colorDescription": "グラスグリーンより グレイッシュで黄に近い",
         "originDescription": "海藻の一種であるミルに由来 万葉集の歌も存在する",
         "iconKey": "starfish",
-        "cmyk": "62,54,77,8",
-        "_rgb": "rgb(97, 98, 69)",
-        "rgb": "rgb(113, 110, 79)",
+        "cmyk": "60,50,75,30",
+        "rgb": "rgb(97, 98, 69)",
         "hex": "#726d3f",
         "examLevel": 2,
         "munsell": "9.5Y 4.5/2.5",
         "approximatePccs": [
-          { "notation": "g10", "deltaE": 7.65 },
-          { "notation": "g8", "deltaE": 8.3 },
-          { "notation": "d10", "deltaE": 8.84 }
+          { "notation": "g10", "deltaE": 7.23 },
+          { "notation": "dk10", "deltaE": 9.31 }
         ]
       },
       {
@@ -1334,16 +1206,12 @@
         "colorDescription": "海松色より暗いが やや鮮やかな緑が感じられる",
         "originDescription": "オリーブの生の実の色か 葉の色かは不明",
         "iconKey": "olive",
-        "cmyk": "71,59,87,24",
-        "_rgb": "rgb(67, 82, 16)",
-        "rgb": "rgb(82, 87, 53)",
+        "cmyk": "60,35,100,60",
+        "rgb": "rgb(67, 82, 16)",
         "hex": "#5f651e",
         "examLevel": 3,
         "munsell": "2.5GY 3.5/3",
-        "approximatePccs": [
-          { "notation": "dk10", "deltaE": 6.92 },
-          { "notation": "dk12", "deltaE": 9.55 }
-        ]
+        "approximatePccs": [{ "notation": "dk10", "deltaE": 5.41 }]
       },
       {
         "id": "uguisu-iro",
@@ -1353,15 +1221,15 @@
         "colorDescription": "海松色より灰みが薄いため やや明るく見える",
         "originDescription": "ウグイスの羽毛に由来",
         "iconKey": "songbird",
-        "cmyk": "62,52,84,8",
-        "_rgb": "rgb(141, 136, 48)",
-        "rgb": "rgb(111, 111, 68)",
+        "cmyk": "50,40,95,10",
+        "rgb": "rgb(141, 136, 48)",
         "hex": "#9d973b",
         "examLevel": 3,
         "munsell": "1GY 4.5/3.5",
         "approximatePccs": [
-          { "notation": "d10", "deltaE": 6.31 },
-          { "notation": "g10", "deltaE": 9.01 }
+          { "notation": "d8", "deltaE": 8.7 },
+          { "notation": "d10", "deltaE": 9.07 },
+          { "notation": "dp8", "deltaE": 9.56 }
         ]
       },
       {
@@ -1372,15 +1240,15 @@
         "colorDescription": "鶯色からくすみを取り除き 明るくしたような色",
         "originDescription": "黄緑色の羽を持つ小鳥 ヒワに由来",
         "iconKey": "songbird",
-        "cmyk": "30,15,83,0",
-        "_rgb": "rgb(198, 203, 20)",
-        "rgb": "rgb(192, 193, 76)",
+        "cmyk": "30,10,95,0",
+        "rgb": "rgb(198, 203, 20)",
         "hex": "#d7cf3a",
         "examLevel": 2,
         "munsell": "1GY 7.5/8",
         "approximatePccs": [
-          { "notation": "sf10", "deltaE": 4.24 },
-          { "notation": "sf8", "deltaE": 5.19 }
+          { "notation": "v9", "deltaE": 7.08 },
+          { "notation": "sf8", "deltaE": 8.13 },
+          { "notation": "sf10", "deltaE": 8.23 }
         ]
       }
     ],
@@ -1402,16 +1270,14 @@
         "colorDescription": "ミントグリーンより 黄みが強い",
         "originDescription": "日本ではリンゴは赤だが 英語ではグリーンが一般的",
         "iconKey": "apple",
-        "cmyk": "39,1,50,0",
-        "_rgb": "rgb(160, 195, 0)",
-        "rgb": "rgb(166, 212, 158)",
+        "cmyk": "45,5,100,0",
+        "rgb": "rgb(160, 195, 0)",
         "hex": "#a2cc89",
         "examLevel": 2,
         "munsell": "10GY 8/5",
         "approximatePccs": [
-          { "notation": "lt12", "deltaE": 6.87 },
-          { "notation": "ltg10", "deltaE": 6.97 },
-          { "notation": "p12", "deltaE": 7.77 }
+          { "notation": "v10", "deltaE": 3.96 },
+          { "notation": "b10", "deltaE": 4.76 }
         ]
       },
       {
@@ -1423,13 +1289,11 @@
         "colorDescription": "アップルグリーンより 彩度が高く澄んで見える",
         "originDescription": "ミントは日本語ではハッカ ハッカ油から造られたお酒の色",
         "iconKey": "mint",
-        "_rgb": "rgb(152, 206, 151)",
         "rgb": "rgb(111, 206, 143)",
         "hex": "#98ce97",
         "examLevel": 2,
         "munsell": "2.5G 7.5/8",
-        "approximatePccs": [{ "notation": "lt12", "deltaE": 4.33 }],
-        "cmyk": "54,0,61,0"
+        "approximatePccs": [{ "notation": "lt12", "deltaE": 4.33 }]
       },
       {
         "id": "wakatake-iro",
@@ -1439,17 +1303,12 @@
         "colorDescription": "黄みも青みもあまりない 12:Gに白を少し混ぜたような色",
         "originDescription": "若い竹を表す色名 合成染料による彩度の高い緑",
         "iconKey": "bamboo",
-        "cmyk": "73,8,63,0",
-        "_rgb": "rgb(96, 187, 162)",
-        "rgb": "rgb(56, 165, 126)",
+        "cmyk": "60,0,45,5",
+        "rgb": "rgb(96, 187, 162)",
         "hex": "#67be8d",
         "examLevel": 3,
         "munsell": "6G 6/7.5",
-        "approximatePccs": [
-          { "notation": "b14", "deltaE": 6.37 },
-          { "notation": "sf14", "deltaE": 6.41 },
-          { "notation": "sf12", "deltaE": 6.8 }
-        ]
+        "approximatePccs": [{ "notation": "lt14", "deltaE": 3.04 }]
       },
       {
         "id": "seiji-iro",
@@ -1459,16 +1318,15 @@
         "colorDescription": "やや青みがある 若竹色より彩度が低い",
         "originDescription": "中国・唐の時代に造られた 青みを帯びた緑色の磁器に由来",
         "iconKey": "pottery",
-        "cmyk": "57,16,48,0",
-        "_rgb": "rgb(153, 200, 201)",
-        "rgb": "rgb(118, 172, 150)",
+        "cmyk": "40,5,20,5",
+        "rgb": "rgb(153, 200, 201)",
         "hex": "#68b7a1",
         "examLevel": 3,
         "munsell": "7.5G 6.5/4",
         "approximatePccs": [
-          { "notation": "ltg14", "deltaE": 6.93 },
-          { "notation": "sf14", "deltaE": 7.28 },
-          { "notation": "lt14", "deltaE": 7.41 }
+          { "notation": "p16", "deltaE": 6.05 },
+          { "notation": "ltg14", "deltaE": 6.7 },
+          { "notation": "p14", "deltaE": 7.58 }
         ]
       },
       {
@@ -1480,13 +1338,11 @@
         "colorDescription": "青磁色より青くやや暗い 灰みが感じられる",
         "originDescription": "ナイル川にちなんだ 英語の色名",
         "iconKey": "river",
-        "_rgb": "rgb(37, 159, 148)",
         "rgb": "rgb(70, 146, 152)",
         "hex": "#259f94",
         "examLevel": 2,
         "munsell": "10BG 5.5/5",
-        "approximatePccs": [{ "notation": "sf16", "deltaE": 4.13 }],
-        "cmyk": "73,28,42,0"
+        "approximatePccs": [{ "notation": "sf16", "deltaE": 4.13 }]
       },
       {
         "id": "peacock-green",
@@ -1497,16 +1353,12 @@
         "colorDescription": "14:BGより青みが強く少し淡い くすみはまったくない",
         "originDescription": "クジャクの羽に見られる 青緑の色名",
         "iconKey": "peacock",
-        "cmyk": "84,38,54,4",
-        "_rgb": "rgb(0, 128, 150)",
-        "rgb": "rgb(0, 122, 125)",
+        "cmyk": "100,30,45,0",
+        "rgb": "rgb(0, 128, 150)",
         "hex": "#00a496",
         "examLevel": 2,
         "munsell": "7.5BG 4.5/9",
-        "approximatePccs": [
-          { "notation": "v15", "deltaE": 4.33 },
-          { "notation": "d14", "deltaE": 6.26 }
-        ]
+        "approximatePccs": [{ "notation": "v15", "deltaE": 4.19 }]
       }
     ],
     "compareSections": [
@@ -1526,7 +1378,6 @@
         "colorDescription": "若竹色よりも緑が強く 鮮やかで濃い",
         "originDescription": "コバルトによる合成顔料の色 絵の具として使われる",
         "iconKey": "artPaint",
-        "_rgb": "rgb(58, 180, 131)",
         "rgb": "rgb(71, 195, 137)",
         "hex": "#3ab483",
         "examLevel": 3,
@@ -1535,8 +1386,7 @@
           { "notation": "sf12", "deltaE": 7.41 },
           { "notation": "lt12", "deltaE": 7.71 },
           { "notation": "b12", "deltaE": 9.45 }
-        ],
-        "cmyk": "64,0,65,0"
+        ]
       },
       {
         "id": "emerald-green",
@@ -1547,15 +1397,15 @@
         "colorDescription": "コバルトグリーンよりも わずかに暗く、12:Gに近い",
         "originDescription": "緑色の宝石を代表する、 エメラルドに由来する色名",
         "iconKey": "jewelry",
-        "cmyk": "73,7,70,0",
-        "_rgb": "rgb(0, 173, 122)",
-        "rgb": "rgb(58, 166, 116)",
+        "cmyk": "80,0,70,0",
+        "rgb": "rgb(0, 173, 122)",
         "hex": "#00aa6e",
         "examLevel": 3,
         "munsell": "4G 6/8",
         "approximatePccs": [
-          { "notation": "b12", "deltaE": 4.99 },
-          { "notation": "sf12", "deltaE": 5.24 }
+          { "notation": "b12", "deltaE": 6.29 },
+          { "notation": "sf12", "deltaE": 7.18 },
+          { "notation": "b14", "deltaE": 9.01 }
         ]
       },
       {
@@ -1567,16 +1417,12 @@
         "colorDescription": "エメラルドグリーンより さらに暗いが、より鮮やか",
         "originDescription": "鉱石マラカイトは 日本語では孔雀石と呼ばれる",
         "iconKey": "ore",
-        "cmyk": "85,31,86,3",
-        "_rgb": "rgb(0, 155, 113)",
-        "rgb": "rgb(0, 127, 79)",
+        "cmyk": "90,10,75,0",
+        "rgb": "rgb(0, 155, 113)",
         "hex": "#009854",
         "examLevel": 2,
         "munsell": "4G 4.5/9",
-        "approximatePccs": [
-          { "notation": "v13", "deltaE": 6.06 },
-          { "notation": "dp12", "deltaE": 6.44 }
-        ]
+        "approximatePccs": [{ "notation": "v13", "deltaE": 4.35 }]
       },
       {
         "id": "tokiwa-iro",
@@ -1586,15 +1432,15 @@
         "colorDescription": "12:Gに黒を混ぜた 暗清色のような緑色",
         "originDescription": "常緑樹の葉のような色 永久に変わらない緑の美称",
         "iconKey": "leaf",
-        "_rgb": "rgb(42, 131, 70)",
-        "rgb": "rgb(32, 124, 81)",
+        "rgb": "rgb(42, 131, 70)",
         "hex": "#007c45",
-        "cmyk": "83,35,83,4",
+        "cmyk": "80,25,90,15",
         "examLevel": 2,
         "munsell": "3G 4.5/7",
         "approximatePccs": [
-          { "notation": "dp12", "deltaE": 5.22 },
-          { "notation": "v13", "deltaE": 6.91 }
+          { "notation": "v13", "deltaE": 6.9 },
+          { "notation": "d12", "deltaE": 7 },
+          { "notation": "dp12", "deltaE": 7.41 }
         ]
       },
       {
@@ -1605,16 +1451,15 @@
         "colorDescription": "常盤色より明度が高いが 灰みが感じられる",
         "originDescription": "孔雀石から造る絵の具の色 錆の色を指す場合もある",
         "iconKey": "artPaint",
-        "cmyk": "71,38,67,2",
-        "_rgb": "rgb(97, 150, 146)",
-        "rgb": "rgb(86, 131, 106)",
+        "cmyk": "60,20,40,15",
+        "rgb": "rgb(97, 150, 146)",
         "hex": "#4f8a5d",
         "examLevel": 2,
         "munsell": "4G 5/4",
         "approximatePccs": [
-          { "notation": "d12", "deltaE": 8.6 },
-          { "notation": "g12", "deltaE": 8.76 },
-          { "notation": "sf14", "deltaE": 9.37 }
+          { "notation": "sf14", "deltaE": 7.26 },
+          { "notation": "sf16", "deltaE": 7.49 },
+          { "notation": "b14", "deltaE": 9.86 }
         ]
       },
       {
@@ -1625,7 +1470,6 @@
         "colorDescription": "常盤色より青みがあり ややくすんで見える",
         "originDescription": "ラテン語で緑を意味する、 viridisからの造語",
         "iconKey": "paint",
-        "_rgb": "rgb(0, 137, 105)",
         "rgb": "rgb(4, 110, 86)",
         "hex": "#008969",
         "examLevel": 3,
@@ -1634,8 +1478,7 @@
           { "notation": "dp12", "deltaE": 7.84 },
           { "notation": "g12", "deltaE": 7.98 },
           { "notation": "v14", "deltaE": 9.8 }
-        ],
-        "cmyk": "87,43,78,9"
+        ]
       },
       {
         "id": "bottle-green",
@@ -1646,7 +1489,6 @@
         "colorDescription": "常盤色にさらに黒を混ぜて 青みを加えたような色",
         "originDescription": "お酒類の輸送に使われるボトルの 緑色のガラスの色",
         "iconKey": "bottle",
-        "_rgb": "rgb(0, 86, 53)",
         "rgb": "rgb(38, 66, 53)",
         "hex": "#005635",
         "examLevel": 2,
@@ -1655,8 +1497,7 @@
           { "notation": "dk14", "deltaE": 5.19 },
           { "notation": "dkg12", "deltaE": 6.63 },
           { "notation": "dkg14", "deltaE": 7.54 }
-        ],
-        "cmyk": "84,63,80,42"
+        ]
       },
       {
         "id": "tetsu-iro",
@@ -1666,16 +1507,15 @@
         "colorDescription": "ボトルグリーンより青みが強く 彩度を下げた、黒に近い青緑",
         "originDescription": "焼いた鉄の肌のような色",
         "iconKey": "iron",
-        "cmyk": "84,64,73,42",
-        "_rgb": "rgb(1, 46, 52)",
-        "rgb": "rgb(39, 65, 61)",
+        "cmyk": "95,80,75,40",
+        "rgb": "rgb(1, 46, 52)",
         "hex": "#005242",
         "examLevel": 2,
         "munsell": "2.5BG 2.5/2.5",
         "approximatePccs": [
-          { "notation": "dkg14", "deltaE": 4.79 },
-          { "notation": "dk14", "deltaE": 5.37 },
-          { "notation": "dkg12", "deltaE": 5.55 }
+          { "notation": "dk16", "deltaE": 7.27 },
+          { "notation": "dkg14", "deltaE": 7.51 },
+          { "notation": "dkg16", "deltaE": 7.69 }
         ]
       }
     ],
@@ -1705,7 +1545,6 @@
         "colorDescription": "わずかに灰みを感じる 淡い水色",
         "originDescription": "乳幼児服の色に由来する色名 聖母マリアの象徴色",
         "iconKey": "baby",
-        "_rgb": "rgb(187, 226, 241)",
         "rgb": "rgb(166, 190, 204)",
         "hex": "#bbe2f1",
         "examLevel": 3,
@@ -1713,8 +1552,7 @@
         "approximatePccs": [
           { "notation": "p18", "deltaE": 4.82 },
           { "notation": "ltg16", "deltaE": 5.32 }
-        ],
-        "cmyk": "38,17,15,0"
+        ]
       },
       {
         "id": "sora-iro",
@@ -1724,17 +1562,12 @@
         "colorDescription": "ベビーブルーの灰みがない 純粋な青を淡くした色",
         "originDescription": "晴れた日の青空のような色 英語ではスカイブルー",
         "iconKey": "sky",
-        "cmyk": "47,8,9,0",
-        "_rgb": "rgb(102, 202, 237)",
-        "rgb": "rgb(137, 195, 221)",
+        "cmyk": "55,0,5,0",
+        "rgb": "rgb(102, 202, 237)",
         "hex": "#a0d8ef",
         "examLevel": 3,
         "munsell": "9B 7.5/5.5",
-        "approximatePccs": [
-          { "notation": "lt16", "deltaE": 6.13 },
-          { "notation": "ltg16", "deltaE": 7.8 },
-          { "notation": "p18", "deltaE": 7.81 }
-        ]
+        "approximatePccs": [{ "notation": "lt16", "deltaE": 6.97 }]
       },
       {
         "id": "sky-blue",
@@ -1745,17 +1578,12 @@
         "colorDescription": "空色と同じ色",
         "originDescription": "空色と同じ色",
         "iconKey": "sky",
-        "cmyk": "47,8,9,0",
-        "_rgb": "rgb(102, 202, 237)",
-        "rgb": "rgb(137, 195, 221)",
+        "cmyk": "55,0,5,0",
+        "rgb": "rgb(102, 202, 237)",
         "hex": "#a0d8ef",
         "examLevel": 3,
         "munsell": "9B 7.5/5.5",
-        "approximatePccs": [
-          { "notation": "lt16", "deltaE": 6.13 },
-          { "notation": "ltg16", "deltaE": 7.8 },
-          { "notation": "p18", "deltaE": 7.81 }
-        ]
+        "approximatePccs": [{ "notation": "lt16", "deltaE": 6.97 }]
       },
       {
         "id": "kamenozoki",
@@ -1765,15 +1593,15 @@
         "colorDescription": "スカイブルーより 緑みがある",
         "originDescription": "糸や布が藍瓶を少し覗いただけ、 という意味のユニークな色名",
         "iconKey": "jar",
-        "cmyk": "51,14,23,0",
-        "_rgb": "rgb(218, 240, 243)",
-        "rgb": "rgb(131, 182, 193)",
+        "cmyk": "15,0,5,0",
+        "rgb": "rgb(218, 240, 243)",
         "hex": "#a2d7dd",
         "examLevel": 2,
         "munsell": "4.5B 7/4",
         "approximatePccs": [
-          { "notation": "ltg16", "deltaE": 5.33 },
-          { "notation": "lt16", "deltaE": 5.38 }
+          { "notation": "p16", "deltaE": 7.18 },
+          { "notation": "Gy-9.0", "deltaE": 8.8 },
+          { "notation": "W", "deltaE": 9.45 }
         ]
       },
       {
@@ -1784,13 +1612,12 @@
         "colorDescription": "甕覗きをやや暗くし 青みを乗せた色",
         "originDescription": "東京・新橋の芸者衆が好んだ 合成染料による緑みの青",
         "iconKey": "paint",
-        "cmyk": "63,13,28,0",
-        "_rgb": "rgb(48, 174, 209)",
-        "rgb": "rgb(91, 172, 184)",
+        "cmyk": "70,10,15,0",
+        "rgb": "rgb(48, 174, 209)",
         "hex": "#64bcc7",
         "examLevel": 2,
         "munsell": "2.5B 6.5/5.5",
-        "approximatePccs": [{ "notation": "lt16", "deltaE": 5.71 }]
+        "approximatePccs": [{ "notation": "lt16", "deltaE": 4.41 }]
       },
       {
         "id": "asagi-iro",
@@ -1800,16 +1627,14 @@
         "colorDescription": "新橋色より暗いが 鮮やかな緑みが感じられる",
         "originDescription": "明るい藍染めの色 葱の若葉のような青と緑の中間色相",
         "iconKey": "paint",
-        "cmyk": "82,31,37,0",
-        "_rgb": "rgb(0, 141, 168)",
-        "rgb": "rgb(0, 136, 156)",
+        "cmyk": "85,20,30,10",
+        "rgb": "rgb(0, 141, 168)",
         "hex": "#00a1ae",
         "examLevel": 3,
         "munsell": "2.5B 5/8",
         "approximatePccs": [
-          { "notation": "sf16", "deltaE": 5.52 },
-          { "notation": "v15", "deltaE": 5.81 },
-          { "notation": "b16", "deltaE": 7.72 }
+          { "notation": "b16", "deltaE": 5.75 },
+          { "notation": "sf16", "deltaE": 6.11 }
         ]
       },
       {
@@ -1821,7 +1646,6 @@
         "colorDescription": "16:gBを明るく淡くした色 シアンほど鮮やかではない",
         "originDescription": "トルコ石のような色を表す 青と緑の中間色相",
         "iconKey": "stone",
-        "_rgb": "rgb(0, 175, 204)",
         "rgb": "rgb(0, 161, 191)",
         "hex": "#00afcc",
         "examLevel": 3,
@@ -1829,8 +1653,7 @@
         "approximatePccs": [
           { "notation": "lt16", "deltaE": 7.51 },
           { "notation": "sf16", "deltaE": 9.39 }
-        ],
-        "cmyk": "76,14,22,0"
+        ]
       },
       {
         "id": "cyan",
@@ -1840,17 +1663,12 @@
         "colorDescription": "彩度が高い はっきりとした青",
         "originDescription": "古代ギリシャ語で「暗い」を意味する、 cyanosから派生した色名",
         "iconKey": "printer",
-        "cmyk": "75,15,8,0",
-        "_rgb": "rgb(0, 126, 174)",
-        "rgb": "rgb(0, 161, 209)",
+        "cmyk": "100,20,20,15",
+        "rgb": "rgb(0, 126, 174)",
         "hex": "#00a0e9",
         "examLevel": 3,
         "munsell": "7.5B 6/10",
-        "approximatePccs": [
-          { "notation": "lt18", "deltaE": 8.09 },
-          { "notation": "lt16", "deltaE": 8.3 },
-          { "notation": "b16", "deltaE": 9.08 }
-        ]
+        "approximatePccs": [{ "notation": "b16", "deltaE": 3.74 }]
       }
     ],
     "compareSections": [
@@ -1869,16 +1687,14 @@
         "colorDescription": "浅葱色より青みが強く 暗く深い色",
         "originDescription": "江戸時代の藍染めの青 納戸（物置部屋）の暗がりの色",
         "iconKey": "paint",
-        "cmyk": "87,48,45,8",
-        "_rgb": "rgb(0, 88, 124)",
-        "rgb": "rgb(0, 106, 127)",
+        "cmyk": "100,40,30,35",
+        "rgb": "rgb(0, 88, 124)",
         "hex": "#007d92",
         "examLevel": 2,
         "munsell": "4B 4/6",
         "approximatePccs": [
-          { "notation": "dp14", "deltaE": 6.68 },
-          { "notation": "v15", "deltaE": 6.82 },
-          { "notation": "d16", "deltaE": 6.97 }
+          { "notation": "v16", "deltaE": 2.45 },
+          { "notation": "d16", "deltaE": 3.61 }
         ]
       },
       {
@@ -1890,16 +1706,15 @@
         "colorDescription": "納戸色より青く 暗いが鮮やか",
         "originDescription": "ヨーロッパ諸国の 海軍従事者の制服に由来",
         "iconKey": "navy",
-        "cmyk": "90,61,49,23",
-        "_rgb": "rgb(0, 95, 165)",
-        "rgb": "rgb(0, 80, 102)",
+        "cmyk": "100,60,10,0",
+        "rgb": "rgb(0, 95, 165)",
         "hex": "#006788",
         "examLevel": 3,
         "munsell": "5B 3/7",
         "approximatePccs": [
-          { "notation": "dk16", "deltaE": 5.26 },
-          { "notation": "dp14", "deltaE": 5.4 },
-          { "notation": "g14", "deltaE": 7.24 }
+          { "notation": "v16", "deltaE": 5.42 },
+          { "notation": "b18", "deltaE": 5.61 },
+          { "notation": "d16", "deltaE": 7.41 }
         ]
       },
       {
@@ -1910,13 +1725,12 @@
         "colorDescription": "緑みは感じられない マリンブルーより彩度が低い",
         "originDescription": "藍は人類最古の植物顔料の一つ インディゴとも呼ばれる",
         "iconKey": "paint",
-        "cmyk": "87,67,42,22",
-        "_rgb": "rgb(26, 74, 117)",
-        "rgb": "rgb(35, 75, 106)",
+        "cmyk": "85,60,20,35",
+        "rgb": "rgb(26, 74, 117)",
         "hex": "#0f5779",
         "examLevel": 3,
         "munsell": "2PB 3/5",
-        "approximatePccs": [{ "notation": "dp16", "deltaE": 3.81 }]
+        "approximatePccs": [{ "notation": "dp16", "deltaE": 2.53 }]
       },
       {
         "id": "saxe-blue",
@@ -1927,15 +1741,14 @@
         "colorDescription": "納戸色より青白さがある うっすらとした灰み",
         "originDescription": "サクソン人の青という意味 藍染めの色名の一つ",
         "iconKey": "paint",
-        "cmyk": "69,45,34,1",
-        "_rgb": "rgb(156, 195, 215)",
-        "rgb": "rgb(91, 126, 150)",
+        "cmyk": "30, 0, 0, 20",
+        "rgb": "rgb(156, 195, 215)",
         "hex": "#3a8daa",
         "examLevel": 2,
         "munsell": "1PB 5/4.5",
         "approximatePccs": [
-          { "notation": "b16", "deltaE": 7.79 },
-          { "notation": "sf16", "deltaE": 10 }
+          { "notation": "p18", "deltaE": 4.93 },
+          { "notation": "ltg16", "deltaE": 6.23 }
         ]
       },
       {
@@ -1946,16 +1759,15 @@
         "colorDescription": "純粋な青18:Bに 白を加えたようなやや淡い色",
         "originDescription": "藍染め全般の代表的な色",
         "iconKey": "paint",
-        "cmyk": "84,56,24,6",
-        "_rgb": "rgb(0, 97, 160)",
-        "rgb": "rgb(43, 100, 146)",
+        "cmyk": "95, 60, 15, 0",
+        "rgb": "rgb(0, 97, 160)",
         "hex": "#2980af",
         "examLevel": 2,
         "munsell": "3PB 4/7.5",
         "approximatePccs": [
-          { "notation": "v16", "deltaE": 4.19 },
-          { "notation": "d16", "deltaE": 5.06 },
-          { "notation": "b18", "deltaE": 5.34 }
+          { "notation": "v16", "deltaE": 4.52 },
+          { "notation": "b18", "deltaE": 5.94 },
+          { "notation": "d16", "deltaE": 6.47 }
         ]
       },
       {
@@ -1967,16 +1779,14 @@
         "colorDescription": "シアンを少し暗くした色に近い 青み・緑みは納戸色と縹色の中間",
         "originDescription": "元はスカイブルーの一種 青色の絵の具の色名",
         "iconKey": "artPaint",
-        "cmyk": "84,44,20,2",
-        "_rgb": "rgb(0, 121, 191)",
-        "rgb": "rgb(0, 118, 165)",
+        "cmyk": "100, 35, 5, 5",
+        "rgb": "rgb(0, 121, 191)",
         "hex": "#008db7",
         "examLevel": 2,
         "munsell": "9B 4.5/9",
         "approximatePccs": [
-          { "notation": "b16", "deltaE": 6.43 },
-          { "notation": "d16", "deltaE": 7.68 },
-          { "notation": "v16", "deltaE": 8.94 }
+          { "notation": "b18", "deltaE": 7.44 },
+          { "notation": "b16", "deltaE": 8.67 }
         ]
       },
       {
@@ -1988,16 +1798,14 @@
         "colorDescription": "シアンと同じ鮮やかさ シアンの緑みはない純粋な青",
         "originDescription": "印象派の画家たちに 愛好された絵の具の色",
         "iconKey": "artPaint",
-        "cmyk": "87,56,11,3",
-        "_rgb": "rgb(0, 95, 177)",
-        "rgb": "rgb(0, 101, 163)",
+        "cmyk": "100, 60, 0, 0",
+        "rgb": "rgb(0, 95, 177)",
         "hex": "#0068b7",
         "examLevel": 3,
         "munsell": "3PB 4/10",
         "approximatePccs": [
-          { "notation": "v16", "deltaE": 4.9 },
-          { "notation": "b18", "deltaE": 5.57 },
-          { "notation": "d16", "deltaE": 6.35 }
+          { "notation": "b18", "deltaE": 4.8 },
+          { "notation": "v16", "deltaE": 6.89 }
         ]
       }
     ],
@@ -2020,16 +1828,12 @@
         "colorDescription": "瑠璃色より紫が強く やや白っぽく明るく見える",
         "originDescription": "初夏に咲く杜若の花のような色 カキツバタは「書きつけ花」から転じた名前",
         "iconKey": "flower",
-        "cmyk": "79,66,4,2",
-        "_rgb": "rgb(108, 53, 133)",
-        "rgb": "rgb(69, 92, 163)",
+        "cmyk": "70, 90, 10, 0",
+        "rgb": "rgb(108, 53, 133)",
         "hex": "#4d4398",
         "examLevel": 3,
         "munsell": "7PB 4/10",
-        "approximatePccs": [
-          { "notation": "sf18", "deltaE": 4.92 },
-          { "notation": "b18", "deltaE": 6.79 }
-        ]
+        "approximatePccs": [{ "notation": "d22", "deltaE": 3.03 }]
       },
       {
         "id": "ruri-iro",
@@ -2039,13 +1843,11 @@
         "colorDescription": "暗めだが、彩度が高い 鮮やかな紫寄りの青",
         "originDescription": "瑠璃という青い石に由来 ラピスラズリと同一の鉱物とされる",
         "iconKey": "jewelry",
-        "_rgb": "rgb(29, 80, 162)",
         "rgb": "rgb(39, 70, 126)",
         "hex": "#1d50a2",
         "examLevel": 3,
         "munsell": "6PB 3/8",
-        "approximatePccs": [{ "notation": "d18", "deltaE": 1.74 }],
-        "cmyk": "88,74,21,14"
+        "approximatePccs": [{ "notation": "d18", "deltaE": 1.74 }]
       },
       {
         "id": "gunjo-iro",
@@ -2055,16 +1857,14 @@
         "colorDescription": "杜若色よりやや明るい ラベンダーのような薄紫みがある",
         "originDescription": "日本画に使われる絵の具の名前 群青は「青の集まり」という意味",
         "iconKey": "artPaint",
-        "cmyk": "84,76,1,1",
-        "_rgb": "rgb(43, 70, 156)",
-        "rgb": "rgb(63, 76, 156)",
+        "cmyk": "90,80,0,0",
+        "rgb": "rgb(43, 70, 156)",
         "hex": "#4e67b0",
         "examLevel": 3,
         "munsell": "7.5PB 3.5/11",
         "approximatePccs": [
-          { "notation": "v17", "deltaE": 7.36 },
-          { "notation": "sf20", "deltaE": 7.47 },
-          { "notation": "d18", "deltaE": 7.62 }
+          { "notation": "v17", "deltaE": 4.81 },
+          { "notation": "d18", "deltaE": 6 }
         ]
       },
       {
@@ -2076,16 +1876,15 @@
         "colorDescription": "マンセル値は群青色と同じだが 群青色よりやや暗く濃く見える",
         "originDescription": "ラピスラズリを粉末状にした顔料 意味は「海の彼方から来た青」",
         "iconKey": "jewelry",
-        "cmyk": "84,76,1,1",
-        "_rgb": "rgb(0, 50, 143)",
-        "rgb": "rgb(63, 76, 156)",
+        "cmyk": "100, 90, 0, 0",
+        "rgb": "rgb(0, 50, 143)",
         "hex": "#4052a2",
         "examLevel": 3,
         "munsell": "7.5PB 3.5/11",
         "approximatePccs": [
-          { "notation": "v17", "deltaE": 7.36 },
-          { "notation": "sf20", "deltaE": 7.47 },
-          { "notation": "d18", "deltaE": 7.62 }
+          { "notation": "v17", "deltaE": 5.2 },
+          { "notation": "v18", "deltaE": 5.45 },
+          { "notation": "d20", "deltaE": 6.82 }
         ]
       },
       {
@@ -2097,13 +1896,16 @@
         "colorDescription": "瑠璃色に黒を混ぜたような色 うっすらと紫みを感じる",
         "originDescription": "イギリス海軍の制服に由来 日本では紺色",
         "iconKey": "navy",
-        "cmyk": "84,75,46,34",
-        "_rgb": "rgb(0, 46, 102)",
-        "rgb": "rgb(48, 59, 88)",
+        "cmyk": "100, 85, 25, 25",
+        "rgb": "rgb(0, 46, 102)",
         "hex": "#1f2e55",
         "examLevel": 3,
         "munsell": "6PB 2.5/4",
-        "approximatePccs": [{ "notation": "g18", "deltaE": 3.05 }]
+        "approximatePccs": [
+          { "notation": "dp18", "deltaE": 5.39 },
+          { "notation": "dk18", "deltaE": 5.47 },
+          { "notation": "v17", "deltaE": 6.27 }
+        ]
       },
       {
         "id": "midnight-blue",
@@ -2114,13 +1916,12 @@
         "colorDescription": "ネイビーブルーよりさらに暗く 紫みがない、ほぼ黒に見える色",
         "originDescription": "意味は「真夜中の青」 ネイビーブルーよりも暗い紺色",
         "iconKey": "moon",
-        "cmyk": "85,77,63,59",
-        "_rgb": "rgb(0, 14, 43)",
-        "rgb": "rgb(32, 38, 52)",
+        "cmyk": "100, 90, 50, 60",
+        "rgb": "rgb(0, 14, 43)",
         "hex": "#001d42",
         "examLevel": 2,
         "munsell": "5PB 1.5/2",
-        "approximatePccs": [{ "notation": "dkg18", "deltaE": 2.84 }]
+        "approximatePccs": [{ "notation": "dkg20", "deltaE": 11.48 }]
       }
     ],
     "compareSections": [
@@ -2139,13 +1940,12 @@
         "colorDescription": "澄んだ薄紫色 赤みや青みはあまり感じられない",
         "originDescription": "ライラック（リラ）の花に由来 香水の原料としても使われる",
         "iconKey": "perfume",
-        "cmyk": "27,41,4,0",
-        "_rgb": "rgb(177, 135, 190)",
-        "rgb": "rgb(192, 163, 202)",
+        "cmyk": "35, 55, 0, 0",
+        "rgb": "rgb(177, 135, 190)",
         "hex": "#d1bada",
         "examLevel": 2,
         "munsell": "6P 7/6",
-        "approximatePccs": [{ "notation": "p22", "deltaE": 4.04 }]
+        "approximatePccs": [{ "notation": "lt22", "deltaE": 5.93 }]
       },
       {
         "id": "lavender",
@@ -2155,15 +1955,15 @@
         "colorDescription": "ライラックより暗く薄い 灰まじりの青みが感じられる",
         "originDescription": "ラベンダーの花のような色 水浴の際の香水としても使われた",
         "iconKey": "perfume",
-        "cmyk": "44,45,26,0",
-        "_rgb": "rgb(174, 167, 197)",
-        "rgb": "rgb(155, 143, 163)",
+        "cmyk": "35, 35, 10, 0",
+        "rgb": "rgb(174, 167, 197)",
         "hex": "#c5b3d3",
         "examLevel": 3,
         "munsell": "5P 6/3",
         "approximatePccs": [
-          { "notation": "ltg22", "deltaE": 4.29 },
-          { "notation": "ltg20", "deltaE": 5.58 }
+          { "notation": "p20", "deltaE": 5.77 },
+          { "notation": "ltg22", "deltaE": 5.94 },
+          { "notation": "p22", "deltaE": 7 }
         ]
       },
       {
@@ -2174,16 +1974,15 @@
         "colorDescription": "ライラックと同じくらいの 明るさ・淡さで青みがある",
         "originDescription": "藤の花房に由来 枕草子の一節にも登場する",
         "iconKey": "flower",
-        "cmyk": "42,40,2,0",
-        "_rgb": "rgb(165, 158, 207)",
-        "rgb": "rgb(159, 155, 202)",
+        "cmyk": "40, 40, 0, 0",
+        "rgb": "rgb(165, 158, 207)",
         "hex": "#bbb7da",
         "examLevel": 2,
         "munsell": "10PB 6.5/6.5",
         "approximatePccs": [
-          { "notation": "ltg20", "deltaE": 6.8 },
-          { "notation": "p20", "deltaE": 8.1 },
-          { "notation": "ltg22", "deltaE": 8.32 }
+          { "notation": "p20", "deltaE": 7.62 },
+          { "notation": "ltg20", "deltaE": 8 },
+          { "notation": "ltg22", "deltaE": 8.38 }
         ]
       },
       {
@@ -2194,7 +1993,6 @@
         "colorDescription": "藤色を暗く鮮やかにした色",
         "originDescription": "色みは異なるが 藤の英語名",
         "iconKey": "flower",
-        "_rgb": "rgb(142, 139, 194)",
         "rgb": "rgb(124, 109, 196)",
         "hex": "#8e8bc2",
         "examLevel": 2,
@@ -2202,8 +2000,7 @@
         "approximatePccs": [
           { "notation": "b20", "deltaE": 5.44 },
           { "notation": "lt20", "deltaE": 6.33 }
-        ],
-        "cmyk": "61,62,0,0"
+        ]
       },
       {
         "id": "violet",
@@ -2213,7 +2010,6 @@
         "colorDescription": "ウイスタリアより青みが弱い 暗いがとても鮮やか",
         "originDescription": "スミレの花に由来する色名 バイオレットはスミレ属の総称",
         "iconKey": "flower",
-        "_rgb": "rgb(113, 79, 157)",
         "rgb": "rgb(117, 78, 157)",
         "hex": "#714f9d",
         "examLevel": 3,
@@ -2222,8 +2018,7 @@
           { "notation": "sf20", "deltaE": 7.69 },
           { "notation": "b20", "deltaE": 8.9 },
           { "notation": "sf22", "deltaE": 9.58 }
-        ],
-        "cmyk": "64,79,0,0"
+        ]
       },
       {
         "id": "kikyo-iro",
@@ -2233,15 +2028,15 @@
         "colorDescription": "バイオレットより青が強く より鮮やか",
         "originDescription": "桔梗の花に由来する青紫 近世では染色の色名",
         "iconKey": "flower",
-        "cmyk": "80,82,0,0",
-        "_rgb": "rgb(78, 82, 162)",
-        "rgb": "rgb(80, 69, 164)",
+        "cmyk": "80, 75, 0, 0",
+        "rgb": "rgb(78, 82, 162)",
         "hex": "#5654a2",
         "examLevel": 3,
         "munsell": "9PB 3.5/13",
         "approximatePccs": [
-          { "notation": "d20", "deltaE": 7.87 },
-          { "notation": "sf20", "deltaE": 7.93 }
+          { "notation": "sf20", "deltaE": 5.43 },
+          { "notation": "b20", "deltaE": 7.4 },
+          { "notation": "sf18", "deltaE": 7.95 }
         ]
       }
     ],
@@ -2261,16 +2056,12 @@
         "colorDescription": "パープルより明るい 強い赤みが感じられる",
         "originDescription": "アヤメという名は 花びらの文目模様に由来する",
         "iconKey": "flower",
-        "cmyk": "23,63,0,0",
-        "_rgb": "rgb(70, 51, 140)",
-        "rgb": "rgb(197, 122, 180)",
+        "cmyk": "85, 90, 0, 0",
+        "rgb": "rgb(70, 51, 140)",
         "hex": "#cc7db1",
         "examLevel": 3,
         "munsell": "10P 6/10",
-        "approximatePccs": [
-          { "notation": "lt22", "deltaE": 5.33 },
-          { "notation": "lt24", "deltaE": 7.57 }
-        ]
+        "approximatePccs": [{ "notation": "d20", "deltaE": 4.32 }]
       },
       {
         "id": "purple",
@@ -2280,13 +2071,11 @@
         "colorDescription": "バイオレットから 青みを取り除いたような紫",
         "originDescription": "ブルプラ貝の体液からは 紫色の植物性染料が採れる",
         "iconKey": "shell",
-        "_rgb": "rgb(155, 104, 169)",
         "rgb": "rgb(168, 93, 172)",
         "hex": "#9b68a9",
         "examLevel": 3,
         "munsell": "7.5P 5/12",
-        "approximatePccs": [{ "notation": "b22", "deltaE": 1.52 }],
-        "cmyk": "40,75,0,0"
+        "approximatePccs": [{ "notation": "b22", "deltaE": 1.52 }]
       },
       {
         "id": "mauve",
@@ -2296,15 +2085,15 @@
         "colorDescription": "微かに青みがある パープルよりやや暗く見える",
         "originDescription": "世界で初めて発見された合成染料の色 フランス語で植物の葵を意味する",
         "iconKey": "flower",
-        "cmyk": "54,72,8,1",
-        "_rgb": "rgb(128, 80, 157)",
-        "rgb": "rgb(134, 92, 154)",
+        "cmyk": "60, 80, 0, 0",
+        "rgb": "rgb(128, 80, 157)",
         "hex": "#915da3",
         "examLevel": 3,
         "munsell": "5P 4.5/9",
         "approximatePccs": [
-          { "notation": "sf22", "deltaE": 5.38 },
-          { "notation": "b22", "deltaE": 6.71 }
+          { "notation": "sf22", "deltaE": 7.5 },
+          { "notation": "b22", "deltaE": 8.26 },
+          { "notation": "sf20", "deltaE": 9.64 }
         ]
       },
       {
@@ -2315,13 +2104,12 @@
         "colorDescription": "パープルに暗めの灰を 混ぜたような色",
         "originDescription": "江戸時代の色名 昔ながらの伝統的な紫の呼び名",
         "iconKey": "japanese",
-        "cmyk": "59,74,32,7",
-        "_rgb": "rgb(78, 29, 92)",
-        "rgb": "rgb(120, 83, 123)",
+        "cmyk": "75, 95, 25, 25",
+        "rgb": "rgb(78, 29, 92)",
         "hex": "#895687",
         "examLevel": 2,
         "munsell": "7.5P 4/6",
-        "approximatePccs": [{ "notation": "sf22", "deltaE": 4.67 }]
+        "approximatePccs": [{ "notation": "dp22", "deltaE": 2.17 }]
       },
       {
         "id": "edomurasaki",
@@ -2331,17 +2119,12 @@
         "colorDescription": "バイオレットより暗く淡い バイオレットの方が青い",
         "originDescription": "武蔵野の紫草で染めた色",
         "iconKey": "japanese",
-        "cmyk": "70,78,25,9",
-        "_rgb": "rgb(66, 63, 120)",
-        "rgb": "rgb(98, 72, 123)",
+        "cmyk": "85, 85,30, 0",
+        "rgb": "rgb(66, 63, 120)",
         "hex": "#734e95",
         "examLevel": 2,
         "munsell": "3P 3.5/7",
-        "approximatePccs": [
-          { "notation": "d22", "deltaE": 7.15 },
-          { "notation": "sf20", "deltaE": 7.58 },
-          { "notation": "g22", "deltaE": 9.57 }
-        ]
+        "approximatePccs": [{ "notation": "d20", "deltaE": 3.54 }]
       },
       {
         "id": "nasukon",
@@ -2351,7 +2134,6 @@
         "colorDescription": "黒に近い暗さの中にも 深い紫を感じ、ナスの実のよう",
         "originDescription": "熟したナスの実のような 黒に近い紫色",
         "iconKey": "eggplant",
-        "_rgb": "rgb(75, 26, 71)",
         "rgb": "rgb(71, 54, 72)",
         "hex": "#4b1a47",
         "examLevel": 3,
@@ -2359,8 +2141,7 @@
         "approximatePccs": [
           { "notation": "g22", "deltaE": 3.93 },
           { "notation": "dk22", "deltaE": 4.5 }
-        ],
-        "cmyk": "74,78,57,38"
+        ]
       }
     ],
     "compareSections": [
@@ -2380,16 +2161,15 @@
         "colorDescription": "ほぼ白だが 赤寄りの黄みが感じられる",
         "originDescription": "何の加工もしていない、 生地（繊維）の色",
         "iconKey": "thread",
-        "cmyk": "8,10,16,0",
-        "_rgb": "rgb(243, 231, 216)",
-        "rgb": "rgb(235, 226, 213)",
+        "cmyk": "5, 10, 15, 0",
+        "rgb": "rgb(243, 231, 216)",
         "hex": "#fbfaf3",
         "examLevel": 3,
         "munsell": "10YR 9/1",
         "approximatePccs": [
-          { "notation": "Gy-9.0", "deltaE": 6.45 },
-          { "notation": "Gy-8.5", "deltaE": 7.2 },
-          { "notation": "W", "deltaE": 8.69 }
+          { "notation": "Gy-9.0", "deltaE": 7.63 },
+          { "notation": "Gy-8.5", "deltaE": 8.72 },
+          { "notation": "W", "deltaE": 8.83 }
         ]
       },
       {
@@ -2400,16 +2180,14 @@
         "colorDescription": "生成り色よりやや暗く 黄色っぽいくすみがある",
         "originDescription": "アイボリーとは象牙のこと 装飾や工芸品の材料とされてきた",
         "iconKey": "ivory",
-        "cmyk": "14,15,27,0",
-        "_rgb": "rgb(245, 229, 190)",
-        "rgb": "rgb(222, 213, 192)",
+        "cmyk": "5, 10, 30, 0",
+        "rgb": "rgb(245, 229, 190)",
         "hex": "#f8f5e3",
         "examLevel": 3,
         "munsell": "2.5Y 8.5/1.5",
         "approximatePccs": [
-          { "notation": "ltg8", "deltaE": 7.77 },
-          { "notation": "Gy-8.5", "deltaE": 9.14 },
-          { "notation": "Gy-9.0", "deltaE": 9.63 }
+          { "notation": "p6", "deltaE": 5.14 },
+          { "notation": "ltg8", "deltaE": 7.27 }
         ]
       },
       {
@@ -2420,7 +2198,6 @@
         "colorDescription": "グレイッシュな 淡いブラウン",
         "originDescription": "茶色に近い鼠色 茶と鼠は江戸時代に大流行した色",
         "iconKey": "mouse",
-        "_rgb": "rgb(169, 158, 147)",
         "rgb": "rgb(156, 145, 139)",
         "hex": "#a99e93",
         "examLevel": 2,
@@ -2429,8 +2206,7 @@
           { "notation": "Gy-6.0", "deltaE": 5.64 },
           { "notation": "Gy-6.5", "deltaE": 6.99 },
           { "notation": "Gy-5.5", "deltaE": 7.22 }
-        ],
-        "cmyk": "44,43,45,0"
+        ]
       },
       {
         "id": "rikyunezu",
@@ -2440,7 +2216,6 @@
         "colorDescription": "黄寄りの緑と グレイを混ぜたような色",
         "originDescription": "千利休にちなんだ緑みのグレイ 利休とつく色は渋い緑みの色",
         "iconKey": "mouse",
-        "_rgb": "rgb(123, 129, 116)",
         "rgb": "rgb(114, 124, 117)",
         "hex": "#7b8174",
         "examLevel": 2,
@@ -2449,8 +2224,7 @@
           { "notation": "Gy-5.0", "deltaE": 6.89 },
           { "notation": "g10", "deltaE": 8.18 },
           { "notation": "Gy-5.5", "deltaE": 8.37 }
-        ],
-        "cmyk": "61,48,55,3"
+        ]
       }
     ],
     "compareSections": [
@@ -2468,13 +2242,15 @@
         "colorDescription": "シルバーグレイと同じ色",
         "originDescription": "白に近い明るいグレイを表す色名 銀は白の美称でもあった",
         "iconKey": "coin",
-        "cmyk": "42,35,35,0",
-        "_rgb": "rgb(179, 185, 189)",
-        "rgb": "rgb(160, 160, 160)",
+        "cmyk": "30, 20, 20, 5",
+        "rgb": "rgb(179, 185, 189)",
         "hex": "#afafb0",
         "examLevel": 2,
         "munsell": "N6.5",
-        "approximatePccs": [{ "notation": "Gy-6.5", "deltaE": 0 }]
+        "approximatePccs": [
+          { "notation": "Gy-7.5", "deltaE": 3.24 },
+          { "notation": "Gy-7.0", "deltaE": 4.38 }
+        ]
       },
       {
         "id": "silver-grey",
@@ -2485,13 +2261,15 @@
         "colorDescription": "銀色に相当する色",
         "originDescription": "銀に由来する、銀鼠と同じ色",
         "iconKey": "coin",
-        "cmyk": "42,35,35,0",
-        "_rgb": "rgb(191, 197, 201)",
-        "rgb": "rgb(160, 160, 160)",
+        "cmyk": "5, 0, 0, 30",
+        "rgb": "rgb(191, 197, 201)",
         "hex": "#afafb0",
         "examLevel": 3,
         "munsell": "N6.5",
-        "approximatePccs": [{ "notation": "Gy-6.5", "deltaE": 0 }]
+        "approximatePccs": [
+          { "notation": "Gy-8.0", "deltaE": 3.26 },
+          { "notation": "Gy-7.5", "deltaE": 3.89 }
+        ]
       },
       {
         "id": "slate-grey",
@@ -2502,13 +2280,12 @@
         "colorDescription": "わずかに青みがあり 冷たく見えるグレイ",
         "originDescription": "スレートとは粘板岩の薄板のこと 西洋では屋根瓦として使われる",
         "iconKey": "rock",
-        "cmyk": "71,62,59,26",
-        "_rgb": "rgb(109, 123, 140)",
-        "rgb": "rgb(81, 84, 87)",
+        "cmyk": "60, 45, 35, 10",
+        "rgb": "rgb(109, 123, 140)",
         "hex": "#636062",
         "examLevel": 2,
         "munsell": "2.5PB 3.5/0.5",
-        "approximatePccs": [{ "notation": "Gy-3.5", "deltaE": 2.2 }]
+        "approximatePccs": [{ "notation": "Gy-5.0", "deltaE": 8.88 }]
       },
       {
         "id": "charcoal-grey",
@@ -2519,7 +2296,6 @@
         "colorDescription": "よく見ると 紫みが感じられる",
         "originDescription": "チャコールとは木炭・炭のこと 日本語では消炭色",
         "iconKey": "charcoal",
-        "_rgb": "rgb(78, 68, 73)",
         "rgb": "rgb(75, 70, 78)",
         "hex": "#4e4449",
         "examLevel": 3,
@@ -2528,8 +2304,7 @@
           { "notation": "Gy-3.0", "deltaE": 6.07 },
           { "notation": "Gy-2.5", "deltaE": 7.21 },
           { "notation": "Gy-3.5", "deltaE": 7.4 }
-        ],
-        "cmyk": "73,69,60,32"
+        ]
       },
       {
         "id": "lamp-black",
@@ -2540,13 +2315,12 @@
         "colorDescription": "煤のように真っ黒",
         "originDescription": "ランプの油を燃焼させて採れる、 煤の色に由来する色名",
         "iconKey": "fire",
-        "cmyk": "84,79,77,71",
-        "_rgb": "rgb(11, 1, 0)",
-        "rgb": "rgb(28, 28, 28)",
+        "cmyk": "30, 20, 20, 100",
+        "rgb": "rgb(11, 1, 0)",
         "hex": "#24130d",
         "examLevel": 2,
         "munsell": "N1",
-        "approximatePccs": [{ "notation": "Bk", "deltaE": 2.83 }]
+        "approximatePccs": [{ "notation": "Bk", "deltaE": 9.23 }]
       }
     ],
     "compareSections": [

@@ -4,13 +4,19 @@ import { dirname, resolve } from "node:path"
 import chroma from "chroma-js"
 import Color from "colorjs.io"
 import { munsellToXyz } from "munsell"
+import { $ } from "zx"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const DATA_DIR = resolve(__dirname, "../src/lib/data")
+const ICC_DIR = resolve(__dirname, "icc")
+const JAPAN_COLOR_ICC = resolve(ICC_DIR, "JapanColor2011Coated.icc")
+const SRGB_ICC = resolve(ICC_DIR, "sRGB.icc")
 
 const DELTA_E_ABS_THRESHOLD = 10
 const DELTA_E_RATIO_THRESHOLD = 1.5
 const MAX_RESULTS = 3
+
+$.verbose = false
 
 async function readJson(filename) {
   const path = resolve(DATA_DIR, filename)
@@ -31,6 +37,26 @@ function munsellToDisplayRgb(munsell) {
   const [x, y, z] = munsellToXyz(munsell)
   const color = new Color("xyz-d65", [x, y, z]).to("srgb").toGamut({ space: "srgb", method: "css" })
   const [r, g, b] = color.coords.map((v) => Math.round(Math.max(0, Math.min(1, v)) * 255))
+  return `rgb(${r}, ${g}, ${b})`
+}
+
+async function cmykToRgb(cmyk) {
+  const parts = String(cmyk)
+    .split(",")
+    .map((s) => s.trim())
+  if (parts.length !== 4 || parts.some((p) => p === "" || Number.isNaN(Number(p)))) {
+    throw new Error(`Invalid CMYK input: "${cmyk}". Expected format: C,M,Y,K`)
+  }
+  const [c, m, y, k] = parts.map(Number)
+  const cmykExpr = `cmyk(${c}%,${m}%,${y}%,${k}%)`
+  const result = await $`magick -size 1x1 xc:${cmykExpr} -profile ${JAPAN_COLOR_ICC} -profile ${SRGB_ICC} txt:`
+  const match = result.stdout.match(/srgb\(([\d.]+)%,([\d.]+)%,([\d.]+)%\)/)
+  if (!match) {
+    throw new Error(`Failed to parse magick output for "${cmyk}":\n${result.stdout}`)
+  }
+  const r = Math.round((parseFloat(match[1]) / 100) * 255)
+  const g = Math.round((parseFloat(match[2]) / 100) * 255)
+  const b = Math.round((parseFloat(match[3]) / 100) * 255)
   return `rgb(${r}, ${g}, ${b})`
 }
 
@@ -64,8 +90,21 @@ async function main() {
   const jisColorsBySubfamily = JSON.parse(await readFile(jisPath, "utf8"))
   const allColors = Object.values(jisColorsBySubfamily).flatMap((sub) => sub.colors)
 
+  const cmykCache = new Map()
+  let fromCmyk = 0
+  let fromMunsell = 0
+
   for (const jis of allColors) {
-    jis.rgb = munsellToDisplayRgb(jis.munsell)
+    if (jis.cmyk) {
+      if (!cmykCache.has(jis.cmyk)) {
+        cmykCache.set(jis.cmyk, await cmykToRgb(jis.cmyk))
+      }
+      jis.rgb = cmykCache.get(jis.cmyk)
+      fromCmyk++
+    } else {
+      jis.rgb = munsellToDisplayRgb(jis.munsell)
+      fromMunsell++
+    }
     jis.approximatePccs = computeApproximatePccs(jis.rgb, pccsAll)
   }
 
@@ -74,7 +113,7 @@ async function main() {
   const total = allColors.length
   const withOnlyOne = allColors.filter((c) => c.approximatePccs.length === 1).length
   const maxed = allColors.filter((c) => c.approximatePccs.length === MAX_RESULTS).length
-  console.log(`Updated rgb + approximatePccs on ${total} entries.`)
+  console.log(`Updated rgb + approximatePccs on ${total} entries (cmyk: ${fromCmyk}, munsell: ${fromMunsell}).`)
   console.log(`  1 candidate:  ${withOnlyOne}`)
   console.log(`  ${MAX_RESULTS} candidates: ${maxed}`)
 
