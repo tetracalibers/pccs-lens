@@ -16,9 +16,7 @@
     "test": "npm run test:unit -- --run",
     "deploy": "npm run build && wrangler deploy",
     "cf-typegen": "wrangler types",
-    "data:jis-cmyk": "node scripts/update-jis-cmyk-from-munsell.mjs && prettier --write src/lib/data/jis_colors.json",
-    "data:jis-rgb": "node scripts/add-rgb-to-jis-colors.mjs && prettier --write src/lib/data/jis_colors.json",
-    "data:jis-pccs-approx": "node scripts/add-pccs-approximations.mjs && prettier --write src/lib/data/jis_colors.json",
+    "data:jis-update": "node scripts/update-jis-from-munsell.mjs && prettier --write src/lib/data/jis_colors.json",
     "data:munsell-hue": "node scripts/generate-munsell-hue.mjs && prettier --write src/lib/data/munsell_hue.json"
   },
   "devDependencies": {

@@ -11,11 +11,11 @@
         "iconKey": "sakura",
         "cmyk": "3,16,8,0",
         "_rgb": "rgb(253, 226, 229)",
-        "rgb": "rgb(246, 222, 223)",
+        "rgb": "rgb(245, 221, 223)",
         "hex": "#fdeeef",
         "examLevel": 3,
         "munsell": "10RP 9/2.5",
-        "approximatePccs": [{ "notation": "Gy-9.0", "deltaE": 9.96 }]
+        "approximatePccs": [{ "notation": "Gy-9.0", "deltaE": 10.06 }]
       },
       {
         "id": "baby-pink",
@@ -28,14 +28,14 @@
         "iconKey": "baby",
         "cmyk": "1,28,16,0",
         "_rgb": "rgb(252, 210, 219)",
-        "rgb": "rgb(250, 203, 200)",
+        "rgb": "rgb(249, 202, 199)",
         "hex": "#fadbda",
         "examLevel": 3,
         "munsell": "4R 8.5/4",
         "approximatePccs": [
-          { "notation": "p4", "deltaE": 7.7 },
-          { "notation": "ltg4", "deltaE": 8.02 },
-          { "notation": "p2", "deltaE": 8.91 }
+          { "notation": "p4", "deltaE": 7.71 },
+          { "notation": "ltg4", "deltaE": 7.8 },
+          { "notation": "p2", "deltaE": 8.82 }
         ]
       },
       {
@@ -48,11 +48,11 @@
         "iconKey": "bird",
         "cmyk": "1,48,12,0",
         "_rgb": "rgb(249, 179, 180)",
-        "rgb": "rgb(245, 163, 184)",
+        "rgb": "rgb(247, 163, 184)",
         "hex": "#f4b3c2",
         "examLevel": 2,
         "munsell": "7RP 7.5/8",
-        "approximatePccs": [{ "notation": "p2", "deltaE": 4.04 }]
+        "approximatePccs": [{ "notation": "p2", "deltaE": 4.06 }]
       },
       {
         "id": "rose-pink",
@@ -65,14 +65,14 @@
         "iconKey": "flower",
         "cmyk": "4,53,25,0",
         "_rgb": "rgb(236, 136, 160)",
-        "rgb": "rgb(239, 150, 160)",
+        "rgb": "rgb(235, 150, 160)",
         "hex": "#f29c9f",
         "examLevel": 2,
         "munsell": "10RP 7/8",
         "approximatePccs": [
-          { "notation": "p2", "deltaE": 7.98 },
-          { "notation": "lt2", "deltaE": 8.21 },
-          { "notation": "ltg2", "deltaE": 8.56 }
+          { "notation": "p2", "deltaE": 7.95 },
+          { "notation": "ltg2", "deltaE": 7.98 },
+          { "notation": "lt2", "deltaE": 8.57 }
         ]
       },
       {
@@ -86,14 +86,11 @@
         "iconKey": "flower",
         "cmyk": "23,59,38,0",
         "_rgb": "rgb(186, 114, 129)",
-        "rgb": "rgb(203, 130, 137)",
+        "rgb": "rgb(198, 128, 135)",
         "hex": "#da8d93",
         "examLevel": 2,
         "munsell": "1R 6/6.5",
-        "approximatePccs": [
-          { "notation": "lt2", "deltaE": 9.26 },
-          { "notation": "sf2", "deltaE": 9.51 }
-        ]
+        "approximatePccs": [{ "notation": "sf2", "deltaE": 9.11 }]
       },
       {
         "id": "sango-iro",
@@ -105,11 +102,11 @@
         "iconKey": "coral",
         "cmyk": "0,61,35,0",
         "_rgb": "rgb(248, 157, 149)",
-        "rgb": "rgb(247, 134, 140)",
+        "rgb": "rgb(255, 137, 144)",
         "hex": "#f4ada3",
         "examLevel": 3,
         "munsell": "2.5R 7/11",
-        "approximatePccs": [{ "notation": "lt2", "deltaE": 3.86 }]
+        "approximatePccs": [{ "notation": "lt2", "deltaE": 4.52 }]
       },
       {
         "id": "kobai-iro",
@@ -121,13 +118,13 @@
         "iconKey": "flower",
         "cmyk": "12,57,36,0",
         "_rgb": "rgb(236, 104, 134)",
-        "rgb": "rgb(222, 138, 142)",
+        "rgb": "rgb(219, 138, 141)",
         "hex": "#f3a7a5",
         "examLevel": 3,
         "munsell": "2.5R 6.5/7.5",
         "approximatePccs": [
-          { "notation": "lt2", "deltaE": 7.04 },
-          { "notation": "lt4", "deltaE": 9.42 }
+          { "notation": "lt2", "deltaE": 7.49 },
+          { "notation": "lt4", "deltaE": 9.53 }
         ]
       },
       {
@@ -141,13 +138,13 @@
         "iconKey": "fish",
         "cmyk": "0,46,41,0",
         "_rgb": "rgb(247, 147, 137)",
-        "rgb": "rgb(249, 165, 142)",
+        "rgb": "rgb(251, 165, 146)",
         "hex": "#f4a583",
         "examLevel": 3,
         "munsell": "8R 7.5/7.5",
         "approximatePccs": [
-          { "notation": "lt4", "deltaE": 9.16 },
-          { "notation": "ltg4", "deltaE": 9.94 }
+          { "notation": "lt4", "deltaE": 8.75 },
+          { "notation": "ltg4", "deltaE": 9.83 }
         ]
       },
       {
@@ -160,11 +157,14 @@
         "iconKey": "flower",
         "cmyk": "21,85,0,0",
         "_rgb": "rgb(217, 89, 162)",
-        "rgb": "rgb(207, 75, 155)",
+        "rgb": "rgb(200, 72, 151)",
         "hex": "#e55a9b",
         "examLevel": 3,
         "munsell": "3RP 5/14",
-        "approximatePccs": [{ "notation": "b24", "deltaE": 4.55 }]
+        "approximatePccs": [
+          { "notation": "b24", "deltaE": 5.85 },
+          { "notation": "sf24", "deltaE": 8.25 }
+        ]
       },
       {
         "id": "magenta",
@@ -176,11 +176,11 @@
         "iconKey": "printer",
         "cmyk": "15,86,14,0",
         "_rgb": "rgb(230, 0, 112)",
-        "rgb": "rgb(217, 73, 140)",
+        "rgb": "rgb(207, 68, 135)",
         "hex": "#e4007f",
         "examLevel": 3,
         "munsell": "5RP 5/14",
-        "approximatePccs": [{ "notation": "b24", "deltaE": 1.73 }]
+        "approximatePccs": [{ "notation": "b24", "deltaE": 4.15 }]
       }
     ],
     "compareSections": [
@@ -203,14 +203,13 @@
         "iconKey": "thread",
         "cmyk": "9,87,80,0",
         "_rgb": "rgb(241, 40, 36)",
-        "rgb": "rgb(227, 74, 62)",
+        "rgb": "rgb(218, 67, 58)",
         "hex": "#ea5539",
         "examLevel": 3,
         "munsell": "7R 5/14",
         "approximatePccs": [
-          { "notation": "v2", "deltaE": 5.79 },
-          { "notation": "v3", "deltaE": 5.86 },
-          { "notation": "b4", "deltaE": 6.19 }
+          { "notation": "v2", "deltaE": 4.76 },
+          { "notation": "v3", "deltaE": 6.8 }
         ]
       },
       {
@@ -223,14 +222,11 @@
         "iconKey": "stamp",
         "cmyk": "2,83,67,0",
         "_rgb": "rgb(233, 63, 21)",
-        "rgb": "rgb(241, 85, 81)",
+        "rgb": "rgb(233, 81, 78)",
         "hex": "#eb613b",
         "examLevel": 3,
         "munsell": "6R 5.5/14",
-        "approximatePccs": [
-          { "notation": "b2", "deltaE": 4.9 },
-          { "notation": "b4", "deltaE": 6.79 }
-        ]
+        "approximatePccs": [{ "notation": "b2", "deltaE": 4.46 }]
       },
       {
         "id": "vermilion",
@@ -242,14 +238,11 @@
         "iconKey": "artPaint",
         "cmyk": "2,83,67,0",
         "_rgb": "rgb(235, 77, 49)",
-        "rgb": "rgb(241, 85, 81)",
+        "rgb": "rgb(233, 81, 78)",
         "hex": "#eb613b",
         "examLevel": 3,
         "munsell": "6R 5.5/14",
-        "approximatePccs": [
-          { "notation": "b2", "deltaE": 4.9 },
-          { "notation": "b4", "deltaE": 6.79 }
-        ]
+        "approximatePccs": [{ "notation": "b2", "deltaE": 4.46 }]
       },
       {
         "id": "carmine",
@@ -261,11 +254,15 @@
         "iconKey": "cactus",
         "cmyk": "21,97,74,5",
         "_rgb": "rgb(206, 0, 75)",
-        "rgb": "rgb(197, 29, 63)",
+        "rgb": "rgb(188, 22, 59)",
         "hex": "#d7003a",
         "examLevel": 3,
         "munsell": "4R 4/14",
-        "approximatePccs": [{ "notation": "v1", "deltaE": 2.93 }]
+        "approximatePccs": [
+          { "notation": "v1", "deltaE": 4.64 },
+          { "notation": "d4", "deltaE": 6.8 },
+          { "notation": "dp2", "deltaE": 6.87 }
+        ]
       },
       {
         "id": "poppy-red",
@@ -278,11 +275,15 @@
         "iconKey": "flower",
         "cmyk": "9,88,61,0",
         "_rgb": "rgb(224, 64, 37)",
-        "rgb": "rgb(227, 68, 85)",
+        "rgb": "rgb(218, 64, 81)",
         "hex": "#e9474d",
         "examLevel": 2,
         "munsell": "4R 5/14",
-        "approximatePccs": [{ "notation": "b2", "deltaE": 4.16 }]
+        "approximatePccs": [
+          { "notation": "b2", "deltaE": 5.89 },
+          { "notation": "v1", "deltaE": 6.82 },
+          { "notation": "sf2", "deltaE": 7.09 }
+        ]
       },
       {
         "id": "karakurenai-iro",
@@ -294,15 +295,11 @@
         "iconKey": "flower",
         "cmyk": "5,81,42,0",
         "_rgb": "rgb(203, 10, 26)",
-        "rgb": "rgb(236, 90, 115)",
+        "rgb": "rgb(226, 85, 110)",
         "hex": "#e95464",
         "examLevel": 2,
         "munsell": "1.5R 5.5/13",
-        "approximatePccs": [
-          { "notation": "sf2", "deltaE": 6.33 },
-          { "notation": "lt2", "deltaE": 6.38 },
-          { "notation": "b2", "deltaE": 8.3 }
-        ]
+        "approximatePccs": [{ "notation": "sf2", "deltaE": 4.65 }]
       },
       {
         "id": "akane-iro",
@@ -314,11 +311,11 @@
         "iconKey": "plant",
         "cmyk": "37,95,77,10",
         "_rgb": "rgb(189, 0, 57)",
-        "rgb": "rgb(164, 38, 59)",
+        "rgb": "rgb(158, 34, 56)",
         "hex": "#b7282d",
         "examLevel": 3,
         "munsell": "4R 3.5/11",
-        "approximatePccs": [{ "notation": "dp2", "deltaE": 4.26 }]
+        "approximatePccs": [{ "notation": "dp2", "deltaE": 3.3 }]
       },
       {
         "id": "wine-red",
@@ -331,14 +328,14 @@
         "iconKey": "wine",
         "cmyk": "48,95,64,19",
         "_rgb": "rgb(134, 0, 60)",
-        "rgb": "rgb(133, 31, 67)",
+        "rgb": "rgb(132, 32, 66)",
         "hex": "#932e44",
         "examLevel": 3,
         "munsell": "10RP 3/9",
         "approximatePccs": [
-          { "notation": "dk24", "deltaE": 8.4 },
-          { "notation": "d2", "deltaE": 8.4 },
-          { "notation": "dk2", "deltaE": 8.96 }
+          { "notation": "dk24", "deltaE": 8.23 },
+          { "notation": "d2", "deltaE": 8.32 },
+          { "notation": "dk2", "deltaE": 8.61 }
         ]
       },
       {
@@ -351,14 +348,14 @@
         "iconKey": "wine",
         "cmyk": "66,81,72,39",
         "_rgb": "rgb(134, 0, 60)",
-        "rgb": "rgb(81, 48, 53)",
+        "rgb": "rgb(84, 51, 56)",
         "hex": "#600f18",
         "examLevel": 3,
         "munsell": "2.5R 2.5/3",
         "approximatePccs": [
-          { "notation": "dk24", "deltaE": 6.51 },
-          { "notation": "dk2", "deltaE": 6.56 },
-          { "notation": "dkg2", "deltaE": 7.76 }
+          { "notation": "dk24", "deltaE": 6.25 },
+          { "notation": "dk2", "deltaE": 6.59 },
+          { "notation": "dkg2", "deltaE": 8.14 }
         ]
       }
     ],
@@ -381,13 +378,13 @@
         "originDescription": "シエナの地で採れる土は 絵の具の原料とされた",
         "iconKey": "shovel",
         "_rgb": "rgb(217, 128, 50)",
-        "rgb": "rgb(188, 107, 52)",
+        "rgb": "rgb(181, 101, 44)",
         "hex": "#d98032",
         "examLevel": 2,
         "munsell": "4YR 5/9",
         "approximatePccs": [
-          { "notation": "d6", "deltaE": 8.69 },
-          { "notation": "sf4", "deltaE": 9.56 }
+          { "notation": "d6", "deltaE": 7.93 },
+          { "notation": "dp6", "deltaE": 9.01 }
         ],
         "cmyk": "31,70,91,2"
       },
@@ -400,14 +397,11 @@
         "originDescription": "酸化鉄を含む土から造られる 絵の具の総称",
         "iconKey": "shovel",
         "_rgb": "rgb(187, 84, 31)",
-        "rgb": "rgb(189, 105, 61)",
+        "rgb": "rgb(182, 100, 56)",
         "hex": "#bb541f",
         "examLevel": 2,
         "munsell": "2.5YR 5/8.5",
-        "approximatePccs": [
-          { "notation": "d6", "deltaE": 6.34 },
-          { "notation": "sf4", "deltaE": 7.79 }
-        ],
+        "approximatePccs": [{ "notation": "d6", "deltaE": 4.98 }],
         "cmyk": "31,71,86,1"
       },
       {
@@ -420,11 +414,11 @@
         "originDescription": "シエナで採れる土を焼いた 赤みのある褐色の絵の具",
         "iconKey": "shovel",
         "_rgb": "rgb(178, 85, 50)",
-        "rgb": "rgb(170, 91, 68)",
+        "rgb": "rgb(165, 87, 64)",
         "hex": "#b25532",
         "examLevel": 2,
         "munsell": "10R 4.5/7.5",
-        "approximatePccs": [{ "notation": "d6", "deltaE": 3.17 }],
+        "approximatePccs": [{ "notation": "d6", "deltaE": 3.77 }],
         "cmyk": "39,76,81,3"
       },
       {
@@ -436,14 +430,11 @@
         "originDescription": "イタリア語で「焼いた土」 素焼きの陶器の色",
         "iconKey": "pottery",
         "_rgb": "rgb(190, 109, 85)",
-        "rgb": "rgb(174, 87, 77)",
+        "rgb": "rgb(169, 83, 72)",
         "hex": "#be6d55",
         "examLevel": 2,
         "munsell": "7.5R 4.5/8",
-        "approximatePccs": [
-          { "notation": "d4", "deltaE": 4.96 },
-          { "notation": "d6", "deltaE": 7.35 }
-        ],
+        "approximatePccs": [{ "notation": "d4", "deltaE": 4.41 }],
         "cmyk": "37,79,74,2"
       },
       {
@@ -455,13 +446,13 @@
         "originDescription": "ヒノキの樹皮のような茶色 蘇芳による染色の色名",
         "iconKey": "trunk",
         "_rgb": "rgb(150, 80, 54)",
-        "rgb": "rgb(144, 100, 86)",
+        "rgb": "rgb(142, 98, 84)",
         "hex": "#965036",
         "examLevel": 2,
         "munsell": "1YR 4.5/4",
         "approximatePccs": [
-          { "notation": "g6", "deltaE": 8.44 },
-          { "notation": "g4", "deltaE": 8.55 }
+          { "notation": "g4", "deltaE": 8.34 },
+          { "notation": "g6", "deltaE": 8.43 }
         ],
         "cmyk": "49,67,69,5"
       },
@@ -474,14 +465,14 @@
         "originDescription": "レンガの中でも 赤レンガに由来する色",
         "iconKey": "brick",
         "_rgb": "rgb(162, 72, 43)",
-        "rgb": "rgb(152, 78, 59)",
+        "rgb": "rgb(148, 75, 56)",
         "hex": "#a2482b",
         "examLevel": 3,
         "munsell": "10R 4/7",
         "approximatePccs": [
-          { "notation": "d6", "deltaE": 7.29 },
-          { "notation": "d4", "deltaE": 7.87 },
-          { "notation": "dk4", "deltaE": 9.72 }
+          { "notation": "d6", "deltaE": 8.25 },
+          { "notation": "d4", "deltaE": 8.38 },
+          { "notation": "dk4", "deltaE": 8.57 }
         ],
         "cmyk": "45,80,84,8"
       },
@@ -494,11 +485,11 @@
         "originDescription": "ベンガル地方で産出する 天然の酸化鉄から造られる顔料",
         "iconKey": "shovel",
         "_rgb": "rgb(143, 45, 18)",
-        "rgb": "rgb(138, 64, 54)",
+        "rgb": "rgb(135, 61, 52)",
         "hex": "#8f2d12",
         "examLevel": 2,
         "munsell": "8R 3.5/7",
-        "approximatePccs": [{ "notation": "dk4", "deltaE": 5.75 }],
+        "approximatePccs": [{ "notation": "dk4", "deltaE": 5.1 }],
         "cmyk": "48,85,84,14"
       },
       {
@@ -510,14 +501,14 @@
         "originDescription": "マメ科の植物「蘇芳」を 原料とする染色の色",
         "iconKey": "plant",
         "_rgb": "rgb(149, 57, 87)",
-        "rgb": "rgb(152, 74, 77)",
+        "rgb": "rgb(149, 73, 76)",
         "hex": "#9e3d3e",
         "cmyk": "45,82,69,7",
         "examLevel": 2,
         "munsell": "4R 4/7",
         "approximatePccs": [
-          { "notation": "d2", "deltaE": 4.97 },
-          { "notation": "d4", "deltaE": 6.47 }
+          { "notation": "d2", "deltaE": 4.84 },
+          { "notation": "d4", "deltaE": 7.01 }
         ]
       }
     ],
@@ -539,11 +530,11 @@
         "originDescription": "なめした革の色 なめすにはタンニンの汁を使う",
         "iconKey": "leather",
         "_rgb": "rgb(193, 129, 63)",
-        "rgb": "rgb(167, 113, 72)",
+        "rgb": "rgb(163, 110, 67)",
         "hex": "#c1813f",
         "examLevel": 2,
         "munsell": "6YR 5/6",
-        "approximatePccs": [{ "notation": "d6", "deltaE": 10.2 }],
+        "approximatePccs": [{ "notation": "d6", "deltaE": 10.28 }],
         "cmyk": "41,63,82,2"
       },
       {
@@ -556,13 +547,13 @@
         "iconKey": "fossil",
         "cmyk": "36,57,83,0",
         "_rgb": "rgb(192, 137, 67)",
-        "rgb": "rgb(181, 127, 72)",
+        "rgb": "rgb(175, 124, 68)",
         "hex": "#bf7834",
         "examLevel": 2,
         "munsell": "8YR 5.5/6.5",
         "approximatePccs": [
-          { "notation": "sf6", "deltaE": 8.09 },
-          { "notation": "d8", "deltaE": 9.79 }
+          { "notation": "d8", "deltaE": 8.6 },
+          { "notation": "sf6", "deltaE": 9.49 }
         ]
       },
       {
@@ -575,13 +566,13 @@
         "iconKey": "fossil",
         "cmyk": "36,57,83,0",
         "_rgb": "rgb(200, 136, 77)",
-        "rgb": "rgb(181, 127, 72)",
+        "rgb": "rgb(175, 124, 68)",
         "hex": "#bf7834",
         "examLevel": 2,
         "munsell": "8YR 5.5/6.5",
         "approximatePccs": [
-          { "notation": "sf6", "deltaE": 8.09 },
-          { "notation": "d8", "deltaE": 9.79 }
+          { "notation": "d8", "deltaE": 8.6 },
+          { "notation": "sf6", "deltaE": 9.49 }
         ]
       },
       {
@@ -594,13 +585,14 @@
         "iconKey": "shovel",
         "cmyk": "30,49,86,0",
         "_rgb": "rgb(204, 144, 65)",
-        "rgb": "rgb(194, 144, 65)",
+        "rgb": "rgb(188, 139, 61)",
         "hex": "#c39043",
         "examLevel": 3,
         "munsell": "10YR 6/7.5",
         "approximatePccs": [
-          { "notation": "sf6", "deltaE": 6.85 },
-          { "notation": "dp8", "deltaE": 9.6 }
+          { "notation": "sf6", "deltaE": 7.55 },
+          { "notation": "dp8", "deltaE": 8.61 },
+          { "notation": "d8", "deltaE": 8.96 }
         ]
       },
       {
@@ -613,11 +605,11 @@
         "iconKey": "army",
         "cmyk": "46,57,87,3",
         "_rgb": "rgb(99, 92, 54)",
-        "rgb": "rgb(155, 119, 64)",
+        "rgb": "rgb(151, 116, 59)",
         "hex": "#bb9855",
         "examLevel": 3,
         "munsell": "1Y 5/5.5",
-        "approximatePccs": [{ "notation": "d8", "deltaE": 4.56 }]
+        "approximatePccs": [{ "notation": "d8", "deltaE": 4.86 }]
       },
       {
         "id": "raw-umber",
@@ -630,13 +622,13 @@
         "iconKey": "shovel",
         "cmyk": "54,63,97,14",
         "_rgb": "rgb(142, 97, 66)",
-        "rgb": "rgb(127, 96, 42)",
+        "rgb": "rgb(121, 92, 27)",
         "hex": "#916f24",
         "examLevel": 2,
         "munsell": "2.5Y 4/6",
         "approximatePccs": [
-          { "notation": "dk8", "deltaE": 7.41 },
-          { "notation": "dk6", "deltaE": 8.16 }
+          { "notation": "dk8", "deltaE": 5.37 },
+          { "notation": "dk6", "deltaE": 7.7 }
         ]
       },
       {
@@ -649,11 +641,11 @@
         "iconKey": "fallenLeaf",
         "cmyk": "53,54,65,3",
         "_rgb": "rgb(168, 137, 91)",
-        "rgb": "rgb(135, 119, 99)",
+        "rgb": "rgb(135, 119, 100)",
         "hex": "#917347",
         "examLevel": 2,
         "munsell": "10YR 5/2",
-        "approximatePccs": [{ "notation": "g8", "deltaE": 3.38 }]
+        "approximatePccs": [{ "notation": "g8", "deltaE": 3.52 }]
       },
       {
         "id": "burnt-umber",
@@ -666,14 +658,14 @@
         "iconKey": "shovel",
         "cmyk": "65,70,86,33",
         "_rgb": "rgb(94, 50, 53)",
-        "rgb": "rgb(87, 67, 46)",
+        "rgb": "rgb(89, 68, 44)",
         "hex": "#7a5e3d",
         "examLevel": 2,
         "munsell": "10YR 3/3",
         "approximatePccs": [
-          { "notation": "dkg8", "deltaE": 7.59 },
-          { "notation": "dkg6", "deltaE": 7.91 },
-          { "notation": "dk6", "deltaE": 8.81 }
+          { "notation": "dk6", "deltaE": 7.7 },
+          { "notation": "dkg8", "deltaE": 7.82 },
+          { "notation": "dkg6", "deltaE": 9.07 }
         ]
       },
       {
@@ -686,11 +678,11 @@
         "iconKey": "squid",
         "cmyk": "70,72,82,44",
         "_rgb": "rgb(68, 56, 24)",
-        "rgb": "rgb(69, 55, 42)",
+        "rgb": "rgb(72, 57, 43)",
         "hex": "#6f4e27",
         "examLevel": 3,
         "munsell": "10YR 2.5/2",
-        "approximatePccs": [{ "notation": "dkg6", "deltaE": 3.98 }]
+        "approximatePccs": [{ "notation": "dkg6", "deltaE": 4.3 }]
       },
       {
         "id": "susutake-iro",
@@ -702,14 +694,14 @@
         "iconKey": "bamboo",
         "cmyk": "66,66,74,24",
         "_rgb": "rgb(91, 85, 58)",
-        "rgb": "rgb(92, 80, 69)",
+        "rgb": "rgb(94, 81, 69)",
         "hex": "#6b5146",
         "examLevel": 2,
         "munsell": "9.5YR 3.5/1.5",
         "approximatePccs": [
-          { "notation": "dkg6", "deltaE": 7.5 },
-          { "notation": "Gy-3.5", "deltaE": 7.82 },
-          { "notation": "Gy-3.0", "deltaE": 8.51 }
+          { "notation": "dkg6", "deltaE": 8.02 },
+          { "notation": "Gy-3.5", "deltaE": 8.35 },
+          { "notation": "dkg8", "deltaE": 8.82 }
         ]
       }
     ],
@@ -733,11 +725,11 @@
         "iconKey": "chestnut",
         "cmyk": "57,76,81,19",
         "_rgb": "rgb(114, 44, 7)",
-        "rgb": "rgb(116, 73, 59)",
+        "rgb": "rgb(116, 73, 58)",
         "hex": "#762e05",
         "examLevel": 3,
         "munsell": "2YR 3.5/4",
-        "approximatePccs": [{ "notation": "dk4", "deltaE": 6.79 }]
+        "approximatePccs": [{ "notation": "dk4", "deltaE": 6.78 }]
       },
       {
         "id": "ebicha",
@@ -749,13 +741,13 @@
         "iconKey": "grape",
         "cmyk": "58,83,81,26",
         "_rgb": "rgb(85, 18, 0)",
-        "rgb": "rgb(109, 57, 51)",
+        "rgb": "rgb(108, 57, 52)",
         "hex": "#814336",
         "examLevel": 2,
         "munsell": "8R 3/4.5",
         "approximatePccs": [
-          { "notation": "dk4", "deltaE": 4.73 },
-          { "notation": "dk2", "deltaE": 6.5 }
+          { "notation": "dk4", "deltaE": 5.26 },
+          { "notation": "dk2", "deltaE": 6.11 }
         ]
       },
       {
@@ -768,13 +760,13 @@
         "iconKey": "bird",
         "cmyk": "54,81,78,16",
         "_rgb": "rgb(80, 46, 44)",
-        "rgb": "rgb(125, 68, 62)",
+        "rgb": "rgb(124, 68, 62)",
         "hex": "#8b4239",
         "examLevel": 2,
         "munsell": "7.5R 3.5/5",
         "approximatePccs": [
-          { "notation": "dk4", "deltaE": 6.22 },
-          { "notation": "g2", "deltaE": 8.96 }
+          { "notation": "dk4", "deltaE": 6.21 },
+          { "notation": "g2", "deltaE": 8.89 }
         ]
       },
       {
@@ -786,14 +778,14 @@
         "originDescription": "チョコレートの色",
         "iconKey": "chocolate",
         "_rgb": "rgb(97, 44, 22)",
-        "rgb": "rgb(78, 50, 45)",
+        "rgb": "rgb(81, 53, 48)",
         "hex": "#612c16",
         "examLevel": 3,
         "munsell": "10R 2.5/2.5",
         "approximatePccs": [
-          { "notation": "dkg4", "deltaE": 6.82 },
-          { "notation": "dkg2", "deltaE": 7.44 },
-          { "notation": "dkg6", "deltaE": 8.33 }
+          { "notation": "dkg4", "deltaE": 7.21 },
+          { "notation": "dkg2", "deltaE": 7.82 },
+          { "notation": "dkg6", "deltaE": 8.13 }
         ],
         "cmyk": "67,78,79,41"
       },
@@ -806,11 +798,11 @@
         "originDescription": "スペイン産の大粒の栗に由来 栗色よりも赤みが強い",
         "iconKey": "chestnut",
         "_rgb": "rgb(106, 24, 22)",
-        "rgb": "rgb(99, 37, 43)",
+        "rgb": "rgb(101, 40, 46)",
         "hex": "#6a1816",
         "examLevel": 2,
         "munsell": "5R 2.5/6",
-        "approximatePccs": [{ "notation": "dk2", "deltaE": 1.85 }],
+        "approximatePccs": [{ "notation": "dk2", "deltaE": 1.27 }],
         "cmyk": "58,89,79,35"
       },
       {
@@ -823,14 +815,14 @@
         "iconKey": "wine",
         "cmyk": "71,81,70,51",
         "_rgb": "rgb(102, 15, 19)",
-        "rgb": "rgb(64, 38, 45)",
+        "rgb": "rgb(67, 42, 49)",
         "hex": "#561620",
         "examLevel": 2,
         "munsell": "10RP 2/2.5",
         "approximatePccs": [
-          { "notation": "dkg2", "deltaE": 5.19 },
-          { "notation": "dkg24", "deltaE": 6.49 },
-          { "notation": "dkg4", "deltaE": 6.93 }
+          { "notation": "dkg2", "deltaE": 4.76 },
+          { "notation": "dkg24", "deltaE": 5.95 },
+          { "notation": "dkg4", "deltaE": 6.57 }
         ]
       }
     ],
@@ -851,15 +843,11 @@
         "iconKey": "trunk",
         "cmyk": "20,13,79,0",
         "_rgb": "rgb(227, 200, 39)",
-        "rgb": "rgb(218, 210, 84)",
+        "rgb": "rgb(213, 204, 86)",
         "hex": "#fef263",
         "examLevel": 2,
         "munsell": "9Y 8/8",
-        "approximatePccs": [
-          { "notation": "sf8", "deltaE": 6.33 },
-          { "notation": "lt8", "deltaE": 7.43 },
-          { "notation": "v8", "deltaE": 9 }
-        ]
+        "approximatePccs": [{ "notation": "sf8", "deltaE": 4.88 }]
       },
       {
         "id": "lemon-yellow",
@@ -872,14 +860,14 @@
         "iconKey": "artPaint",
         "cmyk": "16,14,95,1",
         "_rgb": "rgb(254, 231, 0)",
-        "rgb": "rgb(226, 207, 0)",
+        "rgb": "rgb(221, 203, 0)",
         "hex": "#fff33f",
         "examLevel": 3,
         "munsell": "8Y 8/12",
         "approximatePccs": [
-          { "notation": "v8", "deltaE": 5.73 },
-          { "notation": "b8", "deltaE": 7.71 },
-          { "notation": "v7", "deltaE": 7.91 }
+          { "notation": "v8", "deltaE": 6.78 },
+          { "notation": "sf8", "deltaE": 7.31 },
+          { "notation": "v7", "deltaE": 8.28 }
         ]
       },
       {
@@ -892,13 +880,14 @@
         "iconKey": "bird",
         "cmyk": "10,11,84,0",
         "_rgb": "rgb(254, 240, 0)",
-        "rgb": "rgb(240, 220, 63)",
+        "rgb": "rgb(236, 215, 64)",
         "hex": "#fff262",
         "examLevel": 3,
         "munsell": "7Y 8.5/10",
         "approximatePccs": [
-          { "notation": "v8", "deltaE": 4.1 },
-          { "notation": "b8", "deltaE": 5.26 }
+          { "notation": "v8", "deltaE": 5.06 },
+          { "notation": "b8", "deltaE": 6.47 },
+          { "notation": "lt8", "deltaE": 7.03 }
         ]
       },
       {
@@ -911,13 +900,13 @@
         "originDescription": "乳製品のクリームの色",
         "iconKey": "milk",
         "_rgb": "rgb(255, 242, 184)",
-        "rgb": "rgb(230, 216, 163)",
+        "rgb": "rgb(227, 214, 163)",
         "hex": "#fff2b8",
         "examLevel": 3,
         "munsell": "5Y 8.5/3.5",
         "approximatePccs": [
-          { "notation": "p6", "deltaE": 4.71 },
-          { "notation": "ltg8", "deltaE": 5.15 }
+          { "notation": "ltg8", "deltaE": 4.73 },
+          { "notation": "p6", "deltaE": 5.36 }
         ],
         "cmyk": "12,14,43,0"
       },
@@ -930,11 +919,15 @@
         "originDescription": "金髪を表す色名",
         "iconKey": "hair",
         "_rgb": "rgb(247, 220, 141)",
-        "rgb": "rgb(225, 185, 98)",
+        "rgb": "rgb(221, 181, 99)",
         "hex": "#f7dc8d",
         "examLevel": 3,
         "munsell": "2Y 7.5/7",
-        "approximatePccs": [{ "notation": "sf8", "deltaE": 7.69 }],
+        "approximatePccs": [
+          { "notation": "sf8", "deltaE": 8.2 },
+          { "notation": "ltg8", "deltaE": 9.79 },
+          { "notation": "lt6", "deltaE": 9.88 }
+        ],
         "cmyk": "14,31,71,0"
       },
       {
@@ -947,13 +940,13 @@
         "iconKey": "cloth",
         "cmyk": "28,33,46,0",
         "_rgb": "rgb(209, 185, 154)",
-        "rgb": "rgb(192, 172, 144)",
+        "rgb": "rgb(191, 171, 144)",
         "hex": "#eedcb3",
         "examLevel": 3,
         "munsell": "10YR 7/2.5",
         "approximatePccs": [
-          { "notation": "ltg6", "deltaE": 5.55 },
-          { "notation": "ltg8", "deltaE": 8.15 }
+          { "notation": "ltg6", "deltaE": 5.82 },
+          { "notation": "ltg8", "deltaE": 8.59 }
         ]
       },
       {
@@ -967,14 +960,14 @@
         "iconKey": "wool",
         "cmyk": "4,23,37,0",
         "_rgb": "rgb(236, 204, 150)",
-        "rgb": "rgb(247, 208, 169)",
+        "rgb": "rgb(244, 207, 169)",
         "hex": "#f8eacf",
         "examLevel": 2,
         "munsell": "7.5YR 8.5/4",
         "approximatePccs": [
-          { "notation": "ltg6", "deltaE": 6.37 },
-          { "notation": "p4", "deltaE": 7.68 },
-          { "notation": "ltg8", "deltaE": 8.28 }
+          { "notation": "ltg6", "deltaE": 5.87 },
+          { "notation": "ltg8", "deltaE": 7.77 },
+          { "notation": "p4", "deltaE": 7.88 }
         ]
       },
       {
@@ -987,11 +980,11 @@
         "iconKey": "fruit",
         "cmyk": "9,29,32,0",
         "_rgb": "rgb(255, 217, 192)",
-        "rgb": "rgb(233, 193, 172)",
+        "rgb": "rgb(231, 192, 172)",
         "hex": "#fbd8b5",
         "examLevel": 3,
         "munsell": "3YR 8/3.5",
-        "approximatePccs": [{ "notation": "p4", "deltaE": 3.91 }]
+        "approximatePccs": [{ "notation": "p4", "deltaE": 4.26 }]
       }
     ],
     "compareSections": [
@@ -1013,13 +1006,13 @@
         "iconKey": "crown",
         "cmyk": "4,70,78,0",
         "_rgb": "rgb(247, 126, 74)",
-        "rgb": "rgb(239, 115, 69)",
+        "rgb": "rgb(233, 111, 66)",
         "hex": "#ee7948",
         "examLevel": 2,
         "munsell": "10R 6/12",
         "approximatePccs": [
-          { "notation": "sf4", "deltaE": 5.06 },
-          { "notation": "v5", "deltaE": 6.31 }
+          { "notation": "sf4", "deltaE": 4.6 },
+          { "notation": "v5", "deltaE": 6.21 }
         ]
       },
       {
@@ -1032,14 +1025,11 @@
         "originDescription": "マリーゴールドの花に由来 西洋の山吹色という位置付け",
         "iconKey": "flower",
         "_rgb": "rgb(243, 152, 0)",
-        "rgb": "rgb(253, 169, 0)",
+        "rgb": "rgb(255, 168, 14)",
         "hex": "#f39800",
         "examLevel": 3,
         "munsell": "8YR 7.5/13",
-        "approximatePccs": [
-          { "notation": "b6", "deltaE": 6.51 },
-          { "notation": "lt6", "deltaE": 9.71 }
-        ],
+        "approximatePccs": [{ "notation": "b6", "deltaE": 5.53 }],
         "cmyk": "0,43,95,0"
       },
       {
@@ -1052,13 +1042,13 @@
         "iconKey": "flower",
         "cmyk": "2,39,95,0",
         "_rgb": "rgb(255, 194, 0)",
-        "rgb": "rgb(250, 176, 0)",
+        "rgb": "rgb(247, 173, 0)",
         "hex": "#f8b500",
         "examLevel": 3,
         "munsell": "10YR 7.5/13",
         "approximatePccs": [
-          { "notation": "v7", "deltaE": 9.03 },
-          { "notation": "b6", "deltaE": 9.52 }
+          { "notation": "b6", "deltaE": 9 },
+          { "notation": "v7", "deltaE": 9.68 }
         ]
       },
       {
@@ -1071,11 +1061,11 @@
         "iconKey": "plant",
         "cmyk": "6,34,94,0",
         "_rgb": "rgb(234, 178, 38)",
-        "rgb": "rgb(243, 182, 0)",
+        "rgb": "rgb(236, 178, 0)",
         "hex": "#fabf13",
         "examLevel": 2,
         "munsell": "2Y 7.5/12",
-        "approximatePccs": [{ "notation": "v7", "deltaE": 6.02 }]
+        "approximatePccs": [{ "notation": "v7", "deltaE": 6.81 }]
       },
       {
         "id": "koji-iro",
@@ -1087,11 +1077,11 @@
         "iconKey": "orange",
         "cmyk": "1,43,68,0",
         "_rgb": "rgb(238, 124, 0)",
-        "rgb": "rgb(250, 170, 96)",
+        "rgb": "rgb(249, 169, 98)",
         "hex": "#f6ad48",
         "examLevel": 2,
         "munsell": "5.5YR 7.5/9",
-        "approximatePccs": [{ "notation": "lt6", "deltaE": 2.91 }]
+        "approximatePccs": [{ "notation": "lt6", "deltaE": 3.28 }]
       },
       {
         "id": "golden-yellow",
@@ -1103,14 +1093,14 @@
         "originDescription": "金色を感じさせる黄色の色名 聖人の光輪を描くために使われた",
         "iconKey": "crown",
         "_rgb": "rgb(248, 184, 86)",
-        "rgb": "rgb(239, 161, 65)",
+        "rgb": "rgb(233, 158, 66)",
         "hex": "#f8b856",
         "examLevel": 2,
         "munsell": "7.5YR 7/10",
         "approximatePccs": [
-          { "notation": "b6", "deltaE": 4.7 },
-          { "notation": "lt6", "deltaE": 6.24 },
-          { "notation": "sf6", "deltaE": 6.44 }
+          { "notation": "b6", "deltaE": 5.35 },
+          { "notation": "sf6", "deltaE": 5.37 },
+          { "notation": "lt6", "deltaE": 6.83 }
         ],
         "cmyk": "6,46,82,0"
       },
@@ -1125,14 +1115,13 @@
         "iconKey": "knight",
         "cmyk": "8,26,69,0",
         "_rgb": "rgb(255, 207, 111)",
-        "rgb": "rgb(241, 198, 103)",
+        "rgb": "rgb(235, 195, 103)",
         "hex": "#fdd75c",
         "examLevel": 2,
         "munsell": "2.5Y 8/7.5",
         "approximatePccs": [
-          { "notation": "v7", "deltaE": 8.24 },
-          { "notation": "sf8", "deltaE": 8.79 },
-          { "notation": "p6", "deltaE": 9.99 }
+          { "notation": "sf8", "deltaE": 7.89 },
+          { "notation": "v7", "deltaE": 8.84 }
         ]
       },
       {
@@ -1145,13 +1134,13 @@
         "originDescription": "フランス語で「輝かしい黄色」 ネープルスイエローより明るく鮮やか",
         "iconKey": "artPaint",
         "_rgb": "rgb(255, 220, 0)",
-        "rgb": "rgb(254, 215, 0)",
+        "rgb": "rgb(250, 212, 0)",
         "hex": "#ffdc00",
         "examLevel": 2,
         "munsell": "5Y 8.5/14",
         "approximatePccs": [
-          { "notation": "v7", "deltaE": 3.8 },
-          { "notation": "v8", "deltaE": 4.49 }
+          { "notation": "v7", "deltaE": 3.62 },
+          { "notation": "v8", "deltaE": 4.86 }
         ],
         "cmyk": "4,16,92,0"
       },
@@ -1165,11 +1154,15 @@
         "iconKey": "rice",
         "cmyk": "11,12,67,0",
         "_rgb": "rgb(242, 228, 21)",
-        "rgb": "rgb(236, 219, 113)",
+        "rgb": "rgb(231, 215, 113)",
         "hex": "#f5e56b",
         "examLevel": 2,
         "munsell": "7Y 8.5/7",
-        "approximatePccs": [{ "notation": "lt8", "deltaE": 5.17 }]
+        "approximatePccs": [
+          { "notation": "lt8", "deltaE": 6.14 },
+          { "notation": "sf8", "deltaE": 7.27 },
+          { "notation": "p6", "deltaE": 8.98 }
+        ]
       },
       {
         "id": "karashi-iro",
@@ -1181,14 +1174,14 @@
         "iconKey": "chiliPepper",
         "cmyk": "24,34,71,0",
         "_rgb": "rgb(223, 185, 100)",
-        "rgb": "rgb(204, 172, 98)",
+        "rgb": "rgb(201, 170, 98)",
         "hex": "#d2b74e",
         "examLevel": 3,
         "munsell": "3Y 7/6",
         "approximatePccs": [
-          { "notation": "sf8", "deltaE": 7.8 },
-          { "notation": "ltg8", "deltaE": 9.73 },
-          { "notation": "ltg6", "deltaE": 9.92 }
+          { "notation": "sf8", "deltaE": 8.12 },
+          { "notation": "ltg8", "deltaE": 9.87 },
+          { "notation": "ltg6", "deltaE": 9.94 }
         ]
       }
     ],
@@ -1212,14 +1205,14 @@
         "originDescription": "シャルトルーズ修道院で造られる 黄緑色のリキュールに由来",
         "iconKey": "cocktail",
         "_rgb": "rgb(217, 227, 103)",
-        "rgb": "rgb(192, 214, 58)",
+        "rgb": "rgb(188, 212, 63)",
         "hex": "#d9e367",
         "examLevel": 2,
         "munsell": "4GY 8/10",
         "approximatePccs": [
-          { "notation": "v9", "deltaE": 4.97 },
-          { "notation": "v10", "deltaE": 6.22 },
-          { "notation": "b10", "deltaE": 6.54 }
+          { "notation": "v10", "deltaE": 5.6 },
+          { "notation": "b10", "deltaE": 5.79 },
+          { "notation": "v9", "deltaE": 5.84 }
         ],
         "cmyk": "32,2,88,0"
       },
@@ -1233,14 +1226,14 @@
         "iconKey": "sprout",
         "cmyk": "48,18,96,1",
         "_rgb": "rgb(116, 182, 56)",
-        "rgb": "rgb(152, 176, 43)",
+        "rgb": "rgb(148, 171, 41)",
         "hex": "#afd147",
         "examLevel": 3,
         "munsell": "4GY 6.5/9",
         "approximatePccs": [
-          { "notation": "sf10", "deltaE": 6.33 },
-          { "notation": "v10", "deltaE": 8.7 },
-          { "notation": "b10", "deltaE": 8.87 }
+          { "notation": "sf10", "deltaE": 6.69 },
+          { "notation": "v11", "deltaE": 9.67 },
+          { "notation": "v10", "deltaE": 9.99 }
         ]
       },
       {
@@ -1253,14 +1246,11 @@
         "originDescription": "木の葉の緑に由来 英語の黄緑色の色名を代表する",
         "iconKey": "leaf",
         "_rgb": "rgb(157, 192, 76)",
-        "rgb": "rgb(138, 163, 69)",
+        "rgb": "rgb(133, 157, 65)",
         "hex": "#9dc04c",
         "examLevel": 2,
         "munsell": "5GY 6/7",
-        "approximatePccs": [
-          { "notation": "v11", "deltaE": 9.61 },
-          { "notation": "sf10", "deltaE": 9.61 }
-        ],
+        "approximatePccs": [{ "notation": "v11", "deltaE": 10.62 }],
         "cmyk": "54,26,89,0"
       },
       {
@@ -1274,11 +1264,11 @@
         "iconKey": "grass",
         "cmyk": "63,42,87,3",
         "_rgb": "rgb(154, 199, 123)",
-        "rgb": "rgb(115, 132, 71)",
+        "rgb": "rgb(112, 128, 68)",
         "hex": "#7b8d41",
         "examLevel": 2,
         "munsell": "5GY 5/5",
-        "approximatePccs": [{ "notation": "d10", "deltaE": 2.89 }]
+        "approximatePccs": [{ "notation": "d10", "deltaE": 2.11 }]
       },
       {
         "id": "matsuba-iro",
@@ -1289,11 +1279,11 @@
         "originDescription": "松の葉に由来する色名 冬でも葉が落ちない長寿の象徴",
         "iconKey": "pottedPlant",
         "_rgb": "rgb(131, 154, 92)",
-        "rgb": "rgb(104, 132, 90)",
+        "rgb": "rgb(104, 129, 88)",
         "hex": "#839a5c",
         "examLevel": 3,
         "munsell": "7.5GY 5/4",
-        "approximatePccs": [{ "notation": "d12", "deltaE": 3.93 }],
+        "approximatePccs": [{ "notation": "d12", "deltaE": 4.09 }],
         "cmyk": "66,41,77,2"
       },
       {
@@ -1306,13 +1296,13 @@
         "iconKey": "olive",
         "cmyk": "65,61,92,24",
         "_rgb": "rgb(158, 152, 30)",
-        "rgb": "rgb(95, 86, 46)",
+        "rgb": "rgb(93, 84, 38)",
         "hex": "#72640a",
         "examLevel": 3,
         "munsell": "7.5Y 3.5/4",
         "approximatePccs": [
-          { "notation": "dk10", "deltaE": 5.66 },
-          { "notation": "dk8", "deltaE": 6.29 }
+          { "notation": "dk10", "deltaE": 4.43 },
+          { "notation": "dk8", "deltaE": 5.34 }
         ]
       },
       {
@@ -1325,14 +1315,14 @@
         "iconKey": "starfish",
         "cmyk": "62,54,77,8",
         "_rgb": "rgb(97, 98, 69)",
-        "rgb": "rgb(112, 109, 79)",
+        "rgb": "rgb(113, 110, 79)",
         "hex": "#726d3f",
         "examLevel": 2,
         "munsell": "9.5Y 4.5/2.5",
         "approximatePccs": [
-          { "notation": "g10", "deltaE": 7.51 },
-          { "notation": "g8", "deltaE": 8.21 },
-          { "notation": "d10", "deltaE": 9.28 }
+          { "notation": "g10", "deltaE": 7.65 },
+          { "notation": "g8", "deltaE": 8.3 },
+          { "notation": "d10", "deltaE": 8.84 }
         ]
       },
       {
@@ -1346,13 +1336,13 @@
         "iconKey": "olive",
         "cmyk": "71,59,87,24",
         "_rgb": "rgb(67, 82, 16)",
-        "rgb": "rgb(82, 87, 55)",
+        "rgb": "rgb(82, 87, 53)",
         "hex": "#5f651e",
         "examLevel": 3,
         "munsell": "2.5GY 3.5/3",
         "approximatePccs": [
-          { "notation": "dk10", "deltaE": 7.51 },
-          { "notation": "dk12", "deltaE": 9.59 }
+          { "notation": "dk10", "deltaE": 6.92 },
+          { "notation": "dk12", "deltaE": 9.55 }
         ]
       },
       {
@@ -1365,11 +1355,14 @@
         "iconKey": "songbird",
         "cmyk": "62,52,84,8",
         "_rgb": "rgb(141, 136, 48)",
-        "rgb": "rgb(113, 113, 70)",
+        "rgb": "rgb(111, 111, 68)",
         "hex": "#9d973b",
         "examLevel": 3,
         "munsell": "1GY 4.5/3.5",
-        "approximatePccs": [{ "notation": "d10", "deltaE": 5.72 }]
+        "approximatePccs": [
+          { "notation": "d10", "deltaE": 6.31 },
+          { "notation": "g10", "deltaE": 9.01 }
+        ]
       },
       {
         "id": "hiwa-iro",
@@ -1381,13 +1374,13 @@
         "iconKey": "songbird",
         "cmyk": "30,15,83,0",
         "_rgb": "rgb(198, 203, 20)",
-        "rgb": "rgb(196, 197, 75)",
+        "rgb": "rgb(192, 193, 76)",
         "hex": "#d7cf3a",
         "examLevel": 2,
         "munsell": "1GY 7.5/8",
         "approximatePccs": [
-          { "notation": "sf10", "deltaE": 5.29 },
-          { "notation": "sf8", "deltaE": 5.48 }
+          { "notation": "sf10", "deltaE": 4.24 },
+          { "notation": "sf8", "deltaE": 5.19 }
         ]
       }
     ],
@@ -1411,14 +1404,14 @@
         "iconKey": "apple",
         "cmyk": "39,1,50,0",
         "_rgb": "rgb(160, 195, 0)",
-        "rgb": "rgb(168, 213, 156)",
+        "rgb": "rgb(166, 212, 158)",
         "hex": "#a2cc89",
         "examLevel": 2,
         "munsell": "10GY 8/5",
         "approximatePccs": [
-          { "notation": "lt12", "deltaE": 6.82 },
-          { "notation": "ltg10", "deltaE": 7.24 },
-          { "notation": "p12", "deltaE": 7.84 }
+          { "notation": "lt12", "deltaE": 6.87 },
+          { "notation": "ltg10", "deltaE": 6.97 },
+          { "notation": "p12", "deltaE": 7.77 }
         ]
       },
       {
@@ -1431,11 +1424,11 @@
         "originDescription": "ミントは日本語ではハッカ ハッカ油から造られたお酒の色",
         "iconKey": "mint",
         "_rgb": "rgb(152, 206, 151)",
-        "rgb": "rgb(123, 197, 135)",
+        "rgb": "rgb(111, 206, 143)",
         "hex": "#98ce97",
         "examLevel": 2,
         "munsell": "2.5G 7.5/8",
-        "approximatePccs": [{ "notation": "lt12", "deltaE": 2.82 }],
+        "approximatePccs": [{ "notation": "lt12", "deltaE": 4.33 }],
         "cmyk": "54,0,61,0"
       },
       {
@@ -1448,14 +1441,14 @@
         "iconKey": "bamboo",
         "cmyk": "73,8,63,0",
         "_rgb": "rgb(96, 187, 162)",
-        "rgb": "rgb(58, 170, 130)",
+        "rgb": "rgb(56, 165, 126)",
         "hex": "#67be8d",
         "examLevel": 3,
         "munsell": "6G 6/7.5",
         "approximatePccs": [
-          { "notation": "sf12", "deltaE": 6.36 },
-          { "notation": "b14", "deltaE": 6.83 },
-          { "notation": "sf14", "deltaE": 7.22 }
+          { "notation": "b14", "deltaE": 6.37 },
+          { "notation": "sf14", "deltaE": 6.41 },
+          { "notation": "sf12", "deltaE": 6.8 }
         ]
       },
       {
@@ -1468,14 +1461,14 @@
         "iconKey": "pottery",
         "cmyk": "57,16,48,0",
         "_rgb": "rgb(153, 200, 201)",
-        "rgb": "rgb(118, 174, 151)",
+        "rgb": "rgb(118, 172, 150)",
         "hex": "#68b7a1",
         "examLevel": 3,
         "munsell": "7.5G 6.5/4",
         "approximatePccs": [
-          { "notation": "lt14", "deltaE": 6.97 },
-          { "notation": "ltg14", "deltaE": 6.98 },
-          { "notation": "sf14", "deltaE": 7.6 }
+          { "notation": "ltg14", "deltaE": 6.93 },
+          { "notation": "sf14", "deltaE": 7.28 },
+          { "notation": "lt14", "deltaE": 7.41 }
         ]
       },
       {
@@ -1488,11 +1481,11 @@
         "originDescription": "ナイル川にちなんだ 英語の色名",
         "iconKey": "river",
         "_rgb": "rgb(37, 159, 148)",
-        "rgb": "rgb(69, 149, 155)",
+        "rgb": "rgb(70, 146, 152)",
         "hex": "#259f94",
         "examLevel": 2,
         "munsell": "10BG 5.5/5",
-        "approximatePccs": [{ "notation": "sf16", "deltaE": 4.93 }],
+        "approximatePccs": [{ "notation": "sf16", "deltaE": 4.13 }],
         "cmyk": "73,28,42,0"
       },
       {
@@ -1506,11 +1499,14 @@
         "iconKey": "peacock",
         "cmyk": "84,38,54,4",
         "_rgb": "rgb(0, 128, 150)",
-        "rgb": "rgb(12, 124, 127)",
+        "rgb": "rgb(0, 122, 125)",
         "hex": "#00a496",
         "examLevel": 2,
         "munsell": "7.5BG 4.5/9",
-        "approximatePccs": [{ "notation": "v15", "deltaE": 4.27 }]
+        "approximatePccs": [
+          { "notation": "v15", "deltaE": 4.33 },
+          { "notation": "d14", "deltaE": 6.26 }
+        ]
       }
     ],
     "compareSections": [
@@ -1531,13 +1527,14 @@
         "originDescription": "コバルトによる合成顔料の色 絵の具として使われる",
         "iconKey": "artPaint",
         "_rgb": "rgb(58, 180, 131)",
-        "rgb": "rgb(91, 187, 128)",
+        "rgb": "rgb(71, 195, 137)",
         "hex": "#3ab483",
         "examLevel": 3,
         "munsell": "4G 7/9",
         "approximatePccs": [
-          { "notation": "sf12", "deltaE": 4.61 },
-          { "notation": "lt12", "deltaE": 6.48 }
+          { "notation": "sf12", "deltaE": 7.41 },
+          { "notation": "lt12", "deltaE": 7.71 },
+          { "notation": "b12", "deltaE": 9.45 }
         ],
         "cmyk": "64,0,65,0"
       },
@@ -1552,13 +1549,13 @@
         "iconKey": "jewelry",
         "cmyk": "73,7,70,0",
         "_rgb": "rgb(0, 173, 122)",
-        "rgb": "rgb(60, 171, 118)",
+        "rgb": "rgb(58, 166, 116)",
         "hex": "#00aa6e",
         "examLevel": 3,
         "munsell": "4G 6/8",
         "approximatePccs": [
-          { "notation": "sf12", "deltaE": 4.67 },
-          { "notation": "b12", "deltaE": 4.81 }
+          { "notation": "b12", "deltaE": 4.99 },
+          { "notation": "sf12", "deltaE": 5.24 }
         ]
       },
       {
@@ -1572,11 +1569,14 @@
         "iconKey": "ore",
         "cmyk": "85,31,86,3",
         "_rgb": "rgb(0, 155, 113)",
-        "rgb": "rgb(1, 132, 83)",
+        "rgb": "rgb(0, 127, 79)",
         "hex": "#009854",
         "examLevel": 2,
         "munsell": "4G 4.5/9",
-        "approximatePccs": [{ "notation": "v13", "deltaE": 4.34 }]
+        "approximatePccs": [
+          { "notation": "v13", "deltaE": 6.06 },
+          { "notation": "dp12", "deltaE": 6.44 }
+        ]
       },
       {
         "id": "tokiwa-iro",
@@ -1587,15 +1587,14 @@
         "originDescription": "常緑樹の葉のような色 永久に変わらない緑の美称",
         "iconKey": "leaf",
         "_rgb": "rgb(42, 131, 70)",
-        "rgb": "rgb(38, 127, 85)",
+        "rgb": "rgb(32, 124, 81)",
         "hex": "#007c45",
         "cmyk": "83,35,83,4",
         "examLevel": 2,
         "munsell": "3G 4.5/7",
         "approximatePccs": [
-          { "notation": "v13", "deltaE": 5.86 },
-          { "notation": "dp12", "deltaE": 6.18 },
-          { "notation": "d12", "deltaE": 8.75 }
+          { "notation": "dp12", "deltaE": 5.22 },
+          { "notation": "v13", "deltaE": 6.91 }
         ]
       },
       {
@@ -1608,14 +1607,14 @@
         "iconKey": "artPaint",
         "cmyk": "71,38,67,2",
         "_rgb": "rgb(97, 150, 146)",
-        "rgb": "rgb(88, 133, 107)",
+        "rgb": "rgb(86, 131, 106)",
         "hex": "#4f8a5d",
         "examLevel": 2,
         "munsell": "4G 5/4",
         "approximatePccs": [
-          { "notation": "d12", "deltaE": 8.42 },
-          { "notation": "sf14", "deltaE": 8.91 },
-          { "notation": "v13", "deltaE": 9.25 }
+          { "notation": "d12", "deltaE": 8.6 },
+          { "notation": "g12", "deltaE": 8.76 },
+          { "notation": "sf14", "deltaE": 9.37 }
         ]
       },
       {
@@ -1627,14 +1626,14 @@
         "originDescription": "ラテン語で緑を意味する、 viridisからの造語",
         "iconKey": "paint",
         "_rgb": "rgb(0, 137, 105)",
-        "rgb": "rgb(0, 111, 87)",
+        "rgb": "rgb(4, 110, 86)",
         "hex": "#008969",
         "examLevel": 3,
         "munsell": "8G 4/6",
         "approximatePccs": [
-          { "notation": "dp12", "deltaE": 7.96 },
-          { "notation": "g12", "deltaE": 8.12 },
-          { "notation": "v14", "deltaE": 9.48 }
+          { "notation": "dp12", "deltaE": 7.84 },
+          { "notation": "g12", "deltaE": 7.98 },
+          { "notation": "v14", "deltaE": 9.8 }
         ],
         "cmyk": "87,43,78,9"
       },
@@ -1648,14 +1647,14 @@
         "originDescription": "お酒類の輸送に使われるボトルの 緑色のガラスの色",
         "iconKey": "bottle",
         "_rgb": "rgb(0, 86, 53)",
-        "rgb": "rgb(35, 63, 51)",
+        "rgb": "rgb(38, 66, 53)",
         "hex": "#005635",
         "examLevel": 2,
         "munsell": "5G 2.5/3",
         "approximatePccs": [
-          { "notation": "dk14", "deltaE": 5.48 },
-          { "notation": "dkg12", "deltaE": 5.93 },
-          { "notation": "dkg14", "deltaE": 6.88 }
+          { "notation": "dk14", "deltaE": 5.19 },
+          { "notation": "dkg12", "deltaE": 6.63 },
+          { "notation": "dkg14", "deltaE": 7.54 }
         ],
         "cmyk": "84,63,80,42"
       },
@@ -1669,14 +1668,14 @@
         "iconKey": "iron",
         "cmyk": "84,64,73,42",
         "_rgb": "rgb(1, 46, 52)",
-        "rgb": "rgb(35, 62, 58)",
+        "rgb": "rgb(39, 65, 61)",
         "hex": "#005242",
         "examLevel": 2,
         "munsell": "2.5BG 2.5/2.5",
         "approximatePccs": [
-          { "notation": "dkg14", "deltaE": 4.4 },
-          { "notation": "dkg12", "deltaE": 5.08 },
-          { "notation": "dk14", "deltaE": 5.66 }
+          { "notation": "dkg14", "deltaE": 4.79 },
+          { "notation": "dk14", "deltaE": 5.37 },
+          { "notation": "dkg12", "deltaE": 5.55 }
         ]
       }
     ],
@@ -1707,13 +1706,13 @@
         "originDescription": "乳幼児服の色に由来する色名 聖母マリアの象徴色",
         "iconKey": "baby",
         "_rgb": "rgb(187, 226, 241)",
-        "rgb": "rgb(166, 191, 205)",
+        "rgb": "rgb(166, 190, 204)",
         "hex": "#bbe2f1",
         "examLevel": 3,
         "munsell": "10B 7.5/3",
         "approximatePccs": [
-          { "notation": "p18", "deltaE": 4.69 },
-          { "notation": "ltg16", "deltaE": 5.35 }
+          { "notation": "p18", "deltaE": 4.82 },
+          { "notation": "ltg16", "deltaE": 5.32 }
         ],
         "cmyk": "38,17,15,0"
       },
@@ -1727,14 +1726,14 @@
         "iconKey": "sky",
         "cmyk": "47,8,9,0",
         "_rgb": "rgb(102, 202, 237)",
-        "rgb": "rgb(137, 197, 223)",
+        "rgb": "rgb(137, 195, 221)",
         "hex": "#a0d8ef",
         "examLevel": 3,
         "munsell": "9B 7.5/5.5",
         "approximatePccs": [
-          { "notation": "lt16", "deltaE": 6.4 },
-          { "notation": "p18", "deltaE": 7.91 },
-          { "notation": "ltg16", "deltaE": 8.23 }
+          { "notation": "lt16", "deltaE": 6.13 },
+          { "notation": "ltg16", "deltaE": 7.8 },
+          { "notation": "p18", "deltaE": 7.81 }
         ]
       },
       {
@@ -1748,14 +1747,14 @@
         "iconKey": "sky",
         "cmyk": "47,8,9,0",
         "_rgb": "rgb(102, 202, 237)",
-        "rgb": "rgb(137, 197, 223)",
+        "rgb": "rgb(137, 195, 221)",
         "hex": "#a0d8ef",
         "examLevel": 3,
         "munsell": "9B 7.5/5.5",
         "approximatePccs": [
-          { "notation": "lt16", "deltaE": 6.4 },
-          { "notation": "p18", "deltaE": 7.91 },
-          { "notation": "ltg16", "deltaE": 8.23 }
+          { "notation": "lt16", "deltaE": 6.13 },
+          { "notation": "ltg16", "deltaE": 7.8 },
+          { "notation": "p18", "deltaE": 7.81 }
         ]
       },
       {
@@ -1768,13 +1767,13 @@
         "iconKey": "jar",
         "cmyk": "51,14,23,0",
         "_rgb": "rgb(218, 240, 243)",
-        "rgb": "rgb(130, 183, 195)",
+        "rgb": "rgb(131, 182, 193)",
         "hex": "#a2d7dd",
         "examLevel": 2,
         "munsell": "4.5B 7/4",
         "approximatePccs": [
-          { "notation": "lt16", "deltaE": 5.08 },
-          { "notation": "ltg16", "deltaE": 5.59 }
+          { "notation": "ltg16", "deltaE": 5.33 },
+          { "notation": "lt16", "deltaE": 5.38 }
         ]
       },
       {
@@ -1787,11 +1786,11 @@
         "iconKey": "paint",
         "cmyk": "63,13,28,0",
         "_rgb": "rgb(48, 174, 209)",
-        "rgb": "rgb(90, 175, 187)",
+        "rgb": "rgb(91, 172, 184)",
         "hex": "#64bcc7",
         "examLevel": 2,
         "munsell": "2.5B 6.5/5.5",
-        "approximatePccs": [{ "notation": "lt16", "deltaE": 5.75 }]
+        "approximatePccs": [{ "notation": "lt16", "deltaE": 5.71 }]
       },
       {
         "id": "asagi-iro",
@@ -1803,14 +1802,14 @@
         "iconKey": "paint",
         "cmyk": "82,31,37,0",
         "_rgb": "rgb(0, 141, 168)",
-        "rgb": "rgb(0, 140, 161)",
+        "rgb": "rgb(0, 136, 156)",
         "hex": "#00a1ae",
         "examLevel": 3,
         "munsell": "2.5B 5/8",
         "approximatePccs": [
-          { "notation": "sf16", "deltaE": 5.34 },
-          { "notation": "v15", "deltaE": 7.28 },
-          { "notation": "b16", "deltaE": 7.65 }
+          { "notation": "sf16", "deltaE": 5.52 },
+          { "notation": "v15", "deltaE": 5.81 },
+          { "notation": "b16", "deltaE": 7.72 }
         ]
       },
       {
@@ -1823,11 +1822,14 @@
         "originDescription": "トルコ石のような色を表す 青と緑の中間色相",
         "iconKey": "stone",
         "_rgb": "rgb(0, 175, 204)",
-        "rgb": "rgb(0, 165, 195)",
+        "rgb": "rgb(0, 161, 191)",
         "hex": "#00afcc",
         "examLevel": 3,
         "munsell": "5B 6/8",
-        "approximatePccs": [{ "notation": "lt16", "deltaE": 6.77 }],
+        "approximatePccs": [
+          { "notation": "lt16", "deltaE": 7.51 },
+          { "notation": "sf16", "deltaE": 9.39 }
+        ],
         "cmyk": "76,14,22,0"
       },
       {
@@ -1840,13 +1842,14 @@
         "iconKey": "printer",
         "cmyk": "75,15,8,0",
         "_rgb": "rgb(0, 126, 174)",
-        "rgb": "rgb(0, 166, 216)",
+        "rgb": "rgb(0, 161, 209)",
         "hex": "#00a0e9",
         "examLevel": 3,
         "munsell": "7.5B 6/10",
         "approximatePccs": [
-          { "notation": "lt16", "deltaE": 7.7 },
-          { "notation": "lt18", "deltaE": 8.21 }
+          { "notation": "lt18", "deltaE": 8.09 },
+          { "notation": "lt16", "deltaE": 8.3 },
+          { "notation": "b16", "deltaE": 9.08 }
         ]
       }
     ],
@@ -1868,14 +1871,14 @@
         "iconKey": "paint",
         "cmyk": "87,48,45,8",
         "_rgb": "rgb(0, 88, 124)",
-        "rgb": "rgb(0, 107, 128)",
+        "rgb": "rgb(0, 106, 127)",
         "hex": "#007d92",
         "examLevel": 2,
         "munsell": "4B 4/6",
         "approximatePccs": [
-          { "notation": "v15", "deltaE": 6.52 },
-          { "notation": "dp14", "deltaE": 6.98 },
-          { "notation": "d16", "deltaE": 7.14 }
+          { "notation": "dp14", "deltaE": 6.68 },
+          { "notation": "v15", "deltaE": 6.82 },
+          { "notation": "d16", "deltaE": 6.97 }
         ]
       },
       {
@@ -1889,14 +1892,14 @@
         "iconKey": "navy",
         "cmyk": "90,61,49,23",
         "_rgb": "rgb(0, 95, 165)",
-        "rgb": "rgb(0, 79, 101)",
+        "rgb": "rgb(0, 80, 102)",
         "hex": "#006788",
         "examLevel": 3,
         "munsell": "5B 3/7",
         "approximatePccs": [
-          { "notation": "dk16", "deltaE": 5.01 },
-          { "notation": "dp14", "deltaE": 5.63 },
-          { "notation": "g14", "deltaE": 7.41 }
+          { "notation": "dk16", "deltaE": 5.26 },
+          { "notation": "dp14", "deltaE": 5.4 },
+          { "notation": "g14", "deltaE": 7.24 }
         ]
       },
       {
@@ -1909,11 +1912,11 @@
         "iconKey": "paint",
         "cmyk": "87,67,42,22",
         "_rgb": "rgb(26, 74, 117)",
-        "rgb": "rgb(33, 74, 105)",
+        "rgb": "rgb(35, 75, 106)",
         "hex": "#0f5779",
         "examLevel": 3,
         "munsell": "2PB 3/5",
-        "approximatePccs": [{ "notation": "dp16", "deltaE": 3.59 }]
+        "approximatePccs": [{ "notation": "dp16", "deltaE": 3.81 }]
       },
       {
         "id": "saxe-blue",
@@ -1926,13 +1929,13 @@
         "iconKey": "paint",
         "cmyk": "69,45,34,1",
         "_rgb": "rgb(156, 195, 215)",
-        "rgb": "rgb(94, 128, 152)",
+        "rgb": "rgb(91, 126, 150)",
         "hex": "#3a8daa",
         "examLevel": 2,
         "munsell": "1PB 5/4.5",
         "approximatePccs": [
-          { "notation": "b16", "deltaE": 7.93 },
-          { "notation": "sf16", "deltaE": 9.95 }
+          { "notation": "b16", "deltaE": 7.79 },
+          { "notation": "sf16", "deltaE": 10 }
         ]
       },
       {
@@ -1945,14 +1948,14 @@
         "iconKey": "paint",
         "cmyk": "84,56,24,6",
         "_rgb": "rgb(0, 97, 160)",
-        "rgb": "rgb(44, 101, 148)",
+        "rgb": "rgb(43, 100, 146)",
         "hex": "#2980af",
         "examLevel": 2,
         "munsell": "3PB 4/7.5",
         "approximatePccs": [
-          { "notation": "v16", "deltaE": 4.58 },
-          { "notation": "b18", "deltaE": 4.96 },
-          { "notation": "d16", "deltaE": 5.35 }
+          { "notation": "v16", "deltaE": 4.19 },
+          { "notation": "d16", "deltaE": 5.06 },
+          { "notation": "b18", "deltaE": 5.34 }
         ]
       },
       {
@@ -1966,11 +1969,15 @@
         "iconKey": "artPaint",
         "cmyk": "84,44,20,2",
         "_rgb": "rgb(0, 121, 191)",
-        "rgb": "rgb(19, 122, 169)",
+        "rgb": "rgb(0, 118, 165)",
         "hex": "#008db7",
         "examLevel": 2,
         "munsell": "9B 4.5/9",
-        "approximatePccs": [{ "notation": "b16", "deltaE": 5.08 }]
+        "approximatePccs": [
+          { "notation": "b16", "deltaE": 6.43 },
+          { "notation": "d16", "deltaE": 7.68 },
+          { "notation": "v16", "deltaE": 8.94 }
+        ]
       },
       {
         "id": "cobalt-blue",
@@ -1983,14 +1990,14 @@
         "iconKey": "artPaint",
         "cmyk": "87,56,11,3",
         "_rgb": "rgb(0, 95, 177)",
-        "rgb": "rgb(17, 104, 166)",
+        "rgb": "rgb(0, 101, 163)",
         "hex": "#0068b7",
         "examLevel": 3,
         "munsell": "3PB 4/10",
         "approximatePccs": [
-          { "notation": "b18", "deltaE": 4.75 },
-          { "notation": "v16", "deltaE": 5.81 },
-          { "notation": "d16", "deltaE": 6.81 }
+          { "notation": "v16", "deltaE": 4.9 },
+          { "notation": "b18", "deltaE": 5.57 },
+          { "notation": "d16", "deltaE": 6.35 }
         ]
       }
     ],
@@ -2015,13 +2022,13 @@
         "iconKey": "flower",
         "cmyk": "79,66,4,2",
         "_rgb": "rgb(108, 53, 133)",
-        "rgb": "rgb(74, 95, 165)",
+        "rgb": "rgb(69, 92, 163)",
         "hex": "#4d4398",
         "examLevel": 3,
         "munsell": "7PB 4/10",
         "approximatePccs": [
-          { "notation": "sf18", "deltaE": 4.31 },
-          { "notation": "b18", "deltaE": 6.43 }
+          { "notation": "sf18", "deltaE": 4.92 },
+          { "notation": "b18", "deltaE": 6.79 }
         ]
       },
       {
@@ -2033,11 +2040,11 @@
         "originDescription": "瑠璃という青い石に由来 ラピスラズリと同一の鉱物とされる",
         "iconKey": "jewelry",
         "_rgb": "rgb(29, 80, 162)",
-        "rgb": "rgb(39, 71, 126)",
+        "rgb": "rgb(39, 70, 126)",
         "hex": "#1d50a2",
         "examLevel": 3,
         "munsell": "6PB 3/8",
-        "approximatePccs": [{ "notation": "d18", "deltaE": 1.89 }],
+        "approximatePccs": [{ "notation": "d18", "deltaE": 1.74 }],
         "cmyk": "88,74,21,14"
       },
       {
@@ -2050,14 +2057,14 @@
         "iconKey": "artPaint",
         "cmyk": "84,76,1,1",
         "_rgb": "rgb(43, 70, 156)",
-        "rgb": "rgb(65, 78, 158)",
+        "rgb": "rgb(63, 76, 156)",
         "hex": "#4e67b0",
         "examLevel": 3,
         "munsell": "7.5PB 3.5/11",
         "approximatePccs": [
-          { "notation": "sf20", "deltaE": 7.16 },
-          { "notation": "v17", "deltaE": 7.87 },
-          { "notation": "d18", "deltaE": 8.07 }
+          { "notation": "v17", "deltaE": 7.36 },
+          { "notation": "sf20", "deltaE": 7.47 },
+          { "notation": "d18", "deltaE": 7.62 }
         ]
       },
       {
@@ -2071,14 +2078,14 @@
         "iconKey": "jewelry",
         "cmyk": "84,76,1,1",
         "_rgb": "rgb(0, 50, 143)",
-        "rgb": "rgb(65, 78, 158)",
+        "rgb": "rgb(63, 76, 156)",
         "hex": "#4052a2",
         "examLevel": 3,
         "munsell": "7.5PB 3.5/11",
         "approximatePccs": [
-          { "notation": "sf20", "deltaE": 7.16 },
-          { "notation": "v17", "deltaE": 7.87 },
-          { "notation": "d18", "deltaE": 8.07 }
+          { "notation": "v17", "deltaE": 7.36 },
+          { "notation": "sf20", "deltaE": 7.47 },
+          { "notation": "d18", "deltaE": 7.62 }
         ]
       },
       {
@@ -2092,11 +2099,11 @@
         "iconKey": "navy",
         "cmyk": "84,75,46,34",
         "_rgb": "rgb(0, 46, 102)",
-        "rgb": "rgb(46, 56, 83)",
+        "rgb": "rgb(48, 59, 88)",
         "hex": "#1f2e55",
         "examLevel": 3,
         "munsell": "6PB 2.5/4",
-        "approximatePccs": [{ "notation": "g18", "deltaE": 3.39 }]
+        "approximatePccs": [{ "notation": "g18", "deltaE": 3.05 }]
       },
       {
         "id": "midnight-blue",
@@ -2109,11 +2116,11 @@
         "iconKey": "moon",
         "cmyk": "85,77,63,59",
         "_rgb": "rgb(0, 14, 43)",
-        "rgb": "rgb(30, 36, 46)",
+        "rgb": "rgb(32, 38, 52)",
         "hex": "#001d42",
         "examLevel": 2,
         "munsell": "5PB 1.5/2",
-        "approximatePccs": [{ "notation": "dkg18", "deltaE": 1.34 }]
+        "approximatePccs": [{ "notation": "dkg18", "deltaE": 2.84 }]
       }
     ],
     "compareSections": [
@@ -2134,14 +2141,11 @@
         "iconKey": "perfume",
         "cmyk": "27,41,4,0",
         "_rgb": "rgb(177, 135, 190)",
-        "rgb": "rgb(191, 163, 201)",
+        "rgb": "rgb(192, 163, 202)",
         "hex": "#d1bada",
         "examLevel": 2,
         "munsell": "6P 7/6",
-        "approximatePccs": [
-          { "notation": "p22", "deltaE": 4.01 },
-          { "notation": "ltg24", "deltaE": 5.9 }
-        ]
+        "approximatePccs": [{ "notation": "p22", "deltaE": 4.04 }]
       },
       {
         "id": "lavender",
@@ -2153,11 +2157,14 @@
         "iconKey": "perfume",
         "cmyk": "44,45,26,0",
         "_rgb": "rgb(174, 167, 197)",
-        "rgb": "rgb(157, 143, 164)",
+        "rgb": "rgb(155, 143, 163)",
         "hex": "#c5b3d3",
         "examLevel": 3,
         "munsell": "5P 6/3",
-        "approximatePccs": [{ "notation": "ltg22", "deltaE": 3.66 }]
+        "approximatePccs": [
+          { "notation": "ltg22", "deltaE": 4.29 },
+          { "notation": "ltg20", "deltaE": 5.58 }
+        ]
       },
       {
         "id": "fuji-iro",
@@ -2169,14 +2176,14 @@
         "iconKey": "flower",
         "cmyk": "42,40,2,0",
         "_rgb": "rgb(165, 158, 207)",
-        "rgb": "rgb(160, 156, 203)",
+        "rgb": "rgb(159, 155, 202)",
         "hex": "#bbb7da",
         "examLevel": 2,
         "munsell": "10PB 6.5/6.5",
         "approximatePccs": [
-          { "notation": "ltg20", "deltaE": 6.97 },
-          { "notation": "p20", "deltaE": 7.83 },
-          { "notation": "ltg22", "deltaE": 8.35 }
+          { "notation": "ltg20", "deltaE": 6.8 },
+          { "notation": "p20", "deltaE": 8.1 },
+          { "notation": "ltg22", "deltaE": 8.32 }
         ]
       },
       {
@@ -2188,13 +2195,13 @@
         "originDescription": "色みは異なるが 藤の英語名",
         "iconKey": "flower",
         "_rgb": "rgb(142, 139, 194)",
-        "rgb": "rgb(120, 110, 179)",
+        "rgb": "rgb(124, 109, 196)",
         "hex": "#8e8bc2",
         "examLevel": 2,
         "munsell": "10PB 5/12",
         "approximatePccs": [
-          { "notation": "b20", "deltaE": 4.31 },
-          { "notation": "lt20", "deltaE": 5.3 }
+          { "notation": "b20", "deltaE": 5.44 },
+          { "notation": "lt20", "deltaE": 6.33 }
         ],
         "cmyk": "61,62,0,0"
       },
@@ -2207,14 +2214,14 @@
         "originDescription": "スミレの花に由来する色名 バイオレットはスミレ属の総称",
         "iconKey": "flower",
         "_rgb": "rgb(113, 79, 157)",
-        "rgb": "rgb(119, 81, 159)",
+        "rgb": "rgb(117, 78, 157)",
         "hex": "#714f9d",
         "examLevel": 3,
         "munsell": "2.5P 4/11",
         "approximatePccs": [
-          { "notation": "sf20", "deltaE": 7.6 },
-          { "notation": "b20", "deltaE": 8.28 },
-          { "notation": "sf22", "deltaE": 9.3 }
+          { "notation": "sf20", "deltaE": 7.69 },
+          { "notation": "b20", "deltaE": 8.9 },
+          { "notation": "sf22", "deltaE": 9.58 }
         ],
         "cmyk": "64,79,0,0"
       },
@@ -2228,14 +2235,13 @@
         "iconKey": "flower",
         "cmyk": "80,82,0,0",
         "_rgb": "rgb(78, 82, 162)",
-        "rgb": "rgb(81, 69, 152)",
+        "rgb": "rgb(80, 69, 164)",
         "hex": "#5654a2",
         "examLevel": 3,
         "munsell": "9PB 3.5/13",
         "approximatePccs": [
-          { "notation": "d20", "deltaE": 6.59 },
-          { "notation": "sf20", "deltaE": 6.77 },
-          { "notation": "d22", "deltaE": 9.55 }
+          { "notation": "d20", "deltaE": 7.87 },
+          { "notation": "sf20", "deltaE": 7.93 }
         ]
       }
     ],
@@ -2257,13 +2263,13 @@
         "iconKey": "flower",
         "cmyk": "23,63,0,0",
         "_rgb": "rgb(70, 51, 140)",
-        "rgb": "rgb(201, 124, 182)",
+        "rgb": "rgb(197, 122, 180)",
         "hex": "#cc7db1",
         "examLevel": 3,
         "munsell": "10P 6/10",
         "approximatePccs": [
-          { "notation": "lt22", "deltaE": 6.13 },
-          { "notation": "lt24", "deltaE": 7.18 }
+          { "notation": "lt22", "deltaE": 5.33 },
+          { "notation": "lt24", "deltaE": 7.57 }
         ]
       },
       {
@@ -2275,11 +2281,11 @@
         "originDescription": "ブルプラ貝の体液からは 紫色の植物性染料が採れる",
         "iconKey": "shell",
         "_rgb": "rgb(155, 104, 169)",
-        "rgb": "rgb(171, 97, 166)",
+        "rgb": "rgb(168, 93, 172)",
         "hex": "#9b68a9",
         "examLevel": 3,
         "munsell": "7.5P 5/12",
-        "approximatePccs": [{ "notation": "b22", "deltaE": 3.63 }],
+        "approximatePccs": [{ "notation": "b22", "deltaE": 1.52 }],
         "cmyk": "40,75,0,0"
       },
       {
@@ -2292,13 +2298,13 @@
         "iconKey": "flower",
         "cmyk": "54,72,8,1",
         "_rgb": "rgb(128, 80, 157)",
-        "rgb": "rgb(138, 96, 157)",
+        "rgb": "rgb(134, 92, 154)",
         "hex": "#915da3",
         "examLevel": 3,
         "munsell": "5P 4.5/9",
         "approximatePccs": [
-          { "notation": "sf22", "deltaE": 5.84 },
-          { "notation": "b22", "deltaE": 6.12 }
+          { "notation": "sf22", "deltaE": 5.38 },
+          { "notation": "b22", "deltaE": 6.71 }
         ]
       },
       {
@@ -2311,11 +2317,11 @@
         "iconKey": "japanese",
         "cmyk": "59,74,32,7",
         "_rgb": "rgb(78, 29, 92)",
-        "rgb": "rgb(121, 85, 124)",
+        "rgb": "rgb(120, 83, 123)",
         "hex": "#895687",
         "examLevel": 2,
         "munsell": "7.5P 4/6",
-        "approximatePccs": [{ "notation": "sf22", "deltaE": 4.59 }]
+        "approximatePccs": [{ "notation": "sf22", "deltaE": 4.67 }]
       },
       {
         "id": "edomurasaki",
@@ -2327,13 +2333,13 @@
         "iconKey": "japanese",
         "cmyk": "70,78,25,9",
         "_rgb": "rgb(66, 63, 120)",
-        "rgb": "rgb(98, 73, 123)",
+        "rgb": "rgb(98, 72, 123)",
         "hex": "#734e95",
         "examLevel": 2,
         "munsell": "3P 3.5/7",
         "approximatePccs": [
-          { "notation": "sf20", "deltaE": 7.4 },
-          { "notation": "d22", "deltaE": 7.52 },
+          { "notation": "d22", "deltaE": 7.15 },
+          { "notation": "sf20", "deltaE": 7.58 },
           { "notation": "g22", "deltaE": 9.57 }
         ]
       },
@@ -2346,14 +2352,13 @@
         "originDescription": "熟したナスの実のような 黒に近い紫色",
         "iconKey": "eggplant",
         "_rgb": "rgb(75, 26, 71)",
-        "rgb": "rgb(67, 51, 68)",
+        "rgb": "rgb(71, 54, 72)",
         "hex": "#4b1a47",
         "examLevel": 3,
         "munsell": "7.5P 2.5/2.5",
         "approximatePccs": [
-          { "notation": "g22", "deltaE": 4.65 },
-          { "notation": "dk22", "deltaE": 4.91 },
-          { "notation": "g20", "deltaE": 6.27 }
+          { "notation": "g22", "deltaE": 3.93 },
+          { "notation": "dk22", "deltaE": 4.5 }
         ],
         "cmyk": "74,78,57,38"
       }
@@ -2377,14 +2382,14 @@
         "iconKey": "thread",
         "cmyk": "8,10,16,0",
         "_rgb": "rgb(243, 231, 216)",
-        "rgb": "rgb(236, 228, 214)",
+        "rgb": "rgb(235, 226, 213)",
         "hex": "#fbfaf3",
         "examLevel": 3,
         "munsell": "10YR 9/1",
         "approximatePccs": [
-          { "notation": "Gy-9.0", "deltaE": 6.65 },
-          { "notation": "Gy-8.5", "deltaE": 7.54 },
-          { "notation": "W", "deltaE": 8.59 }
+          { "notation": "Gy-9.0", "deltaE": 6.45 },
+          { "notation": "Gy-8.5", "deltaE": 7.2 },
+          { "notation": "W", "deltaE": 8.69 }
         ]
       },
       {
@@ -2397,14 +2402,14 @@
         "iconKey": "ivory",
         "cmyk": "14,15,27,0",
         "_rgb": "rgb(245, 229, 190)",
-        "rgb": "rgb(223, 213, 190)",
+        "rgb": "rgb(222, 213, 192)",
         "hex": "#f8f5e3",
         "examLevel": 3,
         "munsell": "2.5Y 8.5/1.5",
         "approximatePccs": [
-          { "notation": "ltg8", "deltaE": 7.14 },
-          { "notation": "ltg6", "deltaE": 9.78 },
-          { "notation": "Gy-8.5", "deltaE": 9.83 }
+          { "notation": "ltg8", "deltaE": 7.77 },
+          { "notation": "Gy-8.5", "deltaE": 9.14 },
+          { "notation": "Gy-9.0", "deltaE": 9.63 }
         ]
       },
       {
@@ -2416,14 +2421,14 @@
         "originDescription": "茶色に近い鼠色 茶と鼠は江戸時代に大流行した色",
         "iconKey": "mouse",
         "_rgb": "rgb(169, 158, 147)",
-        "rgb": "rgb(158, 144, 137)",
+        "rgb": "rgb(156, 145, 139)",
         "hex": "#a99e93",
         "examLevel": 2,
         "munsell": "5YR 6/1",
         "approximatePccs": [
-          { "notation": "Gy-6.0", "deltaE": 6.9 },
-          { "notation": "Gy-6.5", "deltaE": 8.11 },
-          { "notation": "Gy-5.5", "deltaE": 8.18 }
+          { "notation": "Gy-6.0", "deltaE": 5.64 },
+          { "notation": "Gy-6.5", "deltaE": 6.99 },
+          { "notation": "Gy-5.5", "deltaE": 7.22 }
         ],
         "cmyk": "44,43,45,0"
       },
@@ -2436,14 +2441,14 @@
         "originDescription": "千利休にちなんだ緑みのグレイ 利休とつく色は渋い緑みの色",
         "iconKey": "mouse",
         "_rgb": "rgb(123, 129, 116)",
-        "rgb": "rgb(114, 123, 116)",
+        "rgb": "rgb(114, 124, 117)",
         "hex": "#7b8174",
         "examLevel": 2,
         "munsell": "2.5G 5/1",
         "approximatePccs": [
-          { "notation": "Gy-5.0", "deltaE": 6.54 },
-          { "notation": "Gy-4.5", "deltaE": 8.01 },
-          { "notation": "g10", "deltaE": 8.04 }
+          { "notation": "Gy-5.0", "deltaE": 6.89 },
+          { "notation": "g10", "deltaE": 8.18 },
+          { "notation": "Gy-5.5", "deltaE": 8.37 }
         ],
         "cmyk": "61,48,55,3"
       }
@@ -2465,11 +2470,11 @@
         "iconKey": "coin",
         "cmyk": "42,35,35,0",
         "_rgb": "rgb(179, 185, 189)",
-        "rgb": "rgb(160, 159, 159)",
+        "rgb": "rgb(160, 160, 160)",
         "hex": "#afafb0",
         "examLevel": 2,
         "munsell": "N6.5",
-        "approximatePccs": [{ "notation": "Gy-6.5", "deltaE": 0.6 }]
+        "approximatePccs": [{ "notation": "Gy-6.5", "deltaE": 0 }]
       },
       {
         "id": "silver-grey",
@@ -2482,11 +2487,11 @@
         "iconKey": "coin",
         "cmyk": "42,35,35,0",
         "_rgb": "rgb(191, 197, 201)",
-        "rgb": "rgb(160, 159, 159)",
+        "rgb": "rgb(160, 160, 160)",
         "hex": "#afafb0",
         "examLevel": 3,
         "munsell": "N6.5",
-        "approximatePccs": [{ "notation": "Gy-6.5", "deltaE": 0.6 }]
+        "approximatePccs": [{ "notation": "Gy-6.5", "deltaE": 0 }]
       },
       {
         "id": "slate-grey",
@@ -2499,14 +2504,11 @@
         "iconKey": "rock",
         "cmyk": "71,62,59,26",
         "_rgb": "rgb(109, 123, 140)",
-        "rgb": "rgb(79, 81, 85)",
+        "rgb": "rgb(81, 84, 87)",
         "hex": "#636062",
         "examLevel": 2,
         "munsell": "2.5PB 3.5/0.5",
-        "approximatePccs": [
-          { "notation": "Gy-3.5", "deltaE": 2.71 },
-          { "notation": "Gy-3.0", "deltaE": 3.92 }
-        ]
+        "approximatePccs": [{ "notation": "Gy-3.5", "deltaE": 2.2 }]
       },
       {
         "id": "charcoal-grey",
@@ -2518,14 +2520,14 @@
         "originDescription": "チャコールとは木炭・炭のこと 日本語では消炭色",
         "iconKey": "charcoal",
         "_rgb": "rgb(78, 68, 73)",
-        "rgb": "rgb(72, 67, 75)",
+        "rgb": "rgb(75, 70, 78)",
         "hex": "#4e4449",
         "examLevel": 3,
         "munsell": "5P 3/1",
         "approximatePccs": [
-          { "notation": "Gy-3.0", "deltaE": 6.21 },
-          { "notation": "Gy-2.5", "deltaE": 6.75 },
-          { "notation": "dkg24", "deltaE": 7.92 }
+          { "notation": "Gy-3.0", "deltaE": 6.07 },
+          { "notation": "Gy-2.5", "deltaE": 7.21 },
+          { "notation": "Gy-3.5", "deltaE": 7.4 }
         ],
         "cmyk": "73,69,60,32"
       },
@@ -2540,11 +2542,11 @@
         "iconKey": "fire",
         "cmyk": "84,79,77,71",
         "_rgb": "rgb(11, 1, 0)",
-        "rgb": "rgb(23, 23, 23)",
+        "rgb": "rgb(28, 28, 28)",
         "hex": "#24130d",
         "examLevel": 2,
         "munsell": "N1",
-        "approximatePccs": [{ "notation": "Bk", "deltaE": 4.4 }]
+        "approximatePccs": [{ "notation": "Bk", "deltaE": 2.83 }]
       }
     ],
     "compareSections": [
