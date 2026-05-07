@@ -1,4 +1,5 @@
 <script lang="ts">
+  import chroma from "chroma-js"
   import ColorPicker from "$lib/components/ColorPicker.svelte"
   import CopyButton from "$lib/components/CopyButton.svelte"
   import { findClosestPccs, findClosestJis } from "$lib/color/approximate"
@@ -75,13 +76,10 @@
     {#if jisResults.length > 0}
       <ul class="result-list">
         {#each jisResults as result (result.color.name)}
+          {@const hex = chroma(result.color.rgb).hex().toUpperCase()}
           <li class="result-card jis-card">
             <div class="jis-card-inner jis-card-main">
-              <span
-                class="swatch"
-                style="background-color: {result.color.rgb}"
-                aria-label={result.color.rgb}
-              ></span>
+              <span class="swatch" style="background-color: {hex}" aria-label={hex}></span>
               <div class="jis-name-reading">
                 <span class="jis-name">{result.color.name}</span>
                 <span class="jis-reading">{result.color.reading}</span>
@@ -91,8 +89,8 @@
               {#if result.color.examLevel !== null}
                 <span class="exam-level">{result.color.examLevel}級</span>
               {/if}
-              <span class="hex-code">{result.color.rgb}</span>
-              <CopyButton text={result.color.rgb} color="#777" />
+              <span class="hex-code">{hex}</span>
+              <CopyButton text={hex} color="#777" />
             </div>
           </li>
         {/each}
