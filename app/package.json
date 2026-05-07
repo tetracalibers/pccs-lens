@@ -17,6 +17,7 @@
     "deploy": "npm run build && wrangler deploy",
     "cf-typegen": "wrangler types",
     "data:pccs-approx": "node scripts/add-pccs-approximations.mjs && prettier --write src/lib/data/jis_colors.json",
+    "data:jis-rgb": "node scripts/add-rgb-to-jis-colors.mjs && prettier --write src/lib/data/jis_colors.json",
     "data:munsell-hue": "node scripts/generate-munsell-hue.mjs && prettier --write src/lib/data/munsell_hue.json"
   },
   "devDependencies": {
