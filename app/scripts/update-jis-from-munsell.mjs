@@ -1,10 +1,11 @@
 import { readFile, writeFile } from "node:fs/promises"
 import { fileURLToPath } from "node:url"
 import { dirname, resolve } from "node:path"
-import chroma from "chroma-js"
 import Color from "colorjs.io"
 import { munsellToXyz } from "munsell"
 import { $ } from "zx"
+
+Color.defaults.deltaE = "2000"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const DATA_DIR = resolve(__dirname, "../src/lib/data")
@@ -60,11 +61,12 @@ async function cmykToRgb(cmyk) {
   return `rgb(${r}, ${g}, ${b})`
 }
 
-function computeApproximatePccs(jisRgb, pccsAll) {
-  const candidates = pccsAll
+function computeApproximatePccs(jisRgb, pccsColors) {
+  const jisColor = new Color(jisRgb)
+  const candidates = pccsColors
     .map((p) => ({
       notation: p.notation,
-      deltaE: chroma.deltaE(jisRgb, p.hex)
+      deltaE: jisColor.deltaE(p.color)
     }))
     .sort((a, b) => a.deltaE - b.deltaE)
 
@@ -86,6 +88,7 @@ function computeApproximatePccs(jisRgb, pccsAll) {
 
 async function main() {
   const pccsAll = await loadPccsAll()
+  const pccsColors = pccsAll.map((p) => ({ notation: p.notation, color: new Color(p.hex) }))
   const jisPath = resolve(DATA_DIR, "jis_colors.json")
   const jisColorsBySubfamily = JSON.parse(await readFile(jisPath, "utf8"))
   const allColors = Object.values(jisColorsBySubfamily).flatMap((sub) => sub.colors)
@@ -105,7 +108,7 @@ async function main() {
       jis.rgb = munsellToDisplayRgb(jis.munsell)
       fromMunsell++
     }
-    jis.approximatePccs = computeApproximatePccs(jis.rgb, pccsAll)
+    jis.approximatePccs = computeApproximatePccs(jis.rgb, pccsColors)
   }
 
   await writeFile(jisPath, JSON.stringify(jisColorsBySubfamily), "utf8")
