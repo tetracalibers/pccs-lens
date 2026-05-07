@@ -16,8 +16,9 @@
     "test": "npm run test:unit -- --run",
     "deploy": "npm run build && wrangler deploy",
     "cf-typegen": "wrangler types",
-    "data:pccs-approx": "node scripts/add-pccs-approximations.mjs && prettier --write src/lib/data/jis_colors.json",
+    "data:jis-cmyk": "node scripts/update-jis-cmyk-from-munsell.mjs && prettier --write src/lib/data/jis_colors.json",
     "data:jis-rgb": "node scripts/add-rgb-to-jis-colors.mjs && prettier --write src/lib/data/jis_colors.json",
+    "data:jis-pccs-approx": "node scripts/add-pccs-approximations.mjs && prettier --write src/lib/data/jis_colors.json",
     "data:munsell-hue": "node scripts/generate-munsell-hue.mjs && prettier --write src/lib/data/munsell_hue.json"
   },
   "devDependencies": {
@@ -37,6 +38,7 @@
     "@vitest/browser-playwright": "^4.0.18",
     "beautiful-mermaid": "^1.1.3",
     "chroma-js": "^3.2.0",
+    "colorjs.io": "^0.6.1",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-svelte": "^3.14.0",
