@@ -1828,12 +1828,14 @@
         "colorDescription": "瑠璃色より紫が強く やや白っぽく明るく見える",
         "originDescription": "初夏に咲く杜若の花のような色 カキツバタは「書きつけ花」から転じた名前",
         "iconKey": "flower",
-        "cmyk": "70, 90, 10, 0",
-        "rgb": "rgb(108, 53, 133)",
+        "rgb": "rgb(69, 92, 163)",
         "hex": "#4d4398",
         "examLevel": 3,
         "munsell": "7PB 4/10",
-        "approximatePccs": [{ "notation": "d22", "deltaE": 3.03 }]
+        "approximatePccs": [
+          { "notation": "sf18", "deltaE": 4.92 },
+          { "notation": "b18", "deltaE": 6.79 }
+        ]
       },
       {
         "id": "ruri-iro",
@@ -2056,12 +2058,14 @@
         "colorDescription": "パープルより明るい 強い赤みが感じられる",
         "originDescription": "アヤメという名は 花びらの文目模様に由来する",
         "iconKey": "flower",
-        "cmyk": "85, 90, 0, 0",
-        "rgb": "rgb(70, 51, 140)",
+        "rgb": "rgb(197, 122, 180)",
         "hex": "#cc7db1",
         "examLevel": 3,
         "munsell": "10P 6/10",
-        "approximatePccs": [{ "notation": "d20", "deltaE": 4.32 }]
+        "approximatePccs": [
+          { "notation": "lt22", "deltaE": 5.33 },
+          { "notation": "lt24", "deltaE": 7.57 }
+        ]
       },
       {
         "id": "purple",
