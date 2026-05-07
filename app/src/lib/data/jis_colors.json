@@ -11,7 +11,7 @@
         "iconKey": "sakura",
         "cmyk": "0,15,5,0",
         "rgb": "rgb(253, 226, 229)",
-        "hex": "#fdeeef",
+        "_hex": "#fdeeef",
         "examLevel": 3,
         "munsell": "10RP 9/2.5",
         "approximatePccs": [{ "notation": "p2", "deltaE": 13.62 }]
@@ -27,7 +27,7 @@
         "iconKey": "baby",
         "cmyk": "0,25,5,0",
         "rgb": "rgb(252, 210, 219)",
-        "hex": "#fadbda",
+        "_hex": "#fadbda",
         "examLevel": 3,
         "munsell": "4R 8.5/4",
         "approximatePccs": [{ "notation": "p2", "deltaE": 8.29 }]
@@ -42,7 +42,7 @@
         "iconKey": "bird",
         "cmyk": "0,40,20,0",
         "rgb": "rgb(249, 179, 180)",
-        "hex": "#f4b3c2",
+        "_hex": "#f4b3c2",
         "examLevel": 2,
         "munsell": "7RP 7.5/8",
         "approximatePccs": [
@@ -61,7 +61,7 @@
         "iconKey": "flower",
         "cmyk": "5,60,20,0",
         "rgb": "rgb(236, 136, 160)",
-        "hex": "#f29c9f",
+        "_hex": "#f29c9f",
         "examLevel": 2,
         "munsell": "10RP 7/8",
         "approximatePccs": [
@@ -80,7 +80,7 @@
         "iconKey": "flower",
         "cmyk": "15,60,30,20",
         "rgb": "rgb(186, 114, 129)",
-        "hex": "#da8d93",
+        "_hex": "#da8d93",
         "examLevel": 2,
         "munsell": "1R 6/6.5",
         "approximatePccs": [{ "notation": "sf2", "deltaE": 7.24 }]
@@ -95,7 +95,7 @@
         "iconKey": "coral",
         "cmyk": "0,50,35,0",
         "rgb": "rgb(248, 157, 149)",
-        "hex": "#f4ada3",
+        "_hex": "#f4ada3",
         "examLevel": 3,
         "munsell": "2.5R 7/11",
         "approximatePccs": [{ "notation": "lt4", "deltaE": 7.46 }]
@@ -110,7 +110,7 @@
         "iconKey": "flower",
         "cmyk": "5,75,30,0",
         "rgb": "rgb(236, 104, 134)",
-        "hex": "#f3a7a5",
+        "_hex": "#f3a7a5",
         "examLevel": 3,
         "munsell": "2.5R 6.5/7.5",
         "approximatePccs": [
@@ -129,7 +129,7 @@
         "iconKey": "fish",
         "cmyk": "0,55,40,0",
         "rgb": "rgb(247, 147, 137)",
-        "hex": "#f4a583",
+        "_hex": "#f4a583",
         "examLevel": 3,
         "munsell": "8R 7.5/7.5",
         "approximatePccs": [{ "notation": "lt4", "deltaE": 4.95 }]
@@ -144,7 +144,7 @@
         "iconKey": "flower",
         "cmyk": "15,80,0,0",
         "rgb": "rgb(217, 89, 162)",
-        "hex": "#e55a9b",
+        "_hex": "#e55a9b",
         "examLevel": 3,
         "munsell": "3RP 5/14",
         "approximatePccs": [
@@ -162,7 +162,7 @@
         "iconKey": "printer",
         "cmyk": "5,100,20,0",
         "rgb": "rgb(230, 0, 112)",
-        "hex": "#e4007f",
+        "_hex": "#e4007f",
         "examLevel": 3,
         "munsell": "5RP 5/14",
         "approximatePccs": [{ "notation": "b24", "deltaE": 8.5 }]
@@ -188,7 +188,7 @@
         "iconKey": "thread",
         "cmyk": "0,95,95,0",
         "rgb": "rgb(241, 40, 36)",
-        "hex": "#ea5539",
+        "_hex": "#ea5539",
         "examLevel": 3,
         "munsell": "7R 5/14",
         "approximatePccs": [
@@ -206,7 +206,7 @@
         "iconKey": "stamp",
         "cmyk": "0,90,100,5",
         "rgb": "rgb(233, 63, 21)",
-        "hex": "#eb613b",
+        "_hex": "#eb613b",
         "examLevel": 3,
         "munsell": "6R 5.5/14",
         "approximatePccs": [
@@ -225,7 +225,7 @@
         "iconKey": "artPaint",
         "cmyk": "0,85,85,5",
         "rgb": "rgb(235, 77, 49)",
-        "hex": "#eb613b",
+        "_hex": "#eb613b",
         "examLevel": 3,
         "munsell": "6R 5.5/14",
         "approximatePccs": [{ "notation": "b4", "deltaE": 3.2 }]
@@ -240,7 +240,7 @@
         "iconKey": "cactus",
         "cmyk": "10,100,55,10",
         "rgb": "rgb(206, 0, 75)",
-        "hex": "#d7003a",
+        "_hex": "#d7003a",
         "examLevel": 3,
         "munsell": "4R 4/14",
         "approximatePccs": [{ "notation": "v1", "deltaE": 2.67 }]
@@ -256,7 +256,7 @@
         "iconKey": "flower",
         "cmyk": "10,90,95,0",
         "rgb": "rgb(224, 64, 37)",
-        "hex": "#e9474d",
+        "_hex": "#e9474d",
         "examLevel": 2,
         "munsell": "4R 5/14",
         "approximatePccs": [
@@ -275,7 +275,7 @@
         "iconKey": "flower",
         "cmyk": "15,100,100,5",
         "rgb": "rgb(203, 10, 26)",
-        "hex": "#e95464",
+        "_hex": "#e95464",
         "examLevel": 2,
         "munsell": "1.5R 5.5/13",
         "approximatePccs": [
@@ -294,7 +294,7 @@
         "iconKey": "plant",
         "cmyk": "0,100,60,30",
         "rgb": "rgb(189, 0, 57)",
-        "hex": "#b7282d",
+        "_hex": "#b7282d",
         "examLevel": 3,
         "munsell": "4R 3.5/11",
         "approximatePccs": [
@@ -313,7 +313,7 @@
         "iconKey": "wine",
         "cmyk": "40,100,60,30",
         "rgb": "rgb(134, 0, 60)",
-        "hex": "#932e44",
+        "_hex": "#932e44",
         "examLevel": 3,
         "munsell": "10RP 3/9",
         "approximatePccs": [
@@ -331,7 +331,7 @@
         "iconKey": "wine",
         "cmyk": "40,100,60,30",
         "rgb": "rgb(134, 0, 60)",
-        "hex": "#600f18",
+        "_hex": "#600f18",
         "examLevel": 3,
         "munsell": "2.5R 2.5/3",
         "approximatePccs": [
@@ -359,7 +359,7 @@
         "originDescription": "シエナの地で採れる土は 絵の具の原料とされた",
         "iconKey": "shovel",
         "rgb": "rgb(181, 101, 44)",
-        "hex": "#d98032",
+        "_hex": "#d98032",
         "examLevel": 2,
         "munsell": "4YR 5/9",
         "approximatePccs": [
@@ -376,7 +376,7 @@
         "originDescription": "酸化鉄を含む土から造られる 絵の具の総称",
         "iconKey": "shovel",
         "rgb": "rgb(182, 100, 56)",
-        "hex": "#bb541f",
+        "_hex": "#bb541f",
         "examLevel": 2,
         "munsell": "2.5YR 5/8.5",
         "approximatePccs": [{ "notation": "d6", "deltaE": 4.77 }]
@@ -391,7 +391,7 @@
         "originDescription": "シエナで採れる土を焼いた 赤みのある褐色の絵の具",
         "iconKey": "shovel",
         "rgb": "rgb(165, 87, 64)",
-        "hex": "#b25532",
+        "_hex": "#b25532",
         "examLevel": 2,
         "munsell": "10R 4.5/7.5",
         "approximatePccs": [{ "notation": "d6", "deltaE": 3.82 }]
@@ -405,7 +405,7 @@
         "originDescription": "イタリア語で「焼いた土」 素焼きの陶器の色",
         "iconKey": "pottery",
         "rgb": "rgb(169, 83, 72)",
-        "hex": "#be6d55",
+        "_hex": "#be6d55",
         "examLevel": 2,
         "munsell": "7.5R 4.5/8",
         "approximatePccs": [{ "notation": "d4", "deltaE": 4.19 }]
@@ -419,7 +419,7 @@
         "originDescription": "ヒノキの樹皮のような茶色 蘇芳による染色の色名",
         "iconKey": "trunk",
         "rgb": "rgb(142, 98, 84)",
-        "hex": "#965036",
+        "_hex": "#965036",
         "examLevel": 2,
         "munsell": "1YR 4.5/4",
         "approximatePccs": [{ "notation": "g6", "deltaE": 8.62 }]
@@ -433,7 +433,7 @@
         "originDescription": "レンガの中でも 赤レンガに由来する色",
         "iconKey": "brick",
         "rgb": "rgb(148, 75, 56)",
-        "hex": "#a2482b",
+        "_hex": "#a2482b",
         "examLevel": 3,
         "munsell": "10R 4/7",
         "approximatePccs": [
@@ -451,7 +451,7 @@
         "originDescription": "ベンガル地方で産出する 天然の酸化鉄から造られる顔料",
         "iconKey": "shovel",
         "rgb": "rgb(135, 61, 52)",
-        "hex": "#8f2d12",
+        "_hex": "#8f2d12",
         "examLevel": 2,
         "munsell": "8R 3.5/7",
         "approximatePccs": [{ "notation": "dk4", "deltaE": 5.06 }]
@@ -465,7 +465,7 @@
         "originDescription": "マメ科の植物「蘇芳」を 原料とする染色の色",
         "iconKey": "plant",
         "rgb": "rgb(149, 57, 87)",
-        "hex": "#9e3d3e",
+        "_hex": "#9e3d3e",
         "cmyk": "50,90,60,0",
         "examLevel": 2,
         "munsell": "4R 4/7",
@@ -490,7 +490,7 @@
         "originDescription": "なめした革の色 なめすにはタンニンの汁を使う",
         "iconKey": "leather",
         "rgb": "rgb(163, 110, 67)",
-        "hex": "#c1813f",
+        "_hex": "#c1813f",
         "examLevel": 2,
         "munsell": "6YR 5/6",
         "approximatePccs": [{ "notation": "d6", "deltaE": 9.64 }]
@@ -505,7 +505,7 @@
         "iconKey": "fossil",
         "cmyk": "0,40,75,35",
         "rgb": "rgb(192, 137, 67)",
-        "hex": "#bf7834",
+        "_hex": "#bf7834",
         "examLevel": 2,
         "munsell": "8YR 5.5/6.5",
         "approximatePccs": [{ "notation": "sf6", "deltaE": 5.39 }]
@@ -520,7 +520,7 @@
         "iconKey": "fossil",
         "cmyk": "0,45,70,30",
         "rgb": "rgb(200, 136, 77)",
-        "hex": "#bf7834",
+        "_hex": "#bf7834",
         "examLevel": 2,
         "munsell": "8YR 5.5/6.5",
         "approximatePccs": [{ "notation": "sf6", "deltaE": 3.99 }]
@@ -535,7 +535,7 @@
         "iconKey": "shovel",
         "cmyk": "25,50,85,0",
         "rgb": "rgb(204, 144, 65)",
-        "hex": "#c39043",
+        "_hex": "#c39043",
         "examLevel": 3,
         "munsell": "10YR 6/7.5",
         "approximatePccs": [{ "notation": "sf6", "deltaE": 3.87 }]
@@ -550,7 +550,7 @@
         "iconKey": "army",
         "cmyk": "60,55,85,30",
         "rgb": "rgb(99, 92, 54)",
-        "hex": "#bb9855",
+        "_hex": "#bb9855",
         "examLevel": 3,
         "munsell": "1Y 5/5.5",
         "approximatePccs": [
@@ -569,7 +569,7 @@
         "iconKey": "shovel",
         "cmyk": "15,50,65,50",
         "rgb": "rgb(142, 97, 66)",
-        "hex": "#916f24",
+        "_hex": "#916f24",
         "examLevel": 2,
         "munsell": "2.5Y 4/6",
         "approximatePccs": [{ "notation": "d6", "deltaE": 9.79 }]
@@ -584,7 +584,7 @@
         "iconKey": "fallenLeaf",
         "cmyk": "35,45,70,10",
         "rgb": "rgb(168, 137, 91)",
-        "hex": "#917347",
+        "_hex": "#917347",
         "examLevel": 2,
         "munsell": "10YR 5/2",
         "approximatePccs": [{ "notation": "d8", "deltaE": 5.99 }]
@@ -600,7 +600,7 @@
         "iconKey": "shovel",
         "cmyk": "50,75,65,50",
         "rgb": "rgb(94, 50, 53)",
-        "hex": "#7a5e3d",
+        "_hex": "#7a5e3d",
         "examLevel": 2,
         "munsell": "10YR 3/3",
         "approximatePccs": [{ "notation": "dk2", "deltaE": 3.32 }]
@@ -615,7 +615,7 @@
         "iconKey": "squid",
         "cmyk": "60,60,90,60",
         "rgb": "rgb(68, 56, 24)",
-        "hex": "#6f4e27",
+        "_hex": "#6f4e27",
         "examLevel": 3,
         "munsell": "10YR 2.5/2",
         "approximatePccs": [{ "notation": "dkg8", "deltaE": 5.39 }]
@@ -630,7 +630,7 @@
         "iconKey": "bamboo",
         "cmyk": "55,50,75,45",
         "rgb": "rgb(91, 85, 58)",
-        "hex": "#6b5146",
+        "_hex": "#6b5146",
         "examLevel": 2,
         "munsell": "9.5YR 3.5/1.5",
         "approximatePccs": [
@@ -659,7 +659,7 @@
         "iconKey": "chestnut",
         "cmyk": "20,80,95,60",
         "rgb": "rgb(114, 44, 7)",
-        "hex": "#762e05",
+        "_hex": "#762e05",
         "examLevel": 3,
         "munsell": "2YR 3.5/4",
         "approximatePccs": [{ "notation": "dk4", "deltaE": 7.03 }]
@@ -674,7 +674,7 @@
         "iconKey": "grape",
         "cmyk": "40,90,100,65",
         "rgb": "rgb(85, 18, 0)",
-        "hex": "#814336",
+        "_hex": "#814336",
         "examLevel": 2,
         "munsell": "8R 3/4.5",
         "approximatePccs": [{ "notation": "dk4", "deltaE": 9.66 }]
@@ -689,7 +689,7 @@
         "iconKey": "bird",
         "cmyk": "50,70,65,60",
         "rgb": "rgb(80, 46, 44)",
-        "hex": "#8b4239",
+        "_hex": "#8b4239",
         "examLevel": 2,
         "munsell": "7.5R 3.5/5",
         "approximatePccs": [
@@ -707,7 +707,7 @@
         "originDescription": "チョコレートの色",
         "iconKey": "chocolate",
         "rgb": "rgb(81, 53, 48)",
-        "hex": "#612c16",
+        "_hex": "#612c16",
         "examLevel": 3,
         "munsell": "10R 2.5/2.5",
         "approximatePccs": [
@@ -725,7 +725,7 @@
         "originDescription": "スペイン産の大粒の栗に由来 栗色よりも赤みが強い",
         "iconKey": "chestnut",
         "rgb": "rgb(101, 40, 46)",
-        "hex": "#6a1816",
+        "_hex": "#6a1816",
         "examLevel": 2,
         "munsell": "5R 2.5/6",
         "approximatePccs": [{ "notation": "dk2", "deltaE": 1.29 }]
@@ -740,7 +740,7 @@
         "iconKey": "wine",
         "cmyk": "60,100,100,30",
         "rgb": "rgb(102, 15, 19)",
-        "hex": "#561620",
+        "_hex": "#561620",
         "examLevel": 2,
         "munsell": "10RP 2/2.5",
         "approximatePccs": [
@@ -766,7 +766,7 @@
         "iconKey": "trunk",
         "cmyk": "15,20,90,0",
         "rgb": "rgb(227, 200, 39)",
-        "hex": "#fef263",
+        "_hex": "#fef263",
         "examLevel": 2,
         "munsell": "9Y 8/8",
         "approximatePccs": [
@@ -786,7 +786,7 @@
         "iconKey": "artPaint",
         "cmyk": "5,5,100,0",
         "rgb": "rgb(254, 231, 0)",
-        "hex": "#fff33f",
+        "_hex": "#fff33f",
         "examLevel": 3,
         "munsell": "8Y 8/12",
         "approximatePccs": [{ "notation": "v8", "deltaE": 0.48 }]
@@ -801,7 +801,7 @@
         "iconKey": "bird",
         "cmyk": "5,0,90,0",
         "rgb": "rgb(254, 240, 0)",
-        "hex": "#fff262",
+        "_hex": "#fff262",
         "examLevel": 3,
         "munsell": "7Y 8.5/10",
         "approximatePccs": [{ "notation": "b8", "deltaE": 1.34 }]
@@ -816,7 +816,7 @@
         "originDescription": "乳製品のクリームの色",
         "iconKey": "milk",
         "rgb": "rgb(227, 214, 163)",
-        "hex": "#fff2b8",
+        "_hex": "#fff2b8",
         "examLevel": 3,
         "munsell": "5Y 8.5/3.5",
         "approximatePccs": [
@@ -833,7 +833,7 @@
         "originDescription": "金髪を表す色名",
         "iconKey": "hair",
         "rgb": "rgb(221, 181, 99)",
-        "hex": "#f7dc8d",
+        "_hex": "#f7dc8d",
         "examLevel": 3,
         "munsell": "2Y 7.5/7",
         "approximatePccs": [
@@ -852,7 +852,7 @@
         "iconKey": "cloth",
         "cmyk": "0,15,30,25",
         "rgb": "rgb(209, 185, 154)",
-        "hex": "#eedcb3",
+        "_hex": "#eedcb3",
         "examLevel": 3,
         "munsell": "10YR 7/2.5",
         "approximatePccs": [{ "notation": "ltg6", "deltaE": 2.23 }]
@@ -868,7 +868,7 @@
         "iconKey": "wool",
         "cmyk": "5,20,45,5",
         "rgb": "rgb(236, 204, 150)",
-        "hex": "#f8eacf",
+        "_hex": "#f8eacf",
         "examLevel": 2,
         "munsell": "7.5YR 8.5/4",
         "approximatePccs": [
@@ -887,7 +887,7 @@
         "iconKey": "fruit",
         "cmyk": "0,20,25,0",
         "rgb": "rgb(255, 217, 192)",
-        "hex": "#fbd8b5",
+        "_hex": "#fbd8b5",
         "examLevel": 3,
         "munsell": "3YR 8/3.5",
         "approximatePccs": [{ "notation": "p4", "deltaE": 4.06 }]
@@ -912,7 +912,7 @@
         "iconKey": "crown",
         "cmyk": "0,65,75,0",
         "rgb": "rgb(247, 126, 74)",
-        "hex": "#ee7948",
+        "_hex": "#ee7948",
         "examLevel": 2,
         "munsell": "10R 6/12",
         "approximatePccs": [
@@ -931,7 +931,7 @@
         "originDescription": "マリーゴールドの花に由来 西洋の山吹色という位置付け",
         "iconKey": "flower",
         "rgb": "rgb(255, 168, 14)",
-        "hex": "#f39800",
+        "_hex": "#f39800",
         "examLevel": 3,
         "munsell": "8YR 7.5/13",
         "approximatePccs": [{ "notation": "b6", "deltaE": 5.22 }]
@@ -946,7 +946,7 @@
         "iconKey": "flower",
         "cmyk": "0,30,95,0",
         "rgb": "rgb(255, 194, 0)",
-        "hex": "#f8b500",
+        "_hex": "#f8b500",
         "examLevel": 3,
         "munsell": "10YR 7.5/13",
         "approximatePccs": [{ "notation": "v7", "deltaE": 3.33 }]
@@ -961,7 +961,7 @@
         "iconKey": "plant",
         "cmyk": "10,35,90,0",
         "rgb": "rgb(234, 178, 38)",
-        "hex": "#fabf13",
+        "_hex": "#fabf13",
         "examLevel": 2,
         "munsell": "2Y 7.5/12",
         "approximatePccs": [{ "notation": "v7", "deltaE": 7.35 }]
@@ -976,7 +976,7 @@
         "iconKey": "orange",
         "cmyk": "5,65,100,0",
         "rgb": "rgb(238, 124, 0)",
-        "hex": "#f6ad48",
+        "_hex": "#f6ad48",
         "examLevel": 2,
         "munsell": "5.5YR 7.5/9",
         "approximatePccs": [{ "notation": "v6", "deltaE": 3.16 }]
@@ -991,7 +991,7 @@
         "originDescription": "金色を感じさせる黄色の色名 聖人の光輪を描くために使われた",
         "iconKey": "crown",
         "rgb": "rgb(233, 158, 66)",
-        "hex": "#f8b856",
+        "_hex": "#f8b856",
         "examLevel": 2,
         "munsell": "7.5YR 7/10",
         "approximatePccs": [
@@ -1011,7 +1011,7 @@
         "iconKey": "knight",
         "cmyk": "0,25,65,0",
         "rgb": "rgb(255, 207, 111)",
-        "hex": "#fdd75c",
+        "_hex": "#fdd75c",
         "examLevel": 2,
         "munsell": "2.5Y 8/7.5",
         "approximatePccs": [
@@ -1029,7 +1029,7 @@
         "originDescription": "フランス語で「輝かしい黄色」 ネープルスイエローより明るく鮮やか",
         "iconKey": "artPaint",
         "rgb": "rgb(250, 212, 0)",
-        "hex": "#ffdc00",
+        "_hex": "#ffdc00",
         "examLevel": 2,
         "munsell": "5Y 8.5/14",
         "approximatePccs": [
@@ -1047,7 +1047,7 @@
         "iconKey": "rice",
         "cmyk": "10,5,90,0",
         "rgb": "rgb(242, 228, 21)",
-        "hex": "#f5e56b",
+        "_hex": "#f5e56b",
         "examLevel": 2,
         "munsell": "7Y 8.5/7",
         "approximatePccs": [
@@ -1065,7 +1065,7 @@
         "iconKey": "chiliPepper",
         "cmyk": "15,30,70,0",
         "rgb": "rgb(223, 185, 100)",
-        "hex": "#d2b74e",
+        "_hex": "#d2b74e",
         "examLevel": 3,
         "munsell": "3Y 7/6",
         "approximatePccs": [
@@ -1094,7 +1094,7 @@
         "originDescription": "シャルトルーズ修道院で造られる 黄緑色のリキュールに由来",
         "iconKey": "cocktail",
         "rgb": "rgb(188, 212, 63)",
-        "hex": "#d9e367",
+        "_hex": "#d9e367",
         "examLevel": 2,
         "munsell": "4GY 8/10",
         "approximatePccs": [
@@ -1113,7 +1113,7 @@
         "iconKey": "sprout",
         "cmyk": "60,5,95,0",
         "rgb": "rgb(116, 182, 56)",
-        "hex": "#afd147",
+        "_hex": "#afd147",
         "examLevel": 3,
         "munsell": "4GY 6.5/9",
         "approximatePccs": [{ "notation": "v11", "deltaE": 2.03 }]
@@ -1128,7 +1128,7 @@
         "originDescription": "木の葉の緑に由来 英語の黄緑色の色名を代表する",
         "iconKey": "leaf",
         "rgb": "rgb(133, 157, 65)",
-        "hex": "#9dc04c",
+        "_hex": "#9dc04c",
         "examLevel": 2,
         "munsell": "5GY 6/7",
         "approximatePccs": [{ "notation": "d10", "deltaE": 11.69 }]
@@ -1144,7 +1144,7 @@
         "iconKey": "grass",
         "cmyk": "45,5,65,0",
         "rgb": "rgb(154, 199, 123)",
-        "hex": "#7b8d41",
+        "_hex": "#7b8d41",
         "examLevel": 2,
         "munsell": "5GY 5/5",
         "approximatePccs": [
@@ -1161,7 +1161,7 @@
         "originDescription": "松の葉に由来する色名 冬でも葉が落ちない長寿の象徴",
         "iconKey": "pottedPlant",
         "rgb": "rgb(104, 129, 88)",
-        "hex": "#839a5c",
+        "_hex": "#839a5c",
         "examLevel": 3,
         "munsell": "7.5GY 5/4",
         "approximatePccs": [{ "notation": "d12", "deltaE": 4.06 }]
@@ -1176,7 +1176,7 @@
         "iconKey": "olive",
         "cmyk": "45,35,100,5",
         "rgb": "rgb(158, 152, 30)",
-        "hex": "#72640a",
+        "_hex": "#72640a",
         "examLevel": 3,
         "munsell": "7.5Y 3.5/4",
         "approximatePccs": [{ "notation": "sf10", "deltaE": 7.44 }]
@@ -1191,7 +1191,7 @@
         "iconKey": "starfish",
         "cmyk": "60,50,75,30",
         "rgb": "rgb(97, 98, 69)",
-        "hex": "#726d3f",
+        "_hex": "#726d3f",
         "examLevel": 2,
         "munsell": "9.5Y 4.5/2.5",
         "approximatePccs": [
@@ -1210,7 +1210,7 @@
         "iconKey": "olive",
         "cmyk": "60,35,100,60",
         "rgb": "rgb(67, 82, 16)",
-        "hex": "#5f651e",
+        "_hex": "#5f651e",
         "examLevel": 3,
         "munsell": "2.5GY 3.5/3",
         "approximatePccs": [{ "notation": "dk10", "deltaE": 5.59 }]
@@ -1225,7 +1225,7 @@
         "iconKey": "songbird",
         "cmyk": "50,40,95,10",
         "rgb": "rgb(141, 136, 48)",
-        "hex": "#9d973b",
+        "_hex": "#9d973b",
         "examLevel": 3,
         "munsell": "1GY 4.5/3.5",
         "approximatePccs": [
@@ -1244,7 +1244,7 @@
         "iconKey": "songbird",
         "cmyk": "30,10,95,0",
         "rgb": "rgb(198, 203, 20)",
-        "hex": "#d7cf3a",
+        "_hex": "#d7cf3a",
         "examLevel": 2,
         "munsell": "1GY 7.5/8",
         "approximatePccs": [
@@ -1274,7 +1274,7 @@
         "iconKey": "apple",
         "cmyk": "45,5,100,0",
         "rgb": "rgb(160, 195, 0)",
-        "hex": "#a2cc89",
+        "_hex": "#a2cc89",
         "examLevel": 2,
         "munsell": "10GY 8/5",
         "approximatePccs": [
@@ -1292,7 +1292,7 @@
         "originDescription": "ミントは日本語ではハッカ ハッカ油から造られたお酒の色",
         "iconKey": "mint",
         "rgb": "rgb(111, 206, 143)",
-        "hex": "#98ce97",
+        "_hex": "#98ce97",
         "examLevel": 2,
         "munsell": "2.5G 7.5/8",
         "approximatePccs": [{ "notation": "lt12", "deltaE": 4.6 }]
@@ -1307,7 +1307,7 @@
         "iconKey": "bamboo",
         "cmyk": "60,0,45,5",
         "rgb": "rgb(96, 187, 162)",
-        "hex": "#67be8d",
+        "_hex": "#67be8d",
         "examLevel": 3,
         "munsell": "6G 6/7.5",
         "approximatePccs": [{ "notation": "lt14", "deltaE": 3.02 }]
@@ -1322,7 +1322,7 @@
         "iconKey": "pottery",
         "cmyk": "40,5,20,5",
         "rgb": "rgb(153, 200, 201)",
-        "hex": "#68b7a1",
+        "_hex": "#68b7a1",
         "examLevel": 3,
         "munsell": "7.5G 6.5/4",
         "approximatePccs": [
@@ -1341,7 +1341,7 @@
         "originDescription": "ナイル川にちなんだ 英語の色名",
         "iconKey": "river",
         "rgb": "rgb(70, 146, 152)",
-        "hex": "#259f94",
+        "_hex": "#259f94",
         "examLevel": 2,
         "munsell": "10BG 5.5/5",
         "approximatePccs": [{ "notation": "sf16", "deltaE": 3.91 }]
@@ -1357,7 +1357,7 @@
         "iconKey": "peacock",
         "cmyk": "100,30,45,0",
         "rgb": "rgb(0, 128, 150)",
-        "hex": "#00a496",
+        "_hex": "#00a496",
         "examLevel": 2,
         "munsell": "7.5BG 4.5/9",
         "approximatePccs": [{ "notation": "v15", "deltaE": 3.95 }]
@@ -1381,7 +1381,7 @@
         "originDescription": "コバルトによる合成顔料の色 絵の具として使われる",
         "iconKey": "artPaint",
         "rgb": "rgb(71, 195, 137)",
-        "hex": "#3ab483",
+        "_hex": "#3ab483",
         "examLevel": 3,
         "munsell": "4G 7/9",
         "approximatePccs": [
@@ -1401,7 +1401,7 @@
         "iconKey": "jewelry",
         "cmyk": "80,0,70,0",
         "rgb": "rgb(0, 173, 122)",
-        "hex": "#00aa6e",
+        "_hex": "#00aa6e",
         "examLevel": 3,
         "munsell": "4G 6/8",
         "approximatePccs": [
@@ -1421,7 +1421,7 @@
         "iconKey": "ore",
         "cmyk": "90,10,75,0",
         "rgb": "rgb(0, 155, 113)",
-        "hex": "#009854",
+        "_hex": "#009854",
         "examLevel": 2,
         "munsell": "4G 4.5/9",
         "approximatePccs": [{ "notation": "v13", "deltaE": 4.36 }]
@@ -1435,7 +1435,7 @@
         "originDescription": "常緑樹の葉のような色 永久に変わらない緑の美称",
         "iconKey": "leaf",
         "rgb": "rgb(42, 131, 70)",
-        "hex": "#007c45",
+        "_hex": "#007c45",
         "cmyk": "80,25,90,15",
         "examLevel": 2,
         "munsell": "3G 4.5/7",
@@ -1455,7 +1455,7 @@
         "iconKey": "artPaint",
         "cmyk": "60,20,40,15",
         "rgb": "rgb(97, 150, 146)",
-        "hex": "#4f8a5d",
+        "_hex": "#4f8a5d",
         "examLevel": 2,
         "munsell": "4G 5/4",
         "approximatePccs": [
@@ -1473,7 +1473,7 @@
         "originDescription": "ラテン語で緑を意味する、 viridisからの造語",
         "iconKey": "paint",
         "rgb": "rgb(4, 110, 86)",
-        "hex": "#008969",
+        "_hex": "#008969",
         "examLevel": 3,
         "munsell": "8G 4/6",
         "approximatePccs": [
@@ -1492,7 +1492,7 @@
         "originDescription": "お酒類の輸送に使われるボトルの 緑色のガラスの色",
         "iconKey": "bottle",
         "rgb": "rgb(38, 66, 53)",
-        "hex": "#005635",
+        "_hex": "#005635",
         "examLevel": 2,
         "munsell": "5G 2.5/3",
         "approximatePccs": [
@@ -1510,7 +1510,7 @@
         "iconKey": "iron",
         "cmyk": "95,80,75,40",
         "rgb": "rgb(1, 46, 52)",
-        "hex": "#005242",
+        "_hex": "#005242",
         "examLevel": 2,
         "munsell": "2.5BG 2.5/2.5",
         "approximatePccs": [
@@ -1547,7 +1547,7 @@
         "originDescription": "乳幼児服の色に由来する色名 聖母マリアの象徴色",
         "iconKey": "baby",
         "rgb": "rgb(166, 190, 204)",
-        "hex": "#bbe2f1",
+        "_hex": "#bbe2f1",
         "examLevel": 3,
         "munsell": "10B 7.5/3",
         "approximatePccs": [
@@ -1565,7 +1565,7 @@
         "iconKey": "sky",
         "cmyk": "55,0,5,0",
         "rgb": "rgb(102, 202, 237)",
-        "hex": "#a0d8ef",
+        "_hex": "#a0d8ef",
         "examLevel": 3,
         "munsell": "9B 7.5/5.5",
         "approximatePccs": [{ "notation": "lt16", "deltaE": 6.98 }]
@@ -1581,7 +1581,7 @@
         "iconKey": "sky",
         "cmyk": "55,0,5,0",
         "rgb": "rgb(102, 202, 237)",
-        "hex": "#a0d8ef",
+        "_hex": "#a0d8ef",
         "examLevel": 3,
         "munsell": "9B 7.5/5.5",
         "approximatePccs": [{ "notation": "lt16", "deltaE": 6.98 }]
@@ -1596,7 +1596,7 @@
         "iconKey": "jar",
         "cmyk": "15,0,5,0",
         "rgb": "rgb(218, 240, 243)",
-        "hex": "#a2d7dd",
+        "_hex": "#a2d7dd",
         "examLevel": 2,
         "munsell": "4.5B 7/4",
         "approximatePccs": [{ "notation": "p16", "deltaE": 7.32 }]
@@ -1611,7 +1611,7 @@
         "iconKey": "paint",
         "cmyk": "70,10,15,0",
         "rgb": "rgb(48, 174, 209)",
-        "hex": "#64bcc7",
+        "_hex": "#64bcc7",
         "examLevel": 2,
         "munsell": "2.5B 6.5/5.5",
         "approximatePccs": [{ "notation": "lt16", "deltaE": 4.68 }]
@@ -1626,7 +1626,7 @@
         "iconKey": "paint",
         "cmyk": "85,20,30,10",
         "rgb": "rgb(0, 141, 168)",
-        "hex": "#00a1ae",
+        "_hex": "#00a1ae",
         "examLevel": 3,
         "munsell": "2.5B 5/8",
         "approximatePccs": [
@@ -1645,7 +1645,7 @@
         "originDescription": "トルコ石のような色を表す 青と緑の中間色相",
         "iconKey": "stone",
         "rgb": "rgb(0, 161, 191)",
-        "hex": "#00afcc",
+        "_hex": "#00afcc",
         "examLevel": 3,
         "munsell": "5B 6/8",
         "approximatePccs": [
@@ -1664,7 +1664,7 @@
         "iconKey": "printer",
         "cmyk": "100,20,20,15",
         "rgb": "rgb(0, 126, 174)",
-        "hex": "#00a0e9",
+        "_hex": "#00a0e9",
         "examLevel": 3,
         "munsell": "7.5B 6/10",
         "approximatePccs": [{ "notation": "b16", "deltaE": 3.66 }]
@@ -1688,7 +1688,7 @@
         "iconKey": "paint",
         "cmyk": "100,40,30,35",
         "rgb": "rgb(0, 88, 124)",
-        "hex": "#007d92",
+        "_hex": "#007d92",
         "examLevel": 2,
         "munsell": "4B 4/6",
         "approximatePccs": [
@@ -1707,7 +1707,7 @@
         "iconKey": "navy",
         "cmyk": "100,60,10,0",
         "rgb": "rgb(0, 95, 165)",
-        "hex": "#006788",
+        "_hex": "#006788",
         "examLevel": 3,
         "munsell": "5B 3/7",
         "approximatePccs": [
@@ -1725,7 +1725,7 @@
         "iconKey": "paint",
         "cmyk": "85,60,20,35",
         "rgb": "rgb(26, 74, 117)",
-        "hex": "#0f5779",
+        "_hex": "#0f5779",
         "examLevel": 3,
         "munsell": "2PB 3/5",
         "approximatePccs": [{ "notation": "dp16", "deltaE": 2.57 }]
@@ -1741,7 +1741,7 @@
         "iconKey": "paint",
         "cmyk": "30, 0, 0, 20",
         "rgb": "rgb(156, 195, 215)",
-        "hex": "#3a8daa",
+        "_hex": "#3a8daa",
         "examLevel": 2,
         "munsell": "1PB 5/4.5",
         "approximatePccs": [
@@ -1759,7 +1759,7 @@
         "iconKey": "paint",
         "cmyk": "95, 60, 15, 0",
         "rgb": "rgb(0, 97, 160)",
-        "hex": "#2980af",
+        "_hex": "#2980af",
         "examLevel": 2,
         "munsell": "3PB 4/7.5",
         "approximatePccs": [
@@ -1779,7 +1779,7 @@
         "iconKey": "artPaint",
         "cmyk": "100, 35, 5, 5",
         "rgb": "rgb(0, 121, 191)",
-        "hex": "#008db7",
+        "_hex": "#008db7",
         "examLevel": 2,
         "munsell": "9B 4.5/9",
         "approximatePccs": [
@@ -1798,7 +1798,7 @@
         "iconKey": "artPaint",
         "cmyk": "100, 60, 0, 0",
         "rgb": "rgb(0, 95, 177)",
-        "hex": "#0068b7",
+        "_hex": "#0068b7",
         "examLevel": 3,
         "munsell": "3PB 4/10",
         "approximatePccs": [{ "notation": "b18", "deltaE": 5.05 }]
@@ -1824,7 +1824,7 @@
         "originDescription": "初夏に咲く杜若の花のような色 カキツバタは「書きつけ花」から転じた名前",
         "iconKey": "flower",
         "rgb": "rgb(69, 92, 163)",
-        "hex": "#4d4398",
+        "_hex": "#4d4398",
         "examLevel": 3,
         "munsell": "7PB 4/10",
         "approximatePccs": [
@@ -1842,7 +1842,7 @@
         "originDescription": "瑠璃という青い石に由来 ラピスラズリと同一の鉱物とされる",
         "iconKey": "jewelry",
         "rgb": "rgb(39, 70, 126)",
-        "hex": "#1d50a2",
+        "_hex": "#1d50a2",
         "examLevel": 3,
         "munsell": "6PB 3/8",
         "approximatePccs": [{ "notation": "d18", "deltaE": 1.68 }]
@@ -1857,7 +1857,7 @@
         "iconKey": "artPaint",
         "cmyk": "90,80,0,0",
         "rgb": "rgb(43, 70, 156)",
-        "hex": "#4e67b0",
+        "_hex": "#4e67b0",
         "examLevel": 3,
         "munsell": "7.5PB 3.5/11",
         "approximatePccs": [
@@ -1876,7 +1876,7 @@
         "iconKey": "jewelry",
         "cmyk": "100, 90, 0, 0",
         "rgb": "rgb(0, 50, 143)",
-        "hex": "#4052a2",
+        "_hex": "#4052a2",
         "examLevel": 3,
         "munsell": "7.5PB 3.5/11",
         "approximatePccs": [
@@ -1896,7 +1896,7 @@
         "iconKey": "navy",
         "cmyk": "100, 85, 25, 25",
         "rgb": "rgb(0, 46, 102)",
-        "hex": "#1f2e55",
+        "_hex": "#1f2e55",
         "examLevel": 3,
         "munsell": "6PB 2.5/4",
         "approximatePccs": [
@@ -1916,7 +1916,7 @@
         "iconKey": "moon",
         "cmyk": "100, 90, 50, 60",
         "rgb": "rgb(0, 14, 43)",
-        "hex": "#001d42",
+        "_hex": "#001d42",
         "examLevel": 2,
         "munsell": "5PB 1.5/2",
         "approximatePccs": [{ "notation": "dkg18", "deltaE": 11.3 }]
@@ -1940,7 +1940,7 @@
         "iconKey": "perfume",
         "cmyk": "35, 55, 0, 0",
         "rgb": "rgb(177, 135, 190)",
-        "hex": "#d1bada",
+        "_hex": "#d1bada",
         "examLevel": 2,
         "munsell": "6P 7/6",
         "approximatePccs": [
@@ -1958,7 +1958,7 @@
         "iconKey": "perfume",
         "cmyk": "35, 35, 10, 0",
         "rgb": "rgb(174, 167, 197)",
-        "hex": "#c5b3d3",
+        "_hex": "#c5b3d3",
         "examLevel": 3,
         "munsell": "5P 6/3",
         "approximatePccs": [
@@ -1977,7 +1977,7 @@
         "iconKey": "flower",
         "cmyk": "40, 40, 0, 0",
         "rgb": "rgb(165, 158, 207)",
-        "hex": "#bbb7da",
+        "_hex": "#bbb7da",
         "examLevel": 2,
         "munsell": "10PB 6.5/6.5",
         "approximatePccs": [
@@ -1994,7 +1994,7 @@
         "originDescription": "色みは異なるが 藤の英語名",
         "iconKey": "flower",
         "rgb": "rgb(124, 109, 196)",
-        "hex": "#8e8bc2",
+        "_hex": "#8e8bc2",
         "examLevel": 2,
         "munsell": "10PB 5/12",
         "approximatePccs": [
@@ -2011,7 +2011,7 @@
         "originDescription": "スミレの花に由来する色名 バイオレットはスミレ属の総称",
         "iconKey": "flower",
         "rgb": "rgb(117, 78, 157)",
-        "hex": "#714f9d",
+        "_hex": "#714f9d",
         "examLevel": 3,
         "munsell": "2.5P 4/11",
         "approximatePccs": [
@@ -2030,7 +2030,7 @@
         "iconKey": "flower",
         "cmyk": "80, 75, 0, 0",
         "rgb": "rgb(78, 82, 162)",
-        "hex": "#5654a2",
+        "_hex": "#5654a2",
         "examLevel": 3,
         "munsell": "9PB 3.5/13",
         "approximatePccs": [
@@ -2056,7 +2056,7 @@
         "originDescription": "アヤメという名は 花びらの文目模様に由来する",
         "iconKey": "flower",
         "rgb": "rgb(197, 122, 180)",
-        "hex": "#cc7db1",
+        "_hex": "#cc7db1",
         "examLevel": 3,
         "munsell": "10P 6/10",
         "approximatePccs": [{ "notation": "lt22", "deltaE": 5.69 }]
@@ -2070,7 +2070,7 @@
         "originDescription": "ブルプラ貝の体液からは 紫色の植物性染料が採れる",
         "iconKey": "shell",
         "rgb": "rgb(168, 93, 172)",
-        "hex": "#9b68a9",
+        "_hex": "#9b68a9",
         "examLevel": 3,
         "munsell": "7.5P 5/12",
         "approximatePccs": [{ "notation": "b22", "deltaE": 1.56 }]
@@ -2085,7 +2085,7 @@
         "iconKey": "flower",
         "cmyk": "60, 80, 0, 0",
         "rgb": "rgb(128, 80, 157)",
-        "hex": "#915da3",
+        "_hex": "#915da3",
         "examLevel": 3,
         "munsell": "5P 4.5/9",
         "approximatePccs": [{ "notation": "b22", "deltaE": 8.71 }]
@@ -2100,7 +2100,7 @@
         "iconKey": "japanese",
         "cmyk": "75, 95, 25, 25",
         "rgb": "rgb(78, 29, 92)",
-        "hex": "#895687",
+        "_hex": "#895687",
         "examLevel": 2,
         "munsell": "7.5P 4/6",
         "approximatePccs": [{ "notation": "dp22", "deltaE": 2.19 }]
@@ -2115,7 +2115,7 @@
         "iconKey": "japanese",
         "cmyk": "85, 85,30, 0",
         "rgb": "rgb(66, 63, 120)",
-        "hex": "#734e95",
+        "_hex": "#734e95",
         "examLevel": 2,
         "munsell": "3P 3.5/7",
         "approximatePccs": [{ "notation": "d20", "deltaE": 3.49 }]
@@ -2129,7 +2129,7 @@
         "originDescription": "熟したナスの実のような 黒に近い紫色",
         "iconKey": "eggplant",
         "rgb": "rgb(71, 54, 72)",
-        "hex": "#4b1a47",
+        "_hex": "#4b1a47",
         "examLevel": 3,
         "munsell": "7.5P 2.5/2.5",
         "approximatePccs": [
@@ -2157,7 +2157,7 @@
         "iconKey": "thread",
         "cmyk": "5, 10, 15, 0",
         "rgb": "rgb(243, 231, 216)",
-        "hex": "#fbfaf3",
+        "_hex": "#fbfaf3",
         "examLevel": 3,
         "munsell": "10YR 9/1",
         "approximatePccs": [{ "notation": "ltg8", "deltaE": 11.74 }]
@@ -2172,7 +2172,7 @@
         "iconKey": "ivory",
         "cmyk": "5, 10, 30, 0",
         "rgb": "rgb(245, 229, 190)",
-        "hex": "#f8f5e3",
+        "_hex": "#f8f5e3",
         "examLevel": 3,
         "munsell": "2.5Y 8.5/1.5",
         "approximatePccs": [
@@ -2189,7 +2189,7 @@
         "originDescription": "茶色に近い鼠色 茶と鼠は江戸時代に大流行した色",
         "iconKey": "mouse",
         "rgb": "rgb(156, 145, 139)",
-        "hex": "#a99e93",
+        "_hex": "#a99e93",
         "examLevel": 2,
         "munsell": "5YR 6/1",
         "approximatePccs": [{ "notation": "g8", "deltaE": 14.34 }]
@@ -2203,7 +2203,7 @@
         "originDescription": "千利休にちなんだ緑みのグレイ 利休とつく色は渋い緑みの色",
         "iconKey": "mouse",
         "rgb": "rgb(114, 124, 117)",
-        "hex": "#7b8174",
+        "_hex": "#7b8174",
         "examLevel": 2,
         "munsell": "2.5G 5/1",
         "approximatePccs": [{ "notation": "g10", "deltaE": 8.01 }]
@@ -2226,7 +2226,7 @@
         "iconKey": "coin",
         "cmyk": "30, 20, 20, 5",
         "rgb": "rgb(179, 185, 189)",
-        "hex": "#afafb0",
+        "_hex": "#afafb0",
         "examLevel": 2,
         "munsell": "N6.5",
         "approximatePccs": [
@@ -2245,7 +2245,7 @@
         "iconKey": "coin",
         "cmyk": "5, 0, 0, 30",
         "rgb": "rgb(191, 197, 201)",
-        "hex": "#afafb0",
+        "_hex": "#afafb0",
         "examLevel": 3,
         "munsell": "N6.5",
         "approximatePccs": [
@@ -2264,7 +2264,7 @@
         "iconKey": "rock",
         "cmyk": "60, 45, 35, 10",
         "rgb": "rgb(109, 123, 140)",
-        "hex": "#636062",
+        "_hex": "#636062",
         "examLevel": 2,
         "munsell": "2.5PB 3.5/0.5",
         "approximatePccs": [{ "notation": "sf18", "deltaE": 11.27 }]
@@ -2279,7 +2279,7 @@
         "originDescription": "チャコールとは木炭・炭のこと 日本語では消炭色",
         "iconKey": "charcoal",
         "rgb": "rgb(75, 70, 78)",
-        "hex": "#4e4449",
+        "_hex": "#4e4449",
         "examLevel": 3,
         "munsell": "5P 3/1",
         "approximatePccs": [{ "notation": "g22", "deltaE": 10.75 }]
@@ -2295,7 +2295,7 @@
         "iconKey": "fire",
         "cmyk": "30, 20, 20, 100",
         "rgb": "rgb(11, 1, 0)",
-        "hex": "#24130d",
+        "_hex": "#24130d",
         "examLevel": 2,
         "munsell": "N1",
         "approximatePccs": [{ "notation": "Bk", "deltaE": 9.29 }]
