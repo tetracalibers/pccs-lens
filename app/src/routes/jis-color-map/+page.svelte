@@ -2,7 +2,7 @@
   import Heading1 from "$lib/components/Heading1.svelte"
   import FamilyCard from "$lib/components/jis-color-map/FamilyCard.svelte"
   import JisColorAllListCard from "$lib/components/jis-color-map/JisColorAllListCard.svelte"
-  import { JIS_COLOR_FAMILIES, JIS_HEX_BY_ID, type ColorFamily } from "$lib/data/jis-colors"
+  import { JIS_COLOR_FAMILIES, JIS_RGB_BY_ID, type ColorFamily } from "$lib/data/jis-colors"
   import { FAMILY_DESCRIPTIONS } from "$lib/jis-color-map/family-copy"
 
   const CHECKER_COLOR_IDS: Record<ColorFamily, [string, string]> = {
@@ -24,7 +24,7 @@
     "wistaria"
   ]
 
-  const hexById = (id: string): string => JIS_HEX_BY_ID.get(id) ?? "#cccccc"
+  const rgbById = (id: string): string => JIS_RGB_BY_ID.get(id) ?? "#cccccc"
 
   const familyCards = JIS_COLOR_FAMILIES.map((family) => {
     const [id1, id2] = CHECKER_COLOR_IDS[family.id]
@@ -32,11 +32,11 @@
       family,
       labelEn: family.id,
       description: FAMILY_DESCRIPTIONS[family.id],
-      checkerColors: [hexById(id1), hexById(id2)] as [string, string]
+      checkerColors: [rgbById(id1), rgbById(id2)] as [string, string]
     }
   })
 
-  const allListCheckerColors = ALL_LIST_CHECKER_COLOR_IDS.map((id) => hexById(id))
+  const allListCheckerColors = ALL_LIST_CHECKER_COLOR_IDS.map((id) => rgbById(id))
 </script>
 
 <svelte:head>

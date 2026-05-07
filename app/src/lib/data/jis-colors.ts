@@ -37,7 +37,9 @@ export type JISColor = {
   systematicName: string
   colorDescription: string
   originDescription: string
-  hex: string
+  cmyk?: string
+  rgb: string
+  _hex: string
   examLevel: 2 | 3 | null
   munsell: string
   iconKey: string
@@ -100,7 +102,7 @@ export const JIS_COLORS: JISColor[] = JIS_COLOR_FAMILIES.flatMap((f) =>
   f.subfamilies.flatMap((s) => JIS_COLORS_BY_SUBFAMILY[s.id]?.colors ?? [])
 )
 
-export const JIS_HEX_BY_ID: Map<string, string> = new Map(JIS_COLORS.map((c) => [c.id, c.hex]))
+export const JIS_RGB_BY_ID: Map<string, string> = new Map(JIS_COLORS.map((c) => [c.id, c.rgb]))
 
 export const JIS_COLOR_BY_ID: Map<string, JISColor> = new Map(JIS_COLORS.map((c) => [c.id, c]))
 

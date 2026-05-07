@@ -14,6 +14,23 @@
 
 - `Anki_`で始まるノードは暗記モード時にテキストが隠れるようになる
 
+## データ更新スクリプト
+
+### 慣用色名データの更新
+
+`app/src/lib/data/jis_colors.json`において、`rgb`・`approximatePccs`はコマンドにより自動生成されます。
+`cmyk`・`munsell`の値を更新した場合は、次のコマンドを実行してください。
+
+```bash
+npm run data:jis-update
+```
+
+このコマンドの実行には、次が必要です。
+
+- `app/scripts/icc/JapanColor2011Coated.icc`（Webからダウンロード）
+- `app/scripts/icc/sRGB.icc`（macOSの場合はシステムにある`sRGB Profile.icc`をコピー）
+- `ImageMagick`コマンド
+
 ## 機能開発
 
 ### 1. ブレインストリーミング

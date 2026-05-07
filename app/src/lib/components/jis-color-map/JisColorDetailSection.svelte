@@ -37,11 +37,11 @@
       <div class="entry-identity">
         <div class="icon-swatch-row">
           {#if iconId}
-            <span class="icon" style:color={jisColor.hex} aria-hidden="true">
+            <span class="icon" style:color={jisColor.rgb} aria-hidden="true">
               <Icon icon={iconId} />
             </span>
           {/if}
-          <span class="swatch" style:background-color={jisColor.hex}></span>
+          <span class="swatch" style:background-color={jisColor.rgb}></span>
         </div>
         <div class="name-block">
           <div class="name-row">

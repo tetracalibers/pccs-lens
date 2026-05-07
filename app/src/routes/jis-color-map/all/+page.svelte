@@ -52,7 +52,7 @@
         {@const iconId = resolveIconId(jisColor.iconKey)}
         {#if iconId}
           <a href="#{jisColor.id}" class="icon-anchor" aria-label={jisColor.name}>
-            <span class="icon" style:color={jisColor.hex} aria-hidden="true">
+            <span class="icon" style:color={jisColor.rgb} aria-hidden="true">
               <Icon icon={iconId} />
             </span>
           </a>
