@@ -25,11 +25,11 @@ async function loadPccsAll() {
   return [...v24, ...even12, ...neutral]
 }
 
-function computeApproximatePccs(jisHex, pccsAll) {
+function computeApproximatePccs(jisRgb, pccsAll) {
   const candidates = pccsAll
     .map((p) => ({
       notation: p.notation,
-      deltaE: chroma.deltaE(jisHex, p.hex)
+      deltaE: chroma.deltaE(jisRgb, p.hex)
     }))
     .sort((a, b) => a.deltaE - b.deltaE)
 
@@ -56,7 +56,7 @@ async function main() {
   const allColors = Object.values(jisColorsBySubfamily).flatMap((sub) => sub.colors)
 
   for (const jis of allColors) {
-    jis.approximatePccs = computeApproximatePccs(jis.hex, pccsAll)
+    jis.approximatePccs = computeApproximatePccs(jis.rgb, pccsAll)
   }
 
   await writeFile(jisPath, JSON.stringify(jisColorsBySubfamily), "utf8")
