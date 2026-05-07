@@ -37,6 +37,7 @@ export type JISColor = {
   systematicName: string
   colorDescription: string
   originDescription: string
+  cmyk?: string
   hex: string
   examLevel: 2 | 3 | null
   munsell: string
