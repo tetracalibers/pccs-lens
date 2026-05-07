@@ -8,14 +8,14 @@
 
   let { colors, variant = "fill" }: Props = $props()
 
-  const bgHex = $derived(colors[0].hex)
+  const bgRgb = $derived(colors[0].rgb)
   const title = $derived(colors.map((c) => `${c.name}（${c.reading}）`).join("\n"))
 </script>
 
 <div
   class="swatch"
   class:--_outline={variant === "outline"}
-  style:--_jis-color-hex={bgHex}
+  style:--_jis-color-rgb={bgRgb}
   {title}
 ></div>
 
@@ -24,12 +24,12 @@
     width: 100%;
     height: 100%;
     border-radius: 6px;
-    background-color: var(--_jis-color-hex);
+    background-color: var(--_jis-color-rgb);
   }
 
   .--_outline {
     background: none;
-    border: 2px solid var(--_jis-color-hex);
+    border: 2px solid var(--_jis-color-rgb);
     box-sizing: border-box;
   }
 </style>

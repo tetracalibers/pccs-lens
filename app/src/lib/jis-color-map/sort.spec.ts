@@ -9,6 +9,7 @@ const makeColor = (id: string, munsell: string): JISColor => ({
   systematicName: "",
   colorDescription: "",
   originDescription: "",
+  rgb: "rgb(0, 0, 0)",
   hex: "#000000",
   examLevel: null,
   munsell,

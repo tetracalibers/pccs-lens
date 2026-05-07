@@ -24,7 +24,7 @@ export function findClosestJis(
 ): JISApproximateResult[] {
   const results: JISApproximateResult[] = colors.map((color) => ({
     color,
-    deltaE: chroma.deltaE(inputHex, color.hex)
+    deltaE: chroma.deltaE(inputHex, color.rgb)
   }))
 
   results.sort((a, b) => a.deltaE - b.deltaE)

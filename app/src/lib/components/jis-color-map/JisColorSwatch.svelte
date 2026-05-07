@@ -10,8 +10,8 @@
 
   let { colors, pccs, hideLabel = false }: Props = $props()
 
-  const bgHex = $derived(colors[0].hex)
-  const textColor = $derived(isLightColor(bgHex) ? "#333" : "#fff")
+  const bgRgb = $derived(colors[0].rgb)
+  const textColor = $derived(isLightColor(bgRgb) ? "#333" : "#fff")
   const pccsTextColor = $derived(pccs ? (isLightColor(pccs.hex) ? "#333" : "#fff") : "#fff")
 
   const maxDensityPerColor = $derived(
@@ -50,7 +50,7 @@
   {/if}
   <div
     class="swatch"
-    style:background-color={bgHex}
+    style:background-color={bgRgb}
     style:color={textColor}
     style:font-size={fontSize}
     {title}

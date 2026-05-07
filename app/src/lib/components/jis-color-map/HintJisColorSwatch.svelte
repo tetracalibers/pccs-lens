@@ -13,14 +13,14 @@
 
   const labelLines = $derived(color.nameSegments ?? [color.name])
   const labelInside = $derived(labelLines.every((line) => line.length <= 3))
-  const insideTextColor = $derived(isLightColor(color.hex) ? "#333" : "#fff")
+  const insideTextColor = $derived(isLightColor(color.rgb) ? "#333" : "#fff")
 
   // 正六角形の亀甲型（上下が頂点、左右が平辺）
   // 外接円半径 50、幅 = 50 * √3 ≒ 86.6、高さ = 100
   const POLY_POINTS = "43.3,0 86.6,25 86.6,75 43.3,100 0,75 0,25"
 </script>
 
-<div class="wrap" style:--_jis-color-hex={color.hex} {title}>
+<div class="wrap" style:--_jis-color-rgb={color.rgb} {title}>
   <div
     class="label"
     class:--_inside={labelInside}
@@ -72,12 +72,12 @@
   }
 
   polygon {
-    fill: var(--_jis-color-hex);
+    fill: var(--_jis-color-rgb);
   }
 
   polygon.--_outline {
     fill: none;
-    stroke: var(--_jis-color-hex);
+    stroke: var(--_jis-color-rgb);
     stroke-width: 4;
   }
 </style>

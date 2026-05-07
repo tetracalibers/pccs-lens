@@ -79,8 +79,8 @@
             <div class="jis-card-inner jis-card-main">
               <span
                 class="swatch"
-                style="background-color: {result.color.hex}"
-                aria-label={result.color.hex}
+                style="background-color: {result.color.rgb}"
+                aria-label={result.color.rgb}
               ></span>
               <div class="jis-name-reading">
                 <span class="jis-name">{result.color.name}</span>
@@ -91,8 +91,8 @@
               {#if result.color.examLevel !== null}
                 <span class="exam-level">{result.color.examLevel}級</span>
               {/if}
-              <span class="hex-code">{result.color.hex}</span>
-              <CopyButton text={result.color.hex} color="#777" />
+              <span class="hex-code">{result.color.rgb}</span>
+              <CopyButton text={result.color.rgb} color="#777" />
             </div>
           </li>
         {/each}

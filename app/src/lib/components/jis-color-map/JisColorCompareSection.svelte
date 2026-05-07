@@ -56,7 +56,7 @@
     {#each targets as jis, i (jis.id)}
       <div class="row" style:--_row-index={i + 1}>
         <JisExamLevelBadge examLevel={jis.examLevel} />
-        <span class="preview" style:background-color={jis.hex}></span>
+        <span class="preview" style:background-color={jis.rgb}></span>
         <div class="info">
           <div class="name">
             {#if isAnki}
