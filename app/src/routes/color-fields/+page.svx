@@ -24,25 +24,6 @@ title: 色の活用分野
 
 ::ComingSoon
 
-## ビジネス
-
-### カラープランニング
-
-- :PageDraft{title="色彩効果とビジネス" grades="1"}
-- :PageDraft{title="カラーコミュニケーションツール" grades="1"}
-
-### 商品のビジネスプロセス
-
-- :PageDraft{title="コンシューマプロダクツ" grades="1"}
-- :PageDraft{title="企業アイデンティティ戦略" grades="1"}
-- :PageDraft{title="商品企画とカラーバリエーション" grades="1"}
-- :PageDraft{title="商品価値とプランニングの視点" grades="1"}
-- :PageDraft{title="商品デザインとCMF" grades="1"}
-- :PageDraft{title="製造と色再現技術" grades="1"}
-- :PageDraft{title="流通とパッケージデザイン" grades="1"}
-- :PageDraft{title="プロモーション" grades="1"}
-- :PageDraft{title="販売形態と色彩戦略" grades="1"}
-
 ## マーケティング
 
 ### カラーマーケティングの基本
@@ -66,6 +47,25 @@ title: 色の活用分野
 - :PageDraft{title="消費者の感性とCMF" grades="1"}
 - :PageDraft{title="ラインナップの展開とCMF" grades="1"}
 - :PageDraft{title="制作におけるCMF" grades="1"}
+
+## ビジネス
+
+### 色とコミュニケーション
+
+- :PageDraft{title="色彩効果とビジネス" grades="1"}
+- :PageDraft{title="カラーコミュニケーションツール" grades="1"}
+
+### 商品のビジネスプロセス
+
+- :PageDraft{title="コンシューマプロダクツ" grades="1"}
+- :PageDraft{title="企業アイデンティティ戦略" grades="1"}
+- :PageDraft{title="商品企画とカラーバリエーション" grades="1"}
+- :PageDraft{title="商品価値とプランニングの視点" grades="1"}
+- :PageDraft{title="商品デザインとCMF" grades="1"}
+- :PageDraft{title="製造と色再現技術" grades="1"}
+- :PageDraft{title="流通とパッケージデザイン" grades="1"}
+- :PageDraft{title="プロモーション" grades="1"}
+- :PageDraft{title="販売形態と色彩戦略" grades="1"}
 
 ## ファッション
 
