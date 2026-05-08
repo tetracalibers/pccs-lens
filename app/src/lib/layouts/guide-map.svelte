@@ -1,5 +1,6 @@
 <script lang="ts" module>
   import Heading2 from "$lib/components/m-html/Heading2.svelte"
+  import PlainHeading3 from "$lib/components/m-html/PlainHeading3.svelte"
   import ALink from "$lib/components/m-html/ALink.svelte"
 
   import ComingSoon from "$lib/components/m-directive/ComingSoon.svelte"
@@ -10,6 +11,7 @@
   /* eslint-disable no-import-assign */
   export {
     Heading2 as h2,
+    PlainHeading3 as h3,
     ALink as a,
     ComingSoon,
     MoreToCome,
@@ -41,14 +43,6 @@
     max-width: 680px;
     margin: 0 auto;
     padding: 0;
-  }
-
-  main :global(h3) {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--color-heading);
-    line-height: 1.3;
-    margin: 1.6rem 0 0.45rem;
   }
 
   main :global(p) {
