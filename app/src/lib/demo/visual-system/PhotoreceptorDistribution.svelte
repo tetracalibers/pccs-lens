@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { line, curveMonotoneX } from "d3-shape"
+  import { line, curveBasis } from "d3-shape"
   import { ankiMode } from "$lib/state/anki.svelte"
 
   interface DistributionPoint {
@@ -33,15 +33,15 @@
 
   // ===== Tick / label sizes =====
   const TICK_LENGTH = 8
-  const FONT_SIZE_TICK_LABEL = 24
-  const FONT_SIZE_AXIS_LABEL = 30
-  const FONT_SIZE_Y_AXIS_LABEL = 22
-  const FONT_SIZE_FEATURE_LABEL = 26
-  const FONT_SIZE_LEGEND = 24
+  const FONT_SIZE_TICK_LABEL = 18
+  const FONT_SIZE_AXIS_LABEL = 20
+  const FONT_SIZE_Y_AXIS_LABEL = 20
+  const FONT_SIZE_FEATURE_LABEL = 22
+  const FONT_SIZE_LEGEND = 20
 
   // ===== ラベル位置オフセット =====
   const X_TICK_LABEL_OFFSET = 26 // PLOT_BOTTOM から数値ラベル中心まで
-  const X_AXIS_LABEL_OFFSET = 145 // PLOT_BOTTOM から軸ラベル中心まで
+  const X_AXIS_LABEL_OFFSET = 150 // PLOT_BOTTOM から軸ラベル中心まで
   const Y_TICK_LABEL_OFFSET = 16 // PLOT_LEFT から数値ラベル右端まで
   const Y_AXIS_LABEL_OFFSET = 80 // PLOT_LEFT から軸ラベル中心まで
 
@@ -236,11 +236,13 @@
     (_, i) => VALUE_MIN + i * Y_TICK_INTERVAL
   )
 
-  // ===== 滑らかなパス生成（curveMonotoneX で 0 への急降下を素直に表現） =====
+  // ===== 滑らかなパス生成 =====
+  // curveBasis（B-spline）で C² 連続のなめらかな曲線を描画
+  // データ点は厳密には通らず、近傍点の平均で平滑化される
   const lineGen = line<DistributionPoint>()
     .x((d) => xAt(d.angle))
     .y((d) => yAt(d.value))
-    .curve(curveMonotoneX)
+    .curve(curveBasis)
 
   const conesPath = lineGen(cones) ?? ""
   const rodsPath = lineGen(rods) ?? ""
@@ -313,7 +315,7 @@
   <g fill={COL_LABEL} font-size={FONT_SIZE_TICK_LABEL} text-anchor="middle">
     {#each X_LABELED_TICKS as angle (angle)}
       <text x={xAt(angle)} y={PLOT_BOTTOM + X_TICK_LABEL_OFFSET} dominant-baseline="central">
-        {angle}
+        {angle}°
       </text>
     {/each}
   </g>
@@ -348,7 +350,7 @@
     fill={COL_LABEL}
     writing-mode="vertical-rl"
   >
-    1mm² あたりの錐体・桿体の数 (万個)
+    1mm^2 あたりの錐体・桿体の数（万個）
   </text>
 
   <!-- 桿体の曲線（青） -->
@@ -388,10 +390,11 @@
     <text
       x={xAt(FOVEA_ANGLE)}
       y={X_ANNO_LABEL_Y}
-      text-anchor="middle"
+      text-anchor="end"
       dominant-baseline="central"
       font-size={FONT_SIZE_FEATURE_LABEL}
       fill={COL_LABEL}
+      style="translate: 0.75rem 0;"
     >
       中心窩
     </text>
@@ -412,10 +415,11 @@
     <text
       x={xAt(BLIND_SPOT_ANGLE)}
       y={X_ANNO_LABEL_Y}
-      text-anchor="middle"
+      text-anchor="start"
       dominant-baseline="central"
       font-size={FONT_SIZE_FEATURE_LABEL}
       fill={COL_LABEL}
+      style="translate: -0.75rem 0;"
     >
       視神経乳頭
     </text>
