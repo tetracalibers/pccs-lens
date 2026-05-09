@@ -13,8 +13,8 @@
   const PLOT_HEIGHT = 360
   const PLOT_LEFT = 110
   const PLOT_TOP = 30
-  const MARGIN_RIGHT = 30
-  const MARGIN_BOTTOM = 100
+  const MARGIN_RIGHT = 40
+  const MARGIN_BOTTOM = 170
   const TOTAL_WIDTH = PLOT_LEFT + PLOT_WIDTH + MARGIN_RIGHT
   const TOTAL_HEIGHT = PLOT_TOP + PLOT_HEIGHT + MARGIN_BOTTOM
   const PLOT_RIGHT = PLOT_LEFT + PLOT_WIDTH
@@ -40,7 +40,8 @@
 
   // ===== ラベル位置オフセット =====
   const X_TICK_LABEL_OFFSET = 26 // PLOT_BOTTOM から数値ラベル中心まで
-  const X_AXIS_LABEL_OFFSET = 70 // PLOT_BOTTOM から軸ラベル中心まで
+  const X_AXIS_LABEL_Y_OFFSET = 46 // PLOT_BOTTOM から波長ラベル中心まで
+  const X_AXIS_LABEL_GAP_FROM_LAST_TICK = 50 // 700 の目盛りラベルから波長ラベル左端までの余白
   const Y_TICK_LABEL_OFFSET = 16 // PLOT_LEFT から数値ラベル右端まで
   const Y_AXIS_LABEL_OFFSET = 80 // PLOT_LEFT から軸ラベル中心まで
 
@@ -48,6 +49,17 @@
   const STROKE_WIDTH_AXIS = 2
   const STROKE_WIDTH_TICK = 1.5
   const STROKE_WIDTH_CURVE = 3.5
+  const STROKE_WIDTH_RANGE_ARROW = 2
+
+  // ===== 波長範囲注釈 =====
+  const RANGE_ARROW_Y_OFFSET = X_AXIS_LABEL_Y_OFFSET * 1.8 // PLOT_BOTTOM から矢線中心まで
+  const RANGE_LABEL_Y_OFFSET = RANGE_ARROW_Y_OFFSET + X_AXIS_LABEL_Y_OFFSET * 0.7 // PLOT_BOTTOM から範囲ラベル中心まで
+  const FONT_SIZE_RANGE_LABEL = 24
+
+  // ===== 矢の形状（タイプA） =====
+  const ARROW_HEAD_VIEWBOX = 7
+  const ARROW_HEAD_SIZE = 22
+  const ARROW_HEAD_STROKE = (STROKE_WIDTH_RANGE_ARROW * ARROW_HEAD_VIEWBOX) / ARROW_HEAD_SIZE
 
   // ===== 色定数 =====
   const COL_AXIS = "var(--color-body)"
@@ -55,6 +67,31 @@
   const COL_S = PCCS_HEX_MAP.get("lt18")! // S錐体
   const COL_M = PCCS_HEX_MAP.get("lt12")! // M錐体
   const COL_L = PCCS_HEX_MAP.get("lt2")! // L錐体
+
+  // ===== 波長範囲 =====
+  const ranges = [
+    {
+      id: "short",
+      from: 380,
+      to: 500,
+      label: "短波長",
+      color: "var(--canvas-pen-blue)"
+    },
+    {
+      id: "mid",
+      from: 500,
+      to: 600,
+      label: "中波長",
+      color: "var(--canvas-pen-green)"
+    },
+    {
+      id: "long",
+      from: 600,
+      to: 780,
+      label: "長波長",
+      color: "var(--canvas-pen-red)"
+    }
+  ]
 
   // ===== 錐体パラメータ =====
   // 教科書で典型的に示される非正規化スケール（曲線の幅と相関した相対ピーク高さ）。
@@ -154,6 +191,28 @@
     <clipPath id="spectral-sensitivity-plot-clip">
       <rect x={PLOT_LEFT} y={PLOT_TOP} width={PLOT_WIDTH} height={PLOT_HEIGHT} />
     </clipPath>
+    {#each ranges as r (r.id)}
+      <marker
+        id="range-arrow-{r.id}"
+        viewBox="0 0 {ARROW_HEAD_VIEWBOX} {ARROW_HEAD_VIEWBOX}"
+        refX={ARROW_HEAD_VIEWBOX / 2}
+        refY={ARROW_HEAD_VIEWBOX / 2}
+        markerWidth={ARROW_HEAD_SIZE}
+        markerHeight={ARROW_HEAD_SIZE}
+        markerUnits="userSpaceOnUse"
+        orient="auto-start-reverse"
+      >
+        <polyline
+          points="0,3.5 3.5,1.75 0,0"
+          fill="none"
+          stroke={r.color}
+          stroke-width={ARROW_HEAD_STROKE}
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          transform="translate(1.1667 1.75)"
+        />
+      </marker>
+    {/each}
   </defs>
 
   <!-- 横軸 -->
@@ -199,11 +258,11 @@
     {/each}
   </g>
 
-  <!-- 横軸ラベル「波長 (nm)」 -->
+  <!-- 横軸ラベル「波長 (nm)」（700 の目盛りラベルの右、横軸からは少し下げる） -->
   <text
-    x={(PLOT_LEFT + PLOT_RIGHT) / 2}
-    y={PLOT_BOTTOM + X_AXIS_LABEL_OFFSET}
-    text-anchor="middle"
+    x={xAt(700) + X_AXIS_LABEL_GAP_FROM_LAST_TICK}
+    y={PLOT_BOTTOM + X_AXIS_LABEL_Y_OFFSET}
+    text-anchor="start"
     dominant-baseline="central"
     font-size={FONT_SIZE_AXIS_LABEL}
     fill={COL_LABEL}
@@ -231,6 +290,30 @@
   >
     感度
   </text>
+
+  <!-- 波長範囲の両側矢印と範囲ラベル -->
+  {#each ranges as r (r.id)}
+    <line
+      x1={xAt(r.from)}
+      y1={PLOT_BOTTOM + RANGE_ARROW_Y_OFFSET}
+      x2={xAt(r.to)}
+      y2={PLOT_BOTTOM + RANGE_ARROW_Y_OFFSET}
+      stroke={r.color}
+      stroke-width={STROKE_WIDTH_RANGE_ARROW}
+      marker-start="url(#range-arrow-{r.id})"
+      marker-end="url(#range-arrow-{r.id})"
+    />
+    <text
+      x={(xAt(r.from) + xAt(r.to)) / 2}
+      y={PLOT_BOTTOM + RANGE_LABEL_Y_OFFSET}
+      text-anchor="middle"
+      dominant-baseline="central"
+      font-size={FONT_SIZE_RANGE_LABEL}
+      fill={r.color}
+    >
+      {r.label}
+    </text>
+  {/each}
 
   <!-- S錐体の曲線（青） -->
   <path
