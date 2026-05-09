@@ -13,7 +13,7 @@
   const PLOT_HEIGHT = 360
   const PLOT_LEFT = 110
   const PLOT_TOP = 80
-  const MARGIN_RIGHT = 30
+  const MARGIN_RIGHT = 100
   const MARGIN_BOTTOM = 200
   const TOTAL_WIDTH = PLOT_LEFT + PLOT_WIDTH + MARGIN_RIGHT
   const TOTAL_HEIGHT = PLOT_TOP + PLOT_HEIGHT + MARGIN_BOTTOM
@@ -29,7 +29,7 @@
   // ===== 目盛り設定 =====
   const X_TICK_INTERVAL = 50
   const Y_TICK_INTERVAL = 0.2
-  const X_LABELED_TICKS = [400, 500, 600, 700]
+  const X_LABELED_TICKS = [400, 450, 500, 550, 600, 650, 700, 750]
   const Y_LABELED_TICKS = [0, 0.2, 0.4, 0.6, 0.8, 1.0]
 
   // ===== Tick / label sizes =====
@@ -43,7 +43,7 @@
   // ===== ラベル位置オフセット =====
   const X_TICK_LABEL_OFFSET = 26 // PLOT_BOTTOM から数値ラベル中心まで
   const X_AXIS_LABEL_OFFSET = 56 // PLOT_BOTTOM から軸ラベル中心まで
-  const X_AXIS_LABEL_GAP_FROM_LAST_TICK = 30 // 700 の目盛りラベルから波長ラベル左端までの余白
+  const X_AXIS_LABEL_GAP_FROM_LAST_TICK = 30 // 最後の目盛りラベル(750)から波長ラベル左端までの余白
   const Y_TICK_LABEL_OFFSET = 16 // PLOT_LEFT から数値ラベル右端まで
   const Y_AXIS_LABEL_OFFSET = 80 // PLOT_LEFT から軸ラベル中心まで
 
@@ -297,9 +297,9 @@
     {/each}
   </g>
 
-  <!-- 横軸ラベル「波長 (nm)」（700 の目盛りラベルの右に配置） -->
+  <!-- 横軸ラベル「波長 (nm)」（最後の目盛りラベル(750)の右に配置） -->
   <text
-    x={xAt(700) + X_AXIS_LABEL_GAP_FROM_LAST_TICK}
+    x={xAt(750) + X_AXIS_LABEL_GAP_FROM_LAST_TICK}
     y={PLOT_BOTTOM + X_AXIS_LABEL_OFFSET}
     text-anchor="start"
     dominant-baseline="central"
