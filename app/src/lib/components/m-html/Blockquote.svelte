@@ -28,7 +28,7 @@
     left: -1.2rem;
     content: "“";
     font-family: var(--font-ja);
-    color: light-dark(#e0e0e0, var(--color-body--dark));
+    color: light-dark(#cecece, #7b7b7b);
     font-size: 4rem;
     line-height: 1;
     font-style: italic;
@@ -40,9 +40,10 @@
     padding-inline-start: 2rem;
     padding-inline-end: 1.5rem;
     box-sizing: border-box;
-    background: light-dark(#f1f1f194, #7b7b7b61);
+    border: 1px solid;
+    border-color: light-dark(#cecece, #7b7b7b);
     margin: 0;
-    clip-path: polygon(2rem 0, 100% 0, 100% 100%, 0 100%, 0 2rem);
+    clip-path: polygon(1.85rem 0, 100% 0, 100% 100%, 0 100%, 0 1.75rem);
   }
 
   blockquote :global(p) {
