@@ -36,7 +36,7 @@
   const TICK_LENGTH = 8
   const FONT_SIZE_TICK_LABEL = 20
   const FONT_SIZE_AXIS_LABEL = 26
-  const FONT_SIZE_CURVE_LABEL = 28
+  const FONT_SIZE_CURVE_LABEL = 30
 
   // ===== ラベル位置オフセット =====
   const X_TICK_LABEL_OFFSET = 26 // PLOT_BOTTOM から数値ラベル中心まで
