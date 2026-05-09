@@ -1,6 +1,7 @@
 <script lang="ts">
   import { line, curveBasis } from "d3-shape"
   import { PCCS_HEX_MAP } from "$lib/data/pccs"
+  import { ankiMode } from "$lib/state/anki.svelte"
 
   interface SensitivityPoint {
     nm: number
@@ -144,6 +145,8 @@
   const M_LABEL_VALUE = 1.3
   const L_LABEL_NM = 575
   const L_LABEL_VALUE = 1.23
+
+  const isAnki = $derived(ankiMode.isAnki)
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {TOTAL_WIDTH} {TOTAL_HEIGHT}">
@@ -262,10 +265,14 @@
     clip-path="url(#spectral-sensitivity-plot-clip)"
   />
 
-  <!-- 曲線ラベル -->
-  <g font-size={FONT_SIZE_CURVE_LABEL} font-weight="bold" dominant-baseline="central">
-    <text x={xAt(S_LABEL_NM)} y={yAt(S_LABEL_VALUE)} text-anchor="middle" fill={COL_S}>S錐体</text>
-    <text x={xAt(M_LABEL_NM)} y={yAt(M_LABEL_VALUE)} text-anchor="end" fill={COL_M}>M錐体</text>
-    <text x={xAt(L_LABEL_NM)} y={yAt(L_LABEL_VALUE)} text-anchor="start" fill={COL_L}>L錐体</text>
-  </g>
+  <!-- 曲線ラベル（暗記モード時は非表示） -->
+  {#if !isAnki}
+    <g font-size={FONT_SIZE_CURVE_LABEL} font-weight="bold" dominant-baseline="central">
+      <text x={xAt(S_LABEL_NM)} y={yAt(S_LABEL_VALUE)} text-anchor="middle" fill={COL_S}>
+        S錐体
+      </text>
+      <text x={xAt(M_LABEL_NM)} y={yAt(M_LABEL_VALUE)} text-anchor="end" fill={COL_M}>M錐体</text>
+      <text x={xAt(L_LABEL_NM)} y={yAt(L_LABEL_VALUE)} text-anchor="start" fill={COL_L}>L錐体</text>
+    </g>
+  {/if}
 </svg>
