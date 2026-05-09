@@ -1,5 +1,6 @@
 <script lang="ts">
   import { line, curveBasis } from "d3-shape"
+  import { PCCS_HEX_MAP } from "$lib/data/pccs"
 
   interface SensitivityPoint {
     nm: number
@@ -32,9 +33,9 @@
 
   // ===== Tick / label sizes =====
   const TICK_LENGTH = 8
-  const FONT_SIZE_TICK_LABEL = 24
-  const FONT_SIZE_AXIS_LABEL = 30
-  const FONT_SIZE_CURVE_LABEL = 26
+  const FONT_SIZE_TICK_LABEL = 20
+  const FONT_SIZE_AXIS_LABEL = 26
+  const FONT_SIZE_CURVE_LABEL = 28
 
   // ===== ラベル位置オフセット =====
   const X_TICK_LABEL_OFFSET = 26 // PLOT_BOTTOM から数値ラベル中心まで
@@ -45,14 +46,14 @@
   // ===== Stroke widths =====
   const STROKE_WIDTH_AXIS = 2
   const STROKE_WIDTH_TICK = 1.5
-  const STROKE_WIDTH_CURVE = 3
+  const STROKE_WIDTH_CURVE = 3.5
 
   // ===== 色定数 =====
   const COL_AXIS = "var(--color-body)"
   const COL_LABEL = "var(--color-body)"
-  const COL_S = "#2563eb" // S錐体（青）
-  const COL_M = "#16a34a" // M錐体（緑）
-  const COL_L = "#dc2626" // L錐体（赤）
+  const COL_S = PCCS_HEX_MAP.get("lt18")! // S錐体
+  const COL_M = PCCS_HEX_MAP.get("lt12")! // M錐体
+  const COL_L = PCCS_HEX_MAP.get("lt2")! // L錐体
 
   // ===== 錐体パラメータ =====
   // 教科書で典型的に示される非正規化スケール（曲線の幅と相関した相対ピーク高さ）。
@@ -262,7 +263,7 @@
   />
 
   <!-- 曲線ラベル -->
-  <g font-size={FONT_SIZE_CURVE_LABEL} dominant-baseline="central">
+  <g font-size={FONT_SIZE_CURVE_LABEL} font-weight="bold" dominant-baseline="central">
     <text x={xAt(S_LABEL_NM)} y={yAt(S_LABEL_VALUE)} text-anchor="middle" fill={COL_S}>S錐体</text>
     <text x={xAt(M_LABEL_NM)} y={yAt(M_LABEL_VALUE)} text-anchor="end" fill={COL_M}>M錐体</text>
     <text x={xAt(L_LABEL_NM)} y={yAt(L_LABEL_VALUE)} text-anchor="start" fill={COL_L}>L錐体</text>
