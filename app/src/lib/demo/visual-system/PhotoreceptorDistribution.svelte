@@ -87,6 +87,18 @@
   const LEGEND_Y_CONE = PLOT_TOP + 28
   const LEGEND_Y_ROD = LEGEND_Y_CONE + LEGEND_ROW_GAP
 
+  // ===== 凡例の枠線 =====
+  const LEGEND_FRAME_PADDING_X = 18
+  const LEGEND_FRAME_PADDING_Y = 18
+  const LEGEND_FRAME_TEXT_WIDTH = FONT_SIZE_LEGEND * 2.4 // 「錐体」「桿体」(2文字) のおおよその幅
+  const LEGEND_FRAME_RADIUS = 4
+  const STROKE_WIDTH_LEGEND_FRAME = 1
+  const LEGEND_FRAME_X = LEGEND_LINE_X1 - LEGEND_FRAME_PADDING_X
+  const LEGEND_FRAME_Y = LEGEND_Y_CONE - LEGEND_FRAME_PADDING_Y
+  const LEGEND_FRAME_WIDTH =
+    LEGEND_LINE_LENGTH + LEGEND_LABEL_GAP + LEGEND_FRAME_TEXT_WIDTH + 2 * LEGEND_FRAME_PADDING_X
+  const LEGEND_FRAME_HEIGHT = LEGEND_ROW_GAP + 2 * LEGEND_FRAME_PADDING_Y
+
   // ===== 分布データ =====
   // Østerberg 1935（古典） / Curcio et al. 1990（J. Comp. Neurol. 292:497-523）の
   // 計測値に基づく錐体・桿体密度データ（万個/mm²）
@@ -451,6 +463,16 @@
 
   <!-- 凡例（プロット内右上） -->
   <g>
+    <rect
+      x={LEGEND_FRAME_X}
+      y={LEGEND_FRAME_Y}
+      width={LEGEND_FRAME_WIDTH}
+      height={LEGEND_FRAME_HEIGHT}
+      rx={LEGEND_FRAME_RADIUS}
+      fill="none"
+      stroke="light-dark(lightslategray, gray)"
+      stroke-width={STROKE_WIDTH_LEGEND_FRAME}
+    />
     <line
       x1={LEGEND_LINE_X1}
       y1={LEGEND_Y_CONE}
