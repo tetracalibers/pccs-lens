@@ -95,10 +95,7 @@
   // ===== サンプリング =====
   const SAMPLE_STEP = 1
   const sampleCount = Math.floor((NM_MAX - NM_MIN) / SAMPLE_STEP) + 1
-  const sampleWavelengths = Array.from(
-    { length: sampleCount },
-    (_, i) => NM_MIN + i * SAMPLE_STEP
-  )
+  const sampleWavelengths = Array.from({ length: sampleCount }, (_, i) => NM_MIN + i * SAMPLE_STEP)
 
   const sCurveData: SensitivityPoint[] = sampleWavelengths.map((nm) => ({
     nm,
@@ -114,8 +111,7 @@
   }))
 
   // ===== 座標変換 =====
-  const xAt = (nm: number): number =>
-    PLOT_LEFT + ((nm - NM_MIN) / (NM_MAX - NM_MIN)) * PLOT_WIDTH
+  const xAt = (nm: number): number => PLOT_LEFT + ((nm - NM_MIN) / (NM_MAX - NM_MIN)) * PLOT_WIDTH
   const yAt = (value: number): number =>
     PLOT_BOTTOM - ((value - VALUE_MIN) / (VALUE_MAX - VALUE_MIN)) * PLOT_HEIGHT
 
@@ -267,14 +263,8 @@
 
   <!-- 曲線ラベル -->
   <g font-size={FONT_SIZE_CURVE_LABEL} dominant-baseline="central">
-    <text x={xAt(S_LABEL_NM)} y={yAt(S_LABEL_VALUE)} text-anchor="middle" fill={COL_S}>
-      S錐体
-    </text>
-    <text x={xAt(M_LABEL_NM)} y={yAt(M_LABEL_VALUE)} text-anchor="end" fill={COL_M}>
-      M錐体
-    </text>
-    <text x={xAt(L_LABEL_NM)} y={yAt(L_LABEL_VALUE)} text-anchor="start" fill={COL_L}>
-      L錐体
-    </text>
+    <text x={xAt(S_LABEL_NM)} y={yAt(S_LABEL_VALUE)} text-anchor="middle" fill={COL_S}>S錐体</text>
+    <text x={xAt(M_LABEL_NM)} y={yAt(M_LABEL_VALUE)} text-anchor="end" fill={COL_M}>M錐体</text>
+    <text x={xAt(L_LABEL_NM)} y={yAt(L_LABEL_VALUE)} text-anchor="start" fill={COL_L}>L錐体</text>
   </g>
 </svg>
