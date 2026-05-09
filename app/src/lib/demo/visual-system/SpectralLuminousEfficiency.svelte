@@ -42,7 +42,8 @@
 
   // ===== ラベル位置オフセット =====
   const X_TICK_LABEL_OFFSET = 26 // PLOT_BOTTOM から数値ラベル中心まで
-  const X_AXIS_LABEL_OFFSET = 75 // PLOT_BOTTOM から軸ラベル中心まで
+  const X_AXIS_LABEL_OFFSET = 56 // PLOT_BOTTOM から軸ラベル中心まで
+  const X_AXIS_LABEL_GAP_FROM_LAST_TICK = 30 // 700 の目盛りラベルから波長ラベル左端までの余白
   const Y_TICK_LABEL_OFFSET = 16 // PLOT_LEFT から数値ラベル右端まで
   const Y_AXIS_LABEL_OFFSET = 80 // PLOT_LEFT から軸ラベル中心まで
 
@@ -296,9 +297,9 @@
     {/each}
   </g>
 
-  <!-- 横軸ラベル「波長 (nm)」（横軸の左端に配置） -->
+  <!-- 横軸ラベル「波長 (nm)」（700 の目盛りラベルの右に配置） -->
   <text
-    x={PLOT_LEFT + 28}
+    x={xAt(700) + X_AXIS_LABEL_GAP_FROM_LAST_TICK}
     y={PLOT_BOTTOM + X_AXIS_LABEL_OFFSET}
     text-anchor="start"
     dominant-baseline="central"
