@@ -33,17 +33,17 @@
 
   // ===== Tick / label sizes =====
   const TICK_LENGTH = 8
-  const FONT_SIZE_TICK_LABEL = 16
-  const FONT_SIZE_AXIS_LABEL = 18
-  const FONT_SIZE_Y_AXIS_LABEL = 18
-  const FONT_SIZE_FEATURE_LABEL = 22
-  const FONT_SIZE_LEGEND = 20
+  const FONT_SIZE_TICK_LABEL = 20
+  const FONT_SIZE_AXIS_LABEL = 24
+  const FONT_SIZE_Y_AXIS_LABEL = 24
+  const FONT_SIZE_FEATURE_LABEL = 30
+  const FONT_SIZE_LEGEND = 24
 
   // ===== ラベル位置オフセット =====
   const X_TICK_LABEL_OFFSET = 26 // PLOT_BOTTOM から数値ラベル中心まで
-  const X_AXIS_LABEL_OFFSET = 70 // PLOT_BOTTOM から軸ラベル中心まで
+  const X_AXIS_LABEL_OFFSET = 75 // PLOT_BOTTOM から軸ラベル中心まで
   const Y_TICK_LABEL_OFFSET = 16 // PLOT_LEFT から数値ラベル右端まで
-  const Y_AXIS_LABEL_OFFSET = 70 // PLOT_LEFT から軸ラベル中心まで
+  const Y_AXIS_LABEL_OFFSET = 80 // PLOT_LEFT から軸ラベル中心まで
 
   // ===== 注釈用矢印・ラベル位置（X軸下部） =====
   const X_ANNO_ARROW_TIP_Y = PLOT_BOTTOM + 52
@@ -58,8 +58,8 @@
   // ===== Stroke widths =====
   const STROKE_WIDTH_AXIS = 2
   const STROKE_WIDTH_TICK = 1.5
-  const STROKE_WIDTH_CURVE = 3
-  const STROKE_WIDTH_ARROW = 2.5
+  const STROKE_WIDTH_CURVE = 3.5
+  const STROKE_WIDTH_ARROW = 3
 
   // ===== 色定数 =====
   const COL_AXIS = "var(--color-body)"
@@ -89,9 +89,9 @@
 
   // ===== 凡例の枠線 =====
   const LEGEND_FRAME_PADDING_X = 18
-  const LEGEND_FRAME_PADDING_Y = 18
+  const LEGEND_FRAME_PADDING_Y = 22
   const LEGEND_FRAME_TEXT_WIDTH = FONT_SIZE_LEGEND * 2.4 // 「錐体」「桿体」(2文字) のおおよその幅
-  const LEGEND_FRAME_RADIUS = 4
+  const LEGEND_FRAME_RADIUS = 6
   const STROKE_WIDTH_LEGEND_FRAME = 1
   const LEGEND_FRAME_X = LEGEND_LINE_X1 - LEGEND_FRAME_PADDING_X
   const LEGEND_FRAME_Y = LEGEND_Y_CONE - LEGEND_FRAME_PADDING_Y
@@ -405,8 +405,9 @@
       text-anchor="end"
       dominant-baseline="central"
       font-size={FONT_SIZE_FEATURE_LABEL}
+      font-weight="bold"
       fill={COL_ARROW}
-      style="translate: 0.75rem 0;"
+      style="translate: 0.5em 0;"
     >
       中心窩
     </text>
@@ -430,8 +431,9 @@
       text-anchor="start"
       dominant-baseline="central"
       font-size={FONT_SIZE_FEATURE_LABEL}
+      font-weight="bold"
       fill={COL_ARROW}
-      style="translate: -0.75rem 0;"
+      style="translate: -0.5em 0;"
     >
       視神経乳頭
     </text>
@@ -455,6 +457,7 @@
       text-anchor="middle"
       dominant-baseline="central"
       font-size={FONT_SIZE_FEATURE_LABEL}
+      font-weight="bold"
       fill={COL_ARROW}
     >
       盲点
