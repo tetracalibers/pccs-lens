@@ -77,27 +77,33 @@
   const FOVEA_ANGLE = 0
   const BLIND_SPOT_ANGLE = 15
 
-  // ===== 凡例の位置（プロット内右上） =====
+  // ===== 凡例（プロット内右上） =====
   const LEGEND_LINE_LENGTH = 56
   const LEGEND_ROW_GAP = 32
   const LEGEND_LABEL_GAP = 14
-  const LEGEND_LINE_X1 = PLOT_RIGHT - 150
-  const LEGEND_LINE_X2 = LEGEND_LINE_X1 + LEGEND_LINE_LENGTH
-  const LEGEND_LABEL_X = LEGEND_LINE_X2 + LEGEND_LABEL_GAP
-  const LEGEND_Y_CONE = PLOT_TOP + 28
-  const LEGEND_Y_ROD = LEGEND_Y_CONE + LEGEND_ROW_GAP
+  const LEGEND_TEXT_WIDTH = FONT_SIZE_LEGEND * 2.0 // 「錐体」「桿体」(2 全角文字) のおおよその幅
 
-  // ===== 凡例の枠線 =====
+  // 凡例の枠線
   const LEGEND_FRAME_PADDING_X = 18
   const LEGEND_FRAME_PADDING_Y = 22
-  const LEGEND_FRAME_TEXT_WIDTH = FONT_SIZE_LEGEND * 2.4 // 「錐体」「桿体」(2文字) のおおよその幅
   const LEGEND_FRAME_RADIUS = 6
   const STROKE_WIDTH_LEGEND_FRAME = 1
-  const LEGEND_FRAME_X = LEGEND_LINE_X1 - LEGEND_FRAME_PADDING_X
-  const LEGEND_FRAME_Y = LEGEND_Y_CONE - LEGEND_FRAME_PADDING_Y
-  const LEGEND_FRAME_WIDTH =
-    LEGEND_LINE_LENGTH + LEGEND_LABEL_GAP + LEGEND_FRAME_TEXT_WIDTH + 2 * LEGEND_FRAME_PADDING_X
+  const LEGEND_CONTENT_WIDTH = LEGEND_LINE_LENGTH + LEGEND_LABEL_GAP + LEGEND_TEXT_WIDTH
+  const LEGEND_FRAME_WIDTH = LEGEND_CONTENT_WIDTH + 2 * LEGEND_FRAME_PADDING_X
   const LEGEND_FRAME_HEIGHT = LEGEND_ROW_GAP + 2 * LEGEND_FRAME_PADDING_Y
+
+  // 枠の位置（右上アンカー：従来の LEGEND_LINE_X1 = PLOT_RIGHT - 150 を維持）
+  const LEGEND_FRAME_X = PLOT_RIGHT - 150 - LEGEND_FRAME_PADDING_X
+  const LEGEND_FRAME_Y = PLOT_TOP + 28 - LEGEND_FRAME_PADDING_Y
+  const LEGEND_FRAME_CENTER_X = LEGEND_FRAME_X + LEGEND_FRAME_WIDTH / 2
+
+  // 内側コンテンツの位置（枠の水平中央に揃える）
+  const LEGEND_LINE_X1 = LEGEND_FRAME_CENTER_X - LEGEND_CONTENT_WIDTH / 2
+  const LEGEND_LINE_X2 = LEGEND_LINE_X1 + LEGEND_LINE_LENGTH
+  const LEGEND_LABEL_X = LEGEND_LINE_X2 + LEGEND_LABEL_GAP
+  const LEGEND_LABEL_CENTER_X = LEGEND_LABEL_X + LEGEND_TEXT_WIDTH / 2
+  const LEGEND_Y_CONE = LEGEND_FRAME_Y + LEGEND_FRAME_PADDING_Y
+  const LEGEND_Y_ROD = LEGEND_Y_CONE + LEGEND_ROW_GAP
 
   // ===== 分布データ =====
   // Østerberg 1935（古典） / Curcio et al. 1990（J. Comp. Neurol. 292:497-523）の
@@ -487,8 +493,9 @@
     />
     {#if !isAnki}
       <text
-        x={LEGEND_LABEL_X}
+        x={LEGEND_LABEL_CENTER_X}
         y={LEGEND_Y_CONE}
+        text-anchor="middle"
         dominant-baseline="central"
         font-size={FONT_SIZE_LEGEND}
         fill={COL_LABEL}
@@ -507,8 +514,9 @@
     />
     {#if !isAnki}
       <text
-        x={LEGEND_LABEL_X}
+        x={LEGEND_LABEL_CENTER_X}
         y={LEGEND_Y_ROD}
+        text-anchor="middle"
         dominant-baseline="central"
         font-size={FONT_SIZE_LEGEND}
         fill={COL_LABEL}
