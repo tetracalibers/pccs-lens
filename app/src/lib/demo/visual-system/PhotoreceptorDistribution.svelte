@@ -368,7 +368,7 @@
     fill={COL_LABEL}
     writing-mode="vertical-rl"
   >
-    1mm^2 あたりの錐体・桿体の数（万個）
+    1mm^2 あたりの錐体・桿体の数
   </text>
 
   <!-- 桿体の曲線（青） -->
