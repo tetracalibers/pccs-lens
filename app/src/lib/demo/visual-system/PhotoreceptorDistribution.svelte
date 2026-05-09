@@ -88,59 +88,137 @@
   const LEGEND_Y_ROD = LEGEND_Y_CONE + LEGEND_ROW_GAP
 
   // ===== 分布データ =====
-  // 中心窩(0°)で錐体ピーク・桿体0、視神経乳頭(+15°)で両者0
-  const cones: DistributionPoint[] = [
-    { angle: -80, value: 0.3 },
-    { angle: -60, value: 0.5 },
-    { angle: -40, value: 0.7 },
-    { angle: -30, value: 0.9 },
-    { angle: -20, value: 1.2 },
-    { angle: -10, value: 2.5 },
-    { angle: -5, value: 7 },
-    { angle: -2, value: 13 },
-    { angle: 0, value: 17 },
-    { angle: 2, value: 13 },
-    { angle: 5, value: 7 },
-    { angle: 10, value: 2.5 },
-    { angle: 13, value: 1.5 },
-    { angle: 14, value: 0.6 },
-    { angle: 15, value: 0 },
-    { angle: 16, value: 0.6 },
-    { angle: 17, value: 1.5 },
-    { angle: 20, value: 1.2 },
-    { angle: 30, value: 0.9 },
-    { angle: 40, value: 0.7 },
-    { angle: 60, value: 0.5 },
-    { angle: 80, value: 0.3 }
+  // Østerberg 1935（古典） / Curcio et al. 1990（J. Comp. Neurol. 292:497-523）の
+  // 計測値に基づく錐体・桿体密度データ（万個/mm²）
+  // - 錐体ピーク: 14.7万/mm² @ 中心窩 (Østerberg 1935)
+  // - 桿体ピーク: ~16万/mm² @ ±18° (eccentricity 5mm 付近、Østerberg)
+  // - 桿体は中心窩 0.35mm (1.25°) で 0、5° 付近で 10万/mm² に到達
+  // - 周辺 80° で 桿体 ~4万/mm²、錐体 ~0.4万/mm²
+  // ※ 視神経乳頭の落ち込みは BLIND_SPOT_* で別途加算
+  const CONE_DATA: DistributionPoint[] = [
+    { angle: -80, value: 0.4 },
+    { angle: -70, value: 0.4 },
+    { angle: -60, value: 0.45 },
+    { angle: -50, value: 0.5 },
+    { angle: -40, value: 0.55 },
+    { angle: -30, value: 0.65 },
+    { angle: -20, value: 0.8 },
+    { angle: -15, value: 0.9 },
+    { angle: -10, value: 1.1 },
+    { angle: -7, value: 1.4 },
+    { angle: -5, value: 1.8 },
+    { angle: -3, value: 2.6 },
+    { angle: -2, value: 3.6 },
+    { angle: -1.5, value: 4.5 },
+    { angle: -1, value: 6.0 },
+    { angle: -0.5, value: 9.5 },
+    { angle: 0, value: 14.7 },
+    { angle: 0.5, value: 9.5 },
+    { angle: 1, value: 6.0 },
+    { angle: 1.5, value: 4.5 },
+    { angle: 2, value: 3.6 },
+    { angle: 3, value: 2.6 },
+    { angle: 5, value: 1.8 },
+    { angle: 7, value: 1.4 },
+    { angle: 10, value: 1.1 },
+    { angle: 15, value: 0.9 },
+    { angle: 20, value: 0.8 },
+    { angle: 30, value: 0.65 },
+    { angle: 40, value: 0.55 },
+    { angle: 50, value: 0.5 },
+    { angle: 60, value: 0.45 },
+    { angle: 70, value: 0.4 },
+    { angle: 80, value: 0.4 }
   ]
 
-  const rods: DistributionPoint[] = [
-    { angle: -80, value: 4 },
-    { angle: -60, value: 7 },
-    { angle: -50, value: 10 },
-    { angle: -40, value: 13 },
-    { angle: -30, value: 15 },
-    { angle: -20, value: 16 },
-    { angle: -17, value: 16.2 },
-    { angle: -10, value: 13 },
-    { angle: -5, value: 6 },
-    { angle: -2, value: 1.5 },
+  const ROD_DATA: DistributionPoint[] = [
+    { angle: -80, value: 4.0 },
+    { angle: -70, value: 5.5 },
+    { angle: -60, value: 7.5 },
+    { angle: -50, value: 9.5 },
+    { angle: -40, value: 11.5 },
+    { angle: -30, value: 13.5 },
+    { angle: -25, value: 14.8 },
+    { angle: -22, value: 15.6 },
+    { angle: -18, value: 16.0 },
+    { angle: -15, value: 15.5 },
+    { angle: -12, value: 14.5 },
+    { angle: -10, value: 13.5 },
+    { angle: -7, value: 11.5 },
+    { angle: -5, value: 10.0 },
+    { angle: -4, value: 8.0 },
+    { angle: -3, value: 5.8 },
+    { angle: -2, value: 3.2 },
+    { angle: -1.5, value: 1.7 },
+    { angle: -1, value: 0.6 },
+    { angle: -0.7, value: 0.1 },
+    { angle: -0.6, value: 0 },
     { angle: 0, value: 0 },
-    { angle: 2, value: 1.5 },
-    { angle: 5, value: 6 },
-    { angle: 10, value: 13 },
-    { angle: 13, value: 14 },
-    { angle: 14, value: 7 },
-    { angle: 15, value: 0 },
-    { angle: 16, value: 7 },
-    { angle: 17, value: 14 },
-    { angle: 20, value: 16 },
-    { angle: 30, value: 15 },
-    { angle: 40, value: 13 },
-    { angle: 50, value: 10 },
-    { angle: 60, value: 7 },
-    { angle: 80, value: 4 }
+    { angle: 0.6, value: 0 },
+    { angle: 0.7, value: 0.1 },
+    { angle: 1, value: 0.6 },
+    { angle: 1.5, value: 1.7 },
+    { angle: 2, value: 3.2 },
+    { angle: 3, value: 5.8 },
+    { angle: 4, value: 8.0 },
+    { angle: 5, value: 10.0 },
+    { angle: 7, value: 11.5 },
+    { angle: 10, value: 13.5 },
+    { angle: 12, value: 14.5 },
+    { angle: 15, value: 15.5 },
+    { angle: 18, value: 16.0 },
+    { angle: 22, value: 15.6 },
+    { angle: 25, value: 14.8 },
+    { angle: 30, value: 13.5 },
+    { angle: 40, value: 11.5 },
+    { angle: 50, value: 9.5 },
+    { angle: 60, value: 7.5 },
+    { angle: 70, value: 5.5 },
+    { angle: 80, value: 4.0 }
   ]
+
+  // 視神経乳頭で両曲線が 0 になる鋭いノッチ
+  // スーパーガウシアン（n を大きくすると頂点が平らになり遷移が急になる）
+  const superGauss = (x: number, sigma: number, n: number): number =>
+    Math.exp(-Math.pow(Math.abs(x) / sigma, n))
+  const BLIND_SPOT_SIGMA = 1.5
+  const BLIND_SPOT_N = 4
+  const blindSpotMask = (angle: number): number =>
+    superGauss(angle - BLIND_SPOT_ANGLE, BLIND_SPOT_SIGMA, BLIND_SPOT_N)
+
+  // データ表からの線形補間
+  const interpolate = (data: DistributionPoint[], angle: number): number => {
+    if (angle <= data[0].angle) return data[0].value
+    if (angle >= data[data.length - 1].angle) return data[data.length - 1].value
+    for (let i = 1; i < data.length; i++) {
+      if (data[i].angle >= angle) {
+        const prev = data[i - 1]
+        const curr = data[i]
+        const t = (angle - prev.angle) / (curr.angle - prev.angle)
+        return prev.value + t * (curr.value - prev.value)
+      }
+    }
+    return 0
+  }
+
+  const coneDensity = (angle: number): number =>
+    interpolate(CONE_DATA, angle) * (1 - blindSpotMask(angle))
+  const rodDensity = (angle: number): number =>
+    interpolate(ROD_DATA, angle) * (1 - blindSpotMask(angle))
+
+  // ===== サンプリング =====
+  const SAMPLE_STEP = 0.5
+  const sampleCount = Math.floor((ANGLE_MAX - ANGLE_MIN) / SAMPLE_STEP) + 1
+  const sampleAngles = Array.from({ length: sampleCount }, (_, i) => ANGLE_MIN + i * SAMPLE_STEP)
+
+  const cones: DistributionPoint[] = sampleAngles.map((angle) => ({
+    angle,
+    value: coneDensity(angle)
+  }))
+  const rods: DistributionPoint[] = sampleAngles.map((angle) => ({
+    angle,
+    value: rodDensity(angle)
+  }))
 
   // ===== 座標変換 =====
   const xAt = (angle: number): number =>
