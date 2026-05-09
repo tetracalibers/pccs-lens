@@ -54,11 +54,12 @@
   // ===== 波長範囲注釈 =====
   const RANGE_ARROW_Y_OFFSET = X_AXIS_LABEL_Y_OFFSET * 1.8 // PLOT_BOTTOM から矢線中心まで
   const RANGE_LABEL_Y_OFFSET = RANGE_ARROW_Y_OFFSET + X_AXIS_LABEL_Y_OFFSET * 0.7 // PLOT_BOTTOM から範囲ラベル中心まで
+  const RANGE_ARROW_INSET = 8 // 隣接する範囲矢印同士が重ならないように両端を内側に縮める量（px）
   const FONT_SIZE_RANGE_LABEL = 24
 
   // ===== 矢の形状（タイプA） =====
   const ARROW_HEAD_VIEWBOX = 7
-  const ARROW_HEAD_SIZE = 22
+  const ARROW_HEAD_SIZE = 24
   const ARROW_HEAD_STROKE = (STROKE_WIDTH_RANGE_ARROW * ARROW_HEAD_VIEWBOX) / ARROW_HEAD_SIZE
 
   // ===== 色定数 =====
@@ -294,9 +295,9 @@
   <!-- 波長範囲の両側矢印と範囲ラベル -->
   {#each ranges as r (r.id)}
     <line
-      x1={xAt(r.from)}
+      x1={xAt(r.from) + RANGE_ARROW_INSET}
       y1={PLOT_BOTTOM + RANGE_ARROW_Y_OFFSET}
-      x2={xAt(r.to)}
+      x2={xAt(r.to) - RANGE_ARROW_INSET}
       y2={PLOT_BOTTOM + RANGE_ARROW_Y_OFFSET}
       stroke={r.color}
       stroke-width={STROKE_WIDTH_RANGE_ARROW}
