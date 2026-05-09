@@ -70,7 +70,7 @@
 
   // ===== 矢の形状 =====
   const ARROW_HEAD_VIEWBOX = 7
-  const ARROW_HEAD_SIZE = 18
+  const ARROW_HEAD_SIZE = 24
   const ARROW_HEAD_STROKE = (STROKE_WIDTH_ARROW * ARROW_HEAD_VIEWBOX) / ARROW_HEAD_SIZE
 
   // ===== 特徴点の角度 =====
