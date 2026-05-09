@@ -211,6 +211,8 @@
   :global(body) {
     --font-ja-base: "Zen Kaku Gothic Antique";
     --font-ja: var(--font-ja-base), sans-serif;
+    --font-en-base: "SUSE Mono";
+    --font-en: var(--font-en-base), sans-serif;
     --font-mono-base: "Reddit Mono";
     --font-mono: var(--font-mono-base), monospace;
     --font-fancy: "Delius", cursive;
@@ -221,7 +223,7 @@
     --font-mark: var(--font-mono-base), var(--font-ja-base);
     --font-math-base: "DM Mono";
 
-    font-family: "SUSE Mono", var(--font-ja-base), sans-serif;
+    font-family: var(--font-en-base), var(--font-ja-base), sans-serif;
     font-synthesis-weight: none;
     margin: 0;
 
