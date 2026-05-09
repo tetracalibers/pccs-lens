@@ -27,7 +27,8 @@ const [c, m, y, k] = parts.map(Number)
 const cmykExpr = `cmyk(${c}%,${m}%,${y}%,${k}%)`
 
 $.verbose = false
-const result = await $`magick -size 1x1 xc:${cmykExpr} -profile ${JAPAN_COLOR_ICC} -profile ${SRGB_ICC} txt:`
+const result =
+  await $`magick -size 1x1 xc:${cmykExpr} -profile ${JAPAN_COLOR_ICC} -profile ${SRGB_ICC} txt:`
 
 const match = result.stdout.match(/srgb\(([\d.]+)%,([\d.]+)%,([\d.]+)%\)/)
 if (!match) {
