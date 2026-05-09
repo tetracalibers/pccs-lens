@@ -52,8 +52,8 @@
 
   // ===== 注釈用矢印・ラベル位置（プロット上部） =====
   const TOP_ANNO_LABEL_Y = 28
-  const TOP_ANNO_ARROW_TAIL_Y = 44
-  const TOP_ANNO_ARROW_TIP_Y = PLOT_TOP - 6
+  const TOP_ANNO_ARROW_TAIL_Y = 52
+  const TOP_ANNO_ARROW_TIP_Y = PLOT_TOP + 24
 
   // ===== Stroke widths =====
   const STROKE_WIDTH_AXIS = 2
