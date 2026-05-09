@@ -175,6 +175,10 @@ const ARROW_HEAD_H = 10   // markerHeight（縦幅）
 
 スペクトル（可視光の波長分布）を表すグラデーションの描画を指示された場合は、`app/src/lib/demo/spectrum/SpectrumGradient.svelte` と同様のグラデーション（`gradientStops` の波長と色の対応）を採用する。
 
+### グラフの軸スタイル
+
+グラフ（横軸・縦軸を持つ図）を描画する場合、ユーザーからの指定が特になければ、横軸・縦軸・軸ラベルのスタイル（線の太さ、目盛り、フォントサイズ、ラベル位置など）は `app/src/lib/demo/spectral-reflectance/SpectralReflectanceGraph.svelte` と統一する。
+
 ### 縦書きテキスト
 
 テキストを縦書きにするよう指示された場合は、`<text>` 要素に `writing-mode="vertical-rl"` 属性を付与して実現する。
@@ -224,3 +228,7 @@ const ARROW_HEAD_H = 10   // markerHeight（縦幅）
 - `app/src/lib/demo/color-solid/ColorSolidSphere.svelte`
   - タイプBの `marker` 要素の定義
   - 動的な `viewBox` の算出方法
+
+- `app/src/lib/demo/spectral-reflectance/SpectralReflectanceGraph.svelte`
+  - グラフ（横軸・縦軸あり）のデフォルトスタイル
+  - 軸・目盛り・軸ラベルの定数定義と配置方法
