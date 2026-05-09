@@ -33,17 +33,17 @@
 
   // ===== Tick / label sizes =====
   const TICK_LENGTH = 8
-  const FONT_SIZE_TICK_LABEL = 18
-  const FONT_SIZE_AXIS_LABEL = 20
-  const FONT_SIZE_Y_AXIS_LABEL = 20
+  const FONT_SIZE_TICK_LABEL = 16
+  const FONT_SIZE_AXIS_LABEL = 18
+  const FONT_SIZE_Y_AXIS_LABEL = 18
   const FONT_SIZE_FEATURE_LABEL = 22
   const FONT_SIZE_LEGEND = 20
 
   // ===== ラベル位置オフセット =====
   const X_TICK_LABEL_OFFSET = 26 // PLOT_BOTTOM から数値ラベル中心まで
-  const X_AXIS_LABEL_OFFSET = 150 // PLOT_BOTTOM から軸ラベル中心まで
+  const X_AXIS_LABEL_OFFSET = 70 // PLOT_BOTTOM から軸ラベル中心まで
   const Y_TICK_LABEL_OFFSET = 16 // PLOT_LEFT から数値ラベル右端まで
-  const Y_AXIS_LABEL_OFFSET = 80 // PLOT_LEFT から軸ラベル中心まで
+  const Y_AXIS_LABEL_OFFSET = 70 // PLOT_LEFT から軸ラベル中心まで
 
   // ===== 注釈用矢印・ラベル位置（X軸下部） =====
   const X_ANNO_ARROW_TIP_Y = PLOT_BOTTOM + 52
@@ -64,9 +64,9 @@
   // ===== 色定数 =====
   const COL_AXIS = "var(--color-body)"
   const COL_LABEL = "var(--color-body)"
-  const COL_ARROW = "var(--color-body)"
-  const COL_CONE = "#dc2626" // 錐体（赤）
-  const COL_ROD = "#2563eb" // 桿体（青）
+  const COL_ARROW = "var(--canvas-pen-orange)"
+  const COL_CONE = "var(--canvas-pen-pink)" // 錐体（赤）
+  const COL_ROD = "var(--canvas-pen-water)" // 桿体（青）
 
   // ===== 矢の形状 =====
   const ARROW_HEAD_VIEWBOX = 7
@@ -320,11 +320,11 @@
     {/each}
   </g>
 
-  <!-- 横軸ラベル「中心窩からの角度 (°)」 -->
+  <!-- 横軸ラベル「中心窩からの角度 (°)」（横軸の左端に配置） -->
   <text
-    x={(PLOT_LEFT + PLOT_RIGHT) / 2}
+    x={PLOT_LEFT + 28}
     y={PLOT_BOTTOM + X_AXIS_LABEL_OFFSET}
-    text-anchor="middle"
+    text-anchor="start"
     dominant-baseline="central"
     font-size={FONT_SIZE_AXIS_LABEL}
     fill={COL_LABEL}
@@ -393,7 +393,7 @@
       text-anchor="end"
       dominant-baseline="central"
       font-size={FONT_SIZE_FEATURE_LABEL}
-      fill={COL_LABEL}
+      fill={COL_ARROW}
       style="translate: 0.75rem 0;"
     >
       中心窩
@@ -418,7 +418,7 @@
       text-anchor="start"
       dominant-baseline="central"
       font-size={FONT_SIZE_FEATURE_LABEL}
-      fill={COL_LABEL}
+      fill={COL_ARROW}
       style="translate: -0.75rem 0;"
     >
       視神経乳頭
@@ -443,7 +443,7 @@
       text-anchor="middle"
       dominant-baseline="central"
       font-size={FONT_SIZE_FEATURE_LABEL}
-      fill={COL_LABEL}
+      fill={COL_ARROW}
     >
       盲点
     </text>
