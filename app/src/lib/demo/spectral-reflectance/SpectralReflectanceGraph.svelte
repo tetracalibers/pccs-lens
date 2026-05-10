@@ -72,7 +72,7 @@
     { nm: 580, color: "#ffff00" }, // 黄 中心
     { nm: 600, color: "#ff7f00" }, // 橙 中心
     { nm: 620, color: "#ff0000" }, // 赤 入り口（純赤）
-    { nm: 780, color: "#7a0000" }  // 赤 帯端
+    { nm: 780, color: "#7a0000" } // 赤 帯端
   ]
 
   const gradientOffset = (nm: number): number => (nm - NM_MIN) / (NM_MAX - NM_MIN)

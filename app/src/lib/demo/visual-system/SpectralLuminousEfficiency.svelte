@@ -127,7 +127,7 @@
     { nm: 580, color: "#ffff00" }, // 黄 中心
     { nm: 600, color: "#ff7f00" }, // 橙 中心
     { nm: 620, color: "#ff0000" }, // 赤 入り口（純赤）
-    { nm: 780, color: "#7a0000" }  // 赤 帯端
+    { nm: 780, color: "#7a0000" } // 赤 帯端
   ]
   const gradientOffset = (nm: number): number => (nm - NM_MIN) / (NM_MAX - NM_MIN)
 
@@ -431,7 +431,10 @@
     font-weight="bold"
     fill={COL_ARROW}
     style="translate: 0.5em 0;"
-  ><tspan visibility={isAnki ? "hidden" : "visible"}>507</tspan>nm</text>
+  >
+    <tspan visibility={isAnki ? "hidden" : "visible"}>507</tspan>
+    nm
+  </text>
 
   <!-- 錐体の最高感度 (555nm)：X軸下、上向き矢印 + 2行ラベル -->
   <line
@@ -465,7 +468,10 @@
     font-weight="bold"
     fill={COL_ARROW}
     style="translate: -0.5em 0;"
-  ><tspan visibility={isAnki ? "hidden" : "visible"}>555</tspan>nm</text>
+  >
+    <tspan visibility={isAnki ? "hidden" : "visible"}>555</tspan>
+    nm
+  </text>
 
   <!-- 凡例（プロット内右上） -->
   <g>
