@@ -8,17 +8,27 @@
     value: number
   }
 
+  interface GradientStop {
+    nm: number
+    color: string
+  }
+
   // ===== SVG dimensions =====
   const PLOT_WIDTH = 720
   const PLOT_HEIGHT = 360
   const PLOT_LEFT = 110
   const PLOT_TOP = 80
   const MARGIN_RIGHT = 100
-  const MARGIN_BOTTOM = 200
+  const MARGIN_BOTTOM = 215
   const TOTAL_WIDTH = PLOT_LEFT + PLOT_WIDTH + MARGIN_RIGHT
   const TOTAL_HEIGHT = PLOT_TOP + PLOT_HEIGHT + MARGIN_BOTTOM
   const PLOT_RIGHT = PLOT_LEFT + PLOT_WIDTH
   const PLOT_BOTTOM = PLOT_TOP + PLOT_HEIGHT
+
+  // 横軸直下に表示する細いスペクトルグラデーション帯
+  const SPECTRUM_BAND_HEIGHT = 14
+  // 目盛り・数値ラベル・注釈はスペクトル帯の下に配置するため、その下端を基準にする
+  const X_AXIS_VISUAL_BOTTOM = PLOT_BOTTOM + SPECTRUM_BAND_HEIGHT
 
   // ===== 軸の範囲 =====
   const NM_MIN = 380
@@ -41,17 +51,17 @@
   const FONT_SIZE_LEGEND = 24
 
   // ===== ラベル位置オフセット =====
-  const X_TICK_LABEL_OFFSET = 26 // PLOT_BOTTOM から数値ラベル中心まで
-  const X_AXIS_LABEL_OFFSET = 56 // PLOT_BOTTOM から軸ラベル中心まで
+  const X_TICK_LABEL_OFFSET = 26 // X_AXIS_VISUAL_BOTTOM から数値ラベル中心まで
+  const X_AXIS_LABEL_OFFSET = 56 // X_AXIS_VISUAL_BOTTOM から軸ラベル中心まで
   const X_AXIS_LABEL_GAP_FROM_LAST_TICK = 30 // 最後の目盛りラベル(750)から波長ラベル左端までの余白
   const Y_TICK_LABEL_OFFSET = 16 // PLOT_LEFT から数値ラベル右端まで
   const Y_AXIS_LABEL_OFFSET = 80 // PLOT_LEFT から軸ラベル中心まで
 
   // ===== 注釈用矢印・ラベル位置（X軸下部） =====
-  const X_ANNO_ARROW_TIP_Y = PLOT_BOTTOM + 52
-  const X_ANNO_ARROW_TAIL_Y = PLOT_BOTTOM + 92
-  const X_ANNO_LABEL_Y_LINE1 = PLOT_BOTTOM + 122
-  const X_ANNO_LABEL_Y_LINE2 = PLOT_BOTTOM + 162
+  const X_ANNO_ARROW_TIP_Y = X_AXIS_VISUAL_BOTTOM + 52
+  const X_ANNO_ARROW_TAIL_Y = X_AXIS_VISUAL_BOTTOM + 92
+  const X_ANNO_LABEL_Y_LINE1 = X_AXIS_VISUAL_BOTTOM + 122
+  const X_ANNO_LABEL_Y_LINE2 = X_AXIS_VISUAL_BOTTOM + 162
 
   // ===== Stroke widths =====
   const STROKE_WIDTH_AXIS = 2
@@ -102,6 +112,22 @@
   const LEGEND_LABEL_CENTER_X = LEGEND_LABEL_X + LEGEND_TEXT_WIDTH / 2
   const LEGEND_Y_CONE = LEGEND_FRAME_Y + LEGEND_FRAME_PADDING_Y
   const LEGEND_Y_ROD = LEGEND_Y_CONE + LEGEND_ROW_GAP
+
+  // ===== スペクトル帯のグラデーション =====
+  // SpectrumGradient.svelte と同じ波長・色の対応
+  const gradientStops: GradientStop[] = [
+    { nm: 380, color: "#4b0082" },
+    { nm: 430, color: "#0000ff" },
+    { nm: 480, color: "#00bfff" },
+    { nm: 510, color: "#00ff80" },
+    { nm: 550, color: "#00ff00" },
+    { nm: 600, color: "#ffff00" },
+    { nm: 640, color: "#ffb000" },
+    { nm: 670, color: "#ff7f00" },
+    { nm: 700, color: "#ff0000" },
+    { nm: 780, color: "#7a0000" }
+  ]
+  const gradientOffset = (nm: number): number => (nm - NM_MIN) / (NM_MAX - NM_MIN)
 
   // ===== CIE 分光視感効率データ =====
   // CIE 1924 明所視 V(λ) — 錐体ベースの相対視感効率（555nm にピーク = 1.0）
@@ -252,6 +278,11 @@
     <clipPath id="luminous-efficiency-plot-clip">
       <rect x={PLOT_LEFT} y={PLOT_TOP} width={PLOT_WIDTH} height={PLOT_HEIGHT} />
     </clipPath>
+    <linearGradient id="luminous-efficiency-spectrum-gradient" x1="0" y1="0" x2="1" y2="0">
+      {#each gradientStops as stop, i (i)}
+        <stop offset={gradientOffset(stop.nm)} stop-color={stop.color} />
+      {/each}
+    </linearGradient>
   </defs>
 
   <!-- 横軸 -->
@@ -274,10 +305,24 @@
     stroke-width={STROKE_WIDTH_AXIS}
   />
 
-  <!-- 横軸の目盛り -->
+  <!-- 横軸直下のスペクトルグラデーション帯 -->
+  <rect
+    x={PLOT_LEFT}
+    y={PLOT_BOTTOM}
+    width={PLOT_WIDTH}
+    height={SPECTRUM_BAND_HEIGHT}
+    fill="url(#luminous-efficiency-spectrum-gradient)"
+  />
+
+  <!-- 横軸の目盛り（スペクトル帯の下） -->
   <g stroke={COL_AXIS} stroke-width={STROKE_WIDTH_TICK}>
     {#each xTicks as nm (nm)}
-      <line x1={xAt(nm)} y1={PLOT_BOTTOM} x2={xAt(nm)} y2={PLOT_BOTTOM + TICK_LENGTH} />
+      <line
+        x1={xAt(nm)}
+        y1={X_AXIS_VISUAL_BOTTOM}
+        x2={xAt(nm)}
+        y2={X_AXIS_VISUAL_BOTTOM + TICK_LENGTH}
+      />
     {/each}
   </g>
 
@@ -291,7 +336,11 @@
   <!-- 横軸の数値ラベル -->
   <g fill={COL_LABEL} font-size={FONT_SIZE_TICK_LABEL} text-anchor="middle">
     {#each X_LABELED_TICKS as nm (nm)}
-      <text x={xAt(nm)} y={PLOT_BOTTOM + X_TICK_LABEL_OFFSET} dominant-baseline="central">
+      <text
+        x={xAt(nm)}
+        y={X_AXIS_VISUAL_BOTTOM + X_TICK_LABEL_OFFSET}
+        dominant-baseline="central"
+      >
         {nm}
       </text>
     {/each}
@@ -300,7 +349,7 @@
   <!-- 横軸ラベル「波長 (nm)」（最後の目盛りラベル(750)の右に配置） -->
   <text
     x={xAt(750) + X_AXIS_LABEL_GAP_FROM_LAST_TICK}
-    y={PLOT_BOTTOM + X_AXIS_LABEL_OFFSET}
+    y={X_AXIS_VISUAL_BOTTOM + X_AXIS_LABEL_OFFSET}
     text-anchor="start"
     dominant-baseline="central"
     font-size={FONT_SIZE_AXIS_LABEL}
