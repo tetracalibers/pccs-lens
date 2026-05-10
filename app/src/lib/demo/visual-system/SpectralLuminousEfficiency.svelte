@@ -430,9 +430,7 @@
     font-weight="bold"
     fill={COL_ARROW}
     style="translate: 0.5em 0;"
-  >
-    {isAnki ? "nm" : "507nm"}
-  </text>
+  ><tspan visibility={isAnki ? "hidden" : "visible"}>507</tspan>nm</text>
 
   <!-- 錐体の最高感度 (555nm)：X軸下、上向き矢印 + 2行ラベル -->
   <line
@@ -466,9 +464,7 @@
     font-weight="bold"
     fill={COL_ARROW}
     style="translate: -0.5em 0;"
-  >
-    {isAnki ? "nm" : "555nm"}
-  </text>
+  ><tspan visibility={isAnki ? "hidden" : "visible"}>555</tspan>nm</text>
 
   <!-- 凡例（プロット内右上） -->
   <g>
