@@ -34,7 +34,8 @@
   const NM_MIN = 380
   const NM_MAX = 780
   const VALUE_MIN = 0
-  const VALUE_MAX = 1.0
+  // 1.0 ちょうどではなく少し上に余裕を取ることで、ピーク付近で曲線がクリップされるのを防ぐ
+  const VALUE_MAX = 1.05
 
   // ===== 目盛り設定 =====
   const X_TICK_INTERVAL = 50
