@@ -115,18 +115,19 @@
   const LEGEND_Y_ROD = LEGEND_Y_CONE + LEGEND_ROW_GAP
 
   // ===== スペクトル帯のグラデーション =====
-  // SpectrumGradient.svelte と同じ波長・色の対応
+  // 元の色（hex）を保ったまま、波長と色の対応に合わせて配置のみ調整:
+  //   紫 380〜430 / 藍 430〜460 / 青 460〜500 / 緑 500〜570
+  //   黄 570〜590 / 橙 590〜610 / 赤 610〜780
+  // 各色を範囲の中心付近に置き、隣接色との間で自然に遷移させる
   const gradientStops: GradientStop[] = [
-    { nm: 380, color: "#4b0082" },
-    { nm: 430, color: "#0000ff" },
-    { nm: 480, color: "#00bfff" },
-    { nm: 510, color: "#00ff80" },
-    { nm: 550, color: "#00ff00" },
-    { nm: 600, color: "#ffff00" },
-    { nm: 640, color: "#ffb000" },
-    { nm: 670, color: "#ff7f00" },
-    { nm: 700, color: "#ff0000" },
-    { nm: 780, color: "#7a0000" }
+    { nm: 405, color: "#4b0082" }, // 紫 中心
+    { nm: 445, color: "#0000ff" }, // 藍 中心
+    { nm: 480, color: "#00bfff" }, // 青 中心
+    { nm: 535, color: "#00ff00" }, // 緑 中心
+    { nm: 580, color: "#ffff00" }, // 黄 中心
+    { nm: 600, color: "#ff7f00" }, // 橙 中心
+    { nm: 620, color: "#ff0000" }, // 赤 入り口（純赤）
+    { nm: 780, color: "#7a0000" }  // 赤 帯端
   ]
   const gradientOffset = (nm: number): number => (nm - NM_MIN) / (NM_MAX - NM_MIN)
 
