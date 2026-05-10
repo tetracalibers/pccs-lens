@@ -337,11 +337,7 @@
   <!-- 横軸の数値ラベル -->
   <g fill={COL_LABEL} font-size={FONT_SIZE_TICK_LABEL} text-anchor="middle">
     {#each X_LABELED_TICKS as nm (nm)}
-      <text
-        x={xAt(nm)}
-        y={X_AXIS_VISUAL_BOTTOM + X_TICK_LABEL_OFFSET}
-        dominant-baseline="central"
-      >
+      <text x={xAt(nm)} y={X_AXIS_VISUAL_BOTTOM + X_TICK_LABEL_OFFSET} dominant-baseline="central">
         {nm}
       </text>
     {/each}
