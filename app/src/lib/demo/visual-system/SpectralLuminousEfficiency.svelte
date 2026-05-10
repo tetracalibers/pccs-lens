@@ -67,7 +67,7 @@
   // ===== Stroke widths =====
   const STROKE_WIDTH_AXIS = 2
   const STROKE_WIDTH_TICK = 1.5
-  const STROKE_WIDTH_CURVE = 3.5
+  const STROKE_WIDTH_CURVE = 4
   const STROKE_WIDTH_ARROW = 3
 
   // ===== 色定数 =====
@@ -213,7 +213,7 @@
   }
 
   // ===== サンプリング =====
-  const SAMPLE_STEP = 1
+  const SAMPLE_STEP = 10
   const sampleCount = Math.floor((NM_MAX - NM_MIN) / SAMPLE_STEP) + 1
   const sampleWavelengths = Array.from({ length: sampleCount }, (_, i) => NM_MIN + i * SAMPLE_STEP)
 
