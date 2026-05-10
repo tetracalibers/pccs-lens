@@ -296,10 +296,10 @@
     stroke-width={STROKE_WIDTH_AXIS}
   />
 
-  <!-- 縦軸 -->
+  <!-- 縦軸（最上目盛り 1.0 を終点とする） -->
   <line
     x1={PLOT_LEFT}
-    y1={PLOT_TOP}
+    y1={yAt(1.0)}
     x2={PLOT_LEFT}
     y2={PLOT_BOTTOM}
     stroke={COL_AXIS}
