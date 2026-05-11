@@ -10,6 +10,7 @@ draft: true
 <script>
   import SVGWrapper from '$lib/demo/SVGWrapper.svelte'
   import SpectralLuminousEfficiency from "$lib/demo/visual-system/SpectralLuminousEfficiency.svelte"
+  import PhotopicScotopicLuminousEfficiency from "$lib/demo/visual-system/PhotopicScotopicLuminousEfficiency.svelte"
 </script>
 
 [視細胞の種類と分布](/color-theory/photoreceptor-types-and-distribution/)では、各錐体の色に対する感度について学びました。
@@ -106,11 +107,34 @@ draft: true
 
 ## :WithGradeTag[薄暗い場所での見え方]{grades="2"}
 
-- 明るい場所で錐体だけで見ている状態を:Mark[明所視]（:Mark[錐体視]）という
-- 暗い場所で錐体が働かず、桿体だけで見ている状態を:Mark[暗所視]（:Mark[桿体視]）という
-- 薄暗くなると、錐体の働きが弱まっていき、桿体が目覚め始める。この移り変わっていく中間の状態を:Mark[薄明視]といい、一時的に錐体と桿体の両方が働いている状態となる
-- 周囲が薄暗くなると桿体が活性化し始めるため、薄明視の状態では、分光視感効率曲線における最も感度の高い波長のピークが錐体の:Mark[555]nmから桿体の:Mark[507]nmへと移行していく
-- 薄明視の状態を分光視感効率曲線で考えると、最も感度が高い波長のピークが移動することで、:Mark[長]波長の領域の感度が下がっていき、:Mark[短]波長の感度は上がっていく
+明るい場所では錐体が働きますが、暗い場所では桿体が働きます。
+
+- :Mark[明所視]（:Mark[錐体視]）：明るい場所で錐体だけで見ている状態
+- :Mark[暗所視]（:Mark[桿体視]）：暗い場所で錐体が働かず、桿体だけで見ている状態
+
+では、薄暗い場所では、どちらがどのように働くのでしょうか？
+
+周囲が徐々に薄暗くなると、:Mark[錐体]の働きが弱まっていき、:Mark[桿体]が目覚め始めます。
+この移り変わっていく中間の状態を:Mark[薄明視]といい、一時的に錐体と桿体の両方が働いている状態となります。
+
+### 薄明視で起こる現象
+
+錐体だけが働いている:Mark[明所視]と、桿体だけが働いている:Mark[暗所視]では、最も明るく感じられる波長のピークが異なります。
+
+- 明所視：錐体が最高感度となる:Mark[555]nmの波長の光が最も明るく感じられる
+- 暗所視：桿体が最高感度となる:Mark[507]nmの波長の光が最も明るく感じられる
+
+<SVGWrapper maxW={500}>
+  <PhotopicScotopicLuminousEfficiency />
+</SVGWrapper>
+
+薄暗くなるにつれて、錐体の働きが弱まっていき、桿体の働きが強まっていくため、最も明るく感じられる波長のピークが、錐体の:Mark[555]nmから桿体の:Mark[507]nmへと移行していきます。
+この移行は:Mark[プルキンエシフト]と呼ばれ、色の見え方にも影響を及ぼします。
+
+プルキンエシフトでは、明所視ではカバーできていた:Mark[長]波長域の感度が、薄明視になるとだんだん下がっていき、暗所視でカバーできている:Mark[短]波長域の感度が相対的に上がっていきます。
+その結果、薄暗い場所では、長波長の:Mark[赤]・:Mark[橙]・:Mark[黄]が:Mark[暗く]見え、低波長の:Mark[青]が:Mark[明るく]見えるようになります。これを:Mark[プルキンエ現象]といいます。
+
+TODO：プルキンエ現象をSVG Filterで簡易再現
 
 ## :WithGradeTag[色に対する順応]{grades="2"}
 
