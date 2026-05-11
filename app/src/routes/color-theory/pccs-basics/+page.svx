@@ -1,6 +1,6 @@
 ---
 layout: guide-content
-title: PCCSの基本
+title: PCCSのトーン
 
 grades: ["3", "uc"]
 basic: true
