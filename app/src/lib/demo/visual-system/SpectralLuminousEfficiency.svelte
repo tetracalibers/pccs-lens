@@ -433,7 +433,7 @@
     style="translate: 0.5em 0;"
   >
     <tspan visibility={isAnki ? "hidden" : "visible"}>507</tspan>
-    nm
+    <tspan dx="-0.4em">nm</tspan>
   </text>
 
   <!-- 錐体の最高感度 (555nm)：X軸下、上向き矢印 + 2行ラベル -->
@@ -470,7 +470,7 @@
     style="translate: -0.5em 0;"
   >
     <tspan visibility={isAnki ? "hidden" : "visible"}>555</tspan>
-    nm
+    <tspan dx="-0.4em">nm</tspan>
   </text>
 
   <!-- 凡例（プロット内右上） -->
