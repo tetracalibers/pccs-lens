@@ -26,7 +26,7 @@
       gradient: "linear-gradient(135deg, #ff6b6b, #ffd93d)",
       glow: "#ff6b6b",
       title: "色の理論",
-      desc: "色彩検定3級・2級・1級・UC級に対応した色彩学の解説",
+      desc: "穴埋め問題集としても使える色彩学の解説",
       grades: ["3", "2", "1", "uc"]
     },
     {
