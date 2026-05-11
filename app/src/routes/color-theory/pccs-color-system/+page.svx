@@ -16,22 +16,31 @@ draft: true
 
 ## :WithGradeTag[PCCSとは]{grades="3"}
 
-::ComingSoon
+- PCCSは色彩調和を目的とした色彩体系で、配色を考えるのに適している
 
 ## :WithGradeTag[PCCSの色相環]{grades="3"}
 
+- PCCSでは、色相のことを:Mark[Hue]という
+- PCCSの色相環は、色相環を示す色として:Mark[純色]が選ばれ、:Mark[24]色相で構成されている
+- 24色相を決めるために、最初に:Mark[心理四原色]といわれる:Mark[赤]・:Mark[黄]・:Mark[緑]・:Mark[青]の色相を色相環上に置く
+- :Mark[心理四原色]とは、赤らしい赤、青らしい青、…のこと。赤なら赤の色味しか感じられない、最も赤らしい赤を指す
+- 心理四元色の対向位置（向かい側）に、:Mark[心理補色]に近い色相を置く
+- ある色をじっと見つめて、その色を取り去ったときに見える残像の色を:Mark[心理補色]という
+- PCCSの色相は、:Mark[偶数]番号が主役となる
+- PCCSの色相環において、明度は、:Mark[黄]（:Mark[8：Y]）の色相で最も高く、:Mark[青紫]（:Mark[20：V]）の色相に近づくほど低くなる
+
 ::::CardGrid{lastWide}
-:::TermCard
+:::TermCard{title="心理四原色"}
 <SVGWrapper maxW={380}>
   <PCCSPrimaryHueWheel />
 </SVGWrapper>
 :::
-:::TermCard
+:::TermCard{title="心理四原色と心理補色"}
 <SVGWrapper maxW={380}>
   <PCCSPrimaryComplementHueWheel />
 </SVGWrapper>
 :::
-:::TermCard
+:::TermCard{title="偶数番号のみの色相環"}
 <SVGWrapper maxW={380}>
   <PCCSEvenHueWheel />
 </SVGWrapper>
@@ -42,17 +51,46 @@ draft: true
   <PCCSHueWheel />
 </SVGWrapper>
 
-## :WithGradeTag[PCCSの明度と彩度]{grades="3"}
+## :WithGradeTag[色相の表示方法]{grades="3"}
 
-::ComingSoon
+- PCCSの24色相は、:Mark[色相記号]で表すことができる
+- 各色相には、:Mark[紫みの赤]（:Mark[puplish red]）から時計まわりの順に1から24の:Mark[色相番号]がつけられている
+- ある色の心理補色の色相番号は、その色の色相番号に:Mark[12]を足すことで求められる。24色相のうち、心理補色は反対側にあるため、24の半分である12だけ色相番号が進むことになる
+- 色相記号では、色相番号の後に、色相の略記号を大文字で、色みの修飾語（〜ishの部分）を小文字で表したものをつけて表示する
+
+:::Example
+purpulish red（紫みの赤）を色相記号で表すと、:Mark[1：pR]となる
+:::
+
+## :WithGradeTag[PCCSの明度]{grades="3"}
+
+- PCCSでは、明度のことを:Mark[Lightness]という
+- PCCSにおける明度は、白の明度を:Mark[9.5]、黒の明度を:Mark[1.5]として、その間に:Mark[0.5]刻みの:Mark[15]色の灰色を置くことで表示する
+- 低明度と呼ばれるのは、:Mark[1.5]〜:Mark[4.0]の範囲である
+- 中明度と呼ばれるのは、:Mark[4.5]〜:Mark[6.5]の範囲である
+- 高明度と呼ばれるのは、:Mark[7.0]〜:Mark[9.5]の範囲である
+
+## :WithGradeTag[PCCSの彩度]{grades="3"}
+
+- PCCSでは、彩度のことを:Mark[Saturation]という
+- PCCSにおける彩度は、最も鮮やかな色を最も高い彩度の段階:Mark[9s]とし、同じ明度の無彩色を最も彩度の低い段階を:Mark[0s]として、その間を変化が等しく見えるように分割することで表示する
+
+:::Note
+小文字sはSaturationの頭文字を表す
+:::
+
+- 低彩度と呼ばれるのは、:Mark[1s]〜:Mark[3s]の範囲である
+- 中彩度と呼ばれるのは、:Mark[4s]〜:Mark[6s]の範囲である
+- 高彩度と呼ばれるのは、:Mark[7s]〜:Mark[9s]の範囲である
 
 ## :WithGradeTag[色立体と等色相面]{grades="3"}
 
-::ComingSoon
+- PCCSの色立体を中心軸のところで縦に切って等色相面を作ると、中央には縦に:Mark[無彩色]が並び、左右の色相が:Mark[補色]の関係になっている
 
 ## :WithGradeTag[色の表示方法]{grades="3"}
 
-::ComingSoon
+- PCCSでは、明度と彩度を合わせて:Mark[トーン]（:Mark[色調]、色の:Mark[調子]）と呼ぶ
+- PCCSは、色相であるHueと、明度と彩度をまとめたToneの二属性で色を表示する:Mark[ヒュートーンシステム]が最大の特徴である
 
 ## :WithGradeTag[PCCSの色票集]{grades="3"}
 
