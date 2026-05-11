@@ -1,0 +1,16 @@
+---
+layout: guide-content
+title: 見え方の安定性
+
+grades: ["2", "1"]
+
+draft: true
+---
+
+## :WithGradeTag[色の恒常性]{grades="2"}
+
+- 自然光の下で白く見える紙は、白熱電球の下で見ると少し黄みを帯びて見えるが、それでも白い紙だとわかる。このように、周囲の照明が変化しても、対象を同じ色として認識できることを色の:Mark[恒常性]（:Mark[色彩恒常]）という
+
+## :WithGradeTag[さまざまな恒常性]{grades="1"}
+
+::ComingSoon

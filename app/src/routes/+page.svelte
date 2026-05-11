@@ -105,7 +105,7 @@
         <span class="h1-lens">Prism</span>
       </h1>
       <p class="tagline">見て・触って学ぶ 色彩の総合サイト</p>
-      <p class="subtitle">色のしくみを解き、新たな視点へ</p>
+      <p class="subtitle">TOWARD NEW WAYS OF SEEING</p>
       <div class="hue-strip">
         {#each ["#e03131", "#f76707", "#f59f00", "#94d82d", "#2f9e44", "#0c8599", "#1971c2", "#3b5bdb", "#6741d9", "#9c36b5", "#c2255c", "#e84393"] as c (c)}
           <div class="hue-seg" style="background:{c}"></div>
@@ -281,7 +281,7 @@
     font-weight: 600;
     color: var(--color-heading);
     margin: 0;
-    padding-block-end: 0.5rem;
+    margin-block-end: 1rem;
   }
 
   .subtitle {
