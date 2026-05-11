@@ -20,21 +20,23 @@ grades: ["3"]
 主観色が起こるしくみは、詳しく解明されていません。
 静止画による主観色は、図を見る際の微細な:Mark[眼球運動]が要因の一つと考えられています。
 
-### ラッキーシュ＆モス図形
-
+::::CardGrid
+:::TermCard{title="ラッキーシュ＆モス図形"}
 斜めの縞模様に対して:Mark[直角]方向に、薄いパステル調の:Mark[オレンジ]や:Mark[青緑]の色の:Mark[流れ]が感じられます。
 
-<SVGWrapper maxW={400}>
+<SVGWrapper noPadding>
   <LuckieshMossFigure />
 </SVGWrapper>
+:::
 
-### スキナー図形
-
+:::TermCard{title="スキナー図形"}
 黒い円の中に配置された小さな白い円それぞれに、薄い:Mark[赤]・:Mark[黄]・:Mark[緑]・:Mark[青]などの色が感じられます。
 
-<SVGWrapper maxW={400}>
+<SVGWrapper noPadding>
   <SkinnerFigure />
 </SVGWrapper>
+:::
+::::
 
 ## :WithGradeTag[動きを伴う主観色]{grades="3"}
 
