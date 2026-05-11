@@ -439,7 +439,7 @@
     fill={COL_SCOTOPIC}
     style="translate: 0.5em 0;"
   >
-    暗所視のピーク
+    <tspan visibility={isAnki ? "hidden" : "visible"}>暗所視</tspan><tspan>のピーク</tspan>
   </text>
   <text
     x={xAt(SCOTOPIC_PEAK_NM)}
@@ -476,7 +476,7 @@
     fill={COL_PHOTOPIC}
     style="translate: -0.5em 0;"
   >
-    明所視のピーク
+    <tspan visibility={isAnki ? "hidden" : "visible"}>明所視</tspan><tspan>のピーク</tspan>
   </text>
   <text
     x={xAt(PHOTOPIC_PEAK_NM)}

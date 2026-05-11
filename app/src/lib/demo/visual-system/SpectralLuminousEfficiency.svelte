@@ -73,7 +73,6 @@
   // ===== 色定数 =====
   const COL_AXIS = "var(--color-body)"
   const COL_LABEL = "var(--color-body)"
-  const COL_ARROW = "var(--canvas-pen-orange)"
   const COL_CONE = PCCS_HEX_MAP.get("lt2")! // 錐体（赤）
   const COL_ROD = PCCS_HEX_MAP.get("lt18")! // 桿体（青）
 
@@ -258,7 +257,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {TOTAL_WIDTH} {TOTAL_HEIGHT}">
   <defs>
     <marker
-      id="luminous-efficiency-arrow"
+      id="luminous-efficiency-arrow-cone"
       viewBox="0 0 {ARROW_HEAD_VIEWBOX} {ARROW_HEAD_VIEWBOX}"
       refX={ARROW_HEAD_VIEWBOX / 2}
       refY={ARROW_HEAD_VIEWBOX / 2}
@@ -270,7 +269,27 @@
       <polyline
         points="0,3.5 3.5,1.75 0,0"
         fill="none"
-        stroke={COL_ARROW}
+        stroke={COL_CONE}
+        stroke-width={ARROW_HEAD_STROKE}
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        transform="translate(1.1667 1.75)"
+      />
+    </marker>
+    <marker
+      id="luminous-efficiency-arrow-rod"
+      viewBox="0 0 {ARROW_HEAD_VIEWBOX} {ARROW_HEAD_VIEWBOX}"
+      refX={ARROW_HEAD_VIEWBOX / 2}
+      refY={ARROW_HEAD_VIEWBOX / 2}
+      markerWidth={ARROW_HEAD_SIZE}
+      markerHeight={ARROW_HEAD_SIZE}
+      markerUnits="userSpaceOnUse"
+      orient="auto-start-reverse"
+    >
+      <polyline
+        points="0,3.5 3.5,1.75 0,0"
+        fill="none"
+        stroke={COL_ROD}
         stroke-width={ARROW_HEAD_STROKE}
         stroke-linecap="round"
         stroke-linejoin="round"
@@ -405,10 +424,10 @@
     y1={X_ANNO_ARROW_TAIL_Y}
     x2={xAt(ROD_PEAK_NM)}
     y2={X_ANNO_ARROW_TIP_Y}
-    stroke={COL_ARROW}
+    stroke={COL_ROD}
     stroke-width={STROKE_WIDTH_ARROW}
     stroke-linecap="round"
-    marker-end="url(#luminous-efficiency-arrow)"
+    marker-end="url(#luminous-efficiency-arrow-rod)"
   />
   <text
     x={xAt(ROD_PEAK_NM)}
@@ -417,10 +436,10 @@
     dominant-baseline="central"
     font-size={FONT_SIZE_FEATURE_LABEL}
     font-weight="bold"
-    fill={COL_ARROW}
+    fill={COL_ROD}
     style="translate: 0.5em 0;"
   >
-    桿体の最高感度
+    <tspan visibility={isAnki ? "hidden" : "visible"}>桿体</tspan><tspan>の最高感度</tspan>
   </text>
   <text
     x={xAt(ROD_PEAK_NM)}
@@ -429,7 +448,7 @@
     dominant-baseline="central"
     font-size={FONT_SIZE_FEATURE_LABEL}
     font-weight="bold"
-    fill={COL_ARROW}
+    fill={COL_ROD}
     style="translate: 0.5em 0;"
   >
     <tspan visibility={isAnki ? "hidden" : "visible"}>507</tspan>
@@ -442,10 +461,10 @@
     y1={X_ANNO_ARROW_TAIL_Y}
     x2={xAt(CONE_PEAK_NM)}
     y2={X_ANNO_ARROW_TIP_Y}
-    stroke={COL_ARROW}
+    stroke={COL_CONE}
     stroke-width={STROKE_WIDTH_ARROW}
     stroke-linecap="round"
-    marker-end="url(#luminous-efficiency-arrow)"
+    marker-end="url(#luminous-efficiency-arrow-cone)"
   />
   <text
     x={xAt(CONE_PEAK_NM)}
@@ -454,10 +473,10 @@
     dominant-baseline="central"
     font-size={FONT_SIZE_FEATURE_LABEL}
     font-weight="bold"
-    fill={COL_ARROW}
+    fill={COL_CONE}
     style="translate: -0.5em 0;"
   >
-    錐体の最高感度
+    <tspan visibility={isAnki ? "hidden" : "visible"}>錐体</tspan><tspan>の最高感度</tspan>
   </text>
   <text
     x={xAt(CONE_PEAK_NM)}
@@ -466,7 +485,7 @@
     dominant-baseline="central"
     font-size={FONT_SIZE_FEATURE_LABEL}
     font-weight="bold"
-    fill={COL_ARROW}
+    fill={COL_CONE}
     style="translate: -0.5em 0;"
   >
     <tspan visibility={isAnki ? "hidden" : "visible"}>555</tspan>
