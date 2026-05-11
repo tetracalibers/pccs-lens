@@ -5,12 +5,18 @@
     children: Snippet
     maxW?: number
     style?: string
+    noPadding?: boolean
   }
 
-  let { children, maxW, style }: Props = $props()
+  let { children, maxW, style, noPadding = false }: Props = $props()
 </script>
 
-<div class="svg-wrapper" style:--_max-w={maxW ? `${maxW}px` : "none"} {style}>
+<div
+  class="svg-wrapper"
+  class:--_no-padding={noPadding}
+  style:--_max-w={maxW ? `${maxW}px` : "none"}
+  {style}
+>
   {@render children()}
 </div>
 
@@ -28,5 +34,8 @@
     box-sizing: border-box;
     max-width: var(--_max-w);
     margin-inline: auto;
+  }
+  .svg-wrapper.--_no-padding :global(> svg) {
+    padding-block: 0;
   }
 </style>
