@@ -49,6 +49,7 @@
   import type { GuideFrontmatter } from "$lib/meta/guide-pages"
   import Breadcrumb from "$lib/components/Breadcrumb.svelte"
   import { resolve } from "$app/paths"
+  import { page } from "$app/state"
   import { sortGrades } from "$lib/meta/grade"
   import DraftTag from "$lib/components/DraftTag.svelte"
   import { ankiMode } from "$lib/state/anki.svelte"
@@ -61,6 +62,14 @@
 
   const pageTitle = $derived(title ? `${title} - Color Prism` : "Color Prism")
   const gradeList = $derived(sortGrades(grades))
+
+  const parentCrumb = $derived.by(() => {
+    const base = page.url.pathname.split("/")[1]
+    if (base === "color-fields") {
+      return { label: "色の活用分野", href: resolve("/color-fields") }
+    }
+    return { label: "色の理論", href: resolve("/color-theory") }
+  })
 </script>
 
 <svelte:head>
@@ -68,10 +77,7 @@
 </svelte:head>
 
 <main>
-  <Breadcrumb
-    category="contents"
-    crumbs={[{ label: "色の理論", href: resolve("/color-theory") }, { label: title }]}
-  />
+  <Breadcrumb category="contents" crumbs={[parentCrumb, { label: title }]} />
   <Heading1 icon="solar:pen-new-round-broken">{title}</Heading1>
   <div class="page-meta">
     {#if grades.length > 0 || basic || draft}
