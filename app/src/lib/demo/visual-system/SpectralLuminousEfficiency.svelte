@@ -439,7 +439,8 @@
     fill={COL_ROD}
     style="translate: 0.5em 0;"
   >
-    <tspan visibility={isAnki ? "hidden" : "visible"}>桿体</tspan><tspan>の最高感度</tspan>
+    <tspan visibility={isAnki ? "hidden" : "visible"}>桿体</tspan>
+    <tspan>の最高感度</tspan>
   </text>
   <text
     x={xAt(ROD_PEAK_NM)}
@@ -476,7 +477,8 @@
     fill={COL_CONE}
     style="translate: -0.5em 0;"
   >
-    <tspan visibility={isAnki ? "hidden" : "visible"}>錐体</tspan><tspan>の最高感度</tspan>
+    <tspan visibility={isAnki ? "hidden" : "visible"}>錐体</tspan>
+    <tspan>の最高感度</tspan>
   </text>
   <text
     x={xAt(CONE_PEAK_NM)}

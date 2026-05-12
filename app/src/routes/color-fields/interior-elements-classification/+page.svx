@@ -1,0 +1,13 @@
+---
+layout: guide-content
+title: インテリアエレメントの分類
+
+grades: ["2"]
+
+draft: true
+---
+
+## :WithGradeTag[TODO]{grades="2"}
+
+- インテリアエレメントは:Mark[面積]に応じて3つに分類される
+- 色を決めるときは面積の大きい順、すなわち:Mark[ベースカラー]、:Mark[メインカラー]、:Mark[アクセントカラー]の順に考えるとよい

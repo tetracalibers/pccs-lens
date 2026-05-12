@@ -12,13 +12,13 @@ title: 色の活用分野
 
 ### ビジュアルデザイン
 
-- :PageDraft{title="ビジュアルデザインと色彩" grades="2"}
-- :PageDraft{title="メディアデザインの概念" grades="2"}
+- :PageLink{slug="visual-design-and-color"}
+- :PageLink{slug="media-design-concepts"}
 
 ### コンピュータによる色彩設計
 
 - :PageDraft{title="カラーマネジメント" grades="2"}
-- :PageDraft{title="デジタル画像の仕組み" grades="2"}
+- :PageLink{slug="digital-image-basics"}
 
 ### 色のユニバーサルデザイン
 
@@ -74,34 +74,28 @@ title: 色の活用分野
 ファッションは、時代を象徴するかのように急速に移り変わっています。
 その中で色彩学とは異なる解釈で定着した用語もあり、ファッションにおける色彩の理解は、ファッションの歴史や文化、トレンドなどの知識に裏付けされるものです。
 
-### コーディネートの基本
+### カラーコーディネート
 
-- :PageDraft{title="スタイリングの構成要素" grades="3"}
-- :PageDraft{title="ファッション色彩の考え方" grades="3"}
+- :PageLink{slug="fashion-color-concepts"}
+- :PageDraft{title="PCCSで見るカラーコーディネート" grades="3"}
+- :PageDraft{title="ファッションの配色用語" grades="2"}
 
 ### トレンドとスタイル分類
 
-- :PageDraft{title="ファッションカラー" grades="2"}
-- :PageDraft{title="ファッショントレンド" grades="2"}
-- :PageDraft{title="国別スタイル" grades="2"}
-- :PageDraft{title="ファッション史とスタイル" grades="2"}
-- :PageDraft{title="マーケット分類とスタイル" grades="2"}
+- :PageLink{slug="fashion-color"}
+- :PageLink{slug="fashion-trend"}
+- :PageLink{slug="fashion-style-categories"}
 - :PageDraft{title="ファッションイメージ" grades="2"}
 - :PageDraft{title="ファッションカラーの変遷" grades="1"}
-
-### ファッションの配色
-
-- :PageDraft{title="PCCSで見るカラーコーディネート" grades="3"}
-- :PageDraft{title="ファッションの配色用語" grades="2"}
 
 ### 素材とテキスタイル
 
 - :PageDraft{title="繊維の種類と発色性" grades="1"}
 - :PageDraft{title="織物と編物" grades="1"}
 
-### カラーコーディネーターの役割
+### ファッションビジネス
 
-- :PageDraft{title="シーズンに応じた役割" grades="1"}
+- :PageDraft{title="カラーコーディネーターの役割" grades="1"}
 - :PageDraft{title="カラー情報の収集" grades="1"}
 - :PageDraft{title="カラー情報の分析" grades="1"}
 - :PageDraft{title="シーズンテーマカラーの決定" grades="1"}
@@ -113,19 +107,17 @@ title: 色の活用分野
 
 ## インテリア
 
-インテリアデザインは、ソファやテーブルといったアイテムだけでなく、屋内空間全体の演出を考える分野です。くつろぎやすいリビング、清潔感のあるキッチン、…求められる雰囲気はその場所によって異なり、空間の雰囲気は色彩によって大きくコントロールされます。
-インテリアの色彩は、機能や文化、なによりもそこに住む「人」を中心に考えていきます。
+インテリアデザインは、ソファやテーブルといった家具だけでなく、屋内空間全体の演出を考える分野です。くつろぎやすいリビング、清潔感のあるキッチンなど、求められる雰囲気はその場所によって異なります。機能や文化、なによりもそこに住む「人」を中心に色彩を考えていきます。
 
 ### インテリアデザイン
 
-- :PageDraft{title="インテリアデザインの基本" grades="3"}
-- :PageDraft{title="インテリア概念の成立" grades="2"}
-- :PageDraft{title="インテリア色彩の考え方" grades="2"}
+- :PageLink{slug="interior-design-basics"}
+- :PageLink{slug="interior-concept-history"}
 - :PageDraft{title="インテリアと心理効果・視覚効果" grades="3"}
 
 ### インテリアエレメント
 
-- :PageDraft{title="インテリアエレメントの分類" grades="2"}
+- :PageLink{slug="interior-elements-classification"}
 - :PageDraft{title="インテリアエレメントの配色" grades="2,3"}
 
 ### 空間のゾーニング
@@ -144,9 +136,8 @@ title: 色の活用分野
 
 インテリア（建物の内観）からさらに規模を広げて、建物の外観やそれを取り巻く街並みも見てみましょう。その地域の文化や、気候風土によって育まれてきた自然に合わせて、街の景色は設計されています。
 
-- :PageDraft{title="景観色彩の考え方" grades="2"}
-- :PageDraft{title="景観色彩設計の配慮事項" grades="2"}
-- :PageDraft{title="住宅の色彩設計プロセス" grades="2"}
+- :PageLink{slug="landscape-color-approach"}
+- :PageLink{slug="housing-color-design-process"}
 - :PageDraft{title="景観法" grades="1"}
 - :PageDraft{title="景観計画" grades="1"}
 - :PageDraft{title="景観計画における色彩基準" grades="1"}
