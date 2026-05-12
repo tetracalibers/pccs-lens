@@ -74,6 +74,9 @@
 
 <svelte:head>
   <title>{pageTitle}</title>
+  {#if draft}
+    <meta name="robots" content="noindex" />
+  {/if}
 </svelte:head>
 
 <main>
