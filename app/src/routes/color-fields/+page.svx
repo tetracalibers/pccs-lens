@@ -137,7 +137,6 @@ title: 色の活用分野
 インテリア（建物の内観）からさらに規模を広げて、建物の外観やそれを取り巻く街並みも見てみましょう。その地域の文化や、気候風土によって育まれてきた自然に合わせて、街の景色は設計されています。
 
 - :PageLink{slug="landscape-color-approach"}
-- :PageDraft{title="景観色彩設計の配慮事項" grades="2"}
 - :PageDraft{title="住宅の色彩設計プロセス" grades="2"}
 - :PageDraft{title="景観法" grades="1"}
 - :PageDraft{title="景観計画" grades="1"}
