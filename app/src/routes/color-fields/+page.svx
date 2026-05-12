@@ -117,7 +117,7 @@ title: 色の活用分野
 
 ### インテリアエレメント
 
-- :PageDraft{title="インテリアエレメントの分類" grades="2"}
+- :PageLink{slug="interior-elements-classification"}
 - :PageDraft{title="インテリアエレメントの配色" grades="2,3"}
 
 ### 空間のゾーニング
