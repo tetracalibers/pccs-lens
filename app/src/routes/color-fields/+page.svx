@@ -18,7 +18,7 @@ title: 色の活用分野
 ### コンピュータによる色彩設計
 
 - :PageDraft{title="カラーマネジメント" grades="2"}
-- :PageDraft{title="デジタル画像の仕組み" grades="2"}
+- :PageLink{slug="digital-image-basics"}
 
 ### 色のユニバーサルデザイン
 
