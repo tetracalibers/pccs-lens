@@ -76,7 +76,7 @@ title: 色の活用分野
 
 ### カラーコーディネート
 
-- :PageDraft{title="ファッション色彩の考え方" grades="3"}
+- :PageLink{slug="fashion-color-concepts"}
 - :PageDraft{title="PCCSで見るカラーコーディネート" grades="3"}
 - :PageDraft{title="ファッションの配色用語" grades="2"}
 
