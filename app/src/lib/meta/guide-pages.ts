@@ -20,9 +20,7 @@ const modules = import.meta.glob(
 /** key: `${base}/${slug}`（例: "color-theory/pccs"、"color-fields/fashion-color-concepts"）, value: フロントマター */
 export const guidePages: Map<string, GuideFrontmatter> = new Map(
   Object.entries(modules).map(([filePath, mod]) => {
-    const key = filePath
-      .replace(/^\/src\/routes\//, "")
-      .replace(/\/\+page\.svx$/, "")
+    const key = filePath.replace(/^\/src\/routes\//, "").replace(/\/\+page\.svx$/, "")
     const meta = mod.metadata
     return [
       key,
