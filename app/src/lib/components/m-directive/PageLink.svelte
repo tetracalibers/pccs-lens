@@ -6,17 +6,24 @@
   import DraftPageTitle from "./DraftPageTitle.svelte"
   import { isProduction } from "$lib/env"
   import DraftTag from "../DraftTag.svelte"
+  import { page } from "$app/state"
 
-  let { slug }: { slug: string } = $props()
+  interface Props {
+    slug: string
+  }
 
-  const meta = $derived(guidePages.get(slug))
+  let { slug }: Props = $props()
+
+  const base = $derived(page.url.pathname.split("/")[1])
+
+  const meta = $derived(guidePages.get(`${base}/${slug}`))
   const { grades, basic, title, draft } = $derived.by(() => {
     if (meta) return meta
-    throw new Error(`PageLink: No metadata found for slug "${slug}"`)
+    throw new Error(`PageLink: No metadata found for slug "${base}/${slug}"`)
   })
 
   // @ts-expect-error
-  let href = $derived(resolve(`/color-theory/${slug}`))
+  let href = $derived(resolve(`/${base}/${slug}`))
 
   const gradeColors = {
     "3": "#c4b5fd",

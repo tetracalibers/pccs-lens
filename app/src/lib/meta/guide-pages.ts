@@ -5,20 +5,27 @@ export type GuideFrontmatter = {
   draft?: boolean
 }
 
+export type GuideBase = "color-theory" | "color-fields"
+
 const modules = import.meta.glob(
-  ["/src/routes/color-theory/**/+page.svx", "!/src/routes/color-theory/+page.svx"],
+  [
+    "/src/routes/color-theory/**/+page.svx",
+    "!/src/routes/color-theory/+page.svx",
+    "/src/routes/color-fields/**/+page.svx",
+    "!/src/routes/color-fields/+page.svx"
+  ],
   { eager: true }
 ) as Record<string, { metadata: GuideFrontmatter }>
 
-/** key: スラッグ（例: "pccs"、"pccs/sub"）, value: フロントマター */
+/** key: `${base}/${slug}`（例: "color-theory/pccs"、"color-fields/fashion-color-concepts"）, value: フロントマター */
 export const guidePages: Map<string, GuideFrontmatter> = new Map(
   Object.entries(modules).map(([filePath, mod]) => {
-    const slug = filePath
-      .replace(/^\/src\/routes\/color-theory\//, "")
+    const key = filePath
+      .replace(/^\/src\/routes\//, "")
       .replace(/\/\+page\.svx$/, "")
     const meta = mod.metadata
     return [
-      slug,
+      key,
       {
         title: meta.title,
         grades: meta.grades ?? [],
