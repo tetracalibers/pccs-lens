@@ -114,7 +114,6 @@ title: 色の活用分野
 
 - :PageLink{slug="interior-design-basics"}
 - :PageLink{slug="interior-concept-history"}
-- :PageDraft{title="インテリア色彩の考え方" grades="2"}
 - :PageDraft{title="インテリアと心理効果・視覚効果" grades="3"}
 
 ### インテリアエレメント
