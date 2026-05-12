@@ -84,9 +84,7 @@ title: 色の活用分野
 
 - :PageLink{slug="fashion-color"}
 - :PageLink{slug="fashion-trend"}
-- :PageLink{slug="fashion-country-styles"}
-- :PageDraft{title="ファッション史とスタイル" grades="2"}
-- :PageDraft{title="マーケット分類とスタイル" grades="2"}
+- :PageLink{slug="fashion-style-categories"}
 - :PageDraft{title="ファッションイメージ" grades="2"}
 - :PageDraft{title="ファッションカラーの変遷" grades="1"}
 
