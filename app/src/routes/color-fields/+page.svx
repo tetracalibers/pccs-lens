@@ -74,10 +74,11 @@ title: 色の活用分野
 ファッションは、時代を象徴するかのように急速に移り変わっています。
 その中で色彩学とは異なる解釈で定着した用語もあり、ファッションにおける色彩の理解は、ファッションの歴史や文化、トレンドなどの知識に裏付けされるものです。
 
-### コーディネートの基本
+### カラーコーディネート
 
-- :PageDraft{title="スタイリングの構成要素" grades="3"}
 - :PageDraft{title="ファッション色彩の考え方" grades="3"}
+- :PageDraft{title="PCCSで見るカラーコーディネート" grades="3"}
+- :PageDraft{title="ファッションの配色用語" grades="2"}
 
 ### トレンドとスタイル分類
 
@@ -88,11 +89,6 @@ title: 色の活用分野
 - :PageDraft{title="マーケット分類とスタイル" grades="2"}
 - :PageDraft{title="ファッションイメージ" grades="2"}
 - :PageDraft{title="ファッションカラーの変遷" grades="1"}
-
-### ファッションの配色
-
-- :PageDraft{title="PCCSで見るカラーコーディネート" grades="3"}
-- :PageDraft{title="ファッションの配色用語" grades="2"}
 
 ### 素材とテキスタイル
 
