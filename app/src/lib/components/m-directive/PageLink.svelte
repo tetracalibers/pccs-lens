@@ -1,6 +1,6 @@
 <script lang="ts">
   import GradeTag from "./GradeTag.svelte"
-  import { resolve } from "$app/paths"
+  import { base, resolve } from "$app/paths"
   import { guidePages } from "$lib/meta/guide-pages"
   import { gradeArray2CSV, sortGrades } from "$lib/meta/grade"
   import DraftPageTitle from "./DraftPageTitle.svelte"
@@ -14,16 +14,16 @@
 
   let { slug }: Props = $props()
 
-  const base = $derived(page.url.pathname.split("/")[1])
+  const baseSegment = $derived(page.url.pathname.slice(base.length).split("/")[1])
 
-  const meta = $derived(guidePages.get(`${base}/${slug}`))
+  const meta = $derived(guidePages.get(`${baseSegment}/${slug}`))
   const { grades, basic, title, draft } = $derived.by(() => {
     if (meta) return meta
-    throw new Error(`PageLink: No metadata found for slug "${base}/${slug}"`)
+    throw new Error(`PageLink: No metadata found for slug "${baseSegment}/${slug}"`)
   })
 
   // @ts-expect-error
-  let href = $derived(resolve(`/${base}/${slug}`))
+  let href = $derived(resolve(`/${baseSegment}/${slug}`))
 
   const gradeColors = {
     "3": "#c4b5fd",
