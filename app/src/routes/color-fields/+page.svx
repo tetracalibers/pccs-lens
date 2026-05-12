@@ -95,9 +95,9 @@ title: 色の活用分野
 - :PageDraft{title="繊維の種類と発色性" grades="1"}
 - :PageDraft{title="織物と編物" grades="1"}
 
-### カラーコーディネーターの役割
+### ファッションビジネス
 
-- :PageDraft{title="シーズンに応じた役割" grades="1"}
+- :PageDraft{title="カラーコーディネーターの役割" grades="1"}
 - :PageDraft{title="カラー情報の収集" grades="1"}
 - :PageDraft{title="カラー情報の分析" grades="1"}
 - :PageDraft{title="シーズンテーマカラーの決定" grades="1"}
