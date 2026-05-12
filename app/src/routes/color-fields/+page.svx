@@ -13,7 +13,7 @@ title: 色の活用分野
 ### ビジュアルデザイン
 
 - :PageDraft{title="ビジュアルデザインと色彩" grades="2"}
-- :PageDraft{title="メディアデザインの概念" grades="2"}
+- :PageLink{slug="media-design-concepts"}
 
 ### コンピュータによる色彩設計
 
