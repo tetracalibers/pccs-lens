@@ -1,0 +1,59 @@
+---
+layout: guide-content
+title: 古代ヨーロッパの色彩
+
+grades: ["1"]
+
+draft: true
+---
+
+## :WithGradeTag[色彩の誕生]{grades="1"}
+
+人間にとって最も初期の色彩と考えられているのは、:Mark[洞窟]に残された色彩です。
+
+::::CardGrid
+:::TermCard{title="ラスコーの壁画"}
+BC2万年頃の:Mark[フランス]の洞窟壁画
+:::
+:::TermCard{title="アルタミラの壁画"}
+BC1万8000年頃の:Mark[スペイン]の洞窟壁画
+:::
+::::
+
+近年では、BC:Mark[6]〜:Mark[4]万年頃に描かれたとされる洞窟壁画も発見されています。
+
+## :WithGradeTag[色をつくる技術]{grades="1"}
+
+当時の絵の具には、身の回りにあるものが使われていました。
+
+::::CardGrid
+:::TermCard{title="赤" keepTitleInAnki}
+:Mark[土]に含まれる赤色顔料から得ていた
+:::
+:::TermCard{title="黒" keepTitleInAnki}
+木を燃やした:Mark[木炭]から作っていた
+:::
+:::TermCard{title="黄・茶" keepTitleInAnki}
+赤色顔料や木炭に、:Mark[獣脂]や:Mark[草木の汁]を混ぜて作り出していた
+:::
+::::
+
+## :WithGradeTag[色彩の語彙]{grades="1"}
+
+人類学的分析に基づいて、:Mark[色彩語]（色彩の語彙）の発展過程が研究されていました。
+
+:::TermCard{title="「基本色彩語」" keepTitleInAnki}
+文化人類学や言語学の視点から、1969年に研究者である:Mark[ブレント・バーリン]と:Mark[ポール・ケイ]が著した本
+:::
+
+彼らの研究では、人類の色彩の語彙は、次のように段階的に増えていくといわれています。
+
+1. :Mark[白]・:Mark[黒]
+2. :Mark[赤]・:Mark[緑]か:Mark[黄]・:Mark[青]
+
+実際には、国によって違いがあり、必ずしもその順番で色数が増えていったわけではありませんでした。
+しかし、道具や色材が増えるにつれて、色彩の種類や語彙が増えていったことは事実です。
+
+## :WithGradeTag[色彩の理論]{grades="1"}
+
+::ComingSoon

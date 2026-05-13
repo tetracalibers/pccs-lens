@@ -1,0 +1,16 @@
+---
+layout: guide-content
+title: 中近世ヨーロッパの色彩
+
+grades: ["1"]
+
+draft: true
+---
+
+## :WithGradeTag[色をつくる技術]{grades="1"}
+
+::ComingSoon
+
+## :WithGradeTag[絵画表現と色彩文化]{grades="1"}
+
+::ComingSoon
