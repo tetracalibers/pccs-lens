@@ -7,14 +7,25 @@
     centering?: boolean
     textCentering?: boolean
     title: string
+    keepTitleInAnki?: boolean
   }
 
-  let { children, centering = false, textCentering = false, title }: Props = $props()
+  let {
+    children,
+    centering = false,
+    textCentering = false,
+    title,
+    keepTitleInAnki = false,
+  }: Props = $props()
 </script>
 
 <section class="term-card" class:centering class:text-centering={textCentering}>
   {#if title}
-    <Heading3 {title}>{title}</Heading3>
+    {#if keepTitleInAnki}
+      <Heading3>{title}</Heading3>
+    {:else}
+      <Heading3 {title}>{title}</Heading3>
+    {/if}
   {/if}
   {@render children?.()}
 </section>
