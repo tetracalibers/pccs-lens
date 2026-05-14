@@ -1,6 +1,6 @@
 <script lang="ts">
   import GradeTag from "./GradeTag.svelte"
-  import { base, resolve } from "$app/paths"
+  import { resolve } from "$app/paths"
   import { guidePages } from "$lib/meta/guide-pages"
   import { gradeArray2CSV, sortGrades } from "$lib/meta/grade"
   import DraftPageTitle from "./DraftPageTitle.svelte"
@@ -14,7 +14,7 @@
 
   let { slug }: Props = $props()
 
-  const baseSegment = $derived(page.url.pathname.slice(base.length).split("/")[1])
+  const baseSegment = $derived(page.route.id?.split("/")[1])
 
   const meta = $derived(guidePages.get(`${baseSegment}/${slug}`))
   const { grades, basic, title, draft } = $derived.by(() => {
