@@ -1,0 +1,16 @@
+---
+layout: guide-content
+title: 色覚タイプの分類
+
+grades: ["2", "uc"]
+
+draft: true
+---
+
+## :WithGradeTag[色覚異常の割合]{grades="2,uc"}
+
+::ComingSoon
+
+## :WithGradeTag[色覚異常のタイプ]{grades="2,uc"}
+
+::ComingSoon

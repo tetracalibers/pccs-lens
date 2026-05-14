@@ -1,0 +1,32 @@
+---
+layout: guide-content
+title: ユニバーサルデザインの考え方
+
+grades: ["uc", "2"]
+
+draft: true
+---
+
+## :WithGradeTag[ユニバーサルデザインとは]{grades="uc,2"}
+
+::ComingSoon
+
+## :WithGradeTag[ユニバーサルデザインの考え方]{grades="uc"}
+
+::ComingSoon
+
+## :WithGradeTag[ユニバーサルデザインの7原則]{grades="uc"}
+
+::ComingSoon
+
+## :WithGradeTag[ユーザーに焦点を当てた設計]{grades="uc"}
+
+::ComingSoon
+
+## :WithGradeTag[色のユニバーサルデザイン]{grades="2,uc"}
+
+::ComingSoon
+
+## :WithGradeTag[視覚情報のユニバーサルデザイン]{grades="uc"}
+
+::ComingSoon
