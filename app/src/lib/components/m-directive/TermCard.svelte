@@ -1,13 +1,14 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
   import Heading3 from "../m-html/Heading3.svelte"
+  import { Mark } from "$lib/layouts/concept.svelte"
 
   interface Props {
     children?: Snippet
     centering?: boolean
     textCentering?: boolean
     title: string
-    keepTitleInAnki?: boolean
+    ankiTitle?: "hide" | "mark" | "show"
   }
 
   let {
@@ -15,14 +16,16 @@
     centering = false,
     textCentering = false,
     title,
-    keepTitleInAnki = false,
+    ankiTitle = "hide"
   }: Props = $props()
 </script>
 
 <section class="term-card" class:centering class:text-centering={textCentering}>
   {#if title}
-    {#if keepTitleInAnki}
+    {#if ankiTitle === "show"}
       <Heading3>{title}</Heading3>
+    {:else if ankiTitle === "mark"}
+      <Heading3><Mark>{title}</Mark></Heading3>
     {:else}
       <Heading3 {title}>{title}</Heading3>
     {/if}

@@ -21,7 +21,7 @@ grades: ["3"]
 静止画による主観色は、図を見る際の微細な:Mark[眼球運動]が要因の一つと考えられています。
 
 ::::CardGrid
-:::TermCard{title="ラッキーシュ＆モス図形"}
+:::TermCard{title="ラッキーシュ＆モス図形" ankiTitle="mark"}
 斜めの縞模様に対して:Mark[直角]方向に、薄いパステル調の:Mark[オレンジ]や:Mark[青緑]の色の:Mark[流れ]が感じられます。
 
 <SVGWrapper noPadding>
@@ -29,7 +29,7 @@ grades: ["3"]
 </SVGWrapper>
 :::
 
-:::TermCard{title="スキナー図形"}
+:::TermCard{title="スキナー図形" ankiTitle="mark"}
 黒い円の中に配置された小さな白い円それぞれに、薄い:Mark[赤]・:Mark[黄]・:Mark[緑]・:Mark[青]などの色が感じられます。
 
 <SVGWrapper noPadding>
@@ -42,9 +42,14 @@ grades: ["3"]
 
 運動を伴う図における主観色は、[3種類の錐体](/color-theory/photoreceptor-types-and-distribution/)の:Mark[反応速度]の差などが関与していると考えられていますが、それだけでは説明できないとする見解もあります。
 
-### ベンハムトップ
-
+:::TermCard{title="ベンハムトップ" ankiTitle="mark"}
 :Mark[ベンハムこま]とも呼ばれ、駒のように回すと主観色を見ることができます。
 時計回りに回すと、中心の縞から順に:Mark[赤]、:Mark[黄]、:Mark[緑]、:Mark[青]に色づいて見え、反時計回りに回すと、色の順序が逆になります。
+:::
+
+:::Action
+左上の再生ボタンをクリックすると、円が回転します。
+（回転を見つめていると酔ってしまうこともあります。体調の変化には十分注意してください。）
+:::
 
 <BenhamsTopAnimated></BenhamsTopAnimated>

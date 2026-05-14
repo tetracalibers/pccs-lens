@@ -56,14 +56,14 @@ grades: ["2", "3", "uc"]
 波長が同じであれば、比エネルギーが:Mark[大きい]ほど、明るく感じます。
 
 ::::CardGrid
-:::TermCard{title="太陽光の分光分布"}
+:::TermCard{title="太陽光" ankiTitle="mark"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <Sunlight />
 </SVGWrapper>
 
 可視範囲のすべての波長をほぼ均等に含んでいることから、:Mark[白色光]（光なので実際は無色）であることがわかります。
 :::
-:::TermCard{title="白熱電球の分光分布"}
+:::TermCard{title="白熱電球" ankiTitle="mark"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <IncandescentBulb />
 </SVGWrapper>
@@ -81,28 +81,28 @@ grades: ["2", "3", "uc"]
 [色と光の関係](/color-theory/how-color-works/)で学んだように、私たちは物体の表面で:Mark[反射]されて目に届いた光だけを目にしているので、反射率の分布を見ることで、その物体の色を知ることができます。
 
 ::::CardGrid
-:::TermCard{title="赤"}
+:::TermCard{title="赤" ankiTitle="mark"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <RedRef />
 </SVGWrapper>
 
 赤く見える物体は、:Mark[長波長]の光を多く反射していることがわかります。
 :::
-:::TermCard{title="緑"}
+:::TermCard{title="緑" ankiTitle="mark"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <GreenRef />
 </SVGWrapper>
 
 緑に見える物体は、:Mark[中波長]の光を多く反射していることがわかります。
 :::
-:::TermCard{title="青"}
+:::TermCard{title="青" ankiTitle="mark"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <BlueRef />
 </SVGWrapper>
 
 青く見える物体は、:Mark[短波長]の光を多く反射していることがわかります。
 :::
-:::TermCard{title="黄"}
+:::TermCard{title="黄" ankiTitle="mark"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <YellowRef />
 </SVGWrapper>
@@ -110,14 +110,14 @@ grades: ["2", "3", "uc"]
 黄に見える物体は、:Mark[中波長]と:Mark[長波長]の光を多く反射していることがわかります。
 これは、黄が:Mark[緑]と:Mark[赤]の[加法混色](/color-theory/color-mixing-basics/)で得られる色であるからです。
 :::
-:::TermCard{title="白"}
+:::TermCard{title="白" ankiTitle="mark"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <WhiteRef />
 </SVGWrapper>
 
 白く見える物体は、可視範囲のすべての波長の光をほぼ均等に反射していることがわかります。
 :::
-:::TermCard{title="黒"}
+:::TermCard{title="黒" ankiTitle="mark"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <BlackRef />
 </SVGWrapper>
@@ -142,12 +142,12 @@ grades: ["2", "3", "uc"]
 特に、:Mark[無彩色]は分光反射率曲線が水平に近いため、その高さで明度を判断できます。
 
 ::::CardGrid
-:::TermCard{title="白"}
+:::TermCard{title="白" ankiTitle="mark"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <WhiteRef />
 </SVGWrapper>
 :::
-:::TermCard{title="灰"}
+:::TermCard{title="灰" ankiTitle="mark"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <GrayRef />
 </SVGWrapper>
@@ -166,12 +166,12 @@ grades: ["2", "3", "uc"]
 ある波長だけ強く反射し、他の波長はあまり反射しない場合、反射している波長の色みだけが強く感じられ、他の色みはあまり混ざらないからです。
 
 ::::CardGrid
-:::TermCard{title="青"}
+:::TermCard{title="青" ankiTitle="mark"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <BlueRef />
 </SVGWrapper>
 :::
-:::TermCard{title="青みがかった灰"}
+:::TermCard{title="青みがかった灰" ankiTitle="mark"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <BluishGrayRef />
 </SVGWrapper>
