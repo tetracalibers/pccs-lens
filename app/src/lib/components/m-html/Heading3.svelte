@@ -40,6 +40,10 @@
     min-height: 1lh;
   }
 
+  h3:not(.has-icon) {
+    gap: 0.7rem;
+  }
+
   h3:not(.has-icon)::before {
     content: "";
     display: inline-block;
