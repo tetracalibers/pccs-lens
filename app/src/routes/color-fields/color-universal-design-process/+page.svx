@@ -1,0 +1,16 @@
+---
+layout: guide-content
+title: 色のユニバーサルデザインの進め方
+
+grades: ["uc"]
+
+draft: true
+---
+
+## :WithGradeTag[色のUDによる制作の流れ]{grades="uc"}
+
+::ComingSoon
+
+## :WithGradeTag[色の見え方のチェック]{grades="uc"}
+
+::ComingSoon
