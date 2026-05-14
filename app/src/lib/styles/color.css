@@ -9,6 +9,8 @@
   --color-heading: light-dark(var(--color-heading--light), var(--color-heading--dark));
   --color-body: light-dark(var(--color-body--light), var(--color-body--dark));
 
+  --color-anki: light-dark(#6b23a8, #e8c8ff);
+
   --canvas-pen-red: #cc3333;
   --canvas-pen-pink: #eb539f;
   --canvas-pen-green: #339944;

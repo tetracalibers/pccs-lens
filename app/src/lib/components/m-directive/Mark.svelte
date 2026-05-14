@@ -13,7 +13,7 @@
   .mark {
     font-weight: 500;
     font-family: var(--font-mark);
-    color: light-dark(#6b23a8, #e8c8ff);
+    color: var(--color-anki);
     display: inline-block;
     margin-inline: 0.1rem;
     line-height: 1.5;
