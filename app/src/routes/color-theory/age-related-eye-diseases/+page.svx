@@ -1,0 +1,20 @@
+---
+layout: guide-content
+title: 加齢に伴う眼疾病
+
+grades: ["uc"]
+
+draft: true
+---
+
+## :WithGradeTag[白内障]{grades="uc"}
+
+::ComingSoon
+
+## :WithGradeTag[緑内障]{grades="uc"}
+
+::ComingSoon
+
+## :WithGradeTag[加齢黄斑変性]{grades="uc"}
+
+::ComingSoon
