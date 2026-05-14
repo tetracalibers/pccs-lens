@@ -1,0 +1,24 @@
+---
+layout: guide-content
+title: 色覚の特性
+
+grades: ["2", "uc"]
+
+draft: true
+---
+
+## :WithGradeTag[先天性の色覚異常]{grades="2,uc"}
+
+::ComingSoon
+
+## :WithGradeTag[後天性の色覚異常]{grades="uc"}
+
+::ComingSoon
+
+## :WithGradeTag[加齢による色覚変化]{grades="2,uc"}
+
+::ComingSoon
+
+## :WithGradeTag[ロービジョン]{grades="uc"}
+
+::ComingSoon
