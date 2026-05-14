@@ -1,0 +1,16 @@
+---
+layout: guide-content
+title: 加齢による見え方の変化
+
+grades: ["2", "uc"]
+
+draft: true
+---
+
+## :WithGradeTag[高齢者の視覚特性]{grades="2,uc"}
+
+::ComingSoon
+
+## :WithGradeTag[加齢による視機能への影響]{grades="uc"}
+
+::ComingSoon
