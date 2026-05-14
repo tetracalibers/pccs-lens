@@ -1,0 +1,44 @@
+---
+layout: guide-content
+title: 色のデザインの工夫
+
+grades: ["uc", "2"]
+
+draft: true
+---
+
+## :WithGradeTag[基本的なテクニック]{grades="2"}
+
+::ComingSoon
+
+## :WithGradeTag[区別しやすい色を使う]{grades="uc"}
+
+::ComingSoon
+
+## :WithGradeTag[明度差をつける]{grades="uc"}
+
+::ComingSoon
+
+## :WithGradeTag[セパレーションの活用]{grades="uc"}
+
+::ComingSoon
+
+## :WithGradeTag[赤を適切に使う]{grades="uc"}
+
+::ComingSoon
+
+## :WithGradeTag[色名を併記する]{grades="uc"}
+
+::ComingSoon
+
+## :WithGradeTag[色以外の要素を活用する]{grades="uc"}
+
+::ComingSoon
+
+## :WithGradeTag[模様で区別する]{grades="uc"}
+
+::ComingSoon
+
+## :WithGradeTag[文字を強調する]{grades="uc"}
+
+::ComingSoon
