@@ -1,0 +1,38 @@
+---
+layout: guide-content
+title: 色覚特性と伝わりやすい表現
+
+grades: ["uc"]
+
+draft: true
+---
+
+## :WithGradeTag[色覚特性とわかりづらい場面]{grades="uc"}
+
+### 状態がわかりにくい
+
+::ComingSoon
+
+### 色分けが役に立たない
+
+::ComingSoon
+
+### 赤が見えにくい
+
+::ComingSoon
+
+### 色の名前がわかりにくい
+
+::ComingSoon
+
+## :WithGradeTag[高齢者にとってわかりづらい場面]{grades="uc"}
+
+::ComingSoon
+
+## :WithGradeTag[子どもたちが色覚で悩まないために]{grades="uc"}
+
+::ComingSoon
+
+## :WithGradeTag[高齢者にも伝えられるように]{grades="uc"}
+
+:::ComingSoon

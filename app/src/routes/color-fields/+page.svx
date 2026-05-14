@@ -23,7 +23,7 @@ title: 色の活用分野
 ### 色のユニバーサルデザイン
 
 - :PageLink{slug="color-universal-design"}
-- :PageDraft{title="伝わりづらい色や情報" grades="uc"}
+- :PageLink{slug="color-vision-accessibility"}
 
 ## マーケティング
 
