@@ -39,7 +39,7 @@
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: flex-start;
-    gap: 0.55rem;
+    gap: 0.6rem;
     line-height: 1.3;
     margin: 2rem 0 0.75rem;
     min-height: 1lh;
