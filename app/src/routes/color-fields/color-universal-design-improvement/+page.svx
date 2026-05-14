@@ -1,0 +1,12 @@
+---
+layout: guide-content
+title: 色のデザインの改善事例
+
+grades: ["uc"]
+
+draft: true
+---
+
+## :WithGradeTag[さまざまな改善事例]{grades="uc"}
+
+::ComingSoon
