@@ -1,0 +1,16 @@
+---
+layout: guide-content
+title: 高齢者の見え方の特徴
+
+grades: ["uc"]
+
+draft: true
+---
+
+## :WithGradeTag[色の弁別機能]{grades="uc"}
+
+::ComingSoon
+
+## :WithGradeTag[まぶしさとコントラスト感]{grades="uc"}
+
+::ComingSoon
