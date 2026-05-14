@@ -22,7 +22,7 @@ title: 色の活用分野
 
 ### 色のユニバーサルデザイン
 
-::ComingSoon
+- :PageLink{slug="color-universal-design"}
 
 ## マーケティング
 
