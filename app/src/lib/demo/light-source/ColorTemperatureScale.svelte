@@ -51,6 +51,9 @@
 
   // ===== Colors =====
   const COL_BODY = "var(--color-body)"
+  // サイドラベル（低/高）は帯の両端の色を使う
+  const COL_LOW_END = chroma.temperature(TEMP_MIN).hex()
+  const COL_HIGH_END = chroma.temperature(TEMP_MAX).hex()
 
   // ===== 色温度 → X座標 =====
   const xAt = (temp: number): number =>
@@ -112,10 +115,8 @@
   const TOP_TITLE_X = (naturalArrowStartX + naturalArrowEndX) / 2
   const BOTTOM_TITLE_X = (fluorescentArrowStartX + fluorescentArrowEndX) / 2
 
-  // ===== サイドラベルのY位置（2行） =====
+  // ===== サイドラベルのY位置 =====
   const SIDE_LABEL_CENTER_Y = STRIP_Y + STRIP_HEIGHT / 2
-  const SIDE_LABEL_LINE1_Y = SIDE_LABEL_CENTER_Y - LINE_HEIGHT_LABEL / 2
-  const SIDE_LABEL_LINE2_Y = SIDE_LABEL_CENTER_Y + LINE_HEIGHT_LABEL / 2
 
   const isAnki = $derived(ankiMode.isAnki)
 </script>
@@ -158,26 +159,29 @@
     fill="url(#color-temperature-gradient)"
   />
 
-  <!-- 左側ラベル：色温度が / 低い -->
-  <g fill={COL_BODY} font-size={FONT_SIZE_SIDE_LABEL} text-anchor="end" dominant-baseline="central">
-    <text x={STRIP_LEFT - SIDE_LABEL_X_GAP} y={SIDE_LABEL_LINE1_Y}>色温度が</text>
-    <text x={STRIP_LEFT - SIDE_LABEL_X_GAP} y={SIDE_LABEL_LINE2_Y}>
-      {isAnki ? "" : "低い"}
-    </text>
-  </g>
+  <!-- 左側ラベル：低（帯の左端の色） -->
+  <text
+    x={STRIP_LEFT - SIDE_LABEL_X_GAP}
+    y={SIDE_LABEL_CENTER_Y}
+    fill={COL_LOW_END}
+    font-size={FONT_SIZE_SIDE_LABEL}
+    text-anchor="end"
+    dominant-baseline="central"
+  >
+    {isAnki ? "" : "低"}
+  </text>
 
-  <!-- 右側ラベル：色温度が / 高い -->
-  <g
-    fill={COL_BODY}
+  <!-- 右側ラベル：高（帯の右端の色） -->
+  <text
+    x={STRIP_RIGHT + SIDE_LABEL_X_GAP}
+    y={SIDE_LABEL_CENTER_Y}
+    fill={COL_HIGH_END}
     font-size={FONT_SIZE_SIDE_LABEL}
     text-anchor="start"
     dominant-baseline="central"
   >
-    <text x={STRIP_RIGHT + SIDE_LABEL_X_GAP} y={SIDE_LABEL_LINE1_Y}>色温度が</text>
-    <text x={STRIP_RIGHT + SIDE_LABEL_X_GAP} y={SIDE_LABEL_LINE2_Y}>
-      {isAnki ? "" : "高い"}
-    </text>
-  </g>
+    {isAnki ? "" : "高"}
+  </text>
 
   <!-- セクションタイトル -->
   <g
