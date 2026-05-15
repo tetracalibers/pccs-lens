@@ -13,10 +13,8 @@
   }
 
   // ===== Strip layout =====
-  // WIDTH / HEIGHT / STRIP_Y は他の定数とデータから自動算出する（下部）
-  const STRIP_LEFT = 150
-  const STRIP_RIGHT = 950
-  const STRIP_WIDTH = STRIP_RIGHT - STRIP_LEFT
+  // STRIP_LEFT / STRIP_RIGHT / WIDTH / HEIGHT / STRIP_Y は他の値から自動算出する（下部）
+  const STRIP_WIDTH = 800
   const STRIP_HEIGHT = 64
 
   // ===== 色温度の範囲 =====
@@ -47,16 +45,13 @@
 
   // ===== 外側パディング =====
   const PADDING_VERTICAL = 8 // SVG 上下端と最も外側のテキストの隙間
+  const PADDING_HORIZONTAL = 4 // SVG 左右端と最も外側のテキストの隙間
 
   // ===== Colors =====
   const COL_BODY = "var(--color-body)"
   // サイドラベル（低/高）は帯の両端の色を使う
   const COL_LOW_END = chroma.temperature(TEMP_MIN).hex()
   const COL_HIGH_END = chroma.temperature(TEMP_MAX).hex()
-
-  // ===== 色温度 → X座標 =====
-  const xAt = (temp: number): number =>
-    STRIP_LEFT + ((temp - TEMP_MIN) / (TEMP_MAX - TEMP_MIN)) * STRIP_WIDTH
 
   // ===== グラデーションストップ生成 =====
   const gradientStops = Array.from({ length: GRADIENT_SAMPLE_COUNT }, (_, i) => {
@@ -88,8 +83,8 @@
   const maxTopNameLines = Math.max(...naturalLights.map((l) => l.nameLines.length))
   const maxBottomNameLines = Math.max(...fluorescentLamps.map((l) => l.nameLines.length))
 
-  // ===== SVG の大きさ・帯のY位置（他の値から自動算出） =====
-  // 帯から外側へ向かう要素の縦積みの長さ：
+  // ===== SVG の大きさ・帯の位置（他の値から自動算出） =====
+  // 縦：帯から外側へ向かう要素の縦積みの長さ
   // tick + ラベル隙間 + 温度ラベル中心 + 名前ラベル積み + 波括弧足元の隙間 + 波括弧 + 頂点〜タイトル中心 + タイトル上半分
   const stackExtent = (nameLines: number): number =>
     TICK_LENGTH +
@@ -103,8 +98,48 @@
 
   const STRIP_Y = PADDING_VERTICAL + stackExtent(maxTopNameLines)
   const HEIGHT = STRIP_Y + STRIP_HEIGHT + stackExtent(maxBottomNameLines) + PADDING_VERTICAL
-  // 左右はサイドラベル「低」「高」を収めるため、STRIP_LEFT を左マージンとし、同じ幅を右にも確保
-  const WIDTH = STRIP_RIGHT + STRIP_LEFT
+
+  // 横：サイドラベルと各マーカーラベルが帯端からはみ出す量を集計
+  // 文字幅は全角 = フォントサイズ、半角 = フォントサイズ × 0.6 で概算
+  const estimateCharWidth = (ch: string, fontSize: number): number => {
+    const code = ch.charCodeAt(0)
+    const isFullWidth =
+      (code >= 0x3000 && code <= 0x9fff) || (code >= 0xff00 && code <= 0xffef)
+    return isFullWidth ? fontSize : fontSize * 0.6
+  }
+  const estimateTextWidth = (s: string, fontSize: number): number =>
+    [...s].reduce((sum, ch) => sum + estimateCharWidth(ch, fontSize), 0)
+
+  const markerLabelHalfWidth = (m: LightMarker): number =>
+    Math.max(
+      estimateTextWidth(`${m.temp}K`, FONT_SIZE_MARKER_LABEL),
+      ...m.nameLines.map((line) =>
+        estimateTextWidth(line.map((p) => p.text).join(""), FONT_SIZE_MARKER_LABEL)
+      )
+    ) / 2
+  const markerRelativeX = (temp: number): number =>
+    ((temp - TEMP_MIN) / (TEMP_MAX - TEMP_MIN)) * STRIP_WIDTH
+
+  const allMarkers = [...naturalLights, ...fluorescentLamps]
+  const SIDE_LABEL_OVERHANG = SIDE_LABEL_X_GAP + FONT_SIZE_SIDE_LABEL // 「低」「高」は1文字想定
+  const LEFT_OVERHANG = Math.max(
+    SIDE_LABEL_OVERHANG,
+    ...allMarkers.map((m) => Math.max(0, markerLabelHalfWidth(m) - markerRelativeX(m.temp)))
+  )
+  const RIGHT_OVERHANG = Math.max(
+    SIDE_LABEL_OVERHANG,
+    ...allMarkers.map((m) =>
+      Math.max(0, markerLabelHalfWidth(m) + markerRelativeX(m.temp) - STRIP_WIDTH)
+    )
+  )
+
+  const STRIP_LEFT = LEFT_OVERHANG + PADDING_HORIZONTAL
+  const STRIP_RIGHT = STRIP_LEFT + STRIP_WIDTH
+  const WIDTH = STRIP_RIGHT + RIGHT_OVERHANG + PADDING_HORIZONTAL
+
+  // ===== 色温度 → X座標 =====
+  const xAt = (temp: number): number =>
+    STRIP_LEFT + ((temp - TEMP_MIN) / (TEMP_MAX - TEMP_MIN)) * STRIP_WIDTH
 
   // ===== ラベルのY位置 =====
   // 帯の上：（外側）名前 → 色温度（内側、帯寄り）
