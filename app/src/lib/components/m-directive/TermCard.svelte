@@ -8,7 +8,11 @@
     book: "icomoon-free:book",
     art: "streamline-plump:painting-board-solid",
     color: "oui:color",
-    country: "tdesign:flag-1-filled"
+    country: "tdesign:flag-1-filled",
+    "1": "ri:number-1",
+    "2": "ri:number-2",
+    "3": "ri:number-3",
+    "4": "ri:number-4"
   } as const
 
   interface Props {
