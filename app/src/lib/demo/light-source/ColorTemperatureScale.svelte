@@ -9,7 +9,7 @@
 
   // ===== SVG dimensions =====
   const WIDTH = 1100
-  const HEIGHT = 320
+  const HEIGHT = 380
 
   // ===== Strip layout =====
   const STRIP_LEFT = 150
@@ -32,6 +32,14 @@
   const LINE_HEIGHT_LABEL = 28
   const FONT_SIZE_MARKER_LABEL = 18
   const FONT_SIZE_SIDE_LABEL = 22
+  const FONT_SIZE_GROUP_TITLE = 24
+  const GROUP_TITLE_GAP = 52 // 直近ラベル中心からタイトル中心までの距離
+
+  // ===== 矢の形状（タイプA） =====
+  const STROKE_WIDTH_ARROW = 2
+  const ARROW_HEAD_VIEWBOX = 7
+  const ARROW_HEAD_SIZE = 20
+  const ARROW_HEAD_STROKE = (STROKE_WIDTH_ARROW * ARROW_HEAD_VIEWBOX) / ARROW_HEAD_SIZE
 
   // ===== サイドラベルの位置 =====
   const SIDE_LABEL_X_GAP = 18
@@ -77,6 +85,27 @@
   const BOTTOM_TEMP_Y =
     STRIP_Y + STRIP_HEIGHT + TICK_LENGTH + GAP_TICK_TO_LABEL + LINE_HEIGHT_LABEL / 2
 
+  // ===== セクションタイトル位置 =====
+  const maxTopNameLines = Math.max(...naturalLights.map((l) => l.nameLines.length))
+  const maxBottomNameLines = Math.max(...fluorescentLamps.map((l) => l.nameLines.length))
+  const TOP_TITLE_Y = TOP_TEMP_Y - LINE_HEIGHT_LABEL * maxTopNameLines - GROUP_TITLE_GAP
+  const BOTTOM_TITLE_Y = BOTTOM_TEMP_Y + LINE_HEIGHT_LABEL * maxBottomNameLines + GROUP_TITLE_GAP
+
+  // ===== セクション矢印（タイトルと最上段/最下段ラベルの中間に配置） =====
+  const TOP_TOPMOST_LABEL_Y = TOP_TEMP_Y - LINE_HEIGHT_LABEL * maxTopNameLines
+  const BOTTOM_BOTTOMMOST_LABEL_Y = BOTTOM_TEMP_Y + LINE_HEIGHT_LABEL * maxBottomNameLines
+  const TOP_ARROW_Y = (TOP_TITLE_Y + TOP_TOPMOST_LABEL_Y) / 2
+  const BOTTOM_ARROW_Y = (BOTTOM_TITLE_Y + BOTTOM_BOTTOMMOST_LABEL_Y) / 2
+
+  const naturalArrowStartX = xAt(naturalLights[0].temp)
+  const naturalArrowEndX = xAt(naturalLights[naturalLights.length - 1].temp)
+  const fluorescentArrowStartX = xAt(fluorescentLamps[0].temp)
+  const fluorescentArrowEndX = xAt(fluorescentLamps[fluorescentLamps.length - 1].temp)
+
+  // タイトルのX位置は各矢印の中央
+  const TOP_TITLE_X = (naturalArrowStartX + naturalArrowEndX) / 2
+  const BOTTOM_TITLE_X = (fluorescentArrowStartX + fluorescentArrowEndX) / 2
+
   // ===== サイドラベルのY位置（2行） =====
   const SIDE_LABEL_CENTER_Y = STRIP_Y + STRIP_HEIGHT / 2
   const SIDE_LABEL_LINE1_Y = SIDE_LABEL_CENTER_Y - LINE_HEIGHT_LABEL / 2
@@ -92,6 +121,26 @@
         <stop offset={stop.offset} stop-color={stop.color} />
       {/each}
     </linearGradient>
+    <marker
+      id="arrow-section"
+      viewBox="0 0 {ARROW_HEAD_VIEWBOX} {ARROW_HEAD_VIEWBOX}"
+      refX={ARROW_HEAD_VIEWBOX / 2}
+      refY={ARROW_HEAD_VIEWBOX / 2}
+      markerWidth={ARROW_HEAD_SIZE}
+      markerHeight={ARROW_HEAD_SIZE}
+      markerUnits="userSpaceOnUse"
+      orient="auto-start-reverse"
+    >
+      <polyline
+        points="0,3.5 3.5,1.75 0,0"
+        fill="none"
+        stroke={COL_BODY}
+        stroke-width={ARROW_HEAD_STROKE}
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        transform="translate(1.1667 1.75)"
+      />
+    </marker>
   </defs>
 
   <!-- 帯（色温度のグラデーション） -->
@@ -122,6 +171,38 @@
     <text x={STRIP_RIGHT + SIDE_LABEL_X_GAP} y={SIDE_LABEL_LINE2_Y}>
       {isAnki ? "" : "高い"}
     </text>
+  </g>
+
+  <!-- セクションタイトル -->
+  <g
+    fill={COL_BODY}
+    font-size={FONT_SIZE_GROUP_TITLE}
+    font-weight="bold"
+    text-anchor="middle"
+    dominant-baseline="central"
+  >
+    <text x={TOP_TITLE_X} y={TOP_TITLE_Y}>自然光</text>
+    <text x={BOTTOM_TITLE_X} y={BOTTOM_TITLE_Y}>蛍光ランプ</text>
+  </g>
+
+  <!-- セクション矢印（最初と最後の目盛りを結ぶ） -->
+  <g stroke={COL_BODY} stroke-width={STROKE_WIDTH_ARROW} fill="none">
+    <line
+      x1={naturalArrowStartX}
+      y1={TOP_ARROW_Y}
+      x2={naturalArrowEndX}
+      y2={TOP_ARROW_Y}
+      marker-start="url(#arrow-section)"
+      marker-end="url(#arrow-section)"
+    />
+    <line
+      x1={fluorescentArrowStartX}
+      y1={BOTTOM_ARROW_Y}
+      x2={fluorescentArrowEndX}
+      y2={BOTTOM_ARROW_Y}
+      marker-start="url(#arrow-section)"
+      marker-end="url(#arrow-section)"
+    />
   </g>
 
   <!-- 自然光（帯の上） -->
