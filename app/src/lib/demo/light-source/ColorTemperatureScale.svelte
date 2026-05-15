@@ -43,8 +43,8 @@
   const BRACE_STROKE_WIDTH = 2
   const BRACE_CORNER_R = 8 // 端と中央コブの曲がりの半径
   const BRACE_HEIGHT = 18 // 足元から頂点までの距離
-  const BRACE_LABEL_GAP = 14 // 波括弧の足元と近接ラベル中心の隙間
-  const BRACE_TITLE_GAP = 18 // 波括弧の頂点とタイトル中心の隙間
+  const BRACE_LABEL_GAP = 24 // 波括弧の足元と近接ラベル中心の隙間
+  const BRACE_TITLE_GAP = 24 // 波括弧の頂点とタイトル中心の隙間
 
   // ===== サイドラベルの位置 =====
   const SIDE_LABEL_X_GAP = 18
