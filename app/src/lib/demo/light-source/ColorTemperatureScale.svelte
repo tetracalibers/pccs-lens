@@ -38,13 +38,13 @@
   const FONT_SIZE_MARKER_LABEL = 18
   const FONT_SIZE_SIDE_LABEL = 22
   const FONT_SIZE_GROUP_TITLE = 24
-  const GROUP_TITLE_GAP = 52 // 直近ラベル中心からタイトル中心までの距離
 
-  // ===== 矢の形状（タイプA） =====
-  const STROKE_WIDTH_ARROW = 2
-  const ARROW_HEAD_VIEWBOX = 7
-  const ARROW_HEAD_SIZE = 20
-  const ARROW_HEAD_STROKE = (STROKE_WIDTH_ARROW * ARROW_HEAD_VIEWBOX) / ARROW_HEAD_SIZE
+  // ===== 波括弧の形状 =====
+  const BRACE_STROKE_WIDTH = 2
+  const BRACE_CORNER_R = 8 // 端と中央コブの曲がりの半径
+  const BRACE_HEIGHT = 18 // 足元から頂点までの距離
+  const BRACE_LABEL_GAP = 14 // 波括弧の足元と近接ラベル中心の隙間
+  const BRACE_TITLE_GAP = 18 // 波括弧の頂点とタイトル中心の隙間
 
   // ===== サイドラベルの位置 =====
   const SIDE_LABEL_X_GAP = 18
@@ -94,26 +94,47 @@
   const BOTTOM_TEMP_Y =
     STRIP_Y + STRIP_HEIGHT + TICK_LENGTH + GAP_TICK_TO_LABEL + LINE_HEIGHT_LABEL / 2
 
-  // ===== セクションタイトル位置 =====
+  // ===== セクション波括弧 / タイトル位置 =====
   const maxTopNameLines = Math.max(...naturalLights.map((l) => l.nameLines.length))
   const maxBottomNameLines = Math.max(...fluorescentLamps.map((l) => l.nameLines.length))
-  const TOP_TITLE_Y = TOP_TEMP_Y - LINE_HEIGHT_LABEL * maxTopNameLines - GROUP_TITLE_GAP
-  const BOTTOM_TITLE_Y = BOTTOM_TEMP_Y + LINE_HEIGHT_LABEL * maxBottomNameLines + GROUP_TITLE_GAP
 
-  // ===== セクション矢印（タイトルと最上段/最下段ラベルの中間に配置） =====
+  // 帯の上：最上段ラベルから外側へ向かって 波括弧足元 → 波括弧頂点 → タイトル
   const TOP_TOPMOST_LABEL_Y = TOP_TEMP_Y - LINE_HEIGHT_LABEL * maxTopNameLines
+  const TOP_BRACE_FEET_Y = TOP_TOPMOST_LABEL_Y - BRACE_LABEL_GAP
+  const TOP_BRACE_PEAK_Y = TOP_BRACE_FEET_Y - BRACE_HEIGHT
+  const TOP_TITLE_Y = TOP_BRACE_PEAK_Y - BRACE_TITLE_GAP
+
+  // 帯の下：最下段ラベルから外側へ向かって 波括弧足元 → 波括弧頂点 → タイトル
   const BOTTOM_BOTTOMMOST_LABEL_Y = BOTTOM_TEMP_Y + LINE_HEIGHT_LABEL * maxBottomNameLines
-  const TOP_ARROW_Y = (TOP_TITLE_Y + TOP_TOPMOST_LABEL_Y) / 2
-  const BOTTOM_ARROW_Y = (BOTTOM_TITLE_Y + BOTTOM_BOTTOMMOST_LABEL_Y) / 2
+  const BOTTOM_BRACE_FEET_Y = BOTTOM_BOTTOMMOST_LABEL_Y + BRACE_LABEL_GAP
+  const BOTTOM_BRACE_PEAK_Y = BOTTOM_BRACE_FEET_Y + BRACE_HEIGHT
+  const BOTTOM_TITLE_Y = BOTTOM_BRACE_PEAK_Y + BRACE_TITLE_GAP
 
-  const naturalArrowStartX = xAt(naturalLights[0].temp)
-  const naturalArrowEndX = xAt(naturalLights[naturalLights.length - 1].temp)
-  const fluorescentArrowStartX = xAt(fluorescentLamps[0].temp)
-  const fluorescentArrowEndX = xAt(fluorescentLamps[fluorescentLamps.length - 1].temp)
+  const naturalBraceStartX = xAt(naturalLights[0].temp)
+  const naturalBraceEndX = xAt(naturalLights[naturalLights.length - 1].temp)
+  const fluorescentBraceStartX = xAt(fluorescentLamps[0].temp)
+  const fluorescentBraceEndX = xAt(fluorescentLamps[fluorescentLamps.length - 1].temp)
 
-  // タイトルのX位置は各矢印の中央
-  const TOP_TITLE_X = (naturalArrowStartX + naturalArrowEndX) / 2
-  const BOTTOM_TITLE_X = (fluorescentArrowStartX + fluorescentArrowEndX) / 2
+  // タイトルのX位置は各波括弧の中央
+  const TOP_TITLE_X = (naturalBraceStartX + naturalBraceEndX) / 2
+  const BOTTOM_TITLE_X = (fluorescentBraceStartX + fluorescentBraceEndX) / 2
+
+  // 波括弧パス：xL〜xR を範囲とし、両端を yFeet、中央頂点を yPeak に置く
+  // yPeak < yFeet なら上向き（頂点が上）、yPeak > yFeet なら下向き（頂点が下）
+  const bracePath = (xL: number, xR: number, yFeet: number, yPeak: number): string => {
+    const xM = (xL + xR) / 2
+    const r = BRACE_CORNER_R
+    const yShoulder = yFeet + (yPeak < yFeet ? -r : r)
+    return [
+      `M ${xL} ${yFeet}`,
+      `Q ${xL} ${yShoulder} ${xL + r} ${yShoulder}`,
+      `L ${xM - r} ${yShoulder}`,
+      `Q ${xM} ${yShoulder} ${xM} ${yPeak}`,
+      `Q ${xM} ${yShoulder} ${xM + r} ${yShoulder}`,
+      `L ${xR - r} ${yShoulder}`,
+      `Q ${xR} ${yShoulder} ${xR} ${yFeet}`
+    ].join(" ")
+  }
 
   // ===== サイドラベルのY位置 =====
   const SIDE_LABEL_CENTER_Y = STRIP_Y + STRIP_HEIGHT / 2
@@ -128,26 +149,6 @@
         <stop offset={stop.offset} stop-color={stop.color} />
       {/each}
     </linearGradient>
-    <marker
-      id="arrow-section"
-      viewBox="0 0 {ARROW_HEAD_VIEWBOX} {ARROW_HEAD_VIEWBOX}"
-      refX={ARROW_HEAD_VIEWBOX / 2}
-      refY={ARROW_HEAD_VIEWBOX / 2}
-      markerWidth={ARROW_HEAD_SIZE}
-      markerHeight={ARROW_HEAD_SIZE}
-      markerUnits="userSpaceOnUse"
-      orient="auto-start-reverse"
-    >
-      <polyline
-        points="0,3.5 3.5,1.75 0,0"
-        fill="none"
-        stroke={COL_BODY}
-        stroke-width={ARROW_HEAD_STROKE}
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        transform="translate(1.1667 1.75)"
-      />
-    </marker>
   </defs>
 
   <!-- 帯（色温度のグラデーション） -->
@@ -195,23 +196,22 @@
     <text x={BOTTOM_TITLE_X} y={BOTTOM_TITLE_Y}>蛍光ランプ</text>
   </g>
 
-  <!-- セクション矢印（最初と最後の目盛りを結ぶ） -->
-  <g stroke={COL_BODY} stroke-width={STROKE_WIDTH_ARROW} fill="none">
-    <line
-      x1={naturalArrowStartX}
-      y1={TOP_ARROW_Y}
-      x2={naturalArrowEndX}
-      y2={TOP_ARROW_Y}
-      marker-start="url(#arrow-section)"
-      marker-end="url(#arrow-section)"
-    />
-    <line
-      x1={fluorescentArrowStartX}
-      y1={BOTTOM_ARROW_Y}
-      x2={fluorescentArrowEndX}
-      y2={BOTTOM_ARROW_Y}
-      marker-start="url(#arrow-section)"
-      marker-end="url(#arrow-section)"
+  <!-- セクション波括弧（最初と最後の目盛りを範囲として表す） -->
+  <g
+    stroke={COL_BODY}
+    stroke-width={BRACE_STROKE_WIDTH}
+    fill="none"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path d={bracePath(naturalBraceStartX, naturalBraceEndX, TOP_BRACE_FEET_Y, TOP_BRACE_PEAK_Y)} />
+    <path
+      d={bracePath(
+        fluorescentBraceStartX,
+        fluorescentBraceEndX,
+        BOTTOM_BRACE_FEET_Y,
+        BOTTOM_BRACE_PEAK_Y
+      )}
     />
   </g>
 
@@ -236,11 +236,15 @@
       {#each item.nameLines as line, i (i)}
         <text {x} y={TOP_TEMP_Y - LINE_HEIGHT_LABEL * (lineCount - i)}>
           {#each line as part, j (j)}<tspan
-              visibility={part.ankiHide && isAnki ? "hidden" : "visible"}>{part.text}</tspan>{/each}
+              visibility={part.ankiHide && isAnki ? "hidden" : "visible"}
+            >
+              {part.text}
+            </tspan>{/each}
         </text>
       {/each}
       <text {x} y={TOP_TEMP_Y}>
-        <tspan visibility={isAnki ? "hidden" : "visible"}>{item.temp}</tspan>K
+        <tspan visibility={isAnki ? "hidden" : "visible"}>{item.temp}</tspan>
+        K
       </text>
     {/each}
   </g>
@@ -263,12 +267,16 @@
         stroke-width={STROKE_WIDTH_TICK}
       />
       <text {x} y={BOTTOM_TEMP_Y}>
-        <tspan visibility={isAnki ? "hidden" : "visible"}>{item.temp}</tspan>K
+        <tspan visibility={isAnki ? "hidden" : "visible"}>{item.temp}</tspan>
+        K
       </text>
       {#each item.nameLines as line, i (i)}
         <text {x} y={BOTTOM_TEMP_Y + LINE_HEIGHT_LABEL * (i + 1)}>
           {#each line as part, j (j)}<tspan
-              visibility={part.ankiHide && isAnki ? "hidden" : "visible"}>{part.text}</tspan>{/each}
+              visibility={part.ankiHide && isAnki ? "hidden" : "visible"}
+            >
+              {part.text}
+            </tspan>{/each}
         </text>
       {/each}
     {/each}
