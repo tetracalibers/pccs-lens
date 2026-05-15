@@ -12,16 +12,12 @@
     temp: number
   }
 
-  // ===== SVG dimensions =====
-  const WIDTH = 1100
-  const HEIGHT = 380
-
   // ===== Strip layout =====
+  // WIDTH / HEIGHT / STRIP_Y は他の定数とデータから自動算出する（下部）
   const STRIP_LEFT = 150
   const STRIP_RIGHT = 950
   const STRIP_WIDTH = STRIP_RIGHT - STRIP_LEFT
   const STRIP_HEIGHT = 64
-  const STRIP_Y = (HEIGHT - STRIP_HEIGHT) / 2
 
   // ===== 色温度の範囲 =====
   const TEMP_MIN = 1500
@@ -48,6 +44,9 @@
 
   // ===== サイドラベルの位置 =====
   const SIDE_LABEL_X_GAP = 18
+
+  // ===== 外側パディング =====
+  const PADDING_VERTICAL = 8 // SVG 上下端と最も外側のテキストの隙間
 
   // ===== Colors =====
   const COL_BODY = "var(--color-body)"
@@ -86,6 +85,27 @@
     { nameLines: [[{ text: "昼光", ankiHide: true }, { text: "色" }]], temp: 6500 }
   ]
 
+  const maxTopNameLines = Math.max(...naturalLights.map((l) => l.nameLines.length))
+  const maxBottomNameLines = Math.max(...fluorescentLamps.map((l) => l.nameLines.length))
+
+  // ===== SVG の大きさ・帯のY位置（他の値から自動算出） =====
+  // 帯から外側へ向かう要素の縦積みの長さ：
+  // tick + ラベル隙間 + 温度ラベル中心 + 名前ラベル積み + 波括弧足元の隙間 + 波括弧 + 頂点〜タイトル中心 + タイトル上半分
+  const stackExtent = (nameLines: number): number =>
+    TICK_LENGTH +
+    GAP_TICK_TO_LABEL +
+    LINE_HEIGHT_LABEL / 2 +
+    LINE_HEIGHT_LABEL * nameLines +
+    BRACE_LABEL_GAP +
+    BRACE_HEIGHT +
+    BRACE_TITLE_GAP +
+    FONT_SIZE_GROUP_TITLE / 2
+
+  const STRIP_Y = PADDING_VERTICAL + stackExtent(maxTopNameLines)
+  const HEIGHT = STRIP_Y + STRIP_HEIGHT + stackExtent(maxBottomNameLines) + PADDING_VERTICAL
+  // 左右はサイドラベル「低」「高」を収めるため、STRIP_LEFT を左マージンとし、同じ幅を右にも確保
+  const WIDTH = STRIP_RIGHT + STRIP_LEFT
+
   // ===== ラベルのY位置 =====
   // 帯の上：（外側）名前 → 色温度（内側、帯寄り）
   // 名前が複数行の場合、temp に近い行から順に積み上げる
@@ -95,9 +115,6 @@
     STRIP_Y + STRIP_HEIGHT + TICK_LENGTH + GAP_TICK_TO_LABEL + LINE_HEIGHT_LABEL / 2
 
   // ===== セクション波括弧 / タイトル位置 =====
-  const maxTopNameLines = Math.max(...naturalLights.map((l) => l.nameLines.length))
-  const maxBottomNameLines = Math.max(...fluorescentLamps.map((l) => l.nameLines.length))
-
   // 帯の上：最上段ラベルから外側へ向かって 波括弧足元 → 波括弧頂点 → タイトル
   const TOP_TOPMOST_LABEL_Y = TOP_TEMP_Y - LINE_HEIGHT_LABEL * maxTopNameLines
   const TOP_BRACE_FEET_Y = TOP_TOPMOST_LABEL_Y - BRACE_LABEL_GAP
