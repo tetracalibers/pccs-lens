@@ -103,8 +103,7 @@
   // 文字幅は全角 = フォントサイズ、半角 = フォントサイズ × 0.6 で概算
   const estimateCharWidth = (ch: string, fontSize: number): number => {
     const code = ch.charCodeAt(0)
-    const isFullWidth =
-      (code >= 0x3000 && code <= 0x9fff) || (code >= 0xff00 && code <= 0xffef)
+    const isFullWidth = (code >= 0x3000 && code <= 0x9fff) || (code >= 0xff00 && code <= 0xffef)
     return isFullWidth ? fontSize : fontSize * 0.6
   }
   const estimateTextWidth = (s: string, fontSize: number): number =>
@@ -296,7 +295,7 @@
       {/each}
       <text {x} y={TOP_TEMP_Y}>
         <tspan visibility={isAnki ? "hidden" : "visible"}>{item.temp}</tspan>
-        K
+        <tspan dx="-0.4em">K</tspan>
       </text>
     {/each}
   </g>
@@ -320,7 +319,7 @@
       />
       <text {x} y={BOTTOM_TEMP_Y}>
         <tspan visibility={isAnki ? "hidden" : "visible"}>{item.temp}</tspan>
-        K
+        <tspan dx="-0.4em">K</tspan>
       </text>
       {#each item.nameLines as line, i (i)}
         <text {x} y={BOTTOM_TEMP_Y + LINE_HEIGHT_LABEL * (i + 1)}>
