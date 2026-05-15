@@ -3,7 +3,7 @@
   import { ankiMode } from "$lib/state/anki.svelte"
 
   interface LightMarker {
-    name: string
+    nameLines: string[]
     temp: number
   }
 
@@ -55,28 +55,27 @@
 
   // ===== 主要な自然光（帯の上） =====
   const naturalLights: LightMarker[] = [
-    { name: "地平線の太陽光", temp: 1580 },
-    { name: "天頂の太陽光", temp: 5250 },
-    { name: "日中の北窓の光", temp: 6500 },
-    { name: "晴天の青空", temp: 12000 }
+    { nameLines: ["地平線の", "太陽光"], temp: 1580 },
+    { nameLines: ["天頂の", "太陽光"], temp: 5250 },
+    { nameLines: ["日中の", "北窓の光"], temp: 6500 },
+    { nameLines: ["晴天の", "青空"], temp: 12000 }
   ]
 
   // ===== 主要な蛍光ランプ（帯の下） =====
   const fluorescentLamps: LightMarker[] = [
-    { name: "電球色", temp: 3000 },
-    { name: "白色", temp: 4000 },
-    { name: "昼白色", temp: 5000 },
-    { name: "昼光色", temp: 6500 }
+    { nameLines: ["電球色"], temp: 3000 },
+    { nameLines: ["白色"], temp: 4000 },
+    { nameLines: ["昼白色"], temp: 5000 },
+    { nameLines: ["昼光色"], temp: 6500 }
   ]
 
   // ===== ラベルのY位置 =====
-  // 帯の上：（外側）名前 → 色温度（内側）
+  // 帯の上：（外側）名前 → 色温度（内側、帯寄り）
+  // 名前が複数行の場合、temp に近い行から順に積み上げる
   const TOP_TEMP_Y = STRIP_Y - TICK_LENGTH - GAP_TICK_TO_LABEL - LINE_HEIGHT_LABEL / 2
-  const TOP_NAME_Y = TOP_TEMP_Y - LINE_HEIGHT_LABEL
-  // 帯の下：（内側）色温度 → 名前（外側）
+  // 帯の下：（内側、帯寄り）色温度 → 名前（外側）
   const BOTTOM_TEMP_Y =
     STRIP_Y + STRIP_HEIGHT + TICK_LENGTH + GAP_TICK_TO_LABEL + LINE_HEIGHT_LABEL / 2
-  const BOTTOM_NAME_Y = BOTTOM_TEMP_Y + LINE_HEIGHT_LABEL
 
   // ===== サイドラベルのY位置（2行） =====
   const SIDE_LABEL_CENTER_Y = STRIP_Y + STRIP_HEIGHT / 2
@@ -134,6 +133,7 @@
   >
     {#each naturalLights as item (item.temp)}
       {@const x = xAt(item.temp)}
+      {@const lineCount = item.nameLines.length}
       <line
         x1={x}
         y1={STRIP_Y}
@@ -142,7 +142,9 @@
         stroke={COL_BODY}
         stroke-width={STROKE_WIDTH_TICK}
       />
-      <text {x} y={TOP_NAME_Y}>{item.name}</text>
+      {#each item.nameLines as line, i (i)}
+        <text {x} y={TOP_TEMP_Y - LINE_HEIGHT_LABEL * (lineCount - i)}>{line}</text>
+      {/each}
       <text {x} y={TOP_TEMP_Y}>{isAnki ? "" : item.temp}K</text>
     {/each}
   </g>
@@ -164,8 +166,10 @@
         stroke={COL_BODY}
         stroke-width={STROKE_WIDTH_TICK}
       />
-      <text {x} y={BOTTOM_NAME_Y}>{item.name}</text>
       <text {x} y={BOTTOM_TEMP_Y}>{isAnki ? "" : item.temp}K</text>
+      {#each item.nameLines as line, i (i)}
+        <text {x} y={BOTTOM_TEMP_Y + LINE_HEIGHT_LABEL * (i + 1)}>{line}</text>
+      {/each}
     {/each}
   </g>
 </svg>
