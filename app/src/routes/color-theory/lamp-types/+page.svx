@@ -1,0 +1,19 @@
+---
+layout: guide-content
+title: ランプの種類
+
+grades: ["2"]
+
+draft: true
+---
+
+## :WithGradeTag[発色原理によるランプの分類]{grades="2"}
+
+照明に使用される光源のことを:Mark[ランプ]といいます。
+ランプにはさまざまな種類があり、その発色原理によって分類することができます。
+
+```mermaid
+graph LR
+    A["光源"] --- B["熱放射"]
+    A --- C["ルミネセンス"]
+```
