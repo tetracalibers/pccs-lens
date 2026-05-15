@@ -3,12 +3,21 @@
   import Heading3 from "../m-html/Heading3.svelte"
   import { Mark } from "$lib/layouts/concept.svelte"
 
+  const iconMap = {
+    person: "fa6-solid:user-tie",
+    book: "icomoon-free:book",
+    art: "streamline-plump:painting-board-solid",
+    color: "oui:color",
+    country: "tdesign:flag-1-filled"
+  } as const
+
   interface Props {
     children?: Snippet
     centering?: boolean
     textCentering?: boolean
     title: string
     ankiTitle?: "hide" | "mark" | "show"
+    icon?: keyof typeof iconMap
   }
 
   let {
@@ -16,18 +25,21 @@
     centering = false,
     textCentering = false,
     title,
-    ankiTitle = "hide"
+    ankiTitle = "hide",
+    icon
   }: Props = $props()
+
+  const resolvedIcon = $derived(icon ? iconMap[icon] : undefined)
 </script>
 
 <section class="term-card" class:centering class:text-centering={textCentering}>
   {#if title}
     {#if ankiTitle === "show"}
-      <Heading3>{title}</Heading3>
+      <Heading3 icon={resolvedIcon}>{title}</Heading3>
     {:else if ankiTitle === "mark"}
-      <Heading3><Mark>{title}</Mark></Heading3>
+      <Heading3 icon={resolvedIcon}><Mark>{title}</Mark></Heading3>
     {:else}
-      <Heading3 {title}>{title}</Heading3>
+      <Heading3 {title} icon={resolvedIcon}>{title}</Heading3>
     {/if}
   {/if}
   {@render children?.()}
