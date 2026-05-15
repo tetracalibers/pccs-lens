@@ -70,13 +70,13 @@
   ]
 
   // ===== ラベルのY位置 =====
-  // 帯の上：（外側）色温度 → 名前（内側）
-  const TOP_NAME_Y = STRIP_Y - TICK_LENGTH - GAP_TICK_TO_LABEL - LINE_HEIGHT_LABEL / 2
-  const TOP_TEMP_Y = TOP_NAME_Y - LINE_HEIGHT_LABEL
-  // 帯の下：（内側）名前 → 色温度（外側）
-  const BOTTOM_NAME_Y =
+  // 帯の上：（外側）名前 → 色温度（内側）
+  const TOP_TEMP_Y = STRIP_Y - TICK_LENGTH - GAP_TICK_TO_LABEL - LINE_HEIGHT_LABEL / 2
+  const TOP_NAME_Y = TOP_TEMP_Y - LINE_HEIGHT_LABEL
+  // 帯の下：（内側）色温度 → 名前（外側）
+  const BOTTOM_TEMP_Y =
     STRIP_Y + STRIP_HEIGHT + TICK_LENGTH + GAP_TICK_TO_LABEL + LINE_HEIGHT_LABEL / 2
-  const BOTTOM_TEMP_Y = BOTTOM_NAME_Y + LINE_HEIGHT_LABEL
+  const BOTTOM_NAME_Y = BOTTOM_TEMP_Y + LINE_HEIGHT_LABEL
 
   // ===== サイドラベルのY位置（2行） =====
   const SIDE_LABEL_CENTER_Y = STRIP_Y + STRIP_HEIGHT / 2
@@ -105,12 +105,7 @@
   />
 
   <!-- 左側ラベル：色温度が / 低い -->
-  <g
-    fill={COL_BODY}
-    font-size={FONT_SIZE_SIDE_LABEL}
-    text-anchor="end"
-    dominant-baseline="central"
-  >
+  <g fill={COL_BODY} font-size={FONT_SIZE_SIDE_LABEL} text-anchor="end" dominant-baseline="central">
     <text x={STRIP_LEFT - SIDE_LABEL_X_GAP} y={SIDE_LABEL_LINE1_Y}>色温度が</text>
     <text x={STRIP_LEFT - SIDE_LABEL_X_GAP} y={SIDE_LABEL_LINE2_Y}>
       {isAnki ? "" : "低い"}
@@ -147,8 +142,8 @@
         stroke={COL_BODY}
         stroke-width={STROKE_WIDTH_TICK}
       />
-      <text x={x} y={TOP_NAME_Y}>{item.name}</text>
-      <text x={x} y={TOP_TEMP_Y}>{isAnki ? "" : item.temp}K</text>
+      <text {x} y={TOP_NAME_Y}>{item.name}</text>
+      <text {x} y={TOP_TEMP_Y}>{isAnki ? "" : item.temp}K</text>
     {/each}
   </g>
 
@@ -169,8 +164,8 @@
         stroke={COL_BODY}
         stroke-width={STROKE_WIDTH_TICK}
       />
-      <text x={x} y={BOTTOM_NAME_Y}>{item.name}</text>
-      <text x={x} y={BOTTOM_TEMP_Y}>{isAnki ? "" : item.temp}K</text>
+      <text {x} y={BOTTOM_NAME_Y}>{item.name}</text>
+      <text {x} y={BOTTOM_TEMP_Y}>{isAnki ? "" : item.temp}K</text>
     {/each}
   </g>
 </svg>
