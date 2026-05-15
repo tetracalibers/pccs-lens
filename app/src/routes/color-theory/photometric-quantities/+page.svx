@@ -1,6 +1,6 @@
 ---
 layout: guide-content
-title: 照明の明るさを表す量
+title: 照明の明るさを表す指標
 
 grades: ["1"]
 
