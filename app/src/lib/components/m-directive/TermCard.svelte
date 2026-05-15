@@ -29,17 +29,21 @@
     icon
   }: Props = $props()
 
-  const resolvedIcon = $derived(icon ? iconMap[icon] : undefined)
+  const resolvedIcon = $derived(() => {
+    if (!icon) return undefined
+    if (icon in iconMap) return iconMap[icon]
+    return icon
+  })
 </script>
 
 <section class="term-card" class:centering class:text-centering={textCentering}>
   {#if title}
     {#if ankiTitle === "show"}
-      <Heading3 icon={resolvedIcon}>{title}</Heading3>
+      <Heading3 icon={resolvedIcon()}>{title}</Heading3>
     {:else if ankiTitle === "mark"}
-      <Heading3 icon={resolvedIcon}><Mark>{title}</Mark></Heading3>
+      <Heading3 icon={resolvedIcon()}><Mark>{title}</Mark></Heading3>
     {:else}
-      <Heading3 {title} icon={resolvedIcon}>{title}</Heading3>
+      <Heading3 {title} icon={resolvedIcon()}>{title}</Heading3>
     {/if}
   {/if}
   {@render children?.()}
