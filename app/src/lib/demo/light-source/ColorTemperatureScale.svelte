@@ -226,7 +226,9 @@
       {#each item.nameLines as line, i (i)}
         <text {x} y={TOP_TEMP_Y - LINE_HEIGHT_LABEL * (lineCount - i)}>{line}</text>
       {/each}
-      <text {x} y={TOP_TEMP_Y}>{isAnki ? "" : item.temp}K</text>
+      <text {x} y={TOP_TEMP_Y}>
+        <tspan visibility={isAnki ? "hidden" : "visible"}>{item.temp}</tspan>K
+      </text>
     {/each}
   </g>
 
@@ -247,7 +249,9 @@
         stroke={COL_BODY}
         stroke-width={STROKE_WIDTH_TICK}
       />
-      <text {x} y={BOTTOM_TEMP_Y}>{isAnki ? "" : item.temp}K</text>
+      <text {x} y={BOTTOM_TEMP_Y}>
+        <tspan visibility={isAnki ? "hidden" : "visible"}>{item.temp}</tspan>K
+      </text>
       {#each item.nameLines as line, i (i)}
         <text {x} y={BOTTOM_TEMP_Y + LINE_HEIGHT_LABEL * (i + 1)}>{line}</text>
       {/each}
