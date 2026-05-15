@@ -217,6 +217,7 @@
     y={SIDE_LABEL_CENTER_Y}
     fill={COL_LOW_END}
     font-size={FONT_SIZE_SIDE_LABEL}
+    font-weight="bold"
     text-anchor="end"
     dominant-baseline="central"
   >
@@ -229,6 +230,7 @@
     y={SIDE_LABEL_CENTER_Y}
     fill={COL_HIGH_END}
     font-size={FONT_SIZE_SIDE_LABEL}
+    font-weight="bold"
     text-anchor="start"
     dominant-baseline="central"
   >
