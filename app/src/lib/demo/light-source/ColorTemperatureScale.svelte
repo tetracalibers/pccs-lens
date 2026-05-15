@@ -2,8 +2,13 @@
   import chroma from "chroma-js"
   import { ankiMode } from "$lib/state/anki.svelte"
 
+  interface NamePart {
+    text: string
+    ankiHide?: boolean // true なら暗記モードで非表示（スペースは保持）
+  }
+
   interface LightMarker {
-    nameLines: string[]
+    nameLines: NamePart[][] // 行 × 各行のセグメント
     temp: number
   }
 
@@ -63,18 +68,19 @@
 
   // ===== 主要な自然光（帯の上） =====
   const naturalLights: LightMarker[] = [
-    { nameLines: ["地平線の", "太陽光"], temp: 1580 },
-    { nameLines: ["天頂の", "太陽光"], temp: 5250 },
-    { nameLines: ["日中の", "北窓の光"], temp: 6500 },
-    { nameLines: ["晴天の", "青空"], temp: 12000 }
+    { nameLines: [[{ text: "地平線の" }], [{ text: "太陽光" }]], temp: 1580 },
+    { nameLines: [[{ text: "天頂の" }], [{ text: "太陽光" }]], temp: 5250 },
+    { nameLines: [[{ text: "日中の" }], [{ text: "北窓の光" }]], temp: 6500 },
+    { nameLines: [[{ text: "晴天の" }], [{ text: "青空" }]], temp: 12000 }
   ]
 
   // ===== 主要な蛍光ランプ（帯の下） =====
+  // 「色」以外の部分を暗記モードで非表示にする
   const fluorescentLamps: LightMarker[] = [
-    { nameLines: ["電球色"], temp: 3000 },
-    { nameLines: ["白色"], temp: 4000 },
-    { nameLines: ["昼白色"], temp: 5000 },
-    { nameLines: ["昼光色"], temp: 6500 }
+    { nameLines: [[{ text: "電球", ankiHide: true }, { text: "色" }]], temp: 3000 },
+    { nameLines: [[{ text: "白", ankiHide: true }, { text: "色" }]], temp: 4000 },
+    { nameLines: [[{ text: "昼白", ankiHide: true }, { text: "色" }]], temp: 5000 },
+    { nameLines: [[{ text: "昼光", ankiHide: true }, { text: "色" }]], temp: 6500 }
   ]
 
   // ===== ラベルのY位置 =====
@@ -224,7 +230,10 @@
         stroke-width={STROKE_WIDTH_TICK}
       />
       {#each item.nameLines as line, i (i)}
-        <text {x} y={TOP_TEMP_Y - LINE_HEIGHT_LABEL * (lineCount - i)}>{line}</text>
+        <text {x} y={TOP_TEMP_Y - LINE_HEIGHT_LABEL * (lineCount - i)}>
+          {#each line as part, j (j)}<tspan
+              visibility={part.ankiHide && isAnki ? "hidden" : "visible"}>{part.text}</tspan>{/each}
+        </text>
       {/each}
       <text {x} y={TOP_TEMP_Y}>
         <tspan visibility={isAnki ? "hidden" : "visible"}>{item.temp}</tspan>K
@@ -253,7 +262,10 @@
         <tspan visibility={isAnki ? "hidden" : "visible"}>{item.temp}</tspan>K
       </text>
       {#each item.nameLines as line, i (i)}
-        <text {x} y={BOTTOM_TEMP_Y + LINE_HEIGHT_LABEL * (i + 1)}>{line}</text>
+        <text {x} y={BOTTOM_TEMP_Y + LINE_HEIGHT_LABEL * (i + 1)}>
+          {#each line as part, j (j)}<tspan
+              visibility={part.ankiHide && isAnki ? "hidden" : "visible"}>{part.text}</tspan>{/each}
+        </text>
       {/each}
     {/each}
   </g>
