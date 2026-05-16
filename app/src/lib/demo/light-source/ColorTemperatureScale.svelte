@@ -31,13 +31,13 @@
   const LINE_HEIGHT_LABEL = 28
   const FONT_SIZE_MARKER_LABEL = 18
   const FONT_SIZE_SIDE_LABEL = 22
-  const FONT_SIZE_GROUP_TITLE = 24
+  const FONT_SIZE_GROUP_TITLE = 22
 
   // ===== 波括弧の形状 =====
-  const BRACE_STROKE_WIDTH = 2
+  const BRACE_STROKE_WIDTH = 1.2
   const BRACE_CORNER_R = 8 // 端と中央コブの曲がりの半径
-  const BRACE_HEIGHT = 18 // 足元から頂点までの距離
-  const BRACE_LABEL_GAP = 24 // 波括弧の足元と近接ラベル中心の隙間
+  const BRACE_HEIGHT = 16 // 足元から頂点までの距離
+  const BRACE_LABEL_GAP = 32 // 波括弧の足元と近接ラベル中心の隙間
   const BRACE_TITLE_GAP = 24 // 波括弧の頂点とタイトル中心の隙間
 
   // ===== サイドラベルの位置 =====
@@ -241,7 +241,6 @@
   <g
     fill={COL_BODY}
     font-size={FONT_SIZE_GROUP_TITLE}
-    font-weight="bold"
     text-anchor="middle"
     dominant-baseline="central"
   >
