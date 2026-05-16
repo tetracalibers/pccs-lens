@@ -375,11 +375,15 @@
         "colorDescription": "ローシェンナに暗い赤を 少し加えたような色",
         "originDescription": "酸化鉄を含む土から造られる 絵の具の総称",
         "iconKey": "shovel",
-        "rgb": "rgb(182, 100, 56)",
+        "cmyk": "25,75,85,0",
+        "rgb": "rgb(202, 101, 61)",
         "_hex": "#bb541f",
         "examLevel": 2,
         "munsell": "2.5YR 5/8.5",
-        "approximatePccs": [{ "notation": "d6", "deltaE": 4.77 }]
+        "approximatePccs": [
+          { "notation": "sf4", "deltaE": 6.16 },
+          { "notation": "d6", "deltaE": 6.48 }
+        ]
       },
       {
         "id": "burnt-sienna",
@@ -390,11 +394,12 @@
         "colorDescription": "代赭より くすんだ赤みを感じる",
         "originDescription": "シエナで採れる土を焼いた 赤みのある褐色の絵の具",
         "iconKey": "shovel",
-        "rgb": "rgb(165, 87, 64)",
+        "cmyk": "30,80,80,0",
+        "rgb": "rgb(192, 89, 69)",
         "_hex": "#b25532",
         "examLevel": 2,
         "munsell": "10R 4.5/7.5",
-        "approximatePccs": [{ "notation": "d6", "deltaE": 3.82 }]
+        "approximatePccs": [{ "notation": "d6", "deltaE": 4.87 }]
       },
       {
         "id": "terracotta",
@@ -404,11 +409,12 @@
         "colorDescription": "バーントシェンナより 赤寄りでくすみが薄い",
         "originDescription": "イタリア語で「焼いた土」 素焼きの陶器の色",
         "iconKey": "pottery",
-        "rgb": "rgb(169, 83, 72)",
+        "cmyk": "40,70,80,15",
+        "rgb": "rgb(153, 93, 64)",
         "_hex": "#be6d55",
         "examLevel": 2,
         "munsell": "7.5R 4.5/8",
-        "approximatePccs": [{ "notation": "d4", "deltaE": 4.19 }]
+        "approximatePccs": [{ "notation": "d6", "deltaE": 6.03 }]
       },
       {
         "id": "hiwada-iro",
@@ -418,11 +424,16 @@
         "colorDescription": "黒に近い暗さというより グレイが感じられる",
         "originDescription": "ヒノキの樹皮のような茶色 蘇芳による染色の色名",
         "iconKey": "trunk",
-        "rgb": "rgb(142, 98, 84)",
+        "cmyk": "0,55,40,70",
+        "rgb": "rgb(117, 68, 63)",
         "_hex": "#965036",
         "examLevel": 2,
         "munsell": "1YR 4.5/4",
-        "approximatePccs": [{ "notation": "g6", "deltaE": 8.62 }]
+        "approximatePccs": [
+          { "notation": "dk4", "deltaE": 6.76 },
+          { "notation": "dk2", "deltaE": 8.5 },
+          { "notation": "g2", "deltaE": 8.14 }
+        ]
       },
       {
         "id": "renga-iro",
@@ -432,14 +443,14 @@
         "colorDescription": "桧皮色と明度は同じくらい 桧皮色より鮮やか",
         "originDescription": "レンガの中でも 赤レンガに由来する色",
         "iconKey": "brick",
-        "rgb": "rgb(148, 75, 56)",
+        "cmyk": "20,80,80,30",
+        "rgb": "rgb(165, 71, 51)",
         "_hex": "#a2482b",
         "examLevel": 3,
         "munsell": "10R 4/7",
         "approximatePccs": [
-          { "notation": "dk4", "deltaE": 8.65 },
-          { "notation": "d6", "deltaE": 8.36 },
-          { "notation": "d4", "deltaE": 8.09 }
+          { "notation": "d6", "deltaE": 6.47 },
+          { "notation": "d4", "deltaE": 6.15 }
         ]
       },
       {
@@ -450,11 +461,16 @@
         "colorDescription": "鮮やかだが暗く 深い赤みが感じられる",
         "originDescription": "ベンガル地方で産出する 天然の酸化鉄から造られる顔料",
         "iconKey": "shovel",
-        "rgb": "rgb(135, 61, 52)",
+        "cmyk": "25,85,90,25",
+        "rgb": "rgb(164, 63, 38)",
         "_hex": "#8f2d12",
         "examLevel": 2,
         "munsell": "8R 3.5/7",
-        "approximatePccs": [{ "notation": "dk4", "deltaE": 5.06 }]
+        "approximatePccs": [
+          { "notation": "dp4", "deltaE": 6.86 },
+          { "notation": "d6", "deltaE": 7.62 },
+          { "notation": "d4", "deltaE": 8.25 }
+        ]
       },
       {
         "id": "suo",
@@ -1472,14 +1488,15 @@
         "colorDescription": "常盤色より青みがあり ややくすんで見える",
         "originDescription": "ラテン語で緑を意味する、 viridisからの造語",
         "iconKey": "paint",
-        "rgb": "rgb(4, 110, 86)",
+        "cmyk": "95,20,80,20",
+        "rgb": "rgb(0, 121, 89)",
         "_hex": "#008969",
         "examLevel": 3,
         "munsell": "8G 4/6",
         "approximatePccs": [
-          { "notation": "g12", "deltaE": 8.15 },
-          { "notation": "dp12", "deltaE": 8.19 },
-          { "notation": "v14", "deltaE": 9.78 }
+          { "notation": "v13", "deltaE": 8.25 },
+          { "notation": "dp12", "deltaE": 7.36 },
+          { "notation": "g12", "deltaE": 9.54 }
         ]
       },
       {
@@ -1579,12 +1596,15 @@
         "colorDescription": "空色と同じ色",
         "originDescription": "空色と同じ色",
         "iconKey": "sky",
-        "cmyk": "55,0,5,0",
-        "rgb": "rgb(102, 202, 237)",
+        "cmyk": "45,5,0,0",
+        "rgb": "rgb(143, 206, 243)",
         "_hex": "#a0d8ef",
         "examLevel": 3,
         "munsell": "9B 7.5/5.5",
-        "approximatePccs": [{ "notation": "lt16", "deltaE": 6.98 }]
+        "approximatePccs": [
+          { "notation": "p18", "deltaE": 7.6 },
+          { "notation": "lt16", "deltaE": 9.47 }
+        ]
       },
       {
         "id": "kamenozoki",
@@ -2055,11 +2075,12 @@
         "colorDescription": "パープルより明るい 強い赤みが感じられる",
         "originDescription": "アヤメという名は 花びらの文目模様に由来する",
         "iconKey": "flower",
-        "rgb": "rgb(197, 122, 180)",
+        "cmyk": "85, 90, 0, 0",
+        "rgb": "rgb(70, 51, 140)",
         "_hex": "#cc7db1",
         "examLevel": 3,
         "munsell": "10P 6/10",
-        "approximatePccs": [{ "notation": "lt22", "deltaE": 5.69 }]
+        "approximatePccs": [{ "notation": "d20", "deltaE": 4.08 }]
       },
       {
         "id": "purple",
