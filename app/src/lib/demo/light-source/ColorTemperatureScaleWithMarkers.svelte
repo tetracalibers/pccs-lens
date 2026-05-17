@@ -21,18 +21,15 @@
 
   // ===== Tick =====
   const TICK_LENGTH = 12
-  const STROKE_WIDTH_TICK = 1.5
+  const STROKE_WIDTH_TICK = 2
 
   // ===== Lamp icon =====
   const LAMP_ICON_SIZE = 56
   const GAP_TICK_TO_ICON = 6
 
   // ===== 外側パディング =====
-  const PADDING_VERTICAL = 8
-  const PADDING_HORIZONTAL = 4
-
-  // ===== Colors =====
-  const COL_BODY = "var(--color-body)"
+  const PADDING_VERTICAL = 12
+  const PADDING_HORIZONTAL = 12
 
   // ===== グラデーションストップ生成 =====
   const gradientStops = Array.from({ length: GRADIENT_SAMPLE_COUNT }, (_, i) => {
@@ -92,6 +89,16 @@
     </linearGradient>
   </defs>
 
+  <!-- 背景 -->
+  <rect
+    x="0"
+    y="0"
+    width={WIDTH}
+    height={HEIGHT}
+    rx={8}
+    fill="light-dark(lightslategray, var(--color-bg--dark))"
+  />
+
   <!-- 帯（色温度のグラデーション） -->
   <rect
     x={STRIP_LEFT}
@@ -104,12 +111,13 @@
   <!-- マーカー（帯の下） -->
   {#each temperatures as temp (temp)}
     {@const x = xAt(temp)}
+    {@const tempColor = chroma.temperature(temp).hex()}
     <line
       x1={x}
       y1={STRIP_Y + STRIP_HEIGHT}
       x2={x}
       y2={STRIP_Y + STRIP_HEIGHT + TICK_LENGTH}
-      stroke={COL_BODY}
+      stroke={tempColor}
       stroke-width={STROKE_WIDTH_TICK}
     />
     <g transform="translate({x - LAMP_ICON_SIZE / 2}, {ICON_Y})">
