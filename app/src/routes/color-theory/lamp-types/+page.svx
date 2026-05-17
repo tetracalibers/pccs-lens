@@ -12,6 +12,9 @@ draft: true
   import ColorTemperatureScaleWithMarkers from "$lib/demo/light-source/ColorTemperatureScaleWithMarkers.svelte"
   import IncandescentBulbSpectralDistribution from "$lib/demo/spectral-distribution/IncandescentBulbSpectralDistribution.svelte"
   import HalogenBulbSpectralDistribution from "$lib/demo/spectral-distribution/HalogenBulbSpectralDistribution.svelte"
+  import StandardFluorescentLampSpectralDistribution from "$lib/demo/spectral-distribution/StandardFluorescentLampSpectralDistribution.svelte"
+  import ThreeBandFluorescentLampSpectralDistribution from "$lib/demo/spectral-distribution/ThreeBandFluorescentLampSpectralDistribution.svelte"
+  import HighColorRenderingFluorescentLampSpectralDistribution from "$lib/demo/spectral-distribution/HighColorRenderingFluorescentLampSpectralDistribution.svelte"
 </script>
 
 照明に使用される光源のことを:Mark[ランプ]といいます。
@@ -26,7 +29,7 @@ draft: true
   色温度約:Mark[2800]Kの:Mark[黄]み〜:Mark[赤]みがかった光色
 
   <SVGWrapper style="margin-block-start: -1.5rem; margin-block-end: -1rem;">
-    <ColorTemperatureScaleWithMarkers temperatures={[2800]} />
+    <ColorTemperatureScaleWithMarkers markers={[{ temp: 2800 }]} />
   </SVGWrapper>
 :::
 
@@ -72,9 +75,75 @@ draft: true
 
 ## :WithGradeTag[蛍光ランプ]{grades="2"}
 
-::ComingSoon
+蛍光ランプは、:Mark[白熱ランプ]（白熱電球やハロゲン電球）に比べて:Mark[効率]がよく、:Mark[寿命]も長いランプです。
+:Mark[消費電力]も小さいため、経済性に優れています。
 
-## :WithGradeTag[LED]{grades="2"}
+### 光色の種類
+
+蛍光ランプは、さまざまな色温度のものがあり、:Mark[光色]の種類が豊富です。
+
+<SVGWrapper>
+  <ColorTemperatureScaleWithMarkers
+    markers={[
+      { temp: 6500, label: "昼光色" },
+      { temp: 5000, label: "昼白色" },
+      { temp: 4000, label: "白色" },
+      { temp: 3000, label: "電球色" }
+    ]}
+  />
+</SVGWrapper>
+
+::::CardGrid
+:::TermCard{title="電球色" ankiTitle="mark"}
+色温度約:Mark[3000]K。:Mark[白熱電球]に近いあたたかみのある光色で、:Mark[くつろいだ]雰囲気
+:::
+:::TermCard{title="白色" ankiTitle="mark"}
+色温度約:Mark[4000]Kのやや:Mark[黄]みを帯びた光色で、:Mark[柔らかな]雰囲気
+:::
+:::TermCard{title="昼白色" ankiTitle="mark"}
+色温度約:Mark[5000]Kの自然でナチュラルな光色。:Mark[物体]の色が自然に美しく見える
+:::
+:::TermCard{title="昼光色" ankiTitle="mark"}
+色温度約:Mark[6500]Kのやや:Mark[青]みがかった光色。空間の:Mark[白さ]が際立つ
+:::
+::::
+
+### 演色性の異なる3タイプ
+
+JISでは、蛍光ランプを:Mark[演色性]によって分類しています。
+演色性が高い順に、:Mark[高演色型]、:Mark[3波長域発光型]、:Mark[普通型]の3タイプがあります。
+
+- :Mark[高演色型]：:Mark[美術館]などの照明や、Raが:Mark[90]以上のものは:Mark[色評価]用としても使われる
+- :Mark[3波長域発光型]：蛍光ランプの主流で、住宅やオフィスで使われる
+- :Mark[普通型]：他の二つと比べると演色性は劣るが、価格が安い
+
+::::CardGrid{cols=1}
+:::TermCard{title="普通型" ankiTitle="mark"}
+R・G・Bのうち、Rの波長域のエネルギー量が激減しており、他の2色の波長域にツノがある。
+波長のバランスが良くないため、見える色が少し変わってしまう（演色性がよくない）
+
+<SVGWrapper maxW={320} style="margin-block: -0.5rem;">
+  <StandardFluorescentLampSpectralDistribution />
+</SVGWrapper>
+:::
+:::TermCard{title="高演色型" ankiTitle="mark"}
+普通形と似ているものの、Rの波長が増強されており、演色性が改善されている
+
+<SVGWrapper maxW={320} style="margin-block: -0.5rem;">
+  <HighColorRenderingFluorescentLampSpectralDistribution />
+</SVGWrapper>
+:::
+:::TermCard{title="3波長域発光型" ankiTitle="mark"}
+:Mark[錐体]の感度がよい波長付近の光を強く発光させることで、:Mark[演色性]を高めている
+逆にそれ以外の部分のエネルギー量は抑えめにすることで、:Mark[省エネルギー]を実現している
+
+<SVGWrapper maxW={320} style="margin-block: -0.5rem;">
+  <ThreeBandFluorescentLampSpectralDistribution />
+</SVGWrapper>
+:::
+::::
+
+## :WithGradeTag[白色LED]{grades="2"}
 
 ::ComingSoon
 
