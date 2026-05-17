@@ -7,47 +7,189 @@ grades: ["2"]
 draft: true
 ---
 
-## :WithGradeTag[発色原理によるランプの分類]{grades="2"}
+<script>
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import ColorTemperatureScaleWithMarkers from "$lib/demo/light-source/ColorTemperatureScaleWithMarkers.svelte"
+  import IncandescentBulbSpectralDistribution from "$lib/demo/spectral-distribution/IncandescentBulbSpectralDistribution.svelte"
+</script>
 
 照明に使用される光源のことを:Mark[ランプ]といいます。
-ランプにはさまざまな種類があり、その発光原理によって分類することができます。
+ランプにはさまざまな種類があり、用途によって使い分けられています。
+
+## :WithGradeTag[白熱電球]{grades="2"}
+
+白熱電球は、:Mark[インテリア]の照明に適したランプで、あたたかみのある光色が特徴です。
+
+::::CardGrid{cols=1}
+:::TermCard{title="色温度と光色" ankiTitle="show"}
+  色温度約:Mark[2800]Kの:Mark[黄]み〜:Mark[赤]みがかった光色
+
+  <SVGWrapper style="margin-block-start: -1.5rem; margin-block-end: -1rem;">
+    <ColorTemperatureScaleWithMarkers temperatures={[2800]} />
+  </SVGWrapper>
+:::
+
+:::TermCard{title="分光分布と色の見え方" ankiTitle="show"}
+  :Mark[演色評価数]の基準光とほぼ同じ分光分布をもつため、:Mark[演色性]が高い
+  
+  <SVGWrapper maxW={320} style="margin-block: -0.5rem;">
+    <IncandescentBulbSpectralDistribution />
+  </SVGWrapper>
+:::
+::::
+
+:Mark[調光]（光の量を調節すること）が可能で、変化に富んだ照明をつくることができます。
+ガラス球の内側に塗料を塗るかどうかによっても光のバリエーションが変わります。
+
+::::CardGrid
+:::TermCard{title="ホワイトランプ" ankiTitle="mark"}
+ガラス球の内側に白色塗料を塗った白熱電球。:Mark[眩しさ]が少なくソフトな光で、光の拡散性に優れている
+:::
+:::TermCard{title="クリアランプ" ankiTitle="mark"}
+ガラス球が透明な白熱電球。きらめきのある:Mark[装飾]的な光を発する
+:::
+::::
+
+## :WithGradeTag[ハロゲン電球]{grades="2"}
+
+ハロゲン電球は、:Mark[白熱電球]の一種の小型ランプです。白熱電球と比べると、次のような性質をもちます。
+
+::ComingSoon
+
+## :WithGradeTag[蛍光ランプ]{grades="2"}
+
+::ComingSoon
+
+## :WithGradeTag[LED]{grades="2"}
+
+::ComingSoon
+
+## :WithGradeTag[HIDランプ]{grades="2"}
+
+::ComingSoon
+
+## :WithGradeTag[発光原理によるランプの分類]{grades="2"}
+
+ランプはその発光原理によって分類できます。ランプの発光原理は、大きく次の2種類に分けられます。
+
+- :Mark[熱放射]：物体を高温にすると光を出す現象
+- :Mark[ルミネセンス]：物体が熱以外のエネルギーを受け取ると光を出す現象
 
 ```mermaid
 graph LR
-    A["光源"] --- Anki_B["熱放射"]
+    A["光源の発光原理"] --- Anki_B["熱放射"]
     A --- Anki_C["ルミネセンス"]
+```
+
+ルミネセンスは、さらに3種類に分けられます。
+
+- :Mark[放電]：電子の放出
+- :Mark[エレクトロルミネセンス]：電気エネルギーによる光放射
+- :Mark[フォトルミネセンス]：光エネルギーによる光放射
+
+```mermaid
+graph LR
+    A["光源の発光原理"] --- B["熱放射"]
+    A --- C["ルミネセンス"]
     
-    Anki_C --- Anki_C1["放電"]
-    Anki_C --- Anki_C2["エレクトロ<br/>ルミネセンス"]
-    Anki_C --- Anki_C3["フォト<br/>ルミネセンス"]
+    C --- Anki_C1["放電"]
+    C --- Anki_C2["エレクトロ<br/>ルミネセンス"]
+    C --- Anki_C3["フォト<br/>ルミネセンス"]
 ```
+
+### 熱放射を利用したランプ
+
+熱放射を利用したランプは、:Mark[白熱ランプ]と呼ばれるものが代表的です。
+
+:::TermCard{title="白熱ランプ" ankiTitle="show"}
+:Mark[熱放射]による発光を利用したランプ。:Mark[白熱電球]や:Mark[ハロゲン電球]などがある
+:::
 
 ```mermaid
 graph LR
-  A["熱放射"] --- Anki_A1["高圧ナトリウムランプ"]
-  A --- Anki_A2["ハロゲン電球"]
+    A["光源"] --- B["熱放射を<br />利用したランプ"]:::b
+    A --- C["ルミネセンスを<br />利用したランプ"]
+        
+    B --- Anki_B1{{"白熱電球"}}:::b
+    B --- Anki_B2{{"ハロゲン電球"}}:::b
+    
+    classDef b fill:var(--pastel-green)
 ```
+
+### 放電を利用したランプ
+
+ルミネセンスのうち、電子を放出する:Mark[放電]を利用したランプとして、:Mark[HIDランプ]や:Mark[蛍光ランプ]があります。
+
+:::TermCard{title="HIDランプ" ankiTitle="show"}
+HIDはHigh Intensity Discharge Lampの略。日本語では:Mark[高輝度放射灯]と呼ばれる。
+:Mark[水銀ランプ]、:Mark[メタルハライドランプ]、:Mark[ナトリウムランプ]などがあり、スタジアムや道路など公共の場で使われている
+:::
 
 ```mermaid
 graph LR
-  A["放電<br/>（高圧放電）"] --- Anki_A1["水銀ランプ"]
-  A --- Anki_A2["メタルハライドランプ"]
-  A --- Anki_A3["高圧ナトリウムランプ"]
+    A["光源"] --- B["熱放射を<br />利用したランプ"]
+    A --- C["ルミネセンスを<br />利用したランプ"]
+    
+    C --- C1["放電を<br />利用したランプ"]
+
+    C1 --- C11["高圧放電"]:::c11
+    C1 --- C12["低圧放電"]:::c12
+    
+    C11 --- Anki_C111{{"水銀ランプ"}}:::c11
+    C11 --- Anki_C112{{"メタルハライドランプ"}}:::c11
+    C11 --- Anki_C113{{"高圧ナトリウムランプ"}}:::c11
+    
+    C12 --- Anki_C121{{"低圧ナトリウムランプ"}}:::c12
+    C12 --- Anki_C122{{"蛍光ランプ"}}:::c12
+
+    classDef b fill:var(--pastel-green)
+    classDef c11 fill:var(--pastel-blue)
+    classDef c12 fill:var(--pastel-water)
+    classDef c2 fill:var(--pastel-orange)
+    classDef c3 fill:var(--pastel-pink)
 ```
+
+### エレクトロルミネセンスを利用したランプ
+
+ルミネセンスのうち、電気エネルギーによる光放射を利用した光源は:Mark[エレクトロルミネセンス]と呼ばれ、身近なランプとしては:Mark[LED]があります。
+
+:::TermCard{title="LED" ankiTitle="show"}
+Light Emitting Diodeの略。日本語では:Mark[発光ダイオード]と呼ばれ、急速に普及している
+:::
 
 ```mermaid
 graph LR
-  A["放電<br/>（低圧放電）"] --- Anki_A1["低圧ナトリウムランプ"]
-  A --- Anki_A2["蛍光ランプ"]
+    A["光源"] --- B["熱放射を<br />利用したランプ"]
+    A --- C["ルミネセンスを<br />利用したランプ"]
+    
+    C --- C2["エレクトロ<br/>ルミネセンス"]:::c2
+  
+    C2 --- Anki_C21{{"LED"}}:::c2
+  
+    classDef b fill:var(--pastel-green)
+    classDef c11 fill:var(--pastel-blue)
+    classDef c12 fill:var(--pastel-water)
+    classDef c2 fill:var(--pastel-orange)
+    classDef c3 fill:var(--pastel-pink)
 ```
+
+### フォトルミネセンスを利用したランプ
+
+ルミネセンスのうち、光を受けて光を放射する現象を利用した光源は:Mark[フォトルミネセンス]と呼ばれ、身近なランプとしては:Mark[蛍光ランプ]や:Mark[白色LED]があります。
 
 ```mermaid
 graph LR
-  A["エレクトロ<br/>ルミネセンス"] --- Anki_A1["LED"]
-```
-
-```mermaid
-graph LR
-  A["フォト<br/>ルミネセンス"] --- Anki_A1["蛍光ランプ"]
-  A --- Anki_A2["白色LED"]
+    A["光源"] --- B["熱放射を<br />利用したランプ"]
+    A --- C["ルミネセンスを<br />利用したランプ"]
+    
+    C --- C3["フォト<br/>ルミネセンス"]:::c3
+      
+    C3 --- Anki_C31{{"蛍光ランプ"}}:::c3
+    C3 --- Anki_C32{{"白色LED"}}:::c3
+    
+    classDef b fill:var(--pastel-green)
+    classDef c11 fill:var(--pastel-blue)
+    classDef c12 fill:var(--pastel-water)
+    classDef c2 fill:var(--pastel-orange)
+    classDef c3 fill:var(--pastel-pink)
 ```
