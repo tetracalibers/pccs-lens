@@ -12,4 +12,4 @@
   const color = $derived(chroma.temperature(temperature).hex())
 </script>
 
-<Icon icon="ion:bulb" style="color: {color}" width={size} />
+<Icon icon="material-symbols-light:lightbulb-rounded" style="color: {color}" width={size} />
