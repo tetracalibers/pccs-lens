@@ -5,7 +5,9 @@
   --color-heading--dark: #eeeef8;
   --color-body--dark: oklch(from var(--color-heading--dark) calc(l - 0.15) calc(c * 0.5) h);
 
-  --color-bg: light-dark(#ffffff, #0c0c14);
+  --color-bg--light: #ffffff;
+  --color-bg--dark: #0c0c14;
+  --color-bg: light-dark(var(--color-bg--light), var(--color-bg--dark));
   --color-heading: light-dark(var(--color-heading--light), var(--color-heading--dark));
   --color-body: light-dark(var(--color-body--light), var(--color-body--dark));
 
