@@ -1,12 +1,18 @@
 <script lang="ts">
   import chroma from "chroma-js"
   import LampIcon from "./LampIcon.svelte"
+  import { ankiMode } from "$lib/state/anki.svelte"
 
-  interface Props {
-    temperatures: number[]
+  interface Marker {
+    temp: number
+    label?: string
   }
 
-  let { temperatures }: Props = $props()
+  interface Props {
+    markers: Marker[]
+  }
+
+  let { markers }: Props = $props()
 
   // ===== Strip layout =====
   const STRIP_WIDTH = 800
@@ -27,6 +33,10 @@
   const LAMP_ICON_SIZE = 56
   const GAP_TICK_TO_ICON = 6
 
+  // ===== Label =====
+  const FONT_SIZE_LABEL = 18
+  const GAP_ICON_TO_LABEL = 6
+
   // ===== 外側パディング =====
   const PADDING_VERTICAL = 12
   const PADDING_HORIZONTAL = 12
@@ -41,28 +51,46 @@
     }
   })
 
+  // ===== 文字幅の見積もり（全角 = フォントサイズ、半角 = フォントサイズ × 0.6） =====
+  const estimateCharWidth = (ch: string, fontSize: number): number => {
+    const code = ch.charCodeAt(0)
+    const isFullWidth = (code >= 0x3000 && code <= 0x9fff) || (code >= 0xff00 && code <= 0xffef)
+    return isFullWidth ? fontSize : fontSize * 0.6
+  }
+  const estimateTextWidth = (s: string, fontSize: number): number =>
+    [...s].reduce((sum, ch) => sum + estimateCharWidth(ch, fontSize), 0)
+
+  // ===== ラベルの有無 =====
+  const hasAnyLabel = $derived(markers.some((m) => m.label))
+
   // ===== SVG の大きさ・帯の位置（他の値から自動算出） =====
-  // 帯下：tick + 隙間 + アイコン本体
-  const stackExtent = TICK_LENGTH + GAP_TICK_TO_ICON + LAMP_ICON_SIZE
+  // 帯下：tick + 隙間 + アイコン本体 +（ラベルがある場合は 隙間 + ラベル）
+  const labelStackExtent = $derived(hasAnyLabel ? GAP_ICON_TO_LABEL + FONT_SIZE_LABEL : 0)
+  const stackExtent = $derived(TICK_LENGTH + GAP_TICK_TO_ICON + LAMP_ICON_SIZE + labelStackExtent)
 
   const STRIP_Y = PADDING_VERTICAL
-  const HEIGHT = STRIP_Y + STRIP_HEIGHT + stackExtent + PADDING_VERTICAL
+  const HEIGHT = $derived(STRIP_Y + STRIP_HEIGHT + stackExtent + PADDING_VERTICAL)
 
-  // 横：各アイコンが帯端からはみ出す量を集計（アイコンは中心揃え）
+  // 横：各マーカー（アイコンとラベルの広い方）が帯端からはみ出す量を集計
   const markerRelativeX = (temp: number): number =>
     ((temp - TEMP_MIN) / (TEMP_MAX - TEMP_MIN)) * STRIP_WIDTH
 
+  const markerHalfWidth = (m: Marker): number => {
+    const labelHalf = m.label ? estimateTextWidth(m.label, FONT_SIZE_LABEL) / 2 : 0
+    return Math.max(LAMP_ICON_SIZE / 2, labelHalf)
+  }
+
   const LEFT_OVERHANG = $derived(
-    temperatures.length === 0
+    markers.length === 0
       ? 0
-      : Math.max(0, ...temperatures.map((t) => LAMP_ICON_SIZE / 2 - markerRelativeX(t)))
+      : Math.max(0, ...markers.map((m) => markerHalfWidth(m) - markerRelativeX(m.temp)))
   )
   const RIGHT_OVERHANG = $derived(
-    temperatures.length === 0
+    markers.length === 0
       ? 0
       : Math.max(
           0,
-          ...temperatures.map((t) => LAMP_ICON_SIZE / 2 + markerRelativeX(t) - STRIP_WIDTH)
+          ...markers.map((m) => markerHalfWidth(m) + markerRelativeX(m.temp) - STRIP_WIDTH)
         )
   )
 
@@ -76,8 +104,12 @@
 
   // ===== アイコンのY位置（左上基準） =====
   const ICON_Y = STRIP_Y + STRIP_HEIGHT + TICK_LENGTH + GAP_TICK_TO_ICON
+  // ===== ラベルの中心Y位置 =====
+  const LABEL_Y = ICON_Y + LAMP_ICON_SIZE + GAP_ICON_TO_LABEL + FONT_SIZE_LABEL / 2
 
   const gradientId = `color-temperature-gradient-marked-${Math.random().toString(36).slice(2, 10)}`
+
+  const isAnki = $derived(ankiMode.isAnki)
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {WIDTH} {HEIGHT}">
@@ -96,7 +128,7 @@
     width={WIDTH}
     height={HEIGHT}
     rx={8}
-    fill="light-dark(lightslategray, var(--color-bg--dark))"
+    fill="light-dark(#545d66, var(--color-bg--dark))"
   />
 
   <!-- 帯（色温度のグラデーション） -->
@@ -109,9 +141,9 @@
   />
 
   <!-- マーカー（帯の下） -->
-  {#each temperatures as temp (temp)}
-    {@const x = xAt(temp)}
-    {@const tempColor = chroma.temperature(temp).hex()}
+  {#each markers as marker (marker.temp)}
+    {@const x = xAt(marker.temp)}
+    {@const tempColor = chroma.temperature(marker.temp).hex()}
     <line
       x1={x}
       y1={STRIP_Y + STRIP_HEIGHT}
@@ -121,7 +153,21 @@
       stroke-width={STROKE_WIDTH_TICK}
     />
     <g transform="translate({x - LAMP_ICON_SIZE / 2}, {ICON_Y})">
-      <LampIcon temperature={temp} size={LAMP_ICON_SIZE} />
+      <LampIcon temperature={marker.temp} size={LAMP_ICON_SIZE} />
     </g>
+    {#if marker.label}
+      <text
+        {x}
+        y={LABEL_Y}
+        fill={tempColor}
+        font-size={FONT_SIZE_LABEL}
+        font-weight="bold"
+        text-anchor="middle"
+        dominant-baseline="central"
+        visibility={isAnki ? "hidden" : "visible"}
+      >
+        {marker.label}
+      </text>
+    {/if}
   {/each}
 </svg>
