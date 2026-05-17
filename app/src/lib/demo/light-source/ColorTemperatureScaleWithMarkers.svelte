@@ -1,16 +1,12 @@
 <script lang="ts">
   import chroma from "chroma-js"
-
-  interface LightMarker {
-    temp: number
-    name?: string
-  }
+  import LampIcon from "./LampIcon.svelte"
 
   interface Props {
-    markers: LightMarker[]
+    temperatures: number[]
   }
 
-  let { markers }: Props = $props()
+  let { temperatures }: Props = $props()
 
   // ===== Strip layout =====
   const STRIP_WIDTH = 800
@@ -23,12 +19,13 @@
   // ===== グラデーション =====
   const GRADIENT_SAMPLE_COUNT = 23 // 1500K → 12500K を 500K 刻みでサンプル
 
-  // ===== Tick / label sizes =====
+  // ===== Tick =====
   const TICK_LENGTH = 12
   const STROKE_WIDTH_TICK = 1.5
-  const GAP_TICK_TO_LABEL = 6
-  const LINE_HEIGHT_LABEL = 28
-  const FONT_SIZE_MARKER_LABEL = 18
+
+  // ===== Lamp icon =====
+  const LAMP_ICON_SIZE = 56
+  const GAP_TICK_TO_ICON = 6
 
   // ===== 外側パディング =====
   const PADDING_VERTICAL = 8
@@ -47,50 +44,28 @@
     }
   })
 
-  const hasNames = $derived(markers.some((m) => m.name != null && m.name !== ""))
-  const nameLineCount = $derived(hasNames ? 1 : 0)
-
   // ===== SVG の大きさ・帯の位置（他の値から自動算出） =====
-  // 帯下：tick + ラベル隙間 + 色温度ラベル中心 + 名前ラベル積み + 最下段の下半分
-  const stackExtent = $derived(
-    TICK_LENGTH +
-      GAP_TICK_TO_LABEL +
-      LINE_HEIGHT_LABEL / 2 +
-      LINE_HEIGHT_LABEL * nameLineCount +
-      LINE_HEIGHT_LABEL / 2
-  )
+  // 帯下：tick + 隙間 + アイコン本体
+  const stackExtent = TICK_LENGTH + GAP_TICK_TO_ICON + LAMP_ICON_SIZE
 
   const STRIP_Y = PADDING_VERTICAL
-  const HEIGHT = $derived(STRIP_Y + STRIP_HEIGHT + stackExtent + PADDING_VERTICAL)
+  const HEIGHT = STRIP_Y + STRIP_HEIGHT + stackExtent + PADDING_VERTICAL
 
-  // 横：各マーカーラベルが帯端からはみ出す量を集計
-  const estimateCharWidth = (ch: string, fontSize: number): number => {
-    const code = ch.charCodeAt(0)
-    const isFullWidth = (code >= 0x3000 && code <= 0x9fff) || (code >= 0xff00 && code <= 0xffef)
-    return isFullWidth ? fontSize : fontSize * 0.6
-  }
-  const estimateTextWidth = (s: string, fontSize: number): number =>
-    [...s].reduce((sum, ch) => sum + estimateCharWidth(ch, fontSize), 0)
-
-  const markerLabelHalfWidth = (m: LightMarker): number => {
-    const texts = [`${m.temp}K`]
-    if (m.name) texts.push(m.name)
-    return Math.max(...texts.map((t) => estimateTextWidth(t, FONT_SIZE_MARKER_LABEL))) / 2
-  }
+  // 横：各アイコンが帯端からはみ出す量を集計（アイコンは中心揃え）
   const markerRelativeX = (temp: number): number =>
     ((temp - TEMP_MIN) / (TEMP_MAX - TEMP_MIN)) * STRIP_WIDTH
 
   const LEFT_OVERHANG = $derived(
-    markers.length === 0
+    temperatures.length === 0
       ? 0
-      : Math.max(0, ...markers.map((m) => markerLabelHalfWidth(m) - markerRelativeX(m.temp)))
+      : Math.max(0, ...temperatures.map((t) => LAMP_ICON_SIZE / 2 - markerRelativeX(t)))
   )
   const RIGHT_OVERHANG = $derived(
-    markers.length === 0
+    temperatures.length === 0
       ? 0
       : Math.max(
           0,
-          ...markers.map((m) => markerLabelHalfWidth(m) + markerRelativeX(m.temp) - STRIP_WIDTH)
+          ...temperatures.map((t) => LAMP_ICON_SIZE / 2 + markerRelativeX(t) - STRIP_WIDTH)
         )
   )
 
@@ -102,9 +77,8 @@
   const xAt = (temp: number): number =>
     STRIP_LEFT + ((temp - TEMP_MIN) / (TEMP_MAX - TEMP_MIN)) * STRIP_WIDTH
 
-  // ===== ラベルのY位置 =====
-  // 帯下：（内側、帯寄り）色温度 → 名前（外側）
-  const TEMP_Y = STRIP_Y + STRIP_HEIGHT + TICK_LENGTH + GAP_TICK_TO_LABEL + LINE_HEIGHT_LABEL / 2
+  // ===== アイコンのY位置（左上基準） =====
+  const ICON_Y = STRIP_Y + STRIP_HEIGHT + TICK_LENGTH + GAP_TICK_TO_ICON
 
   const gradientId = `color-temperature-gradient-marked-${Math.random().toString(36).slice(2, 10)}`
 </script>
@@ -128,29 +102,18 @@
   />
 
   <!-- マーカー（帯の下） -->
-  <g
-    fill={COL_BODY}
-    font-size={FONT_SIZE_MARKER_LABEL}
-    text-anchor="middle"
-    dominant-baseline="central"
-  >
-    {#each markers as marker (marker.temp)}
-      {@const x = xAt(marker.temp)}
-      <line
-        x1={x}
-        y1={STRIP_Y + STRIP_HEIGHT}
-        x2={x}
-        y2={STRIP_Y + STRIP_HEIGHT + TICK_LENGTH}
-        stroke={COL_BODY}
-        stroke-width={STROKE_WIDTH_TICK}
-      />
-      <text {x} y={TEMP_Y}>
-        <tspan>{marker.temp}</tspan>
-        <tspan dx="-0.4em">K</tspan>
-      </text>
-      {#if marker.name}
-        <text {x} y={TEMP_Y + LINE_HEIGHT_LABEL}>{marker.name}</text>
-      {/if}
-    {/each}
-  </g>
+  {#each temperatures as temp (temp)}
+    {@const x = xAt(temp)}
+    <line
+      x1={x}
+      y1={STRIP_Y + STRIP_HEIGHT}
+      x2={x}
+      y2={STRIP_Y + STRIP_HEIGHT + TICK_LENGTH}
+      stroke={COL_BODY}
+      stroke-width={STROKE_WIDTH_TICK}
+    />
+    <g transform="translate({x - LAMP_ICON_SIZE / 2}, {ICON_Y})">
+      <LampIcon temperature={temp} size={LAMP_ICON_SIZE} />
+    </g>
+  {/each}
 </svg>
