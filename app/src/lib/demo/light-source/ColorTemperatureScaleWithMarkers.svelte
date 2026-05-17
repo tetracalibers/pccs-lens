@@ -38,8 +38,8 @@
   const GAP_ICON_TO_LABEL = 6
 
   // ===== 外側パディング =====
-  const PADDING_VERTICAL = 12
-  const PADDING_HORIZONTAL = 12
+  const PADDING_VERTICAL = 22
+  const PADDING_HORIZONTAL = 22
 
   // ===== グラデーションストップ生成 =====
   const gradientStops = Array.from({ length: GRADIENT_SAMPLE_COUNT }, (_, i) => {
@@ -127,7 +127,6 @@
     y="0"
     width={WIDTH}
     height={HEIGHT}
-    rx={8}
     fill="light-dark(#545d66, var(--color-bg--dark))"
   />
 
