@@ -11,6 +11,7 @@ draft: true
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
   import ColorTemperatureScaleWithMarkers from "$lib/demo/light-source/ColorTemperatureScaleWithMarkers.svelte"
   import IncandescentBulbSpectralDistribution from "$lib/demo/spectral-distribution/IncandescentBulbSpectralDistribution.svelte"
+  import HalogenBulbSpectralDistribution from "$lib/demo/spectral-distribution/HalogenBulbSpectralDistribution.svelte"
 </script>
 
 照明に使用される光源のことを:Mark[ランプ]といいます。
@@ -29,7 +30,7 @@ draft: true
   </SVGWrapper>
 :::
 
-:::TermCard{title="分光分布と色の見え方" ankiTitle="show"}
+:::TermCard{title="分光分布" ankiTitle="show"}
   :Mark[演色評価数]の基準光とほぼ同じ分光分布をもつため、:Mark[演色性]が高い
   
   <SVGWrapper maxW={320} style="margin-block: -0.5rem;">
@@ -54,7 +55,20 @@ draft: true
 
 ハロゲン電球は、:Mark[白熱電球]の一種の小型ランプです。白熱電球と比べると、次のような性質をもちます。
 
-::ComingSoon
+- 白熱電球より:Mark[色温度]が高い
+- 白熱電球より:Mark[寿命]が長く、:Mark[経済的]
+
+明るく:Mark[演色性]が高いため、高級感のある光として、宝飾・衣料・食品などの:Mark[商業]照明や、:Mark[看板]・サインなどの照明に利用されます。
+
+::::CardGrid
+:::TermCard{title="分光分布" ankiTitle="show"}
+  効率性のために:Mark[赤外線]を出さない加工がされているものが多く、:Mark[長波長]側のエネルギーが少ない
+  
+  <SVGWrapper maxW={320} style="margin-block: -0.5rem;">
+    <HalogenBulbSpectralDistribution />
+  </SVGWrapper>
+:::
+::::
 
 ## :WithGradeTag[蛍光ランプ]{grades="2"}
 
