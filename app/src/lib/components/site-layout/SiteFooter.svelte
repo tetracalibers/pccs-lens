@@ -22,7 +22,8 @@
       const prevHref = nav.prev ? resolve(`/${base}/${nav.prev.slug}`) : undefined
       // @ts-expect-error dynamic route path
       const nextHref = nav.next ? resolve(`/${base}/${nav.next.slug}`) : undefined
-      return { prev: nav.prev, next: nav.next, prevHref, nextHref }
+      const listHref = resolve(`/${base}`)
+      return { prev: nav.prev, next: nav.next, prevHref, nextHref, listHref }
     }
     return null
   })
@@ -37,6 +38,7 @@
           <span class="footer-page-nav-title">{pageNavInfo.prev.title}</span>
         </a>
       {/if}
+      <a class="footer-link footer-page-nav-list" href={pageNavInfo.listHref}>一覧へ戻る</a>
       {#if pageNavInfo.next && pageNavInfo.nextHref}
         <a class="footer-page-nav-link footer-page-nav-next" href={pageNavInfo.nextHref}>
           <span class="footer-page-nav-title">{pageNavInfo.next.title}</span>
@@ -126,7 +128,7 @@
   /* ===== prev / next ページ送り ===== */
   .footer-page-nav {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr auto 1fr;
     column-gap: 1rem;
     align-items: center;
     padding-block-start: 1.5rem;
@@ -157,14 +159,20 @@
     text-align: start;
   }
 
-  .footer-page-nav-next {
+  .footer-page-nav-list {
     grid-column: 2;
+    justify-self: center;
+    padding-block-start: 0;
+  }
+
+  .footer-page-nav-next {
+    grid-column: 3;
     justify-self: end;
     text-align: end;
   }
 
   .footer-page-nav-title {
     min-width: 0;
-    overflow-wrap: anywhere;
+    word-break: auto-phrase;
   }
 </style>
