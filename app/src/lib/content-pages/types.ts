@@ -25,3 +25,13 @@ export interface Category {
   summary: string
   sections: CategorySection[]
 }
+
+export interface PageNavEntry {
+  slug: string
+  title: string
+}
+
+export interface PageNavLinks {
+  prev?: PageNavEntry
+  next?: PageNavEntry
+}
