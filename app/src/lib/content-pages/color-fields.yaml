@@ -1,0 +1,184 @@
+- title: デザイン
+  id: design
+  summary: |
+    デザインでは、さまざまな色の効果が活用されています。情報を多くの人に伝えるために、ユニバーサルデザインの視点も重要です。
+    コンピュータを使ったデザイン作業では、デジタルとアナログ（印刷物など）で色の情報をやり取りする際に、もとの色をなるべく損なわないようにする技術が必要になります。
+  sections:
+    - title: ビジュアルデザイン
+      links:
+        - slug: visual-design-and-color
+        - slug: media-design-concepts
+    - title: コンピュータによる色彩設計
+      links:
+        - title: カラーマネジメント
+          grades: ["2"]
+        - slug: digital-image-basics
+    - title: 色のユニバーサルデザイン
+      links:
+        - slug: color-universal-design
+        - slug: color-vision-accessibility
+        - slug: color-universal-design-process
+        - slug: color-design-tips
+        - slug: color-universal-design-improvement
+
+- title: マーケティング
+  id: marketing
+  summary: |
+    マーケティングでは、「誰に、どんな価値を、どう伝え、どう選んでもらうか」を分析し、価値を最大化する戦略を立てます。商品が自然と売れる仕組みをつくり出すために、色が人の感情や行動に与える影響を利用することができます。
+  sections:
+    - title: カラーマーケティングの基本
+      links:
+        - title: カラーマーケティングの考え方
+          grades: ["1"]
+    - title: カラーリサーチ
+      links:
+        - title: カラーリサーチの目的
+          grades: ["1"]
+        - title: カラーリサーチの手法
+          grades: ["1"]
+        - title: カラーリサーチ用カラーコード
+          grades: ["1"]
+        - title: カラーリサーチの分析ツール
+          grades: ["1"]
+    - title: カラー戦略
+      links:
+        - title: さまざまなカラー戦略
+          grades: ["1"]
+    - title: CMF
+      links:
+        - title: CMFの考え方
+          grades: ["1"]
+        - title: 消費者の感性とCMF
+          grades: ["1"]
+        - title: ラインナップの展開とCMF
+          grades: ["1"]
+        - title: 制作におけるCMF
+          grades: ["1"]
+
+- title: ビジネス
+  id: business
+  summary: ""
+  sections:
+    - title: 色とコミュニケーション
+      links:
+        - title: 色彩効果とビジネス
+          grades: ["1"]
+        - title: カラーコミュニケーションツール
+          grades: ["1"]
+    - title: 商品のビジネスプロセス
+      links:
+        - title: コンシューマプロダクツ
+          grades: ["1"]
+        - title: 企業アイデンティティ戦略
+          grades: ["1"]
+        - title: 商品企画とカラーバリエーション
+          grades: ["1"]
+        - title: 商品価値とプランニングの視点
+          grades: ["1"]
+        - title: 商品デザインとCMF
+          grades: ["1"]
+        - title: 製造と色再現技術
+          grades: ["1"]
+        - title: 流通とパッケージデザイン
+          grades: ["1"]
+        - title: プロモーション
+          grades: ["1"]
+        - title: 販売形態と色彩戦略
+          grades: ["1"]
+
+- title: ファッション
+  id: fashion
+  summary: |
+    ファッションは、時代を象徴するかのように急速に移り変わっています。
+    その中で色彩学とは異なる解釈で定着した用語もあり、ファッションにおける色彩の理解は、ファッションの歴史や文化、トレンドなどの知識に裏付けされるものです。
+  sections:
+    - title: カラーコーディネート
+      links:
+        - slug: fashion-color-concepts
+        - title: PCCSで見るカラーコーディネート
+          grades: ["3"]
+        - title: ファッションの配色用語
+          grades: ["2"]
+    - title: トレンドとスタイル分類
+      links:
+        - slug: fashion-color
+        - slug: fashion-trend
+        - slug: fashion-style-categories
+        - title: ファッションイメージ
+          grades: ["2"]
+        - title: ファッションカラーの変遷
+          grades: ["1"]
+    - title: 素材とテキスタイル
+      links:
+        - title: 繊維の種類と発色性
+          grades: ["1"]
+        - title: 織物と編物
+          grades: ["1"]
+    - title: ファッションビジネス
+      links:
+        - title: カラーコーディネーターの役割
+          grades: ["1"]
+        - title: カラー情報の収集
+          grades: ["1"]
+        - title: カラー情報の分析
+          grades: ["1"]
+        - title: シーズンテーマカラーの決定
+          grades: ["1"]
+    - title: 視覚に訴える商品演出
+      links:
+        - title: VMDの定義と分類
+          grades: ["1"]
+        - title: 商品陳列の方法と効果
+          grades: ["1"]
+
+- title: インテリア
+  id: interior
+  summary: |
+    インテリアデザインは、ソファやテーブルといった家具だけでなく、屋内空間全体の演出を考える分野です。くつろぎやすいリビング、清潔感のあるキッチンなど、求められる雰囲気はその場所によって異なります。機能や文化、なによりもそこに住む「人」を中心に色彩を考えていきます。
+  sections:
+    - title: インテリアデザイン
+      links:
+        - slug: interior-design-basics
+        - slug: interior-concept-history
+        - title: インテリアと心理効果・視覚効果
+          grades: ["3"]
+    - title: インテリアエレメント
+      links:
+        - slug: interior-elements-classification
+        - title: インテリアエレメントの配色
+          grades: ["2", "3"]
+    - title: 空間のゾーニング
+      links:
+        - slug: interior-space-zoning
+        - title: パブリック空間の配色
+          grades: ["2"]
+        - title: プライベート空間の配色
+          grades: ["2"]
+        - title: サービス空間の配色
+          grades: ["2"]
+    - title: インテリアスタイル
+      links:
+        - title: PCCSで見るインテリアの配色形式
+          grades: ["3"]
+        - title: インテリアスタイル
+          grades: ["2"]
+
+- title: 景観色彩
+  id: landscape-color
+  summary: |
+    インテリア（建物の内観）からさらに規模を広げて、建物の外観やそれを取り巻く街並みも見てみましょう。その地域の文化や、気候風土によって育まれてきた自然に合わせて、街の景色は設計されています。
+  sections:
+    - title: ""
+      links:
+        - slug: landscape-color-approach
+        - slug: housing-color-design-process
+        - title: 景観法
+          grades: ["1"]
+        - title: 景観計画
+          grades: ["1"]
+        - title: 景観計画における色彩基準
+          grades: ["1"]
+        - title: 色の三属性と景観形成
+          grades: ["1"]
+        - title: 遠景・中景・近景の景観色彩
+          grades: ["1"]
