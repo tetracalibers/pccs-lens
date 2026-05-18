@@ -147,7 +147,6 @@
     text-decoration: none;
     font-size: 0.8rem;
     line-height: 1.4;
-    max-width: 33cqw;
   }
 
   .footer-page-nav-link:hover {
