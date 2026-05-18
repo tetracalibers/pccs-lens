@@ -129,7 +129,7 @@
   /* ===== prev / next ページ送り ===== */
   .footer-page-nav {
     display: grid;
-    grid-template-columns: minmax(30cqw, auto) 1fr minmax(30cqw, auto);
+    grid-template-columns: minmax(0, 33cqw) 1fr minmax(0, 33cqw);
     column-gap: 1rem;
     align-items: center;
     padding-block-start: 1.5rem;
