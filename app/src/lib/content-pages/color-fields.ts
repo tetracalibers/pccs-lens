@@ -10,8 +10,9 @@ const BASE = "color-fields"
 export const colorFieldsCategoryBySlug: Map<string, CategoryRef> = new Map(
   colorFieldsCategories.flatMap((category) =>
     category.sections.flatMap((section) =>
-      section.links.flatMap((link): Array<[string, CategoryRef]> =>
-        isPageLink(link) ? [[link.slug, { id: category.id, title: category.title }]] : []
+      section.links.flatMap(
+        (link): Array<[string, CategoryRef]> =>
+          isPageLink(link) ? [[link.slug, { id: category.id, title: category.title }]] : []
       )
     )
   )
