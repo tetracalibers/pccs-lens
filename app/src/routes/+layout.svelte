@@ -3,8 +3,8 @@
   import icon from "$lib/assets/icon.svg"
   import appleTouchIcon from "$lib/assets/apple-touch-icon.png"
   import { page } from "$app/state"
-  import SiteHeader from "$lib/components/layout/SiteHeader.svelte"
-  import SiteFooter from "$lib/components/layout/SiteFooter.svelte"
+  import SiteHeader from "$lib/components/site-layout/SiteHeader.svelte"
+  import SiteFooter from "$lib/components/site-layout/SiteFooter.svelte"
   import { ankiMode } from "$lib/state/anki.svelte"
   import "$lib/styles/color.css"
 
