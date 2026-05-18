@@ -13,8 +13,9 @@
 
 <GuideMap title="色の活用分野">
   <p>
-    <ALink href="/color-theory">色の理論</ALink
-    >を学んだ先では、実世界でどのように色が活用されているか？を見渡すことができます。
+    <ALink href="/color-theory">
+      色の理論
+    </ALink>を学んだ先では、実世界でどのように色が活用されているか？を見渡すことができます。
   </p>
   {#each colorFieldsCategories as category (category.id)}
     <Heading2 id={category.id}>{category.title}</Heading2>

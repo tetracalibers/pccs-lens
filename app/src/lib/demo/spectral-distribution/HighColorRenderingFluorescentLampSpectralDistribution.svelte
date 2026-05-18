@@ -42,4 +42,7 @@
   ]
 </script>
 
-<SpectralDistributionGraph points={highColorRenderingFluorescentSpectrum} id="high-cri-fluorescent" />
+<SpectralDistributionGraph
+  points={highColorRenderingFluorescentSpectrum}
+  id="high-cri-fluorescent"
+/>
