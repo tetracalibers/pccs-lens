@@ -8,14 +8,15 @@
   let {
     children,
     title = "",
-    grades = ""
-  }: { children?: Snippet; title?: string; grades?: string } = $props()
+    grades = "",
+    id
+  }: { children?: Snippet; title?: string; grades?: string; id?: string } = $props()
 
   const isAnki = $derived(ankiMode.isAnki)
   const gradeList = $derived(grades ? gradeCSV2Array(grades as AftGradeCSV) : [])
 </script>
 
-<h2 class:--_anki={isAnki}>
+<h2 {id} class:--_anki={isAnki}>
   <span class="dot"></span>
   {#if isAnki && title}
     <div>
