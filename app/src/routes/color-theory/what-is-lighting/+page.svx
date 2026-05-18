@@ -19,10 +19,10 @@ graph LR
     Lighting["照明光"] --- Anki_NaturalLight["自然光"]
     Lighting --- Anki_ArtificialLight["人工光"]
     Anki_NaturalLight --- Anki_Sunlight{{"太陽光（昼光）"}}
-    Anki_ArtificialLight --- Anki_Incandescent{{"白熱電球"}}
-    Anki_ArtificialLight --- Anki_Fluorescent{{"蛍光ランプ"}}
-    Anki_ArtificialLight --- Anki_LED{{"LED"}}
+    Anki_ArtificialLight --- Anki_Incandescent{{"白熱電球による光"}}
+    Anki_ArtificialLight --- Anki_Fluorescent{{"蛍光ランプによる光"}}
+    Anki_ArtificialLight --- Anki_LED{{"LEDによる光"}}
 ```
 
 自然光は:Mark[太陽光]（:Mark[昼光]）のみですが、人工光にはさまざまな種類があります。
-人工的な光源（:Mark[ランプ]）は多数開発されていますし、ろうそくの光も人工光です。
+人工的な光源（:Mark[ランプ]）は多数開発されており、ろうそくの光も人工光です。

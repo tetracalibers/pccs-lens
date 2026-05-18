@@ -1,0 +1,14 @@
+---
+layout: guide-content
+title: 色の好み
+
+grades: ["2"]
+
+draft: true
+---
+
+## :WithGradeTag[TODO]{grades="2"}
+
+- 色から直接的に受ける雰囲気への好みのことを:Mark[色嗜好]という
+- 色嗜好とは、好きな色や嫌いな色などの「色の好み」のことである
+- 好きな色のことを:Mark[嗜好色]という

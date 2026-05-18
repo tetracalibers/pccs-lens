@@ -8,7 +8,11 @@
     book: "icomoon-free:book",
     art: "streamline-plump:painting-board-solid",
     color: "oui:color",
-    country: "tdesign:flag-1-filled"
+    country: "tdesign:flag-1-filled",
+    "1": "ri:number-1",
+    "2": "ri:number-2",
+    "3": "ri:number-3",
+    "4": "ri:number-4"
   } as const
 
   interface Props {
@@ -29,17 +33,21 @@
     icon
   }: Props = $props()
 
-  const resolvedIcon = $derived(icon ? iconMap[icon] : undefined)
+  const resolvedIcon = $derived(() => {
+    if (!icon) return undefined
+    if (icon in iconMap) return iconMap[icon]
+    return icon
+  })
 </script>
 
 <section class="term-card" class:centering class:text-centering={textCentering}>
   {#if title}
     {#if ankiTitle === "show"}
-      <Heading3 icon={resolvedIcon}>{title}</Heading3>
+      <Heading3 icon={resolvedIcon()}>{title}</Heading3>
     {:else if ankiTitle === "mark"}
-      <Heading3 icon={resolvedIcon}><Mark>{title}</Mark></Heading3>
+      <Heading3 icon={resolvedIcon()}><Mark>{title}</Mark></Heading3>
     {:else}
-      <Heading3 {title} icon={resolvedIcon}>{title}</Heading3>
+      <Heading3 {title} icon={resolvedIcon()}>{title}</Heading3>
     {/if}
   {/if}
   {@render children?.()}

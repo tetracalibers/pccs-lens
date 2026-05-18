@@ -161,7 +161,7 @@ async function main() {
     .filter((c) => c.approximatePccs[0].deltaE > DELTA_E_ABS_THRESHOLD)
     .map(
       (c) =>
-        `  - ${c.name} (${c.hex}): ${c.approximatePccs[0].notation} ΔE=${c.approximatePccs[0].deltaE}`
+        `  - ${c.name} (${c._hex}): ${c.approximatePccs[0].notation} ΔE=${c.approximatePccs[0].deltaE}`
     )
   if (largeFirstDeltaE.length > 0) {
     console.log(`\nEntries whose 1st ΔE > ${DELTA_E_ABS_THRESHOLD}:`)

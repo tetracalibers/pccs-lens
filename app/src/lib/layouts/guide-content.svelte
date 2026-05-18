@@ -204,8 +204,6 @@
     margin: 1.5rem 0;
     max-width: 100%;
     overflow-x: auto;
-    width: fit-content;
-    margin-inline: auto;
   }
 
   .--_anki :global(.mermaid-diagram [data-id^="Anki"] text) {

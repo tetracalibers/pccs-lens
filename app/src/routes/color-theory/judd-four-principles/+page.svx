@@ -1,0 +1,27 @@
+---
+layout: guide-content
+title: ジャッドの4つの原理
+
+grades: ["2", "1"]
+
+draft: true
+---
+
+## :WithGradeTag[TODO]{grades="2"}
+
+- アメリカの色彩学者である:Mark[ジャッド]は、さまざまな色彩調和論を研究・分析し、4つの原理にまとめた
+
+::::CardGrid
+:::TermCard{title="秩序の原理" ankiTitle="mark"}
+> 色相環のように規則的に配置された色群の中から、規則的に選択した色どうしは調和する
+:::
+:::TermCard{title="なじみの原理" ankiTitle="mark"}
+> 木の葉の光が当たっている部分と陰の部分の濃淡のように、日常で見慣れた色の配列は調和する
+:::
+:::TermCard{title="類似性の原理" ankiTitle="mark"}
+> 同系色相や同系トーンなど共通性をもつ色どうしは調和する
+:::
+:::TermCard{title="明瞭性の原理" ankiTitle="mark"}
+> 明快なコントラストをもつ色の組み合わせは調和する
+:::
+::::

@@ -126,7 +126,7 @@ title: 色の活用分野
 
 ### 空間のゾーニング
 
-- :PageDraft{title="インテリア空間のゾーニング" grades="2"}
+- :PageLink{slug="interior-space-zoning"}
 - :PageDraft{title="パブリック空間の配色" grades="2"}
 - :PageDraft{title="プライベート空間の配色" grades="2"}
 - :PageDraft{title="サービス空間の配色" grades="2"}

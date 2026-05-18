@@ -1,0 +1,331 @@
+---
+layout: guide-content
+title: ランプの種類
+
+grades: ["2"]
+---
+
+<script>
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import ColorTemperatureScaleWithMarkers from "$lib/demo/light-source/ColorTemperatureScaleWithMarkers.svelte"
+  import IncandescentBulbSpectralDistribution from "$lib/demo/spectral-distribution/IncandescentBulbSpectralDistribution.svelte"
+  import HalogenBulbSpectralDistribution from "$lib/demo/spectral-distribution/HalogenBulbSpectralDistribution.svelte"
+  import StandardFluorescentLampSpectralDistribution from "$lib/demo/spectral-distribution/StandardFluorescentLampSpectralDistribution.svelte"
+  import ThreeBandFluorescentLampSpectralDistribution from "$lib/demo/spectral-distribution/ThreeBandFluorescentLampSpectralDistribution.svelte"
+  import HighColorRenderingFluorescentLampSpectralDistribution from "$lib/demo/spectral-distribution/HighColorRenderingFluorescentLampSpectralDistribution.svelte"
+  import WarmWhiteLEDSpectralDistribution from "$lib/demo/spectral-distribution/WarmWhiteLEDSpectralDistribution.svelte"
+  import NeutralWhiteLEDSpectralDistribution from "$lib/demo/spectral-distribution/NeutralWhiteLEDSpectralDistribution.svelte"
+  import DaylightWhiteLEDSpectralDistribution from "$lib/demo/spectral-distribution/DaylightWhiteLEDSpectralDistribution.svelte"
+  import LowPressureSodiumLampSpectralDistribution from "$lib/demo/spectral-distribution/LowPressureSodiumLampSpectralDistribution.svelte"
+</script>
+
+照明に使用される光源のことを:Mark[ランプ]といいます。
+ランプにはさまざまな種類があり、用途によって使い分けられています。
+
+## :WithGradeTag[白熱電球]{grades="2"}
+
+白熱電球は、:Mark[インテリア]の照明に適したランプで、あたたかみのある光色が特徴です。
+
+::::CardGrid{cols=1}
+:::TermCard{title="色温度と光色" ankiTitle="show"}
+  色温度約:Mark[2800]Kの:Mark[黄]み〜:Mark[赤]みがかった光色
+
+  <SVGWrapper style="margin-block-start: -1.5rem; margin-block-end: -1rem;">
+    <ColorTemperatureScaleWithMarkers markers={[{ temp: 2800 }]} />
+  </SVGWrapper>
+:::
+
+:::TermCard{title="分光分布" ankiTitle="show"}
+  :Mark[演色評価数]の基準光とほぼ同じ分光分布をもつため、:Mark[演色性]が高い
+  
+  <SVGWrapper maxW={320} style="margin-block: -0.5rem;">
+    <IncandescentBulbSpectralDistribution />
+  </SVGWrapper>
+:::
+::::
+
+:Mark[調光]（光の量を調節すること）が可能で、変化に富んだ照明をつくることができます。
+ガラス球の内側に塗料を塗るかどうかによっても光のバリエーションが変わります。
+
+::::CardGrid
+:::TermCard{title="ホワイトランプ" ankiTitle="mark"}
+ガラス球の内側に白色塗料を塗った白熱電球。:Mark[眩しさ]が少なくソフトな光で、光の拡散性に優れている
+:::
+:::TermCard{title="クリアランプ" ankiTitle="mark"}
+ガラス球が透明な白熱電球。きらめきのある:Mark[装飾]的な光を発する
+:::
+::::
+
+## :WithGradeTag[ハロゲン電球]{grades="2"}
+
+ハロゲン電球は、:Mark[白熱電球]の一種の小型ランプです。白熱電球と比べると、次のような性質をもちます。
+
+- 白熱電球より:Mark[色温度]が高い
+- 白熱電球より:Mark[寿命]が長く、:Mark[経済的]
+
+明るく:Mark[演色性]が高いため、高級感のある光として、宝飾・衣料・食品などの:Mark[商業]照明や、:Mark[看板]・サインなどの照明に利用されます。
+
+::::CardGrid
+:::TermCard{title="分光分布" ankiTitle="show"}
+  効率性のために:Mark[赤外線]を出さない加工がされているものが多く、:Mark[長波長]側のエネルギーが少ない
+  
+  <SVGWrapper maxW={320} style="margin-block: -0.5rem;">
+    <HalogenBulbSpectralDistribution />
+  </SVGWrapper>
+:::
+::::
+
+## :WithGradeTag[蛍光ランプ]{grades="2"}
+
+蛍光ランプは、:Mark[白熱ランプ]（白熱電球やハロゲン電球）に比べて:Mark[効率]がよく、:Mark[寿命]も長いランプです。
+:Mark[消費電力]も小さいため、経済性に優れています。
+
+### 光色の種類
+
+蛍光ランプは、さまざまな色温度のものがあり、:Mark[光色]の種類が豊富です。
+
+<SVGWrapper>
+  <ColorTemperatureScaleWithMarkers
+    markers={[
+      { temp: 6500, label: "昼光色" },
+      { temp: 5000, label: "昼白色" },
+      { temp: 4000, label: "白色" },
+      { temp: 3000, label: "電球色" }
+    ]}
+  />
+</SVGWrapper>
+
+::::CardGrid
+:::TermCard{title="電球色" ankiTitle="mark"}
+色温度約:Mark[3000]K。:Mark[白熱電球]に近いあたたかみのある光色で、:Mark[くつろいだ]雰囲気
+:::
+:::TermCard{title="白色" ankiTitle="mark"}
+色温度約:Mark[4000]Kのやや:Mark[黄]みを帯びた光色で、:Mark[柔らかな]雰囲気
+:::
+:::TermCard{title="昼白色" ankiTitle="mark"}
+色温度約:Mark[5000]Kの自然でナチュラルな光色。:Mark[物体]の色が自然に美しく見える
+:::
+:::TermCard{title="昼光色" ankiTitle="mark"}
+色温度約:Mark[6500]Kのやや:Mark[青]みがかった光色。空間の:Mark[白さ]が際立つ
+:::
+::::
+
+### 演色性の異なる3タイプ
+
+JISでは、蛍光ランプを:Mark[演色性]によって分類しています。
+演色性が高い順に、:Mark[高演色型]、:Mark[3波長域発光型]、:Mark[普通型]の3タイプがあります。
+
+- :Mark[高演色型]：:Mark[美術館]などの照明や、Raが:Mark[90]以上のものは:Mark[色評価]用としても使われる
+- :Mark[3波長域発光型]：蛍光ランプの主流で、住宅やオフィスで使われる
+- :Mark[普通型]：他の二つと比べると演色性は劣るが、価格が安い
+
+::::CardGrid{cols=1}
+:::TermCard{title="普通型" ankiTitle="mark"}
+長波長域のエネルギー量が激減しており、他の短波長域・中波長域には突出したピークがある。
+波長のバランスが良くないため、見える色が少し変わってしまう（演色性がよくない）
+
+<SVGWrapper maxW={320} style="margin-block: -0.5rem;">
+  <StandardFluorescentLampSpectralDistribution />
+</SVGWrapper>
+:::
+:::TermCard{title="高演色型" ankiTitle="mark"}
+普通形と似ているものの、長波長域のエネルギーが増強されており、演色性が改善されている
+
+<SVGWrapper maxW={320} style="margin-block: -0.5rem;">
+  <HighColorRenderingFluorescentLampSpectralDistribution />
+</SVGWrapper>
+:::
+:::TermCard{title="3波長域発光型" ankiTitle="mark"}
+:Mark[錐体]の感度がよい波長付近の光を強く発光させることで、:Mark[演色性]を高めている
+逆にそれ以外の部分のエネルギー量は抑えめにすることで、:Mark[省エネルギー]を実現している
+
+<SVGWrapper maxW={320} style="margin-block: -0.5rem;">
+  <ThreeBandFluorescentLampSpectralDistribution />
+</SVGWrapper>
+:::
+::::
+
+## :WithGradeTag[HIDランプ]{grades="2"}
+
+:Mark[HID]はHigh Intensity Discharge Lampの略で、日本語では:Mark[高輝度放射灯]と呼ばれます。
+
+::::CardGrid{cols=1}
+:::TermCard{title="メタルハライドランプ" ankiTitle="mark"}
+高効率で演色性がよく、:Mark[大光量]が得られるため、スタジアムや体育館などの:Mark[スポーツ施設]で使われる。:Mark[高演色]タイプはスーパーやデパートなどの:Mark[商業施設]でも使われる。
+:::
+:::TermCard{title="水銀ランプ" ankiTitle="mark"}
+白熱電球の約:Mark[3]倍の発光効率をもち、長寿命で経済性に優れている。しかし:Mark[演色性]が悪いため、利用範囲は限られる。:Mark[道路]や:Mark[公園]の夜間照明、:Mark[工場]や:Mark[倉庫]の照明に使われるが、演色性や効率性の優れたメタルハライドランプなどに置き換えられつつある。
+:::
+:::TermCard{title="高圧ナトリウムランプ" ankiTitle="mark"}
+高効率で大光量が得られるため、:Mark[スポーツ施設]、:Mark[道路]や:Mark[景観]のライトアップに使われてきた。明るさは白熱電球の:Mark[3]〜:Mark[4]倍、寿命は白熱電球の:Mark[4]〜:Mark[9]倍と経済性にも優れ、白熱電球に似た温かみのある光色のものはホテルのロビーなどで使われることもあった。
+:::
+:::TermCard{title="低圧ナトリウムランプ" ankiTitle="mark"}
+:Mark[オレンジ]色の光色をもつ単色光のランプ。:Mark[道路]照明や:Mark[トンネル]照明として広く使われたが、:Mark[演色性]が悪いため、高圧ナトリウムランプや蛍光ランプなどに置き換えられている。
+
+<SVGWrapper maxW={320} style="margin-block: -0.5rem;">
+  <LowPressureSodiumLampSpectralDistribution />
+</SVGWrapper>
+:::
+::::
+
+## :WithGradeTag[白色LED]{grades="2"}
+
+:Mark[LED]はLight Emitting Diodeの略で、日本語では:Mark[発光ダイオード]と呼ばれます。
+赤、緑のLEDは以前からありましたが、1993年に:Mark[高輝度青色]発光ダイオードが実用化され、光の三原色が揃ったことで急速に普及し始めました。
+
+近年では、:Mark[白色LED]（無色透明な光を放つLED）の光色が:Mark[蛍光ランプ]に匹敵するくらい豊富となり、蛍光ランプの寿命をさらに上回る長寿命を誇るため、照明用光源の主流となっています。
+
+- 蛍光ランプの寿命：:Mark[1万数千]時間
+- 白色LEDの寿命：:Mark[数万]時間
+
+光の波長が:Mark[可視光]の範囲内であり、:Mark[赤外線]や:Mark[紫外線]をほとんど放出しません。そのため、光による:Mark[損傷]や:Mark[温度上昇]が少なく、:Mark[美術品]などデリケートな温度管理を要する商品の照明にも適しています。
+
+また、:Mark[高出力]化も進んでいるため、:Mark[HIDランプ]の代わりにLEDが採用されることが増えてきています。
+
+### 光色の種類
+
+白色LEDの分光分布は、次の2種類の光に対応する2つの山をもちます。
+
+- :Mark[青色LED]による青い光（波長:Mark[450]〜:Mark[500]nm）
+- :Mark[蛍光体]による黄色い光
+
+:::Note
+:Mark[蛍光体]とは、青色LEDの光を受けて黄色い光を放つ物質のことです。
+:::
+
+この2つの山の大きさのバランスによって、白色LEDの光色が変わります。
+
+::::CardGrid{firstWide}
+:::TermCard{title="電球色" ankiTitle="mark"}
+<SVGWrapper maxW={320} style="margin-block: -0.5rem;">
+  <WarmWhiteLEDSpectralDistribution />
+</SVGWrapper>
+:::
+:::TermCard{title="昼白色" ankiTitle="mark"}
+<SVGWrapper maxW={320} style="margin-block: -0.5rem;">
+  <NeutralWhiteLEDSpectralDistribution />
+</SVGWrapper>
+:::
+:::TermCard{title="昼光色" ankiTitle="mark"}
+<SVGWrapper maxW={320} style="margin-block: -0.5rem;">
+  <DaylightWhiteLEDSpectralDistribution />
+</SVGWrapper>
+:::
+::::
+
+## :WithGradeTag[発光原理によるランプの分類]{grades="2"}
+
+ランプはその発光原理によって分類できます。ランプの発光原理は、大きく次の2種類に分けられます。
+
+- :Mark[熱放射]：物体を高温にすると光を出す現象
+- :Mark[ルミネセンス]：物体が熱以外のエネルギーを受け取ると光を出す現象
+
+```mermaid
+graph LR
+    A["光源の発光原理"] --- Anki_B["熱放射"]
+    A --- Anki_C["ルミネセンス"]
+```
+
+ルミネセンスは、さらに3種類に分けられます。
+
+- :Mark[放電]：電子の放出
+- :Mark[エレクトロルミネセンス]：電気エネルギーによる光放射
+- :Mark[フォトルミネセンス]：光エネルギーによる光放射
+
+```mermaid
+graph LR
+    A["光源の発光原理"] --- B["熱放射"]
+    A --- C["ルミネセンス"]
+    
+    C --- Anki_C1["放電"]
+    C --- Anki_C2["エレクトロ<br/>ルミネセンス"]
+    C --- Anki_C3["フォト<br/>ルミネセンス"]
+```
+
+### 熱放射を利用したランプ
+
+熱放射を利用したランプは、:Mark[白熱ランプ]と呼ばれるものが代表的です。
+
+:::TermCard{title="白熱ランプ" ankiTitle="show"}
+:Mark[熱放射]による発光を利用したランプ。:Mark[白熱電球]や:Mark[ハロゲン電球]などがある
+:::
+
+```mermaid
+graph LR
+    A["光源"] --- B["熱放射を<br />利用したランプ"]:::b
+    A --- C["ルミネセンスを<br />利用したランプ"]
+        
+    B --- Anki_B1{{"白熱電球"}}:::b
+    B --- Anki_B2{{"ハロゲン電球"}}:::b
+    
+    classDef b fill:var(--pastel-green)
+```
+
+### 放電を利用したランプ
+
+ルミネセンスのうち、電子を放出する:Mark[放電]を利用したランプとして、:Mark[HIDランプ]や:Mark[蛍光ランプ]があります。
+
+```mermaid
+graph LR
+    A["光源"] --- B["熱放射を<br />利用したランプ"]
+    A --- C["ルミネセンスを<br />利用したランプ"]
+    
+    C --- C1["放電を<br />利用したランプ"]
+
+    C1 --- C11["高圧放電"]:::c11
+    C1 --- C12["低圧放電"]:::c12
+    
+    C11 --- Anki_C111{{"水銀ランプ"}}:::c11
+    C11 --- Anki_C112{{"メタルハライドランプ"}}:::c11
+    C11 --- Anki_C113{{"高圧ナトリウムランプ"}}:::c11
+    
+    C12 --- Anki_C121{{"低圧ナトリウムランプ"}}:::c12
+    C12 --- Anki_C122{{"蛍光ランプ"}}:::c12
+
+    classDef b fill:var(--pastel-green)
+    classDef c11 fill:var(--pastel-blue)
+    classDef c12 fill:var(--pastel-water)
+    classDef c2 fill:var(--pastel-orange)
+    classDef c3 fill:var(--pastel-pink)
+```
+
+### エレクトロルミネセンスを利用したランプ
+
+ルミネセンスのうち、電気エネルギーによる光放射を利用した光源は:Mark[エレクトロルミネセンス]と呼ばれ、身近なランプとしては:Mark[LED]があります。
+
+```mermaid
+graph LR
+    A["光源"] --- B["熱放射を<br />利用したランプ"]
+    A --- C["ルミネセンスを<br />利用したランプ"]
+    
+    C --- C2["エレクトロ<br/>ルミネセンス"]:::c2
+  
+    C2 --- Anki_C21{{"LED"}}:::c2
+  
+    classDef b fill:var(--pastel-green)
+    classDef c11 fill:var(--pastel-blue)
+    classDef c12 fill:var(--pastel-water)
+    classDef c2 fill:var(--pastel-orange)
+    classDef c3 fill:var(--pastel-pink)
+```
+
+### フォトルミネセンスを利用したランプ
+
+ルミネセンスのうち、光を受けて光を放射する現象を利用した光源は:Mark[フォトルミネセンス]と呼ばれ、身近なランプとしては:Mark[蛍光ランプ]や:Mark[白色LED]があります。
+
+```mermaid
+graph LR
+    A["光源"] --- B["熱放射を<br />利用したランプ"]
+    A --- C["ルミネセンスを<br />利用したランプ"]
+    
+    C --- C3["フォト<br/>ルミネセンス"]:::c3
+      
+    C3 --- Anki_C31{{"蛍光ランプ"}}:::c3
+    C3 --- Anki_C32{{"白色LED"}}:::c3
+    
+    classDef b fill:var(--pastel-green)
+    classDef c11 fill:var(--pastel-blue)
+    classDef c12 fill:var(--pastel-water)
+    classDef c2 fill:var(--pastel-orange)
+    classDef c3 fill:var(--pastel-pink)
+```
