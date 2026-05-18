@@ -2,8 +2,8 @@
   import { page } from "$app/state"
   import { resolve } from "$app/paths"
   import Icon from "@iconify/svelte"
-  import { colorTheoryPageNav } from "$lib/content-pages/color-theory"
-  import { colorFieldsPageNav } from "$lib/content-pages/color-fields"
+  import { colorTheoryPageNav } from "$lib/content-pages/color-theory-nav"
+  import { colorFieldsPageNav } from "$lib/content-pages/color-fields-nav"
 
   const isConceptPage = $derived(page.route.id === "/concept")
 
