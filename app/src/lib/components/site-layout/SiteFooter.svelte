@@ -33,14 +33,14 @@
     <nav class="footer-page-nav" aria-label="ページ送り">
       {#if pageNavInfo.prev && pageNavInfo.prevHref}
         <a class="footer-page-nav-link footer-page-nav-prev" href={pageNavInfo.prevHref}>
-          <Icon icon="solar:arrow-left-broken" width="20" height="20" aria-hidden="true" />
+          <Icon icon="mingcute:arrow-left-line" aria-hidden="true" />
           <span class="footer-page-nav-title">{pageNavInfo.prev.title}</span>
         </a>
       {/if}
       {#if pageNavInfo.next && pageNavInfo.nextHref}
         <a class="footer-page-nav-link footer-page-nav-next" href={pageNavInfo.nextHref}>
           <span class="footer-page-nav-title">{pageNavInfo.next.title}</span>
-          <Icon icon="solar:arrow-right-broken" width="20" height="20" aria-hidden="true" />
+          <Icon icon="mingcute:arrow-right-line" aria-hidden="true" />
         </a>
       {/if}
     </nav>
@@ -129,7 +129,10 @@
     grid-template-columns: 1fr 1fr;
     column-gap: 1rem;
     align-items: center;
-    padding: 1.25rem 1.5rem;
+    padding-block-start: 1.5rem;
+    padding-block-end: 1rem;
+    max-width: 680px;
+    margin-inline: auto;
   }
 
   .footer-page-nav-link {
@@ -139,10 +142,9 @@
     column-gap: 0.5rem;
     color: var(--color-body);
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     line-height: 1.4;
     max-width: 100%;
-    transition: color 0.15s;
   }
 
   .footer-page-nav-link:hover {
