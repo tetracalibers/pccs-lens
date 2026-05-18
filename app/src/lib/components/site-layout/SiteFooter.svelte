@@ -34,7 +34,7 @@
     <nav class="footer-page-nav" aria-label="ページ送り">
       {#if pageNavInfo.prev && pageNavInfo.prevHref}
         <a class="footer-page-nav-link footer-page-nav-prev" href={pageNavInfo.prevHref}>
-          <Icon icon="uil:arrow-left" aria-hidden="true" />
+          <Icon icon="uil:arrow-left" width="16" aria-hidden="true" />
           <span class="footer-page-nav-title">{pageNavInfo.prev.title}</span>
         </a>
       {/if}
@@ -42,7 +42,7 @@
       {#if pageNavInfo.next && pageNavInfo.nextHref}
         <a class="footer-page-nav-link footer-page-nav-next" href={pageNavInfo.nextHref}>
           <span class="footer-page-nav-title">{pageNavInfo.next.title}</span>
-          <Icon icon="uil:arrow-right" aria-hidden="true" />
+          <Icon icon="uil:arrow-right" width="16" aria-hidden="true" />
         </a>
       {/if}
     </nav>
@@ -142,7 +142,7 @@
     display: grid;
     grid-auto-flow: column;
     align-items: center;
-    column-gap: 0.5rem;
+    column-gap: 0.25rem;
     color: var(--color-body);
     text-decoration: none;
     font-size: 0.8rem;
@@ -176,5 +176,6 @@
   .footer-page-nav-title {
     min-width: 0;
     word-break: auto-phrase;
+    line-height: 1.5;
   }
 </style>
