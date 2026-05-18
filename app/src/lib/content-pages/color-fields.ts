@@ -7,23 +7,28 @@ export const colorFieldsCategories = data as unknown as Category[]
 
 const BASE = "color-fields"
 
-const orderedPublishedPages: PageNavEntry[] = colorFieldsCategories.flatMap((category) =>
+type OrderedEntry = PageNavEntry & { categoryId: string }
+
+const orderedPublishedPages: OrderedEntry[] = colorFieldsCategories.flatMap((category) =>
   category.sections.flatMap((section) =>
     section.links.flatMap((link) => {
       if (!isPageLink(link)) return []
       const meta = guidePages.get(`${BASE}/${link.slug}`)
       if (!meta || meta.draft) return []
-      return [{ slug: link.slug, title: meta.title }]
+      return [{ slug: link.slug, title: meta.title, categoryId: category.id }]
     })
   )
 )
+
+const toNavEntry = ({ slug, title }: OrderedEntry): PageNavEntry => ({ slug, title })
 
 export const colorFieldsPageNav: Map<string, PageNavLinks> = new Map(
   orderedPublishedPages.map((entry, i) => [
     entry.slug,
     {
-      prev: orderedPublishedPages[i - 1],
-      next: orderedPublishedPages[i + 1]
+      prev: orderedPublishedPages[i - 1] ? toNavEntry(orderedPublishedPages[i - 1]) : undefined,
+      next: orderedPublishedPages[i + 1] ? toNavEntry(orderedPublishedPages[i + 1]) : undefined,
+      categoryId: entry.categoryId
     }
   ])
 )

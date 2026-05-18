@@ -34,4 +34,5 @@ export interface PageNavEntry {
 export interface PageNavLinks {
   prev?: PageNavEntry
   next?: PageNavEntry
+  categoryId: string
 }
