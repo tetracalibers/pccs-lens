@@ -49,8 +49,11 @@
   import type { GuideFrontmatter } from "$lib/meta/guide-pages"
   import Breadcrumb from "$lib/components/Breadcrumb.svelte"
   import { resolve } from "$app/paths"
+  import type { ResolvedPathname } from "$app/types"
   import { page } from "$app/state"
   import { sortGrades } from "$lib/meta/grade"
+  import { colorTheoryCategoryBySlug } from "$lib/content-pages/color-theory"
+  import { colorFieldsCategoryBySlug } from "$lib/content-pages/color-fields"
   import DraftTag from "$lib/components/DraftTag.svelte"
   import { ankiMode } from "$lib/state/anki.svelte"
 
@@ -64,9 +67,27 @@
   const gradeList = $derived(sortGrades(grades))
 
   const parentCrumb = $derived.by(() => {
-    const base = page.url.pathname.split("/")[1]
+    const routeSegments = page.route.id?.split("/").filter(Boolean) ?? []
+    const base = routeSegments[0]
+    const slug = routeSegments[1]
     if (base === "color-fields") {
+      const category = slug ? colorFieldsCategoryBySlug.get(slug) : undefined
+      if (category) {
+        return {
+          label: category.title,
+          href: `${resolve("/color-fields")}#${category.id}` as ResolvedPathname
+        }
+      }
       return { label: "色の活用分野", href: resolve("/color-fields") }
+    }
+    if (base === "color-theory") {
+      const category = slug ? colorTheoryCategoryBySlug.get(slug) : undefined
+      if (category) {
+        return {
+          label: category.title,
+          href: `${resolve("/color-theory")}#${category.id}` as ResolvedPathname
+        }
+      }
     }
     return { label: "色の理論", href: resolve("/color-theory") }
   })
