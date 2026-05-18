@@ -34,7 +34,7 @@
     <nav class="footer-page-nav" aria-label="ページ送り">
       {#if pageNavInfo.prev && pageNavInfo.prevHref}
         <a class="footer-page-nav-link footer-page-nav-prev" href={pageNavInfo.prevHref}>
-          <Icon icon="mingcute:arrow-left-line" aria-hidden="true" />
+          <Icon icon="uil:arrow-left" aria-hidden="true" />
           <span class="footer-page-nav-title">{pageNavInfo.prev.title}</span>
         </a>
       {/if}
@@ -42,7 +42,7 @@
       {#if pageNavInfo.next && pageNavInfo.nextHref}
         <a class="footer-page-nav-link footer-page-nav-next" href={pageNavInfo.nextHref}>
           <span class="footer-page-nav-title">{pageNavInfo.next.title}</span>
-          <Icon icon="mingcute:arrow-right-line" aria-hidden="true" />
+          <Icon icon="uil:arrow-right" aria-hidden="true" />
         </a>
       {/if}
     </nav>
@@ -58,9 +58,10 @@
 <style>
   /* ===== サイトフッター ===== */
   .site-footer {
-    margin-block-end: 1rem;
+    margin-block-end: 0.5rem;
     margin-inline: 1rem;
     position: relative;
+    container-type: inline-size;
   }
 
   .site-footer::before {
@@ -128,7 +129,7 @@
   /* ===== prev / next ページ送り ===== */
   .footer-page-nav {
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: minmax(30cqw, auto) 1fr minmax(30cqw, auto);
     column-gap: 1rem;
     align-items: center;
     padding-block-start: 1.5rem;
@@ -146,7 +147,7 @@
     text-decoration: none;
     font-size: 0.8rem;
     line-height: 1.4;
-    max-width: 100%;
+    max-width: 33cqw;
   }
 
   .footer-page-nav-link:hover {
@@ -163,6 +164,7 @@
     grid-column: 2;
     justify-self: center;
     padding-block-start: 0;
+    white-space: nowrap;
   }
 
   .footer-page-nav-next {
