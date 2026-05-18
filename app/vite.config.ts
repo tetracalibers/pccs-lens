@@ -2,12 +2,13 @@ import { defineConfig } from "vitest/config"
 import { playwright } from "@vitest/browser-playwright"
 import { sveltekit } from "@sveltejs/kit/vite"
 import { enhancedImages } from "@sveltejs/enhanced-img"
+import yaml from "@modyfi/vite-plugin-yaml"
 
 export default defineConfig({
   define: {
     __GITHUB_PAGES__: JSON.stringify(process.env.GITHUB_PAGES === "true")
   },
-  plugins: [enhancedImages(), sveltekit()],
+  plugins: [enhancedImages(), yaml(), sveltekit()],
   test: {
     expect: { requireAssertions: true },
     projects: [

@@ -1,0 +1,266 @@
+- title: 色の表し方
+  id: color-expression
+  summary: |
+    色を誰かに伝えるために、色を記号や数値で表す方法（表色系）と色を言葉で表す方法（色名）を学びます。色の特徴を捉える上で基本となるのは、色相・明度・彩度の三属性です。
+  sections:
+    - title: 色を記号や数値で表す
+      links:
+        - slug: color-three-attributes
+        - slug: pccs-basics
+        - slug: color-system-types
+        - slug: color-wheel-and-color-solid
+        - slug: pccs-color-system
+        - slug: how-to-draw-pccs-color-wheel
+        - slug: munsell-color-system
+    - title: 色を言葉で表す
+      links:
+        - slug: color-name-types
+        - title: 物体色の色名
+          grades: ["1"]
+        - title: 光源色の色名
+          grades: ["1"]
+        - slug: basic-color-terms
+        - title: ISCC-NBS色名法
+          grades: ["1"]
+
+- title: 配色と色彩調和
+  id: color-scheme-and-harmony
+  summary: |
+    PCCSのトーンの仕組みは、明度や彩度の関係をシンプルに捉え、イメージに合う色選びを助けてくれるものです。使いたい色をPCCSに落とし込んでから色の組み合わせ（配色）を考えることで、配色の技法を直感的に理解できます。
+
+    また、配色技法の背景には、なぜその組み合わせが調和するのか？という数々の研究があります。
+  sections:
+    - title: 配色の技法
+      links:
+        - slug: hue-tone-difference
+        - slug: color-area-proportion
+        - slug: gradient-color-scheme
+        - slug: dominant-and-tone-on-tone
+        - slug: tonal-color-scheme
+        - slug: camaieu-and-faux-camaieu
+        - slug: bicolor-and-tricolor
+        - slug: color-wheel-based-color-schemes
+        - slug: natural-harmony
+        - title: 色の三属性と配色イメージ
+          grades: ["3"]
+          basic: true
+        - title: イメージ別の配色法
+          grades: ["2"]
+          basic: true
+    - title: 色彩調和論
+      links:
+        - slug: unity-and-variety
+        - slug: chevreul-color-harmony
+        - slug: judd-four-principles
+        - slug: natural-hue-sequence
+        - title: 色相分割による調和
+          grades: ["1"]
+        - title: 混色から考える調和
+          grades: ["1"]
+        - title: ムーン＆スペンサーの色彩調和論
+          grades: ["1"]
+
+- title: 色が見えるしくみ
+  id: how-color-is-perceived
+  summary: |
+    私たちが目にする色は、一体どこで生み出されるのか？
+    ある色をその色として認識できるメカニズムを、光の性質、眼の構造と視覚の仕組み、脳内での情報処理の仕組みに分けて紐解いていきます。
+  sections:
+    - title: 光と色
+      links:
+        - slug: how-color-works
+        - slug: electromagnetic-waves
+        - slug: light-components-and-reflectance
+        - slug: light-phenomena
+    - title: 眼と視覚系
+      links:
+        - slug: eye-structure
+        - slug: light-path-through-the-retina
+        - slug: photoreceptor-types-and-distribution
+        - slug: brightness-sensitivity-and-adaptation
+        - slug: perceptual-constancy
+    - title: 色の知覚
+      links:
+        - slug: color-vision-theories
+        - slug: opponent-color-response
+        - title: NCS表色系
+          grades: ["1"]
+
+- title: 色の作り方と色再現
+  id: color-creation-and-reproduction
+  summary: |
+    色を重ねたり混ぜたりすると新たな色が現れる、混色について学びます。色のついた光を重ねるのか、色のついた物（フィルタなど）を重ねるのかによって、現れる色は異なってきます。
+    混色の考え方は、コンピュータ等での色の指定にも用いられます。コンピュータで作った色を印刷したらどうなるか？についても考えてみましょう。
+  sections:
+    - title: 混色で色をつくる
+      links:
+        - slug: color-mixing-basics
+        - slug: additive-color-mixing-types
+        - slug: real-world-color-mixing
+    - title: デジタル空間の色
+      links:
+        - title: コンピュータで色を作る
+          grades: ["2"]
+        - title: 色再現領域
+          grades: ["2"]
+    - title: 加法混色の法則性
+      links:
+        - slug: color-matching-and-grassmanns-law
+    - title: 混色の原理による色表示
+      links:
+        - slug: rgb-color-system
+        - slug: xyz-color-system
+        - title: xy色度図
+          grades: ["1"]
+        - title: 色差の表示
+          grades: ["1"]
+        - title: L*a*b*色空間
+          grades: ["1"]
+        - title: オストワルト表色系
+          grades: ["1"]
+
+- title: 色の見え方
+  id: color-appearance
+  summary: |
+    同じ色が使われているはずなのに、色の見え方に違いが生じる要因はさまざまあります。
+    色の組み合わせや配置によっては脳が解釈する色がズレたり、照明が変わると色の感じ方も変わったり、物体の質感によっても色の見え方は変わります。
+    意図した通りに色を表現するには、これらの要因を知っておくことが大切です。
+  sections:
+    - title: 色の視覚効果
+      links:
+        - slug: adjacent-color-influence
+        - slug: color-contrast
+        - slug: contrast-phenomena
+        - title: 色の同化
+          grades: ["3"]
+        - title: 面積と見え方
+          grades: ["3"]
+        - slug: subjective-color
+        - slug: optical-illusions
+    - title: 照明
+      links:
+        - slug: what-is-lighting
+        - slug: color-temperature-and-light-color
+        - slug: illuminance-and-lighting-design
+        - slug: photometric-quantities
+        - slug: color-rendering
+        - slug: lamp-types
+        - title: 光の明るさの測定
+          grades: ["1"]
+        - title: エネルギー量とランプ効率
+          grades: ["1"]
+    - title: 色の現れ方と感じ方
+      links:
+        - title: 物体表面の質感と光
+          grades: ["2"]
+        - title: 色の様相
+          grades: ["1"]
+        - title: 色の現れ方の分類
+          grades: ["1"]
+    - title: 光と色知覚の複雑性
+      links:
+        - title: 三属性間の影響
+          grades: ["1"]
+        - title: 光の入射角の影響
+          grades: ["1"]
+
+- title: 色のはたらき方
+  id: color-functions
+  summary: |
+    色の美しさを追求するだけでなく、色の持つ効果をうまく活用することが重要です。色に結びついている普遍的なイメージや心理を理解することも、よりよい表現につながります。
+  sections:
+    - title: 色の役割
+      links:
+        - slug: color-roles
+        - slug: visual-clarity-and-visibility
+    - title: 色の心理効果
+      links:
+        - title: 色と感覚
+          grades: ["3"]
+        - slug: color-preference
+        - slug: color-association-symbolism
+        - title: 記憶色と色記憶
+          grades: ["1"]
+
+- title: 色の見え方の多様性
+  id: color-vision-diversity
+  summary: |
+    色の見え方には個人差があり、目立つ色や見やすい色も人によって異なります。
+    さまざまな色の見え方を学ぶことは、すべての人に伝わるような色の使い方を考える第一歩です。
+  sections:
+    - title: 色覚の多様性
+      links:
+        - slug: color-vision-characteristics
+        - slug: color-vision-types
+    - title: 色覚タイプごとの見え方
+      links:
+        - title: 混同しやすい色
+          grades: ["uc"]
+        - title: 色の誤認
+          grades: ["uc"]
+    - title: 高齢者の見え方
+      links:
+        - slug: age-related-vision-changes
+        - slug: elderly-vision-characteristics
+        - slug: age-related-eye-diseases
+    - title: 色覚の遺伝と検査法
+      links:
+        - title: 色覚の遺伝
+          grades: ["uc"]
+        - title: 色覚検査法
+          grades: ["uc"]
+
+- title: 色の測り方
+  id: color-measurement
+  summary: |
+    製品の色にばらつきがないか？など、色の品質を管理するためには、色を測り、その誤差を評価することが重要です。
+    また、心理評価法を用いると、色から受ける印象や、色の見え方などを測定することもできます。
+  sections:
+    - title: 測色と色管理
+      links:
+        - title: 測色の基本
+          grades: ["1"]
+        - title: 視感測色
+          grades: ["1"]
+        - title: 物理測色
+          grades: ["1"]
+        - title: 測色における照明
+          grades: ["1"]
+        - title: 測り方による色の分類
+          grades: ["1"]
+    - title: 色の印象の評価
+      links:
+        - slug: psychological-scaling-method
+        - slug: psychological-scale-types
+        - title: 一対比較法
+          grades: ["1"]
+        - title: SD法
+          grades: ["1"]
+        - title: 色のイメージにおける因子
+          grades: ["1"]
+    - title: 色の知覚や感覚の測定
+      links:
+        - title: 知覚の度合いと閾
+          grades: ["1"]
+        - title: 心理物理学的測定法
+          grades: ["1"]
+        - title: 感覚と弁別閾の法則性
+          grades: ["1"]
+
+- title: 色彩文化の発展
+  id: color-culture-development
+  summary: ""
+  sections:
+    - title: 西洋の色彩と文化
+      links:
+        - slug: ancient-european-colors
+        - slug: medieval-european-colors
+        - slug: modern-european-colors
+    - title: 日本の色彩と文化
+      links:
+        - title: 古代の日本と色彩
+          grades: ["1"]
+        - title: 古代から中近世の日本と色彩
+          grades: ["1"]
+        - title: 近代の日本の色彩
+          grades: ["1"]
