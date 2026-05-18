@@ -7,19 +7,13 @@
   import { colorTheoryCategories } from "$lib/content-pages/color-theory"
   import { isPageLink } from "$lib/content-pages/types"
   import { gradeArray2CSV } from "$lib/meta/grade"
-
-  const summaryParagraphs = (summary: string): string[][] =>
-    summary
-      .trim()
-      .split(/\n{2,}/)
-      .filter((p) => p.length > 0)
-      .map((p) => p.split("\n"))
+  import { parseParagraphs } from "$lib/md/paragraph"
 </script>
 
 <GuideMap title="色の理論一覧">
   {#each colorTheoryCategories as category (category.id)}
     <Heading2 id={category.id}>{category.title}</Heading2>
-    {#each summaryParagraphs(category.summary) as lines, pi (pi)}
+    {#each parseParagraphs(category.summary) as lines, pi (pi)}
       <p>
         {#each lines as line, li (li)}
           {#if li > 0}<br />{/if}{line}
