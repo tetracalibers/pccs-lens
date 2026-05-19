@@ -26,13 +26,13 @@
   const LABEL_RADIUS = ARC_RADIUS + LABEL_GAP
 
   // ===== ViewBox =====
-  const VIEWBOX_PADDING = 24
+  const VIEWBOX_PADDING = 0
   const VB_R = LABEL_RADIUS + VIEWBOX_PADDING
   const viewBox = `${-VB_R} ${-VB_R} ${2 * VB_R} ${2 * VB_R}`
 
   // ===== フォント =====
   const FONT_SIZE_HUE_LABEL = 14
-  const FONT_SIZE_ARC_LABEL = 16
+  const FONT_SIZE_ARC_LABEL = 22
 
   // ===== 線幅 =====
   const ARC_STROKE_WIDTH = 3
@@ -50,7 +50,7 @@
   // ===== 色 =====
   const COL_WARM = "var(--canvas-pen-pink)"
   const COL_COOL = "var(--canvas-pen-water)"
-  const COL_NEUTRAL = "var(--canvas-pen-gray)"
+  const COL_NEUTRAL = "lightslategray"
 
   // ===== スウォッチ間の隙間 =====
   const gap = Math.max(2, R_OUTER * 0.018)
@@ -113,28 +113,28 @@
   const arcGroups: ArcGroup[] = [
     {
       id: "warm",
-      label: "暖色 warm",
+      label: "暖色",
       startDeg: segStartDeg(1) + ARC_END_PAD_DEG,
       endDeg: segEndDeg(8) - ARC_END_PAD_DEG,
       color: COL_WARM
     },
     {
       id: "neutral-green",
-      label: "中性色 neutral",
+      label: "中性色",
       startDeg: segStartDeg(9) + ARC_END_PAD_DEG,
       endDeg: segEndDeg(12) - ARC_END_PAD_DEG,
       color: COL_NEUTRAL
     },
     {
       id: "cool",
-      label: "寒色 cool",
+      label: "寒色",
       startDeg: segStartDeg(13) + ARC_END_PAD_DEG,
       endDeg: segEndDeg(19) - ARC_END_PAD_DEG,
       color: COL_COOL
     },
     {
       id: "neutral-purple",
-      label: "中性色 neutral",
+      label: "中性色",
       startDeg: segStartDeg(20) + ARC_END_PAD_DEG,
       endDeg: segEndDeg(24) - ARC_END_PAD_DEG,
       color: COL_NEUTRAL
@@ -243,14 +243,11 @@
     <text
       class="arc-label"
       font-size={FONT_SIZE_ARC_LABEL}
+      font-weight="bold"
       fill={group.color}
       dominant-baseline="middle"
     >
-      <textPath
-        href="#warm-cool-label-path-{group.id}"
-        startOffset="50%"
-        text-anchor="middle"
-      >
+      <textPath href="#warm-cool-label-path-{group.id}" startOffset="50%" text-anchor="middle">
         {isAnki ? "" : group.label}
       </textPath>
     </text>
