@@ -183,6 +183,36 @@ const ARROW_HEAD_H = 10   // markerHeight（縦幅）
 
 テキストを縦書きにするよう指示された場合は、`<text>` 要素に `writing-mode="vertical-rl"` 属性を付与して実現する。
 
+### 色の使い分け
+
+- **PCCSの色を使用する**よう指示された場合は、`app/src/lib/data/pccs.ts` の `PCCS_HEX_MAP` などからHEXカラーコードを取得する
+- **それ以外の色分け**（例: 「赤い線を描く」など）が指示された場合は、`app/src/lib/styles/color.css` で定義されている `--canvas-pen-*` を使用する
+
+### 暗記モードでのテキスト非表示
+
+暗記モードでテキストを隠すよう指示された場合は、以下の規則を守る。
+
+- 非表示時に周囲のテキストの位置が変わらないよう、`visibility="hidden"` で隠す（`display="none"` などレイアウトに影響する方法は使わない）
+- `<tspan>` を使う場合は、`<text>` 直下に生テキストを置かず、すべての文字列を必ず `<tspan>` で囲む
+
+Bad:
+
+```svelte
+<text>
+  <tspan visibility={isAnki ? "hidden" : "visible"}>{item.temp}</tspan>
+  K
+</text>
+```
+
+Good:
+
+```svelte
+<text>
+  <tspan visibility={isAnki ? "hidden" : "visible"}>{item.temp}</tspan>
+  <tspan dx="-0.4em">K</tspan>
+</text>
+```
+
 ### 文字色のコントラスト確保
 
 塗りつぶし色の明暗差が場合によって大きく、文字が読みづらくなる可能性がある場合は、`app/src/lib/color/utils.ts` の `isLightColor` 関数によって文字色を出し分ける。指示がない限り、コンポーネント内で chroma.js の `luminance` 関数を直接使わない。
