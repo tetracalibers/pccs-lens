@@ -1,7 +1,10 @@
 <script lang="ts">
   import { PCCS_ALL } from "$lib/data/pccs"
   import { isLightColor } from "$lib/color/utils"
+  import { ankiMode } from "$lib/state/anki.svelte"
   const colorsFullData = PCCS_ALL
+
+  const isAnki = $derived(ankiMode.isAnki)
 
   interface Props {
     highlights?: string[]
@@ -226,7 +229,7 @@
           font-size="10"
           style="pointer-events: none; user-select: none; fill: {labelFill};"
         >
-          {cell.label}
+          {isAnki ? "" : cell.label}
         </text>
       </g>
     {/each}
