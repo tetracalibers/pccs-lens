@@ -3,7 +3,12 @@
   import { isLightColor } from "$lib/color/utils"
   const colorsFullData = PCCS_ALL
 
-  let { highlights = [] }: { highlights: string[] } = $props()
+  interface Props {
+    highlights?: string[]
+    hue?: number
+  }
+
+  let { highlights = [], hue = 24 }: Props = $props()
 
   type ToneCell = {
     key: string
@@ -87,7 +92,7 @@
     if (cell.shape === "square") {
       return ACHROMATIC_FILLS[cell.key] ?? "#999"
     }
-    const entry = colorsFullData.find((c) => c.toneSymbol === cell.key && c.hueNumber === 24)
+    const entry = colorsFullData.find((c) => c.toneSymbol === cell.key && c.hueNumber === hue)
     return entry?.hex ?? "#ccc"
   }
 
