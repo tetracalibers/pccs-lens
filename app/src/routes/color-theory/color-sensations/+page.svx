@@ -1,0 +1,28 @@
+---
+layout: guide-content
+title: 色と感覚
+
+grades: ["3"]
+
+draft: true
+---
+
+## :WithGradeTag[色相の効果]{grades="3"}
+
+### 色の寒暖感
+
+### 色の進出・後退感
+
+## :WithGradeTag[明度の効果]{grades="3"}
+
+### 色の膨張・収縮感
+
+### 色の硬軟感
+
+### 色の軽重感
+
+## :WithGradeTag[彩度の効果]{grades="3"}
+
+### 色の興奮・沈静感
+
+### 色の派手・地味感

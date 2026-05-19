@@ -175,8 +175,7 @@
         - slug: visual-clarity-and-visibility
     - title: 色の心理効果
       links:
-        - title: 色と感覚
-          grades: ["3"]
+        - slug: color-sensations
         - slug: color-preference
         - slug: color-association-symbolism
         - title: 記憶色と色記憶
