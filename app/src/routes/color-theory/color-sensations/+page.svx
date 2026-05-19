@@ -7,22 +7,54 @@ grades: ["3"]
 draft: true
 ---
 
+<script>
+  import Icon from "@iconify/svelte"
+  import SVGWrapper from '$lib/demo/SVGWrapper.svelte';
+  import WarmCoolHueWheel from "$lib/demo/color-sensations/WarmCoolHueWheel.svelte"
+  import AdvancingColor from "$lib/demo/color-sensations/AdvancingColor.svelte"
+  import RecedingColor from "$lib/demo/color-sensations/RecedingColor.svelte"
+  import ExpansionContractionGoStones from "$lib/demo/color-sensations/ExpansionContractionGoStones.svelte"
+</script>
+
 ## :WithGradeTag[色相の効果]{grades="3"}
 
 ### 色の寒暖感
 
+<SVGWrapper maxW={600}>
+  <WarmCoolHueWheel />
+</SVGWrapper>
+
 ### 色の進出・後退感
+
+<SVGWrapper maxW={300}>
+  <AdvancingColor />
+</SVGWrapper>
+
+<SVGWrapper maxW={300}>
+  <RecedingColor />
+</SVGWrapper>
 
 ## :WithGradeTag[明度の効果]{grades="3"}
 
 ### 色の膨張・収縮感
 
-### 色の硬軟感
+<SVGWrapper maxW={300}>
+  <ExpansionContractionGoStones />
+</SVGWrapper>
 
-### 色の軽重感
+### 色の硬軟感と軽重感
+
+<Icon icon="uim:box" width="150" style="color: darkmagenta; background-color: white;" />
+<Icon icon="uim:box" width="150" style="color: pink; background-color: white;" />
 
 ## :WithGradeTag[彩度の効果]{grades="3"}
 
 ### 色の興奮・沈静感
 
+<Icon icon="game-icons:abstract-078" width="150" style="color: orangered; background-color: white;" />
+<Icon icon="game-icons:abstract-078" width="150" style="color: lightsteelblue; background-color: white;" />
+
 ### 色の派手・地味感
+
+<Icon icon="emojione-monotone:night-with-stars" width="150" style="color: deeppink; background-color: white;" />
+<Icon icon="emojione-monotone:night-with-stars" width="150" style="color: rosybrown; background-color: white;" />
