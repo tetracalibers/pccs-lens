@@ -6,7 +6,7 @@
   const NUM_SQUARES = 5
   const OUTER_SIZE = 300 // 最外側の正方形の一辺
   const SIZE_STEP = 30 // 内側に1段進むごとに左右で減少する量
-  const PADDING = 8 // viewBox外周の余白
+  const PADDING = 0 // viewBox外周の余白
 
   // ===== 明度ステップ =====
   // chroma.darken は amount=1 で CIELAB の L* を -18 する
