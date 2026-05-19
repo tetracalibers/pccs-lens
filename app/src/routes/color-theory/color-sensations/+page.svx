@@ -34,14 +34,14 @@ grades: ["3"]
 
 光の波長で考えると、:Mark[長波長]域が暖色、:Mark[短波長]域が寒色に分類されます。
 
-:::TermCard{title="PCCS色相環における暖色・寒色"}
+### PCCS色相環における暖色・寒色
+
 PCCS色相環で考えると、暖色は:Mark[1：pR]〜:Mark[8：Y]、寒色は:Mark[13：bG]〜:Mark[19：pB]とされています。
 暖色と寒色の間に挟まれた:Mark[緑]系や:Mark[紫]系は中性色であり、この付近で寒暖が切り替わります。
 
 <SVGWrapper maxW={400} style="margin-block-start: -1rem;">
   <WarmCoolHueWheel />
 </SVGWrapper>
-:::
 
 ### 色の寒暖感と彩度
 
