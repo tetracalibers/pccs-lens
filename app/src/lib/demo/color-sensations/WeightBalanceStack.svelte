@@ -1,13 +1,17 @@
 <script lang="ts">
+  import { PCCS_HEX_MAP } from "$lib/data/pccs"
+
   interface Props {
-    topColor?: string
-    bottomColor?: string
+    /** PCCS記号（例: "v2"） */
+    topPCCS: string
+    /** PCCS記号（例: "v2"） */
+    bottomPCCS: string
   }
 
-  let {
-    topColor = "var(--color-body)",
-    bottomColor = "var(--color-body)"
-  }: Props = $props()
+  let { topPCCS, bottomPCCS }: Props = $props()
+
+  const topHex = $derived(PCCS_HEX_MAP.get(topPCCS)!)
+  const bottomHex = $derived(PCCS_HEX_MAP.get(bottomPCCS)!)
 
   // ===== 台形の形状 =====
   // 上段・下段で共通の等脚台形（上辺＜下辺）
@@ -39,7 +43,7 @@
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="{VB_X} {VB_Y} {VB_W} {VB_H}">
-  <path d={trapezoidPath(TOP_X, TOP_Y)} fill={topColor} />
-  <path d={trapezoidPath(BOTTOM_L_X, BOTTOM_Y)} fill={bottomColor} />
-  <path d={trapezoidPath(BOTTOM_R_X, BOTTOM_Y)} fill={bottomColor} />
+  <path d={trapezoidPath(TOP_X, TOP_Y)} fill={topHex} />
+  <path d={trapezoidPath(BOTTOM_L_X, BOTTOM_Y)} fill={bottomHex} />
+  <path d={trapezoidPath(BOTTOM_R_X, BOTTOM_Y)} fill={bottomHex} />
 </svg>
