@@ -240,14 +240,13 @@
 
   <!-- 円弧に沿うラベル -->
   {#each renderedArcs as group (group.id)}
-    <text
-      class="arc-label"
-      font-size={FONT_SIZE_ARC_LABEL}
-      font-weight="bold"
-      fill={group.color}
-      dominant-baseline="middle"
-    >
-      <textPath href="#warm-cool-label-path-{group.id}" startOffset="50%" text-anchor="middle">
+    <text class="arc-label" font-size={FONT_SIZE_ARC_LABEL} font-weight="500" fill={group.color}>
+      <textPath
+        href="#warm-cool-label-path-{group.id}"
+        startOffset="50%"
+        text-anchor="middle"
+        dominant-baseline="central"
+      >
         {isAnki ? "" : group.label}
       </textPath>
     </text>
