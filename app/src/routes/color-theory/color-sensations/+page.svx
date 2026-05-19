@@ -1,0 +1,190 @@
+---
+layout: guide-content
+title: 色と感覚
+
+grades: ["3"]
+---
+
+<script>
+  import Icon from "@iconify/svelte"
+  import SVGWrapper from '$lib/demo/SVGWrapper.svelte';
+  import WarmCoolHueWheel from "$lib/demo/color-sensations/WarmCoolHueWheel.svelte"
+  import AdvancingColor from "$lib/demo/color-sensations/AdvancingColor.svelte"
+  import RecedingColor from "$lib/demo/color-sensations/RecedingColor.svelte"
+  import ExpansionContractionGoStones from "$lib/demo/color-sensations/ExpansionContractionGoStones.svelte"
+  import ToneAreaDiagram from "$lib/demo/pccs/ToneAreaDiagram.svelte"
+  import WeightBalanceStack from "$lib/demo/color-sensations/WeightBalanceStack.svelte"
+</script>
+
+私たちは色に対してさまざまなイメージを抱きますが、その中でも多くの人が共通して感じるとされる色のイメージもあります。
+そのような普遍的なイメージには、色の三属性が関わっています。
+
+- 色相が生むイメージ：:Mark[寒暖]感、:Mark[進出・後退]感
+- 明度が生むイメージ：:Mark[膨張・収縮]感、:Mark[硬軟]感、:Mark[軽重]感
+- 彩度が生むイメージ：:Mark[興奮・沈静]感、:Mark[派手・地味]感
+
+## :WithGradeTag[色の寒暖感]{grades="3"}
+
+色を見たときに、「あたたかい」「冷たい」といった温度のイメージを感じることがあります。
+これを色の:Mark[寒暖感]といい、色の三属性のうち:Mark[色相]が深く関わるものです。
+
+- :Mark[暖色]：あたたかく感じられる色（:Mark[赤]、:Mark[橙]、:Mark[黄]系）
+- :Mark[寒色]：冷たく感じられる色（:Mark[青緑]、:Mark[青]系）
+- :Mark[中性色]：温度感を感じない色（:Mark[緑]、:Mark[紫]系）
+
+光の波長で考えると、:Mark[長波長]域が暖色、:Mark[短波長]域が寒色に分類されます。
+
+### PCCS色相環における暖色・寒色
+
+PCCS色相環で考えると、暖色は:Mark[1：pR]〜:Mark[8：Y]、寒色は:Mark[13：bG]〜:Mark[19：pB]とされています。
+暖色と寒色の間に挟まれた:Mark[緑]系や:Mark[紫]系は中性色であり、この付近で寒暖が切り替わります。
+
+<SVGWrapper maxW={400} style="margin-block-start: -1rem;">
+  <WarmCoolHueWheel />
+</SVGWrapper>
+
+### 色の寒暖感と彩度
+
+同じ色でも、:Mark[低彩度]色では寒暖感の効果は弱くなります。
+また、:Mark[無彩色]は有彩色に比べると冷たく感じられやすいです。
+
+## :WithGradeTag[色の進出・後退感]{grades="3"}
+
+実際には同じ距離に置かれていても、色によって近くにあるように見えたり、遠くにあるように見えたりします。これを:Mark[進出・後退]感といい、距離の判断には:Mark[色相]が深く関わっているといわれています。
+
+- :Mark[進出色]：実際より近くに感じる色
+- :Mark[後退色]：実際より遠くに感じる色
+
+::::CardGrid
+:::TermCard{title="進出色と明度"}
+:Mark[暖色]系の色は進出色
+同色相の場合は、:Mark[高明度]色の方が近く感じる
+
+<SVGWrapper maxW={300} style="margin-block: -1rem;">
+  <AdvancingColor />
+</SVGWrapper>
+:::
+:::TermCard{title="後退色と明度"}
+:Mark[寒色]系の色は後退色
+同色相の場合は、:Mark[低明度]色の方が遠く感じる
+
+<SVGWrapper maxW={300} style="margin-block: -1rem;">
+  <RecedingColor />
+</SVGWrapper>
+::::
+
+## :WithGradeTag[色の膨張・収縮感]{grades="3"}
+
+形状と大きさが同じ物体でも、色が変わるとサイズが違って見えることがあります。これを色の:Mark[膨張・収縮]感といい、物体の見かけの大きさの判断には:Mark[明度]が深く関わっているといわれています。
+
+- :Mark[膨張色]：実際より大きく見える色
+- :Mark[収縮色]：実際より小さく見える色
+
+膨張色は:Mark[高明度]色、収縮色は:Mark[低明度]色です。
+同じ:Mark[明度]であれば、色相が異なっていても見かけの大きさはあまり変わりません。
+
+:::TermCard{title="囲碁の碁石の例" textCentering}
+同じ大きさの白い丸と黒い丸を並べると、白い丸の方が大きく、補助線を圧迫しているように見える
+
+<SVGWrapper maxW={300}>
+  <ExpansionContractionGoStones />
+</SVGWrapper>
+
+このような現象を避けるため、実際の碁石では、白の方が小さめに作られている
+:::
+
+### 視覚調整
+
+色の膨張・収縮感により大きさが変わって見える場合、同じ大きさに見せるには、次のような:Mark[視覚調整]が必要となります。
+
+- 明るい物体のサイズを:Mark[小さく]する
+- 暗い物体のサイズを:Mark[大きく]する
+
+## :WithGradeTag[色の硬軟感と軽重感]{grades="3"}
+
+色が見かけの硬さに影響する効果を色の:Mark[硬軟感]、色が見かけの重量感覚に影響する効果を色の:Mark[軽重感]といいます。どちらも:Mark[明度]が深く関わっているとされる効果です。
+
+- :Mark[高明度]色は軟らかく、軽く感じられる
+- :Mark[低明度]色は硬く、重そうに感じられる
+
+::::TermCard{title="色の硬軟感と軽重感" centering textCentering}
+:::div{style="display: flex; justify-content: center; background-color: white;"}
+<Icon icon="uim:box" width="150" style="color: darkblue; max-width: 100%;" />
+<Icon icon="uim:box" width="150" style="color: pink; max-width: 100%;" />
+:::
+
+色の硬軟感に色相の影響は弱いといわれているが、:Mark[暖色]の方が少しやわらかい印象となる
+::::
+
+::::CardGrid
+:::TermCard{title="軟らかい色のPCCSトーン"}
+PCCSのトーンでは、軟らかい色の代表として:Mark[p]トーン、:Mark[lt]トーン、:Mark[sf]トーンがあげられる
+
+<ToneAreaDiagram highlights={["p", "lt", "sf"]} hue={17} />
+:::
+:::TermCard{title="硬い色のPCCSトーン"}
+PCCSのトーンでは、硬い色の代表として:Mark[dk]トーン、:Mark[dkg]トーンがあげられる
+
+<ToneAreaDiagram highlights={["dk", "dkg"]} hue={17} />
+:::
+::::
+
+### 色の軽重感とバランス
+
+色の軽重感を利用すると、色の配置によって:Mark[バランス]（安定感）や:Mark[アンバランス]（躍動感）を演出することができます。
+
+::::CardGrid
+:::TermCard{title="バランス" ankiTitle="mark" centering textCentering}
+<SVGWrapper maxW={150}>
+  <WeightBalanceStack topPCCS="p24" bottomPCCS="dk24" />
+</SVGWrapper>
+
+:Mark[低明度]色を下にすると:Mark[安定]して見える
+:::
+:::TermCard{title="アンバランス" ankiTitle="mark" centering textCentering}
+<SVGWrapper maxW={150} style="rotate: 180deg;">
+  <WeightBalanceStack topPCCS="p24" bottomPCCS="dk24" />
+</SVGWrapper>
+
+:Mark[高明度]色を下にすると:Mark[不安定]に見える
+:Mark[動き]を感じさせる効果もある
+::::
+
+## :WithGradeTag[色の興奮・沈静感]{grades="3"}
+
+色の興奮・沈静感には、主に:Mark[彩度]と:Mark[色相]が影響します。
+
+- :Mark[興奮色]：気持ちを高揚させる色
+- :Mark[沈静色]：気持ちを落ち着かせ、リラックスさせる色
+
+::::CardGrid
+:::TermCard{title="興奮色" centering textCentering}
+<Icon icon="game-icons:abstract-078" width="150" style="color: orangered; background-color: white;" />
+
+興奮色は、:Mark[暖色]系の:Mark[高彩度]色
+:::
+:::TermCard{title="沈静色" centering textCentering}
+<Icon icon="game-icons:abstract-078" width="150" style="color: lightsteelblue; background-color: white;" />
+
+沈静色は、:Mark[寒色]系の:Mark[低彩度]色
+::::
+
+## :WithGradeTag[色の派手・地味感]{grades="3"}
+
+色による派手さの印象には、:Mark[彩度]が大きく影響します。
+
+::::CardGrid
+:::TermCard{title="派手な色" centering textCentering}
+<Icon icon="emojione-monotone:night-with-stars" width="150" style="color: deeppink; background-color: white;" />
+
+:Mark[高彩度]色は派手な印象
+:::
+:::TermCard{title="地味な色" centering textCentering}
+<Icon icon="emojione-monotone:night-with-stars" width="150" style="color: rosybrown; background-color: white;" />
+
+:Mark[低彩度]色は地味な印象
+::::
+
+### 色の派手・地味感と明度
+
+彩度ほどではないですが、色の派手さには:Mark[明度]も若干影響し、明度で比べると:Mark[高明度]色の方が派手に感じられやすいといわれています。

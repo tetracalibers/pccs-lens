@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { arc } from "d3-shape"
   import { PCCS_HUE_MAP } from "$lib/data/pccs"
   import { isLightColor } from "$lib/color/utils"
 
@@ -7,7 +8,7 @@
     baseHue?: number
     /** 色相環の外側の円の半径（px） */
     radius?: number
-    /** 台形スウォッチの高さ（外周から内周までの距離, px） */
+    /** スウォッチの高さ（外周から内周までの距離, px） */
     swatchHeight?: number
     /** 色相スウォッチ選択時のコールバック */
     onSelectHue?: (hueNumber: number) => void
@@ -28,6 +29,8 @@
   const TOP_HUE_NUM = 8
   // SVG座標系における「真上」の角度
   const TOP_ANGLE = -Math.PI / 2
+  // d3-shape arc 用：num=8 のセグメント中心を 12 時に揃えるための角度オフセット
+  const ARC_ANGLE_OFFSET = -(TOP_HUE_NUM - 0.5) * ANGLE_PER_HUE
 
   // 矢印マーカーの描画サイズ（markerHeight 相当, px）。markerWidth は 9:10 の比率で算出
   const ARROW_SIZE = 12
@@ -50,6 +53,9 @@
   let r = $derived(Math.max(1, R - swatchHeight))
   // 色スウォッチ同士の隙間（外側・内側ともに同じ距離）
   let gap = $derived(Math.max(2, R * 0.018))
+  // d3 arc のパディングをスウォッチ中央半径基準で算出
+  let midRadius = $derived((R + r) / 2)
+  let padAngle = $derived(gap / midRadius)
 
   // 外側レイヤーの半径
   let diffNumberRadius = $derived(R + 22)
@@ -72,14 +78,6 @@
   let cx = $derived(size / 2)
   let cy = $derived(size / 2)
 
-  let labelRadius = $derived(
-    (gap / 2) * Math.sin(HALF_ANGLE) +
-      ((Math.sqrt(Math.max(0, R * R - (gap / 2) ** 2)) +
-        Math.sqrt(Math.max(0, r * r - (gap / 2) ** 2))) /
-        2) *
-        Math.cos(HALF_ANGLE)
-  )
-
   function hueAngle(num: number): number {
     // num=8 を真上、時計回りに num が増加
     return TOP_ANGLE + (num - TOP_HUE_NUM) * ANGLE_PER_HUE
@@ -93,42 +91,6 @@
 
   function polarToCartesian(angle: number, rad: number) {
     return { x: cx + rad * Math.cos(angle), y: cy + rad * Math.sin(angle) }
-  }
-
-  /**
-   * 色スウォッチの4頂点を計算。
-   * 隣り合うスウォッチの境界線（gap の中心線）に平行で、gap/2 だけ内側に
-   * オフセットした2本の直線を左右の辺とすることで、外側・内側どちらの
-   * 辺同士の間隔も等しく gap になる台形を構築する。
-   */
-  function buildSwatchPath(num: number): string {
-    const thetaC = hueAngle(num)
-    const phiL = thetaC - HALF_ANGLE
-    const phiR = thetaC + HALF_ANGLE
-
-    const offLx = (gap / 2) * -Math.sin(phiL)
-    const offLy = (gap / 2) * Math.cos(phiL)
-    const dirLx = Math.cos(phiL)
-    const dirLy = Math.sin(phiL)
-
-    const offRx = (gap / 2) * Math.sin(phiR)
-    const offRy = (gap / 2) * -Math.cos(phiR)
-    const dirRx = Math.cos(phiR)
-    const dirRy = Math.sin(phiR)
-
-    const half = gap / 2
-    const tOuter = Math.sqrt(R * R - half * half)
-    const tInner = Math.sqrt(r * r - half * half)
-
-    const outerL = { x: offLx + tOuter * dirLx, y: offLy + tOuter * dirLy }
-    const innerL = { x: offLx + tInner * dirLx, y: offLy + tInner * dirLy }
-    const outerR = { x: offRx + tOuter * dirRx, y: offRy + tOuter * dirRy }
-    const innerR = { x: offRx + tInner * dirRx, y: offRy + tInner * dirRy }
-
-    const toSvg = (p: { x: number; y: number }) =>
-      `${(cx + p.x).toFixed(3)},${(cy + p.y).toFixed(3)}`
-
-    return `M ${toSvg(outerL)} L ${toSvg(outerR)} L ${toSvg(innerR)} L ${toSvg(innerL)} Z`
   }
 
   function buildArcPath(startAngle: number, endAngle: number, rad: number): string {
@@ -164,22 +126,33 @@
     }
   }
 
-  // 色相スウォッチ
-  let hues = $derived(
-    Array.from(PCCS_HUE_MAP.entries()).map(([num, data]) => {
-      const angle = hueAngle(num)
+  // 色相スウォッチ（中心原点で生成し、描画時に translate(cx, cy) で配置する）
+  let hues = $derived.by(() => {
+    const arcGen = arc<{ x0: number; x1: number }>()
+      .startAngle((d) => d.x0 + ARC_ANGLE_OFFSET)
+      .endAngle((d) => d.x1 + ARC_ANGLE_OFFSET)
+      .innerRadius(r)
+      .outerRadius(R)
+      .padAngle(padAngle)
+      .padRadius(midRadius)
+
+    return Array.from(PCCS_HUE_MAP.entries()).map(([num, data]) => {
+      const x0 = (num - 1) * ANGLE_PER_HUE
+      const x1 = num * ANGLE_PER_HUE
+      // d3 arc の角度は「12 時 = 0、CW 正」。SVG ローカル座標へは (sin, -cos) で写像する。
+      const midAng = (x0 + x1) / 2 + ARC_ANGLE_OFFSET
       return {
         num,
         ...data,
-        path: buildSwatchPath(num),
+        path: arcGen({ x0, x1 }) ?? "",
         label: {
-          x: cx + labelRadius * Math.cos(angle),
-          y: cy + labelRadius * Math.sin(angle)
+          x: midRadius * Math.sin(midAng),
+          y: -midRadius * Math.cos(midAng)
         },
         textColor: isLightColor(data.color) ? "#222" : "#fff"
       }
     })
-  )
+  })
 
   // 放射状直線
   let radialLines = $derived(
@@ -339,48 +312,53 @@
   <!-- 基準色相の強調扇形（スウォッチより下に描画） -->
   <path class="base-sector" d={baseSectorPath} />
 
-  <!-- 色相スウォッチ（インタラクティブ） -->
-  {#each hues as hue (hue.num)}
-    <g
-      data-hue-swatch
-      role="button"
-      tabindex="0"
-      aria-label="色相 {hue.num} {hue.symbol}"
-      aria-pressed={selectedHue === hue.num}
-      onclick={() => handleSelectHue(hue.num)}
-      onkeydown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault()
-          handleSelectHue(hue.num)
-        }
-      }}
-    >
-      <!--
-        キーボードフォーカスリング。スウォッチ fill より先に描画することで、
-        stroke の外半分のみがスウォッチ間の隙間に露出して見える。
-      -->
-      <path class="hue-focus-ring" d={hue.path} fill="none" style="pointer-events: none;" />
-      <path d={hue.path} fill={hue.color} />
-      <text
-        class="symbol"
-        x={hue.label.x}
-        y={hue.label.y}
-        font-size={14}
-        fill={hue.textColor}
-        style="pointer-events: none; user-select: none;"
+  <!--
+    色相スウォッチと選択中アウトライン。d3 arc の path は原点中心で生成しているため、
+    まとめて translate(cx, cy) で中心へ平行移動する。
+  -->
+  <g transform="translate({cx}, {cy})">
+    {#each hues as hue (hue.num)}
+      <g
+        data-hue-swatch
+        role="button"
+        tabindex="0"
+        aria-label="色相 {hue.num} {hue.symbol}"
+        aria-pressed={selectedHue === hue.num}
+        onclick={() => handleSelectHue(hue.num)}
+        onkeydown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault()
+            handleSelectHue(hue.num)
+          }
+        }}
       >
-        {hue.symbol}
-      </text>
-    </g>
-  {/each}
+        <!--
+          キーボードフォーカスリング。スウォッチ fill より先に描画することで、
+          stroke の外半分のみがスウォッチ間の隙間に露出して見える。
+        -->
+        <path class="hue-focus-ring" d={hue.path} fill="none" style="pointer-events: none;" />
+        <path d={hue.path} fill={hue.color} />
+        <text
+          class="symbol"
+          x={hue.label.x}
+          y={hue.label.y}
+          font-size={14}
+          fill={hue.textColor}
+          style="pointer-events: none; user-select: none;"
+        >
+          {hue.symbol}
+        </text>
+      </g>
+    {/each}
 
-  <!-- 選択中の色相のアウトライン（全スウォッチより上に描画） -->
-  {#if selectedHue !== null}
-    {@const sel = hues.find((h) => h.num === selectedHue)}
-    {#if sel}
-      <path class="selected-hue-outline" d={sel.path} fill="none" style="pointer-events: none;" />
+    <!-- 選択中の色相のアウトライン（全スウォッチより上に描画） -->
+    {#if selectedHue !== null}
+      {@const sel = hues.find((h) => h.num === selectedHue)}
+      {#if sel}
+        <path class="selected-hue-outline" d={sel.path} fill="none" style="pointer-events: none;" />
+      {/if}
     {/if}
-  {/if}
+  </g>
 
   <!-- 放射状直線 -->
   {#each radialLines as line, i (i)}

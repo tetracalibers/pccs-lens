@@ -1,9 +1,17 @@
 <script lang="ts">
   import { PCCS_ALL } from "$lib/data/pccs"
   import { isLightColor } from "$lib/color/utils"
+  import { ankiMode } from "$lib/state/anki.svelte"
   const colorsFullData = PCCS_ALL
 
-  let { highlights = [] }: { highlights: string[] } = $props()
+  const isAnki = $derived(ankiMode.isAnki)
+
+  interface Props {
+    highlights?: string[]
+    hue?: number
+  }
+
+  let { highlights = [], hue = 24 }: Props = $props()
 
   type ToneCell = {
     key: string
@@ -87,7 +95,7 @@
     if (cell.shape === "square") {
       return ACHROMATIC_FILLS[cell.key] ?? "#999"
     }
-    const entry = colorsFullData.find((c) => c.toneSymbol === cell.key && c.hueNumber === 24)
+    const entry = colorsFullData.find((c) => c.toneSymbol === cell.key && c.hueNumber === hue)
     return entry?.hex ?? "#ccc"
   }
 
@@ -221,7 +229,7 @@
           font-size="10"
           style="pointer-events: none; user-select: none; fill: {labelFill};"
         >
-          {cell.label}
+          {isAnki ? "" : cell.label}
         </text>
       </g>
     {/each}
