@@ -355,12 +355,7 @@
     {#if selectedHue !== null}
       {@const sel = hues.find((h) => h.num === selectedHue)}
       {#if sel}
-        <path
-          class="selected-hue-outline"
-          d={sel.path}
-          fill="none"
-          style="pointer-events: none;"
-        />
+        <path class="selected-hue-outline" d={sel.path} fill="none" style="pointer-events: none;" />
       {/if}
     {/if}
   </g>
