@@ -5,20 +5,15 @@
   const CIRCLE_GAP = 80 // 2つの碁石の隙間
   const GUIDE_OFFSET = 6 // 碁石とガイド円の半径差
   const GUIDE_LINE_EXTEND = 28 // 水平ガイド線が両端の円から外側に延びる長さ
-  const TEXT_TOP_GAP = 44 // 円の下端と説明テキスト基線の距離
 
   // ===== 線幅 =====
   const STROKE_GUIDE = 1.4
-
-  // ===== フォント =====
-  const FONT_SIZE_CAPTION = 18
 
   // ===== 色 =====
   const COL_BG = "darkslategray" // 中間グレー
   const COL_WHITE_STONE = "#fafafa"
   const COL_BLACK_STONE = "#161616"
   const COL_GUIDE = "var(--canvas-pen-water)" // 見やすい青系
-  const COL_CAPTION = "var(--color-body--dark)"
 
   // ===== 派生値 =====
   const GUIDE_R = RADIUS + GUIDE_OFFSET
@@ -34,13 +29,9 @@
   const GUIDE_TOP_Y = CY - RADIUS
   const GUIDE_BOTTOM_Y = CY + RADIUS
 
-  // 説明テキスト
-  const CAPTION_Y = CY + GUIDE_R + TEXT_TOP_GAP
-  const CAPTION_X = (GUIDE_LINE_X1 + GUIDE_LINE_X2) / 2
-
   // viewBox
   const WIDTH = GUIDE_LINE_X2 + PADDING
-  const HEIGHT = CAPTION_Y + FONT_SIZE_CAPTION + PADDING
+  const HEIGHT = CY + GUIDE_R + PADDING
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {WIDTH} {HEIGHT}">
@@ -72,16 +63,4 @@
 
   <!-- 黒い碁石（右） -->
   <circle cx={CX_RIGHT} cy={CY} r={RADIUS} fill={COL_BLACK_STONE} />
-
-  <!-- 説明テキスト -->
-  <text
-    x={CAPTION_X}
-    y={CAPTION_Y}
-    text-anchor="middle"
-    dominant-baseline="hanging"
-    font-size={FONT_SIZE_CAPTION}
-    fill={COL_CAPTION}
-  >
-    どちらも同じ直径
-  </text>
 </svg>
