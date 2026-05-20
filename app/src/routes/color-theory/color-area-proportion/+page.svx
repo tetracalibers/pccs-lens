@@ -8,18 +8,52 @@ basic: true
 draft: true
 ---
 
-## :WithGradeTag[配色で使う色の面積比]{grades="3"}
+<script>
+  import AreaProportionWithCornerAccent from "$lib/demo/color-palette/AreaProportionWithCornerAccent.svelte"
+  import AreaProportionWithBoundaryAccent from "$lib/demo/color-palette/AreaProportionWithBoundaryAccent.svelte"
+</script>
 
-- 配色で面積が最も大きい色を:Mark[ベースカラー]（:Mark[基調色]）という
-- ベースカラーの次に面積が大きく、ベースカラーに組み合わせる色を:Mark[アソートカラー]（:Mark[配合色]）という
-- 小さい面積で配色全体を引き締めるための色を:Mark[アクセントカラー]（:Mark[強調色]）という
+## :WithGradeTag[配色の面積構成]{grades="3"}
+
+配色を考えるときは、色の:Mark[面積比]を考慮し、色に主従関係をつけることで意図がはっきりします。
+
+::::CardGrid{cols=1}
+:::TermCard{title="ベースカラー（基調色）" ankiTitle="mark"}
+最も面積が大きい色
+配色の背景となり、全体のイメージをつくる
+:::
+:::TermCard{title="アソートカラー（配合色）" ankiTitle="mark"}
+二番目に面積が大きい色
+ベースカラーを補助し、配色の方向性を左右する
+
+- ベースカラーと同系色なら、ベースカラーの印象が際立つ
+- ベースカラーと対照的な色なら、配色に動きが生まれる
+:::
+:::TermCard{title="アクセントカラー（強調色）" ankiTitle="mark"}
+小面積で使う色
+配色全体を引き締めたり、変化を与えたりする
+:::
+::::
 
 ## :WithGradeTag[アクセントカラー]{grades="3"}
 
-- アクセントカラーには、配色に:Mark[変化]をつける、配色を:Mark[強調]する、特定の部分を目立たせる、などの効果がある
-- アクセントカラーは、:Mark[目立つ]色である必要がある
-- 全体の色に対して、:Mark[色相]や:Mark[トーン]が大きく異なる色をアクセントカラーとして選ぶとよい
-- 他の色との差が大きければ、:Mark[無彩色]を使うこともできる
+中でも、目立つ色を:Mark[アクセントカラー]として小面積で使うことで、配色に:Mark[変化]をつけることができます。小面積であれば、使う位置や形は自由です。
+
+全体の色に対して、:Mark[色相]や:Mark[トーン]が大きく異なる色をアクセントカラーとして選ぶと効果的です。
+他の色との差が大きければ、:Mark[無彩色]でも効果的なアクセントカラーになります。
+
+::::CardGrid{cols=1}
+:::TermCard{title="高彩度色を使う" centering textCentering}
+<AreaProportionWithCornerAccent base="dkg4" assort="g4" accent="b6" />
+
+低明度どうしの配色に、高彩度・高明度色を加えて引き締める
+:::
+:::TermCard{title="明度差のある無彩色を使う" centering textCentering}
+<AreaProportionWithBoundaryAccent base="p16" assort="p18" accent="Gy-2.5" />
+
+高明度どうしの配色に、低明度の無彩色を加えて変化をつける
+:::
+::::
 
 ## :WithGradeTag[セパレーション]{grades="3"}
 
