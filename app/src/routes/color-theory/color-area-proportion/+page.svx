@@ -4,13 +4,14 @@ title: 色の面積比による配色
 
 grades: ["3"]
 basic: true
-
-draft: true
 ---
 
 <script>
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
   import AreaProportionWithCornerAccent from "$lib/demo/color-palette/AreaProportionWithCornerAccent.svelte"
   import AreaProportionWithBoundaryAccent from "$lib/demo/color-palette/AreaProportionWithBoundaryAccent.svelte"
+  import AreaProportionWithSeparation from "$lib/demo/color-palette/AreaProportionWithSeparation.svelte"
+  import OutlinedText from "$lib/demo/color-palette/OutlinedText.svelte"
 </script>
 
 ## :WithGradeTag[配色の面積構成]{grades="3"}
@@ -57,9 +58,56 @@ draft: true
 
 ## :WithGradeTag[セパレーション]{grades="3"}
 
-- 色の境界部分に別の色を加えて色を分離することを:Mark[セパレーション]という
-- セパレーションによる分離効果には、:Mark[コントラスト]感を調節するはたらきがある
-- 対比が強すぎるとき（:Mark[高彩度]色どうしを使った配色など）はそれを和らげ、境界がぼやけて見えるとき（:Mark[明度]差のない配色など）には、それぞれの色を引き立てる効果がある
-- セパレーションは、色と色の間に、背景に対して:Mark[明度]差のある色を線として配置する
-- 明度差だけでなく彩度差も大きい色をセパレーションとして加えると、セパレーションの効果と同時に:Mark[アクセントカラー]としての役割も与えることがある。たとえば、文字の縁取りでは、境界だけでなく文字自体も目立つようになる
-- :Mark[アクセントカラー]はその色自体が目立つ色で、数も位置も自由である。一方、:Mark[セパレーション]は他の色を引き立てる色で、色と色の境界部分で使用する
+色の境界部分に別の色を加えて色を分離することを:Mark[セパレーション]といい、:Mark[コントラスト]感の調節に用いられます。
+コントラスト感を調節したくなるのは、たとえば次のような場合です。
+
+- 2色の対比が強すぎてギラギラとして見える
+- 2色の差が曖昧で境界がぼやけて見える
+
+セパレーションでは、色と色の間に、背景に対して:Mark[明度差]のある色を:Mark[線]として配置します。
+これにより、境界のギラギラ感を和らげたり、境界を明確にしてそれぞれの色を引き立てたりすることができます。
+
+::::CardGrid{cols=1}
+:::TermCard{title="強すぎる対比を和らげる" centering textCentering}
+<AreaProportionWithSeparation base="v2" assort="v14" separation="W" />
+
+高彩度色の間に、高明度の無彩色である白を加える
+:::
+:::TermCard{title="似た色の境界を明確にする" centering textCentering}
+<AreaProportionWithSeparation base="lt24" assort="ltg24" separation="dkg22" />
+
+高明度色の間に、低明度色を加える
+:::
+::::
+
+### 同時にアクセントカラーにも
+
+:Mark[アクセントカラー]はその色自体が目立つ色で、数も位置も自由でした。一方、:Mark[セパレーション]は他の色を引き立てる色で、色と色の境界部分で使用します。
+
+明度差だけでなく:Mark[彩度差]も大きい色をセパレーションとして加えると、セパレーションの効果と同時に:Mark[アクセントカラー]としての役割も与えられます。
+
+たとえば、文字の縁取りでは、縁取りが:Mark[セパレーション]として文字色を引き立たせます。
+さらに、高彩度の縁取りにすると、縁取り自体が視線を集めて注意喚起のような効果も得られます。これは、縁取り自体が目立つ:Mark[アクセントカラー]としての効果になります。
+
+::::CardGrid{cols=1}
+:::TermCard{title="読みづらいテキスト" centering textCentering}
+<SVGWrapper>
+  <OutlinedText bg="dkg4" fg="g24" stroke="dkg4" />
+</SVGWrapper>
+
+低明度・低彩度どうしでコントラストが弱く、読みづらい
+:::
+:::TermCard{title="明度差によるセパレーション効果" centering textCentering}
+<SVGWrapper>
+  <OutlinedText bg="dkg4" fg="g24" stroke="W" />
+</SVGWrapper>
+
+高明度の縁取りをつけると、文字が読みやすくなる
+:::
+:::TermCard{title="彩度差によるアクセントカラー効果" centering textCentering}
+<SVGWrapper>
+  <OutlinedText bg="dkg4" fg="g24" stroke="b6" />
+</SVGWrapper>
+
+さらに高彩度の縁取りにすると、文字の輪郭自体が視線を集める
+::::
