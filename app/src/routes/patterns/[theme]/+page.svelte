@@ -326,4 +326,8 @@
   .pickers-hint :global(svg) {
     vertical-align: bottom;
   }
+
+  button {
+    font-family: var(--font-ja);
+  }
 </style>
