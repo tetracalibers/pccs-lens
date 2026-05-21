@@ -31,7 +31,8 @@
   .container {
     display: flex;
     flex-direction: column;
-    margin: 1.25rem;
+    max-width: 400px;
+    margin-inline: auto;
     border: 1px solid light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.15));
   }
 
