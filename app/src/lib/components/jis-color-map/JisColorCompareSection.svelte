@@ -179,7 +179,7 @@
   }
 
   .desc {
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     line-height: 1.5;
     color: var(--color-body);
     grid-column: 1 / -1;
