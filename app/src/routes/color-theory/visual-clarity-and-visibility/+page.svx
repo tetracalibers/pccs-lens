@@ -2,7 +2,7 @@
 layout: guide-content
 title: 見やすさの性質
 
-grades: ["2"]
+grades: ["2", "uc"]
 draft: true
 ---
 
@@ -14,7 +14,7 @@ draft: true
 [色の機能的効果](/color-theory/color-roles/)は、状況や意味を色でわかりやすく伝える効果です。
 わかりやすさの性質には、発見されやすさ、理解のしやすさ、区別のしやすさなどがあります。
 
-## :WithGradeTag[発見されやすさ]{grades="2"}
+## :WithGradeTag[発見されやすさ]{grades="2,uc"}
 
 ### 誘目性
 
@@ -33,14 +33,14 @@ draft: true
 - 注意を向けて対象を探す時の「発見しやすさ」を:Mark[視認性]という
 - 背景色と対象の色との:Mark[明度]差が大きいほど、視認性が高くなる
 
-## :WithGradeTag[理解のしやすさ]{grades="2"}
+## :WithGradeTag[理解のしやすさ]{grades="2,uc"}
 
 ### 明視性と可読性
 
 - 発見された対象の「意味の理解のしやすさ」を表す言葉として、対象が図形の場合は:Mark[明視性]、文字の場合は:Mark[可読性]という言葉を使う
 - 明視性・可読性を高めるには、背景色と対象の色との:Mark[明度]差を大きくすることが効果的である
 
-## :WithGradeTag[区別のしやすさ]{grades="2"}
+## :WithGradeTag[区別のしやすさ]{grades="2,uc"}
 
 ### 識別性
 
