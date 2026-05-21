@@ -31,17 +31,15 @@
   .container {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    padding: 0.5rem 1rem;
+    margin: 1.25rem;
+    border: 1px solid light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.15));
   }
 
   .row {
     display: flex;
     justify-content: center;
-    gap: 1.5rem;
+    gap: 1.25rem;
     padding: 1rem;
-    border: 1px solid var(--color-body);
-    border-radius: 0.5rem;
   }
 
   .row--white {
