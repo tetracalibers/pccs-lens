@@ -32,7 +32,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
   <link
-    href="https://fonts.googleapis.com/css2?family=Sigmar+One&family=Kiwi+Maru:wght@500&family=Flow+Circular&family=Flow+Rounded&family=Rakkas&family=Delius&family=Reddit+Mono:wght@400..700&family=SUSE+Mono:wght@400;500&family=Zen+Kaku+Gothic+Antique:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Sigmar+One&family=Kiwi+Maru:wght@500&family=Flow+Circular&family=Flow+Rounded&family=Rakkas&family=Delius&family=Reddit+Mono:wght@400..700&family=SUSE+Mono:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap"
     rel="stylesheet"
   />
   <link
@@ -54,7 +54,7 @@
   }
 
   :global(body) {
-    --font-ja-base: "Zen Kaku Gothic Antique";
+    --font-ja-base: "Zen Kaku Gothic New";
     --font-ja: var(--font-ja-base), sans-serif;
     --font-en-base: "SUSE Mono";
     --font-en: var(--font-en-base), sans-serif;
