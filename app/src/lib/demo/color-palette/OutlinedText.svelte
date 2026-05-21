@@ -7,9 +7,10 @@
     stroke: string
     text?: string
     maxW?: number
+    boxBorder?: string
   }
 
-  let { bg, fg, stroke, text = "Hello World!", maxW = 400 }: Props = $props()
+  let { bg, fg, stroke, text = "Hello World!", maxW = 400, boxBorder }: Props = $props()
 
   const bgColor = $derived(PCCS_HEX_MAP.get(bg)!)
   const fgColor = $derived(PCCS_HEX_MAP.get(fg)!)
@@ -32,7 +33,7 @@
   style:height="auto"
   style:display="block"
 >
-  <rect width={WIDTH} height={HEIGHT} fill={bgColor} />
+  <rect width={WIDTH} height={HEIGHT} fill={bgColor} stroke={boxBorder ? boxBorder : "none"} />
   <text
     x={WIDTH / 2}
     y={HEIGHT / 2}
