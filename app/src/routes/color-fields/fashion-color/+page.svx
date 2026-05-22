@@ -3,9 +3,13 @@ layout: guide-content
 title: ファッションカラー
 
 grades: ["2"]
-
-draft: true
 ---
+
+<script lang="ts">
+  import HexColor from "$lib/demo/HexColor.svelte"
+  import JISColor from "$lib/demo/JISColor.svelte"
+  import ColorRow from "$lib/demo/ColorRow.svelte"
+</script>
 
 ## :WithGradeTag[ベーシックカラー]{grades="2"}
 
@@ -13,9 +17,14 @@ draft: true
 
 カジュアルブランドではベーシックカラーに:Mark[カーキー]が加わったり、メンズブランドでは:Mark[グレイ]の濃淡を数色加えて展開する場合もあります。
 
-TODO: 白・黒・グレイ・紺・ベージュの色スウォッチを並べた図
-TODO: カーキーの色スウォッチ
-TODO: グレイの濃淡の色スウォッチを数色並べた図
+<ColorRow>
+  <HexColor hex="#FFFFFF" />
+  <HexColor hex="#000000" />
+  <HexColor hex="#808080" />
+  <HexColor hex="#1F2D5C" />
+  <HexColor hex="#D9C8A8" />
+  <JISColor id="khaki" />
+</ColorRow>
 
 ## :WithGradeTag[トレンドカラー]{grades="2"}
 
