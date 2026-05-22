@@ -57,7 +57,7 @@ grades: ["3"]
 
 ### 色の面積比とアクセント
 
-ファッションのカラーコーディネートは、:Mark[ベースカラー]・:Mark[アソートカラー]・:Mark[アクセントカラー]という、[面積にメリハリをつけた色構成](/color-theory/color-area-proportion/)で考えるのが基本となります。
+ファッションのカラーコーディネートは、:Mark[ベースカラー]・:Mark[アソートカラー]・:Mark[アクセントカラー]という、[面積にメリハリをつけた配色構成](/color-theory/color-area-proportion/)で考えるのが基本となります。
 
 ::::CardGrid{lastWide}
 :::TermCard{title="ベースカラー" ankiTitle="mark"}
