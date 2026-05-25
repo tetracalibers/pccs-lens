@@ -7,6 +7,62 @@ grades: ["uc"]
 draft: true
 ---
 
+<script>
+  import SVGWrapper from '$lib/demo/SVGWrapper.svelte';
+  import SpectralSensitivityCurves from "$lib/demo/visual-system/SpectralSensitivityCurves.svelte"
+  import SpectralLuminousEfficiency from "$lib/demo/visual-system/SpectralLuminousEfficiency.svelte"
+</script>
+
+## :WithGradeTag[赤と緑のチャンネル]{grades="uc"}
+
+[視細胞の種類と分布](/color-theory/photoreceptor-types-and-distribution/)で学んだように、主に緑に反応するのがM錐体、主に赤に反応するのがL錐体でした。しかし、次のような分光感度曲線を見ると、M錐体とL錐体は似た波長に反応することがわかります。
+
+<SVGWrapper maxW={450}>
+  <SpectralSensitivityCurves />
+</SVGWrapper>
+
+- L と M は似た波長に反応するので、共通して反応する成分を大量に持っている
+- そのため、引き算することで共通部分が消える
+- `L - M`で、赤寄りと緑寄りのどちらが強いかを判断できる
+- 引き算で共通成分を消すことで、色差だけが残る
+
+```
+M = 共通部分 + 少し緑寄り
+L = 共通部分 + 少し赤寄り
+
+L - M = (共通部分 + 少し赤寄り) - (共通部分 + 少し緑寄り)
+      = 少し赤寄り - 少し緑寄り
+```
+
+## :WithGradeTag[明るさのチャンネル]{grades="uc"}
+
+<SVGWrapper maxW={500}>
+  <SpectralLuminousEfficiency />
+</SVGWrapper>
+
+- 明るさは光エネルギーの総量
+- 光が強いほど、錐体は強く反応する
+- 「明るさ」はどの色かとは無関係に、全体的に反応量を増やす作用をする
+- 多くの光に対して、LとMは一緒に増減する傾向がある
+- 例えば光が強くなると、L も M も増える傾向がある
+- つまり、全体的な光量という共通成分が両方に入っている
+- L と M が両方増える成分、つまりL と M に共通して入っているものが主に明るさ
+- だからL + Mをすると、共通部分が強調される
+- 足し算で共通成分を集めることで、光量（明るさ）を表しやすい
+- L/M を明るさに使うのは、その分光感度の合成が、人間にとって最も情報量の多い「知覚的明るさ曲線」（錐体の分光視感効率曲線）に近くなるから
+
+## :WithGradeTag[黄と青のチャンネル]{grades="uc"}
+
+- 短波長が多いか少ないかを見ている軸
+- Sの反応も光が強ければ増える
+- 例えば S が強く反応したとしても、本当に青いのか、単に全体が明るいのか分からない
+- S が「他より強いか」を判断するためには、L と M の反応と比べる必要がある
+- 黄色は物理的には中〜長波長が多い光であり、分光感度曲線上ではL と M が強く、S が弱い状態
+- だから脳にとって黄色とは、「S が不足している状態」として定義できる
+- 赤緑軸はL と M の比較であり、青黄軸はS と “その他全部” の比較
+- L と M はかなり似ていますが、S はスペクトル的にかなり離れている
+- つまりS vs (L+M)は、「短波長成分が突出しているか」を見る自然な方法
+
 ## :WithGradeTag[TODO]{grades="uc"}
 
 - 段階説では、L錐体とM錐体からの応答結果の:Mark[和]で、明るさとその度合いを判断する
