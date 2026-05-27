@@ -25,7 +25,7 @@
 
 <style>
   .square {
-    --_square-size: 5rem;
+    --_square-size: 4rem;
     --_black-border: rgba(0, 0, 0, 0.2);
     --_white-border: rgba(255, 255, 255, 0.25);
 
