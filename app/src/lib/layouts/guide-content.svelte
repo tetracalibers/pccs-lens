@@ -153,7 +153,7 @@
   }
 
   main :global(code) {
-    font-family: var(--font-mono);
+    font-family: var(--font-mono-base), var(--font-ja-base);
     padding-inline: 4px;
     display: inline-block;
     line-height: 1.3;
@@ -167,7 +167,6 @@
     width: fit-content;
     margin-inline: auto;
     margin-block: 1.5rem;
-    font-size: 1.1rem;
   }
   main :global(pre.language-math code) {
     font-family: var(--font-math-base), var(--font-ja-base);
@@ -207,7 +206,8 @@
   }
 
   main :global(.katex *) {
-    font-family: var(--font-math-base), KaTeX_Main;
+    font-family: var(--font-math-base), var(--font-ja-base), KaTeX_Main;
+    font-size: 1.1rem;
     color: var(--color-body);
   }
 

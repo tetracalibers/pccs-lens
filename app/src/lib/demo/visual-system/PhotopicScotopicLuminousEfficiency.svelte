@@ -440,7 +440,7 @@
     style="translate: 0.5em 0;"
   >
     <tspan visibility={isAnki ? "hidden" : "visible"}>暗所視</tspan>
-    <tspan>のピーク</tspan>
+    <tspan dx="-0.5em">のピーク</tspan>
   </text>
   <text
     x={xAt(SCOTOPIC_PEAK_NM)}
@@ -478,7 +478,7 @@
     style="translate: -0.5em 0;"
   >
     <tspan visibility={isAnki ? "hidden" : "visible"}>明所視</tspan>
-    <tspan>のピーク</tspan>
+    <tspan dx="-0.5em">のピーク</tspan>
   </text>
   <text
     x={xAt(PHOTOPIC_PEAK_NM)}
