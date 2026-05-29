@@ -37,7 +37,7 @@
   const GAP_STRIP_TO_NUM = 18 // 帯の下端と照度ラベル上端の隙間
   const GAP_NUM_TO_USAGE = 20 // 照度ラベル下端と使用例1行目中心の隙間
   const LINE_HEIGHT = 26 // 使用例・サイドラベルの行間
-  const SIDE_LABEL_GAP = 30 // 帯端とサイドラベルの隙間
+  const SIDE_LABEL_GAP = 24 // 帯端とサイドラベルの隙間
 
   // ===== 矢印 =====
   const COL_ARROW = "var(--color-body)"
@@ -81,8 +81,13 @@
   ]
 
   // ===== サイドラベル =====
-  const sideLeftLines = ["落ち着いた", "空間"]
-  const sideRightLines = ["開放的な", "空間"]
+  // 「空間」以外の行を暗記モードで非表示にする
+  interface SideLine {
+    text: string
+    ankiHide?: boolean
+  }
+  const sideLeftLines: SideLine[] = [{ text: "落ち着いた", ankiHide: true }, { text: "空間" }]
+  const sideRightLines: SideLine[] = [{ text: "開放的な", ankiHide: true }, { text: "空間" }]
 
   const maxUsageLines = Math.max(...usages.map((u) => u.lines.length))
 
@@ -99,9 +104,11 @@
     estimateTextWidth(String(value), FONT_SIZE_NUM) / 2
   const usageHalfWidth = (u: Usage): number =>
     Math.max(...u.lines.map((l) => estimateTextWidth(l, FONT_SIZE_USAGE))) / 2
-  const sideLeftWidth = Math.max(...sideLeftLines.map((l) => estimateTextWidth(l, FONT_SIZE_SIDE)))
+  const sideLeftWidth = Math.max(
+    ...sideLeftLines.map((l) => estimateTextWidth(l.text, FONT_SIZE_SIDE))
+  )
   const sideRightWidth = Math.max(
-    ...sideRightLines.map((l) => estimateTextWidth(l, FONT_SIZE_SIDE))
+    ...sideRightLines.map((l) => estimateTextWidth(l.text, FONT_SIZE_SIDE))
   )
 
   // ===== 横方向のはみ出し量を集計 =====
@@ -244,16 +251,16 @@
     {/each}
   </g>
 
-  <!-- サイドラベル（帯の両端／暗記モードで非表示） -->
+  <!-- サイドラベル（帯の両端／暗記モードでは「空間」以外を非表示） -->
   <g fill={COL_BODY} font-size={FONT_SIZE_SIDE} font-weight="bold" dominant-baseline="central">
     {#each sideLeftLines as line, i (i)}
       <text
         x={STRIP_LEFT - SIDE_LABEL_GAP - sideLeftWidth / 2}
         y={sideLineTopY(sideLeftLines.length) + LINE_HEIGHT * i}
         text-anchor="middle"
-        visibility={isAnki ? "hidden" : "visible"}
+        visibility={line.ankiHide && isAnki ? "hidden" : "visible"}
       >
-        {line}
+        {line.text}
       </text>
     {/each}
     {#each sideRightLines as line, i (i)}
@@ -261,9 +268,9 @@
         x={STRIP_RIGHT + SIDE_LABEL_GAP + sideRightWidth / 2}
         y={sideLineTopY(sideRightLines.length) + LINE_HEIGHT * i}
         text-anchor="middle"
-        visibility={isAnki ? "hidden" : "visible"}
+        visibility={line.ankiHide && isAnki ? "hidden" : "visible"}
       >
-        {line}
+        {line.text}
       </text>
     {/each}
   </g>
