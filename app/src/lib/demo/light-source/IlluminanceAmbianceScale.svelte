@@ -25,8 +25,8 @@
 
   // ===== ラベルのフォントサイズ =====
   const FONT_SIZE_NUM = 22
-  const FONT_SIZE_USAGE = 18
-  const FONT_SIZE_SIDE = 20
+  const FONT_SIZE_USAGE = 20
+  const FONT_SIZE_SIDE = 22
   const FONT_SIZE_UNIT = 18
 
   // ===== 単位ラベル =====
