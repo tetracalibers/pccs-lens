@@ -77,7 +77,7 @@
 
   // ===== サイドラベル =====
   const sideLeftLines = ["落ち着いた", "空間"]
-  const sideRightLines = ["開放的な", "雰囲気"]
+  const sideRightLines = ["開放的な", "空間"]
 
   const maxUsageLines = Math.max(...usages.map((u) => u.lines.length))
 
@@ -95,22 +95,23 @@
   const usageHalfWidth = (u: Usage): number =>
     Math.max(...u.lines.map((l) => estimateTextWidth(l, FONT_SIZE_USAGE))) / 2
   const sideLeftWidth = Math.max(...sideLeftLines.map((l) => estimateTextWidth(l, FONT_SIZE_SIDE)))
-  const sideRightWidth = Math.max(...sideRightLines.map((l) => estimateTextWidth(l, FONT_SIZE_SIDE)))
+  const sideRightWidth = Math.max(
+    ...sideRightLines.map((l) => estimateTextWidth(l, FONT_SIZE_SIDE))
+  )
 
   // ===== 横方向のはみ出し量を集計 =====
+  // 使用例ラベルは帯内に収めるため、はみ出し集計には含めない（数値ラベルとサイドラベルのみ）
   const LEFT_OVERHANG =
     Math.max(
       SIDE_LABEL_GAP + sideLeftWidth,
-      ...illuminances.map((d) => Math.max(0, numHalfWidth(d.value) - d.t * STRIP_WIDTH)),
-      ...usages.map((u) => Math.max(0, usageHalfWidth(u) - u.t * STRIP_WIDTH))
+      ...illuminances.map((d) => Math.max(0, numHalfWidth(d.value) - d.t * STRIP_WIDTH))
     ) + PADDING_HORIZONTAL
   const RIGHT_OVERHANG =
     Math.max(
       SIDE_LABEL_GAP + sideRightWidth,
       ...illuminances.map((d) =>
         Math.max(0, numHalfWidth(d.value) + d.t * STRIP_WIDTH - STRIP_WIDTH)
-      ),
-      ...usages.map((u) => Math.max(0, usageHalfWidth(u) + u.t * STRIP_WIDTH - STRIP_WIDTH))
+      )
     ) + PADDING_HORIZONTAL
 
   const STRIP_LEFT = LEFT_OVERHANG
@@ -121,12 +122,19 @@
   const NUM_LABEL_CENTER_Y = PADDING_VERTICAL + FONT_SIZE_NUM / 2
   const STRIP_Y = NUM_LABEL_CENTER_Y + FONT_SIZE_NUM / 2 + GAP_STRIP_TO_NUM
   const USAGE_TOP_Y = STRIP_Y + STRIP_HEIGHT + GAP_STRIP_TO_USAGE // 使用例1行目の中心
-  const SIDE_LABEL_CENTER_Y = USAGE_TOP_Y + (LINE_HEIGHT * (maxUsageLines - 1)) / 2
+  // サイドラベルは帯の縦中央に揃える
+  const SIDE_LABEL_CENTER_Y = STRIP_Y + STRIP_HEIGHT / 2
   const HEIGHT =
     USAGE_TOP_Y + LINE_HEIGHT * (maxUsageLines - 1) + FONT_SIZE_USAGE / 2 + PADDING_VERTICAL
 
   // ===== 相対位置 → X座標 =====
   const xAt = (t: number): number => STRIP_LEFT + t * STRIP_WIDTH
+
+  // 使用例ラベルの中心X：帯の左右端からはみ出さないようにクランプする
+  const usageXAt = (u: Usage): number => {
+    const half = usageHalfWidth(u)
+    return Math.min(Math.max(xAt(u.t), STRIP_LEFT + half), STRIP_RIGHT - half)
+  }
 
   // ===== 照度ラベル間の矢印 =====
   const arrows = illuminances.slice(0, -1).map((d, i) => {
@@ -213,7 +221,7 @@
   <!-- 照明の使用例（帯の下／暗記モードで非表示） -->
   <g fill={COL_BODY} font-size={FONT_SIZE_USAGE} text-anchor="middle" dominant-baseline="central">
     {#each usages as u (u.t)}
-      {@const x = xAt(u.t)}
+      {@const x = usageXAt(u)}
       {#each u.lines as line, i (i)}
         <text {x} y={USAGE_TOP_Y + LINE_HEIGHT * i} visibility={isAnki ? "hidden" : "visible"}>
           {line}
@@ -223,12 +231,7 @@
   </g>
 
   <!-- サイドラベル（帯の両端／暗記モードで非表示） -->
-  <g
-    fill={COL_BODY}
-    font-size={FONT_SIZE_SIDE}
-    font-weight="bold"
-    dominant-baseline="central"
-  >
+  <g fill={COL_BODY} font-size={FONT_SIZE_SIDE} font-weight="bold" dominant-baseline="central">
     {#each sideLeftLines as line, i (i)}
       <text
         x={STRIP_LEFT - SIDE_LABEL_GAP}
