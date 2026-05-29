@@ -27,7 +27,7 @@
   const FONT_SIZE_NUM = 22
   const FONT_SIZE_USAGE = 18
   const FONT_SIZE_SIDE = 20
-  const FONT_SIZE_UNIT = 16
+  const FONT_SIZE_UNIT = 18
 
   // ===== 単位ラベル =====
   const UNIT_LABEL = "(lx)"
@@ -35,9 +35,9 @@
 
   // ===== 隙間・行高 =====
   const GAP_STRIP_TO_NUM = 18 // 帯の上端と照度ラベル下端の隙間
-  const GAP_STRIP_TO_USAGE = 16 // 帯の下端と使用例1行目中心の隙間
+  const GAP_STRIP_TO_USAGE = 24 // 帯の下端と使用例1行目中心の隙間
   const LINE_HEIGHT = 26 // 使用例・サイドラベルの行間
-  const SIDE_LABEL_GAP = 40 // 帯端とサイドラベルの隙間
+  const SIDE_LABEL_GAP = 30 // 帯端とサイドラベルの隙間
 
   // ===== 矢印 =====
   const COL_ARROW = "var(--color-body)"
@@ -223,7 +223,7 @@
       x={UNIT_LABEL_X}
       y={NUM_LABEL_CENTER_Y}
       font-size={FONT_SIZE_UNIT}
-      font-weight="normal"
+      font-weight="bold"
       text-anchor="start"
     >
       {UNIT_LABEL}
