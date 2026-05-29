@@ -34,8 +34,8 @@
   const GAP_NUM_TO_UNIT = 6 // 「800」ラベルと単位ラベルの隙間
 
   // ===== 隙間・行高 =====
-  const GAP_STRIP_TO_NUM = 18 // 帯の上端と照度ラベル下端の隙間
-  const GAP_STRIP_TO_USAGE = 24 // 帯の下端と使用例1行目中心の隙間
+  const GAP_STRIP_TO_NUM = 18 // 帯の下端と照度ラベル上端の隙間
+  const GAP_NUM_TO_USAGE = 20 // 照度ラベル下端と使用例1行目中心の隙間
   const LINE_HEIGHT = 26 // 使用例・サイドラベルの行間
   const SIDE_LABEL_GAP = 30 // 帯端とサイドラベルの隙間
 
@@ -62,7 +62,7 @@
     return { offset: t, color: grayScale(t).hex() }
   })
 
-  // ===== 照度ラベル（帯の上） =====
+  // ===== 照度ラベル（帯の下） =====
   const illuminances: Illuminance[] = [
     { value: 50, t: 0 },
     { value: 100, t: 1 / 3 },
@@ -70,7 +70,7 @@
     { value: 800, t: 1 }
   ]
 
-  // ===== 照明の使用例（帯の下） =====
+  // ===== 照明の使用例（照度ラベルのさらに下） =====
   const usages: Usage[] = [
     { lines: ["飲食店"], t: 0 },
     { lines: ["ホテル", "ロビー"], t: 1 / 6 },
@@ -116,9 +116,11 @@
   const WIDTH = STRIP_RIGHT + RIGHT_OVERHANG
 
   // ===== 縦方向の位置 =====
-  const NUM_LABEL_CENTER_Y = PADDING_VERTICAL + FONT_SIZE_NUM / 2
-  const STRIP_Y = NUM_LABEL_CENTER_Y + FONT_SIZE_NUM / 2 + GAP_STRIP_TO_NUM
-  const USAGE_TOP_Y = STRIP_Y + STRIP_HEIGHT + GAP_STRIP_TO_USAGE // 使用例1行目の中心
+  // 上から：帯 → 照度ラベル（＋矢印） → 使用例
+  const STRIP_Y = PADDING_VERTICAL
+  const NUM_LABEL_CENTER_Y = STRIP_Y + STRIP_HEIGHT + GAP_STRIP_TO_NUM + FONT_SIZE_NUM / 2
+  const USAGE_TOP_Y =
+    NUM_LABEL_CENTER_Y + FONT_SIZE_NUM / 2 + GAP_NUM_TO_USAGE + FONT_SIZE_USAGE / 2 // 使用例1行目の中心
   // サイドラベルは帯の縦中央に揃える
   const SIDE_LABEL_CENTER_Y = STRIP_Y + STRIP_HEIGHT / 2
   const HEIGHT =
@@ -208,7 +210,7 @@
     />
   {/each}
 
-  <!-- 照度の数値ラベル（帯の上） -->
+  <!-- 照度の数値ラベル（帯の下） -->
   <g
     fill={COL_BODY}
     font-size={FONT_SIZE_NUM}
@@ -230,7 +232,7 @@
     </text>
   </g>
 
-  <!-- 照明の使用例（帯の下／暗記モードで非表示） -->
+  <!-- 照明の使用例（照度ラベルのさらに下／暗記モードで非表示） -->
   <g fill={COL_BODY} font-size={FONT_SIZE_USAGE} text-anchor="middle" dominant-baseline="central">
     {#each usages as u (u.t)}
       {@const x = usageXAt(u)}
