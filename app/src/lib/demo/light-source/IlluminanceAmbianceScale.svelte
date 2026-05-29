@@ -27,6 +27,11 @@
   const FONT_SIZE_NUM = 22
   const FONT_SIZE_USAGE = 18
   const FONT_SIZE_SIDE = 20
+  const FONT_SIZE_UNIT = 16
+
+  // ===== 単位ラベル =====
+  const UNIT_LABEL = "(lx)"
+  const GAP_NUM_TO_UNIT = 6 // 「800」ラベルと単位ラベルの隙間
 
   // ===== 隙間・行高 =====
   const GAP_STRIP_TO_NUM = 18 // 帯の上端と照度ラベル下端の隙間
@@ -100,9 +105,11 @@
   )
 
   // ===== 横方向のはみ出し量を集計 =====
-  // 照度ラベル・使用例ラベルは帯内に収めるため、はみ出し集計はサイドラベルのみ
+  // 照度ラベル・使用例ラベルは帯内に収めるため、はみ出すのはサイドラベルと単位ラベル
+  const unitOverhang = GAP_NUM_TO_UNIT + estimateTextWidth(UNIT_LABEL, FONT_SIZE_UNIT)
   const LEFT_OVERHANG = SIDE_LABEL_GAP + sideLeftWidth + PADDING_HORIZONTAL
-  const RIGHT_OVERHANG = SIDE_LABEL_GAP + sideRightWidth + PADDING_HORIZONTAL
+  const RIGHT_OVERHANG =
+    Math.max(SIDE_LABEL_GAP + sideRightWidth, unitOverhang) + PADDING_HORIZONTAL
 
   const STRIP_LEFT = LEFT_OVERHANG
   const STRIP_RIGHT = STRIP_LEFT + STRIP_WIDTH
@@ -136,6 +143,11 @@
       y: NUM_LABEL_CENTER_Y
     }
   })
+
+  // 単位ラベル（「800」の右側）の左端X
+  const lastIlluminance = illuminances[illuminances.length - 1]
+  const UNIT_LABEL_X =
+    numXAt(lastIlluminance) + numHalfWidth(lastIlluminance.value) + GAP_NUM_TO_UNIT
 
   // サイドラベル1行目の中心Y（複数行を中央揃え）
   const sideLineTopY = (lineCount: number): number =>
@@ -207,6 +219,15 @@
     {#each illuminances as d (d.value)}
       <text x={numXAt(d)} y={NUM_LABEL_CENTER_Y}>{d.value}</text>
     {/each}
+    <text
+      x={UNIT_LABEL_X}
+      y={NUM_LABEL_CENTER_Y}
+      font-size={FONT_SIZE_UNIT}
+      font-weight="normal"
+      text-anchor="start"
+    >
+      {UNIT_LABEL}
+    </text>
   </g>
 
   <!-- 照明の使用例（帯の下／暗記モードで非表示） -->
