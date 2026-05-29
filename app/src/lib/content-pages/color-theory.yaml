@@ -146,8 +146,6 @@
         - slug: color-rendering
         - slug: lamp-types
         - slug: photometric-and-radiometric-quantities
-        - title: エネルギー量とランプ効率
-          grades: ["1"]
     - title: 色の現れ方と感じ方
       links:
         - title: 物体表面の質感と光
