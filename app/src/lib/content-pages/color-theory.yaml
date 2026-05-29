@@ -145,8 +145,7 @@
         - slug: photometric-quantities
         - slug: color-rendering
         - slug: lamp-types
-        - title: 光の明るさの測定
-          grades: ["1"]
+        - slug: photometric-and-radiometric-quantities
         - title: エネルギー量とランプ効率
           grades: ["1"]
     - title: 色の現れ方と感じ方
