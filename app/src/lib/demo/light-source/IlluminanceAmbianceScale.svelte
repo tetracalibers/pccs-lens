@@ -246,9 +246,9 @@
   <g fill={COL_BODY} font-size={FONT_SIZE_SIDE} font-weight="bold" dominant-baseline="central">
     {#each sideLeftLines as line, i (i)}
       <text
-        x={STRIP_LEFT - SIDE_LABEL_GAP}
+        x={STRIP_LEFT - SIDE_LABEL_GAP - sideLeftWidth / 2}
         y={sideLineTopY(sideLeftLines.length) + LINE_HEIGHT * i}
-        text-anchor="end"
+        text-anchor="middle"
         visibility={isAnki ? "hidden" : "visible"}
       >
         {line}
@@ -256,9 +256,9 @@
     {/each}
     {#each sideRightLines as line, i (i)}
       <text
-        x={STRIP_RIGHT + SIDE_LABEL_GAP}
+        x={STRIP_RIGHT + SIDE_LABEL_GAP + sideRightWidth / 2}
         y={sideLineTopY(sideRightLines.length) + LINE_HEIGHT * i}
-        text-anchor="start"
+        text-anchor="middle"
         visibility={isAnki ? "hidden" : "visible"}
       >
         {line}
