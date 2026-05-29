@@ -29,7 +29,7 @@
   const COL_GRADIENT_LIGHT = "#f0f0f0"
 
   // ===== ラベルのフォントサイズ =====
-  const FONT_SIZE_AMBIENCE = 20
+  const FONT_SIZE_AMBIENCE = 18
   const FONT_SIZE_SIDE = 22
 
   // ===== 隙間・行高 =====
@@ -98,8 +98,7 @@
   const TEMP_STRIP_Y = PADDING_VERTICAL
 
   const AMBIENCE_BLOCK_TOP = TEMP_STRIP_Y + STRIP_HEIGHT + GAP_STRIP_TO_AMBIENCE
-  const AMBIENCE_BLOCK_HEIGHT =
-    LINE_HEIGHT_AMBIENCE * (maxAmbienceLines - 1) + FONT_SIZE_AMBIENCE
+  const AMBIENCE_BLOCK_HEIGHT = LINE_HEIGHT_AMBIENCE * (maxAmbienceLines - 1) + FONT_SIZE_AMBIENCE
   const AMBIENCE_BLOCK_CENTER_Y = AMBIENCE_BLOCK_TOP + AMBIENCE_BLOCK_HEIGHT / 2
 
   const ILLUM_STRIP_Y = AMBIENCE_BLOCK_TOP + AMBIENCE_BLOCK_HEIGHT + GAP_AMBIENCE_TO_STRIP
@@ -170,6 +169,7 @@
   <g
     fill={COL_BODY}
     font-size={FONT_SIZE_AMBIENCE}
+    font-weight="bold"
     text-anchor="middle"
     dominant-baseline="central"
   >
@@ -179,8 +179,10 @@
       {#each item.lines as line, i (i)}
         <text {x} y={ambienceFirstLineY(lineCount) + LINE_HEIGHT_AMBIENCE * i}>
           {#each line as part, j (j)}<tspan
-              visibility={part.ankiHide && isAnki ? "hidden" : "visible"}>{part.text}</tspan
-            >{/each}
+              visibility={part.ankiHide && isAnki ? "hidden" : "visible"}
+            >
+              {part.text}
+            </tspan>{/each}
         </text>
       {/each}
     {/each}
