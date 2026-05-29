@@ -100,19 +100,9 @@
   )
 
   // ===== 横方向のはみ出し量を集計 =====
-  // 使用例ラベルは帯内に収めるため、はみ出し集計には含めない（数値ラベルとサイドラベルのみ）
-  const LEFT_OVERHANG =
-    Math.max(
-      SIDE_LABEL_GAP + sideLeftWidth,
-      ...illuminances.map((d) => Math.max(0, numHalfWidth(d.value) - d.t * STRIP_WIDTH))
-    ) + PADDING_HORIZONTAL
-  const RIGHT_OVERHANG =
-    Math.max(
-      SIDE_LABEL_GAP + sideRightWidth,
-      ...illuminances.map((d) =>
-        Math.max(0, numHalfWidth(d.value) + d.t * STRIP_WIDTH - STRIP_WIDTH)
-      )
-    ) + PADDING_HORIZONTAL
+  // 照度ラベル・使用例ラベルは帯内に収めるため、はみ出し集計はサイドラベルのみ
+  const LEFT_OVERHANG = SIDE_LABEL_GAP + sideLeftWidth + PADDING_HORIZONTAL
+  const RIGHT_OVERHANG = SIDE_LABEL_GAP + sideRightWidth + PADDING_HORIZONTAL
 
   const STRIP_LEFT = LEFT_OVERHANG
   const STRIP_RIGHT = STRIP_LEFT + STRIP_WIDTH
@@ -130,18 +120,19 @@
   // ===== 相対位置 → X座標 =====
   const xAt = (t: number): number => STRIP_LEFT + t * STRIP_WIDTH
 
-  // 使用例ラベルの中心X：帯の左右端からはみ出さないようにクランプする
-  const usageXAt = (u: Usage): number => {
-    const half = usageHalfWidth(u)
-    return Math.min(Math.max(xAt(u.t), STRIP_LEFT + half), STRIP_RIGHT - half)
-  }
+  // 帯の左右端からはみ出さないように中心Xをクランプする
+  const clampToStrip = (x: number, half: number): number =>
+    Math.min(Math.max(x, STRIP_LEFT + half), STRIP_RIGHT - half)
+
+  const numXAt = (d: Illuminance): number => clampToStrip(xAt(d.t), numHalfWidth(d.value))
+  const usageXAt = (u: Usage): number => clampToStrip(xAt(u.t), usageHalfWidth(u))
 
   // ===== 照度ラベル間の矢印 =====
   const arrows = illuminances.slice(0, -1).map((d, i) => {
     const next = illuminances[i + 1]
     return {
-      x1: xAt(d.t) + numHalfWidth(d.value) + ARROW_GAP,
-      x2: xAt(next.t) - numHalfWidth(next.value) - ARROW_GAP,
+      x1: numXAt(d) + numHalfWidth(d.value) + ARROW_GAP,
+      x2: numXAt(next) - numHalfWidth(next.value) - ARROW_GAP,
       y: NUM_LABEL_CENTER_Y
     }
   })
@@ -214,7 +205,7 @@
     dominant-baseline="central"
   >
     {#each illuminances as d (d.value)}
-      <text x={xAt(d.t)} y={NUM_LABEL_CENTER_Y}>{d.value}</text>
+      <text x={numXAt(d)} y={NUM_LABEL_CENTER_Y}>{d.value}</text>
     {/each}
   </g>
 
