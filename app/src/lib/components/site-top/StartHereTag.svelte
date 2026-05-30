@@ -4,7 +4,7 @@
 
 <span class="start-here-tag">
   <Icon icon="solar:star-shine-bold" class="start-here-tag-icon" />
-  まずはここから
+  探索を始める
 </span>
 
 <style>

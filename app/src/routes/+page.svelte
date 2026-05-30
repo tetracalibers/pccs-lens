@@ -137,7 +137,6 @@
             </div>
             <h2>このサイトの歩き方</h2>
             <p>色のしくみを体験しながら学ぶ。このサイトでできる学びや体験を紹介します。</p>
-            <span class="neon-cta">探索を始める</span>
           </div>
         </div>
       </a>
@@ -373,24 +372,15 @@
   .guide-body h2 {
     font-size: 1.2rem;
     font-weight: 700;
-    margin: 0 0 0.4rem;
+    margin: 0 0 0.5rem;
     color: var(--color-heading);
   }
 
   .guide-body p {
     font-size: 0.85rem;
     color: var(--color-body);
-    margin: 0 0 0.75rem;
+    margin: 0;
     line-height: 1.6;
-  }
-
-  .neon-cta {
-    font-size: 0.85rem;
-    font-weight: 700;
-    background: linear-gradient(215deg, #d69ef8, #ff6b6b);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
   }
 
   /* Contents */

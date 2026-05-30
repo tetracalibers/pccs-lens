@@ -65,12 +65,6 @@ draft: true
 
 ::ComingSoon
 
-## :WithGradeTag[光束とランプ効率]{grades="1"}
-
-- 昔は消費電力（W）で明るさを表していた
-- しかし、LEDは同じ消費電力でも明るさが違う
-- そこで、「実際にどれだけ光を出すか？」を直接表す必要が生じた
-
 ## :WithGradeTag[光束と照度の関係]{grades="1"}
 
 ::ComingSoon
