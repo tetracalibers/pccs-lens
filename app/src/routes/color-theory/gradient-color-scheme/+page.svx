@@ -3,7 +3,7 @@ layout: guide-content
 title: グラデーション
 
 grades: ["3"]
-basic: true
+useful: true
 ---
 
 <script>

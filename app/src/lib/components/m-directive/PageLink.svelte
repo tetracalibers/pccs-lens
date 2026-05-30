@@ -17,7 +17,7 @@
   const baseSegment = $derived(page.route.id?.split("/")[1])
 
   const meta = $derived(guidePages.get(`${baseSegment}/${slug}`))
-  const { grades, basic, title, draft } = $derived.by(() => {
+  const { grades, useful, title, draft } = $derived.by(() => {
     if (meta) return meta
     throw new Error(`PageLink: No metadata found for slug "${baseSegment}/${slug}"`)
   })
@@ -41,7 +41,7 @@
 {:else}
   <a {href} class="page-link" style="--pl-accent: {accentColor}">
     <span class="pl-title">{title}</span>
-    {#if grades.length > 0 || basic || draft}
+    {#if grades.length > 0 || useful || draft}
       <span class="pl-grades">
         {#if draft}
           <DraftTag />
@@ -49,8 +49,8 @@
         {#each gradesList as grade (grade)}
           <GradeTag {grade} />
         {/each}
-        {#if basic}
-          <GradeTag grade="basic" />
+        {#if useful}
+          <GradeTag grade="useful" />
         {/if}
       </span>
     {/if}

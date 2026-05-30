@@ -3,7 +3,7 @@ layout: guide-content
 title: PCCSのトーン
 
 grades: ["3", "uc"]
-basic: true
+useful: true
 ---
 
 <script lang="ts">

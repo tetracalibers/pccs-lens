@@ -3,7 +3,7 @@ layout: guide-content
 title: 色の面積比による配色
 
 grades: ["3"]
-basic: true
+useful: true
 ---
 
 <script>

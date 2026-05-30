@@ -1,7 +1,7 @@
 export type GuideFrontmatter = {
   title: string
   grades: ("3" | "2" | "1" | "uc")[]
-  basic?: boolean
+  useful?: boolean
   draft?: boolean
 }
 
@@ -27,7 +27,7 @@ export const guidePages: Map<string, GuideFrontmatter> = new Map(
       {
         title: meta.title,
         grades: meta.grades ?? [],
-        basic: meta.basic ?? false,
+        useful: meta.useful ?? false,
         draft: meta.draft ?? false
       }
     ]

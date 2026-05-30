@@ -59,7 +59,7 @@
 
   import "katex/dist/katex.min.css"
 
-  let { title, grades, basic, draft, children }: GuideFrontmatter & { children: Snippet } = $props()
+  let { title, grades, useful, draft, children }: GuideFrontmatter & { children: Snippet } = $props()
 
   const isAnki = $derived(ankiMode.isAnki)
 
@@ -104,7 +104,7 @@
   <Breadcrumb category="contents" crumbs={[parentCrumb, { label: title }]} />
   <Heading1 icon="solar:pen-new-round-broken">{title}</Heading1>
   <div class="page-meta">
-    {#if grades.length > 0 || basic || draft}
+    {#if grades.length > 0 || useful || draft}
       <div class="page-grades">
         {#if draft}
           <DraftTag />
@@ -112,8 +112,8 @@
         {#each gradeList as grade (grade)}
           <GradeTag {grade} />
         {/each}
-        {#if basic}
-          <GradeTag grade="basic" />
+        {#if useful}
+          <GradeTag grade="useful" />
         {/if}
       </div>
     {/if}
