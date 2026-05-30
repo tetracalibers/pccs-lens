@@ -43,10 +43,10 @@
         - slug: natural-harmony
         - title: 色の三属性と配色イメージ
           grades: ["3"]
-          basic: true
+          useful: true
         - title: イメージ別の配色法
           grades: ["2"]
-          basic: true
+          useful: true
     - title: 色彩調和論
       links:
         - slug: unity-and-variety

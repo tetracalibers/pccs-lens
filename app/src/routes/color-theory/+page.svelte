@@ -31,7 +31,7 @@
               <DraftPageTitle
                 title={link.title}
                 grades={gradeArray2CSV(link.grades)}
-                basic={link.basic ?? false}
+                useful={link.useful ?? false}
               />
             {/if}
           </li>

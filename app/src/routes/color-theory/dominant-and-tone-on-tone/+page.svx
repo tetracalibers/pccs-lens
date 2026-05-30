@@ -3,7 +3,7 @@ layout: guide-content
 title: ドミナントとトーンオントーン
 
 grades: ["2"]
-basic: true
+useful: true
 ---
 
 <script>

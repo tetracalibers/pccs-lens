@@ -3,7 +3,7 @@ layout: guide-content
 title: トーナル配色
 
 grades: ["2"]
-basic: true
+useful: true
 ---
 
 <script>

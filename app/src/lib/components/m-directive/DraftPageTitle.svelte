@@ -7,8 +7,8 @@
   let {
     grades,
     title,
-    basic = false
-  }: { grades: AftGradeCSV; title: string; basic?: boolean } = $props()
+    useful = false
+  }: { grades: AftGradeCSV; title: string; useful?: boolean } = $props()
 
   const gradeList = $derived(gradeCSV2Array(grades))
   let accentColor = $derived(gradeList.length > 0 ? gradeColors[gradeList[0]] : "#94a3b8")
@@ -21,8 +21,8 @@
       {#each gradeList as grade (grade)}
         <GradeTag {grade} />
       {/each}
-      {#if basic}
-        <GradeTag grade="basic" />
+      {#if useful}
+        <GradeTag grade="useful" />
       {/if}
     </span>
   {/if}
