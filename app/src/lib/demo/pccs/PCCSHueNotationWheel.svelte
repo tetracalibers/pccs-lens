@@ -44,7 +44,7 @@
   const SECTION_GAP = 22 // 波括弧セクション ↔ 色相名セクションの隙間
   const ROW_GAP = 28 // 日本語名 ↔ 英語名の行間
   const PAD_X = 20 // 吹き出し左右の内側余白
-  const PAD_Y = 18 // 吹き出し上下の内側余白
+  const PAD_Y = 32 // 吹き出し上下の内側余白
 
   // ===== 波括弧の形状（ColorTemperatureScale を参考）=====
   const BRACE_STROKE_WIDTH = 1.2
@@ -58,7 +58,7 @@
   // ===== Colors =====
   const COL_BUBBLE_BG = "light-dark(#ffffff, #1c1c2e)"
   const COL_BUBBLE_BORDER = "light-dark(#d8d8d8, #3a3a4e)"
-  const COL_LABEL = "light-dark(#666666, #aaaaaa)"
+  const COL_LABEL = "var(--color-body)"
   const COL_VALUE = "var(--color-body)"
   const COL_BRACE = "var(--color-body)"
 
