@@ -57,9 +57,9 @@
   const GAP_VALUE_BRACE = 10 // 色相記号の値 ↔ 波括弧頂点
   const BRACE_DEPTH = 14 // 波括弧の頂点 ↔ 足元（横方向の深さ）
   const GAP_BRACE_LABEL = 10 // 波括弧の足元 ↔ サブラベル右側
-  const SUB_GAP = 24 // 色相番号/色相記号/略記号の行間
-  const SECTION_GAP = 22 // 波括弧セクション ↔ 色相名セクションの隙間
-  const ROW_GAP = 28 // 日本語名 ↔ 英語名の行間
+  const SUB_GAP = 18 // 色相番号/色相記号/略記号の行間
+  const SECTION_GAP = 32 // 波括弧セクション ↔ 色相名セクションの隙間
+  const ROW_GAP = 24 // 日本語名 ↔ 英語名の行間
   const PAD_X = 20 // 吹き出し左右の内側余白
   const PAD_Y = 32 // 吹き出し上下の内側余白
 
