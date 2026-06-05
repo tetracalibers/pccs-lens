@@ -1,7 +1,18 @@
 <script lang="ts">
+  import { onDestroy } from "svelte"
   import { browser } from "$app/environment"
   import { Canvas, T } from "@threlte/core"
-  import { InstancedMesh, Instance, OrbitControls } from "@threlte/extras"
+  import { OrbitControls } from "@threlte/extras"
+  import {
+    BoxGeometry,
+    Color,
+    Euler,
+    InstancedMesh,
+    Matrix4,
+    MeshBasicMaterial,
+    Quaternion,
+    Vector3
+  } from "three"
   import { mhvcToHex } from "munsell"
   // マンセル・リノーテーション・データ（http://www.rit-mcsl.org/MunsellRenotation/all.dat）
   // 由来の「各色相・各明度における実測上の最高彩度」テーブル。
@@ -112,6 +123,45 @@
 
   const chips = buildChips()
 
+  /**
+   * 全チップを 1 つの THREE.InstancedMesh にまとめる。
+   *
+   * `<Instance>`（Threlte コンポーネント）を数千個生成するとマウントが極端に重くなるため、
+   * 行列・色を JS のループで直接書き込む。描画は GPU インスタンシングで 1 ドローコール。
+   */
+  function buildInstancedMesh(): InstancedMesh {
+    const mesh = new InstancedMesh(new BoxGeometry(1, 1, 1), new MeshBasicMaterial(), chips.length)
+    const matrix = new Matrix4()
+    const position = new Vector3()
+    const quaternion = new Quaternion()
+    const euler = new Euler()
+    const scale = new Vector3()
+    const color = new Color()
+
+    chips.forEach((ch, i) => {
+      position.set(ch.position[0], ch.position[1], ch.position[2])
+      euler.set(0, ch.rotationY, 0)
+      quaternion.setFromEuler(euler)
+      scale.set(ch.scale[0], ch.scale[1], ch.scale[2])
+      matrix.compose(position, quaternion, scale)
+      mesh.setMatrixAt(i, matrix)
+      mesh.setColorAt(i, color.set(ch.color))
+    })
+
+    mesh.instanceMatrix.needsUpdate = true
+    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true
+    // 全インスタンスが常に画面内にあるので個別カリングは不要（誤カリング防止のため無効化）
+    mesh.frustumCulled = false
+    return mesh
+  }
+
+  const colorSolid = buildInstancedMesh()
+
+  onDestroy(() => {
+    colorSolid.geometry.dispose()
+    ;(colorSolid.material as MeshBasicMaterial).dispose()
+  })
+
   // 注視点と、そこから見た初期カメラ方向（単位ベクトル）
   const TARGET: [number, number, number] = [0, CENTER_Y, 0]
   const VIEW_DIR: [number, number, number] = [
@@ -186,21 +236,8 @@
         />
       </T.PerspectiveCamera>
 
-      <!-- 色票は MeshBasicMaterial（陰影なし）で塗り、各 hex を正確な見た目で表示する -->
-      <!-- limit=確保数 / range=描画数。range の既定値は 1000 のため、全チップを描くには明示指定が必要 -->
-      <InstancedMesh limit={chips.length} range={chips.length}>
-        <T.BoxGeometry />
-        <T.MeshBasicMaterial />
-
-        {#each chips as chip (chip.key)}
-          <Instance
-            position={chip.position}
-            rotation={[0, chip.rotationY, 0]}
-            scale={chip.scale}
-            color={chip.color}
-          />
-        {/each}
-      </InstancedMesh>
+      <!-- 全色票を 1 つの InstancedMesh にまとめて描画（陰影なし MeshBasicMaterial で hex を忠実表示） -->
+      <T is={colorSolid} />
     </Canvas>
   {/if}
 </div>
