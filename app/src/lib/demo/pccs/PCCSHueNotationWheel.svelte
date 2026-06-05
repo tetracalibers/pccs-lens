@@ -61,7 +61,6 @@
   const COL_LABEL = "light-dark(#666666, #aaaaaa)"
   const COL_VALUE = "var(--color-body)"
   const COL_BRACE = "var(--color-body)"
-  const COL_SEGMENT_STROKE = "var(--color-body)"
 
   type Segment = {
     key: number
@@ -275,6 +274,12 @@
     const t = ((activeSegment.midAngleDeg - 90) * Math.PI) / 180
     return { ux: Math.cos(t), uy: Math.sin(t) }
   })
+
+  function getSelectedRingStroke(hex: string): string {
+    return isLightColor(hex)
+      ? `oklch(from ${hex} calc(l - .10) c calc(h - 10))`
+      : `oklch(from ${hex} calc(l + .10) c calc(h - 10))`
+  }
 </script>
 
 <svg
@@ -331,7 +336,7 @@
   <path
     d={activeSegment.path}
     fill="none"
-    stroke={COL_SEGMENT_STROKE}
+    stroke={getSelectedRingStroke(activeSegment.color)}
     stroke-width="2.5"
     style="pointer-events: none;"
   />
@@ -501,6 +506,6 @@
 
   [data-hue]:focus .focus-ring {
     stroke: Highlight;
-    stroke-width: 3;
+    stroke-width: 6;
   }
 </style>
