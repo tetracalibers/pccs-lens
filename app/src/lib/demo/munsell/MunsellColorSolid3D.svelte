@@ -247,6 +247,7 @@
     position: relative;
     width: 100%;
     aspect-ratio: 1 / 1;
+    border: 1px solid light-dark(var(--color-body--dark), var(--color-body--light));
     /* OrbitControls のドラッグ中にページがスクロールしないようにする */
     touch-action: none;
     cursor: grab;
