@@ -37,9 +37,13 @@
   /** 色立体の高さ中心（V=5 のワールド y）。OrbitControls の注視点に使う */
   const CENTER_Y = 5 * VALUE_UNIT
   const CAMERA_FOV = 45
-  const CAMERA_POSITION: [number, number, number] = [13, 7.5, 13]
-  const MIN_DISTANCE = 8
-  const MAX_DISTANCE = 32
+  // 初期カメラ位置はジオメトリの外接球から自動算出するため（後述の FIT_DISTANCE）、
+  // VALUE_UNIT / CHROMA_UNIT を変更しても初期表示で色立体全体が収まる。
+  /** 注視点から見た初期カメラ方向（方位 45°・仰角 22° の 3/4 ビュー） */
+  const VIEW_AZIMUTH = Math.PI / 4
+  const VIEW_ELEVATION = (22 * Math.PI) / 180
+  /** フィット距離にどれだけ余白を足すか（1 でぴったり、>1 でわずかに引く） */
+  const VIEW_MARGIN = 1.05
   // 真上・真下まで回り込むと色立体が線に潰れて見えるため、極角に余裕を持たせる
   const MIN_POLAR_ANGLE = Math.PI * 0.12
   const MAX_POLAR_ANGLE = Math.PI * 0.86
@@ -107,6 +111,64 @@
   }
 
   const chips = buildChips()
+
+  // 注視点と、そこから見た初期カメラ方向（単位ベクトル）
+  const TARGET: [number, number, number] = [0, CENTER_Y, 0]
+  const VIEW_DIR: [number, number, number] = [
+    Math.cos(VIEW_ELEVATION) * Math.cos(VIEW_AZIMUTH),
+    Math.sin(VIEW_ELEVATION),
+    Math.cos(VIEW_ELEVATION) * Math.sin(VIEW_AZIMUTH)
+  ]
+
+  /**
+   * 全チップが視錐台にちょうど収まる最小カメラ距離（canvas にフィットさせる距離）。
+   *
+   * カメラ基底 (right, up, forward) を作り、各チップを right/up 軸へ射影する。
+   * 点が画面に収まる条件は `|proj| ≤ (depth) * tan(fov/2)` なので、距離 D について
+   * `D ≥ |proj| / tan(fov/2) − depth` を満たす最大値が必要距離になる。
+   * 正方形 canvas（aspect=1）なので横 fov と縦 fov は等しく、両軸とも同じ tan を使う。
+   * チップの大きさ（空間対角の半分）も加味してはみ出しを防ぐ。
+   */
+  function computeFitDistance(): number {
+    const f: [number, number, number] = [-VIEW_DIR[0], -VIEW_DIR[1], -VIEW_DIR[2]]
+    // right = normalize(cross(forward, worldUp(0,1,0)))
+    const rl = Math.hypot(-f[2], f[0])
+    const r: [number, number, number] = [-f[2] / rl, 0, f[0] / rl]
+    // up = cross(right, forward)
+    const u: [number, number, number] = [
+      r[1] * f[2] - r[2] * f[1],
+      r[2] * f[0] - r[0] * f[2],
+      r[0] * f[1] - r[1] * f[0]
+    ]
+    const tanHalfFov = Math.tan((CAMERA_FOV * Math.PI) / 360)
+
+    let dist = 0
+    for (const ch of chips) {
+      const dx = ch.position[0] - TARGET[0]
+      const dy = ch.position[1] - TARGET[1]
+      const dz = ch.position[2] - TARGET[2]
+      const depth = dx * f[0] + dy * f[1] + dz * f[2]
+      const h = dx * r[0] + dy * r[1] + dz * r[2]
+      const w = dx * u[0] + dy * u[1] + dz * u[2]
+      const chipR = 0.5 * Math.hypot(ch.scale[0], ch.scale[1], ch.scale[2])
+      const needH = (Math.abs(h) + chipR) / tanHalfFov - (depth - chipR)
+      const needW = (Math.abs(w) + chipR) / tanHalfFov - (depth - chipR)
+      dist = Math.max(dist, needH, needW)
+    }
+    return dist
+  }
+
+  const FIT_DISTANCE = computeFitDistance() * VIEW_MARGIN
+
+  // 注視点から VIEW_DIR 方向へ FIT_DISTANCE 離した位置にカメラを置く
+  const CAMERA_POSITION: [number, number, number] = [
+    TARGET[0] + VIEW_DIR[0] * FIT_DISTANCE,
+    TARGET[1] + VIEW_DIR[1] * FIT_DISTANCE,
+    TARGET[2] + VIEW_DIR[2] * FIT_DISTANCE
+  ]
+  // ズーム範囲も初期距離を基準に決める
+  const MIN_DISTANCE = FIT_DISTANCE * 0.45
+  const MAX_DISTANCE = FIT_DISTANCE * 2.2
 </script>
 
 <div class="solid-3d" role="img" aria-label="マンセル色立体の3次元表示（ドラッグで回転）">
