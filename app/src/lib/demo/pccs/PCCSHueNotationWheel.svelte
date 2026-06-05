@@ -27,9 +27,26 @@
   // ===== セグメントのラベル =====
   const FONT_SIZE_SEGMENT = 14
 
+  // ===== 外周の円弧（1:pR → 4:rO、時計回り）=====
+  const ARC_FROM_HUE = 1
+  const ARC_TO_HUE = 4
+  const ARC_GAP = 16 // 色相環の外周 ↔ 円弧
+  const ARC_RADIUS = R_OUTER + ARC_GAP
+  const ARC_STROKE_WIDTH = 2.5
+  const ARC_COLOR = PCCS_HUE_MAP.get(ARC_FROM_HUE)!.color
+  // midAngleDeg(n) = (n - 8) × 15（12 時 = 0、CW 正）
+  const ARC_START_DEG = (ARC_FROM_HUE - TOP_HUE_NUM) * 15
+  const ARC_END_DEG = (ARC_TO_HUE - TOP_HUE_NUM) * 15
+
+  // ===== 矢の形状（タイプA）=====
+  const ARROW_HEAD_VIEWBOX = 7 // marker viewBox の一辺
+  const ARROW_HEAD_SIZE = 20 // 矢先のレンダリングサイズ（user space）
+  // marker 内 polyline の stroke-width。線本体と見た目の太さを一致させる
+  const ARROW_HEAD_STROKE = (ARC_STROKE_WIDTH * ARROW_HEAD_VIEWBOX) / ARROW_HEAD_SIZE
+
   // ===== ViewBox（原点中心）=====
   const PADDING = 20
-  const VB_R = R_OUTER + PADDING
+  const VB_R = Math.max(R_OUTER + PADDING, ARC_RADIUS + ARROW_HEAD_SIZE / 2 + ARC_STROKE_WIDTH)
 
   // ===== ツールチップ（吹き出し）の文字 =====
   const FONT_SIZE_LABEL = 12
@@ -97,6 +114,15 @@
   function pointAt(angleDeg: number, r: number): [number, number] {
     const t = ((angleDeg - 90) * Math.PI) / 180
     return [r * Math.cos(t), r * Math.sin(t)]
+  }
+
+  // 半径 r の円弧パス（startDeg → endDeg）。角度が増える向き = 時計回り。
+  function arcPath(startDeg: number, endDeg: number, r: number): string {
+    const [sx, sy] = pointAt(startDeg, r)
+    const [ex, ey] = pointAt(endDeg, r)
+    const largeArc = Math.abs(endDeg - startDeg) > 180 ? 1 : 0
+    const sweep = endDeg > startDeg ? 1 : 0
+    return `M ${sx} ${sy} A ${r} ${r} 0 ${largeArc} ${sweep} ${ex} ${ey}`
   }
 
   // ===== 文字幅の概算（ColorTemperatureScale と同じ手法）=====
@@ -287,6 +313,39 @@
   role="img"
   aria-label="PCCS色相環（色相をクリックすると表記が表示されます）"
 >
+  <defs>
+    <marker
+      id="hue-arc-arrow"
+      viewBox="0 0 {ARROW_HEAD_VIEWBOX} {ARROW_HEAD_VIEWBOX}"
+      refX={ARROW_HEAD_VIEWBOX / 2}
+      refY={ARROW_HEAD_VIEWBOX / 2}
+      markerWidth={ARROW_HEAD_SIZE}
+      markerHeight={ARROW_HEAD_SIZE}
+      markerUnits="userSpaceOnUse"
+      orient="auto-start-reverse"
+    >
+      <polyline
+        points="0,3.5 3.5,1.75 0,0"
+        fill="none"
+        stroke={ARC_COLOR}
+        stroke-width={ARROW_HEAD_STROKE}
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        transform="translate(1.1667 1.75)"
+      />
+    </marker>
+  </defs>
+
+  <!-- 外周の円弧（1:pR → 4:rO、時計回り）。色は 1:pR -->
+  <path
+    d={arcPath(ARC_START_DEG, ARC_END_DEG, ARC_RADIUS)}
+    fill="none"
+    stroke={ARC_COLOR}
+    stroke-width={ARC_STROKE_WIDTH}
+    stroke-linecap="round"
+    marker-end="url(#hue-arc-arrow)"
+  />
+
   <!-- 24 色相のセグメント（クリック可能） -->
   {#each segments as seg (seg.key)}
     {@const [lx, ly] = pointAt(seg.midAngleDeg, MID_RADIUS)}
