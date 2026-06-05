@@ -217,50 +217,50 @@
     const tY = Math.abs(uy) < 1e-6 ? Infinity : hh / Math.abs(uy)
     const onVertical = tX <= tY // 左右どちらかの辺から出る
     const t = Math.min(tX, tY)
-    const ex = t * ux
-    const ey = t * uy
-    const tipX = ex + TAIL_LEN * ux
-    const tipY = ey + TAIL_LEN * uy
+
+    // ツノ付け根の中心を辺上に置く。
+    // 斜め方向では交点が角丸の領域に来るので、中心を「角丸 + ツノ半幅」を確保できる
+    // 直線部の範囲に収める（個々の端点をクランプすると付け根が潰れるため中心で調整）。
+    let bcx: number
+    let bcy: number
+    if (onVertical) {
+      bcx = ux > 0 ? hw : -hw
+      bcy = clamp(t * uy, -hh + r + TAIL_HALF, hh - r - TAIL_HALF)
+    } else {
+      bcy = uy > 0 ? hh : -hh
+      bcx = clamp(t * ux, -hw + r + TAIL_HALF, hw - r - TAIL_HALF)
+    }
+    // ツノ先端は付け根中心から色相方向へ伸ばす
+    const tipX = bcx + TAIL_LEN * ux
+    const tipY = bcy + TAIL_LEN * uy
 
     const p: string[] = []
     p.push(`M ${-hw + r} ${-hh}`)
 
     // 上辺：(-hw+r,-hh) → (hw-r,-hh)（x 増加方向）
     if (!onVertical && uy < 0) {
-      const cx = clamp(ex, -hw + r, hw - r)
-      const b1 = clamp(cx - TAIL_HALF, -hw + r, hw - r)
-      const b2 = clamp(cx + TAIL_HALF, -hw + r, hw - r)
-      p.push(`L ${b1} ${-hh}`, `L ${tipX} ${tipY}`, `L ${b2} ${-hh}`)
+      p.push(`L ${bcx - TAIL_HALF} ${-hh}`, `L ${tipX} ${tipY}`, `L ${bcx + TAIL_HALF} ${-hh}`)
     }
     p.push(`L ${hw - r} ${-hh}`)
     p.push(`Q ${hw} ${-hh} ${hw} ${-hh + r}`)
 
     // 右辺：(hw,-hh+r) → (hw,hh-r)（y 増加方向）
     if (onVertical && ux > 0) {
-      const cy = clamp(ey, -hh + r, hh - r)
-      const b1 = clamp(cy - TAIL_HALF, -hh + r, hh - r)
-      const b2 = clamp(cy + TAIL_HALF, -hh + r, hh - r)
-      p.push(`L ${hw} ${b1}`, `L ${tipX} ${tipY}`, `L ${hw} ${b2}`)
+      p.push(`L ${hw} ${bcy - TAIL_HALF}`, `L ${tipX} ${tipY}`, `L ${hw} ${bcy + TAIL_HALF}`)
     }
     p.push(`L ${hw} ${hh - r}`)
     p.push(`Q ${hw} ${hh} ${hw - r} ${hh}`)
 
     // 下辺：(hw-r,hh) → (-hw+r,hh)（x 減少方向）
     if (!onVertical && uy > 0) {
-      const cx = clamp(ex, -hw + r, hw - r)
-      const b1 = clamp(cx + TAIL_HALF, -hw + r, hw - r)
-      const b2 = clamp(cx - TAIL_HALF, -hw + r, hw - r)
-      p.push(`L ${b1} ${hh}`, `L ${tipX} ${tipY}`, `L ${b2} ${hh}`)
+      p.push(`L ${bcx + TAIL_HALF} ${hh}`, `L ${tipX} ${tipY}`, `L ${bcx - TAIL_HALF} ${hh}`)
     }
     p.push(`L ${-hw + r} ${hh}`)
     p.push(`Q ${-hw} ${hh} ${-hw} ${hh - r}`)
 
     // 左辺：(-hw,hh-r) → (-hw,-hh+r)（y 減少方向）
     if (onVertical && ux < 0) {
-      const cy = clamp(ey, -hh + r, hh - r)
-      const b1 = clamp(cy + TAIL_HALF, -hh + r, hh - r)
-      const b2 = clamp(cy - TAIL_HALF, -hh + r, hh - r)
-      p.push(`L ${-hw} ${b1}`, `L ${tipX} ${tipY}`, `L ${-hw} ${b2}`)
+      p.push(`L ${-hw} ${bcy + TAIL_HALF}`, `L ${tipX} ${tipY}`, `L ${-hw} ${bcy - TAIL_HALF}`)
     }
     p.push(`L ${-hw} ${-hh + r}`)
     p.push(`Q ${-hw} ${-hh} ${-hw + r} ${-hh}`)
