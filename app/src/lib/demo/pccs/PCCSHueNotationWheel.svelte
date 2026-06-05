@@ -136,8 +136,8 @@
   }
 
   // ===== アクティブな色相 =====
-  // 初期状態は 8:Y のツールチップを表示
-  let activeNum = $state(8)
+  // 初期状態は 1:pR のツールチップを表示
+  let activeNum = $state(1)
 
   const active = $derived(PCCS_HUE_MAP.get(activeNum)!)
   const activeSegment = $derived(segments.find((s) => s.key === activeNum)!)
