@@ -154,8 +154,9 @@
     const mainValueX = mainLabelEndX + GAP_LABEL_VALUE
     const bracePeakX = mainValueX + symbolW + GAP_VALUE_BRACE
     const braceFeetX = bracePeakX + BRACE_DEPTH
-    const subLabelEndX = braceFeetX + GAP_BRACE_LABEL + subLabelW
-    const subValueX = subLabelEndX + GAP_LABEL_VALUE
+    // サブラベル（色相番号・色相の略記号）は左寄せ。値はラベル幅ぶん右に揃える。
+    const subLabelStartX = braceFeetX + GAP_BRACE_LABEL
+    const subValueX = subLabelStartX + subLabelW + GAP_LABEL_VALUE
     const contentRight = Math.max(subValueX + subValueW, mainValueX + mainValueW)
 
     // 縦方向の座標
@@ -177,7 +178,7 @@
       mainValueX,
       bracePeakX,
       braceFeetX,
-      subLabelEndX,
+      subLabelStartX,
       subValueX,
       y0,
       y1,
@@ -359,11 +360,11 @@
     <!-- 色相番号 -->
     <text
       class="tip-label"
-      x={layout.subLabelEndX}
+      x={layout.subLabelStartX}
       y={layout.y0}
       font-size={FONT_SIZE_LABEL}
       fill={COL_LABEL}
-      text-anchor="end"
+      text-anchor="start"
       dominant-baseline="central"
     >
       色相番号
@@ -407,11 +408,11 @@
     <!-- 色相の略記号 -->
     <text
       class="tip-label"
-      x={layout.subLabelEndX}
+      x={layout.subLabelStartX}
       y={layout.y2}
       font-size={FONT_SIZE_LABEL}
       fill={COL_LABEL}
-      text-anchor="end"
+      text-anchor="start"
       dominant-baseline="central"
     >
       色相の略記号
@@ -465,10 +466,9 @@
       英語の色相名
     </text>
     <text
-      class="tip-value"
+      class="tip-value tip-value--mono"
       x={layout.mainValueX}
       y={layout.y4}
-      font-family="var(--font-mono)"
       font-size={FONT_SIZE_VALUE}
       fill={COL_VALUE}
       text-anchor="start"
