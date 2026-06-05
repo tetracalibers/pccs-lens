@@ -30,8 +30,10 @@
   const CHROMA_FILL = 0.86 // 半径方向（隣の彩度との隙間）
   const VALUE_FILL = 0.86 // 高さ方向（隣の明度との隙間）
 
-  /** 無彩色軸チップ（中心列）の一辺 */
-  const NEUTRAL_CHIP_SIZE = 0.38
+  // 半径方向の奥行きと高さは全チップ共通（接線方向の幅だけ半径に応じて変わる）。
+  // 無彩色軸チップもこの寸法を使い、他の色票と同じ大きさにする。
+  const CHIP_RADIAL_DEPTH = CHROMA_FILL * CHROMA_STEP * CHROMA_UNIT
+  const CHIP_HEIGHT = VALUE_FILL * VALUE_UNIT
 
   // ===== カメラ・操作 =====
   /** 色立体の高さ中心（V=5 のワールド y）。OrbitControls の注視点に使う */
@@ -82,13 +84,11 @@
         for (let c = CHROMA_STEP; c <= maxC; c += CHROMA_STEP) {
           const r = c * CHROMA_UNIT
           const tangentialW = HUE_FILL * anglePerHue * r
-          const radialD = CHROMA_FILL * CHROMA_STEP * CHROMA_UNIT
-          const height = VALUE_FILL * VALUE_UNIT
           chips.push({
             key: `h${hue40}-v${v}-c${c}`,
             position: [dirX * r, y, dirZ * r],
             rotationY,
-            scale: [tangentialW, height, radialD],
+            scale: [tangentialW, CHIP_HEIGHT, CHIP_RADIAL_DEPTH],
             color: mhvcToHex(hue100, v, c)
           })
         }
@@ -101,7 +101,7 @@
         key: `n-v${v}`,
         position: [0, v * VALUE_UNIT, 0],
         rotationY: 0,
-        scale: [NEUTRAL_CHIP_SIZE, VALUE_FILL * VALUE_UNIT, NEUTRAL_CHIP_SIZE],
+        scale: [CHIP_RADIAL_DEPTH, CHIP_HEIGHT, CHIP_RADIAL_DEPTH],
         // 彩度 0 の無彩色（色相に依らずグレースケール）
         color: mhvcToHex(0, v, 0)
       })
