@@ -57,7 +57,6 @@
 
   // ===== Colors =====
   const COL_BUBBLE_BG = "light-dark(#ffffff, #1c1c2e)"
-  const COL_BUBBLE_BORDER = "light-dark(#d8d8d8, #3a3a4e)"
   const COL_LABEL = "var(--color-body)"
   const COL_VALUE = "var(--color-body)"
   const COL_BRACE = "var(--color-body)"
@@ -288,12 +287,6 @@
   role="img"
   aria-label="PCCS色相環（色相をクリックすると表記が表示されます）"
 >
-  <defs>
-    <filter id="hue-bubble-shadow" x="-30%" y="-30%" width="160%" height="160%">
-      <feDropShadow dx="0" dy="3" stdDeviation="6" flood-opacity="0.25" />
-    </filter>
-  </defs>
-
   <!-- 24 色相のセグメント（クリック可能） -->
   {#each segments as seg (seg.key)}
     {@const [lx, ly] = pointAt(seg.midAngleDeg, MID_RADIUS)}
@@ -341,13 +334,12 @@
     style="pointer-events: none;"
   />
 
-  <!-- 吹き出し（色相環の内側） -->
+  <!-- 吹き出し（色相環の内側）。枠線は選択中の色相の色 -->
   <path
     d={bubblePath(layout.hw, layout.hh, activeDir.ux, activeDir.uy)}
     fill={COL_BUBBLE_BG}
-    stroke={COL_BUBBLE_BORDER}
-    stroke-width="1"
-    filter="url(#hue-bubble-shadow)"
+    stroke={getSelectedRingStroke(activeSegment.color)}
+    stroke-width="2"
   />
 
   <!-- 吹き出しの中身 -->
