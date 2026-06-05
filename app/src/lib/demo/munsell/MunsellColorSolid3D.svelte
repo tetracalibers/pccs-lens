@@ -203,8 +203,6 @@
       </InstancedMesh>
     </Canvas>
   {/if}
-
-  <p class="hint">ドラッグで回転・スクロールで拡大縮小</p>
 </div>
 
 <style>
@@ -219,17 +217,5 @@
 
   .solid-3d:active {
     cursor: grabbing;
-  }
-
-  .hint {
-    position: absolute;
-    inset-block-end: 0.25rem;
-    inset-inline: 0;
-    margin: 0;
-    text-align: center;
-    font-size: 0.75rem;
-    color: var(--color-body);
-    opacity: 0.6;
-    pointer-events: none;
   }
 </style>
