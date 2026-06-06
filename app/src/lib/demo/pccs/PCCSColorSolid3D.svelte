@@ -9,6 +9,7 @@
     InstancedMesh,
     Matrix4,
     MeshBasicMaterial,
+    NoToneMapping,
     Quaternion,
     Vector3
   } from "three"
@@ -187,7 +188,8 @@
 
 <div class="solid-3d" role="img" aria-label="PCCSの色立体の3次元表示（ドラッグで回転）">
   {#if browser}
-    <Canvas>
+    <!-- Threlte の既定は AgX トーンマッピングで鮮やかな色が褪せるため無効化し、hex を忠実に出す -->
+    <Canvas toneMapping={NoToneMapping}>
       <T.PerspectiveCamera makeDefault fov={CAMERA_FOV} position={CAMERA_POSITION}>
         <OrbitControls
           enablePan={false}
