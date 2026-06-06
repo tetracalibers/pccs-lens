@@ -13,6 +13,7 @@ draft: true
   import PCCSPrimaryComplementHueWheel from "$lib/demo/pccs/PCCSPrimaryComplementHueWheel.svelte"
   import PCCSEvenHueWheel from "$lib/demo/pccs/PCCSEvenHueWheel.svelte"
   import PCCSHueNotationWheel from "$lib/demo/pccs/PCCSHueNotationWheel.svelte"
+  import PCCSColorSolid3D from "$lib/demo/pccs/PCCSColorSolid3D.svelte"
 </script>
 
 [PCCSと色の分類](/color-theory/pccs-color-system/)で基本的な使い方を学んだPCCSは、[色彩調和](/color-theory/unity-and-variety/)を目的とした[表色系](/color-theory/color-system-types/)で、配色を考えるのに適しています。
@@ -107,6 +108,10 @@ PCCSでは、明度を:Mark[Lightness]と呼びます。
 - PCCSは、色相であるHueと、明度と彩度をまとめたToneの二属性で色を表示する:Mark[ヒュートーンシステム]が最大の特徴である
 
 ## :WithGradeTag[色立体と等色相面]{grades="3"}
+
+<div style="max-width: 560px; margin-inline: auto;">
+  <PCCSColorSolid3D />
+</div>
 
 - PCCSの色立体を中心軸のところで縦に切って等色相面を作ると、中央には縦に:Mark[無彩色]が並び、左右の色相が:Mark[補色]の関係になっている
 
