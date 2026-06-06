@@ -12,93 +12,76 @@
   const LIGHTNESS_ROWS = [9.5, 8.5, 7.5, 6.5, 5.5, 4.5, 3.5, 2.5, 1.5]
   // 横軸（彩度）: 左 9s … 中央 0s … 右 9s の 11 列
   const SAT_LABELS = ["9s", "7s", "5s", "3s", "1s", "0s", "1s", "3s", "5s", "7s", "9s"]
-  const LEFT_SATS = [9, 7, 5, 3, 1] // 左半分（col 0〜4）の彩度
-  const RIGHT_SATS = [1, 3, 5, 7, 9] // 右半分（col 6〜10）の彩度
   const GRAY_COL = 5
 
   const N_COLS = 11
   const N_ROWS = LIGHTNESS_ROWS.length // 9
 
-  // ===== 各トーンの配置（彩度 sat・明度 light）=====
-  // 明度は各色のマンセル明度（≒ PCCS 明度）、彩度は v トーンを 9s として
-  // マンセルクロマを正規化し、奇数列 {1,3,5,7,9} に丸めて決めている。
-  type Placement = { notation: string; sat: number; light: number }
-  const HUE_8: Placement[] = [
-    { notation: "v8", sat: 9, light: 8.5 },
-    { notation: "b8", sat: 7, light: 8.5 },
-    { notation: "s8", sat: 7, light: 7.5 },
-    { notation: "dp8", sat: 7, light: 6.5 },
-    { notation: "lt8", sat: 5, light: 8.5 },
-    { notation: "sf8", sat: 5, light: 7.5 },
-    { notation: "d8", sat: 5, light: 6.5 },
-    { notation: "p8", sat: 3, light: 9.5 },
-    { notation: "dk8", sat: 3, light: 4.5 },
-    { notation: "ltg8", sat: 1, light: 7.5 },
-    { notation: "g8", sat: 1, light: 4.5 },
-    { notation: "dkg8", sat: 1, light: 2.5 }
-  ]
-  const HUE_20: Placement[] = [
-    { notation: "v20", sat: 9, light: 3.5 },
-    { notation: "b20", sat: 7, light: 5.5 },
-    { notation: "s20", sat: 7, light: 3.5 },
-    { notation: "dp20", sat: 7, light: 2.5 },
-    { notation: "lt20", sat: 5, light: 6.5 },
-    { notation: "sf20", sat: 5, light: 5.5 },
-    { notation: "d20", sat: 5, light: 3.5 },
-    { notation: "p20", sat: 3, light: 7.5 },
-    { notation: "dk20", sat: 3, light: 2.5 },
-    { notation: "ltg20", sat: 1, light: 6.5 },
-    { notation: "g20", sat: 1, light: 3.5 },
-    { notation: "dkg20", sat: 1, light: 1.5 }
+  // ===== 色の決め方 =====
+  // 中間色はトーンの実色ではなく、純色 8：Y / 20：V と白・黒を基準に補間して求める。
+  // 各半分を三角形（白・黒・純色）とみなし、CIELAB 上で重心座標による線形補間を行うことで、
+  // 明度（縦）も彩度（横）も等間隔に変化させる。純色の頂点には実際の純色をそのまま置く。
+  //   - 無彩色軸（0s, col5）: 白〜黒の等間隔グラデーション
+  //   - 純色の頂点: 8：Y は明度 8.0（≒グリッド最近行 8.5）、20：V は明度 3.5
+  const VIVID_LEFT = chroma(PCCS_HEX_MAP.get("v8")!).lab() // 8：Y（col 0〜5 で使用）
+  const VIVID_RIGHT = chroma(PCCS_HEX_MAP.get("v20")!).lab() // 20：V（col 6〜10 で使用）
+  const APEX_LEFT: [number, number] = [0, 1] // 8：Y 頂点（9s・明度8.5）
+  const APEX_RIGHT: [number, number] = [N_COLS - 1, 6] // 20：V 頂点（9s・明度3.5）
+  const WHITE_LAB = chroma(PCCS_HEX_MAP.get("W")!).lab()
+  const BLACK_LAB = chroma(PCCS_HEX_MAP.get("Bk")!).lab()
+
+  // 各列の塗りつぶし範囲（明度の上端〜下端）。中央 0s から外側ほど狭まる等色相面の輪郭。
+  // 並び: 9s,7s,5s,3s,1s(=8:Y側) / 0s / 1s,3s,5s,7s,9s(=20:V側)
+  const FILL_LIGHT: [number, number][] = [
+    [8.5, 8.5], // 9s（8：Y）頂点
+    [8.5, 5.5], // 7s（8：Y）
+    [8.5, 3.5], // 5s（8：Y）
+    [8.5, 2.5], // 3s（8：Y）
+    [8.5, 2.5], // 1s（8：Y）
+    [9.5, 1.5], // 0s（無彩色軸）
+    [8.5, 1.5], // 1s（20：V）
+    [8.5, 2.5], // 3s（20：V）
+    [7.5, 2.5], // 5s（20：V）
+    [5.5, 2.5], // 7s（20：V）
+    [3.5, 3.5] // 9s（20：V）頂点
   ]
 
-  const colOf = (sats: number[], offset: number, sat: number) => offset + sats.indexOf(sat)
-  const rowOf = (light: number) => LIGHTNESS_ROWS.indexOf(light)
+  // 三角形 A(白) B(黒) C(純色) に対する点 P の重心座標
+  function barycentric(
+    px: number,
+    py: number,
+    a: [number, number],
+    b: [number, number],
+    c: [number, number]
+  ): [number, number, number] {
+    const d = (b[1] - c[1]) * (a[0] - c[0]) + (c[0] - b[0]) * (a[1] - c[1])
+    const wa = ((b[1] - c[1]) * (px - c[0]) + (c[0] - b[0]) * (py - c[1])) / d
+    const wb = ((c[1] - a[1]) * (px - c[0]) + (a[0] - c[0]) * (py - c[1])) / d
+    return [wa, wb, 1 - wa - wb]
+  }
 
-  const grayHex = (light: number) =>
-    PCCS_HEX_MAP.get(light === 9.5 ? "W" : light === 1.5 ? "Bk" : `Gy-${light.toFixed(1)}`)!
+  // 白・黒・純色の Lab を重心座標で補間してセル色を求める（三角形外は線形外挿）
+  const A: [number, number] = [GRAY_COL, 0] // 白（0s・明度9.5）
+  const B: [number, number] = [GRAY_COL, N_ROWS - 1] // 黒（0s・明度1.5）
+  function colorAt(col: number, row: number): string {
+    const vivid = col <= GRAY_COL ? VIVID_LEFT : VIVID_RIGHT
+    const c = col <= GRAY_COL ? APEX_LEFT : APEX_RIGHT
+    const [wa, wb, wc] = barycentric(col, row, A, B, c)
+    const L = wa * WHITE_LAB[0] + wb * BLACK_LAB[0] + wc * vivid[0]
+    const aa = wa * WHITE_LAB[1] + wb * BLACK_LAB[1] + wc * vivid[1]
+    const bb = wa * WHITE_LAB[2] + wb * BLACK_LAB[2] + wc * vivid[2]
+    return chroma.lab(L, aa, bb).hex()
+  }
 
-  // 列ごとに上端〜下端の明度行を実トーンから決め（＝等色相面の輪郭）、
-  // その範囲内をトーン間の Lab 補間で塗りつぶす。範囲外のセルは塗らず形を表す。
+  // 指定された各列の明度範囲を塗りつぶす
   type Cell = { col: number; row: number; fill: string }
   function buildCells(): Cell[] {
-    const colAnchors = new Map<number, { row: number; hex: string }[]>()
-    const add = (col: number, row: number, hex: string) => {
-      if (!colAnchors.has(col)) colAnchors.set(col, [])
-      colAnchors.get(col)!.push({ row, hex })
-    }
-
-    // 中央の無彩色軸
-    LIGHTNESS_ROWS.forEach((light, row) => add(GRAY_COL, row, grayHex(light)))
-    // 有彩色（8：Y / 20：V）
-    for (const p of HUE_8) add(colOf(LEFT_SATS, 0, p.sat), rowOf(p.light), PCCS_HEX_MAP.get(p.notation)!)
-    for (const p of HUE_20) add(colOf(RIGHT_SATS, 6, p.sat), rowOf(p.light), PCCS_HEX_MAP.get(p.notation)!)
-
     const cells: Cell[] = []
-    for (const [col, anchors] of colAnchors) {
-      anchors.sort((a, b) => a.row - b.row)
-      const minRow = anchors[0].row
-      const maxRow = anchors[anchors.length - 1].row
-      for (let row = minRow; row <= maxRow; row++) {
-        const exact = anchors.find((a) => a.row === row)
-        if (exact) {
-          cells.push({ col, row, fill: exact.hex })
-          continue
-        }
-        // 上下のアンカーで挟んで Lab 補間
-        let lo = anchors[0]
-        let hi = anchors[anchors.length - 1]
-        for (let i = 0; i < anchors.length - 1; i++) {
-          if (anchors[i].row <= row && anchors[i + 1].row >= row) {
-            lo = anchors[i]
-            hi = anchors[i + 1]
-            break
-          }
-        }
-        const t = (row - lo.row) / (hi.row - lo.row)
-        cells.push({ col, row, fill: chroma.mix(lo.hex, hi.hex, t, "lab").hex() })
-      }
-    }
+    FILL_LIGHT.forEach(([topLight, botLight], col) => {
+      const top = LIGHTNESS_ROWS.indexOf(topLight)
+      const bot = LIGHTNESS_ROWS.indexOf(botLight)
+      for (let row = top; row <= bot; row++) cells.push({ col, row, fill: colorAt(col, row) })
+    })
     return cells
   }
 
