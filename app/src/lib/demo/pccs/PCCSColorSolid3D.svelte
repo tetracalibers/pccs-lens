@@ -22,8 +22,8 @@
 
   // ===== ワールド座標へのスケール =====
   // 位置は各色の実測 sRGB を CIELAB に変換して決める（Munsell 版が実測値を使うのと同様）。
-  //   明度（縦）  = L*（0〜100）
-  //   彩度（半径）= C*ab = √(a*² + b*²)
+  //   明度（縦）  = L*（0〜100）の実測値
+  //   彩度（半径）= トーンごとの平均 C*ab（同一トーンは全色相で同半径＝上から見て正円になる）
   //   色相（角度）= PCCS 色相番号（1〜24）
   // 明度（縦）の係数を彩度（横）より大きくして、横から見たときに縦長の色立体にする。
   // 無彩色軸の球（最小間隔 ≈ 4.67 L*）が重ならないよう、直径 / 4.67 ≈ 0.182 以上にしている。
@@ -62,6 +62,12 @@
     const chips: Chip[] = []
     const anglePerHue = (2 * Math.PI) / HUE_COUNT
 
+    // 上から見て正円にするため、半径は「トーンごとの平均 C*ab」で決める（同じトーンは全色相で
+    // 同じ半径＝同心円になる）。高さ(L*)は各色の実測値のまま残し、特有の傾いた構造を保つ。
+    type Chromatic = { notation: string; hex: string; tone: string; hueNumber: number; y: number }
+    const chromatic: Chromatic[] = []
+    const toneCstar = new Map<string, { sum: number; count: number }>()
+
     for (const color of PCCS_ALL) {
       const [lstar, astar, bstar] = chroma(color.hex).lab()
       const y = lstar * LIGHTNESS_UNIT
@@ -72,14 +78,24 @@
         continue
       }
 
-      // 有彩色: 色相番号で角度、C*ab で半径
-      const radius = Math.hypot(astar, bstar) * CHROMA_UNIT
+      const tone = color.toneSymbol ?? ""
+      chromatic.push({ notation: color.notation, hex: color.hex, tone, hueNumber: color.hueNumber, y })
+      const acc = toneCstar.get(tone) ?? { sum: 0, count: 0 }
+      acc.sum += Math.hypot(astar, bstar)
+      acc.count += 1
+      toneCstar.set(tone, acc)
+    }
+
+    // 有彩色: 色相番号で角度、トーン平均 C*ab で半径
+    for (const c of chromatic) {
+      const acc = toneCstar.get(c.tone)!
+      const radius = (acc.sum / acc.count) * CHROMA_UNIT
       // 色相番号 1 を角度 0 に置き、時計回りに 24 等分。num と num+12 は 180°（補色）になる。
-      const theta = (color.hueNumber - 1) * anglePerHue
+      const theta = (c.hueNumber - 1) * anglePerHue
       chips.push({
-        key: color.notation,
-        position: [Math.cos(theta) * radius, y, Math.sin(theta) * radius],
-        color: color.hex
+        key: c.notation,
+        position: [Math.cos(theta) * radius, c.y, Math.sin(theta) * radius],
+        color: c.hex
       })
     }
 
