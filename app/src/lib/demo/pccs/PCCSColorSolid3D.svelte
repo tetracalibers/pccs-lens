@@ -73,19 +73,25 @@
     type Chromatic = { notation: string; hex: string; tone: string; hueNumber: number; y: number }
     const chromatic: Chromatic[] = []
     const toneCstar = new Map<string, { sum: number; count: number }>()
+    const neutrals: { notation: string; hex: string; lstar: number }[] = []
 
     for (const color of PCCS_ALL) {
       const [lstar, astar, bstar] = chroma(color.hex).lab()
-      const y = lstar * LIGHTNESS_UNIT
 
-      // 無彩色（Bk + グレイ15色 + W = 17色）は中心の明度軸へ。立方体で描く。
+      // 無彩色（Bk + グレイ15色 + W = 17色）は中心の明度軸へ。立方体で描く（配置は後でまとめて）。
       if (color.isNeutral || color.hueNumber == null) {
-        chips.push({ key: color.notation, position: [0, y, 0], shape: "cube", color: color.hex })
+        neutrals.push({ notation: color.notation, hex: color.hex, lstar })
         continue
       }
 
       const tone = color.toneSymbol ?? ""
-      chromatic.push({ notation: color.notation, hex: color.hex, tone, hueNumber: color.hueNumber, y })
+      chromatic.push({
+        notation: color.notation,
+        hex: color.hex,
+        tone,
+        hueNumber: color.hueNumber,
+        y: lstar * LIGHTNESS_UNIT
+      })
       const acc = toneCstar.get(tone) ?? { sum: 0, count: 0 }
       acc.sum += Math.hypot(astar, bstar)
       acc.count += 1
@@ -103,6 +109,26 @@
         position: [Math.cos(theta) * radius, c.y, Math.sin(theta) * radius],
         shape: "sphere",
         color: c.hex
+      })
+    }
+
+    // 無彩色（中心軸）。白(W)だけ実測 L* だと最上の間隔が約2倍空くので、他と同じ間隔に詰める。
+    const sortedNeutrals = neutrals.sort((a, b) => a.lstar - b.lstar)
+    const gaps: number[] = []
+    for (let i = 1; i < sortedNeutrals.length; i++) {
+      gaps.push(sortedNeutrals[i].lstar - sortedNeutrals[i - 1].lstar)
+    }
+    const medianGap = [...gaps].sort((a, b) => a - b)[Math.floor(gaps.length / 2)]
+    const top = sortedNeutrals.length - 1
+    for (let i = 0; i <= top; i++) {
+      const neu = sortedNeutrals[i]
+      // 最上（白）は 2 番目に明るいチップから中央値の間隔だけ上に置く（色は白のまま）
+      const lstar = i === top ? sortedNeutrals[top - 1].lstar + medianGap : neu.lstar
+      chips.push({
+        key: neu.notation,
+        position: [0, lstar * LIGHTNESS_UNIT, 0],
+        shape: "cube",
+        color: neu.hex
       })
     }
 
