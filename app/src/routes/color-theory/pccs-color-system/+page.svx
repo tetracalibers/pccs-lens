@@ -14,6 +14,7 @@ draft: true
   import PCCSEvenHueWheel from "$lib/demo/pccs/PCCSEvenHueWheel.svelte"
   import PCCSHueNotationWheel from "$lib/demo/pccs/PCCSHueNotationWheel.svelte"
   import PCCSColorSolid3D from "$lib/demo/pccs/PCCSColorSolid3D.svelte"
+  import PCCSEqualHuePlane from "$lib/demo/pccs/PCCSEqualHuePlane.svelte"
   import ToneAreaDiagram from "$lib/demo/pccs/ToneAreaDiagram.svelte"
 </script>
 
@@ -160,6 +161,10 @@ PCCSでは、記号を使った色の表し方が2種類あります。
 </div>
 
 - PCCSの色立体を中心軸のところで縦に切って等色相面を作ると、中央には縦に:Mark[無彩色]が並び、左右の色相が:Mark[補色]の関係になっている
+
+<SVGWrapper maxW={420}>
+  <PCCSEqualHuePlane />
+</SVGWrapper>
 
 ## :WithGradeTag[PCCSの色票集]{grades="3"}
 
