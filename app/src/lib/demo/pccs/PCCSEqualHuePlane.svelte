@@ -135,15 +135,6 @@
     <rect x={cellX(cell.col)} y={cellY(cell.row)} width={CELL} height={CELL} fill={cell.fill} />
   {/each}
 
-  <!-- 8：Y 純色: 行8.5の下半分＋行7.5の上半分（半セルずらし） -->
-  <rect
-    x={cellX(APEX_STRADDLE_COL)}
-    y={cellY(APEX_STRADDLE_ROW) + CELL / 2}
-    width={CELL}
-    height={CELL}
-    fill={APEX_STRADDLE_HEX}
-  />
-
   <!-- グリッド線（11×9・全セル） -->
   {#each rows as row (row)}
     {#each cols as col (col)}
@@ -158,6 +149,18 @@
       />
     {/each}
   {/each}
+
+  <!-- 8：Y 純色: 行8.5の下半分＋行7.5の上半分（半セルずらし）。
+       グリッド線の上に重ね、背後の罫線を隠して1つのセルに見せる -->
+  <rect
+    x={cellX(APEX_STRADDLE_COL)}
+    y={cellY(APEX_STRADDLE_ROW) + CELL / 2}
+    width={CELL}
+    height={CELL}
+    fill={APEX_STRADDLE_HEX}
+    stroke={COL_GRID}
+    stroke-width={GRID_STROKE_W}
+  />
 
   <!-- 明度（縦軸）の数値 -->
   {#each LIGHTNESS_ROWS as light, row (light)}
