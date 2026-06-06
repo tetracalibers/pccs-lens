@@ -4,13 +4,13 @@
   import { Canvas, T } from "@threlte/core"
   import { OrbitControls } from "@threlte/extras"
   import {
-    BoxGeometry,
     Color,
     InstancedMesh,
     Matrix4,
     MeshBasicMaterial,
     NoToneMapping,
     Quaternion,
+    SphereGeometry,
     Vector3
   } from "three"
   import chroma from "chroma-js"
@@ -26,16 +26,18 @@
   //   彩度（半径）= C*ab = √(a*² + b*²)
   //   色相（角度）= PCCS 色相番号（1〜24）
   // 明度（縦）の係数を彩度（横）より大きくして、横から見たときに縦長の色立体にする。
-  /** L* 1 あたりの高さ。大きくするほど横から見て縦長になる。 */
+  // 無彩色軸の球（最小間隔 ≈ 4.67 L*）が重ならないよう、直径 / 4.67 ≈ 0.182 以上にしている。
+  /** L* 1 あたりの高さ。大きいほど縦長（≈0.182 未満だと無彩色軸の球が重なる）。 */
   const LIGHTNESS_UNIT = 0.13
   /** C*ab 1 あたりの半径方向距離 */
   const CHROMA_UNIT = 0.1
 
   // ===== チップ（色票）=====
-  // 各チップは軸に平行な立方体（向きを揃えると敷き詰めた見た目になる）。
-  // 一辺は隣接チップ間隔の中央値（≈ 0.78）よりやや大きめにして、できるだけ隙間なく
-  // 敷き詰める（密集する中心部はやや重なるが、不透明なので塊として見える）。
-  const CUBE = 0.85
+  // 各チップは球。直径は隣接チップ間隔の中央値（≈ 0.78）よりやや大きめにして、できるだけ
+  // 隙間なく敷き詰める（密集する中心部はやや重なるが、不透明なので塊として見える）。
+  const CHIP_DIAMETER = 0.85
+  /** 球の分割数（多いほど滑らかだが頂点が増える） */
+  const SPHERE_SEGMENTS = 16
 
   // ===== カメラ・操作 =====
   const CAMERA_FOV = 45
@@ -96,14 +98,16 @@
    *
    * `<Instance>`（Threlte コンポーネント）を多数生成するとマウントが重くなるため、
    * 行列・色を JS のループで直接書き込む。描画は GPU インスタンシングで 1 ドローコール。
-   * 全チップが同じ向き・同じ大きさの立方体なので、回転は単位回転・スケールは共通。
+   * 全チップが同じ大きさの球なので、回転は単位回転・スケールは共通。
    */
   function buildInstancedMesh(): InstancedMesh {
-    const mesh = new InstancedMesh(new BoxGeometry(1, 1, 1), new MeshBasicMaterial(), chips.length)
+    // 半径 0.5（直径 1）の球を CHIP_DIAMETER 倍して使う
+    const geometry = new SphereGeometry(0.5, SPHERE_SEGMENTS, SPHERE_SEGMENTS)
+    const mesh = new InstancedMesh(geometry, new MeshBasicMaterial(), chips.length)
     const matrix = new Matrix4()
     const position = new Vector3()
-    const quaternion = new Quaternion() // 単位回転（軸平行）
-    const scale = new Vector3(CUBE, CUBE, CUBE)
+    const quaternion = new Quaternion() // 単位回転
+    const scale = new Vector3(CHIP_DIAMETER, CHIP_DIAMETER, CHIP_DIAMETER)
     const color = new Color()
 
     chips.forEach((ch, i) => {
@@ -142,7 +146,7 @@
    * 点が画面に収まる条件は `|proj| ≤ (depth) * tan(fov/2)` なので、距離 D について
    * `D ≥ |proj| / tan(fov/2) − depth` を満たす最大値が必要距離になる。
    * 正方形 canvas（aspect=1）なので横 fov と縦 fov は等しく、両軸とも同じ tan を使う。
-   * 立方体の大きさ（空間対角の半分）も加味してはみ出しを防ぐ。
+   * 球の半径も加味してはみ出しを防ぐ。
    */
   function computeFitDistance(): number {
     const f: [number, number, number] = [-VIEW_DIR[0], -VIEW_DIR[1], -VIEW_DIR[2]]
@@ -156,7 +160,7 @@
       r[0] * f[1] - r[1] * f[0]
     ]
     const tanHalfFov = Math.tan((CAMERA_FOV * Math.PI) / 360)
-    const chipR = 0.5 * Math.sqrt(3) * CUBE // 立方体の外接球半径
+    const chipR = 0.5 * CHIP_DIAMETER // 球の半径
 
     let dist = 0
     for (const ch of chips) {
