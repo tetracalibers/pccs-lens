@@ -17,6 +17,7 @@
   } from "three"
   import chroma from "chroma-js"
   import { PCCS_ALL } from "$lib/data/pccs"
+  import { SvelteMap } from "svelte/reactivity"
 
   // ===== PCCS の構成 =====
   /** 色相数（PCCS は 24 色相） */
@@ -72,7 +73,7 @@
     // 同じ半径＝同心円になる）。高さ(L*)は各色の実測値のまま残し、特有の傾いた構造を保つ。
     type Chromatic = { notation: string; hex: string; tone: string; hueNumber: number; y: number }
     const chromatic: Chromatic[] = []
-    const toneCstar = new Map<string, { sum: number; count: number }>()
+    const toneCstar = new SvelteMap<string, { sum: number; count: number }>()
     const neutrals: { notation: string; hex: string; lstar: number }[] = []
 
     for (const color of PCCS_ALL) {
@@ -163,7 +164,11 @@
    * 各チップは単位回転で、メッシュ内では同じ大きさ（引数 size）。
    * ジオメトリは基準サイズ 1（球は直径 1・立方体は一辺 1）とし、size 倍する。
    */
-  function buildInstancedMesh(geometry: BufferGeometry, items: Chip[], size: number): InstancedMesh {
+  function buildInstancedMesh(
+    geometry: BufferGeometry,
+    items: Chip[],
+    size: number
+  ): InstancedMesh {
     const mesh = new InstancedMesh(geometry, new MeshBasicMaterial(), items.length)
     const matrix = new Matrix4()
     const position = new Vector3()
