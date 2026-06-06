@@ -22,10 +22,10 @@
   // 各半分を三角形（白・黒・純色）とみなし、CIELAB 上で重心座標による線形補間を行うことで、
   // 明度（縦）も彩度（横）も等間隔に変化させる。純色の頂点には実際の純色をそのまま置く。
   //   - 無彩色軸（0s, col5）: 白〜黒の等間隔グラデーション
-  //   - 純色の頂点: 8：Y は明度 8.0（≒グリッド最近行 8.5）、20：V は明度 3.5
+  //   - 純色の頂点: 8：Y は明度 8.0（行 8.5 と 7.5 の境界）、20：V は明度 3.5
   const VIVID_LEFT = chroma(PCCS_HEX_MAP.get("v8")!).lab() // 8：Y（col 0〜5 で使用）
   const VIVID_RIGHT = chroma(PCCS_HEX_MAP.get("v20")!).lab() // 20：V（col 6〜10 で使用）
-  const APEX_LEFT: [number, number] = [0, 1] // 8：Y 頂点（9s・明度8.5）
+  const APEX_LEFT: [number, number] = [0, 1.5] // 8：Y 頂点（9s・明度8.0＝行8.5と7.5の中間）
   const APEX_RIGHT: [number, number] = [N_COLS - 1, 6] // 20：V 頂点（9s・明度3.5）
   const WHITE_LAB = chroma(PCCS_HEX_MAP.get("W")!).lab()
   const BLACK_LAB = chroma(PCCS_HEX_MAP.get("Bk")!).lab()
@@ -33,7 +33,7 @@
   // 各列の塗りつぶし範囲（明度の上端〜下端）。中央 0s から外側ほど狭まる等色相面の輪郭。
   // 並び: 9s,7s,5s,3s,1s(=8:Y側) / 0s / 1s,3s,5s,7s,9s(=20:V側)
   const FILL_LIGHT: [number, number][] = [
-    [8.5, 8.5], // 9s（8：Y）頂点
+    [8.5, 7.5], // 9s（8：Y）頂点（明度8.0が8.5と7.5に半分ずつまたがる）
     [8.5, 5.5], // 7s（8：Y）
     [8.5, 3.5], // 5s（8：Y）
     [8.5, 2.5], // 3s（8：Y）
@@ -73,19 +73,25 @@
     return chroma.lab(L, aa, bb).hex()
   }
 
-  // 指定された各列の明度範囲を塗りつぶす
+  // 指定された各列の明度範囲を塗りつぶす（col 0 の頂点は半セルずらして別途描画）
   type Cell = { col: number; row: number; fill: string }
   function buildCells(): Cell[] {
-    const cells: Cell[] = []
+    const result: Cell[] = []
     FILL_LIGHT.forEach(([topLight, botLight], col) => {
+      if (col === APEX_STRADDLE_COL) return
       const top = LIGHTNESS_ROWS.indexOf(topLight)
       const bot = LIGHTNESS_ROWS.indexOf(botLight)
-      for (let row = top; row <= bot; row++) cells.push({ col, row, fill: colorAt(col, row) })
+      for (let row = top; row <= bot; row++) result.push({ col, row, fill: colorAt(col, row) })
     })
-    return cells
+    return result
   }
 
-  const fillMap = new Map(buildCells().map((c) => [`${c.col}-${c.row}`, c.fill]))
+  // 8：Y の純色（明度8.0）は行 8.5 の下半分＋行 7.5 の上半分にまたがるよう半セルずらして塗る
+  const APEX_STRADDLE_COL = 0
+  const APEX_STRADDLE_ROW = LIGHTNESS_ROWS.indexOf(8.5) // 上端の行（8.5）
+  const APEX_STRADDLE_HEX = PCCS_HEX_MAP.get("v8")!
+
+  const cells = buildCells()
 
   // ===== レイアウト =====
   const CELL = 38
@@ -124,7 +130,21 @@
   role="img"
   aria-label="PCCSの等色相面（左 8：Y・右 20：V、縦軸=明度・横軸=彩度）"
 >
-  <!-- グリッド（11×9）。等色相面に含まれるセルだけ色で塗る -->
+  <!-- 色の塗り（グリッド線の下） -->
+  {#each cells as cell (`${cell.col}-${cell.row}`)}
+    <rect x={cellX(cell.col)} y={cellY(cell.row)} width={CELL} height={CELL} fill={cell.fill} />
+  {/each}
+
+  <!-- 8：Y 純色: 行8.5の下半分＋行7.5の上半分（半セルずらし） -->
+  <rect
+    x={cellX(APEX_STRADDLE_COL)}
+    y={cellY(APEX_STRADDLE_ROW) + CELL / 2}
+    width={CELL}
+    height={CELL}
+    fill={APEX_STRADDLE_HEX}
+  />
+
+  <!-- グリッド線（11×9・全セル） -->
   {#each rows as row (row)}
     {#each cols as col (col)}
       <rect
@@ -132,7 +152,7 @@
         y={cellY(row)}
         width={CELL}
         height={CELL}
-        fill={fillMap.get(`${col}-${row}`) ?? "none"}
+        fill="none"
         stroke={COL_GRID}
         stroke-width={GRID_STROKE_W}
       />
