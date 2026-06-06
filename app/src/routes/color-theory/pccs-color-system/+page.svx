@@ -3,11 +3,11 @@ layout: guide-content
 title: PCCSによる色表示
 
 grades: ["3"]
-draft: true
 ---
 
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import CanvasWrapper from "$lib/demo/CanvasWrapper.svelte"
   import PCCSHueWheel from "$lib/demo/pccs/PCCSHueWheel.svelte"
   import PCCSPrimaryHueWheel from "$lib/demo/pccs/PCCSPrimaryHueWheel.svelte"
   import PCCSPrimaryComplementHueWheel from "$lib/demo/pccs/PCCSPrimaryComplementHueWheel.svelte"
@@ -152,15 +152,22 @@ PCCSでは、記号を使った色の表し方が2種類あります。
 
 ## :WithGradeTag[色立体と等色相面]{grades="3"}
 
+PCCSの色立体では、上から見たときの円周上に:Mark[色相]の違いを観察できます。
+一番外側に並ぶのは最も鮮やかな:Mark[純色]であり、各色相の純色はすべて同じ:Mark[彩度]であることから、上から見ると:Mark[正円]になります。
+
+そして、横から見たときには、色立体は:Mark[球]を:Mark[斜め]に歪めた形になります。
+これは、色相によって純色の:Mark[明度]が異なるため、純色の位置が上下にずれているためです。最も明度が高い:Mark[8：Y]は最も高い位置に、最も明度が低い:Mark[20：V]は最も低い位置にあります。
+
 :::Action
 ドラッグ操作で回転させて、さまざまな角度から色立体を見てみよう
 :::
 
-<div style="margin-inline: 0.25rem;">
+<CanvasWrapper>
   <PCCSColorSolid3D />
-</div>
+</CanvasWrapper>
 
-- PCCSの色立体を中心軸のところで縦に切って等色相面を作ると、中央には縦に:Mark[無彩色]が並び、左右の色相が:Mark[補色]の関係になっている
+この色立体を中心軸のところで:Mark[縦]に切ると、[等色相面](/color-theory/color-wheel-and-color-solid/)が現れます。
+縦中央の彩度:Mark[0s]の位置に:Mark[無彩色]が並び、左右の色相が:Mark[補色]の関係になっていることがわかります。
 
 <SVGWrapper maxW={420}>
   <PCCSEqualHuePlane />
@@ -168,4 +175,7 @@ PCCSでは、記号を使った色の表し方が2種類あります。
 
 ## :WithGradeTag[PCCSの色票集]{grades="3"}
 
-::ComingSoon
+PCCSの[色票](/color-theory/color-system-types/)として、[新配色カード](https://sikiken.co.jp/products/50566.html)があります。
+
+新配色カードには、:Mark[v]トーンは全色相の24色、その他のトーンは:Mark[偶数]色相のみの12色が収録されており、:Mark[s]トーンは収録されていません。
+また、:Mark[p]トーンと:Mark[lt]トーンは、概念上の色より:Mark[彩度]が高く印刷されており、その印として`+`をつけて:Mark[p+]トーン、:Mark[lt+]トーンのように表記されています。
