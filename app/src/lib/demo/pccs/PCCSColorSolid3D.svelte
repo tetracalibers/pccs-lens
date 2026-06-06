@@ -6,7 +6,6 @@
   import {
     BoxGeometry,
     Color,
-    Euler,
     InstancedMesh,
     Matrix4,
     MeshBasicMaterial,
@@ -31,11 +30,11 @@
   /** C*ab 1 あたりの半径方向距離 */
   const CHROMA_UNIT = 0.1
 
-  // ===== チップ（色票）の寸法 =====
-  // 接線方向の幅だけ半径に応じて変える（外周ほど広い）。奥行きと高さは全チップ共通。
-  const HUE_FILL = 0.82 // 接線方向の充填率（隣の色相との隙間）
-  const CHIP_DEPTH = 0.5 // 半径方向の奥行き
-  const CHIP_HEIGHT = 0.5 // 高さ方向
+  // ===== チップ（色票）=====
+  // 各チップは軸に平行な立方体（向きを揃えると敷き詰めた見た目になる）。
+  // 一辺は隣接チップ間隔の中央値（≈ 0.78）よりやや大きめにして、できるだけ隙間なく
+  // 敷き詰める（密集する中心部はやや重なるが、不透明なので塊として見える）。
+  const CUBE = 0.85
 
   // ===== カメラ・操作 =====
   const CAMERA_FOV = 45
@@ -53,9 +52,6 @@
   type Chip = {
     key: string
     position: [number, number, number]
-    /** Y 軸回りの回転。色票の奥行き面を半径方向の外側へ向ける */
-    rotationY: number
-    scale: [number, number, number]
     color: string
   }
 
@@ -67,15 +63,9 @@
       const [lstar, astar, bstar] = chroma(color.hex).lab()
       const y = lstar * LIGHTNESS_UNIT
 
-      // 無彩色（W・グレイ・Bk）は中心の明度軸へ
+      // 無彩色（Bk + グレイ15色 + W = 17色）は中心の明度軸へ
       if (color.isNeutral || color.hueNumber == null) {
-        chips.push({
-          key: color.notation,
-          position: [0, y, 0],
-          rotationY: 0,
-          scale: [CHIP_DEPTH, CHIP_HEIGHT, CHIP_DEPTH],
-          color: color.hex
-        })
+        chips.push({ key: color.notation, position: [0, y, 0], color: color.hex })
         continue
       }
 
@@ -83,12 +73,9 @@
       const radius = Math.hypot(astar, bstar) * CHROMA_UNIT
       // 色相番号 1 を角度 0 に置き、時計回りに 24 等分。num と num+12 は 180°（補色）になる。
       const theta = (color.hueNumber - 1) * anglePerHue
-      const tangentialW = HUE_FILL * anglePerHue * radius
       chips.push({
         key: color.notation,
         position: [Math.cos(theta) * radius, y, Math.sin(theta) * radius],
-        rotationY: Math.PI / 2 - theta,
-        scale: [tangentialW, CHIP_HEIGHT, CHIP_DEPTH],
         color: color.hex
       })
     }
@@ -108,21 +95,18 @@
    *
    * `<Instance>`（Threlte コンポーネント）を多数生成するとマウントが重くなるため、
    * 行列・色を JS のループで直接書き込む。描画は GPU インスタンシングで 1 ドローコール。
+   * 全チップが同じ向き・同じ大きさの立方体なので、回転は単位回転・スケールは共通。
    */
   function buildInstancedMesh(): InstancedMesh {
     const mesh = new InstancedMesh(new BoxGeometry(1, 1, 1), new MeshBasicMaterial(), chips.length)
     const matrix = new Matrix4()
     const position = new Vector3()
-    const quaternion = new Quaternion()
-    const euler = new Euler()
-    const scale = new Vector3()
+    const quaternion = new Quaternion() // 単位回転（軸平行）
+    const scale = new Vector3(CUBE, CUBE, CUBE)
     const color = new Color()
 
     chips.forEach((ch, i) => {
       position.set(ch.position[0], ch.position[1], ch.position[2])
-      euler.set(0, ch.rotationY, 0)
-      quaternion.setFromEuler(euler)
-      scale.set(ch.scale[0], ch.scale[1], ch.scale[2])
       matrix.compose(position, quaternion, scale)
       mesh.setMatrixAt(i, matrix)
       mesh.setColorAt(i, color.set(ch.color))
@@ -157,7 +141,7 @@
    * 点が画面に収まる条件は `|proj| ≤ (depth) * tan(fov/2)` なので、距離 D について
    * `D ≥ |proj| / tan(fov/2) − depth` を満たす最大値が必要距離になる。
    * 正方形 canvas（aspect=1）なので横 fov と縦 fov は等しく、両軸とも同じ tan を使う。
-   * チップの大きさ（空間対角の半分）も加味してはみ出しを防ぐ。
+   * 立方体の大きさ（空間対角の半分）も加味してはみ出しを防ぐ。
    */
   function computeFitDistance(): number {
     const f: [number, number, number] = [-VIEW_DIR[0], -VIEW_DIR[1], -VIEW_DIR[2]]
@@ -171,6 +155,7 @@
       r[0] * f[1] - r[1] * f[0]
     ]
     const tanHalfFov = Math.tan((CAMERA_FOV * Math.PI) / 360)
+    const chipR = 0.5 * Math.sqrt(3) * CUBE // 立方体の外接球半径
 
     let dist = 0
     for (const ch of chips) {
@@ -180,7 +165,6 @@
       const depth = dx * f[0] + dy * f[1] + dz * f[2]
       const h = dx * r[0] + dy * r[1] + dz * r[2]
       const w = dx * u[0] + dy * u[1] + dz * u[2]
-      const chipR = 0.5 * Math.hypot(ch.scale[0], ch.scale[1], ch.scale[2])
       const needH = (Math.abs(h) + chipR) / tanHalfFov - (depth - chipR)
       const needW = (Math.abs(w) + chipR) / tanHalfFov - (depth - chipR)
       dist = Math.max(dist, needH, needW)
