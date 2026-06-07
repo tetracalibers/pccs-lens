@@ -175,7 +175,8 @@ PCCSの色立体では、上から見たときの円周上に:Mark[色相]の違
 
 ## :WithGradeTag[PCCSの色票集]{grades="3"}
 
-PCCSの[色票](/color-theory/color-system-types/)として、[新配色カード](https://sikiken.co.jp/products/50566.html)があります。
+色を指定したり、見比べて測ったりするための色見本が:Mark[色票集]です。
+PCCSの色票集として、[新配色カード](https://sikiken.co.jp/products/50566.html)があります。
 
 新配色カードには、:Mark[v]トーンは全色相の24色、その他のトーンは:Mark[偶数]色相のみの12色が収録されており、:Mark[s]トーンは収録されていません。
 また、:Mark[p]トーンと:Mark[lt]トーンは、概念上の色より:Mark[彩度]が高く印刷されており、その印として`+`をつけて:Mark[p+]トーン、:Mark[lt+]トーンのように表記されています。
