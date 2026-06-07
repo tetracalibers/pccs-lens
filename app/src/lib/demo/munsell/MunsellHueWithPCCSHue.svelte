@@ -4,6 +4,7 @@
   import { arc } from "d3-shape"
   import { MUNSELL_HUE_FAMILIES, getMunsellHueHex, munsellHueLabelAt } from "$lib/data/munsell-hue"
   import { PCCS_V24, PCCS_HEX_MAP, PCCS_HUE_MAP } from "$lib/data/pccs"
+  import { ankiMode } from "$lib/state/anki.svelte"
 
   // ===== SVG 中心 =====
   const CX = 360
@@ -230,6 +231,8 @@
   const PADDING = 4
   const VB_R = R_PCCS_DOT + PCCS_DOT_RADIUS + PADDING
   const viewBox = `${CX - VB_R} ${CY - VB_R} ${2 * VB_R} ${2 * VB_R}`
+
+  const isAnki = $derived(ankiMode.isAnki)
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" {viewBox}>
@@ -259,7 +262,7 @@
       dominant-baseline="central"
       transform="rotate({labelRotation(node.midAngleDeg)} {lx} {ly})"
     >
-      {node.label}
+      {isAnki ? "" : node.label}
     </text>
   {/each}
 
