@@ -59,7 +59,8 @@
 
   import "katex/dist/katex.min.css"
 
-  let { title, grades, useful, draft, children }: GuideFrontmatter & { children: Snippet } = $props()
+  let { title, grades, useful, draft, children }: GuideFrontmatter & { children: Snippet } =
+    $props()
 
   const isAnki = $derived(ankiMode.isAnki)
 

@@ -65,7 +65,7 @@ function interpolatedHex(idx) {
     const start = anchors[i]
     const end = anchors[(i + 1) % anchors.length]
     // start → end の循環距離（同一idxは色相環1周=100扱い）
-    const span = ((end.idx - start.idx + 100) % 100) || 100
+    const span = (end.idx - start.idx + 100) % 100 || 100
     const offset = (idx - start.idx + 100) % 100
     if (offset < span) {
       const t = offset / span
