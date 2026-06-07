@@ -2,6 +2,7 @@
   import { hierarchy, partition, type HierarchyRectangularNode } from "d3-hierarchy"
   import { arc } from "d3-shape"
   import { MUNSELL_HUE_FAMILIES, getMunsellHueHex, munsellHueLabelAt } from "$lib/data/munsell-hue"
+  import { ankiMode } from "$lib/state/anki.svelte"
 
   // ===== SVG 中心 =====
   const CX = 360
@@ -154,6 +155,8 @@
   const PADDING = 16
   const VB_R = R_OUTER_OUTER + PADDING
   const viewBox = `${CX - VB_R} ${CY - VB_R} ${2 * VB_R} ${2 * VB_R}`
+
+  const isAnki = $derived(ankiMode.isAnki)
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" {viewBox}>
@@ -194,7 +197,7 @@
       dominant-baseline="central"
       transform="rotate({labelRotation(node.midAngleDeg)} {lx} {ly})"
     >
-      {node.label}
+      {isAnki ? "" : node.label}
     </text>
   {/each}
 </svg>

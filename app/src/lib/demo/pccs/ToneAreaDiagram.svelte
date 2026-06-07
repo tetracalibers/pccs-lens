@@ -7,7 +7,7 @@
   const isAnki = $derived(ankiMode.isAnki)
 
   interface Props {
-    highlights?: string[]
+    highlights?: string[] | "all"
     hue?: number
   }
 
@@ -72,8 +72,11 @@
     { key: "v", label: "v", cx: OX + X4, cy: OY + Y0 + S * 2, shape: "circle" }
   ]
 
-  // highlights 判定: "Gy" は ltGy/mGy/dkGy にマッチ
+  // highlights 判定: "all" は全トーン、"Gy" は ltGy/mGy/dkGy にマッチ
   function isHighlighted(cell: ToneCell): boolean {
+    if (highlights === "all") {
+      return true
+    }
     if (cell.key === "ltGy" || cell.key === "mGy" || cell.key === "dkGy") {
       return highlights.includes("Gy")
     }

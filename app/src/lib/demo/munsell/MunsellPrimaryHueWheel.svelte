@@ -1,4 +1,5 @@
 <script lang="ts">
+  import chroma from "chroma-js"
   import { arc } from "d3-shape"
   import { getMunsellHueHex, munsellHueLabelAt } from "$lib/data/munsell-hue"
   import { ankiMode } from "$lib/state/anki.svelte"
@@ -38,6 +39,11 @@
 
   function colorFor(idx: number): string {
     return getMunsellHueHex(munsellHueLabelAt(idx)) ?? FALLBACK_HEX
+  }
+
+  // 背景色の輝度に応じてラベルの文字色を白／黒で切替
+  function textColorOn(hex: string): string {
+    return chroma(hex).luminance() > 0.55 ? "#222" : "#fff"
   }
 
   type Segment = {
@@ -104,7 +110,7 @@
       y={ly}
       font-size={FONT_SIZE_LABEL}
       font-weight="600"
-      fill="#fff"
+      fill={textColorOn(seg.color)}
       text-anchor="middle"
       dominant-baseline="central"
     >

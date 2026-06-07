@@ -1,6 +1,6 @@
 ---
 layout: guide-content
-title: PCCSのトーン
+title: PCCSと色の分類
 
 grades: ["3", "uc"]
 useful: true

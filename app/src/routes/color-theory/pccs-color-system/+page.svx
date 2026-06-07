@@ -3,95 +3,180 @@ layout: guide-content
 title: PCCSによる色表示
 
 grades: ["3"]
-draft: true
 ---
 
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import CanvasWrapper from "$lib/demo/CanvasWrapper.svelte"
   import PCCSHueWheel from "$lib/demo/pccs/PCCSHueWheel.svelte"
   import PCCSPrimaryHueWheel from "$lib/demo/pccs/PCCSPrimaryHueWheel.svelte"
   import PCCSPrimaryComplementHueWheel from "$lib/demo/pccs/PCCSPrimaryComplementHueWheel.svelte"
   import PCCSEvenHueWheel from "$lib/demo/pccs/PCCSEvenHueWheel.svelte"
+  import PCCSHueNotationWheel from "$lib/demo/pccs/PCCSHueNotationWheel.svelte"
+  import PCCSColorSolid3D from "$lib/demo/pccs/PCCSColorSolid3D.svelte"
+  import PCCSEqualHuePlane from "$lib/demo/pccs/PCCSEqualHuePlane.svelte"
+  import ToneAreaDiagram from "$lib/demo/pccs/ToneAreaDiagram.svelte"
 </script>
 
-## :WithGradeTag[PCCSとは]{grades="3"}
-
-- PCCSは色彩調和を目的とした色彩体系で、配色を考えるのに適している
+[PCCSと色の分類](/color-theory/pccs-basics/)で基本的な使い方を学んだPCCSは、[色彩調和](/color-theory/unity-and-variety/)を目的とした[表色系](/color-theory/color-system-types/)で、配色を考えるのに適しています。
+Practical Color Co-ordinate Systemの頭文字をとった名前になっており、一般財団法人:Mark[日本色彩研究所]が開発しました。
 
 ## :WithGradeTag[PCCSの色相環]{grades="3"}
 
-- PCCSでは、色相のことを:Mark[Hue]という
-- PCCSの色相環は、色相環を示す色として:Mark[純色]が選ばれ、:Mark[24]色相で構成されている
-- 24色相を決めるために、最初に:Mark[心理四原色]といわれる:Mark[赤]・:Mark[黄]・:Mark[緑]・:Mark[青]の色相を色相環上に置く
-- :Mark[心理四原色]とは、赤らしい赤、青らしい青、…のこと。赤なら赤の色味しか感じられない、最も赤らしい赤を指す
-- 心理四元色の対向位置（向かい側）に、:Mark[心理補色]に近い色相を置く
-- ある色をじっと見つめて、その色を取り去ったときに見える残像の色を:Mark[心理補色]という
-- PCCSの色相は、:Mark[偶数]番号が主役となる
-- PCCSの色相環において、明度は、:Mark[黄]（:Mark[8：Y]）の色相で最も高く、:Mark[青紫]（:Mark[20：V]）の色相に近づくほど低くなる
+PCCSでは、色相を:Mark[Hue]と呼びます。PCCSの色相環は、白も黒もグレイも混ざっていない[純色](/color-theory/pccs-color-system/)を並べたもので、:Mark[24]色相で構成されています。
+
+<SVGWrapper maxW={500}>
+  <PCCSHueWheel />
+</SVGWrapper>
+
+この色相環は、次のような手順で決められたものです。
+
+1. :Mark[心理四原色]と呼ばれる:Mark[赤]・:Mark[黄]・:Mark[緑]・:Mark[青]の色相を置く
+2. 心理四原色の対向位置（向かい側）に、:Mark[心理補色]に近い色相を置く
+3. 等間隔に見た目が変化するように、残りの偶数番号の色相を置く
+4. 色相の間に中間の色相を置いて、24色相を完成させる
+
+:Mark[心理四原色]とは、赤らしい赤、黄らしい黄、緑らしい緑、青らしい青のことで、赤なら赤の色みしか感じられない、最も赤らしい赤を指します。この4色は:Mark[人間の基本色覚]とも呼ばれ、生まれながらに識別できる色といわれています。
+
+PCCS色相環で向かい合う色は、:Mark[心理補色]の関係になっています。
+心理補色とは、ある色をじっと見つめた後、その色を取り去ったときに見える残像の色で、この残像は[補色残像](/color-theory/contrast-phenomena/)と呼ばれます。
+
+PCCSの色相は:Mark[偶数]番号が主役であり、配色を考えるときもこの:Mark[12]色相を中心に考えることが多いです。
 
 ::::CardGrid{lastWide}
-:::TermCard{title="心理四原色"}
+:::TermCard{title="心理四原色" icon="1"}
 <SVGWrapper maxW={380}>
   <PCCSPrimaryHueWheel />
 </SVGWrapper>
 :::
-:::TermCard{title="心理四原色と心理補色"}
+:::TermCard{title="心理四原色と心理補色" icon="2"}
 <SVGWrapper maxW={380}>
   <PCCSPrimaryComplementHueWheel />
 </SVGWrapper>
 :::
-:::TermCard{title="偶数番号のみの色相環"}
+:::TermCard{title="偶数番号の12色相" icon="3"}
 <SVGWrapper maxW={380}>
   <PCCSEvenHueWheel />
 </SVGWrapper>
 :::
 ::::
 
-<SVGWrapper maxW={500}>
-  <PCCSHueWheel />
-</SVGWrapper>
-
 ## :WithGradeTag[色相の表示方法]{grades="3"}
 
-- PCCSの24色相は、:Mark[色相記号]で表すことができる
-- 各色相には、:Mark[紫みの赤]（:Mark[puplish red]）から時計まわりの順に1から24の:Mark[色相番号]がつけられている
-- ある色の心理補色の色相番号は、その色の色相番号に:Mark[12]を足すことで求められる。24色相のうち、心理補色は反対側にあるため、24の半分である12だけ色相番号が進むことになる
-- 色相記号では、色相番号の後に、色相の略記号を大文字で、色みの修飾語（〜ishの部分）を小文字で表したものをつけて表示する
+PCCSの各色相には、:Mark[紫みの赤]（:Mark[pR]：:Mark[purplish red]）から時計まわりの順に、1から24の:Mark[色相番号]がつけられています。
 
-:::Example
-purpulish red（紫みの赤）を色相記号で表すと、:Mark[1：pR]となる
+この色相番号の後に、主な色みを表す:Mark[色相の略記号]を大文字で、色みの偏りがある場合は:Mark[修飾語]（〜ishの部分の頭文字）を小文字で表したものをつけて色相を表します。
+このような色相の表記を:Mark[色相記号]といいます。
+
+- purplish red（:Mark[紫みの赤]：紫に偏った赤）を色相記号で表すと、:Mark[1：pR]となる
+- red（:Mark[赤]：他の色みに偏らない純粋な赤）を色相記号で表すと、:Mark[2：R]となる
+
+
+:::Action
+色相をクリックして、色相記号や色相名を確認してみよう
 :::
+
+<SVGWrapper maxW={500}>
+  <PCCSHueNotationWheel />
+</SVGWrapper>
 
 ## :WithGradeTag[PCCSの明度]{grades="3"}
 
-- PCCSでは、明度のことを:Mark[Lightness]という
-- PCCSにおける明度は、白の明度を:Mark[9.5]、黒の明度を:Mark[1.5]として、その間に:Mark[0.5]刻みの:Mark[15]色の灰色を置くことで表示する
-- 低明度と呼ばれるのは、:Mark[1.5]〜:Mark[4.0]の範囲である
-- 中明度と呼ばれるのは、:Mark[4.5]〜:Mark[6.5]の範囲である
-- 高明度と呼ばれるのは、:Mark[7.0]〜:Mark[9.5]の範囲である
+PCCSでは、明度を:Mark[Lightness]と呼びます。
+
+最も暗い色である黒の明度を:Mark[1.5]、最も明るい色である白の明度を:Mark[9.5]とし、その間に:Mark[0.5]刻みの:Mark[15]色の灰色を置くことで、明度を段階に分けて表します。
+
+さらに、:Mark[低明度]、:Mark[中明度]、:Mark[高明度]のグループにまとめて、大まかに明度を表すこともあります。
+
+- 低明度：:Mark[1.5]〜:Mark[4.0]の範囲
+- 中明度：:Mark[4.5]〜:Mark[6.5]の範囲
+- 高明度：:Mark[7.0]〜:Mark[9.5]の範囲
 
 ## :WithGradeTag[PCCSの彩度]{grades="3"}
 
-- PCCSでは、彩度のことを:Mark[Saturation]という
-- PCCSにおける彩度は、最も鮮やかな色を最も高い彩度の段階:Mark[9s]とし、同じ明度の無彩色を最も彩度の低い段階を:Mark[0s]として、その間を変化が等しく見えるように分割することで表示する
+PCCSでは、彩度を:Mark[Saturation]と呼びます。
 
-:::Note
-小文字sはSaturationの頭文字を表す
+最も鮮やかな色の彩度を:Mark[9s]とし、同じ明度の無彩色を:Mark[0s]として、その間を変化が等しく見えるように分割することで、彩度を段階に分けて表します。
+ここで、段階を表す数字の後ろにつく小文字sは、Saturationの頭文字です。
+
+さらに、:Mark[低彩度]、:Mark[中彩度]、:Mark[高彩度]のグループにまとめて、大まかに彩度を表すこともあります。
+
+- 低彩度：:Mark[1s]〜:Mark[3s]の範囲
+- 中彩度：:Mark[4s]〜:Mark[6s]の範囲
+- 高彩度：:Mark[7s]〜:Mark[9s]の範囲
+
+## :WithGradeTag[トーンの概念]{grades="3"}
+
+似た明度と彩度の領域を:Mark[トーン]（:Mark[色調]、色の調子）とよび、トーンによって大まかな色のイメージが決まります。詳しくは[トーンと色のイメージ](/color-theory/pccs-basics/)で学んでみてください。
+
+:::TermCard{title="色相が8：Yの色のトーンマップ" centering}
+同じ色相でも、明度や彩度（トーン）が異なると、まったく違う色になります。
+
+<ToneAreaDiagram highlights="all" hue={8} />
 :::
 
-- 低彩度と呼ばれるのは、:Mark[1s]〜:Mark[3s]の範囲である
-- 中彩度と呼ばれるのは、:Mark[4s]〜:Mark[6s]の範囲である
-- 高彩度と呼ばれるのは、:Mark[7s]〜:Mark[9s]の範囲である
+色相・明度・彩度の三属性を使って色の位置関係を表すには、3次元の[色立体](/color-theory/color-wheel-and-color-solid/)が必要になります。
+しかし、PCCSでは、明度・彩度をトーンとしてまとめることで、:Mark[色相環]と:Mark[トーンマップ]という平面上に描ける2次元の図で色の位置関係を表すことができます。
 
-## :WithGradeTag[色立体と等色相面]{grades="3"}
-
-- PCCSの色立体を中心軸のところで縦に切って等色相面を作ると、中央には縦に:Mark[無彩色]が並び、左右の色相が:Mark[補色]の関係になっている
+PCCSのように、色相とトーンの二属性で色を表示する方法は、:Mark[ヒュートーンシステム]と呼ばれます。
 
 ## :WithGradeTag[色の表示方法]{grades="3"}
 
-- PCCSでは、明度と彩度を合わせて:Mark[トーン]（:Mark[色調]、色の:Mark[調子]）と呼ぶ
-- PCCSは、色相であるHueと、明度と彩度をまとめたToneの二属性で色を表示する:Mark[ヒュートーンシステム]が最大の特徴である
+PCCSでは、記号を使った色の表し方が2種類あります。
+
+- 色の三属性による表記
+- トーンによる表記
+
+### 有彩色の場合
+
+::::CardGrid{cols=1}
+:::TermCard{title="色の三属性による表記" ankiTitle="show"}
+有彩色は、「:Mark[色相記号]`-`:Mark[明度]`-`:Mark[彩度]」という形式で表します。
+:::
+:::TermCard{title="トーンによる表記" ankiTitle="show"}
+有彩色は、:Mark[トーンの略記号]の後に:Mark[色相番号]を並べて表します。
+::::
+
+たとえば、`v2`（トーンによる表記）と`2:R-4.5-9s`（色の三属性による表記）は、同じ色を表します。
+
+### 無彩色の場合
+
+::::CardGrid{cols=1}
+:::TermCard{title="色の三属性による表記" ankiTitle="show"}
+無彩色は、「:Mark[n]`-`明度」という形式で表します。
+:::
+:::TermCard{title="トーンによる表記" ankiTitle="show"}
+白は:Mark[W]、黒は:Mark[Bk]、グレイは「:Mark[Gy]`-`明度」という形式で表します。
+:::
+::::
+
+## :WithGradeTag[色立体と等色相面]{grades="3"}
+
+PCCSの色立体では、上から見たときの円周上に:Mark[色相]の違いを観察できます。
+一番外側に並ぶのは最も鮮やかな:Mark[純色]であり、各色相の純色はすべて同じ:Mark[彩度]であることから、上から見ると:Mark[正円]になります。
+
+そして、横から見たときには、色立体は:Mark[球]を:Mark[斜め]に歪めた形になります。
+これは、色相によって純色の:Mark[明度]が異なるため、純色の位置が上下にずれているためです。最も明度が高い:Mark[8：Y]は最も高い位置に、最も明度が低い:Mark[20：V]は最も低い位置にあります。
+
+:::Action
+ドラッグ操作で回転させて、さまざまな角度から色立体を見てみよう
+:::
+
+<CanvasWrapper>
+  <PCCSColorSolid3D />
+</CanvasWrapper>
+
+この色立体を中心軸のところで:Mark[縦]に切ると、[等色相面](/color-theory/color-wheel-and-color-solid/)が現れます。
+縦中央の彩度:Mark[0s]の位置に:Mark[無彩色]が並び、左右の色相が:Mark[補色]の関係になっていることがわかります。
+
+<SVGWrapper maxW={420}>
+  <PCCSEqualHuePlane />
+</SVGWrapper>
 
 ## :WithGradeTag[PCCSの色票集]{grades="3"}
 
-::ComingSoon
+色を指定したり、見比べて測ったりするための色見本が:Mark[色票集]です。
+PCCSの色票集として、[新配色カード](https://sikiken.co.jp/products/50566.html)があります。
+
+新配色カードには、:Mark[v]トーンは全色相の24色、その他のトーンは:Mark[偶数]色相のみの12色が収録されており、:Mark[s]トーンは収録されていません。
+また、:Mark[p]トーンと:Mark[lt]トーンは、概念上の色より:Mark[彩度]が高く印刷されており、その印として`+`をつけて:Mark[p+]トーン、:Mark[lt+]トーンのように表記されています。
