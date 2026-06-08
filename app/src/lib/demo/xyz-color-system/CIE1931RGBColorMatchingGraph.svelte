@@ -8,7 +8,8 @@
   const PLOT_WIDTH = 720
   const PLOT_HEIGHT = 360
   const PLOT_LEFT = 110
-  const PLOT_TOP = 30
+  // 凡例（高さ 108）をプロット上部の外側に置くための余白を確保する
+  const PLOT_TOP = 140
   const MARGIN_RIGHT = 30
   const MARGIN_BOTTOM = 100
   const TOTAL_WIDTH = PLOT_LEFT + PLOT_WIDTH + MARGIN_RIGHT
@@ -31,7 +32,7 @@
   const TICK_LENGTH = 8
   const FONT_SIZE_TICK_LABEL = 24
   const FONT_SIZE_AXIS_LABEL = 26
-  const FONT_SIZE_LEGEND = 26
+  const FONT_SIZE_LEGEND = 22
 
   // ===== ラベル位置オフセット =====
   const X_TICK_LABEL_OFFSET = 26 // PLOT_BOTTOM から数値ラベル中心まで
@@ -171,9 +172,9 @@
   ]
 
   const curves = [
-    { points: rBar, color: COL_R, label: "r̄(λ)" },
-    { points: gBar, color: COL_G, label: "ḡ(λ)" },
-    { points: bBar, color: COL_B, label: "b̄(λ)" }
+    { points: rBar, color: COL_R, label: "[R]を混ぜる量" },
+    { points: gBar, color: COL_G, label: "[G]を混ぜる量" },
+    { points: bBar, color: COL_B, label: "[B]を混ぜる量" }
   ]
 
   // ===== 座標変換 =====
@@ -214,13 +215,34 @@
     return d
   }
 
-  // ===== 凡例レイアウト =====
-  const LEGEND_SWATCH_W = 40
-  const LEGEND_GAP = 8 // swatch と文字の隙間
-  const LEGEND_ITEM_W = 150 // 1項目の占有幅
-  const LEGEND_Y = PLOT_TOP + 14
-  const legendTotalW = LEGEND_ITEM_W * curves.length
-  const legendStartX = (PLOT_LEFT + PLOT_RIGHT) / 2 - legendTotalW / 2
+  // ===== 凡例（プロット内・右上） =====
+  const LEGEND_LINE_LENGTH = 48
+  const LEGEND_ROW_GAP = 32
+  const LEGEND_LABEL_GAP = 14
+  const LEGEND_MARGIN = 16 // プロット枠と凡例枠の間の余白
+  const LEGEND_TEXT_WIDTH = FONT_SIZE_LEGEND * 6.7 // 「[R]を混ぜる量」程度の幅
+
+  // 凡例の枠線
+  const LEGEND_FRAME_PADDING_X = 18
+  const LEGEND_FRAME_PADDING_Y = 22
+  const LEGEND_FRAME_RADIUS = 6
+  const STROKE_WIDTH_LEGEND_FRAME = 1
+  const LEGEND_CONTENT_WIDTH = LEGEND_LINE_LENGTH + LEGEND_LABEL_GAP + LEGEND_TEXT_WIDTH
+  const LEGEND_FRAME_WIDTH = LEGEND_CONTENT_WIDTH + 2 * LEGEND_FRAME_PADDING_X
+  const LEGEND_FRAME_HEIGHT = LEGEND_ROW_GAP * (curves.length - 1) + 2 * LEGEND_FRAME_PADDING_Y
+
+  // 枠の位置（プロット上部の外側・右寄せ。曲線と重ならないよう上にずらす）
+  const LEGEND_FRAME_X = PLOT_RIGHT - LEGEND_FRAME_WIDTH - LEGEND_MARGIN
+  const LEGEND_FRAME_Y = LEGEND_MARGIN
+  const LEGEND_FRAME_CENTER_X = LEGEND_FRAME_X + LEGEND_FRAME_WIDTH / 2
+
+  // 内側コンテンツの位置（枠の水平中央に揃える）
+  const LEGEND_LINE_X1 = LEGEND_FRAME_CENTER_X - LEGEND_CONTENT_WIDTH / 2
+  const LEGEND_LINE_X2 = LEGEND_LINE_X1 + LEGEND_LINE_LENGTH
+  const LEGEND_LABEL_X = LEGEND_LINE_X2 + LEGEND_LABEL_GAP
+  const LEGEND_LABEL_CENTER_X = LEGEND_LABEL_X + LEGEND_TEXT_WIDTH / 2
+  const legendRowY = (i: number): number =>
+    LEGEND_FRAME_Y + LEGEND_FRAME_PADDING_Y + i * LEGEND_ROW_GAP
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {TOTAL_WIDTH} {TOTAL_HEIGHT}">
@@ -337,24 +359,36 @@
     三刺激値（混色量）
   </text>
 
-  <!-- 凡例 -->
-  <g font-size={FONT_SIZE_LEGEND} font-style="italic" font-family="var(--font-math)">
+  <!-- 凡例（プロット内・上部中央） -->
+  <g>
+    <rect
+      x={LEGEND_FRAME_X}
+      y={LEGEND_FRAME_Y}
+      width={LEGEND_FRAME_WIDTH}
+      height={LEGEND_FRAME_HEIGHT}
+      rx={LEGEND_FRAME_RADIUS}
+      fill="none"
+      stroke="light-dark(lightslategray, gray)"
+      stroke-width={STROKE_WIDTH_LEGEND_FRAME}
+    />
     {#each curves as curve, i (curve.label)}
-      {@const itemX = legendStartX + i * LEGEND_ITEM_W}
       <line
-        x1={itemX}
-        y1={LEGEND_Y}
-        x2={itemX + LEGEND_SWATCH_W}
-        y2={LEGEND_Y}
+        x1={LEGEND_LINE_X1}
+        y1={legendRowY(i)}
+        x2={LEGEND_LINE_X2}
+        y2={legendRowY(i)}
         stroke={curve.color}
         stroke-width={STROKE_WIDTH_CURVE}
         stroke-linecap="round"
       />
       <text
-        x={itemX + LEGEND_SWATCH_W + LEGEND_GAP}
-        y={LEGEND_Y}
+        x={LEGEND_LABEL_CENTER_X}
+        y={legendRowY(i)}
+        text-anchor="middle"
         dominant-baseline="central"
-        fill={curve.color}
+        font-family="var(--font-math-base), var(--font-ja-base)"
+        font-size={FONT_SIZE_LEGEND}
+        fill={COL_LABEL}
       >
         {curve.label}
       </text>
