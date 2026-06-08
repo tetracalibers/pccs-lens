@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { line, curveBasis } from "d3-shape"
+
   interface CMFPoint {
     nm: number
     value: number
@@ -190,30 +192,12 @@
 
   const formatY = (v: number): string => (v === 0 ? "0" : v.toFixed(1))
 
-  // ===== Catmull-Rom 風の滑らかなパス生成 =====
-  function smoothCurveSegments(pts: CMFPoint[]): string {
-    if (pts.length === 0) return ""
-    if (pts.length === 1) {
-      const p = pts[0]
-      return `M ${xAt(p.nm)} ${yAt(p.value)}`
-    }
-
-    let d = `M ${xAt(pts[0].nm)} ${yAt(pts[0].value)}`
-    for (let i = 1; i < pts.length; i++) {
-      const p0 = i > 1 ? pts[i - 2] : pts[i - 1]
-      const p1 = pts[i - 1]
-      const p2 = pts[i]
-      const p3 = i < pts.length - 1 ? pts[i + 1] : pts[i]
-
-      const cp1x = xAt(p1.nm) + (xAt(p2.nm) - xAt(p0.nm)) / 6
-      const cp1y = yAt(p1.value) + (yAt(p2.value) - yAt(p0.value)) / 6
-      const cp2x = xAt(p2.nm) - (xAt(p3.nm) - xAt(p1.nm)) / 6
-      const cp2y = yAt(p2.value) - (yAt(p3.value) - yAt(p1.value)) / 6
-
-      d += ` C ${cp1x} ${cp1y} ${cp2x} ${cp2y} ${xAt(p2.nm)} ${yAt(p2.value)}`
-    }
-    return d
-  }
+  // ===== 滑らかなパス生成 =====
+  // curveBasis（B-spline）で C² 連続のなめらかな曲線を描画
+  const lineGen = line<CMFPoint>()
+    .x((d) => xAt(d.nm))
+    .y((d) => yAt(d.value))
+    .curve(curveBasis)
 
   // ===== 凡例（プロット内・右上） =====
   const LEGEND_LINE_LENGTH = 48
@@ -310,7 +294,7 @@
   <g clip-path="url(#plot-clip-{ID})" fill="none" stroke-linecap="round" stroke-linejoin="round">
     {#each curves as curve (curve.label)}
       <path
-        d={smoothCurveSegments(curve.points)}
+        d={lineGen(curve.points) ?? ""}
         stroke={curve.color}
         stroke-width={STROKE_WIDTH_CURVE}
       />
