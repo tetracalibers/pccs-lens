@@ -6,6 +6,11 @@
     value: number
   }
 
+  interface GradientStop {
+    nm: number
+    color: string
+  }
+
   // ===== SVG dimensions =====
   const PLOT_WIDTH = 720
   const PLOT_HEIGHT = 360
@@ -18,6 +23,11 @@
   const TOTAL_HEIGHT = PLOT_TOP + PLOT_HEIGHT + MARGIN_BOTTOM
   const PLOT_RIGHT = PLOT_LEFT + PLOT_WIDTH
   const PLOT_BOTTOM = PLOT_TOP + PLOT_HEIGHT
+
+  // 横軸直下に表示する細いスペクトルグラデーション帯
+  const SPECTRUM_BAND_HEIGHT = 14
+  // 目盛り・数値ラベル・軸ラベルはスペクトル帯の下に配置するため、その下端を基準にする
+  const X_AXIS_VISUAL_BOTTOM = PLOT_BOTTOM + SPECTRUM_BAND_HEIGHT
 
   // ===== 軸の範囲 =====
   const NM_MIN = 380
@@ -37,8 +47,8 @@
   const FONT_SIZE_LEGEND = 22
 
   // ===== ラベル位置オフセット =====
-  const X_TICK_LABEL_OFFSET = 26 // PLOT_BOTTOM から数値ラベル中心まで
-  const X_AXIS_LABEL_OFFSET = 70 // PLOT_BOTTOM から軸ラベル中心まで
+  const X_TICK_LABEL_OFFSET = 26 // X_AXIS_VISUAL_BOTTOM から数値ラベル中心まで
+  const X_AXIS_LABEL_OFFSET = 70 // X_AXIS_VISUAL_BOTTOM から軸ラベル中心まで
   const Y_TICK_LABEL_OFFSET = 16 // PLOT_LEFT から数値ラベル右端まで
   const Y_AXIS_LABEL_OFFSET = 100 // PLOT_LEFT から軸ラベル中心まで
 
@@ -58,6 +68,21 @@
   // マイナスの混色量の領域（横軸より下）を示す帯
   const COL_NEGATIVE_BAND = "var(--color-body)"
   const OPACITY_NEGATIVE_BAND = 0.06
+
+  // ===== スペクトル帯のグラデーション（SpectrumGradient.svelte と同一） =====
+  // 波長と色の対応:
+  //   紫 380〜430 / 藍 430〜460 / 青 460〜500 / 緑 500〜570
+  //   黄 570〜590 / 橙 590〜610 / 赤 610〜780
+  const gradientStops: GradientStop[] = [
+    { nm: 405, color: "#4b0082" }, // 紫 中心
+    { nm: 445, color: "#0000ff" }, // 藍 中心
+    { nm: 480, color: "#00bfff" }, // 青 中心
+    { nm: 535, color: "#00ff00" }, // 緑 中心
+    { nm: 580, color: "#ffff00" }, // 黄 中心
+    { nm: 600, color: "#ff7f00" }, // 橙 中心
+    { nm: 620, color: "#ff0000" } // 赤
+  ]
+  const gradientOffset = (nm: number): number => (nm - NM_MIN) / (NM_MAX - NM_MIN)
 
   // SVG 内 id の衝突を避けるための固定サフィックス
   const ID = "cie-rgb-cmf"
@@ -234,6 +259,11 @@
     <clipPath id="plot-clip-{ID}">
       <rect x={PLOT_LEFT} y={PLOT_TOP} width={PLOT_WIDTH} height={PLOT_HEIGHT} />
     </clipPath>
+    <linearGradient id="spectrum-band-{ID}" x1="0" y1="0" x2="1" y2="0">
+      {#each gradientStops as stop, i (i)}
+        <stop offset={gradientOffset(stop.nm)} stop-color={stop.color} />
+      {/each}
+    </linearGradient>
   </defs>
 
   <!-- マイナスの混色量の領域（横軸＝0 より下）を示す帯 -->
@@ -276,10 +306,24 @@
     stroke-width={STROKE_WIDTH_ZERO}
   />
 
-  <!-- 横軸の目盛り -->
+  <!-- 横軸直下のスペクトルグラデーション帯 -->
+  <rect
+    x={PLOT_LEFT}
+    y={PLOT_BOTTOM}
+    width={PLOT_WIDTH}
+    height={SPECTRUM_BAND_HEIGHT}
+    fill="url(#spectrum-band-{ID})"
+  />
+
+  <!-- 横軸の目盛り（スペクトル帯の下） -->
   <g stroke={COL_AXIS} stroke-width={STROKE_WIDTH_TICK}>
     {#each xTicks as nm (nm)}
-      <line x1={xAt(nm)} y1={PLOT_BOTTOM} x2={xAt(nm)} y2={PLOT_BOTTOM + TICK_LENGTH} />
+      <line
+        x1={xAt(nm)}
+        y1={X_AXIS_VISUAL_BOTTOM}
+        x2={xAt(nm)}
+        y2={X_AXIS_VISUAL_BOTTOM + TICK_LENGTH}
+      />
     {/each}
   </g>
 
@@ -301,10 +345,10 @@
     {/each}
   </g>
 
-  <!-- 横軸の数値ラベル -->
+  <!-- 横軸の数値ラベル（スペクトル帯の下） -->
   <g fill={COL_LABEL} font-size={FONT_SIZE_TICK_LABEL} text-anchor="middle">
     {#each X_LABELED_TICKS as nm (nm)}
-      <text x={xAt(nm)} y={PLOT_BOTTOM + X_TICK_LABEL_OFFSET} dominant-baseline="central">
+      <text x={xAt(nm)} y={X_AXIS_VISUAL_BOTTOM + X_TICK_LABEL_OFFSET} dominant-baseline="central">
         {nm}
       </text>
     {/each}
@@ -313,7 +357,7 @@
   <!-- 横軸ラベル「波長 (nm)」 -->
   <text
     x={(PLOT_LEFT + PLOT_RIGHT) / 2}
-    y={PLOT_BOTTOM + X_AXIS_LABEL_OFFSET}
+    y={X_AXIS_VISUAL_BOTTOM + X_AXIS_LABEL_OFFSET}
     text-anchor="middle"
     dominant-baseline="central"
     font-size={FONT_SIZE_AXIS_LABEL}
