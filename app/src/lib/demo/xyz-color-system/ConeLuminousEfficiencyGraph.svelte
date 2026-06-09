@@ -154,6 +154,34 @@
     .y((d) => yAt(d.value))
     .curve(curveBasis)
   const conesPath = lineGen(cones) ?? ""
+
+  // ===== 凡例（プロット内・右上） =====
+  const FONT_SIZE_LEGEND = 22
+  const LEGEND_LINE_LENGTH = 48
+  const LEGEND_LABEL_GAP = 22
+  const LEGEND_MARGIN = 16 // プロット枠と凡例枠の間の余白
+  const LEGEND_TEXT_WIDTH = FONT_SIZE_LEGEND * 8.5 // 「錐体の分光視感効率」程度の幅
+
+  // 凡例の枠線
+  const LEGEND_FRAME_PADDING_X = 20
+  const LEGEND_FRAME_PADDING_Y = 22
+  const LEGEND_FRAME_RADIUS = 6
+  const STROKE_WIDTH_LEGEND_FRAME = 1
+  const LEGEND_CONTENT_WIDTH = LEGEND_LINE_LENGTH + LEGEND_LABEL_GAP + LEGEND_TEXT_WIDTH
+  const LEGEND_FRAME_WIDTH = LEGEND_CONTENT_WIDTH + 2 * LEGEND_FRAME_PADDING_X
+  const LEGEND_FRAME_HEIGHT = 2 * LEGEND_FRAME_PADDING_Y
+
+  // 枠の位置（プロット内・右上）
+  const LEGEND_FRAME_X = PLOT_RIGHT - LEGEND_FRAME_WIDTH - LEGEND_MARGIN
+  const LEGEND_FRAME_Y = PLOT_TOP + LEGEND_MARGIN
+  const LEGEND_FRAME_CENTER_X = LEGEND_FRAME_X + LEGEND_FRAME_WIDTH / 2
+
+  // 内側コンテンツの位置（枠の水平中央に揃える）
+  const LEGEND_LINE_X1 = LEGEND_FRAME_CENTER_X - LEGEND_CONTENT_WIDTH / 2
+  const LEGEND_LINE_X2 = LEGEND_LINE_X1 + LEGEND_LINE_LENGTH
+  const LEGEND_LABEL_X = LEGEND_LINE_X2 + LEGEND_LABEL_GAP
+  const LEGEND_LABEL_CENTER_X = LEGEND_LABEL_X + LEGEND_TEXT_WIDTH / 2
+  const LEGEND_ROW_Y = LEGEND_FRAME_Y + LEGEND_FRAME_HEIGHT / 2
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {TOTAL_WIDTH} {TOTAL_HEIGHT}">
@@ -262,4 +290,37 @@
   >
     明るさの感じやすさ
   </text>
+
+  <!-- 凡例（プロット内・右上） -->
+  <g>
+    <rect
+      x={LEGEND_FRAME_X}
+      y={LEGEND_FRAME_Y}
+      width={LEGEND_FRAME_WIDTH}
+      height={LEGEND_FRAME_HEIGHT}
+      rx={LEGEND_FRAME_RADIUS}
+      fill="none"
+      stroke="light-dark(lightslategray, gray)"
+      stroke-width={STROKE_WIDTH_LEGEND_FRAME}
+    />
+    <line
+      x1={LEGEND_LINE_X1}
+      y1={LEGEND_ROW_Y}
+      x2={LEGEND_LINE_X2}
+      y2={LEGEND_ROW_Y}
+      stroke={COL_CURVE}
+      stroke-width={STROKE_WIDTH_CURVE}
+      stroke-linecap="round"
+    />
+    <text
+      x={LEGEND_LABEL_CENTER_X}
+      y={LEGEND_ROW_Y}
+      text-anchor="middle"
+      dominant-baseline="central"
+      font-size={FONT_SIZE_LEGEND}
+      fill={COL_LABEL}
+    >
+      錐体の分光視感効率
+    </text>
+  </g>
 </svg>
