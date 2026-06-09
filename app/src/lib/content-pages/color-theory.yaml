@@ -103,11 +103,9 @@
           grades: ["2"]
         - title: 色再現領域
           grades: ["2"]
-    - title: 加法混色の法則性
-      links:
-        - slug: color-matching-and-grassmanns-law
     - title: 混色の原理による色表示
       links:
+        - slug: color-matching-and-grassmanns-law
         - slug: rgb-color-system
         - slug: xyz-color-system
         - title: xy色度図
