@@ -10,6 +10,7 @@ draft: true
 <script>
   import SVGWrapper from '$lib/demo/SVGWrapper.svelte'
   import CIE1931RGBColorMatchingGraph from '$lib/demo/xyz-color-system/CIE1931RGBColorMatchingGraph.svelte'
+  import CIE1931XYZColorMatchingGraph from '$lib/demo/xyz-color-system/CIE1931XYZColorMatchingGraph.svelte'
 </script>
 
 実際の色光を基準としている[RGB表色系](/color-theory/rgb-color-system/)は、マイナスの混色量を使わなければ表せない色があり、当時の計算機では扱いづらいものでした。
@@ -33,10 +34,22 @@ draft: true
   <CIE1931RGBColorMatchingGraph />
 </SVGWrapper>
 
-たとえば、橙色にあたる600nm付近の単色光を見てみましょう。
-このとき $$\overline{r}(\lambda)$$ は最大付近の大きなプラスの値、$$\overline{g}(\lambda)$$ は小さなプラスの値で、$$\overline{b}(\lambda)$$ はほぼ0です。
-つまり、$$[R]$$ を多めに、$$[G]$$ を少しだけ混ぜ、$$[B]$$ はほとんど使わないことで、この色を再現できます。
-3つの混色量にマイナスがないため、この色は原刺激を:Mark[足し合わせるだけ]でつくることができます。
+たとえば、波長600nm付近の単色光は、$$[R]$$ を多めに、$$[G]$$ を少しだけ混ぜ、$$[B]$$ はほとんど使わないことで、再現できることがわかります。
 
-一方、グラフをよく見ると、$$\overline{r}(\lambda)$$ は500nm付近で:Mark[マイナスの値]になっています。
-これは、その波長の単色光は $$[R], [G], [B]$$ を足し合わせるだけでは再現できず、再現したい単色光の側に $$[R]$$ を混ぜて（実質的に $$[R]$$ を引いて）はじめて等色できることを意味しています。
+一方で、波長500nm付近の単色光は、マイナスの量の $$[R]$$ を使わなければ再現できないことがわかります。これがRGB表色系の問題点である、マイナスの混色量の存在です。
+
+## :WithGradeTag[XYZ表色系の等色関数]{grades="1"}
+
+仮想的な色光 $$[X], [Y], [Z]$$ を使ったXYZ表色系でも、同じように再現したい単色光の波長 $$\lambda$$ ごとの混色量を関数として表すことができます。
+
+- $$[X]$$ を混ぜる量：$$\overline{x}(\lambda)$$
+- $$[Y]$$ を混ぜる量：$$\overline{y}(\lambda)$$
+- $$[Z]$$ を混ぜる量：$$\overline{z}(\lambda)$$
+
+これらをXYZ表色系の:Mark[等色関数]といい、グラフ化すると次のようになります。
+
+<SVGWrapper maxW={500}>
+  <CIE1931XYZColorMatchingGraph />
+</SVGWrapper>
+
+RGB表色系の等色関数と違い、グラフが横軸より下に潜り込む部分（マイナスの混色量）がどこにもありません。どの波長の単色光も、$$[X], [Y], [Z]$$ をすべてプラスの量だけ混ぜることで再現できるようになっています。これがXYZ表色系のねらいです。
