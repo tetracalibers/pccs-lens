@@ -7,9 +7,36 @@ grades: ["1"]
 draft: true
 ---
 
+<script>
+  import SVGWrapper from '$lib/demo/SVGWrapper.svelte'
+  import CIE1931RGBColorMatchingGraph from '$lib/demo/xyz-color-system/CIE1931RGBColorMatchingGraph.svelte'
+</script>
+
 実際の色光を基準としている[RGB表色系](/color-theory/rgb-color-system/)は、マイナスの混色量を使わなければ表せない色があり、当時の計算機では扱いづらいものでした。
 そこで、混色量が負の数にならずに済むように、数学的に変換してつくられた表色系が:Mark[XYZ表色系]です。
 
 実際の色光 $$[R], [G], [B]$$ ではうまくいかなかったことから、XYZ表色系では、3つの仮想的な色光 $$[X], [Y], [Z]$$ を設定しています。
 
-## :WithGradeTag[TODO]{grades="1"}
+## :WithGradeTag[RGB表色系の等色関数]{grades="1"}
+
+さまざまな波長の単色光を再現しようとする[等色実験](/color-theory/color-matching-and-grassmanns-law/)を繰り返し、それぞれの単色光と等色する $$[R], [G], [B]$$ の:Mark[混色比]（どれくらいずつ混ぜるか）を求めていくことを考えます。
+
+再現したい単色光の波長 $$\lambda$$ によって、$$[R], [G], [B]$$ の混色比は変わるため、$$[R], [G], [B]$$ それぞれを混ぜる量は、単色光の波長 $$\lambda$$ の関数として表すことができます。
+
+- $$[R]$$ を混ぜる量：$$\overline{r}(\lambda)$$
+- $$[G]$$ を混ぜる量：$$\overline{g}(\lambda)$$
+- $$[B]$$ を混ぜる量：$$\overline{b}(\lambda)$$
+
+これらの関数をRGB表色系の:Mark[等色関数]といい、関数の値は[色の三色性](/color-theory/color-matching-and-grassmanns-law/)で学んだ:Mark[三刺激値]を表しています。次のようにグラフ化すると、再現したい色（波長）ごとの三刺激値（混ぜる量）がわかります。
+
+<SVGWrapper maxW={500}>
+  <CIE1931RGBColorMatchingGraph />
+</SVGWrapper>
+
+たとえば、橙色にあたる600nm付近の単色光を見てみましょう。
+このとき $$\overline{r}(\lambda)$$ は最大付近の大きなプラスの値、$$\overline{g}(\lambda)$$ は小さなプラスの値で、$$\overline{b}(\lambda)$$ はほぼ0です。
+つまり、$$[R]$$ を多めに、$$[G]$$ を少しだけ混ぜ、$$[B]$$ はほとんど使わないことで、この色を再現できます。
+3つの混色量にマイナスがないため、この色は原刺激を:Mark[足し合わせるだけ]でつくることができます。
+
+一方、グラフをよく見ると、$$\overline{r}(\lambda)$$ は500nm付近で:Mark[マイナスの値]になっています。
+これは、その波長の単色光は $$[R], [G], [B]$$ を足し合わせるだけでは再現できず、再現したい単色光の側に $$[R]$$ を混ぜて（実質的に $$[R]$$ を引いて）はじめて等色できることを意味しています。
