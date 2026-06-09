@@ -11,7 +11,7 @@ import katex from "katex"
 /** @type {import("katex").KatexOptions} */
 const KATEX_OPTIONS = { throwOnError: false, output: "html" }
 
-const BLOCK_MATH_RE = /^\$\$\s*([\s\S]+?)\s*\$\$$/
+const BLOCK_MATH_RE = /^\$\$\s*([^$]+?)\s*\$\$$/
 const INLINE_MATH_RE = /\$\$([^$]+?)\$\$/g
 
 /**
@@ -26,6 +26,50 @@ function renderDisplay(latex) {
  */
 function renderInline(latex) {
   return katex.renderToString(latex, { ...KATEX_OPTIONS, displayMode: false })
+}
+
+/**
+ * linkReference / imageReference ノードの子テキストを取り出す。
+ * @param {{ children?: Array<{ type: string; value?: string }> }} node
+ */
+function referenceLabel(node) {
+  let text = ""
+  for (const child of node.children ?? []) {
+    if (typeof child.value === "string") text += child.value
+  }
+  return text
+}
+
+/**
+ * `$$[R]$$` のように数式中に角括弧があると、CommonMark がそれを linkReference として
+ * パースし text ノードを分断してしまう（このリポジトリには参照リンク定義は存在しない）。
+ * 数式マッチングの前に linkReference をリテラルな `[ラベル]` テキストに戻し、隣接する
+ * text ノードを結合して、`$$...$$` が 1 つの text ノードに収まるようにする。
+ * @param {Root} tree
+ */
+function restoreBracketsAndMergeText(tree) {
+  visit(tree, (/** @type {any} */ node) => {
+    if (!Array.isArray(node.children)) return
+    /** @type {any[]} */
+    const merged = []
+    for (const child of node.children) {
+      let next = child
+      if (child.type === "linkReference") {
+        const label = referenceLabel(child)
+        let raw = `[${label}]`
+        if (child.referenceType === "collapsed") raw += "[]"
+        else if (child.referenceType === "full") raw += `[${child.label ?? ""}]`
+        next = { type: "text", value: raw }
+      }
+      const last = merged[merged.length - 1]
+      if (next.type === "text" && last && last.type === "text") {
+        last.value += next.value
+      } else {
+        merged.push(next)
+      }
+    }
+    node.children = merged
+  })
 }
 
 /**
@@ -56,6 +100,8 @@ function paragraphRawText(node) {
  */
 export default function remarkMath() {
   return (/** @type {Root} */ tree) => {
+    restoreBracketsAndMergeText(tree)
+
     visit(tree, "paragraph", (node, index, parent) => {
       if (!parent || index === null || index === undefined) return
       const text = paragraphRawText(node)
