@@ -108,7 +108,8 @@
         - slug: color-matching-and-grassmanns-law
         - slug: rgb-color-system
         - slug: xyz-color-system
-        - title: xy色度図
+        - slug: colorimetric-illuminants
+        - title: 色度座標とxy色度図
           grades: ["1"]
         - title: 色差の表示
           grades: ["1"]
@@ -217,8 +218,6 @@
         - title: 視感測色
           grades: ["1"]
         - title: 物理測色
-          grades: ["1"]
-        - title: 測色における照明
           grades: ["1"]
         - title: 測り方による色の分類
           grades: ["1"]
