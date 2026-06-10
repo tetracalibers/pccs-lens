@@ -108,9 +108,8 @@
         - slug: color-matching-and-grassmanns-law
         - slug: rgb-color-system
         - slug: xyz-color-system
+        - slug: xy-chromaticity-diagram
         - slug: colorimetric-illuminants
-        - title: 色度座標とxy色度図
-          grades: ["1"]
         - title: 色差の表示
           grades: ["1"]
         - title: L*a*b*色空間
