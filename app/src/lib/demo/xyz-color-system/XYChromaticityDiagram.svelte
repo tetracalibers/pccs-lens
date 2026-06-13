@@ -28,8 +28,8 @@
   const TICK_LENGTH = 8
 
   // ===== Tick / label sizes =====
-  const FONT_SIZE_TICK_LABEL = 24
-  const FONT_SIZE_AXIS_LABEL = 32
+  const FONT_SIZE_TICK_LABEL = 18
+  const FONT_SIZE_AXIS_LABEL = 28
 
   // ===== ラベル位置オフセット =====
   const X_TICK_LABEL_OFFSET = 26 // PLOT_BOTTOM から数値ラベル中心まで
@@ -234,8 +234,7 @@
   // 内外判定（isInside）と同一の denseLocus 多角形からクリップパスを作り、
   // 塗りのセル選択と境界形状を完全に一致させる。
   // 端（700nm → 380nm）を直線で結んで閉じた辺が純紫軌跡（line of purples）になる。
-  const clipPath =
-    "M " + denseLocus.map((p) => `${xAt(p.x)} ${yAt(p.y)}`).join(" L ") + " Z"
+  const clipPath = "M " + denseLocus.map((p) => `${xAt(p.x)} ${yAt(p.y)}`).join(" L ") + " Z"
 
   // ===== 色度座標 (x, y) を sRGB 文字列へ変換 =====
   // 明るさ Y=1 として XYZ を復元し、sRGB へ線形変換する。
