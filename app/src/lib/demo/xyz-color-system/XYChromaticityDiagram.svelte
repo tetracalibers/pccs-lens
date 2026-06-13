@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { line, curveCatmullRom } from "d3-shape"
-
   interface CMFPoint {
     nm: number
     value: number
@@ -42,12 +40,10 @@
   // ===== Stroke widths =====
   const STROKE_WIDTH_AXIS = 2
   const STROKE_WIDTH_TICK = 1.5
-  const STROKE_WIDTH_LOCUS = 1.5
 
   // ===== 色定数 =====
   const COL_AXIS = "var(--color-body)"
   const COL_LABEL = "var(--color-body)"
-  const COL_LOCUS = "light-dark(#444, #ccc)"
 
   // ===== カラーフィル =====
   // 色域内を細かなセルで塗り分ける際の刻み幅（色度座標の単位）
@@ -234,18 +230,10 @@
   const xAt = (x: number): number => PLOT_LEFT + (x / XMAX) * PLOT_WIDTH
   const yAt = (y: number): number => PLOT_BOTTOM - (y / YMAX) * PLOT_HEIGHT
 
-  // ===== 色域境界（スペクトル軌跡 + 純紫軌跡）のパス =====
-  // 表示用の輪郭線は d3-shape の Catmull-Rom 曲線でなめらかに描く。
+  // ===== 色域境界（スペクトル軌跡 + 純紫軌跡）のクリップパス =====
+  // 内外判定（isInside）と同一の denseLocus 多角形からクリップパスを作り、
+  // 塗りのセル選択と境界形状を完全に一致させる。
   // 端（700nm → 380nm）を直線で結んで閉じた辺が純紫軌跡（line of purples）になる。
-  const spectralCurve = line<LocusPoint>()
-    .x((p) => xAt(p.x))
-    .y((p) => yAt(p.y))
-    .curve(curveCatmullRom)
-  const boundaryPath = `${spectralCurve(locus) ?? ""} L ${xAt(locus[0].x)} ${yAt(locus[0].y)} Z`
-
-  // 塗りのクリップには、内外判定（isInside）と同一の denseLocus 多角形を使う。
-  // d3 の曲線をそのままクリップに使うと、赤端（660〜700nm が密集する尖り）付近で
-  // Catmull-Rom の張り出しと判定多角形がわずかにずれ、内部に白い隙間が生じるため。
   const clipPath =
     "M " + denseLocus.map((p) => `${xAt(p.x)} ${yAt(p.y)}`).join(" L ") + " Z"
 
@@ -372,15 +360,6 @@
       />
     {/each}
   </g>
-
-  <!-- 色域境界（スペクトル軌跡 + 純紫軌跡） -->
-  <path
-    d={boundaryPath}
-    fill="none"
-    stroke={COL_LOCUS}
-    stroke-width={STROKE_WIDTH_LOCUS}
-    stroke-linejoin="round"
-  />
 
   <!-- 横軸 -->
   <line
