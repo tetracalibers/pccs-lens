@@ -49,23 +49,23 @@
   // 元の xy 色度図と同じ色域の色を、薄く（低い不透明度で）表示する。
   const STEP = 0.01 // 色域内を細かなセルで塗り分ける際の刻み幅（色度座標の単位）
   const CELL_OVERLAP = 1.5 // セル同士の継ぎ目（白スジ）を防ぐ重なり(px)
-  const GAMUT_FILL_OPACITY = 0.35 // 色域の塗りの薄さ（0〜1。小さいほど薄い）
+  const GAMUT_FILL_OPACITY = 0.9 // 色域の塗りの薄さ（0〜1。小さいほど薄い）
 
   // ===== 注釈の矢印・ラベル =====
   const COL_ARROW = "var(--color-body)"
-  const ARROW_STROKE_WIDTH = 2.5
+  const ARROW_STROKE_WIDTH = 3
   // 矢じり（タイプA）
   const ARROW_HEAD_VIEWBOX = 7 // marker viewBox の一辺
   const ARROW_HEAD_SIZE = 22 // 矢先のレンダリングサイズ（user space）
   const ARROW_HEAD_STROKE = (ARROW_STROKE_WIDTH * ARROW_HEAD_VIEWBOX) / ARROW_HEAD_SIZE
   // 円弧矢印（境界の外側を各辺に沿って回る）
-  const ARC_ARROW_OFFSET = 12 // 境界の外側へ円弧矢印を逃がす距離(px)
+  const ARC_ARROW_OFFSET = 18 // 境界の外側へ円弧矢印を逃がす距離(px)
   const ARC_ARROW_TRIM = 0.12 // 各辺の両端をこの割合だけ詰め、3 本の矢印に隙間をつくる
-  const HUE_LABEL_OFFSET = 24 // 円弧矢印のさらに外側へ「色相」を置く距離(px)
+  const HUE_LABEL_OFFSET = 18 // 円弧矢印のさらに外側へ「色相」を置く距離(px)
   // 放射状の矢印（白色点から境界へ）
-  const RADIAL_START_GAP = 12 // 白色点中心から矢印開始までの距離(px)
-  const RADIAL_END_GAP = 6 // 境界の手前で矢印を止める距離(px)
-  const SATURATION_LABEL_OFFSET = 18 // 「彩度」を緑へ向かう矢印から横にずらす距離(px)
+  const RADIAL_START_GAP = 18 // 白色点中心から矢印開始までの距離(px)
+  const RADIAL_END_GAP = 24 // 境界の手前で矢印を止める距離(px)
+  const SATURATION_LABEL_OFFSET = 28 // 「彩度」を緑へ向かう矢印から横にずらす距離(px)
   const FONT_SIZE_ANNOTATION = 26
 
   // ===== 白色点 =====
