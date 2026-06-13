@@ -235,13 +235,19 @@
   const yAt = (y: number): number => PLOT_BOTTOM - (y / YMAX) * PLOT_HEIGHT
 
   // ===== 色域境界（スペクトル軌跡 + 純紫軌跡）のパス =====
-  // スペクトル軌跡は d3-shape の Catmull-Rom 曲線でなめらかに描く。
+  // 表示用の輪郭線は d3-shape の Catmull-Rom 曲線でなめらかに描く。
   // 端（700nm → 380nm）を直線で結んで閉じた辺が純紫軌跡（line of purples）になる。
   const spectralCurve = line<LocusPoint>()
     .x((p) => xAt(p.x))
     .y((p) => yAt(p.y))
     .curve(curveCatmullRom)
   const boundaryPath = `${spectralCurve(locus) ?? ""} L ${xAt(locus[0].x)} ${yAt(locus[0].y)} Z`
+
+  // 塗りのクリップには、内外判定（isInside）と同一の denseLocus 多角形を使う。
+  // d3 の曲線をそのままクリップに使うと、赤端（660〜700nm が密集する尖り）付近で
+  // Catmull-Rom の張り出しと判定多角形がわずかにずれ、内部に白い隙間が生じるため。
+  const clipPath =
+    "M " + denseLocus.map((p) => `${xAt(p.x)} ${yAt(p.y)}`).join(" L ") + " Z"
 
   // ===== 色度座標 (x, y) を sRGB 文字列へ変換 =====
   // 明るさ Y=1 として XYZ を復元し、sRGB へ線形変換する。
@@ -299,9 +305,12 @@
   }
 
   // ===== 色域を塗りつぶすセル群 =====
-  // セルの 4 隅のいずれかが色域内にあれば描画対象とし、中心の色で塗る。
-  // 実際の境界はクリップパスで切り取るため、境界付近も隙間なく埋まる。
+  // セル内の 3×3 のサンプル点（四隅・各辺の中点・中心）のいずれかが色域内にあれば
+  // 描画対象とし、中心の色で塗る。実際の境界はクリップパスで切り取る。
+  // 四隅だけの判定では、赤端のような鋭い角でセルを取りこぼして白く残るため、
+  // サンプル点を増やして角付近まで確実にセルを拾う。
   const HALF = STEP / 2
+  const SAMPLE_OFFSETS = [-HALF, 0, HALF]
   const cells: Cell[] = (() => {
     const result: Cell[] = []
     const cols = Math.ceil(XMAX / STEP)
@@ -310,12 +319,17 @@
       const cy = (row + 0.5) * STEP
       for (let col = 0; col < cols; col++) {
         const cx = (col + 0.5) * STEP
-        const anyCornerInside =
-          isInside(cx - HALF, cy - HALF) ||
-          isInside(cx + HALF, cy - HALF) ||
-          isInside(cx - HALF, cy + HALF) ||
-          isInside(cx + HALF, cy + HALF)
-        if (anyCornerInside) {
+        let hit = false
+        for (const ox of SAMPLE_OFFSETS) {
+          for (const oy of SAMPLE_OFFSETS) {
+            if (isInside(cx + ox, cy + oy)) {
+              hit = true
+              break
+            }
+          }
+          if (hit) break
+        }
+        if (hit) {
           result.push({ cx, cy, color: xyToRGB(cx, cy) })
         }
       }
@@ -342,7 +356,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {TOTAL_WIDTH} {TOTAL_HEIGHT}">
   <defs>
     <clipPath id="gamut-clip-{ID}">
-      <path d={boundaryPath} />
+      <path d={clipPath} />
     </clipPath>
   </defs>
 
