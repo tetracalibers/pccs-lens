@@ -42,8 +42,8 @@
   const STROKE_WIDTH_TICK = 1.5
 
   // ===== 色定数 =====
-  const COL_AXIS = "var(--color-body)"
-  const COL_LABEL = "var(--color-body)"
+  const COL_AXIS = "var(--canvas-pen-gray)"
+  const COL_LABEL = "var(--canvas-pen-gray)"
 
   // ===== カラーフィル =====
   // 元の xy 色度図と同じ色域の色を、薄く（低い不透明度で）表示する。
