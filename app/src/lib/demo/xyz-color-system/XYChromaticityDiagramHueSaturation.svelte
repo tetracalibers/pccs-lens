@@ -49,11 +49,13 @@
   // 元の xy 色度図と同じ色域の色を、薄く（低い不透明度で）表示する。
   const STEP = 0.01 // 色域内を細かなセルで塗り分ける際の刻み幅（色度座標の単位）
   const CELL_OVERLAP = 1.5 // セル同士の継ぎ目（白スジ）を防ぐ重なり(px)
-  const GAMUT_FILL_OPACITY = 0.9 // 色域の塗りの薄さ（0〜1。小さいほど薄い）
+  const GAMUT_FILL_OPACITY = 0.8 // 色域の塗りの薄さ（0〜1。小さいほど薄い）
 
   // ===== 注釈の矢印・ラベル =====
-  const COL_ARROW = "var(--color-body)"
-  const ARROW_STROKE_WIDTH = 3
+  // 色相（境界を回る円弧矢印・ラベル）はピンク、彩度（放射状矢印・ラベル）は白で描く。
+  const COL_HUE = "var(--canvas-pen-pink)"
+  const COL_SATURATION = "var(--canvas-pen-water)"
+  const ARROW_STROKE_WIDTH = 3.5
   // 矢じり（タイプA）
   const ARROW_HEAD_VIEWBOX = 7 // marker viewBox の一辺
   const ARROW_HEAD_SIZE = 22 // 矢先のレンダリングサイズ（user space）
@@ -513,9 +515,9 @@
     </clipPath>
     <!-- 「色相」ラベルを沿わせるためのオフセットパス -->
     <path id="hue-label-path-{ID}" d={hueLabelPathD} fill="none" />
-    <!-- 矢じり（タイプA） -->
+    <!-- 矢じり（タイプA）。色相＝ピンク、彩度＝白で色ごとに用意する -->
     <marker
-      id="arrow-{ID}"
+      id="arrow-hue-{ID}"
       viewBox="0 0 {ARROW_HEAD_VIEWBOX} {ARROW_HEAD_VIEWBOX}"
       refX={ARROW_HEAD_VIEWBOX / 2}
       refY={ARROW_HEAD_VIEWBOX / 2}
@@ -527,7 +529,27 @@
       <polyline
         points="0,3.5 3.5,1.75 0,0"
         fill="none"
-        stroke={COL_ARROW}
+        stroke={COL_HUE}
+        stroke-width={ARROW_HEAD_STROKE}
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        transform="translate(1.1667 1.75)"
+      />
+    </marker>
+    <marker
+      id="arrow-sat-{ID}"
+      viewBox="0 0 {ARROW_HEAD_VIEWBOX} {ARROW_HEAD_VIEWBOX}"
+      refX={ARROW_HEAD_VIEWBOX / 2}
+      refY={ARROW_HEAD_VIEWBOX / 2}
+      markerWidth={ARROW_HEAD_SIZE}
+      markerHeight={ARROW_HEAD_SIZE}
+      markerUnits="userSpaceOnUse"
+      orient="auto-start-reverse"
+    >
+      <polyline
+        points="0,3.5 3.5,1.75 0,0"
+        fill="none"
+        stroke={COL_SATURATION}
         stroke-width={ARROW_HEAD_STROKE}
         stroke-linecap="round"
         stroke-linejoin="round"
@@ -549,32 +571,37 @@
     {/each}
   </g>
 
-  <!-- 境界の外側を各辺に沿って回る円弧矢印（反時計回り） -->
+  <!-- 境界の外側を各辺に沿って回る円弧矢印（反時計回り）：色相＝ピンク -->
   <g
     fill="none"
-    stroke={COL_ARROW}
+    stroke={COL_HUE}
     stroke-width={ARROW_STROKE_WIDTH}
     stroke-linecap="round"
     stroke-linejoin="round"
   >
     {#each arcArrowPaths as d, i (i)}
-      <path {d} marker-end="url(#arrow-{ID})" />
+      <path {d} marker-end="url(#arrow-hue-{ID})" />
     {/each}
   </g>
 
-  <!-- 「色相」ラベル（赤 → 緑の辺の外側） -->
-  <text fill={COL_LABEL} font-size={FONT_SIZE_ANNOTATION} font-family="var(--font-ja-base)">
+  <!-- 「色相」ラベル（赤 → 緑の辺の外側）：ピンク -->
+  <text
+    fill={COL_HUE}
+    font-size={FONT_SIZE_ANNOTATION}
+    font-weight="bold"
+    font-family="var(--font-ja-base)"
+  >
     <textPath href="#hue-label-path-{ID}" startOffset="50%" text-anchor="middle">色相</textPath>
   </text>
 
-  <!-- 白色点から境界へ伸びる 6 本の放射状矢印 -->
-  <g stroke={COL_ARROW} stroke-width={ARROW_STROKE_WIDTH} stroke-linecap="round">
+  <!-- 白色点から境界へ伸びる 6 本の放射状矢印：彩度＝白 -->
+  <g stroke={COL_SATURATION} stroke-width={ARROW_STROKE_WIDTH} stroke-linecap="round">
     {#each radialArrows as a, i (i)}
-      <line x1={a.x1} y1={a.y1} x2={a.x2} y2={a.y2} marker-end="url(#arrow-{ID})" />
+      <line x1={a.x1} y1={a.y1} x2={a.x2} y2={a.y2} marker-end="url(#arrow-sat-{ID})" />
     {/each}
   </g>
 
-  <!-- 「彩度」ラベル（緑へ向かう矢印に沿わせる） -->
+  <!-- 「彩度」ラベル（緑へ向かう矢印に沿わせる）：白 -->
   <text
     x={satLabelX}
     y={satLabelY}
@@ -583,7 +610,8 @@
     dominant-baseline="central"
     font-family="var(--font-ja-base)"
     font-size={FONT_SIZE_ANNOTATION}
-    fill={COL_LABEL}
+    font-weight="bold"
+    fill={COL_SATURATION}
   >
     彩度
   </text>
