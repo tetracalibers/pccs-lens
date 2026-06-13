@@ -46,10 +46,10 @@
   const COL_LABEL = "var(--color-body)"
 
   // ===== 境界線（スペクトル軌跡・純紫軌跡）とそのラベル =====
-  const STROKE_WIDTH_LOCUS = 3
-  const FONT_SIZE_CURVE_LABEL = 17
+  const STROKE_WIDTH_LOCUS = 6
+  const FONT_SIZE_CURVE_LABEL = 22
   const SPECTRAL_LABEL_OFFSET = 14 // スペクトル軌跡から外側へラベルを逃がす距離(px)
-  const PURPLE_LABEL_OFFSET = 8 // 純紫軌跡から外側へラベルを逃がす距離(px)
+  const PURPLE_LABEL_OFFSET = 14 // 純紫軌跡から外側へラベルを逃がす距離(px)
   // スペクトル軌跡ラベルを沿わせる波長範囲（緑〜橙の上辺右側のなだらかな部分）
   const SPECTRAL_LABEL_NM_MIN = 525
   const SPECTRAL_LABEL_NM_MAX = 605
@@ -70,7 +70,7 @@
   ]
   // 純紫軌跡のグラデーション（青紫 → 赤）
   const COL_PURPLE_START = "#4b0082"
-  const COL_PURPLE_END = "#ff0000"
+  const COL_PURPLE_END = "#7a0000"
 
   // ===== カラーフィル =====
   // 色域内を細かなセルで塗り分ける際の刻み幅（色度座標の単位）
