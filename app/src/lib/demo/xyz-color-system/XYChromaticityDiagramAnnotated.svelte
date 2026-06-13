@@ -46,13 +46,45 @@
   const COL_LABEL = "var(--color-body)"
 
   // ===== カラーフィル =====
-  // 色域内を細かなセルで塗り分ける際の刻み幅（色度座標の単位）
-  const STEP = 0.01
-  // セル同士の継ぎ目（白スジ）を防ぐためのレンダリング上の重なり（px）
-  const CELL_OVERLAP = 1.5
+  // 元の xy 色度図と同じ色域の色を、薄く（低い不透明度で）表示する。
+  const STEP = 0.01 // 色域内を細かなセルで塗り分ける際の刻み幅（色度座標の単位）
+  const CELL_OVERLAP = 1.5 // セル同士の継ぎ目（白スジ）を防ぐ重なり(px)
+  const GAMUT_FILL_OPACITY = 0.35 // 色域の塗りの薄さ（0〜1。小さいほど薄い）
+
+  // ===== 境界線（スペクトル軌跡・純紫軌跡）とそのラベル =====
+  const STROKE_WIDTH_LOCUS = 6
+  const FONT_SIZE_CURVE_LABEL = 22
+  const SPECTRAL_LABEL_OFFSET = 14 // スペクトル軌跡から外側へラベルを逃がす距離(px)
+  const PURPLE_LABEL_OFFSET = 14 // 純紫軌跡から外側へラベルを逃がす距離(px)
+  // スペクトル軌跡ラベルを沿わせる波長範囲（緑〜橙の上辺右側のなだらかな部分）
+  const SPECTRAL_LABEL_NM_MIN = 525
+  const SPECTRAL_LABEL_NM_MAX = 605
+
+  // ===== 白色点 =====
+  // 等エネルギー白色点 E。点を打ち、その上にラベルを表示する。
+  const WHITE_X = 1 / 3
+  const WHITE_Y = 1 / 3
+  const WHITE_DOT_RADIUS = 6
+  const WHITE_LABEL_GAP = 8 // 点の上端からラベル下端までの距離(px)
+  const FONT_SIZE_WHITE_LABEL = 22
+
+  // スペクトル軌跡を彩色するための波長→色の対応（SpectrumGradient.svelte と同一）
+  const SPECTRUM_STOPS = [
+    { nm: 405, color: "#4b0082" },
+    { nm: 445, color: "#0000ff" },
+    { nm: 480, color: "#00bfff" },
+    { nm: 535, color: "#00ff00" },
+    { nm: 580, color: "#ffff00" },
+    { nm: 600, color: "#ff7f00" },
+    { nm: 620, color: "#ff0000" },
+    { nm: 780, color: "#7a0000" }
+  ]
+  // 純紫軌跡のグラデーション（青紫 → 赤）
+  const COL_PURPLE_START = "#4b0082"
+  const COL_PURPLE_END = "#7a0000"
 
   // SVG 内 id の衝突を避けるための固定サフィックス
-  const ID = "xy-chromaticity"
+  const ID = "xy-chromaticity-annotated"
 
   // ===== CIE 1931 等色関数（10nm 刻み, 2°視野標準観測者） =====
   // 色度座標を求めて馬蹄形（スペクトル軌跡）を構成するために用いる。
@@ -181,10 +213,8 @@
   })
 
   // ===== スペクトル軌跡を密にサンプリングした多角形 =====
-  // 色域の塗り（セル選択）に使う多角形を、表示に使う d3 の Catmull-Rom 曲線に
-  // 合わせるため、同じ centripetal Catmull-Rom（α=0.5）で軌跡を細かく補間する。
-  // x・y は等倍スケールのため、色度座標空間でのサンプリングで曲線形状が一致する。
-  // これを怠ると、点間隔が広い 500〜510nm 付近で塗りが曲線に届かず白く残る。
+  // centripetal Catmull-Rom（α=0.5）で軌跡を細かく補間し、なめらかな馬蹄形を得る。
+  // 各点には区間内で線形補間した波長を持たせ、スペクトルの色での彩色に使う。
   const CR_ALPHA = 0.5
   const CR_SAMPLE_SPACING = 0.008 // サンプル点間隔（色度座標の単位）の目安
 
@@ -217,7 +247,10 @@
         const a3 = crLerp(p2, p3, t2, t3, t)
         const b1 = crLerp(a1, a2, t0, t2, t)
         const b2 = crLerp(a2, a3, t1, t3, t)
-        out.push(crLerp(b1, b2, t1, t2, t))
+        const pos = crLerp(b1, b2, t1, t2, t)
+        // 波長は区間内で線形補間しておき、軌跡を波長の色で彩色する際に使う
+        const nm = p1.nm + (p2.nm - p1.nm) * (s / segments)
+        out.push({ nm, x: pos.x, y: pos.y })
       }
     }
     out.push(pts[n - 1])
@@ -230,9 +263,8 @@
   const xAt = (x: number): number => PLOT_LEFT + (x / XMAX) * PLOT_WIDTH
   const yAt = (y: number): number => PLOT_BOTTOM - (y / YMAX) * PLOT_HEIGHT
 
-  // ===== 色域境界（スペクトル軌跡 + 純紫軌跡）のクリップパス =====
-  // 内外判定（isInside）と同一の denseLocus 多角形からクリップパスを作り、
-  // 塗りのセル選択と境界形状を完全に一致させる。
+  // ===== 色域境界のクリップパス =====
+  // セルの塗りをこの多角形で切り取り、馬蹄形の形に収める。
   // 端（700nm → 380nm）を直線で結んで閉じた辺が純紫軌跡（line of purples）になる。
   const clipPath = "M " + denseLocus.map((p) => `${xAt(p.x)} ${yAt(p.y)}`).join(" L ") + " Z"
 
@@ -270,7 +302,6 @@
   }
 
   // ===== 点が色域多角形の内側にあるかの判定（レイキャスティング） =====
-  // クリップに使う曲線と一致させるため、密にサンプリングした denseLocus を用いる。
   function isInside(px: number, py: number): boolean {
     let inside = false
     for (let i = 0, j = denseLocus.length - 1; i < denseLocus.length; j = i++) {
@@ -292,10 +323,8 @@
   }
 
   // ===== 色域を塗りつぶすセル群 =====
-  // セル内の 3×3 のサンプル点（四隅・各辺の中点・中心）のいずれかが色域内にあれば
-  // 描画対象とし、中心の色で塗る。実際の境界はクリップパスで切り取る。
-  // 四隅だけの判定では、赤端のような鋭い角でセルを取りこぼして白く残るため、
-  // サンプル点を増やして角付近まで確実にセルを拾う。
+  // セル内の 3×3 のサンプル点のいずれかが色域内にあれば描画対象とし、中心の色で塗る。
+  // 実際の境界はクリップパスで切り取る。
   const HALF = STEP / 2
   const SAMPLE_OFFSETS = [-HALF, 0, HALF]
   const cells: Cell[] = (() => {
@@ -328,6 +357,100 @@
   const cellW = (STEP / XMAX) * PLOT_WIDTH + CELL_OVERLAP
   const cellH = (STEP / YMAX) * PLOT_HEIGHT + CELL_OVERLAP
 
+  // ===== スペクトル軌跡の彩色 =====
+  // 波長 → 色（SPECTRUM_STOPS を線形補間）
+  function parseHex(hex: string): [number, number, number] {
+    return [
+      parseInt(hex.slice(1, 3), 16),
+      parseInt(hex.slice(3, 5), 16),
+      parseInt(hex.slice(5, 7), 16)
+    ]
+  }
+  function spectrumColorAt(nm: number): string {
+    const stops = SPECTRUM_STOPS
+    if (nm <= stops[0].nm) return stops[0].color
+    const last = stops[stops.length - 1]
+    if (nm >= last.nm) return last.color
+    for (let i = 0; i < stops.length - 1; i++) {
+      if (nm >= stops[i].nm && nm <= stops[i + 1].nm) {
+        const t = (nm - stops[i].nm) / (stops[i + 1].nm - stops[i].nm)
+        const c1 = parseHex(stops[i].color)
+        const c2 = parseHex(stops[i + 1].color)
+        const r = Math.round(c1[0] + (c2[0] - c1[0]) * t)
+        const g = Math.round(c1[1] + (c2[1] - c1[1]) * t)
+        const b = Math.round(c1[2] + (c2[2] - c1[2]) * t)
+        return `rgb(${r}, ${g}, ${b})`
+      }
+    }
+    return last.color
+  }
+
+  interface LocusSegment {
+    x1: number
+    y1: number
+    x2: number
+    y2: number
+    color: string
+  }
+  // スペクトル軌跡を細かな線分に分け、各線分を波長の色で塗ることで
+  // 曲線に沿ったスペクトルのグラデーションを表現する。
+  const locusSegments: LocusSegment[] = denseLocus.slice(0, -1).map((p, i) => {
+    const q = denseLocus[i + 1]
+    return {
+      x1: xAt(p.x),
+      y1: yAt(p.y),
+      x2: xAt(q.x),
+      y2: yAt(q.y),
+      color: spectrumColorAt((p.nm + q.nm) / 2)
+    }
+  })
+
+  // 純紫軌跡（軌跡の両端 380nm と 700nm を結ぶ直線）の端点
+  const violetEnd = denseLocus[0]
+  const redEnd = denseLocus[denseLocus.length - 1]
+
+  // ===== ラベルを線に沿わせるためのオフセットパス =====
+  // 各点を、白色点 E から離れる法線方向へ offset(px) ずらした path を作り、
+  // textPath で文字を線の外側に沿わせる。
+  function offsetPathD(pts: LocusPoint[], offset: number): string {
+    const ex = xAt(WHITE_X)
+    const ey = yAt(WHITE_Y)
+    const n = pts.length
+    const coords: string[] = []
+    for (let i = 0; i < n; i++) {
+      const prev = pts[Math.max(0, i - 1)]
+      const next = pts[Math.min(n - 1, i + 1)]
+      const sx = xAt(pts[i].x)
+      const sy = yAt(pts[i].y)
+      let tx = xAt(next.x) - xAt(prev.x)
+      let ty = yAt(next.y) - yAt(prev.y)
+      const tl = Math.hypot(tx, ty) || 1
+      tx /= tl
+      ty /= tl
+      let nx = -ty
+      let ny = tx
+      // 法線を外向き（E から離れる向き）に揃える
+      if (nx * (sx - ex) + ny * (sy - ey) < 0) {
+        nx = -nx
+        ny = -ny
+      }
+      coords.push(`${sx + nx * offset} ${sy + ny * offset}`)
+    }
+    return "M " + coords.join(" L ")
+  }
+
+  // スペクトル軌跡ラベルのパス（上辺右側のなだらかな部分に沿わせる）
+  const spectralLabelPathD = offsetPathD(
+    denseLocus.filter((p) => p.nm >= SPECTRAL_LABEL_NM_MIN && p.nm <= SPECTRAL_LABEL_NM_MAX),
+    SPECTRAL_LABEL_OFFSET
+  )
+  // 純紫軌跡ラベルのパス（青紫端 → 赤端、線の外側）
+  const purpleLabelPathD = offsetPathD([violetEnd, redEnd], PURPLE_LABEL_OFFSET)
+
+  // ===== 白色点の座標 =====
+  const whiteCx = xAt(WHITE_X)
+  const whiteCy = yAt(WHITE_Y)
+
   // ===== 目盛り生成 =====
   const xTicks = Array.from(
     { length: Math.round(XMAX / TICK_INTERVAL) + 1 },
@@ -345,10 +468,25 @@
     <clipPath id="gamut-clip-{ID}">
       <path d={clipPath} />
     </clipPath>
+    <!-- 純紫軌跡のグラデーション（青紫 → 赤）。両端の座標に沿わせる -->
+    <linearGradient
+      id="purple-line-grad-{ID}"
+      gradientUnits="userSpaceOnUse"
+      x1={xAt(violetEnd.x)}
+      y1={yAt(violetEnd.y)}
+      x2={xAt(redEnd.x)}
+      y2={yAt(redEnd.y)}
+    >
+      <stop offset="0" stop-color={COL_PURPLE_START} />
+      <stop offset="1" stop-color={COL_PURPLE_END} />
+    </linearGradient>
+    <!-- ラベルを沿わせるためのオフセットパス -->
+    <path id="spectral-label-path-{ID}" d={spectralLabelPathD} fill="none" />
+    <path id="purple-label-path-{ID}" d={purpleLabelPathD} fill="none" />
   </defs>
 
-  <!-- 色域の塗りつぶし（多数のセルを色域境界でクリップ） -->
-  <g clip-path="url(#gamut-clip-{ID})" shape-rendering="crispEdges">
+  <!-- 馬蹄形の内部：元の色域の色を薄く（低い不透明度で）表示 -->
+  <g clip-path="url(#gamut-clip-{ID})" shape-rendering="crispEdges" opacity={GAMUT_FILL_OPACITY}>
     {#each cells as cell, i (i)}
       <rect
         x={xAt(cell.cx) - cellW / 2}
@@ -359,6 +497,52 @@
       />
     {/each}
   </g>
+
+  <!-- スペクトル軌跡（波長の色のグラデーション） -->
+  <g stroke-width={STROKE_WIDTH_LOCUS} stroke-linecap="round">
+    {#each locusSegments as seg, i (i)}
+      <line x1={seg.x1} y1={seg.y1} x2={seg.x2} y2={seg.y2} stroke={seg.color} />
+    {/each}
+  </g>
+
+  <!-- 純紫軌跡（青紫 → 赤のグラデーション） -->
+  <line
+    x1={xAt(violetEnd.x)}
+    y1={yAt(violetEnd.y)}
+    x2={xAt(redEnd.x)}
+    y2={yAt(redEnd.y)}
+    stroke="url(#purple-line-grad-{ID})"
+    stroke-width={STROKE_WIDTH_LOCUS}
+    stroke-linecap="round"
+  />
+
+  <!-- 各境界線の外側に沿うラベル -->
+  <g fill={COL_LABEL} font-size={FONT_SIZE_CURVE_LABEL} font-family="var(--font-ja-base)">
+    <text dominant-baseline="auto">
+      <textPath href="#spectral-label-path-{ID}" startOffset="50%" text-anchor="middle">
+        スペクトル軌跡
+      </textPath>
+    </text>
+    <text dominant-baseline="hanging">
+      <textPath href="#purple-label-path-{ID}" startOffset="50%" text-anchor="middle">
+        純紫軌跡
+      </textPath>
+    </text>
+  </g>
+
+  <!-- 白色点とそのラベル -->
+  <circle cx={whiteCx} cy={whiteCy} r={WHITE_DOT_RADIUS} fill={COL_AXIS} />
+  <text
+    x={whiteCx}
+    y={whiteCy - WHITE_DOT_RADIUS - WHITE_LABEL_GAP}
+    text-anchor="middle"
+    dominant-baseline="auto"
+    font-family="var(--font-ja-base)"
+    font-size={FONT_SIZE_WHITE_LABEL}
+    fill={COL_LABEL}
+  >
+    白色点
+  </text>
 
   <!-- 横軸 -->
   <line
