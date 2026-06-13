@@ -571,54 +571,7 @@
     {/each}
   </g>
 
-  <!-- 境界の外側を各辺に沿って回る円弧矢印（反時計回り）：色相＝ピンク -->
-  <g
-    fill="none"
-    stroke={COL_HUE}
-    stroke-width={ARROW_STROKE_WIDTH}
-    stroke-linecap="round"
-    stroke-linejoin="round"
-  >
-    {#each arcArrowPaths as d, i (i)}
-      <path {d} marker-end="url(#arrow-hue-{ID})" />
-    {/each}
-  </g>
-
-  <!-- 「色相」ラベル（赤 → 緑の辺の外側）：ピンク -->
-  <text
-    fill={COL_HUE}
-    font-size={FONT_SIZE_ANNOTATION}
-    font-weight="bold"
-    font-family="var(--font-ja-base)"
-  >
-    <textPath href="#hue-label-path-{ID}" startOffset="50%" text-anchor="middle">色相</textPath>
-  </text>
-
-  <!-- 白色点から境界へ伸びる 6 本の放射状矢印：彩度＝白 -->
-  <g stroke={COL_SATURATION} stroke-width={ARROW_STROKE_WIDTH} stroke-linecap="round">
-    {#each radialArrows as a, i (i)}
-      <line x1={a.x1} y1={a.y1} x2={a.x2} y2={a.y2} marker-end="url(#arrow-sat-{ID})" />
-    {/each}
-  </g>
-
-  <!-- 「彩度」ラベル（緑へ向かう矢印に沿わせる）：白 -->
-  <text
-    x={satLabelX}
-    y={satLabelY}
-    transform="rotate({satAngle} {satLabelX} {satLabelY})"
-    text-anchor="middle"
-    dominant-baseline="central"
-    font-family="var(--font-ja-base)"
-    font-size={FONT_SIZE_ANNOTATION}
-    font-weight="bold"
-    fill={COL_SATURATION}
-  >
-    彩度
-  </text>
-
-  <!-- 白色点（放射状矢印の起点） -->
-  <circle cx={whiteCx} cy={whiteCy} r={WHITE_DOT_RADIUS} fill={COL_AXIS} />
-
+  <!-- 座標軸（矢印より下に描画する） -->
   <!-- 横軸 -->
   <line
     x1={PLOT_LEFT}
@@ -698,4 +651,52 @@
   >
     y
   </text>
+
+  <!-- 境界の外側を各辺に沿って回る円弧矢印（反時計回り）：色相＝ピンク -->
+  <g
+    fill="none"
+    stroke={COL_HUE}
+    stroke-width={ARROW_STROKE_WIDTH}
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    {#each arcArrowPaths as d, i (i)}
+      <path {d} marker-end="url(#arrow-hue-{ID})" />
+    {/each}
+  </g>
+
+  <!-- 「色相」ラベル（赤 → 緑の辺の外側）：ピンク -->
+  <text
+    fill={COL_HUE}
+    font-size={FONT_SIZE_ANNOTATION}
+    font-weight="bold"
+    font-family="var(--font-ja-base)"
+  >
+    <textPath href="#hue-label-path-{ID}" startOffset="50%" text-anchor="middle">色相</textPath>
+  </text>
+
+  <!-- 白色点から境界へ伸びる 6 本の放射状矢印：彩度＝白 -->
+  <g stroke={COL_SATURATION} stroke-width={ARROW_STROKE_WIDTH} stroke-linecap="round">
+    {#each radialArrows as a, i (i)}
+      <line x1={a.x1} y1={a.y1} x2={a.x2} y2={a.y2} marker-end="url(#arrow-sat-{ID})" />
+    {/each}
+  </g>
+
+  <!-- 「彩度」ラベル（緑へ向かう矢印に沿わせる）：白 -->
+  <text
+    x={satLabelX}
+    y={satLabelY}
+    transform="rotate({satAngle} {satLabelX} {satLabelY})"
+    text-anchor="middle"
+    dominant-baseline="central"
+    font-family="var(--font-ja-base)"
+    font-size={FONT_SIZE_ANNOTATION}
+    font-weight="bold"
+    fill={COL_SATURATION}
+  >
+    彩度
+  </text>
+
+  <!-- 白色点（放射状矢印の起点） -->
+  <circle cx={whiteCx} cy={whiteCy} r={WHITE_DOT_RADIUS} fill={COL_AXIS} />
 </svg>
