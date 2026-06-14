@@ -2,8 +2,10 @@
   import GuideMap from "$lib/layouts/guide-map.svelte"
   import Heading2 from "$lib/components/m-html/Heading2.svelte"
   import PlainHeading3 from "$lib/components/m-html/PlainHeading3.svelte"
+  import PageLink from "$lib/components/m-directive/PageLink.svelte"
   import CgDraftPageTitle from "$lib/components/m-directive/CgDraftPageTitle.svelte"
   import { cgCategories } from "$lib/content-pages/cg"
+  import { isPageLink } from "$lib/content-pages/types"
   import { parseParagraphs } from "$lib/md/paragraph"
 </script>
 
@@ -24,7 +26,11 @@
       <ul>
         {#each section.links as link, i (i)}
           <li>
-            <CgDraftPageTitle title={link.title} group={link.group} />
+            {#if isPageLink(link)}
+              <PageLink slug={link.slug} />
+            {:else}
+              <CgDraftPageTitle title={link.title} group={link.group} />
+            {/if}
           </li>
         {/each}
       </ul>

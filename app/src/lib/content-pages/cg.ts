@@ -1,11 +1,14 @@
 import data from "./cg.yaml"
+import type { PageLink } from "./types"
 
 export type CgGroup = "CG" | "ImgP"
 
-export interface CgLink {
+export interface CgDraftLink {
   title: string
   group: CgGroup[]
 }
+
+export type CgLink = PageLink | CgDraftLink
 
 export interface CgSection {
   title: string
