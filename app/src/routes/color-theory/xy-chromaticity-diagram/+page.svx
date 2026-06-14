@@ -7,6 +7,14 @@ grades: ["1"]
 draft: true
 ---
 
+<script>
+  import SVGWrapper from '$lib/demo/SVGWrapper.svelte'
+  import XYChromaticityDiagram from '$lib/demo/xyz-color-system/XYChromaticityDiagram.svelte'
+  import XYChromaticityDiagramAnnotated from '$lib/demo/xyz-color-system/XYChromaticityDiagramAnnotated.svelte'
+  import XYChromaticityDiagramHueSaturation from '$lib/demo/xyz-color-system/XYChromaticityDiagramHueSaturation.svelte'
+  import XYChromaticityDiagramLightnessStack from '$lib/demo/xyz-color-system/XYChromaticityDiagramLightnessStack.svelte'
+</script>
+
 ## :WithGradeTag[色度座標]{grades="1"}
 
 [XYZ表色系](/color-theory/xyz-color-system/)では、三刺激値 $$X, Y, Z$$ で色を表すことができます。
@@ -68,7 +76,35 @@ $$
 色度座標で点を定め、その点を並べて色度を表す平面図を:Mark[色度図]といいます。
 特に、色度座標の $$x$$ を:Mark[横軸]に、$$y$$ を:Mark[縦軸]にとった色度図は、:Mark[xy色度図]と呼ばれます。
 
-TODO：xy色度図を実際に描く
+<SVGWrapper maxW={480}>
+  <XYChromaticityDiagram />
+</SVGWrapper>
+
+このxy色度図の外周にある馬蹄形の曲線は、各波長の単色光（純色）の色度を表しており、:Mark[スペクトル軌跡]と呼ばれます。下側をまっすぐ結ぶ辺は、スペクトルには存在しない紫の色度を表す:Mark[純紫軌跡]です。この境界線の内側が、人間が見ることのできるすべての色の色度の範囲になります。
+
+<SVGWrapper maxW={480}>
+  <XYChromaticityDiagramAnnotated />
+</SVGWrapper>
+
+馬蹄形の中央付近にある:Mark[白色点]は、赤・緑・青のバランスがとれた、色みのない白色光の色度を表します。境界に近い色ほど色みが鮮やかで、白色点に近づくほど色みが薄くなります。
+
+xy色度図の上では、色みの違いが位置として表れます。馬蹄形の:Mark[境界に沿って回る]と:Mark[色相]（赤・緑・青といった色みの種類）が移り変わり、:Mark[白色点から境界へ近づく]ほど:Mark[彩度]（色みの鮮やかさ）が高くなります。
+
+<SVGWrapper maxW={480}>
+  <XYChromaticityDiagramHueSaturation />
+</SVGWrapper>
+
+## :WithGradeTag[Yxy表色系]{grades="1"}
+
+xy色度図は色みだけを表す平面ですが、ここに明るさ $$Y$$ を:Mark[高さ]として加えると、色を立体的に表すことができます。このように、明るさ $$Y$$ と色度座標 $$x, y$$ で色を表す方法を:Mark[Yxy表色系]といいます。
+
+次の図は、xy色度図を明度ごとに積み重ねたものです。:Mark[上の層ほど明るく]、:Mark[下の層ほど暗い]色度図になっています。
+
+各色度図の白色点を縦に貫く軸を:Mark[無彩色軸]といい、明度だけが変化する白〜灰〜黒の無彩色の並びを表します。
+
+<SVGWrapper maxW={420}>
+  <XYChromaticityDiagramLightnessStack />
+</SVGWrapper>
 
 ## :WithGradeTag[XYZ表色系による色表示]{grades="1"}
 
