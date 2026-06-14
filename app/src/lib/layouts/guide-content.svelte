@@ -9,6 +9,7 @@
 
   import Mark from "$lib/components/m-directive/Mark.svelte"
   import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
+  import GroupTag from "$lib/components/m-directive/GroupTag.svelte"
   import WithGradeTag from "$lib/components/m-directive/WithGradeTag.svelte"
   import Info from "$lib/components/m-directive/Info.svelte"
   import Note from "$lib/components/m-directive/Note.svelte"
@@ -54,13 +55,20 @@
   import { sortGrades } from "$lib/meta/grade"
   import { colorTheoryCategoryBySlug } from "$lib/content-pages/color-theory"
   import { colorFieldsCategoryBySlug } from "$lib/content-pages/color-fields"
+  import { cgCategoryBySlug } from "$lib/content-pages/cg"
   import DraftTag from "$lib/components/DraftTag.svelte"
   import { ankiMode } from "$lib/state/anki.svelte"
 
   import "katex/dist/katex.min.css"
 
-  let { title, grades, useful, draft, children }: GuideFrontmatter & { children: Snippet } =
-    $props()
+  let {
+    title,
+    grades = [],
+    group = [],
+    useful,
+    draft,
+    children
+  }: GuideFrontmatter & { children: Snippet } = $props()
 
   const isAnki = $derived(ankiMode.isAnki)
 
@@ -80,6 +88,16 @@
         }
       }
       return { label: "色の活用分野", href: resolve("/color-fields") }
+    }
+    if (base === "cg") {
+      const category = slug ? cgCategoryBySlug.get(slug) : undefined
+      if (category) {
+        return {
+          label: category.title,
+          href: `${resolve("/cg")}#${category.id}` as ResolvedPathname
+        }
+      }
+      return { label: "CGの理論", href: resolve("/cg") }
     }
     if (base === "color-theory") {
       const category = slug ? colorTheoryCategoryBySlug.get(slug) : undefined
@@ -105,13 +123,16 @@
   <Breadcrumb category="contents" crumbs={[parentCrumb, { label: title }]} />
   <Heading1 icon="solar:pen-new-round-broken">{title}</Heading1>
   <div class="page-meta">
-    {#if grades.length > 0 || useful || draft}
+    {#if grades.length > 0 || group.length > 0 || useful || draft}
       <div class="page-grades">
         {#if draft}
           <DraftTag />
         {/if}
         {#each gradeList as grade (grade)}
           <GradeTag {grade} />
+        {/each}
+        {#each group as g (g)}
+          <GroupTag group={g} />
         {/each}
         {#if useful}
           <GradeTag grade="useful" />

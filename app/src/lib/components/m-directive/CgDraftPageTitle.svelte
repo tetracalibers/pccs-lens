@@ -1,9 +1,8 @@
 <script lang="ts">
-  import type { CgGroup } from "$lib/content-pages/cg"
+  import type { CgGroup } from "$lib/meta/group"
+  import GroupTag from "./GroupTag.svelte"
 
   let { title, group }: { title: string; group: CgGroup[] } = $props()
-
-  const labels: Record<CgGroup, string> = { CG: "CG", ImgP: "画像処理" }
 </script>
 
 <div class="cg-page-title">
@@ -11,7 +10,7 @@
   {#if group.length > 0}
     <span class="cg-groups">
       {#each group as g (g)}
-        <span class="group-tag" data-group={g}>{labels[g]}</span>
+        <GroupTag group={g} />
       {/each}
     </span>
   {/if}
@@ -57,30 +56,5 @@
     gap: 4px;
     margin-inline-start: auto;
     align-self: flex-end;
-  }
-
-  .group-tag {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    line-height: 1;
-    padding: 4px 8px;
-    border-radius: 4px;
-    color: #1a1a2e;
-    flex-shrink: 0;
-    white-space: nowrap;
-    box-sizing: border-box;
-    background: var(--_color);
-  }
-
-  .group-tag[data-group="CG"] {
-    --_color: #d8b4fe;
-  }
-
-  .group-tag[data-group="ImgP"] {
-    --_color: #a5d8ff;
   }
 </style>

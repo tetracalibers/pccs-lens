@@ -4,14 +4,14 @@
   import PlainHeading3 from "$lib/components/m-html/PlainHeading3.svelte"
   import PageLink from "$lib/components/m-directive/PageLink.svelte"
   import CgDraftPageTitle from "$lib/components/m-directive/CgDraftPageTitle.svelte"
-  import { cgCategories } from "$lib/content-pages/cg"
+  import { cgCategories, cgCategoryId } from "$lib/content-pages/cg"
   import { isPageLink } from "$lib/content-pages/types"
   import { parseParagraphs } from "$lib/md/paragraph"
 </script>
 
 <GuideMap title="CGの理論一覧">
   {#each cgCategories as category, ci (category.title)}
-    <Heading2 id={`cg-category-${ci}`}>{category.title}</Heading2>
+    <Heading2 id={cgCategoryId(ci)}>{category.title}</Heading2>
     {#if category.summary}
       {#each parseParagraphs(category.summary) as lines, pi (pi)}
         <p>
