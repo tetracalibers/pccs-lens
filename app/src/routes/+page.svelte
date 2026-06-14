@@ -44,6 +44,14 @@
       title: "慣用色名マップ",
       desc: "慣用色を色相・明度の2軸で眺め、比較して覚える",
       grades: ["3", "2"]
+    },
+    {
+      href: resolve("/cg"),
+      gradient: "linear-gradient(135deg, #4d96ff, #c77dff)",
+      glow: "#4d96ff",
+      title: "コンピュータグラフィックス",
+      desc: "デジタル画像や座標変換など、CGの基礎理論",
+      grades: []
     }
   ]
 
@@ -153,11 +161,13 @@
           <a href={content.href} class="tool-glass" style="--glow: {content.glow}">
             <div class="tool-gradient-bar" style="background: {content.gradient}"></div>
             <div class="tool-glass-body">
-              <div class="tool-glass-tags">
-                {#each content.grades as grade (grade)}
-                  <GradeTag {grade} variant="light" />
-                {/each}
-              </div>
+              {#if content.grades.length > 0}
+                <div class="tool-glass-tags">
+                  {#each content.grades as grade (grade)}
+                    <GradeTag {grade} variant="light" />
+                  {/each}
+                </div>
+              {/if}
               <h3>{content.title}</h3>
               <p>{content.desc}</p>
             </div>
