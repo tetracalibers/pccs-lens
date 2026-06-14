@@ -9,7 +9,7 @@
   import { parseParagraphs } from "$lib/md/paragraph"
 </script>
 
-<GuideMap title="CGの理論一覧">
+<GuideMap title="コンピュータグラフィックス">
   {#each cgCategories as category, ci (category.title)}
     <Heading2 id={cgCategoryId(ci)}>{category.title}</Heading2>
     {#if category.summary}
