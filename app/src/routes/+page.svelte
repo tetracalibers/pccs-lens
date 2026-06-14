@@ -18,6 +18,7 @@
     title: string
     desc: string
     grades: Grade[]
+    tags?: string[]
   }
 
   const contents: CardItem[] = [
@@ -81,7 +82,8 @@
       glow: "#4d96ff",
       title: "コンピュータグラフィックス",
       desc: "デジタル画像や座標変換など、CGの基礎理論",
-      grades: []
+      grades: [],
+      tags: ["CG Experts"]
     }
   ]
 </script>
@@ -214,10 +216,13 @@
           <a href={content.href} class="tool-glass" style="--glow: {content.glow}">
             <div class="tool-gradient-bar" style="background: {content.gradient}"></div>
             <div class="tool-glass-body">
-              {#if content.grades.length > 0}
+              {#if content.grades.length > 0 || (content.tags?.length ?? 0) > 0}
                 <div class="tool-glass-tags">
                   {#each content.grades as grade (grade)}
                     <GradeTag {grade} variant="light" />
+                  {/each}
+                  {#each content.tags ?? [] as tag (tag)}
+                    <span class="card-tag">{tag}</span>
                   {/each}
                 </div>
               {/if}
@@ -509,6 +514,21 @@
     display: inline-flex;
     gap: 0.35rem;
     margin-bottom: 0.75rem;
+  }
+
+  .card-tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    line-height: 1.3;
+    padding: 4px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+    border: 1px solid var(--glow);
+    color: oklch(from var(--glow) calc(l * 0.9) c h);
+    background-color: oklch(from var(--glow) l c h / 10%);
   }
 
   .tool-glass-body h3 {
