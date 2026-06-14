@@ -63,25 +63,24 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     font-weight: 600;
     letter-spacing: 0.04em;
-    line-height: 1.3;
+    line-height: 1;
     padding: 4px 8px;
-    border-radius: 20px;
+    border-radius: 4px;
+    color: #1a1a2e;
     flex-shrink: 0;
     white-space: nowrap;
     box-sizing: border-box;
-    border: 1px solid var(--_color);
-    background-color: oklch(from var(--_color) l c h / 10%);
-    color: oklch(from var(--_color) calc(l * 0.9) c h);
+    background: var(--_color);
   }
 
   .group-tag[data-group="CG"] {
-    --_color: #c77dff;
+    --_color: #d8b4fe;
   }
 
   .group-tag[data-group="ImgP"] {
-    --_color: #4dabf7;
+    --_color: #a5d8ff;
   }
 </style>
