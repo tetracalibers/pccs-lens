@@ -17,7 +17,7 @@
     glow: string
     title: string
     desc: string
-    grades: Grade[]
+    grades?: Grade[]
     tags?: string[]
   }
 
@@ -82,7 +82,6 @@
       glow: "#4d96ff",
       title: "コンピュータグラフィックス",
       desc: "デジタル画像や座標変換など、CGの基礎理論",
-      grades: [],
       tags: ["CG Experts"]
     }
   ]
@@ -166,9 +165,9 @@
           <a href={content.href} class="tool-glass" style="--glow: {content.glow}">
             <div class="tool-gradient-bar" style="background: {content.gradient}"></div>
             <div class="tool-glass-body">
-              {#if content.grades.length > 0}
+              {#if (content.grades?.length ?? 0) > 0}
                 <div class="tool-glass-tags">
-                  {#each content.grades as grade (grade)}
+                  {#each content.grades ?? [] as grade (grade)}
                     <GradeTag {grade} variant="light" />
                   {/each}
                 </div>
@@ -193,7 +192,7 @@
             <div class="tool-gradient-bar" style="background: {tool.gradient}"></div>
             <div class="tool-glass-body">
               <div class="tool-glass-tags">
-                {#each tool.grades as grade (grade)}
+                {#each tool.grades ?? [] as grade (grade)}
                   <GradeTag {grade} variant="light" />
                 {/each}
               </div>
@@ -216,9 +215,9 @@
           <a href={content.href} class="tool-glass" style="--glow: {content.glow}">
             <div class="tool-gradient-bar" style="background: {content.gradient}"></div>
             <div class="tool-glass-body">
-              {#if content.grades.length > 0 || (content.tags?.length ?? 0) > 0}
+              {#if (content.grades?.length ?? 0) > 0 || (content.tags?.length ?? 0) > 0}
                 <div class="tool-glass-tags">
-                  {#each content.grades as grade (grade)}
+                  {#each content.grades ?? [] as grade (grade)}
                     <GradeTag {grade} variant="light" />
                   {/each}
                   {#each content.tags ?? [] as tag (tag)}
