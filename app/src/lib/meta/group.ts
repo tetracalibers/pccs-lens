@@ -6,6 +6,6 @@ export const groupLabels: Record<CgGroup, string> = {
 }
 
 export const groupColors: Record<CgGroup, string> = {
-  CG: "#d8b4fe",
-  ImgP: "#a5d8ff"
+  CG: "var(--pastel-blue)",
+  ImgP: "var(--pastel-green)"
 }
