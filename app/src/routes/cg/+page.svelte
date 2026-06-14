@@ -4,11 +4,21 @@
   import PlainHeading3 from "$lib/components/m-html/PlainHeading3.svelte"
   import CgDraftPageTitle from "$lib/components/m-directive/CgDraftPageTitle.svelte"
   import { cgCategories } from "$lib/content-pages/cg"
+  import { parseParagraphs } from "$lib/md/paragraph"
 </script>
 
 <GuideMap title="CGの理論一覧">
   {#each cgCategories as category, ci (category.title)}
     <Heading2 id={`cg-category-${ci}`}>{category.title}</Heading2>
+    {#if category.summary}
+      {#each parseParagraphs(category.summary) as lines, pi (pi)}
+        <p>
+          {#each lines as line, li (li)}
+            {#if li > 0}<br />{/if}{line}
+          {/each}
+        </p>
+      {/each}
+    {/if}
     {#each category.sections as section (section.title)}
       <PlainHeading3>{section.title}</PlainHeading3>
       <ul>

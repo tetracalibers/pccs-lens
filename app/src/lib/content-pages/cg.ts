@@ -15,6 +15,7 @@ export interface CgSection {
 export interface CgCategory {
   title: string
   id: string
+  summary?: string
   sections: CgSection[]
 }
 
