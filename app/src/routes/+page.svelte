@@ -44,14 +44,6 @@
       title: "慣用色名マップ",
       desc: "慣用色を色相・明度の2軸で眺め、比較して覚える",
       grades: ["3", "2"]
-    },
-    {
-      href: resolve("/cg"),
-      gradient: "linear-gradient(135deg, #4d96ff, #c77dff)",
-      glow: "#4d96ff",
-      title: "コンピュータグラフィックス",
-      desc: "デジタル画像や座標変換など、CGの基礎理論",
-      grades: []
     }
   ]
 
@@ -79,6 +71,17 @@
       title: "配色シミュレータ",
       desc: "イメージに合う色の組み合わせを実験する",
       grades: ["2"]
+    }
+  ]
+
+  const cgContents: CardItem[] = [
+    {
+      href: resolve("/cg"),
+      gradient: "linear-gradient(135deg, #4d96ff, #c77dff)",
+      glow: "#4d96ff",
+      title: "コンピュータグラフィックス",
+      desc: "デジタル画像や座標変換など、CGの基礎理論",
+      grades: []
     }
   ]
 </script>
@@ -153,7 +156,7 @@
     <!-- Contents -->
     <section class="contents-section">
       <div class="tools-header">
-        <span class="tools-label">コンテンツ</span>
+        <span class="tools-label">色彩コンテンツ</span>
         <div class="tools-divider"></div>
       </div>
       <div class="contents-grid">
@@ -179,7 +182,7 @@
     <!-- Tools -->
     <section class="tools-section">
       <div class="tools-header">
-        <span class="tools-label">ツール</span>
+        <span class="tools-label">色彩ツール</span>
         <div class="tools-divider"></div>
       </div>
       <div class="tools-grid">
@@ -194,6 +197,32 @@
               </div>
               <h3>{tool.title}</h3>
               <p>{tool.desc}</p>
+            </div>
+          </a>
+        {/each}
+      </div>
+    </section>
+
+    <!-- CG / Image processing -->
+    <section class="contents-section">
+      <div class="tools-header">
+        <span class="tools-label">CG・画像処理</span>
+        <div class="tools-divider"></div>
+      </div>
+      <div class="contents-grid">
+        {#each cgContents as content (content.title)}
+          <a href={content.href} class="tool-glass" style="--glow: {content.glow}">
+            <div class="tool-gradient-bar" style="background: {content.gradient}"></div>
+            <div class="tool-glass-body">
+              {#if content.grades.length > 0}
+                <div class="tool-glass-tags">
+                  {#each content.grades as grade (grade)}
+                    <GradeTag {grade} variant="light" />
+                  {/each}
+                </div>
+              {/if}
+              <h3>{content.title}</h3>
+              <p>{content.desc}</p>
             </div>
           </a>
         {/each}
@@ -411,6 +440,10 @@
   }
 
   /* Tools */
+  .tools-section {
+    margin-bottom: 2rem;
+  }
+
   .tools-header {
     display: flex;
     align-items: center;
