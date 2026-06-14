@@ -17,7 +17,8 @@
     glow: string
     title: string
     desc: string
-    grades: Grade[]
+    grades?: Grade[]
+    tags?: string[]
   }
 
   const contents: CardItem[] = [
@@ -71,6 +72,17 @@
       title: "配色シミュレータ",
       desc: "イメージに合う色の組み合わせを実験する",
       grades: ["2"]
+    }
+  ]
+
+  const cgContents: CardItem[] = [
+    {
+      href: resolve("/cg"),
+      gradient: "linear-gradient(135deg, #4d96ff, #c77dff)",
+      glow: "#4d96ff",
+      title: "コンピュータグラフィックス",
+      desc: "デジタル画像や座標変換など、CGの基礎理論",
+      tags: ["CG Experts"]
     }
   ]
 </script>
@@ -145,7 +157,7 @@
     <!-- Contents -->
     <section class="contents-section">
       <div class="tools-header">
-        <span class="tools-label">コンテンツ</span>
+        <span class="tools-label">色彩コンテンツ</span>
         <div class="tools-divider"></div>
       </div>
       <div class="contents-grid">
@@ -153,11 +165,13 @@
           <a href={content.href} class="tool-glass" style="--glow: {content.glow}">
             <div class="tool-gradient-bar" style="background: {content.gradient}"></div>
             <div class="tool-glass-body">
-              <div class="tool-glass-tags">
-                {#each content.grades as grade (grade)}
-                  <GradeTag {grade} variant="light" />
-                {/each}
-              </div>
+              {#if (content.grades?.length ?? 0) > 0}
+                <div class="tool-glass-tags">
+                  {#each content.grades ?? [] as grade (grade)}
+                    <GradeTag {grade} variant="light" />
+                  {/each}
+                </div>
+              {/if}
               <h3>{content.title}</h3>
               <p>{content.desc}</p>
             </div>
@@ -169,7 +183,7 @@
     <!-- Tools -->
     <section class="tools-section">
       <div class="tools-header">
-        <span class="tools-label">ツール</span>
+        <span class="tools-label">色彩ツール</span>
         <div class="tools-divider"></div>
       </div>
       <div class="tools-grid">
@@ -178,12 +192,41 @@
             <div class="tool-gradient-bar" style="background: {tool.gradient}"></div>
             <div class="tool-glass-body">
               <div class="tool-glass-tags">
-                {#each tool.grades as grade (grade)}
+                {#each tool.grades ?? [] as grade (grade)}
                   <GradeTag {grade} variant="light" />
                 {/each}
               </div>
               <h3>{tool.title}</h3>
               <p>{tool.desc}</p>
+            </div>
+          </a>
+        {/each}
+      </div>
+    </section>
+
+    <!-- CG / Image processing -->
+    <section class="contents-section">
+      <div class="tools-header">
+        <span class="tools-label">CG・画像処理</span>
+        <div class="tools-divider"></div>
+      </div>
+      <div class="contents-grid">
+        {#each cgContents as content (content.title)}
+          <a href={content.href} class="tool-glass" style="--glow: {content.glow}">
+            <div class="tool-gradient-bar" style="background: {content.gradient}"></div>
+            <div class="tool-glass-body">
+              {#if (content.grades?.length ?? 0) > 0 || (content.tags?.length ?? 0) > 0}
+                <div class="tool-glass-tags">
+                  {#each content.grades ?? [] as grade (grade)}
+                    <GradeTag {grade} variant="light" />
+                  {/each}
+                  {#each content.tags ?? [] as tag (tag)}
+                    <span class="card-tag">{tag}</span>
+                  {/each}
+                </div>
+              {/if}
+              <h3>{content.title}</h3>
+              <p>{content.desc}</p>
             </div>
           </a>
         {/each}
@@ -401,6 +444,10 @@
   }
 
   /* Tools */
+  .tools-section {
+    margin-bottom: 2rem;
+  }
+
   .tools-header {
     display: flex;
     align-items: center;
@@ -466,6 +513,21 @@
     display: inline-flex;
     gap: 0.35rem;
     margin-bottom: 0.75rem;
+  }
+
+  .card-tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    line-height: 1.3;
+    padding: 4px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+    border: 1px solid var(--glow);
+    color: oklch(from var(--glow) calc(l * 0.9) c h);
+    background-color: oklch(from var(--glow) l c h / 10%);
   }
 
   .tool-glass-body h3 {
