@@ -3,13 +3,85 @@ layout: guide-content
 title: XYZ表色系
 
 grades: ["1"]
-
-draft: true
 ---
+
+<script>
+  import SVGWrapper from '$lib/demo/SVGWrapper.svelte'
+  import CIE1931RGBColorMatchingGraph from '$lib/demo/xyz-color-system/CIE1931RGBColorMatchingGraph.svelte'
+  import CIE1931XYZColorMatchingGraph from '$lib/demo/xyz-color-system/CIE1931XYZColorMatchingGraph.svelte'
+  import ConeLuminousEfficiencyGraph from '$lib/demo/xyz-color-system/ConeLuminousEfficiencyGraph.svelte'
+</script>
 
 実際の色光を基準としている[RGB表色系](/color-theory/rgb-color-system/)は、マイナスの混色量を使わなければ表せない色があり、当時の計算機では扱いづらいものでした。
 そこで、混色量が負の数にならずに済むように、数学的に変換してつくられた表色系が:Mark[XYZ表色系]です。
 
-実際の色光 $$[R], [G], [B]$$ ではうまくいかなかったことから、XYZ表色系では、3つの仮想的な色光 $$[X], [Y], [Z]$$ を設定しています。
+## :WithGradeTag[RGB表色系の等色関数]{grades="1"}
 
-## :WithGradeTag[TODO]{grades="1"}
+さまざまな波長の単色光を再現しようとする[等色実験](/color-theory/color-matching-and-grassmanns-law/)を繰り返し、それぞれの単色光と等色する $$[R], [G], [B]$$ の:Mark[混色比]（どれくらいずつ混ぜるか）を求めていくことを考えます。
+
+再現したい単色光の波長 $$\lambda$$ によって、$$[R], [G], [B]$$ の混色比は変わるため、$$[R], [G], [B]$$ それぞれを混ぜる量は、単色光の波長 $$\lambda$$ の関数として表すことができます。
+
+- $$[R]$$ を混ぜる量：$$\overline{r}(\lambda)$$
+- $$[G]$$ を混ぜる量：$$\overline{g}(\lambda)$$
+- $$[B]$$ を混ぜる量：$$\overline{b}(\lambda)$$
+
+これらの関数をRGB表色系の:Mark[等色関数]といい、関数の値は[色の三色性](/color-theory/color-matching-and-grassmanns-law/)で学んだ:Mark[三刺激値]を表しています。次のようにグラフ化すると、再現したい色（波長）ごとの三刺激値（混ぜる量）がわかります。
+
+<SVGWrapper maxW={500}>
+  <CIE1931RGBColorMatchingGraph />
+</SVGWrapper>
+
+たとえば、波長600nm付近の単色光は、$$[R]$$ を多めに、$$[G]$$ を少しだけ混ぜ、$$[B]$$ はほとんど使わないことで、再現できることがわかります。
+
+一方で、波長500nm付近の単色光は、マイナスの量の $$[R]$$ を使わなければ再現できないことがわかります。これがRGB表色系の問題点である、マイナスの混色量の存在です。
+
+## :WithGradeTag[XYZ表色系の等色関数と原刺激]{grades="1"}
+
+そこで、等色関数がマイナスの値をとらないような仮想の:Mark[原刺激] $$[X], [Y], [Z]$$ を設定し、この仮想の三原色によるXYZ表色系が作られました。
+
+:::Note
+$$[X], [Y], [Z]$$ は実在する色光ではなく、あくまで数学的な変換によって定義された仮想の原色であるため、:Mark[虚色]と呼ばれます。
+:::
+
+RGB表色系と同じように、$$[X], [Y], [Z]$$ の混色量は、再現したい単色光の波長 $$\lambda$$ の関数として表すことができます。
+
+- $$[X]$$ を混ぜる量：$$\overline{x}(\lambda)$$
+- $$[Y]$$ を混ぜる量：$$\overline{y}(\lambda)$$
+- $$[Z]$$ を混ぜる量：$$\overline{z}(\lambda)$$
+
+これらをXYZ表色系の:Mark[等色関数]といい、グラフ化すると次のようになります。
+
+<SVGWrapper maxW={500}>
+  <CIE1931XYZColorMatchingGraph />
+</SVGWrapper>
+
+この等色関数のグラフはなにやら、[錐体ごとの分光感度曲線](/color-theory/photoreceptor-types-and-distribution/)に似ていることに気づくかもしれません。
+XYZ表色系は、次のような錐体の反応を組み合わせて色を表すように設計されています。
+
+- $$\overline{x}(\lambda)$$ は、主に:Mark[S]錐体に対応する
+- $$\overline{y}(\lambda)$$ は、主に:Mark[M]錐体に対応する
+- $$\overline{z}(\lambda)$$ は、主に:Mark[L]錐体に対応する
+
+それだけではありません。明るい場所での明るさの感じやすさである、[錐体の分光視感効率曲線](/color-theory/brightness-sensitivity-and-adaptation/)は、$$\overline{y}(\lambda)$$ のグラフと同じ形をしています。
+
+<SVGWrapper maxW={500}>
+  <ConeLuminousEfficiencyGraph />
+</SVGWrapper>
+
+分光視感効率、すなわち明るさの感じ方は、緑付近の波長で最も高くなります。つまり、緑みを感じるとき、私たちは最も明るさを感じられるのです。
+
+そこで、XYZ表色系の原刺激 $$[X], [Y], [Z]$$ は、RGB表色系のような単なる青み・緑み・赤みではなく、次のような情報をもつものとして設計されています。
+
+- $$[X]$$：:Mark[青み]をもつ原刺激
+- $$[Y]$$：:Mark[緑み]と:Mark[明るさ]をもつ原刺激
+- $$[Z]$$：:Mark[赤み]をもつ原刺激
+
+等色関数 $$\overline{x}(\lambda), \overline{y}(\lambda), \overline{z}(\lambda)$$ の値は、RGB表色系のときと同様に、:Mark[三刺激値]を表しています。
+慣習に倣って、この三刺激値（混ぜる量）をそれぞれ $$X, Y, Z$$ と書くことにすると、色光 $$[C] $$ は次のような:Mark[等色式]で表すことができます。
+
+$$
+[C] \equiv X[X] + Y[Y] + Z[Z]
+$$
+
+このように、XYZ表色系では、三刺激値の数値の組 $$(X,Y,Z)$$ で色を表すことができます。
+この数値から、具体的にどのように色みと明るさを読み取ることができるかは、[色度座標とxy色度図](/color-theory/xy-chromaticity-diagram/)で学びましょう。

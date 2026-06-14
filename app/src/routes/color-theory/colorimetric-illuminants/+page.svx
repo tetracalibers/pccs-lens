@@ -1,0 +1,10 @@
+---
+layout: guide-content
+title: XYZ表色系と測色の照明
+
+grades: ["1"]
+
+draft: true
+---
+
+## :WithGradeTag[TODO]{grades="1"}
