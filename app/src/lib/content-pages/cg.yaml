@@ -1,0 +1,35 @@
+- title: CGと画像
+  id: TODO
+  sections:
+    - title: デジタル画像
+      links:
+        - title: 画像のデジタル化
+          group: ["CG", "ImgP"]
+        - title: デジタル画像のデータ量
+          group: ["CG", "ImgP"]
+        - title: ベクタ表現とラスタ表現
+          group: ["CG", "ImgP"]
+    - title: デジタルカメラモデル
+      links:
+        - title: カメラでの撮影とCG
+          group: ["CG"]
+        - title: CGと画像処理
+          group: ["CG", "ImgP"]
+
+- title: 座標と図形の変換
+  id: TODO
+  sections:
+    - title: 座標変換
+      links:
+        - title: 座標系
+          group: ["CG"]
+        - title: 基本的な変換と同次座標
+          group: ["CG"]
+        - title: 鏡映
+          group: ["CG"]
+        - title: スキュー
+          group: ["CG"]
+        - title: 変換の合成
+          group: ["CG"]
+        - title: アフィン変換
+          group: ["CG"]
