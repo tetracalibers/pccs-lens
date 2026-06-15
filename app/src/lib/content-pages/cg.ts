@@ -3,6 +3,7 @@ import type { ResolvedPathname } from "$app/types"
 import basicsData from "./cg-basics.yaml"
 import modelingData from "./cg-modeling.yaml"
 import transformationData from "./cg-transformation.yaml"
+import animationData from "./cg-animation.yaml"
 import renderingData from "./cg-rendering.yaml"
 import type { PageLink } from "./types"
 import type { CgGroup } from "$lib/meta/group"
@@ -49,13 +50,25 @@ export const cgTransformation: CgPage = {
   ...(transformationData as unknown as CgPageData)
 }
 
+export const cgAnimation: CgPage = {
+  route: "cg-animation",
+  href: resolve("/cg-animation"),
+  ...(animationData as unknown as CgPageData)
+}
+
 export const cgRendering: CgPage = {
   route: "cg-rendering",
   href: resolve("/cg-rendering"),
   ...(renderingData as unknown as CgPageData)
 }
 
-// トップページのカード順に合わせる（CGと画像 → 座標と図形の変換 → モデリング → レンダリング）
-export const cgPages: CgPage[] = [cgBasics, cgTransformation, cgModeling, cgRendering]
+// トップページのカード順に合わせる（CGと画像 → 座標と図形の変換 → モデリング → レンダリング → アニメーション）
+export const cgPages: CgPage[] = [
+  cgBasics,
+  cgTransformation,
+  cgModeling,
+  cgRendering,
+  cgAnimation
+]
 
 export const cgPageByRoute: Map<string, CgPage> = new Map(cgPages.map((page) => [page.route, page]))

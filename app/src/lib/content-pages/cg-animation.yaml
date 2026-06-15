@@ -1,0 +1,81 @@
+title: アニメーション
+sections:
+  - heading: CGアニメーションの構成要素
+    id: TODO
+    links:
+      - title: 仮現運動とコマ撮り
+        group: ["CG"]
+      - title: アニメーション技法
+        group: ["CG"]
+      - title: カメラワーク
+        group: ["CG"]
+  - heading: キーフレームアニメーション
+    id: TODO
+    links:
+      - title: キーフレーム法とスケルトン法
+        group: ["CG"]
+      - title: キーフレームの補間
+        group: ["CG"]
+      - title: 形状変形アニメーション
+        group: ["CG"]
+      - title: 自由形状変形
+        group: ["CG"]
+  - heading: 手続き型アニメーション
+    id: TODO
+    links:
+      - title: 進化・成長のアニメーション
+        group: ["CG"]
+      - title: 自然現象のアニメーション
+        group: ["CG"]
+      - title: パーティクルによるアニメーション
+        group: ["CG"]
+      - title: AIを利用したアニメーション
+        group: ["CG"]
+  - heading: キャラクターアニメーション
+    id: TODO
+    links:
+      - title: フォワードキネマティクス
+        group: ["CG"]
+      - title: インバースキネマティクス
+        group: ["CG"]
+      - title: パスアニメーション
+        group: ["CG"]
+      - title: モーションキャプチャ
+        group: ["CG"]
+      - title: 筋肉変形アニメーション
+        group: ["CG"]
+      - title: 表情のアニメーション
+        group: ["CG"]
+      - title: 布地のアニメーション
+        group: ["CG"]
+      - title: 髪の毛のアニメーション
+        group: ["CG"]
+      - title: 群集アニメーション
+        group: ["CG"]
+  - heading: 物理ベースアニメーション
+    id: TODO
+    links:
+      - title: 剛体の物理シミュレーション
+        group: ["CG"]
+      - title: 弾性体の物理シミュレーション
+        group: ["CG"]
+      - title: 衝突判定
+        group: ["CG"]
+  - heading: リアルタイムアニメーション
+    id: TODO
+    links:
+      - title: リアルタイムアニメーションの手法
+        group: ["CG"]
+      - title: レンダーマンとリアルタイムシェーダ
+        group: ["CG"]
+      - title: ゲーム物理
+        group: ["CG"]
+  - heading: 実写映像との合成
+    id: TODO
+    links:
+      - title: 実写映像との合成時の条件
+        group: ["CG"]
+      - title: カメラパラメータの整合
+        group: ["CG"]
+      - title: 照明条件の整合
+        group: ["CG"]

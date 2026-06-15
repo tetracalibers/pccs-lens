@@ -2,7 +2,13 @@
   import { resolve } from "$app/paths"
   import GradeTag, { type Grade } from "$lib/components/m-directive/GradeTag.svelte"
   import StartHereTag from "$lib/components/site-top/StartHereTag.svelte"
-  import { cgBasics, cgModeling, cgRendering, cgTransformation } from "$lib/content-pages/cg"
+  import {
+    cgAnimation,
+    cgBasics,
+    cgModeling,
+    cgRendering,
+    cgTransformation
+  } from "$lib/content-pages/cg"
 
   const hueOrbs = [
     { color: "#ff6b6b", x: 15, y: 20, size: 160 },
@@ -107,6 +113,14 @@
       glow: "#ff6b6b",
       title: cgRendering.title,
       desc: "隠面消去・シェーディングなど写実的描画",
+      tags: ["CG Experts"]
+    },
+    {
+      href: resolve("/cg-animation"),
+      gradient: "linear-gradient(135deg, #f59f00, #ffd93d)",
+      glow: "#f59f00",
+      title: cgAnimation.title,
+      desc: "仮現運動・アニメーション技法・カメラワーク",
       tags: ["CG Experts"]
     }
   ]
