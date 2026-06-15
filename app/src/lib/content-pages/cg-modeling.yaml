@@ -1,0 +1,79 @@
+title: モデリング
+sections:
+  - heading: 形状モデル
+    id: TODO
+    links:
+      - title: さまざまな形状モデル
+        group: ["CG"]
+      - title: CSG表現
+        group: ["CG"]
+      - title: 境界表現
+        group: ["CG"]
+      - title: スイープ表現
+        group: ["CG"]
+      - title: 境界表現のデータ構造
+        group: ["CG"]
+      - title: オイラー表現
+        group: ["CG"]
+  - heading: 曲線と曲面
+    id: TODO
+    links:
+      - title: 曲線・曲面の数式表現
+        group: ["CG"]
+      - title: 2次曲線
+        group: ["CG"]
+      - title: パラメトリック曲線・曲面
+        group: ["CG"]
+      - title: ベジェ曲線・曲面
+        group: ["CG"]
+      - title: ファーガソン曲線
+        group: ["CG"]
+      - title: 双3次クーンズ曲面
+        group: ["CG"]
+      - title: Bスプライン曲線・曲面
+        group: ["CG"]
+      - title: 有理ベジェ曲線・曲面
+        group: ["CG"]
+      - title: NURBS曲線・曲面
+        group: ["CG"]
+      - title: パラメトリック曲線・曲面の微分幾何
+        group: ["CG"]
+  - heading: ポリゴン
+    id: TODO
+    links:
+      - title: ポリゴン曲面
+        group: ["CG"]
+      - title: 細分割曲面
+        group: ["CG"]
+      - title: ポリゴン曲面の詳細度制御
+        group: ["CG"]
+      - title: ポリゴン曲面の平滑化処理
+        group: ["CG"]
+      - title: ポリゴン曲面のパラメータ化
+        group: ["CG"]
+      - title: セグメンテーション
+        group: ["CG"]
+      - title: 電子透かし
+        group: ["CG"]
+      - title: 形状検索
+        group: ["CG"]
+  - heading: ボリューム
+    id: TODO
+    links:
+      - title: ボクセル
+        group: ["CG"]
+      - title: 八分木
+        group: ["CG"]
+      - title: メタボール
+        group: ["CG"]
+      - title: 等値面抽出
+        group: ["CG"]
+  - heading: 特殊な形状表現
+    id: TODO
+    links:
+      - title: パーティクル
+        group: ["CG"]
+      - title: ポイントベースドモデリング
+        group: ["CG"]
+      - title: フラクタル
+        group: ["CG"]

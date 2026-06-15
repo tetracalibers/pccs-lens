@@ -55,7 +55,7 @@
   import { sortGrades } from "$lib/meta/grade"
   import { colorTheoryCategoryBySlug } from "$lib/content-pages/color-theory"
   import { colorFieldsCategoryBySlug } from "$lib/content-pages/color-fields"
-  import { cgCategoryBySlug } from "$lib/content-pages/cg"
+  import { cgBasics, cgPageByRoute } from "$lib/content-pages/cg"
   import DraftTag from "$lib/components/DraftTag.svelte"
   import { ankiMode } from "$lib/state/anki.svelte"
 
@@ -89,15 +89,11 @@
       }
       return { label: "色の活用分野", href: resolve("/color-fields") }
     }
-    if (base === "cg") {
-      const category = slug ? cgCategoryBySlug.get(slug) : undefined
-      if (category) {
-        return {
-          label: category.title,
-          href: `${resolve("/cg")}#${category.id}` as ResolvedPathname
-        }
-      }
-      return { label: "CGの理論", href: resolve("/cg") }
+    if (base?.startsWith("cg-")) {
+      const cgPage = cgPageByRoute.get(base)
+      return cgPage
+        ? { label: cgPage.title, href: cgPage.href }
+        : { label: "CGの理論", href: cgBasics.href }
     }
     if (base === "color-theory") {
       const category = slug ? colorTheoryCategoryBySlug.get(slug) : undefined

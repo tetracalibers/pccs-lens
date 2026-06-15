@@ -77,11 +77,35 @@
 
   const cgContents: CardItem[] = [
     {
-      href: resolve("/cg"),
+      href: resolve("/cg-basics"),
       gradient: "linear-gradient(135deg, #4d96ff, #c77dff)",
       glow: "#4d96ff",
-      title: "コンピュータグラフィックス",
-      desc: "デジタル画像や座標変換など、CGの基礎理論",
+      title: "CGと画像",
+      desc: "デジタル画像の表現とデジタルカメラモデル",
+      tags: ["CG Experts"]
+    },
+    {
+      href: resolve("/cg-transformation"),
+      gradient: "linear-gradient(135deg, #6bcb77, #4d96ff)",
+      glow: "#6bcb77",
+      title: "座標と図形の変換",
+      desc: "座標変換・投影・ビューイングパイプライン",
+      tags: ["CG Experts"]
+    },
+    {
+      href: resolve("/cg-modeling"),
+      gradient: "linear-gradient(135deg, #c77dff, #4d96ff)",
+      glow: "#c77dff",
+      title: "モデリング",
+      desc: "形状モデル・曲線曲面・ポリゴンなどの形状表現",
+      tags: ["CG Experts"]
+    },
+    {
+      href: resolve("/cg-rendering"),
+      gradient: "linear-gradient(135deg, #ff6b6b, #ffd93d)",
+      glow: "#ff6b6b",
+      title: "レンダリング",
+      desc: "隠面消去・シェーディングなど写実的描画",
       tags: ["CG Experts"]
     }
   ]

@@ -1,0 +1,43 @@
+title: 座標と図形の変換
+sections:
+  - heading: 座標変換
+    id: TODO
+    links:
+      - title: 座標系
+        group: ["CG"]
+      - title: 基本的な変換と同次座標
+        group: ["CG"]
+      - title: 鏡映
+        group: ["CG"]
+      - title: スキュー
+        group: ["CG"]
+      - title: 変換の合成
+        group: ["CG"]
+      - title: アフィン変換
+        group: ["CG"]
+  - heading: 投影
+    id: TODO
+    links:
+      - title: カメラと投影
+        group: ["CG"]
+      - title: 透視投影と平行投影
+        group: ["CG"]
+      - title: 投影の手順
+        group: ["CG"]
+      - title: 投影の計算法
+        group: ["CG"]
+      - title: 消点とn点透視
+        group: ["CG"]
+      - title: さまざまな平行投影
+        group: ["CG"]
+  - heading: ビューイングパイプライン
+    id: TODO
+    links:
+      - title: ビューイングパイプラインでの変換
+        group: ["CG"]
+      - title: ビューイングと視野変換
+        group: ["CG"]
+      - title: クリッピング
+        group: ["CG"]
+      - title: 階層モデリング
+        group: ["CG"]

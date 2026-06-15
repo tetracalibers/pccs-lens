@@ -16,8 +16,7 @@ const modules = import.meta.glob(
     "!/src/routes/color-theory/+page.svx",
     "/src/routes/color-fields/**/+page.svx",
     "!/src/routes/color-fields/+page.svx",
-    "/src/routes/cg/**/+page.svx",
-    "!/src/routes/cg/+page.svx"
+    "/src/routes/cg-*/**/+page.svx"
   ],
   { eager: true }
 ) as Record<string, { metadata: Partial<GuideFrontmatter> }>

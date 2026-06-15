@@ -1,0 +1,27 @@
+<script lang="ts">
+  import GuideMap from "$lib/layouts/guide-map.svelte"
+  import Heading2 from "$lib/components/m-html/Heading2.svelte"
+  import PageLink from "$lib/components/m-directive/PageLink.svelte"
+  import CgDraftPageTitle from "$lib/components/m-directive/CgDraftPageTitle.svelte"
+  import { isPageLink } from "$lib/content-pages/types"
+  import type { CgPage } from "$lib/content-pages/cg"
+
+  let { page }: { page: CgPage } = $props()
+</script>
+
+<GuideMap title={page.title}>
+  {#each page.sections as section, si (si)}
+    <Heading2 id={`section-${si}`}>{section.heading}</Heading2>
+    <ul>
+      {#each section.links as link, i (i)}
+        <li>
+          {#if isPageLink(link)}
+            <PageLink slug={link.slug} />
+          {:else}
+            <CgDraftPageTitle title={link.title} group={link.group} />
+          {/if}
+        </li>
+      {/each}
+    </ul>
+  {/each}
+</GuideMap>

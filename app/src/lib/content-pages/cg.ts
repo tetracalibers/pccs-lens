@@ -1,6 +1,10 @@
-import data from "./cg.yaml"
-import type { CategoryRef, PageLink } from "./types"
-import { isPageLink } from "./types"
+import { resolve } from "$app/paths"
+import type { ResolvedPathname } from "$app/types"
+import basicsData from "./cg-basics.yaml"
+import modelingData from "./cg-modeling.yaml"
+import transformationData from "./cg-transformation.yaml"
+import renderingData from "./cg-rendering.yaml"
+import type { PageLink } from "./types"
 import type { CgGroup } from "$lib/meta/group"
 
 export interface CgDraftLink {
@@ -11,29 +15,46 @@ export interface CgDraftLink {
 export type CgLink = PageLink | CgDraftLink
 
 export interface CgSection {
-  title: string
+  heading: string
+  id: string
   links: CgLink[]
 }
 
-export interface CgCategory {
+interface CgPageData {
   title: string
-  id: string
-  summary?: string
   sections: CgSection[]
 }
 
-export const cgCategories = data as unknown as CgCategory[]
+export interface CgPage extends CgPageData {
+  /** ルートセグメント（例: "cg-basics"）。 */
+  route: string
+  href: ResolvedPathname
+}
 
-/** カテゴリの id はプレースホルダ（TODO）のため、一覧ページの見出し id と揃えて index から生成する。 */
-export const cgCategoryId = (index: number): string => `cg-category-${index}`
+export const cgBasics: CgPage = {
+  route: "cg-basics",
+  href: resolve("/cg-basics"),
+  ...(basicsData as unknown as CgPageData)
+}
 
-export const cgCategoryBySlug: Map<string, CategoryRef> = new Map(
-  cgCategories.flatMap((category, ci) =>
-    category.sections.flatMap((section) =>
-      section.links.flatMap(
-        (link): Array<[string, CategoryRef]> =>
-          isPageLink(link) ? [[link.slug, { id: cgCategoryId(ci), title: category.title }]] : []
-      )
-    )
-  )
-)
+export const cgModeling: CgPage = {
+  route: "cg-modeling",
+  href: resolve("/cg-modeling"),
+  ...(modelingData as unknown as CgPageData)
+}
+
+export const cgTransformation: CgPage = {
+  route: "cg-transformation",
+  href: resolve("/cg-transformation"),
+  ...(transformationData as unknown as CgPageData)
+}
+
+export const cgRendering: CgPage = {
+  route: "cg-rendering",
+  href: resolve("/cg-rendering"),
+  ...(renderingData as unknown as CgPageData)
+}
+
+export const cgPages: CgPage[] = [cgBasics, cgModeling, cgTransformation, cgRendering]
+
+export const cgPageByRoute: Map<string, CgPage> = new Map(cgPages.map((page) => [page.route, page]))
