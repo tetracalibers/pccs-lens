@@ -55,6 +55,7 @@ export const cgRendering: CgPage = {
   ...(renderingData as unknown as CgPageData)
 }
 
-export const cgPages: CgPage[] = [cgBasics, cgModeling, cgTransformation, cgRendering]
+// トップページのカード順に合わせる（CGと画像 → 座標と図形の変換 → モデリング → レンダリング）
+export const cgPages: CgPage[] = [cgBasics, cgTransformation, cgModeling, cgRendering]
 
 export const cgPageByRoute: Map<string, CgPage> = new Map(cgPages.map((page) => [page.route, page]))

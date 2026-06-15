@@ -4,12 +4,29 @@
   import Icon from "@iconify/svelte"
   import { colorTheoryPageNav } from "$lib/content-pages/color-theory-nav"
   import { colorFieldsPageNav } from "$lib/content-pages/color-fields-nav"
+  import { cgPages } from "$lib/content-pages/cg"
 
   const isConceptPage = $derived(page.route.id === "/concept")
 
   const pageNavInfo = $derived.by(() => {
     const id = page.route.id
     if (!id) return null
+
+    // CG ページ（トップレベルの cg-* ルート）は cgPages の順序で前後に送る
+    const cgIndex = cgPages.findIndex((cgPage) => `/${cgPage.route}` === id)
+    if (cgIndex !== -1) {
+      const prev = cgPages[cgIndex - 1]
+      const next = cgPages[cgIndex + 1]
+      return {
+        prev: prev ? { title: prev.title } : undefined,
+        next: next ? { title: next.title } : undefined,
+        prevHref: prev?.href,
+        nextHref: next?.href,
+        listHref: resolve("/") as string,
+        listLabel: "トップへ戻る"
+      }
+    }
+
     for (const base of ["color-theory", "color-fields"] as const) {
       const prefix = `/${base}/`
       if (!id.startsWith(prefix)) continue
@@ -23,7 +40,7 @@
       // @ts-expect-error dynamic route path
       const nextHref = nav.next ? resolve(`/${base}/${nav.next.slug}`) : undefined
       const listHref = `${resolve(`/${base}`)}#${nav.categoryId}`
-      return { prev: nav.prev, next: nav.next, prevHref, nextHref, listHref }
+      return { prev: nav.prev, next: nav.next, prevHref, nextHref, listHref, listLabel: "一覧へ戻る" }
     }
     return null
   })
@@ -38,7 +55,11 @@
           <span class="footer-page-nav-title">{pageNavInfo.prev.title}</span>
         </a>
       {/if}
-      <a class="footer-link footer-page-nav-list" href={pageNavInfo.listHref}>一覧へ戻る</a>
+      {#if pageNavInfo.listHref}
+        <a class="footer-link footer-page-nav-list" href={pageNavInfo.listHref}>
+          {pageNavInfo.listLabel}
+        </a>
+      {/if}
       {#if pageNavInfo.next && pageNavInfo.nextHref}
         <a class="footer-page-nav-link footer-page-nav-next" href={pageNavInfo.nextHref}>
           <span class="footer-page-nav-title">{pageNavInfo.next.title}</span>
