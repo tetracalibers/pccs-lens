@@ -2,6 +2,7 @@
   import { resolve } from "$app/paths"
   import GradeTag, { type Grade } from "$lib/components/m-directive/GradeTag.svelte"
   import StartHereTag from "$lib/components/site-top/StartHereTag.svelte"
+  import { cgBasics, cgModeling, cgRendering, cgTransformation } from "$lib/content-pages/cg"
 
   const hueOrbs = [
     { color: "#ff6b6b", x: 15, y: 20, size: 160 },
@@ -80,7 +81,7 @@
       href: resolve("/cg-basics"),
       gradient: "linear-gradient(135deg, #4d96ff, #c77dff)",
       glow: "#4d96ff",
-      title: "CGと画像",
+      title: cgBasics.title,
       desc: "デジタル画像の表現とデジタルカメラモデル",
       tags: ["CG Experts"]
     },
@@ -88,7 +89,7 @@
       href: resolve("/cg-transformation"),
       gradient: "linear-gradient(135deg, #6bcb77, #4d96ff)",
       glow: "#6bcb77",
-      title: "座標と図形の変換",
+      title: cgTransformation.title,
       desc: "座標変換・投影・ビューイングパイプライン",
       tags: ["CG Experts"]
     },
@@ -96,7 +97,7 @@
       href: resolve("/cg-modeling"),
       gradient: "linear-gradient(135deg, #c77dff, #4d96ff)",
       glow: "#c77dff",
-      title: "モデリング",
+      title: cgModeling.title,
       desc: "形状モデル・曲線曲面・ポリゴンなどの形状表現",
       tags: ["CG Experts"]
     },
@@ -104,7 +105,7 @@
       href: resolve("/cg-rendering"),
       gradient: "linear-gradient(135deg, #ff6b6b, #ffd93d)",
       glow: "#ff6b6b",
-      title: "レンダリング",
+      title: cgRendering.title,
       desc: "隠面消去・シェーディングなど写実的描画",
       tags: ["CG Experts"]
     }
