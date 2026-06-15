@@ -12,7 +12,7 @@
 
 <GuideMap title={page.title}>
   {#snippet breadcrumb()}
-    <Breadcrumb category="contents" crumbs={[{ label: "CG・画像処理" }]} />
+    <Breadcrumb category="contents" crumbs={[{ label: "Computer Graphics" }]} />
   {/snippet}
   {#each page.sections as section, si (si)}
     <Heading2 id={`section-${si}`}>{section.heading}</Heading2>
