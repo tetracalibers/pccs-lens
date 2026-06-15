@@ -1,5 +1,6 @@
 <script lang="ts">
   import GuideMap from "$lib/layouts/guide-map.svelte"
+  import Breadcrumb from "$lib/components/Breadcrumb.svelte"
   import Heading2 from "$lib/components/m-html/Heading2.svelte"
   import PageLink from "$lib/components/m-directive/PageLink.svelte"
   import CgDraftPageTitle from "$lib/components/m-directive/CgDraftPageTitle.svelte"
@@ -10,6 +11,9 @@
 </script>
 
 <GuideMap title={page.title}>
+  {#snippet breadcrumb()}
+    <Breadcrumb category="contents" crumbs={[{ label: "CG・画像処理" }]} />
+  {/snippet}
   {#each page.sections as section, si (si)}
     <Heading2 id={`section-${si}`}>{section.heading}</Heading2>
     <ul>
