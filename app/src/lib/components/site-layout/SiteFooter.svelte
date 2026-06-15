@@ -22,7 +22,7 @@
         next: next ? { title: next.title } : undefined,
         prevHref: prev?.href,
         nextHref: next?.href,
-        listHref: resolve("/") as string,
+        listHref: `${resolve("/")}#cg`,
         listLabel: "トップへ戻る"
       }
     }

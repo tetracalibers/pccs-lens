@@ -230,7 +230,7 @@
     </section>
 
     <!-- CG / Image processing -->
-    <section class="contents-section">
+    <section id="cg" class="contents-section">
       <div class="tools-header">
         <span class="tools-label">CG・画像処理</span>
         <div class="tools-divider"></div>
@@ -454,6 +454,10 @@
   /* Contents */
   .contents-section {
     margin-bottom: 2rem;
+  }
+
+  #cg {
+    scroll-margin-top: 120px;
   }
 
   .contents-grid {
