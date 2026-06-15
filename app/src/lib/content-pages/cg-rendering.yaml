@@ -51,3 +51,53 @@ sections:
         group: ["CG"]
       - title: フォンシェーディング
         group: ["CG"]
+  - heading: シャドウイング
+    id: TODO
+    links:
+      - title: 平行光源・点光源による影
+        group: ["CG"]
+      - title: 大きさをもつ光源による影
+        group: ["CG"]
+  - heading: マッピング
+    id: TODO
+    links:
+      - title: マッピングの目的と手法
+        group: ["CG"]
+      - title: テクスチャマッピング
+        group: ["CG"]
+      - title: アンチエイリアシング
+        group: ["CG"]
+      - title: バンプマッピング
+        group: ["CG"]
+      - title: 環境マッピング
+        group: ["CG"]
+      - title: ソリッドテクスチャマッピング
+        group: ["CG"]
+  - heading: イメージベースドレンダリング
+    id: TODO
+    links:
+      - title: イメージベースドレンダリングの技法
+        group: ["CG"]
+      - title: 投影テクスチャマッピング
+        group: ["CG"]
+      - title: 画像再投影の利用
+        group: ["CG"]
+      - title: パノラマ画像の利用
+        group: ["CG"]
+      - title: ビューモーフィング
+        group: ["CG"]
+      - title: レイデータベースアプローチ
+        group: ["CG"]
+      - title: イメージベースドライティング
+        group: ["CG"]
+  - heading: 大域照明計算
+    id: TODO
+    links:
+      - title: レンダリング方程式
+        group: ["CG"]
+      - title: ラジオシティ法
+        group: ["CG"]
+      - title: モンテカルロ法
+        group: ["CG"]
+      - title: マルコフ連鎖モンテカルロ法
+        group: ["CG"]
