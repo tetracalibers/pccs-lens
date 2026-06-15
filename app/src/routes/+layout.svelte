@@ -73,6 +73,11 @@
     font-synthesis-weight: none;
     margin: 0;
 
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
+
     background: var(--color-bg);
     color: light-dark(#1a1a1a, #f0f0f0);
     transition:
@@ -90,6 +95,9 @@
 
   /* ===== メインコンテンツラッパー ===== */
   .container {
+    flex: 1 0 auto;
+    width: 100%;
+    box-sizing: border-box;
     margin: 3rem auto;
     padding: 1.5rem 1.5rem 0;
     container-type: inline-size;
