@@ -1,6 +1,5 @@
 <script lang="ts">
   import { resolve } from "$app/paths"
-  import type { ResolvedPathname } from "$app/types"
   import GuideMap from "$lib/layouts/guide-map.svelte"
   import Breadcrumb from "$lib/components/Breadcrumb.svelte"
   import Heading2 from "$lib/components/m-html/Heading2.svelte"
@@ -14,10 +13,7 @@
 
 <GuideMap title={page.title}>
   {#snippet breadcrumb()}
-    <Breadcrumb
-      category="contents"
-      crumbs={[{ label: "Computer Graphics", href: `${resolve("/")}#cg` as ResolvedPathname }]}
-    />
+    <Breadcrumb category="contents" crumbs={[{ label: "CG・画像処理", href: resolve("/cg") }]} />
   {/snippet}
   {#each page.sections as section, si (si)}
     <Heading2 id={`section-${si}`}>{section.heading}</Heading2>

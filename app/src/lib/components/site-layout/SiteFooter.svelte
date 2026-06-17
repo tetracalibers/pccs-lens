@@ -22,8 +22,8 @@
         next: next ? { title: next.title } : undefined,
         prevHref: prev?.href,
         nextHref: next?.href,
-        listHref: `${resolve("/")}#cg`,
-        listLabel: "トップへ戻る"
+        listHref: resolve("/cg"),
+        listLabel: "一覧へ戻る"
       }
     }
 

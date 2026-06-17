@@ -2,13 +2,6 @@
   import { resolve } from "$app/paths"
   import LinkCard, { type LinkCardItem } from "$lib/components/site-top/LinkCard.svelte"
   import StartHereTag from "$lib/components/site-top/StartHereTag.svelte"
-  import {
-    cgAnimation,
-    cgBasics,
-    cgModeling,
-    cgRendering,
-    cgTransformation
-  } from "$lib/content-pages/cg"
 
   const hueOrbs = [
     { color: "#ff6b6b", x: 15, y: 20, size: 160 },
@@ -74,44 +67,12 @@
 
   const cgContents: LinkCardItem[] = [
     {
-      href: resolve("/cg-basics"),
+      href: resolve("/cg"),
       gradient: "linear-gradient(135deg, #4d96ff, #c77dff)",
       glow: "#4d96ff",
-      title: cgBasics.title,
-      desc: "デジタル画像の表現とデジタルカメラモデル",
-      tags: ["CG Experts"]
-    },
-    {
-      href: resolve("/cg-transformation"),
-      gradient: "linear-gradient(135deg, #6bcb77, #4d96ff)",
-      glow: "#6bcb77",
-      title: cgTransformation.title,
-      desc: "座標変換・投影・ビューイングパイプライン",
-      tags: ["CG Experts"]
-    },
-    {
-      href: resolve("/cg-modeling"),
-      gradient: "linear-gradient(135deg, #c77dff, #4d96ff)",
-      glow: "#c77dff",
-      title: cgModeling.title,
-      desc: "形状モデル・曲線曲面・ポリゴンなどの形状表現",
-      tags: ["CG Experts"]
-    },
-    {
-      href: resolve("/cg-rendering"),
-      gradient: "linear-gradient(135deg, #ff6b6b, #ffd93d)",
-      glow: "#ff6b6b",
-      title: cgRendering.title,
-      desc: "隠面消去・シェーディングなど写実的描画",
-      tags: ["CG Experts"]
-    },
-    {
-      href: resolve("/cg-animation"),
-      gradient: "linear-gradient(135deg, #f59f00, #ffd93d)",
-      glow: "#f59f00",
-      title: cgAnimation.title,
-      desc: "仮現運動・アニメーション技法・カメラワーク",
-      tags: ["CG Experts"]
+      title: "色と画像（CG・画像処理）",
+      desc: "光や色を計算して生み出す、CGと画像処理の世界",
+      tags: ["CG", "画像処理"]
     }
   ]
 </script>
@@ -212,7 +173,7 @@
     <!-- CG / Image processing -->
     <section id="cg" class="contents-section">
       <div class="tools-header">
-        <span class="tools-label">CG・画像処理</span>
+        <span class="tools-label">色のしくみと関わる分野</span>
         <div class="tools-divider"></div>
       </div>
       <div class="contents-grid">
