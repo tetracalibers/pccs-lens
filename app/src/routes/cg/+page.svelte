@@ -1,6 +1,9 @@
 <script lang="ts">
   import { resolve } from "$app/paths"
-  import LinkCard, { type LinkCardItem } from "$lib/components/site-top/LinkCard.svelte"
+  import LinkCard, {
+    type CardTag,
+    type LinkCardItem
+  } from "$lib/components/site-top/LinkCard.svelte"
   import {
     cgAnimation,
     cgBasics,
@@ -9,6 +12,9 @@
     cgTransformation
   } from "$lib/content-pages/cg"
 
+  const cgTag: CardTag = { label: "CG", color: "var(--color-cg)" }
+  const imgpTag: CardTag = { label: "画像処理", color: "var(--color-image-processing)" }
+
   const cgContents: LinkCardItem[] = [
     {
       href: resolve("/cg-basics"),
@@ -16,7 +22,7 @@
       glow: "#4d96ff",
       title: cgBasics.title,
       desc: "デジタル画像の表現とデジタルカメラモデル",
-      tags: ["CG Experts"]
+      tags: [cgTag, imgpTag]
     },
     {
       href: resolve("/cg-transformation"),
@@ -24,7 +30,7 @@
       glow: "#6bcb77",
       title: cgTransformation.title,
       desc: "座標変換・投影・ビューイングパイプライン",
-      tags: ["CG Experts"]
+      tags: [cgTag]
     },
     {
       href: resolve("/cg-modeling"),
@@ -32,7 +38,7 @@
       glow: "#c77dff",
       title: cgModeling.title,
       desc: "形状モデル・曲線曲面・ポリゴンなどの形状表現",
-      tags: ["CG Experts"]
+      tags: [cgTag]
     },
     {
       href: resolve("/cg-rendering"),
@@ -40,7 +46,7 @@
       glow: "#ff6b6b",
       title: cgRendering.title,
       desc: "隠面消去・シェーディングなど写実的描画",
-      tags: ["CG Experts"]
+      tags: [cgTag]
     },
     {
       href: resolve("/cg-animation"),
@@ -48,7 +54,7 @@
       glow: "#f59f00",
       title: cgAnimation.title,
       desc: "仮現運動・アニメーション技法・カメラワーク",
-      tags: ["CG Experts"]
+      tags: [cgTag]
     }
   ]
 </script>
@@ -92,7 +98,7 @@
   }
 
   .cg-hero h1 {
-    font-size: 2rem;
+    font-size: 2.1rem;
     font-weight: 900;
     letter-spacing: -0.02em;
     margin: 0 0 0.75rem;

@@ -72,7 +72,10 @@
       glow: "#4d96ff",
       title: "色と画像（CG・画像処理）",
       desc: "光や色を計算して生み出す、CGと画像処理の世界",
-      tags: ["CG", "画像処理"]
+      tags: [
+        { label: "CG", color: "var(--color-cg)" },
+        { label: "画像処理", color: "var(--color-image-processing)" }
+      ]
     }
   ]
 </script>

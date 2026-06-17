@@ -1,6 +1,9 @@
 <script lang="ts">
   import GradeTag, { type Grade } from "$lib/components/m-directive/GradeTag.svelte"
 
+  /** カードのタグ。色を指定しない場合はカードの glow 色を使う。 */
+  export type CardTag = string | { label: string; color?: string }
+
   export interface LinkCardItem {
     href: string
     gradient: string
@@ -8,7 +11,7 @@
     title: string
     desc: string
     grades?: Grade[]
-    tags?: string[]
+    tags?: CardTag[]
   }
 
   let { href, gradient, glow, title, desc, grades = [], tags = [] }: LinkCardItem = $props()
@@ -22,8 +25,12 @@
         {#each grades as grade (grade)}
           <GradeTag {grade} variant="light" />
         {/each}
-        {#each tags as tag (tag)}
-          <span class="card-tag">{tag}</span>
+        {#each tags as tag (typeof tag === "string" ? tag : tag.label)}
+          {@const label = typeof tag === "string" ? tag : tag.label}
+          {@const color = typeof tag === "string" ? undefined : tag.color}
+          <span class="card-tag" class:--_colored={color != null} style:--tag-color={color}>
+            {label}
+          </span>
         {/each}
       </div>
     {/if}
@@ -67,6 +74,8 @@
   }
 
   .card-tag {
+    /* タグ個別の色指定があればそれを、なければカードの glow 色を使う */
+    --_tag-color: var(--tag-color, var(--glow));
     display: inline-flex;
     align-items: center;
     font-size: 0.75rem;
@@ -76,9 +85,27 @@
     padding: 4px 8px;
     border-radius: 20px;
     white-space: nowrap;
-    border: 1px solid var(--glow);
-    color: oklch(from var(--glow) calc(l * 0.9) c h);
-    background-color: oklch(from var(--glow) l c h / 10%);
+    border: 1px solid var(--_tag-color);
+    color: oklch(from var(--_tag-color) calc(l * 0.9) c h);
+    background-color: oklch(from var(--_tag-color) l c h / 10%);
+  }
+
+  /* 色指定のあるタグ（CG / 画像処理）: 角丸を抑え、淡いパステルでも読めるようコントラストを上げる */
+  .card-tag.--_colored {
+    border-radius: 6px;
+    padding: 3px 8px;
+    border-color: light-dark(
+      oklch(from var(--_tag-color) calc(l * 0.78) calc(c * 1.3) h),
+      oklch(from var(--_tag-color) l c h)
+    );
+    color: light-dark(
+      oklch(from var(--_tag-color) 0.65 calc(c * 1.5) h),
+      oklch(from var(--_tag-color) 0.8 c h)
+    );
+    background-color: light-dark(
+      oklch(from var(--_tag-color) l calc(c * 1.2) h / 28%),
+      oklch(from var(--_tag-color) l c h / 14%)
+    );
   }
 
   .tool-glass-body h3 {
