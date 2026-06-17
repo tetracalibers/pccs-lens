@@ -1,6 +1,6 @@
 <script lang="ts">
   import { resolve } from "$app/paths"
-  import GradeTag, { type Grade } from "$lib/components/m-directive/GradeTag.svelte"
+  import LinkCard, { type LinkCardItem } from "$lib/components/site-top/LinkCard.svelte"
   import StartHereTag from "$lib/components/site-top/StartHereTag.svelte"
   import {
     cgAnimation,
@@ -18,17 +18,7 @@
     { color: "#c77dff", x: 35, y: 65, size: 90 }
   ]
 
-  interface CardItem {
-    href: string
-    gradient: string
-    glow: string
-    title: string
-    desc: string
-    grades?: Grade[]
-    tags?: string[]
-  }
-
-  const contents: CardItem[] = [
+  const contents: LinkCardItem[] = [
     {
       href: resolve("/color-theory"),
       gradient: "linear-gradient(135deg, #ff6b6b, #ffd93d)",
@@ -55,7 +45,7 @@
     }
   ]
 
-  const tools: CardItem[] = [
+  const tools: LinkCardItem[] = [
     {
       href: resolve("/approximate"),
       gradient: "linear-gradient(135deg, #ff6b6b, #ffd93d)",
@@ -82,7 +72,7 @@
     }
   ]
 
-  const cgContents: CardItem[] = [
+  const cgContents: LinkCardItem[] = [
     {
       href: resolve("/cg-basics"),
       gradient: "linear-gradient(135deg, #4d96ff, #c77dff)",
@@ -201,20 +191,7 @@
       </div>
       <div class="contents-grid">
         {#each contents as content (content.title)}
-          <a href={content.href} class="tool-glass" style="--glow: {content.glow}">
-            <div class="tool-gradient-bar" style="background: {content.gradient}"></div>
-            <div class="tool-glass-body">
-              {#if (content.grades?.length ?? 0) > 0}
-                <div class="tool-glass-tags">
-                  {#each content.grades ?? [] as grade (grade)}
-                    <GradeTag {grade} variant="light" />
-                  {/each}
-                </div>
-              {/if}
-              <h3>{content.title}</h3>
-              <p>{content.desc}</p>
-            </div>
-          </a>
+          <LinkCard {...content} />
         {/each}
       </div>
     </section>
@@ -227,18 +204,7 @@
       </div>
       <div class="tools-grid">
         {#each tools as tool (tool.title)}
-          <a href={tool.href} class="tool-glass" style="--glow: {tool.glow}">
-            <div class="tool-gradient-bar" style="background: {tool.gradient}"></div>
-            <div class="tool-glass-body">
-              <div class="tool-glass-tags">
-                {#each tool.grades ?? [] as grade (grade)}
-                  <GradeTag {grade} variant="light" />
-                {/each}
-              </div>
-              <h3>{tool.title}</h3>
-              <p>{tool.desc}</p>
-            </div>
-          </a>
+          <LinkCard {...tool} />
         {/each}
       </div>
     </section>
@@ -251,23 +217,7 @@
       </div>
       <div class="contents-grid">
         {#each cgContents as content (content.title)}
-          <a href={content.href} class="tool-glass" style="--glow: {content.glow}">
-            <div class="tool-gradient-bar" style="background: {content.gradient}"></div>
-            <div class="tool-glass-body">
-              {#if (content.grades?.length ?? 0) > 0 || (content.tags?.length ?? 0) > 0}
-                <div class="tool-glass-tags">
-                  {#each content.grades ?? [] as grade (grade)}
-                    <GradeTag {grade} variant="light" />
-                  {/each}
-                  {#each content.tags ?? [] as tag (tag)}
-                    <span class="card-tag">{tag}</span>
-                  {/each}
-                </div>
-              {/if}
-              <h3>{content.title}</h3>
-              <p>{content.desc}</p>
-            </div>
-          </a>
+          <LinkCard {...content} />
         {/each}
       </div>
     </section>
@@ -525,65 +475,10 @@
     }
   }
 
-  .tool-glass {
-    display: flex;
-    flex-direction: column;
-    background: light-dark(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.04));
-    border: 1px solid light-dark(rgba(0, 0, 0, 0.07), rgba(255, 255, 255, 0.08));
-    box-shadow: light-dark(0 1px 8px rgba(0, 0, 0, 0.05), none);
-    overflow: hidden;
-    text-decoration: none;
-    color: inherit;
-    transition:
-      border-color 0.2s,
-      box-shadow 0.2s;
-  }
-
-  .tool-glass:hover {
-    border-color: light-dark(rgba(0, 0, 0, 0.12), rgba(255, 255, 255, 0.2));
-    box-shadow: 0 4px 12px light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.2));
-  }
-
-  .tool-gradient-bar {
-    height: 3px;
-  }
-
-  .tool-glass-body {
-    padding: 1.1rem;
-  }
-
+  /* Guide card のタグ枠（リンクカードは LinkCard.svelte 側で完結） */
   .tool-glass-tags {
     display: inline-flex;
     gap: 0.35rem;
     margin-bottom: 0.75rem;
-  }
-
-  .card-tag {
-    display: inline-flex;
-    align-items: center;
-    font-size: 0.75rem;
-    font-weight: 600;
-    font-family: var(--font-mono);
-    line-height: 1.3;
-    padding: 4px 8px;
-    border-radius: 20px;
-    white-space: nowrap;
-    border: 1px solid var(--glow);
-    color: oklch(from var(--glow) calc(l * 0.9) c h);
-    background-color: oklch(from var(--glow) l c h / 10%);
-  }
-
-  .tool-glass-body h3 {
-    font-size: 0.9rem;
-    font-weight: 700;
-    margin: 0 0 0.35rem;
-    color: var(--color-heading);
-  }
-
-  .tool-glass-body p {
-    font-size: 0.78rem;
-    color: var(--color-body);
-    margin: 0;
-    line-height: 1.5;
   }
 </style>
