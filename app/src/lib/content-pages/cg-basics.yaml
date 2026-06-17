@@ -1,5 +1,12 @@
 title: CGと画像の基本
 sections:
+  - heading: デジタルカメラモデル
+    id: TODO
+    links:
+      - title: カメラでの撮影とCG
+        group: ["CG"]
+      - title: CGと画像処理
+        group: ["CG", "ImgP"]
   - heading: デジタル画像の基礎
     id: TODO
     links:
@@ -8,11 +15,4 @@ sections:
       - title: デジタル画像のデータ量
         group: ["CG", "ImgP"]
       - title: ベクタ表現とラスタ表現
-        group: ["CG", "ImgP"]
-  - heading: デジタルカメラモデル
-    id: TODO
-    links:
-      - title: カメラでの撮影とCG
-        group: ["CG"]
-      - title: CGと画像処理
         group: ["CG", "ImgP"]
