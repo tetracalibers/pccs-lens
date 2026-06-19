@@ -5,8 +5,7 @@ sections:
     id: camera-model
     links:
       - slug: camera-capture-and-cg # CG 1-1
-      - title: CGと画像処理 # CG 1-3 / ImgP 1
-        group: ["CG", "ImgP"]
+      - slug: cg-and-image-processing
   - heading: デジタル画像の基礎
     id: digital-image
     links:
