@@ -1,0 +1,48 @@
+title: パターン認識と機械学習
+summary: 識別・クラスタリング・機械学習による画像認識
+sections:
+  - heading: パターン認識の基礎
+    id: basics
+    links:
+      - title: パターン認識の流れ  # ImgP 12-1-1
+        group: ["ImgP"]
+      - title: 画像からの特徴抽出  # ImgP 12-1-2
+        group: ["ImgP"]
+      - title: プロトタイプ法による識別  # ImgP 12-1-3
+        group: ["ImgP"]
+      - title: クラスの分布を考慮した識別  # ImgP 12-1-4
+        group: ["ImgP"]
+      - title: NN法・kNN法  # ImgP 12-1-5
+        group: ["ImgP"]
+      - title: kd-tree法  # ImgP 12-1-6
+        group: ["ImgP"]
+      - title: ハッシングによる近似最近傍探索  # ImgP 12-1-7
+        group: ["ImgP"]
+      - title: 線形判別分析  # ImgP 12-1-8
+        group: ["ImgP"]
+      - title: 部分空間法  # ImgP 12-1-9
+        group: ["ImgP"]
+  - heading: 機械学習
+    id: machine-learning
+    links:
+      - title: 教師なし学習・教師あり学習  # ImgP 12-2
+        group: ["ImgP"]
+      - title: k-means法によるクラスタリング  # ImgP 12-3-1
+        group: ["ImgP"]
+      - title: 主成分分析による次元圧縮  # ImgP 12-3-2
+        group: ["ImgP"]
+      - title: アダブースト  # ImgP 12-4-1
+        group: ["ImgP"]
+      - title: サポートベクタマシン  # ImgP 12-4-2
+        group: ["ImgP"]
+      - title: ランダムフォレスト  # ImgP 12-4-3
+        group: ["ImgP"]
+  - heading: 画像認識への応用
+    id: applications
+    links:
+      - title: 物体検出  # ImgP 12-5-1
+        group: ["ImgP"]
+      - title: 類似画像検索  # ImgP 12-5-2
+        group: ["ImgP"]
+      - title: 人体姿勢推定  # ImgP 12-5-3
+        group: ["ImgP"]

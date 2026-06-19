@@ -1,0 +1,43 @@
+title: 画像符号化
+summary: 画像圧縮の原理と各種符号化方式
+sections:
+  - heading: 圧縮の基礎とファイル形式
+    id: basics
+    links:
+      - title: 画像の圧縮とファイル形式  # CG 6-1-3
+        group: ["CG"]
+      - title: 画像圧縮の原理  # ImgP 17-2-1
+        group: ["ImgP"]
+      - title: 画像符号化の分類  # ImgP 17-2-2
+        group: ["ImgP"]
+      - title: 画像ファイル形式一覧  # CG 6-7-1 / ImgP a-6-4
+        group: ["CG", "ImgP"]
+  - heading: 2値画像の符号化
+    id: binary-coding
+    links:
+      - title: 2値画像のデータ量  # ImgP 17-1-1
+        group: ["ImgP"]
+      - title: ランレングス符号化  # ImgP 17-1-2
+        group: ["ImgP"]
+      - title: チェイン符号化  # ImgP 17-1-3
+        group: ["ImgP"]
+  - heading: グレースケール画像の符号化
+    id: grayscale-coding
+    links:
+      - title: ハフマン符号化  # ImgP 17-2-3
+        group: ["ImgP"]
+      - title: 算術符号化  # ImgP 17-2-4
+        group: ["ImgP"]
+      - title: 予測符号化  # ImgP 17-2-5
+        group: ["ImgP"]
+      - title: 変換符号化  # ImgP 17-2-6
+        group: ["ImgP"]
+  - heading: カラー画像・動画像の符号化
+    id: color-video-coding
+    links:
+      - title: カラー画像の符号化  # ImgP 17-3-1
+        group: ["ImgP"]
+      - title: 静止画像の符号化方式  # ImgP 17-3-2
+        group: ["ImgP"]
+      - title: 動画像の符号化方式  # ImgP 17-3-3
+        group: ["ImgP"]

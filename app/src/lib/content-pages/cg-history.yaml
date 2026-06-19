@@ -1,0 +1,10 @@
+title: 歴史
+summary: CGと画像処理の歩み
+sections:
+  - heading: CGと画像処理の歴史
+    id: history
+    links:
+      - title: CGの歴史  # CG a-3
+        group: ["CG"]
+      - title: 画像処理の歴史  # ImgP a-1
+        group: ["ImgP"]

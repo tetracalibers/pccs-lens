@@ -1,0 +1,34 @@
+title: 光学的解析とシーンの復元
+summary: 放射量・反射と、形状や照明環境の復元
+sections:
+  - heading: 放射量と反射
+    id: radiometry-reflection
+    links:
+      - title: 放射量の定義と基本法則  # ImgP 16-2
+        group: ["ImgP"]
+      - title: 反射の種類  # ImgP 16-3-1
+        group: ["ImgP"]
+      - title: BRDFの定義と性質  # ImgP 16-3-2
+        group: ["ImgP"]
+      - title: 反射モデル  # ImgP 16-3-3
+        group: ["ImgP"]
+  - heading: 反射・形状の復元
+    id: shape-recovery
+    links:
+      - title: 反射成分の分離  # ImgP 16-4
+        group: ["ImgP"]
+      - title: 位置の推定と法線の推定  # ImgP 16-5-1
+        group: ["ImgP"]
+      - title: 照度差ステレオ  # ImgP 16-5-2
+        group: ["ImgP"]
+  - heading: 反射特性・照明環境の復元
+    id: reflectance-illumination
+    links:
+      - title: BRDFの計測と反射パラメータの推定  # ImgP 16-6
+        group: ["ImgP"]
+      - title: 光源分布の計測  # ImgP 16-7-2
+        group: ["ImgP"]
+      - title: インバースライティング  # ImgP 16-7-3
+        group: ["ImgP"]
+      - title: 形状・反射特性・照明環境の同時復元  # ImgP 16-8
+        group: ["ImgP"]

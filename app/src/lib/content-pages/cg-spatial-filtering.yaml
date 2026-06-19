@@ -1,0 +1,43 @@
+title: 領域に基づく処理（空間フィルタリング）
+summary: 平滑化・エッジ抽出・鮮鋭化などの空間フィルタ
+sections:
+  - heading: 空間フィルタリングと平滑化
+    id: smoothing
+    links:
+      - title: 空間フィルタリング  # CG 6-4-1 / ImgP 5-1
+        group: ["CG", "ImgP"]
+      - title: 平滑化（平均化・重み付き平均化）  # CG 6-4-2 / ImgP 5-2
+        group: ["CG", "ImgP"]
+      - title: 特定方向の平滑化  # ImgP 5-2-3
+        group: ["ImgP"]
+  - heading: エッジ抽出と鮮鋭化
+    id: edge-sharpening
+    links:
+      - title: 微分フィルタ  # CG 6-4-4 / ImgP 5-3-1
+        group: ["CG", "ImgP"]
+      - title: プリューウィットフィルタ・ソーベルフィルタ  # ImgP 5-3-2
+        group: ["ImgP"]
+      - title: 2次微分とラプラシアン  # ImgP 5-3-3
+        group: ["ImgP"]
+      - title: エッジ検出  # CG 6-4-4 / ImgP 5-3-4
+        group: ["CG", "ImgP"]
+      - title: 鮮鋭化  # CG 6-4-5 / ImgP 5-4
+        group: ["CG", "ImgP"]
+  - heading: エッジを保存した平滑化
+    id: edge-preserving
+    links:
+      - title: 局所領域の選択による平滑化  # CG 6-4-3 / ImgP 5-5-1
+        group: ["CG", "ImgP"]
+      - title: k最近隣平均化フィルタ  # ImgP 5-5-2
+        group: ["ImgP"]
+      - title: バイラテラルフィルタ  # ImgP 5-5-3
+        group: ["ImgP"]
+      - title: ノンローカルミーンフィルタ  # ImgP 5-5-4
+        group: ["ImgP"]
+      - title: メディアンフィルタ  # ImgP 5-5-5
+        group: ["ImgP"]
+  - heading: 特殊効果
+    id: special-effects
+    links:
+      - title: 領域に基づく変換による特殊効果  # CG 6-4-6
+        group: ["CG"]

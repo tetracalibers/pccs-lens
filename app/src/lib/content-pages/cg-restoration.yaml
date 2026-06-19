@@ -1,0 +1,34 @@
+title: 画像の復元と生成
+summary: ぼけ復元・超解像・コンピュテーショナルフォトグラフィ
+sections:
+  - heading: ぼけ・ぶれの復元
+    id: deblur
+    links:
+      - title: 画像の劣化モデル  # ImgP 7-1-1
+        group: ["ImgP"]
+      - title: 点拡がり関数（PSF）  # ImgP 7-1-2
+        group: ["ImgP"]
+      - title: 逆フィルタ・ウィーナフィルタ  # ImgP 7-1-3
+        group: ["ImgP"]
+  - heading: さまざまな復元・生成
+    id: restoration-generation
+    links:
+      - title: ノイズ除去  # ImgP 7-2-1
+        group: ["ImgP"]
+      - title: 画像超解像  # ImgP 7-2-2
+        group: ["ImgP"]
+      - title: ハイダイナミックレンジ画像  # ImgP 7-2-3
+        group: ["ImgP"]
+      - title: ガイド画像を利用した画像処理  # ImgP 7-2-4
+        group: ["ImgP"]
+      - title: 勾配に基づく画像処理  # ImgP 7-2-5
+        group: ["ImgP"]
+  - heading: コンピュテーショナルフォトグラフィ
+    id: computational-photography
+    links:
+      - title: コンピュテーショナルフォトグラフィの考え方  # CG 7-1-3 / ImgP 7-3-1
+        group: ["CG", "ImgP"]
+      - title: 光線の記録とその利用  # CG 7-1-4 / ImgP 7-3-2
+        group: ["CG", "ImgP"]
+      - title: 符号化撮像  # CG 7-1-5 / ImgP 7-3-3
+        group: ["CG", "ImgP"]

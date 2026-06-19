@@ -15,8 +15,8 @@
   {#snippet breadcrumb()}
     <Breadcrumb category="contents" crumbs={[{ label: "CG・画像処理", href: resolve("/cg") }]} />
   {/snippet}
-  {#each page.sections as section, si (si)}
-    <Heading2 id={`section-${si}`}>{section.heading}</Heading2>
+  {#each page.sections as section (section.id)}
+    <Heading2 id={section.id}>{section.heading}</Heading2>
     <ul>
       {#each section.links as link, i (i)}
         <li>

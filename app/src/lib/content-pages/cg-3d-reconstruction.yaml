@@ -1,0 +1,36 @@
+title: 画像からの3次元復元
+summary: エピポーラ幾何・ステレオ・SfMによる3次元復元
+sections:
+  - heading: 画像と空間の幾何
+    id: geometry
+    links:
+      - title: 透視投影モデルと幾何学的関係  # ImgP 15-1-1
+        group: ["ImgP"]
+      - title: 同次座標を用いた記述  # ImgP 15-1-2
+        group: ["ImgP"]
+      - title: エピポーラ幾何  # ImgP 15-1-3
+        group: ["ImgP"]
+  - heading: カメラキャリブレーションとステレオ
+    id: calibration-stereo
+    links:
+      - title: カメラキャリブレーション  # ImgP 15-2
+        group: ["ImgP"]
+      - title: 空間位置の計算  # ImgP 15-3-1
+        group: ["ImgP"]
+      - title: 平行ステレオ  # ImgP 15-3-2
+        group: ["ImgP"]
+      - title: ステレオマッチング  # ImgP 15-3-3
+        group: ["ImgP"]
+      - title: マルチビューステレオ  # ImgP 15-3-4
+        group: ["ImgP"]
+      - title: アクティブステレオ  # ImgP 15-4
+        group: ["ImgP"]
+  - heading: モーション推定からの復元
+    id: motion-reconstruction
+    links:
+      - title: カメラ位置・姿勢の推定  # ImgP 15-5-1
+        group: ["ImgP"]
+      - title: カメラモーションと3次元位置の推定  # ImgP 15-5-2
+        group: ["ImgP"]
+      - title: 大量の画像を用いた復元（SfM）  # ImgP 15-5-3
+        group: ["ImgP"]

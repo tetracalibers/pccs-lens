@@ -1,0 +1,35 @@
+title: ノンフォトリアリスティックレンダリングと可視化
+summary: 非写実的レンダリングとデータの可視化
+sections:
+  - heading: ノンフォトリアリスティックレンダリング
+    id: npr
+    links:
+      - title: NPRの概要と特徴  # CG 7-2-1
+        group: ["CG"]
+      - title: NPRの目的と表現技法  # CG 7-2-2
+        group: ["CG"]
+      - title: 線を入力とするNPR  # CG 7-2-3
+        group: ["CG"]
+      - title: 2次元画像を入力とするNPR  # CG 7-2-4
+        group: ["CG"]
+      - title: 3次元形状を入力とするNPR  # CG 7-2-5
+        group: ["CG"]
+      - title: 形状の誇張表現  # CG 7-2-6
+        group: ["CG"]
+      - title: アニメーションへの対応  # CG 7-2-7
+        group: ["CG"]
+      - title: NPRの描画実現方法の分類  # CG 7-2-8
+        group: ["CG"]
+  - heading: 可視化
+    id: visualization
+    links:
+      - title: サイエンティフィックビジュアライゼーション  # CG 7-3-1
+        group: ["CG"]
+      - title: 可視化処理の流れとデータマッピング  # CG 7-3-2
+        group: ["CG"]
+      - title: 3次元スカラデータの可視化  # CG 7-3-3
+        group: ["CG"]
+      - title: ベクトル・テンソルデータの可視化  # CG 7-3-4
+        group: ["CG"]
+      - title: 情報可視化  # CG 7-3-5
+        group: ["CG"]

@@ -1,0 +1,47 @@
+title: 画像の性質と色
+summary: 画像の性質・人間の視覚・表色系と色空間
+sections:
+  - heading: 画像の性質
+    id: properties
+    links:
+      - title: 画像のダイナミックレンジと階調  # CG 6-1-1
+        group: ["CG"]
+      - title: 画像の統計量  # ImgP 3-1-1
+        group: ["ImgP"]
+      - title: 画像のノイズ  # ImgP 3-1-2
+        group: ["ImgP"]
+      - title: コントラストとシャープネス  # ImgP 3-1-3
+        group: ["ImgP"]
+  - heading: 人間の視覚
+    id: human-vision
+    links:
+      - title: 人間の視覚  # CG a-1-2 / ImgP 3-2
+        group: ["CG", "ImgP"]
+      - title: 色の見え方  # CG a-1-2
+        group: ["CG"]
+  - heading: 色の表現と混色
+    id: color-mixing
+    links:
+      - title: 加法混色と減法混色  # ImgP 2-5-1
+        group: ["ImgP"]
+      - title: グレースケール画像とカラー画像  # CG 6-1-2 / ImgP 2-5-2
+        group: ["CG", "ImgP"]
+      - title: 色の表現  # CG 6-1-2
+        group: ["CG"]
+  - heading: 表色系と色空間
+    id: color-spaces
+    links:
+      - title: マンセル表色系  # ImgP 3-3-1
+        group: ["ImgP"]
+      - title: CIE-RGB表色系  # ImgP 3-3-2
+        group: ["ImgP"]
+      - title: CIE-XYZ表色系  # ImgP 3-3-3
+        group: ["ImgP"]
+      - title: CIE-L*a*b*色空間  # ImgP 3-3-4
+        group: ["ImgP"]
+      - title: sRGB色空間  # ImgP 3-3-5
+        group: ["ImgP"]
+      - title: 輝度信号と色差信号  # ImgP 3-3-6
+        group: ["ImgP"]
+      - title: HSI変換と逆変換  # ImgP 3-3-7
+        group: ["ImgP"]

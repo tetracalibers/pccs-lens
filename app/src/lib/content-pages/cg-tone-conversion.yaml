@@ -1,0 +1,44 @@
+title: 画素ごとの濃淡・色変換
+summary: トーンカーブやヒストグラムによる濃淡・色変換
+sections:
+  - heading: 濃淡変換
+    id: tone
+    links:
+      - title: ヒストグラム  # CG 6-3-1 / ImgP 4-1-5
+        group: ["CG", "ImgP"]
+      - title: トーンカーブ  # CG 6-3-2 / ImgP 4-1-1
+        group: ["CG", "ImgP"]
+      - title: 折れ線型・累乗型トーンカーブ  # ImgP 4-1-2, 4-1-3
+        group: ["ImgP"]
+      - title: S字トーンカーブ  # ImgP 4-1-4
+        group: ["ImgP"]
+      - title: ヒストグラム平坦化  # ImgP 4-1-5
+        group: ["ImgP"]
+      - title: 各種の濃淡変換  # CG 6-3-3
+        group: ["CG"]
+  - heading: 特殊効果と2値化
+    id: special-effects
+    links:
+      - title: 濃淡の反転  # ImgP 4-2-1
+        group: ["ImgP"]
+      - title: ポスタリゼーション  # ImgP 4-2-2
+        group: ["ImgP"]
+      - title: 2値化（しきい値処理）  # CG 6-3-5 / ImgP 4-2-2
+        group: ["CG", "ImgP"]
+      - title: ソラリゼーション  # ImgP 4-2-3
+        group: ["ImgP"]
+      - title: 画素ごとの変換による特殊効果  # CG 6-3-4
+        group: ["CG"]
+  - heading: 色変換
+    id: color
+    links:
+      - title: RGBトーンカーブによる変換  # ImgP 4-3-1
+        group: ["ImgP"]
+      - title: 擬似カラー  # CG 6-3-7 / ImgP 4-3-2
+        group: ["CG", "ImgP"]
+      - title: 色相・彩度・明度の変化  # ImgP 4-3-3
+        group: ["ImgP"]
+      - title: 色補正  # ImgP 4-3-4
+        group: ["ImgP"]
+      - title: 色変換  # CG 6-3-6
+        group: ["CG"]

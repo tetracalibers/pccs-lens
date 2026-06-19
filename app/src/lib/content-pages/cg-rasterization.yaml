@@ -1,0 +1,16 @@
+title: 2次元画像の生成と描画
+summary: ラスタ化・アンチエイリアシング・塗りつぶし
+sections:
+  - heading: ラスタ化と描画
+    id: rasterization
+    links:
+      - title: ラスタ化による図形の描画  # CG 6-2-1
+        group: ["CG"]
+      - title: 画像生成時のアンチエイリアシング  # CG 6-2-2
+        group: ["CG"]
+      - title: 塗りつぶし処理  # CG 6-2-3
+        group: ["CG"]
+      - title: ブラシ処理  # CG 6-2-4
+        group: ["CG"]
+      - title: グラデーション生成  # CG 6-2-5
+        group: ["CG"]

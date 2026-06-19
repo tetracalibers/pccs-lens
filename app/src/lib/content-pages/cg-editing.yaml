@@ -1,0 +1,21 @@
+title: 画像の編集と合成
+summary: 画像間演算・領域補完・テクスチャ合成
+sections:
+  - heading: 画像の合成
+    id: compositing
+    links:
+      - title: 画像間演算  # CG 6-6-1 / ImgP 4-4-1
+        group: ["CG", "ImgP"]
+      - title: マスク処理  # ImgP 4-4-2
+        group: ["ImgP"]
+      - title: 接続が自然な画像合成  # CG 6-6-5
+        group: ["CG"]
+  - heading: 編集・補完
+    id: editing-completion
+    links:
+      - title: 自然な画像サイズ変更（リターゲティング）  # CG 6-6-4
+        group: ["CG"]
+      - title: 画像の領域補完  # CG 6-6-6
+        group: ["CG"]
+      - title: 画像からのテクスチャ合成  # CG 6-6-7
+        group: ["CG"]

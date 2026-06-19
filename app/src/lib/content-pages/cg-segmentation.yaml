@@ -1,0 +1,31 @@
+title: 領域分割
+summary: テクスチャ特徴量と領域分割の手法
+sections:
+  - heading: 領域の特徴量
+    id: region-features
+    links:
+      - title: 領域のテクスチャ  # ImgP 10-1-1
+        group: ["ImgP"]
+      - title: 2次元フーリエ変換による周波数特徴量  # ImgP 10-1-2
+        group: ["ImgP"]
+      - title: ガボールフィルタによる局所周波数特徴量  # ImgP 10-1-3
+        group: ["ImgP"]
+      - title: 同時生起行列による統計的特徴量  # ImgP 10-1-4
+        group: ["ImgP"]
+  - heading: 領域分割の手法
+    id: segmentation-methods
+    links:
+      - title: 領域分割のアプローチ  # ImgP 10-2-1
+        group: ["ImgP"]
+      - title: 階層的統合による領域分割  # ImgP 10-2-2
+        group: ["ImgP"]
+      - title: パラメータ空間でのクラス分け  # ImgP 10-2-3
+        group: ["ImgP"]
+      - title: ミーンシフト  # ImgP 10-2-4
+        group: ["ImgP"]
+      - title: エッジを利用した領域分割  # ImgP 10-2-5
+        group: ["ImgP"]
+      - title: グラフカット  # ImgP 10-2-6
+        group: ["ImgP"]
+      - title: 画像のセグメンテーション  # CG 6-6-2
+        group: ["CG"]

@@ -1,0 +1,43 @@
+title: パターン・特徴の検出とマッチング
+summary: テンプレートマッチングと特徴点検出
+sections:
+  - heading: テンプレートマッチング
+    id: template-matching
+    links:
+      - title: テンプレートマッチング  # ImgP 11-1-1
+        group: ["ImgP"]
+      - title: 類似度  # ImgP 11-1-2
+        group: ["ImgP"]
+      - title: サブピクセル位置推定  # ImgP 11-1-3
+        group: ["ImgP"]
+      - title: 高速探索法  # ImgP 11-1-4
+        group: ["ImgP"]
+  - heading: エッジ・ヒストグラムによる検出
+    id: edge-histogram
+    links:
+      - title: チャンファーマッチング  # ImgP 11-2-1
+        group: ["ImgP"]
+      - title: アクティブ探索  # ImgP 11-2-2
+        group: ["ImgP"]
+  - heading: 特徴点の検出と記述
+    id: feature-points
+    links:
+      - title: コーナー検出  # ImgP 11-3-1
+        group: ["ImgP"]
+      - title: DoGによる特徴点とスケールの検出  # ImgP 11-3-2
+        group: ["ImgP"]
+      - title: SIFT特徴  # ImgP 11-4-1
+        group: ["ImgP"]
+      - title: 2値特徴量  # ImgP 11-4-2
+        group: ["ImgP"]
+      - title: 対応点マッチング  # ImgP 11-4-3
+        group: ["ImgP"]
+  - heading: 図形要素検出と顕著性
+    id: shape-saliency
+    links:
+      - title: ハフ変換  # ImgP 11-5-1
+        group: ["ImgP"]
+      - title: 一般化・ランダム化ハフ変換  # ImgP 11-5-2, 11-5-3
+        group: ["ImgP"]
+      - title: 顕著性マップ  # ImgP 11-6
+        group: ["ImgP"]

@@ -1,103 +1,104 @@
 title: レンダリング
+summary: 隠面消去・シェーディングなど写実的描画
 sections:
   - heading: 写実的レンダリング
-    id: TODO
+    id: photorealistic
     links:
-      - title: 写実的表現
+      - title: 写実的表現  # CG 4-1-1
         group: ["CG"]
-      - title: リアリティの要素
+      - title: リアリティの要素  # CG 4-1-2
         group: ["CG"]
-      - title: 写実的表現のためのモデリング
+      - title: 写実的表現のためのモデリング  # CG 4-1-3
         group: ["CG"]
-      - title: レンダリングにおける処理
+      - title: レンダリングにおける処理  # CG 4-1-4
         group: ["CG"]
   - heading: 隠面消去
-    id: TODO
+    id: hidden-surface
     links:
-      - title: バックフェースカリング
+      - title: バックフェースカリング  # CG 4-2-1
         group: ["CG"]
-      - title: 隠面消去法の分類
+      - title: 隠面消去法の分類  # CG 4-2-2
         group: ["CG"]
-      - title: 優先順位アルゴリズム
+      - title: 優先順位アルゴリズム  # CG 4-2-3
         group: ["CG"]
-      - title: スキャンライン法
+      - title: スキャンライン法  # CG 4-2-4
         group: ["CG"]
-      - title: Zバッファ法
+      - title: Zバッファ法  # CG 4-2-5
         group: ["CG"]
-      - title: レイトレーシング法
+      - title: レイトレーシング法  # CG 4-2-6
         group: ["CG"]
   - heading: シェーディング
-    id: TODO
+    id: shading
     links:
-      - title: シェーディングの目的
+      - title: シェーディングの目的  # CG 4-3-1
         group: ["CG"]
-      - title: 光を表す量
+      - title: 光を表す量  # CG 4-3-1
         group: ["CG"]
-      - title: シェーディングモデル
+      - title: シェーディングモデル  # CG 4-3-1
         group: ["CG"]
-      - title: 環境光の表現
+      - title: 環境光の表現  # CG 4-3-2
         group: ["CG"]
-      - title: 拡散反射の表現
+      - title: 拡散反射の表現  # CG 4-3-3
         group: ["CG"]
-      - title: 鏡面反射の表現
+      - title: 鏡面反射の表現  # CG 4-3-4
         group: ["CG"]
-      - title: 反射・透過・屈折の表現
+      - title: 反射・透過・屈折の表現  # CG 4-3-5
         group: ["CG"]
-      - title: 散乱・減衰の表現
+      - title: 散乱・減衰の表現  # CG 4-3-6
         group: ["CG"]
-      - title: スムーズシェーディングの手法
+      - title: スムーズシェーディングの手法  # CG 4-3-7
         group: ["CG"]
-      - title: グローシェーディング
+      - title: グローシェーディング  # CG 4-3-7
         group: ["CG"]
-      - title: フォンシェーディング
+      - title: フォンシェーディング  # CG 4-3-7
         group: ["CG"]
   - heading: シャドウイング
-    id: TODO
+    id: shadowing
     links:
-      - title: 平行光源・点光源による影
+      - title: 平行光源・点光源による影  # CG 4-4-2
         group: ["CG"]
-      - title: 大きさをもつ光源による影
+      - title: 大きさをもつ光源による影  # CG 4-4-3
         group: ["CG"]
   - heading: マッピング
-    id: TODO
+    id: mapping
     links:
-      - title: マッピングの目的と手法
+      - title: マッピングの目的と手法  # CG 4-5-1
         group: ["CG"]
-      - title: テクスチャマッピング
+      - title: テクスチャマッピング  # CG 4-5-2
         group: ["CG"]
-      - title: アンチエイリアシング
+      - title: アンチエイリアシング  # CG 4-5-2
         group: ["CG"]
-      - title: バンプマッピング
+      - title: バンプマッピング  # CG 4-5-3
         group: ["CG"]
-      - title: 環境マッピング
+      - title: 環境マッピング  # CG 4-5-4
         group: ["CG"]
-      - title: ソリッドテクスチャマッピング
+      - title: ソリッドテクスチャマッピング  # CG 4-5-5
         group: ["CG"]
   - heading: イメージベースドレンダリング
-    id: TODO
+    id: image-based-rendering
     links:
-      - title: イメージベースドレンダリングの技法
+      - title: イメージベースドレンダリングの技法  # CG 4-6-1
         group: ["CG"]
-      - title: 投影テクスチャマッピング
+      - title: 投影テクスチャマッピング  # CG 4-6-2
         group: ["CG"]
-      - title: 画像再投影の利用
+      - title: 画像再投影の利用  # CG 4-6-3
         group: ["CG"]
-      - title: パノラマ画像の利用
+      - title: パノラマ画像の利用  # CG 4-6-4
         group: ["CG"]
-      - title: ビューモーフィング
+      - title: ビューモーフィング  # CG 4-6-5
         group: ["CG"]
-      - title: レイデータベースアプローチ
+      - title: レイデータベースアプローチ  # CG 4-6-6
         group: ["CG"]
-      - title: イメージベースドライティング
+      - title: イメージベースドライティング  # CG 4-6-7
         group: ["CG"]
   - heading: 大域照明計算
-    id: TODO
+    id: global-illumination
     links:
-      - title: レンダリング方程式
+      - title: レンダリング方程式  # CG 4-7-1
         group: ["CG"]
-      - title: ラジオシティ法
+      - title: ラジオシティ法  # CG 4-7-2
         group: ["CG"]
-      - title: モンテカルロ法
+      - title: モンテカルロ法  # CG 4-7-3
         group: ["CG"]
-      - title: マルコフ連鎖モンテカルロ法
+      - title: マルコフ連鎖モンテカルロ法  # CG 4-7-4
         group: ["CG"]

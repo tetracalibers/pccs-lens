@@ -1,43 +1,67 @@
 title: 座標と図形の変換
+summary: 座標変換・投影・画像の幾何学的変換
 sections:
   - heading: 座標変換
-    id: TODO
+    id: coordinate-transform
     links:
-      - title: 座標系
-        group: ["CG"]
-      - title: 基本的な変換と同次座標
-        group: ["CG"]
-      - title: 鏡映
-        group: ["CG"]
-      - title: スキュー
-        group: ["CG"]
-      - title: 変換の合成
-        group: ["CG"]
-      - title: アフィン変換
-        group: ["CG"]
+      - title: 座標系  # CG 2-1-1, 2-2-1 / ImgP 8-1
+        group: ["CG", "ImgP"]
+      - title: 基本的な変換と同次座標  # CG 2-1-2, 2-1-3 / ImgP 8-1-1, 8-2-2
+        group: ["CG", "ImgP"]
+      - title: 拡大・縮小  # ImgP 8-1-2
+        group: ["ImgP"]
+      - title: 回転  # ImgP 8-1-3
+        group: ["ImgP"]
+      - title: 鏡映  # CG 2-1-2 / ImgP 8-1-4
+        group: ["CG", "ImgP"]
+      - title: スキュー  # CG 2-1-2 / ImgP 8-1-5
+        group: ["CG", "ImgP"]
+      - title: 変換の合成  # CG 2-1-4 / ImgP 8-1-6, 8-2-5
+        group: ["CG", "ImgP"]
+      - title: アフィン変換  # CG 2-1-5 / ImgP 8-2-3
+        group: ["CG", "ImgP"]
+      - title: 射影変換  # ImgP 8-2-4
+        group: ["ImgP"]
   - heading: 投影
-    id: TODO
+    id: projection
     links:
-      - title: カメラと投影
+      - title: カメラと投影  # CG 2-3-1
         group: ["CG"]
-      - title: 透視投影と平行投影
+      - title: 透視投影と平行投影  # CG 2-3-2
         group: ["CG"]
-      - title: 投影の手順
+      - title: 投影の手順  # CG 2-3-1
         group: ["CG"]
-      - title: 投影の計算法
+      - title: 投影の計算法  # CG 2-3
         group: ["CG"]
-      - title: 消点とn点透視
+      - title: 消点とn点透視  # CG 2-3-3
         group: ["CG"]
-      - title: さまざまな平行投影
+      - title: さまざまな平行投影  # CG 2-3-3
         group: ["CG"]
   - heading: ビューイングパイプライン
-    id: TODO
+    id: viewing-pipeline
     links:
-      - title: ビューイングパイプラインでの変換
+      - title: ビューイングパイプラインでの変換  # CG 2-4-1
         group: ["CG"]
-      - title: ビューイングと視野変換
+      - title: ビューイングと視野変換  # CG 2-4-2
         group: ["CG"]
-      - title: クリッピング
+      - title: クリッピング  # CG 2-4-3
         group: ["CG"]
-      - title: 階層モデリング
+      - title: 階層モデリング  # CG 2-4-4
         group: ["CG"]
+  - heading: 画像の幾何学的変換
+    id: image-geometric-transform
+    links:
+      - title: 画像の幾何学的変換  # CG 6-5-1 / ImgP 8-3-1
+        group: ["CG", "ImgP"]
+      - title: 画像の再標本化と補間  # CG 6-5-2 / ImgP 8-3-1
+        group: ["CG", "ImgP"]
+      - title: ニアレストネイバー  # ImgP 8-3-2
+        group: ["ImgP"]
+      - title: バイリニア補間・バイキュービック補間  # ImgP 8-3-3, 8-3-4
+        group: ["ImgP"]
+      - title: 再標本化時のアンチエイリアシング  # CG 6-5-3 / ImgP 8-3-3
+        group: ["CG", "ImgP"]
+      - title: イメージモザイキング  # CG 6-6-3 / ImgP 8-4
+        group: ["CG", "ImgP"]
+      - title: パノラマ画像の生成  # ImgP 8-4-5
+        group: ["ImgP"]
