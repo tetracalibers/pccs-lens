@@ -4,6 +4,8 @@
     type LinkCardItem
   } from "$lib/components/site-top/LinkCard.svelte"
   import { cgPages, cgGroups, type CgPage, type CgLink } from "$lib/content-pages/cg"
+  import { isPageLink } from "$lib/content-pages/types"
+  import { guidePages } from "$lib/meta/guide-pages"
   import type { CgGroup } from "$lib/meta/group"
   import { SvelteSet, SvelteMap } from "svelte/reactivity"
 
@@ -36,6 +38,18 @@
     return tags
   }
 
+  // ページ内の記事がすべて下書き（公開待ち）または未作成なら true（カードに Coming Soon を表示）
+  const isComingSoon = (page: CgPage): boolean => {
+    const links = page.sections.flatMap((section) => section.links)
+    return (
+      links.length > 0 &&
+      links.every((link) => {
+        if (!isPageLink(link)) return true // CgDraftLink = 未作成
+        return guidePages.get(`cg/${page.route}/${link.slug}`)?.draft ?? true // 下書き or メタ未生成
+      })
+    )
+  }
+
   // route 引きできるカード集合（配色は cgPages 全体での並び順で循環）
   const cardByRoute = new SvelteMap<string, LinkCardItem>(
     cgPages.map((page, i) => [
@@ -45,7 +59,8 @@
         ...palette[i % palette.length],
         title: page.title,
         desc: page.summary,
-        tags: tagsOf(page)
+        tags: tagsOf(page),
+        comingSoon: isComingSoon(page)
       }
     ])
   )

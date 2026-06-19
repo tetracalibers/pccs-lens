@@ -12,16 +12,30 @@
     desc: string
     grades?: Grade[]
     tags?: CardTag[]
+    /** リンク先の記事がすべて下書き／未作成のとき true。「Coming Soon」タグを表示する。 */
+    comingSoon?: boolean
   }
 
-  let { href, gradient, glow, title, desc, grades = [], tags = [] }: LinkCardItem = $props()
+  let {
+    href,
+    gradient,
+    glow,
+    title,
+    desc,
+    grades = [],
+    tags = [],
+    comingSoon = false
+  }: LinkCardItem = $props()
 </script>
 
 <a {href} class="tool-glass" style="--glow: {glow}">
   <div class="tool-gradient-bar" style="background: {gradient}"></div>
   <div class="tool-glass-body">
-    {#if grades.length > 0 || tags.length > 0}
+    {#if comingSoon || grades.length > 0 || tags.length > 0}
       <div class="tool-glass-tags">
+        {#if comingSoon}
+          <span class="coming-soon-tag">Coming Soon</span>
+        {/if}
         {#each grades as grade (grade)}
           <GradeTag {grade} variant="light" />
         {/each}
@@ -108,6 +122,20 @@
       oklch(from var(--_tag-color) l calc(c * 1.2) h / 28%),
       oklch(from var(--_tag-color) l c h / 14%)
     );
+  }
+
+  /* 公開待ち（下書き／未作成）を示すグレーのタグ。色付きタグと同じピル形状に揃える */
+  .coming-soon-tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    line-height: 1.3;
+    padding: 3px 8px;
+    white-space: nowrap;
+    border: 1px solid light-dark(#b0b0b0, #6a6a6a);
+    color: light-dark(#6e6e6e, #b0b0b0);
   }
 
   .tool-glass-body h3 {
