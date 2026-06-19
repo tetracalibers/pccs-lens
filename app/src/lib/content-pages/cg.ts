@@ -51,170 +51,170 @@ interface CgPageData {
 }
 
 export interface CgPage extends CgPageData {
-  /** ルートセグメント（例: "cg-basics"）。 */
+  /** 動的ルート /cg/[slug] の slug（YAMLファイル名、例: "basics"）。 */
   route: string
   href: ResolvedPathname
 }
 
 export const cgBasics: CgPage = {
-  route: "cg-basics",
-  href: resolve("/cg-basics"),
+  route: "basics",
+  href: resolve("/cg/[slug]", { slug: "basics" }),
   ...(cgBasicsData as unknown as CgPageData)
 }
 
 export const cgImageProperties: CgPage = {
-  route: "cg-image-properties",
-  href: resolve("/cg-image-properties"),
+  route: "image-properties",
+  href: resolve("/cg/[slug]", { slug: "image-properties" }),
   ...(cgImagePropertiesData as unknown as CgPageData)
 }
 
 export const cgCamera: CgPage = {
-  route: "cg-camera",
-  href: resolve("/cg-camera"),
+  route: "camera",
+  href: resolve("/cg/[slug]", { slug: "camera" }),
   ...(cgCameraData as unknown as CgPageData)
 }
 
 export const cgTransformation: CgPage = {
-  route: "cg-transformation",
-  href: resolve("/cg-transformation"),
+  route: "transformation",
+  href: resolve("/cg/[slug]", { slug: "transformation" }),
   ...(cgTransformationData as unknown as CgPageData)
 }
 
 export const cgModeling: CgPage = {
-  route: "cg-modeling",
-  href: resolve("/cg-modeling"),
+  route: "modeling",
+  href: resolve("/cg/[slug]", { slug: "modeling" }),
   ...(cgModelingData as unknown as CgPageData)
 }
 
 export const cgRendering: CgPage = {
-  route: "cg-rendering",
-  href: resolve("/cg-rendering"),
+  route: "rendering",
+  href: resolve("/cg/[slug]", { slug: "rendering" }),
   ...(cgRenderingData as unknown as CgPageData)
 }
 
 export const cgAnimation: CgPage = {
-  route: "cg-animation",
-  href: resolve("/cg-animation"),
+  route: "animation",
+  href: resolve("/cg/[slug]", { slug: "animation" }),
   ...(cgAnimationData as unknown as CgPageData)
 }
 
 export const cgRasterization: CgPage = {
-  route: "cg-rasterization",
-  href: resolve("/cg-rasterization"),
+  route: "rasterization",
+  href: resolve("/cg/[slug]", { slug: "rasterization" }),
   ...(cgRasterizationData as unknown as CgPageData)
 }
 
 export const cgToneConversion: CgPage = {
-  route: "cg-tone-conversion",
-  href: resolve("/cg-tone-conversion"),
+  route: "tone-conversion",
+  href: resolve("/cg/[slug]", { slug: "tone-conversion" }),
   ...(cgToneConversionData as unknown as CgPageData)
 }
 
 export const cgSpatialFiltering: CgPage = {
-  route: "cg-spatial-filtering",
-  href: resolve("/cg-spatial-filtering"),
+  route: "spatial-filtering",
+  href: resolve("/cg/[slug]", { slug: "spatial-filtering" }),
   ...(cgSpatialFilteringData as unknown as CgPageData)
 }
 
 export const cgFrequency: CgPage = {
-  route: "cg-frequency",
-  href: resolve("/cg-frequency"),
+  route: "frequency",
+  href: resolve("/cg/[slug]", { slug: "frequency" }),
   ...(cgFrequencyData as unknown as CgPageData)
 }
 
 export const cgBinaryImage: CgPage = {
-  route: "cg-binary-image",
-  href: resolve("/cg-binary-image"),
+  route: "binary-image",
+  href: resolve("/cg/[slug]", { slug: "binary-image" }),
   ...(cgBinaryImageData as unknown as CgPageData)
 }
 
 export const cgRestoration: CgPage = {
-  route: "cg-restoration",
-  href: resolve("/cg-restoration"),
+  route: "restoration",
+  href: resolve("/cg/[slug]", { slug: "restoration" }),
   ...(cgRestorationData as unknown as CgPageData)
 }
 
 export const cgEditing: CgPage = {
-  route: "cg-editing",
-  href: resolve("/cg-editing"),
+  route: "editing",
+  href: resolve("/cg/[slug]", { slug: "editing" }),
   ...(cgEditingData as unknown as CgPageData)
 }
 
 export const cgNpr: CgPage = {
-  route: "cg-npr",
-  href: resolve("/cg-npr"),
+  route: "npr",
+  href: resolve("/cg/[slug]", { slug: "npr" }),
   ...(cgNprData as unknown as CgPageData)
 }
 
 export const cgSegmentation: CgPage = {
-  route: "cg-segmentation",
-  href: resolve("/cg-segmentation"),
+  route: "segmentation",
+  href: resolve("/cg/[slug]", { slug: "segmentation" }),
   ...(cgSegmentationData as unknown as CgPageData)
 }
 
 export const cgFeatureDetection: CgPage = {
-  route: "cg-feature-detection",
-  href: resolve("/cg-feature-detection"),
+  route: "feature-detection",
+  href: resolve("/cg/[slug]", { slug: "feature-detection" }),
   ...(cgFeatureDetectionData as unknown as CgPageData)
 }
 
 export const cgPatternRecognition: CgPage = {
-  route: "cg-pattern-recognition",
-  href: resolve("/cg-pattern-recognition"),
+  route: "pattern-recognition",
+  href: resolve("/cg/[slug]", { slug: "pattern-recognition" }),
   ...(cgPatternRecognitionData as unknown as CgPageData)
 }
 
 export const cgDeepLearning: CgPage = {
-  route: "cg-deep-learning",
-  href: resolve("/cg-deep-learning"),
+  route: "deep-learning",
+  href: resolve("/cg/[slug]", { slug: "deep-learning" }),
   ...(cgDeepLearningData as unknown as CgPageData)
 }
 
 export const cgVideo: CgPage = {
-  route: "cg-video",
-  href: resolve("/cg-video"),
+  route: "video",
+  href: resolve("/cg/[slug]", { slug: "video" }),
   ...(cgVideoData as unknown as CgPageData)
 }
 
 export const cgReconstruction: CgPage = {
-  route: "cg-3d-reconstruction",
-  href: resolve("/cg-3d-reconstruction"),
+  route: "3d-reconstruction",
+  href: resolve("/cg/[slug]", { slug: "3d-reconstruction" }),
   ...(cgReconstructionData as unknown as CgPageData)
 }
 
 export const cgOpticalAnalysis: CgPage = {
-  route: "cg-optical-analysis",
-  href: resolve("/cg-optical-analysis"),
+  route: "optical-analysis",
+  href: resolve("/cg/[slug]", { slug: "optical-analysis" }),
   ...(cgOpticalAnalysisData as unknown as CgPageData)
 }
 
 export const cgImageCoding: CgPage = {
-  route: "cg-image-coding",
-  href: resolve("/cg-image-coding"),
+  route: "image-coding",
+  href: resolve("/cg/[slug]", { slug: "image-coding" }),
   ...(cgImageCodingData as unknown as CgPageData)
 }
 
 export const cgSystems: CgPage = {
-  route: "cg-systems",
-  href: resolve("/cg-systems"),
+  route: "systems",
+  href: resolve("/cg/[slug]", { slug: "systems" }),
   ...(cgSystemsData as unknown as CgPageData)
 }
 
 export const cgPerception: CgPage = {
-  route: "cg-perception",
-  href: resolve("/cg-perception"),
+  route: "perception",
+  href: resolve("/cg/[slug]", { slug: "perception" }),
   ...(cgPerceptionData as unknown as CgPageData)
 }
 
 export const cgIpRights: CgPage = {
-  route: "cg-ip-rights",
-  href: resolve("/cg-ip-rights"),
+  route: "ip-rights",
+  href: resolve("/cg/[slug]", { slug: "ip-rights" }),
   ...(cgIpRightsData as unknown as CgPageData)
 }
 
 export const cgHistory: CgPage = {
-  route: "cg-history",
-  href: resolve("/cg-history"),
+  route: "history",
+  href: resolve("/cg/[slug]", { slug: "history" }),
   ...(cgHistoryData as unknown as CgPageData)
 }
 

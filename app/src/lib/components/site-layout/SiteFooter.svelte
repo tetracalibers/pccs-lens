@@ -12,8 +12,9 @@
     const id = page.route.id
     if (!id) return null
 
-    // CG ページ（トップレベルの cg-* ルート）は cgPages の順序で前後に送る
-    const cgIndex = cgPages.findIndex((cgPage) => `/${cgPage.route}` === id)
+    // CG ユニットページ（動的ルート /cg/[slug]）は cgPages の順序で前後に送る
+    const cgIndex =
+      id === "/cg/[slug]" ? cgPages.findIndex((cgPage) => cgPage.route === page.params.slug) : -1
     if (cgIndex !== -1) {
       const prev = cgPages[cgIndex - 1]
       const next = cgPages[cgIndex + 1]

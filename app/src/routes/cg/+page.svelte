@@ -40,36 +40,36 @@
   const groupDefs: { label: string; routes: string[] }[] = [
     {
       label: "基礎",
-      routes: ["cg-basics", "cg-image-properties", "cg-camera", "cg-transformation"]
+      routes: ["basics", "image-properties", "camera", "transformation"]
     },
-    { label: "CG合成", routes: ["cg-modeling", "cg-rendering", "cg-animation"] },
+    { label: "CG合成", routes: ["modeling", "rendering", "animation"] },
     {
       label: "基本的な画像処理",
       routes: [
-        "cg-rasterization",
-        "cg-tone-conversion",
-        "cg-spatial-filtering",
-        "cg-frequency",
-        "cg-binary-image",
-        "cg-restoration",
-        "cg-editing"
+        "rasterization",
+        "tone-conversion",
+        "spatial-filtering",
+        "frequency",
+        "binary-image",
+        "restoration",
+        "editing"
       ]
     },
-    { label: "表現と可視化", routes: ["cg-npr"] },
+    { label: "表現と可視化", routes: ["npr"] },
     {
       label: "画像処理の応用と解析",
       routes: [
-        "cg-segmentation",
-        "cg-feature-detection",
-        "cg-pattern-recognition",
-        "cg-deep-learning",
-        "cg-video",
-        "cg-3d-reconstruction",
-        "cg-optical-analysis"
+        "segmentation",
+        "feature-detection",
+        "pattern-recognition",
+        "deep-learning",
+        "video",
+        "3d-reconstruction",
+        "optical-analysis"
       ]
     },
-    { label: "符号化とシステム", routes: ["cg-image-coding", "cg-systems"] },
-    { label: "知っておきたい関連知識", routes: ["cg-perception", "cg-ip-rights", "cg-history"] }
+    { label: "符号化とシステム", routes: ["image-coding", "systems"] },
+    { label: "知っておきたい関連知識", routes: ["perception", "ip-rights", "history"] }
   ]
 
   // route 引きできるカード集合（配色は cgPages 全体での並び順で循環）
