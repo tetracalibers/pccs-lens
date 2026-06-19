@@ -250,3 +250,54 @@ export const cgPages: CgPage[] = [
 ]
 
 export const cgPageByRoute: Map<string, CgPage> = new Map(cgPages.map((page) => [page.route, page]))
+
+/** /cg 一覧での区分（カリキュラム上のグルーピング）。`id` は同ページ内のアンカー。 */
+export interface CgGroupDef {
+  id: string
+  label: string
+  /** この区分に属するページの route（slug）。cgPages の並び順に対応。 */
+  routes: string[]
+}
+
+export const cgGroups: CgGroupDef[] = [
+  {
+    id: "foundation",
+    label: "基礎",
+    routes: ["basics", "image-properties", "camera", "transformation"]
+  },
+  { id: "synthesis", label: "CG合成", routes: ["modeling", "rendering", "animation"] },
+  {
+    id: "image-processing",
+    label: "基本的な画像処理",
+    routes: [
+      "rasterization",
+      "tone-conversion",
+      "spatial-filtering",
+      "frequency",
+      "binary-image",
+      "restoration",
+      "editing"
+    ]
+  },
+  { id: "expression", label: "表現と可視化", routes: ["npr"] },
+  {
+    id: "analysis",
+    label: "画像処理の応用と解析",
+    routes: [
+      "segmentation",
+      "feature-detection",
+      "pattern-recognition",
+      "deep-learning",
+      "video",
+      "3d-reconstruction",
+      "optical-analysis"
+    ]
+  },
+  { id: "systems", label: "符号化とシステム", routes: ["image-coding", "systems"] },
+  { id: "related", label: "知っておきたい関連知識", routes: ["perception", "ip-rights", "history"] }
+]
+
+/** route(slug) → 所属区分の id。「一覧へ戻る」のアンカー解決に使う。 */
+export const cgGroupIdByRoute: Map<string, string> = new Map(
+  cgGroups.flatMap((group) => group.routes.map((route) => [route, group.id] as const))
+)

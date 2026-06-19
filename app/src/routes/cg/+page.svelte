@@ -3,7 +3,7 @@
     type CardTag,
     type LinkCardItem
   } from "$lib/components/site-top/LinkCard.svelte"
-  import { cgPages, type CgPage, type CgLink } from "$lib/content-pages/cg"
+  import { cgPages, cgGroups, type CgPage, type CgLink } from "$lib/content-pages/cg"
   import type { CgGroup } from "$lib/meta/group"
   import { SvelteSet, SvelteMap } from "svelte/reactivity"
 
@@ -36,42 +36,6 @@
     return tags
   }
 
-  // 区分ごとのグルーピング（cgPages の並び順に対応）
-  const groupDefs: { label: string; routes: string[] }[] = [
-    {
-      label: "基礎",
-      routes: ["basics", "image-properties", "camera", "transformation"]
-    },
-    { label: "CG合成", routes: ["modeling", "rendering", "animation"] },
-    {
-      label: "基本的な画像処理",
-      routes: [
-        "rasterization",
-        "tone-conversion",
-        "spatial-filtering",
-        "frequency",
-        "binary-image",
-        "restoration",
-        "editing"
-      ]
-    },
-    { label: "表現と可視化", routes: ["npr"] },
-    {
-      label: "画像処理の応用と解析",
-      routes: [
-        "segmentation",
-        "feature-detection",
-        "pattern-recognition",
-        "deep-learning",
-        "video",
-        "3d-reconstruction",
-        "optical-analysis"
-      ]
-    },
-    { label: "符号化とシステム", routes: ["image-coding", "systems"] },
-    { label: "知っておきたい関連知識", routes: ["perception", "ip-rights", "history"] }
-  ]
-
   // route 引きできるカード集合（配色は cgPages 全体での並び順で循環）
   const cardByRoute = new SvelteMap<string, LinkCardItem>(
     cgPages.map((page, i) => [
@@ -86,7 +50,9 @@
     ])
   )
 
-  const cgGroups = groupDefs.map((group) => ({
+  // 区分ごとにカードをまとめる（区分定義は cg.ts と共有）
+  const cgGroupCards = cgGroups.map((group) => ({
+    id: group.id,
     label: group.label,
     items: group.routes
       .map((route) => cardByRoute.get(route))
@@ -105,8 +71,8 @@
     <p>架空の景色を映すCGと、画像を扱う広い世界</p>
   </header>
 
-  {#each cgGroups as group (group.label)}
-    <section class="cg-group">
+  {#each cgGroupCards as group (group.id)}
+    <section id={group.id} class="cg-group">
       <div class="tools-header">
         <span class="tools-label">{group.label}</span>
         <div class="tools-divider"></div>
@@ -157,6 +123,7 @@
 
   .cg-group {
     margin-bottom: 2rem;
+    scroll-margin-top: 120px;
   }
 
   .tools-header {

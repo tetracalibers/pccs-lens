@@ -4,7 +4,7 @@
   import Icon from "@iconify/svelte"
   import { colorTheoryPageNav } from "$lib/content-pages/color-theory-nav"
   import { colorFieldsPageNav } from "$lib/content-pages/color-fields-nav"
-  import { cgPages } from "$lib/content-pages/cg"
+  import { cgPages, cgGroupIdByRoute } from "$lib/content-pages/cg"
 
   const isConceptPage = $derived(page.route.id === "/concept")
 
@@ -16,14 +16,16 @@
     const cgIndex =
       id === "/cg/[slug]" ? cgPages.findIndex((cgPage) => cgPage.route === page.params.slug) : -1
     if (cgIndex !== -1) {
+      const current = cgPages[cgIndex]
       const prev = cgPages[cgIndex - 1]
       const next = cgPages[cgIndex + 1]
+      const groupId = cgGroupIdByRoute.get(current.route)
       return {
         prev: prev ? { title: prev.title } : undefined,
         next: next ? { title: next.title } : undefined,
         prevHref: prev?.href,
         nextHref: next?.href,
-        listHref: resolve("/cg"),
+        listHref: groupId ? `${resolve("/cg")}#${groupId}` : resolve("/cg"),
         listLabel: "一覧へ戻る"
       }
     }
