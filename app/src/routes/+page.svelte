@@ -416,7 +416,7 @@
   .tools-label {
     font-size: 0.72rem;
     font-weight: 700;
-    color: light-dark(#aaa, #7b7b7b);
+    color: var(--color-body);
     text-transform: uppercase;
     letter-spacing: 0.12em;
     white-space: nowrap;
@@ -425,7 +425,7 @@
   .tools-divider {
     flex: 1;
     height: 1px;
-    background: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.15));
+    background: light-dark(rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.25));
   }
 
   .tools-grid {
