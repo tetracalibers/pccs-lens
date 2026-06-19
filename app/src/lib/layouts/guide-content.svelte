@@ -11,6 +11,7 @@
   import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
   import GroupTag from "$lib/components/m-directive/GroupTag.svelte"
   import WithGradeTag from "$lib/components/m-directive/WithGradeTag.svelte"
+  import WithGroupTag from "$lib/components/m-directive/WithGroupTag.svelte"
   import Info from "$lib/components/m-directive/Info.svelte"
   import Note from "$lib/components/m-directive/Note.svelte"
   import Example from "$lib/components/m-directive/Example.svelte"
@@ -32,6 +33,7 @@
     Mark,
     GradeTag,
     WithGradeTag,
+    WithGroupTag,
     Info,
     Note,
     Example,

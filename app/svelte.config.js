@@ -31,7 +31,8 @@ const directives = {
     { name: "PageLink", replaceTo: "svelte-component" },
     { name: "PageDraft", replaceTo: "svelte-component" },
     { name: "MoreToCome", replaceTo: "svelte-component" },
-    { name: "WithGradeTag", replaceTo: "svelte-component" }
+    { name: "WithGradeTag", replaceTo: "svelte-component" },
+    { name: "WithGroupTag", replaceTo: "svelte-component" }
   ]
 }
 
