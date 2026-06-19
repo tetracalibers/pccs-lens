@@ -16,12 +16,12 @@ const modules = import.meta.glob(
     "!/src/routes/color-theory/+page.svx",
     "/src/routes/color-fields/**/+page.svx",
     "!/src/routes/color-fields/+page.svx",
-    "/src/routes/cg-*/**/+page.svx"
+    "/src/routes/cg/**/+page.svx"
   ],
   { eager: true }
 ) as Record<string, { metadata: Partial<GuideFrontmatter> }>
 
-/** key: `${base}/${slug}`（例: "color-theory/pccs"、"color-fields/fashion-color-concepts"）, value: フロントマター */
+/** key: ルートからの相対パス（例: "color-theory/pccs"、"color-fields/fashion-color-concepts"、CG はユニット込みで "cg/basics/camera-capture-and-cg"）, value: フロントマター */
 export const guidePages: Map<string, GuideFrontmatter> = new Map(
   Object.entries(modules).map(([filePath, mod]) => {
     const key = filePath.replace(/^\/src\/routes\//, "").replace(/\/\+page\.svx$/, "")

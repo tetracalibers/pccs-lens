@@ -17,11 +17,13 @@
 
   let { slug }: Props = $props()
 
-  const baseSegment = $derived(page.route.id?.split("/")[1])
+  // 一覧ページ自身のパスを基準にする。色の理論/色の活用分野は `/color-theory/`、
+  // CG はユニット込みの `/cg/basics/` などになり、その配下の個別ページを解決する。
+  const basePath = $derived(page.url.pathname.replace(/^\/+|\/+$/g, ""))
 
   const meta = $derived.by(() => {
-    const found = guidePages.get(`${baseSegment}/${slug}`)
-    if (!found) throw new Error(`PageLink: No metadata found for slug "${baseSegment}/${slug}"`)
+    const found = guidePages.get(`${basePath}/${slug}`)
+    if (!found) throw new Error(`PageLink: No metadata found for slug "${basePath}/${slug}"`)
     return found
   })
   const grades = $derived(meta.grades)
@@ -32,7 +34,7 @@
   const isGroupPage = $derived(group.length > 0)
 
   // @ts-expect-error
-  let href = $derived(resolve(`/${baseSegment}/${slug}`))
+  let href = $derived(resolve(`/${basePath}/${slug}`))
 
   const gradeColors = {
     "3": "#c4b5fd",
