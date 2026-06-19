@@ -65,6 +65,8 @@
 
   .tool-glass-body {
     padding: 1.1rem;
+    background: rgba(255, 255, 255, 0.06);
+    height: 100%;
   }
 
   .tool-glass-tags {

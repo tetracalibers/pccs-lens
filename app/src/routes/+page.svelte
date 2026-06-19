@@ -327,6 +327,7 @@
     align-items: center;
     gap: 1.5rem;
     padding: 1.75rem;
+    background: rgba(255, 255, 255, 0.03);
   }
 
   @media (max-width: 480px) {

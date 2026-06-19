@@ -73,9 +73,9 @@
 
   {#each cgGroupCards as group (group.id)}
     <section id={group.id} class="cg-group">
-      <div class="tools-header">
-        <span class="tools-label">{group.label}</span>
-        <div class="tools-divider"></div>
+      <div class="cg-group-header">
+        <span class="cg-group-label">{group.label}</span>
+        <div class="cg-group-divider"></div>
       </div>
       <div class="contents-grid">
         {#each group.items as content (content.title)}
@@ -122,30 +122,24 @@
   }
 
   .cg-group {
-    margin-bottom: 2rem;
+    margin-bottom: 2.75rem;
     scroll-margin-top: 120px;
   }
 
-  .tools-header {
+  .cg-group-header {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
+    gap: 0.9rem;
+    margin-bottom: 1.25rem;
   }
 
-  .tools-label {
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: light-dark(#aaa, #7b7b7b);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
+  .cg-group-label {
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    line-height: 1.3;
+    color: var(--color-heading);
     white-space: nowrap;
-  }
-
-  .tools-divider {
-    flex: 1;
-    height: 1px;
-    background: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.15));
   }
 
   .contents-grid {

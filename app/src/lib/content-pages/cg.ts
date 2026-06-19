@@ -265,7 +265,11 @@ export const cgGroups: CgGroupDef[] = [
     label: "基礎",
     routes: ["basics", "image-properties", "camera", "transformation"]
   },
-  { id: "synthesis", label: "CG合成", routes: ["modeling", "rendering", "animation"] },
+  {
+    id: "synthesis",
+    label: "コンピュータグラフィックス",
+    routes: ["modeling", "rendering", "animation"]
+  },
   {
     id: "image-processing",
     label: "基本的な画像処理",
