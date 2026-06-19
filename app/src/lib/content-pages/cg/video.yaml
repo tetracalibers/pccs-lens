@@ -4,33 +4,33 @@ sections:
   - heading: 移動体検出
     id: motion-detection
     links:
-      - title: 差分画像  # ImgP 14-1-1
+      - title: 差分画像 # ImgP 14-1-1
         group: ["ImgP"]
-      - title: 背景差分法  # ImgP 14-1-2
+      - title: 背景差分法 # ImgP 14-1-2
         group: ["ImgP"]
-      - title: フレーム間差分法  # ImgP 14-1-3
+      - title: フレーム間差分法 # ImgP 14-1-3
         group: ["ImgP"]
-      - title: 統計的背景差分法  # ImgP 14-1-4
+      - title: 統計的背景差分法 # ImgP 14-1-4
         group: ["ImgP"]
   - heading: オプティカルフロー
     id: optical-flow
     links:
-      - title: オプティカルフローの求め方  # ImgP 14-2-1
+      - title: オプティカルフローの求め方 # ImgP 14-2-1
         group: ["ImgP"]
-      - title: ブロックマッチング法  # ImgP 14-2-2
+      - title: ブロックマッチング法 # ImgP 14-2-2
         group: ["ImgP"]
-      - title: 勾配法  # ImgP 14-2-3
+      - title: 勾配法 # ImgP 14-2-3
         group: ["ImgP"]
-      - title: イメージピラミッドを用いた求め方  # ImgP 14-2-4
+      - title: イメージピラミッドを用いた求め方 # ImgP 14-2-4
         group: ["ImgP"]
   - heading: 物体追跡
     id: tracking
     links:
-      - title: 物体追跡の手法分類  # ImgP 14-3-1
+      - title: 物体追跡の手法分類 # ImgP 14-3-1
         group: ["ImgP"]
-      - title: KLTトラッカー  # ImgP 14-3-3
+      - title: KLTトラッカー # ImgP 14-3-3
         group: ["ImgP"]
-      - title: ミーンシフトトラッキング  # ImgP 14-3-4
+      - title: ミーンシフトトラッキング # ImgP 14-3-4
         group: ["ImgP"]
-      - title: ベイジアンフィルタ  # ImgP 14-3-5
+      - title: ベイジアンフィルタ # ImgP 14-3-5
         group: ["ImgP"]

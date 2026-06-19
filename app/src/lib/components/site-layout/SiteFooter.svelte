@@ -43,7 +43,14 @@
       // @ts-expect-error dynamic route path
       const nextHref = nav.next ? resolve(`/${base}/${nav.next.slug}`) : undefined
       const listHref = `${resolve(`/${base}`)}#${nav.categoryId}`
-      return { prev: nav.prev, next: nav.next, prevHref, nextHref, listHref, listLabel: "一覧へ戻る" }
+      return {
+        prev: nav.prev,
+        next: nav.next,
+        prevHref,
+        nextHref,
+        listHref,
+        listLabel: "一覧へ戻る"
+      }
     }
     return null
   })

@@ -4,31 +4,31 @@ sections:
   - heading: カメラの構成と幾何モデル
     id: geometry
     links:
-      - title: デジタルカメラの構成  # ImgP 2-1
+      - title: デジタルカメラの構成 # ImgP 2-1
         group: ["ImgP"]
-      - title: ピンホールカメラ  # ImgP 2-2-1
+      - title: ピンホールカメラ # ImgP 2-2-1
         group: ["ImgP"]
-      - title: 透視投影モデル  # ImgP 2-2-2
+      - title: 透視投影モデル # ImgP 2-2-2
         group: ["ImgP"]
-      - title: レンズモデル  # ImgP 2-2-3
+      - title: レンズモデル # ImgP 2-2-3
         group: ["ImgP"]
   - heading: 撮影パラメータ
     id: shooting-parameters
     links:
-      - title: 撮影画角  # ImgP 2-3-1
+      - title: 撮影画角 # ImgP 2-3-1
         group: ["ImgP"]
-      - title: 画像の明るさ（露出）  # CG 7-1-1 / ImgP 2-3-2
+      - title: 画像の明るさ（露出） # CG 7-1-1 / ImgP 2-3-2
         group: ["CG", "ImgP"]
-      - title: 被写界深度（フォーカス）  # CG 7-1-2 / ImgP 2-3-3
+      - title: 被写界深度（フォーカス） # CG 7-1-2 / ImgP 2-3-3
         group: ["CG", "ImgP"]
-      - title: フレームレート  # ImgP 2-3-4
+      - title: フレームレート # ImgP 2-3-4
         group: ["ImgP"]
   - heading: 撮影と信号
     id: capture-signal
     links:
-      - title: カメラ応答関数  # ImgP 2-4-3
+      - title: カメラ応答関数 # ImgP 2-4-3
         group: ["ImgP"]
-      - title: 時系列画像  # ImgP 2-4-4
+      - title: 時系列画像 # ImgP 2-4-4
         group: ["ImgP"]
-      - title: カラー画像の撮影  # ImgP 2-5-3
+      - title: カラー画像の撮影 # ImgP 2-5-3
         group: ["ImgP"]

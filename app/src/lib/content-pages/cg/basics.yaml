@@ -4,25 +4,25 @@ sections:
   - heading: デジタルカメラモデル
     id: camera-model
     links:
-      - title: カメラでの撮影とCG  # CG 1-1
+      - title: カメラでの撮影とCG # CG 1-1
         group: ["CG"]
-      - title: CGと画像処理  # CG 1-3 / ImgP 1
+      - title: CGと画像処理 # CG 1-3 / ImgP 1
         group: ["CG", "ImgP"]
   - heading: デジタル画像の基礎
     id: digital-image
     links:
-      - title: 画像のデジタル化  # CG 1-2-1 / ImgP 2-4
+      - title: 画像のデジタル化 # CG 1-2-1 / ImgP 2-4
         group: ["CG", "ImgP"]
-      - title: 標本化と量子化  # ImgP 2-4-2
+      - title: 標本化と量子化 # ImgP 2-4-2
         group: ["ImgP"]
-      - title: デジタル画像のデータ量  # CG 1-2-1 / ImgP 2-4-2
+      - title: デジタル画像のデータ量 # CG 1-2-1 / ImgP 2-4-2
         group: ["CG", "ImgP"]
-      - title: ベクタ表現とラスタ表現  # CG 1-2-2
+      - title: ベクタ表現とラスタ表現 # CG 1-2-2
         group: ["CG", "ImgP"]
   - heading: 画像処理の概要
     id: image-processing-overview
     links:
-      - title: 画像処理の位置づけと分類  # ImgP 1
+      - title: 画像処理の位置づけと分類 # ImgP 1
         group: ["ImgP"]
-      - title: 画像の座標系  # ImgP 1（座標系について）
+      - title: 画像の座標系 # ImgP 1（座標系について）
         group: ["ImgP"]

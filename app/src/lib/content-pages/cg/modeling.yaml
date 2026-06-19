@@ -4,77 +4,77 @@ sections:
   - heading: 形状モデル
     id: shape-models
     links:
-      - title: さまざまな形状モデル  # CG 3-1
+      - title: さまざまな形状モデル # CG 3-1
         group: ["CG"]
-      - title: CSG表現  # CG 3-2-1
+      - title: CSG表現 # CG 3-2-1
         group: ["CG"]
-      - title: 境界表現  # CG 3-2-2
+      - title: 境界表現 # CG 3-2-2
         group: ["CG"]
-      - title: スイープ表現  # CG 3-2-3
+      - title: スイープ表現 # CG 3-2-3
         group: ["CG"]
-      - title: 境界表現のデータ構造  # CG 3-3-1
+      - title: 境界表現のデータ構造 # CG 3-3-1
         group: ["CG"]
-      - title: オイラー表現  # CG 3-3-2
+      - title: オイラー表現 # CG 3-3-2
         group: ["CG"]
   - heading: 曲線と曲面
     id: curves-surfaces
     links:
-      - title: 曲線・曲面の数式表現  # CG 3-4-1
+      - title: 曲線・曲面の数式表現 # CG 3-4-1
         group: ["CG"]
-      - title: 2次曲線  # CG 3-4-2
+      - title: 2次曲線 # CG 3-4-2
         group: ["CG"]
-      - title: パラメトリック曲線・曲面  # CG 3-4-3, 3-4-4
+      - title: パラメトリック曲線・曲面 # CG 3-4-3, 3-4-4
         group: ["CG"]
-      - title: ベジェ曲線・曲面  # CG 3-4-3
+      - title: ベジェ曲線・曲面 # CG 3-4-3
         group: ["CG"]
-      - title: ファーガソン曲線  # CG 3-4-3
+      - title: ファーガソン曲線 # CG 3-4-3
         group: ["CG"]
-      - title: 双3次クーンズ曲面  # CG 3-4-4
+      - title: 双3次クーンズ曲面 # CG 3-4-4
         group: ["CG"]
-      - title: Bスプライン曲線・曲面  # CG 3-4-3
+      - title: Bスプライン曲線・曲面 # CG 3-4-3
         group: ["CG"]
-      - title: 有理ベジェ曲線・曲面  # CG 3-4-3
+      - title: 有理ベジェ曲線・曲面 # CG 3-4-3
         group: ["CG"]
-      - title: NURBS曲線・曲面  # CG 3-4-3
+      - title: NURBS曲線・曲面 # CG 3-4-3
         group: ["CG"]
-      - title: パラメトリック曲線・曲面の微分幾何  # CG 3-4
+      - title: パラメトリック曲線・曲面の微分幾何 # CG 3-4
         group: ["CG"]
   - heading: ポリゴン
     id: polygon
     links:
-      - title: ポリゴン曲面  # CG 3-5-1
+      - title: ポリゴン曲面 # CG 3-5-1
         group: ["CG"]
-      - title: 細分割曲面  # CG 3-5-2
+      - title: 細分割曲面 # CG 3-5-2
         group: ["CG"]
-      - title: ポリゴン曲面の詳細度制御  # CG 3-5-3
+      - title: ポリゴン曲面の詳細度制御 # CG 3-5-3
         group: ["CG"]
-      - title: ポリゴン曲面の平滑化処理  # CG 3-5-4
+      - title: ポリゴン曲面の平滑化処理 # CG 3-5-4
         group: ["CG"]
-      - title: ポリゴン曲面のパラメータ化  # CG 3-5-5
+      - title: ポリゴン曲面のパラメータ化 # CG 3-5-5
         group: ["CG"]
-      - title: セグメンテーション  # CG 3-5-6
+      - title: セグメンテーション # CG 3-5-6
         group: ["CG"]
-      - title: 電子透かし  # CG 3-5-7
+      - title: 電子透かし # CG 3-5-7
         group: ["CG"]
-      - title: 形状検索  # CG 3-5-8
+      - title: 形状検索 # CG 3-5-8
         group: ["CG"]
   - heading: ボリューム
     id: volume
     links:
-      - title: ボクセル  # CG 3-6-1
+      - title: ボクセル # CG 3-6-1
         group: ["CG"]
-      - title: 八分木  # CG 3-6-2
+      - title: 八分木 # CG 3-6-2
         group: ["CG"]
-      - title: メタボール  # CG 3-6-3
+      - title: メタボール # CG 3-6-3
         group: ["CG"]
-      - title: 等値面抽出  # CG 3-6-5
+      - title: 等値面抽出 # CG 3-6-5
         group: ["CG"]
   - heading: 特殊な形状表現
     id: special-shapes
     links:
-      - title: パーティクル  # CG 3-7-1
+      - title: パーティクル # CG 3-7-1
         group: ["CG"]
-      - title: ポイントベースドモデリング  # CG 3-7-2
+      - title: ポイントベースドモデリング # CG 3-7-2
         group: ["CG"]
-      - title: フラクタル  # CG 3-7-3
+      - title: フラクタル # CG 3-7-3
         group: ["CG"]

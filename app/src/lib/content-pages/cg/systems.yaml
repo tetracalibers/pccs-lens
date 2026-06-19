@@ -4,77 +4,77 @@ sections:
   - heading: CGシステムとソフトウェア
     id: systems-software
     links:
-      - title: CGシステムの応用と構成  # CG 8-1-1, 8-1-2
+      - title: CGシステムの応用と構成 # CG 8-1-1, 8-1-2
         group: ["CG"]
-      - title: コンピュータネットワーク  # CG 8-1-3
+      - title: コンピュータネットワーク # CG 8-1-3
         group: ["CG"]
-      - title: プログラム記述言語  # CG 8-2-2
+      - title: プログラム記述言語 # CG 8-2-2
         group: ["CG"]
-      - title: グラフィックス用API  # CG 8-2-3
+      - title: グラフィックス用API # CG 8-2-3
         group: ["CG"]
-      - title: CGアプリケーションソフトウェア  # CG 8-2-4
+      - title: CGアプリケーションソフトウェア # CG 8-2-4
         group: ["CG"]
-      - title: 3次元モデル記述言語・フォーマット  # CG 8-2-5
+      - title: 3次元モデル記述言語・フォーマット # CG 8-2-5
         group: ["CG"]
   - heading: リアルタイム3次元CG
     id: real-time-3d
     links:
-      - title: 並列処理  # CG 8-3-1
+      - title: 並列処理 # CG 8-3-1
         group: ["CG"]
-      - title: 3次元CGハードウェアの変遷  # CG 8-3-2
+      - title: 3次元CGハードウェアの変遷 # CG 8-3-2
         group: ["CG"]
-      - title: 描画処理の流れ  # CG 8-3-3
+      - title: 描画処理の流れ # CG 8-3-3
         group: ["CG"]
-      - title: GPUを利用したCG処理  # CG 8-3-4
+      - title: GPUを利用したCG処理 # CG 8-3-4
         group: ["CG"]
-      - title: CGハードウェアの性能評価  # CG 8-3-5
+      - title: CGハードウェアの性能評価 # CG 8-3-5
         group: ["CG"]
   - heading: 入力装置
     id: input-devices
     links:
-      - title: 3次元ディジタイザ  # CG 8-4-1
+      - title: 3次元ディジタイザ # CG 8-4-1
         group: ["CG"]
-      - title: モーションキャプチャ装置  # CG 8-4-2
+      - title: モーションキャプチャ装置 # CG 8-4-2
         group: ["CG"]
-      - title: 3次元座標入力・フォースディスプレイ  # CG 8-4-3
+      - title: 3次元座標入力・フォースディスプレイ # CG 8-4-3
         group: ["CG"]
-      - title: 関節角入力装置  # CG 8-4-4
+      - title: 関節角入力装置 # CG 8-4-4
         group: ["CG"]
-      - title: 撮像素子の種類と特徴  # ImgP a-3-1
+      - title: 撮像素子の種類と特徴 # ImgP a-3-1
         group: ["ImgP"]
-      - title: 高速度カメラ・リニアイメージセンサ  # ImgP a-3-2, a-3-3
+      - title: 高速度カメラ・リニアイメージセンサ # ImgP a-3-2, a-3-3
         group: ["ImgP"]
-      - title: 距離画像の取得  # ImgP a-3-4
+      - title: 距離画像の取得 # ImgP a-3-4
         group: ["ImgP"]
   - heading: 出力装置とディスプレイ
     id: output-devices
     links:
-      - title: 両眼立体視（メガネ方式）  # CG 8-5-1
+      - title: 両眼立体視（メガネ方式） # CG 8-5-1
         group: ["CG"]
-      - title: 裸眼立体視  # CG 8-5-2
+      - title: 裸眼立体視 # CG 8-5-2
         group: ["CG"]
-      - title: ヘッドマウントディスプレイ  # CG 8-5-3
+      - title: ヘッドマウントディスプレイ # CG 8-5-3
         group: ["CG"]
-      - title: 3次元ディスプレイの映像フォーマット  # CG 8-5-4
+      - title: 3次元ディスプレイの映像フォーマット # CG 8-5-4
         group: ["CG"]
-      - title: ホログラフィ  # CG 8-5-5
+      - title: ホログラフィ # CG 8-5-5
         group: ["CG"]
-      - title: ボリュームディスプレイ  # CG 8-5-6
+      - title: ボリュームディスプレイ # CG 8-5-6
         group: ["CG"]
-      - title: 切削加工装置・3Dプリンタ  # CG 8-5-7, 8-5-8
+      - title: 切削加工装置・3Dプリンタ # CG 8-5-7, 8-5-8
         group: ["CG"]
-      - title: ディスプレイ  # ImgP a-4-1
+      - title: ディスプレイ # ImgP a-4-1
         group: ["ImgP"]
-      - title: プリンタ  # ImgP a-4-3
+      - title: プリンタ # ImgP a-4-3
         group: ["ImgP"]
   - heading: 記録メディアと規格
     id: recording-standards
     links:
-      - title: 画像記録メディア  # CG 8-6-1
+      - title: 画像記録メディア # CG 8-6-1
         group: ["CG"]
-      - title: 画像処理の特性測定  # ImgP a-5
+      - title: 画像処理の特性測定 # ImgP a-5
         group: ["ImgP"]
-      - title: テレビジョンの走査方式  # ImgP a-6-1
+      - title: テレビジョンの走査方式 # ImgP a-6-1
         group: ["ImgP"]
-      - title: 映像信号接続端子  # ImgP a-6-2
+      - title: 映像信号接続端子 # ImgP a-6-2
         group: ["ImgP"]

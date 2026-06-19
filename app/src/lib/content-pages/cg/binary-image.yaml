@@ -4,35 +4,35 @@ sections:
   - heading: 2値化
     id: binarization
     links:
-      - title: 2値化の意味  # ImgP 9-1-1
+      - title: 2値化の意味 # ImgP 9-1-1
         group: ["ImgP"]
-      - title: p-タイル法  # ImgP 9-1-2
+      - title: p-タイル法 # ImgP 9-1-2
         group: ["ImgP"]
-      - title: モード法  # ImgP 9-1-3
+      - title: モード法 # ImgP 9-1-3
         group: ["ImgP"]
-      - title: 判別分析法（大津の手法）  # ImgP 9-1-4
+      - title: 判別分析法（大津の手法） # ImgP 9-1-4
         group: ["ImgP"]
   - heading: 2値画像の基本処理と計測
     id: measurement
     links:
-      - title: 連結性  # ImgP 9-2-1
+      - title: 連結性 # ImgP 9-2-1
         group: ["ImgP"]
-      - title: 輪郭追跡  # ImgP 9-2-2
+      - title: 輪郭追跡 # ImgP 9-2-2
         group: ["ImgP"]
-      - title: 収縮・膨張処理（モルフォロジー）  # ImgP 9-2-4
+      - title: 収縮・膨張処理（モルフォロジー） # ImgP 9-2-4
         group: ["ImgP"]
-      - title: ラベリング  # ImgP 9-2-6
+      - title: ラベリング # ImgP 9-2-6
         group: ["ImgP"]
-      - title: 形状特徴パラメータ  # ImgP 9-2-7
+      - title: 形状特徴パラメータ # ImgP 9-2-7
         group: ["ImgP"]
-      - title: 距離と距離変換画像  # ImgP 9-2-8
+      - title: 距離と距離変換画像 # ImgP 9-2-8
         group: ["ImgP"]
   - heading: 線画像のベクトル化
     id: vectorization
     links:
-      - title: ベクトル化処理の流れ  # ImgP 9-3-1
+      - title: ベクトル化処理の流れ # ImgP 9-3-1
         group: ["ImgP"]
-      - title: 細線化  # ImgP 9-3-2
+      - title: 細線化 # ImgP 9-3-2
         group: ["ImgP"]
-      - title: 細線の特徴点抽出とベクトル化  # ImgP 9-3-3, 9-3-4
+      - title: 細線の特徴点抽出とベクトル化 # ImgP 9-3-3, 9-3-4
         group: ["ImgP"]

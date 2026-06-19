@@ -4,13 +4,13 @@ sections:
   - heading: 知的財産権
     id: ip-rights
     links:
-      - title: 知的財産権の概要  # CG a-2-1 / ImgP a-7-1
+      - title: 知的財産権の概要 # CG a-2-1 / ImgP a-7-1
         group: ["CG", "ImgP"]
-      - title: 著作権・著作物利用のルール  # CG a-2-2 / ImgP a-7-2
+      - title: 著作権・著作物利用のルール # CG a-2-2 / ImgP a-7-2
         group: ["CG", "ImgP"]
-      - title: 著作権侵害  # CG a-2-3
+      - title: 著作権侵害 # CG a-2-3
         group: ["CG"]
-      - title: 産業財産権と不正競争防止法  # ImgP a-7-3
+      - title: 産業財産権と不正競争防止法 # ImgP a-7-3
         group: ["ImgP"]
-      - title: ©マークによる著作権表示  # CG a-2-4
+      - title: ©マークによる著作権表示 # CG a-2-4
         group: ["CG"]
