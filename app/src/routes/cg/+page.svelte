@@ -150,13 +150,7 @@
 
   .contents-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 1rem;
-  }
-
-  @media (max-width: 480px) {
-    .contents-grid {
-      grid-template-columns: 1fr;
-    }
   }
 </style>
