@@ -5,6 +5,7 @@
   import { colorTheoryPageNav } from "$lib/content-pages/color-theory-nav"
   import { colorFieldsPageNav } from "$lib/content-pages/color-fields-nav"
   import { cgPages, cgGroupIdByRoute } from "$lib/content-pages/cg"
+  import { cgArticlePageNav } from "$lib/content-pages/cg-article-nav"
 
   const isConceptPage = $derived(page.route.id === "/concept")
 
@@ -26,6 +27,20 @@
         prevHref: prev?.href,
         nextHref: next?.href,
         listHref: groupId ? `${resolve("/cg")}#${groupId}` : resolve("/cg"),
+        listLabel: "一覧へ戻る"
+      }
+    }
+
+    // CG 記事ページ（静的ネストルート /cg/<unit>/<article>）は記事の読み順で前後に送る
+    if (id.startsWith("/cg/") && id !== "/cg/[slug]") {
+      const nav = cgArticlePageNav.get(id.slice(1))
+      if (!nav) return null
+      return {
+        prev: nav.prev ? { title: nav.prev.title } : undefined,
+        next: nav.next ? { title: nav.next.title } : undefined,
+        prevHref: nav.prev?.href,
+        nextHref: nav.next?.href,
+        listHref: nav.listHref,
         listLabel: "一覧へ戻る"
       }
     }
