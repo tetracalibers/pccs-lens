@@ -1,33 +1,34 @@
 ---
 name: create-cg-page
-description: `app/src/lib/content-pages` 配下の `cg-*.yaml`（cg- プレフィックス付きの全YAML）から引数のタイトルを検索し、対応するルート配下に新しいCGページの雛形（`+page.svx`）を作成するスキル。該当する `CgDraftLink` エントリを `PageLink` に置き換える。CG一覧から下書きページを「実装に着手する」段階で使用する。
+description: `app/src/lib/content-pages/cg/` 配下の全YAML（`basics.yaml` など）から引数のタイトルを検索し、対応するルート配下に新しいCGページの雛形（`+page.svx`）を作成するスキル。該当する `CgDraftLink` エントリを `PageLink` に置き換える。CG一覧から下書きページを「実装に着手する」段階で使用する。
 ---
 
 # CGページ作成スキル
 
-`app/src/lib/content-pages` 配下の `cg-*.yaml`（`cg-basics.yaml` / `cg-modeling.yaml` / `cg-transformation.yaml` / `cg-rendering.yaml` など、`cg-` プレフィックスが付いた全ファイル）に `CgDraftLink`（`title` と `group` を持つエントリ）として記載されている下書きページを、実際の `+page.svx` ファイルとして起こす作業を自動化するスキルです。
+`app/src/lib/content-pages/cg/` 配下の全 YAML ファイル（`basics.yaml` / `modeling.yaml` / `transformation.yaml` / `rendering.yaml` など）に `CgDraftLink`（`title` と `group` を持つエントリ）として記載されている下書きページを、実際の `+page.svx` ファイルとして起こす作業を自動化するスキルです。
 
-CG のコンテンツは複数の YAML ファイル（＝複数のページ）に分割されており、各 YAML ファイルが 1 つのルートに対応します。ルート名は YAML ファイル名から `.yaml` を除いたもので、たとえば `cg-basics.yaml` は `app/src/routes/cg-basics/` に対応します。下書きリンクから起こす個別ページは、その対応ルート配下に作成します。
+CG のコンテンツは複数の YAML ファイル（＝複数のページ）に分割されており、各 YAML ファイルが 1 つのルートに対応します。**ルート名は YAML ファイル名（`.yaml` を除いたもの）に `cg-` を付けたもの**で、たとえば `cg/basics.yaml` は `app/src/routes/cg-basics/` に対応します。下書きリンクから起こす個別ページは、その対応ルート配下に作成します。
 
-> **補足:** 色の理論ページを作成する場合は `create-color-theory-page` スキルを使うこと。本スキルは CG（`cg-*.yaml` / `app/src/routes/cg-*`）専用です。両者の違いは、ページのメタ情報が「級（`grades`）」ではなく「分野（`group`）」である点です。`group` は `"CG"`（コンピュータグラフィックス）と `"ImgP"`（画像処理）の配列です（画像処理単独のページは別途作成予定のため、本スキルでは扱いません）。
+> **補足:** 色の理論ページを作成する場合は `create-color-theory-page` スキルを使うこと。本スキルは CG（`app/src/lib/content-pages/cg/*.yaml` / `app/src/routes/cg-*`）専用です。両者の違いは、ページのメタ情報が「級（`grades`）」ではなく「分野（`group`）」である点です。`group` は `"CG"`（コンピュータグラフィックス）と `"ImgP"`（画像処理）の配列です（画像処理単独のページは別途作成予定のため、本スキルでは扱いません）。
 
 ## 入力
 
-- **ページタイトル**（必須）: いずれかの `cg-*.yaml` に存在する `CgDraftLink` の `title` と完全に一致する日本語タイトル。
+- **ページタイトル**（必須）: いずれかの `app/src/lib/content-pages/cg/*.yaml` に存在する `CgDraftLink` の `title` と完全に一致する日本語タイトル。
 
 ## 手順
 
-### 1. `CgDraftLink` エントリを全 `cg-*.yaml` から探す
+### 1. `CgDraftLink` エントリを `cg/` 配下の全 YAML から探す
 
-`app/src/lib/content-pages` 配下の `cg-` プレフィックスが付いた**全ての** YAML ファイル（`cg-basics.yaml`, `cg-modeling.yaml`, `cg-transformation.yaml`, `cg-rendering.yaml`, およびその他の `cg-*.yaml`）を対象に、引数で受け取ったタイトルと完全に一致する `title` を持つ `CgDraftLink` エントリを探します。
+`app/src/lib/content-pages/cg/` 配下の**全ての** YAML ファイル（`basics.yaml`, `modeling.yaml`, `transformation.yaml`, `rendering.yaml`, およびその他の `*.yaml`）を対象に、引数で受け取ったタイトルと完全に一致する `title` を持つ `CgDraftLink` エントリを探します。
 
 各 YAML は次の構造で、`CgDraftLink` は `sections[].links[]` の中にあります（`slug` を持たず、`title` と `group` を持つ）:
 
 ```yaml
-title: CGと画像
+title: CGと画像の基本
+summary: デジタル画像の表現とデジタルカメラモデル
 sections:
-  - heading: デジタル画像
-    id: TODO
+  - heading: デジタル画像の基礎
+    id: digital-image
     links:
       - title: 画像のデジタル化
         group: ["CG", "ImgP"]
@@ -42,11 +43,11 @@ sections:
 
 見つかったら、次の 3 点を記憶する:
 
-1. **どの YAML ファイルに含まれていたか**（例: `cg-basics.yaml`）。これが対応ルート（例: `app/src/routes/cg-basics/`）を決める。
+1. **どの YAML ファイルに含まれていたか**（例: `cg/basics.yaml`）。これが対応ルート（例: `app/src/routes/cg-basics/`）を決める。ルート名は **ファイル名（`.yaml` を除く）に `cg-` を付けたもの**。
 2. エントリの **`group`** 配列。
 3. エントリの **`title`**（＝引数のタイトル）。
 
-該当する `CgDraftLink` エントリがどの `cg-*.yaml` にも見つからない場合、または複数のファイルに重複して見つかった場合は、その旨をユーザーに伝えて処理を中止する。
+該当する `CgDraftLink` エントリがどの YAML にも見つからない場合、または複数のファイルに重複して見つかった場合は、その旨をユーザーに伝えて処理を中止する。
 
 `group` の各要素は `"CG"` または `"ImgP"` のいずれか。これ以外の値が入っていた場合は、その旨をユーザーに伝えて確認する。
 
@@ -67,7 +68,7 @@ slug を決定したら、手順 1 で特定したルートフォルダ（例: `
 
 手順 1 で特定したルートフォルダ配下に `<slug>/` ディレクトリを作成し、その直下に `+page.svx` を作成する。
 
-- 例: `cg-basics.yaml` で見つかった場合 → `app/src/routes/cg-basics/<slug>/+page.svx`
+- 例: `cg/basics.yaml` で見つかった場合 → `app/src/routes/cg-basics/<slug>/+page.svx`
 
 ファイルの内容は次のフォーマットに従う。`group` には手順 1 で取得した配列をそのまま書く。
 
@@ -87,7 +88,7 @@ draft: true
 
 #### 具体例
 
-引数のタイトルが `画像のデジタル化`（`cg-basics.yaml` に `group: ["CG", "ImgP"]` で存在）の場合、`app/src/routes/cg-basics/image-digitization/+page.svx` を作成する:
+引数のタイトルが `画像のデジタル化`（`cg/basics.yaml` に `group: ["CG", "ImgP"]` で存在）の場合、`app/src/routes/cg-basics/image-digitization/+page.svx` を作成する:
 
 ```
 ---
@@ -103,7 +104,7 @@ draft: true
 
 ```
 
-引数のタイトルが `カメラでの撮影とCG`（`cg-basics.yaml` に `group: ["CG"]` で存在）の場合:
+引数のタイトルが `カメラでの撮影とCG`（`cg/basics.yaml` に `group: ["CG"]` で存在）の場合:
 
 ```
 ---
@@ -141,8 +142,8 @@ draft: true
 ## 注意事項
 
 - slug は一度決めたら、`+page.svx` のファイル内容、ディレクトリ名、YAML の `slug` フィールドですべて同一の値を使うこと。
-- ディレクトリは**正しいルートフォルダ**（タイトルが見つかった `cg-*.yaml` に対応するルート）配下に作ること。別のルートに作らないよう注意する。
+- ディレクトリは**正しいルートフォルダ**（タイトルが見つかった `cg/*.yaml` に対応するルート＝ファイル名に `cg-` を付けたルート）配下に作ること。別のルートに作らないよう注意する。
 - `group` の値（`["CG", "ImgP"]` など）は、`+page.svx` のフロントマターと一致させること。一覧ページのタグ表示はページのフロントマターの `group` を参照する。
 - 雛形を書き込んだ後の作業（具体的な内容の執筆）はこのスキルの対象外。`draft: true` のまま残し、雛形を作成したことだけをユーザーに報告する。
-- 置き換え後、対象の `cg-*.yaml` の同セクション内で `CgDraftLink` から `PageLink` への置き換えが正しく反映されていることを確認する（前後のエントリの位置がずれていないこと、`group` 行の取り残しがないこと）。
+- 置き換え後、対象の `cg/*.yaml` の同セクション内で `CgDraftLink` から `PageLink` への置き換えが正しく反映されていることを確認する（前後のエントリの位置がずれていないこと、`group` 行の取り残しがないこと）。
 - 作業後は `app` ディレクトリで `npm run check` を実行し、エラー・警告が出ないことを確認する。
