@@ -24,12 +24,19 @@
 
   const hasGroup = (link: CgLink): link is Extract<CgLink, { group: CgGroup[] }> => "group" in link
 
-  // ページ内のリンクが属する group から CG / 画像処理タグを導出する
+  // ページ内のリンクが属する group から CG / 画像処理タグを導出する。
+  // 下書きリンク（CgDraftLink）は YAML の group を、slug リンク（PageLink）は
+  // 対応する .svx フロントマターの group を guidePages から解決する。
   const tagsOf = (page: CgPage): CardTag[] => {
     const groups = new SvelteSet<CgGroup>()
     for (const section of page.sections) {
       for (const link of section.links) {
-        if (hasGroup(link)) for (const g of link.group) groups.add(g)
+        if (hasGroup(link)) {
+          for (const g of link.group) groups.add(g)
+        } else {
+          const meta = guidePages.get(`cg/${page.route}/${link.slug}`)
+          if (meta) for (const g of meta.group) groups.add(g)
+        }
       }
     }
     const tags: CardTag[] = []
