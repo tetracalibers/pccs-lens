@@ -263,7 +263,7 @@ export const cgGroups: CgGroupDef[] = [
   {
     id: "foundation",
     label: "基礎",
-    routes: ["basics", "image-properties", "camera", "transformation"]
+    routes: ["basics", "rasterization", "image-properties", "camera", "transformation"]
   },
   {
     id: "synthesis",
@@ -274,7 +274,6 @@ export const cgGroups: CgGroupDef[] = [
     id: "image-processing",
     label: "基本的な画像処理",
     routes: [
-      "rasterization",
       "tone-conversion",
       "spatial-filtering",
       "frequency",
@@ -297,11 +296,22 @@ export const cgGroups: CgGroupDef[] = [
       "optical-analysis"
     ]
   },
-  { id: "systems", label: "符号化とシステム", routes: ["image-coding", "systems"] },
+  { id: "systems", label: "画像データとシステム", routes: ["image-coding", "systems"] },
   { id: "related", label: "知っておきたい関連知識", routes: ["perception", "ip-rights", "history"] }
 ]
 
 /** route(slug) → 所属区分の id。「一覧へ戻る」のアンカー解決に使う。 */
 export const cgGroupIdByRoute: Map<string, string> = new Map(
   cgGroups.flatMap((group) => group.routes.map((route) => [route, group.id] as const))
+)
+
+/**
+ * cgGroups の区分・route 順に並べたユニットページ一覧。
+ * ページ送り（前後ナビ）の順序の単一の情報源。cgGroups を組み替えれば自動で追従する。
+ */
+export const cgPagesInCurriculumOrder: CgPage[] = cgGroups.flatMap((group) =>
+  group.routes.flatMap((route) => {
+    const page = cgPageByRoute.get(route)
+    return page ? [page] : []
+  })
 )
