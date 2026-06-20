@@ -18,13 +18,11 @@ sections:
         group: ["CG", "ImgP"]
       - title: 色の見え方 # CG a-1-2
         group: ["CG"]
-  - heading: 表色系と色空間
+  - heading: 色空間とカラーモデル
     id: color-spaces
     links:
-      - title: マンセル表色系 # CG 6-1-2 / ImgP 3-3-1
-        group: ["ImgP"]
       - title: CIE-RGB表色系 # CG 6-1-2 / ImgP 3-3-2
-        group: ["ImgP"]
+        group: ["CG", "ImgP"]
       - title: CIE-XYZ表色系 # CG 6-1-2 / ImgP 3-3-3
         group: ["ImgP"]
       - title: CIE-L*a*b*色空間 # ImgP 3-3-4
