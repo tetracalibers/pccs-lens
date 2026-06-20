@@ -12,8 +12,7 @@ sections:
       - slug: image-digitization
       - slug: image-sampling
       - slug: image-quantization
-      - title: グレースケール画像とカラー画像 # CG 1-2-1 / ImgP 2-4-2
-        group: ["CG", "ImgP"]
+      - slug: grayscale-and-color-images
       - title: ベクタ表現とラスタ表現 # CG 1-2-2
         group: ["CG", "ImgP"]
   - heading: 画像処理の概要
