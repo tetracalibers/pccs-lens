@@ -17,8 +17,6 @@ sections:
         group: ["ImgP"]
       - title: 画像超解像 # ImgP 7-2-2
         group: ["ImgP"]
-      - title: ハイダイナミックレンジ画像 # ImgP 7-2-3
-        group: ["ImgP"]
       - title: ガイド画像を利用した画像処理 # ImgP 7-2-4
         group: ["ImgP"]
       - title: 勾配に基づく画像処理 # ImgP 7-2-5

@@ -4,8 +4,7 @@ sections:
   - heading: 画像の性質
     id: properties
     links:
-      - title: 画像のダイナミックレンジと階調 # CG 6-1-1
-        group: ["CG"]
+      - slug: dynamic-range-and-gradation
       - title: 画像の統計量 # ImgP 3-1-1
         group: ["ImgP"]
       - title: 画像のノイズ # ImgP 3-1-2
