@@ -9,8 +9,7 @@ sections:
   - heading: デジタル画像の基礎
     id: digital-image
     links:
-      - title: 画像のデジタル化 # CG 1-2-1 / ImgP 2-4
-        group: ["CG", "ImgP"]
+      - slug: image-digitization
       - title: 標本化と量子化 # ImgP 2-4-2
         group: ["ImgP"]
       - title: デジタル画像のデータ量 # CG 1-2-1 / ImgP 2-4-2
