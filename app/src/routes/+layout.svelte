@@ -16,6 +16,7 @@
       !CONTENT_TOP_ROUTES.has(page.route.id) &&
       (page.route.id.startsWith("/color-theory") ||
         page.route.id.startsWith("/color-fields") ||
+        (page.route.id.startsWith("/cg/") && page.route.id !== "/cg/[slug]") ||
         page.route.id === "/jis-color-map/[family]")) ||
       page.route.id === "/concept"
   )
