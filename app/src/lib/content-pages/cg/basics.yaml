@@ -4,7 +4,7 @@ sections:
   - heading: デジタルカメラモデル
     id: camera-model
     links:
-      - slug: camera-capture-and-cg # CG 1-1
+      - slug: camera-capture-and-cg
       - slug: cg-and-image-processing
   - heading: デジタル画像の基礎
     id: digital-image
