@@ -31,17 +31,19 @@ sections:
   - heading: 表色系と色空間
     id: color-spaces
     links:
-      - title: マンセル表色系 # ImgP 3-3-1
+      - title: マンセル表色系 # CG 6-1-2 / ImgP 3-3-1
         group: ["ImgP"]
-      - title: CIE-RGB表色系 # ImgP 3-3-2
+      - title: CIE-RGB表色系 # CG 6-1-2 / ImgP 3-3-2
         group: ["ImgP"]
-      - title: CIE-XYZ表色系 # ImgP 3-3-3
+      - title: CIE-XYZ表色系 # CG 6-1-2 / ImgP 3-3-3
         group: ["ImgP"]
       - title: CIE-L*a*b*色空間 # ImgP 3-3-4
         group: ["ImgP"]
+      - title: YIQ表色系 # CG 6-1-2
+        group: ["CG"]
       - title: sRGB色空間 # ImgP 3-3-5
         group: ["ImgP"]
       - title: 輝度信号と色差信号 # ImgP 3-3-6
         group: ["ImgP"]
-      - title: HSI変換と逆変換 # ImgP 3-3-7
+      - title: HSI変換と逆変換 # CG 6-1-2 / ImgP 3-3-7
         group: ["ImgP"]
