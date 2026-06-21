@@ -1,12 +1,12 @@
-title: CGと画像の基本
-summary: デジタル画像の表現とデジタルカメラモデル
+title: デジタル画像の基本
+summary: デジタル画像とデジタルカメラモデル
 sections:
   - heading: デジタルカメラモデル
     id: camera-model
     links:
       - slug: camera-capture-and-cg
       - slug: cg-and-image-processing
-  - heading: デジタル画像の基礎
+  - heading: デジタル画像の表現
     id: digital-image
     links:
       - slug: image-digitization
