@@ -12,6 +12,20 @@ import remarkCodeTitle from "./src/lib/remark/code-title.js"
 
 const isGithubPages = process.env.GITHUB_PAGES === "true"
 
+const shikiThemes = { light: "ayu-light", dark: "dracula-soft" }
+
+/** @type {ReturnType<typeof createHighlighter> | undefined} */
+let highlighterPromise
+const getHighlighter = () => {
+  if (!highlighterPromise) {
+    highlighterPromise = createHighlighter({
+      themes: Object.values(shikiThemes),
+      langs: Object.keys(bundledLanguages)
+    })
+  }
+  return highlighterPromise
+}
+
 /** @type {import('./src/lib/remark/custom-directives.js').DirectiveConfigMap} */
 const directives = {
   container: [
@@ -63,12 +77,8 @@ const config = {
       ],
       highlight: {
         highlighter: async (code, lang) => {
-          const themes = { light: "ayu-light", dark: "dracula-soft" }
-          const highlighter = await createHighlighter({
-            themes: Object.values(themes),
-            langs: Object.keys(bundledLanguages)
-          })
-          const html = highlighter.codeToHtml(code, { lang, themes })
+          const highlighter = await getHighlighter()
+          const html = highlighter.codeToHtml(code, { lang, themes: shikiThemes })
           return `{@html \`${html}\` }`
         }
       }
