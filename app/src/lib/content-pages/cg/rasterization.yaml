@@ -4,8 +4,7 @@ sections:
   - heading: ラスタ化と描画
     id: rasterization
     links:
-      - title: ラスタ化による図形の描画 # CG 6-2-1
-        group: ["CG"]
+      - slug: shape-rasterization
       - title: 画像生成時のアンチエイリアシング # CG 6-2-2
         group: ["CG"]
       - title: 塗りつぶし処理 # CG 6-2-3
