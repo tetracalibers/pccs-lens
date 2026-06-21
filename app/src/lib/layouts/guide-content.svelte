@@ -180,7 +180,14 @@
   }
 
   main :global(pre) {
-    color: var(--color-body);
+    padding: 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  main :global(pre code) {
+    line-height: 1.5;
   }
 
   main :global(pre.language-math) {

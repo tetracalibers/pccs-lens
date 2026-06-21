@@ -1,6 +1,7 @@
 import { mdsvex } from "mdsvex"
 import adapter from "@sveltejs/adapter-static"
 import { fileURLToPath } from "url"
+import { bundledLanguages, createHighlighter } from "shiki"
 import remarkBreaks from "remark-breaks"
 import remarkMath from "./src/lib/remark/math.js"
 import remarkDirective from "./src/lib/remark/directive.js"
@@ -59,7 +60,18 @@ const config = {
         remarkHeadingTitle,
         remarkMermaid,
         remarkCodeTitle
-      ]
+      ],
+      highlight: {
+        highlighter: async (code, lang) => {
+          const themes = { light: "ayu-light", dark: "dracula-soft" }
+          const highlighter = await createHighlighter({
+            themes: Object.values(themes),
+            langs: Object.keys(bundledLanguages)
+          })
+          const html = highlighter.codeToHtml(code, { lang, themes })
+          return `{@html \`${html}\` }`
+        }
+      }
     })
   ],
   extensions: [".svelte", ".svx"]

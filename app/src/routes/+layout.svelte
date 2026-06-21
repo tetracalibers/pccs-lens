@@ -7,6 +7,7 @@
   import SiteFooter from "$lib/components/site-layout/SiteFooter.svelte"
   import { ankiMode } from "$lib/state/anki.svelte"
   import "$lib/styles/color.css"
+  import "$lib/styles/shiki.css"
 
   let { children } = $props()
 

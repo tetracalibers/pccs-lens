@@ -77,7 +77,9 @@
     }
   },
   "dependencies": {
+    "@svelte-dev/pretty-code": "^1.0.0",
     "d3-hierarchy": "^3.1.2",
-    "d3-shape": "^3.2.0"
+    "d3-shape": "^3.2.0",
+    "shiki": "^4.2.0"
   }
 }
