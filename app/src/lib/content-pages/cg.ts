@@ -296,7 +296,7 @@ export const cgGroups: CgGroupDef[] = [
       "optical-analysis"
     ]
   },
-  { id: "systems", label: "画像データとシステム", routes: ["image-coding", "systems"] },
+  { id: "systems", label: "データとシステム", routes: ["image-coding", "systems"] },
   { id: "related", label: "知っておきたい関連知識", routes: ["perception", "ip-rights", "history"] }
 ]
 
