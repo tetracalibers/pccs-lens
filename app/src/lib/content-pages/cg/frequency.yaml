@@ -1,0 +1,21 @@
+title: 周波数領域における処理
+summary: フーリエ変換と周波数フィルタリング
+sections:
+  - heading: 画像のフーリエ変換
+    id: fourier
+    links:
+      - title: 2次元フーリエ変換 # ImgP 6-1-1
+        group: ["ImgP"]
+      - title: 画像のフーリエ変換 # ImgP 6-1-2
+        group: ["ImgP"]
+  - heading: 周波数フィルタリング
+    id: frequency-filtering
+    links:
+      - title: 周波数フィルタリングの原理 # ImgP 6-2-1
+        group: ["ImgP"]
+      - title: 空間フィルタリングとの関係 # ImgP 6-2-2
+        group: ["ImgP"]
+      - title: ローパス・ハイパス・バンドパスフィルタ # ImgP 6-3
+        group: ["ImgP"]
+      - title: 高域強調フィルタ # ImgP 6-4
+        group: ["ImgP"]

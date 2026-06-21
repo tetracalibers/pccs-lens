@@ -7,6 +7,7 @@
   import SiteFooter from "$lib/components/site-layout/SiteFooter.svelte"
   import { ankiMode } from "$lib/state/anki.svelte"
   import "$lib/styles/color.css"
+  import "$lib/styles/shiki.css"
 
   let { children } = $props()
 
@@ -16,6 +17,7 @@
       !CONTENT_TOP_ROUTES.has(page.route.id) &&
       (page.route.id.startsWith("/color-theory") ||
         page.route.id.startsWith("/color-fields") ||
+        (page.route.id.startsWith("/cg/") && page.route.id !== "/cg/[slug]") ||
         page.route.id === "/jis-color-map/[family]")) ||
       page.route.id === "/concept"
   )
@@ -71,7 +73,13 @@
 
     font-family: var(--font-en-base), var(--font-ja-base), sans-serif;
     font-synthesis-weight: none;
+    -webkit-text-size-adjust: 100%;
     margin: 0;
+
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
 
     background: var(--color-bg);
     color: light-dark(#1a1a1a, #f0f0f0);
@@ -90,6 +98,9 @@
 
   /* ===== メインコンテンツラッパー ===== */
   .container {
+    flex: 1 0 auto;
+    width: 100%;
+    box-sizing: border-box;
     margin: 3rem auto;
     padding: 1.5rem 1.5rem 0;
     container-type: inline-size;

@@ -1,6 +1,7 @@
 import { mdsvex } from "mdsvex"
 import adapter from "@sveltejs/adapter-static"
 import { fileURLToPath } from "url"
+import { bundledLanguages, createHighlighter } from "shiki"
 import remarkBreaks from "remark-breaks"
 import remarkMath from "./src/lib/remark/math.js"
 import remarkDirective from "./src/lib/remark/directive.js"
@@ -10,6 +11,20 @@ import remarkHeadingTitle from "./src/lib/remark/heading-title.js"
 import remarkCodeTitle from "./src/lib/remark/code-title.js"
 
 const isGithubPages = process.env.GITHUB_PAGES === "true"
+
+const shikiThemes = { light: "ayu-light", dark: "dracula-soft" }
+
+/** @type {ReturnType<typeof createHighlighter> | undefined} */
+let highlighterPromise
+const getHighlighter = () => {
+  if (!highlighterPromise) {
+    highlighterPromise = createHighlighter({
+      themes: Object.values(shikiThemes),
+      langs: Object.keys(bundledLanguages)
+    })
+  }
+  return highlighterPromise
+}
 
 /** @type {import('./src/lib/remark/custom-directives.js').DirectiveConfigMap} */
 const directives = {
@@ -31,7 +46,8 @@ const directives = {
     { name: "PageLink", replaceTo: "svelte-component" },
     { name: "PageDraft", replaceTo: "svelte-component" },
     { name: "MoreToCome", replaceTo: "svelte-component" },
-    { name: "WithGradeTag", replaceTo: "svelte-component" }
+    { name: "WithGradeTag", replaceTo: "svelte-component" },
+    { name: "WithGroupTag", replaceTo: "svelte-component" }
   ]
 }
 
@@ -58,7 +74,14 @@ const config = {
         remarkHeadingTitle,
         remarkMermaid,
         remarkCodeTitle
-      ]
+      ],
+      highlight: {
+        highlighter: async (code, lang) => {
+          const highlighter = await getHighlighter()
+          const html = highlighter.codeToHtml(code, { lang, themes: shikiThemes })
+          return `{@html \`${html}\` }`
+        }
+      }
     })
   ],
   extensions: [".svelte", ".svx"]

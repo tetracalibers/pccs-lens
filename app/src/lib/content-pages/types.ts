@@ -12,7 +12,7 @@ export interface DraftLink {
 
 export type Link = PageLink | DraftLink
 
-export const isPageLink = (link: Link): link is PageLink => "slug" in link
+export const isPageLink = <T extends object>(link: T): link is T & PageLink => "slug" in link
 
 export interface CategorySection {
   title: string

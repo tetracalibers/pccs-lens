@@ -15,12 +15,16 @@ export default function remarkHeadingTitle() {
       if (node.depth < 2 || node.depth > 4) return
       const text = toString(node)
       const grades = extractGrades(node)
+      const group = extractGroup(node)
       node.data = node.data ?? {}
       const nodeData = /** @type {Record<string, unknown>} */ (node.data)
       const hProps = /** @type {Record<string, unknown>} */ (nodeData.hProperties ?? {})
-      nodeData.hProperties = grades
-        ? { ...hProps, title: text, grades }
-        : { ...hProps, title: text }
+      nodeData.hProperties = {
+        ...hProps,
+        title: text,
+        ...(grades ? { grades } : {}),
+        ...(group ? { group } : {})
+      }
     })
   }
 }
@@ -39,6 +43,27 @@ function extractGrades(node) {
       directive.attributes?.grades
     ) {
       return directive.attributes.grades
+    }
+  }
+  return null
+}
+
+/**
+ * 見出しの children から WithGroupTag ディレクティブの group 属性を抽出する。
+ * 値は `{['CG', 'ImgP']}` のような Svelte 式の文字列で、属性として出力された後に
+ * Svelte 側で配列として解釈される。
+ * @param {import("mdast").Heading} node
+ * @returns {string | null}
+ */
+function extractGroup(node) {
+  for (const child of node.children) {
+    const directive = /** @type {any} */ (child)
+    if (
+      directive.type === "textDirective" &&
+      directive.name === "WithGroupTag" &&
+      directive.attributes?.group
+    ) {
+      return directive.attributes.group
     }
   }
   return null

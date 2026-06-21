@@ -1,16 +1,25 @@
 <script lang="ts">
   import { type Snippet } from "svelte"
   import GradeTag from "../m-directive/GradeTag.svelte"
+  import GroupTag from "../m-directive/GroupTag.svelte"
   import AnkiEnabledHeadingText from "../AnkiEnabledHeadingText.svelte"
   import { type AftGradeCSV, gradeCSV2Array } from "$lib/meta/grade"
+  import type { CgGroup } from "$lib/meta/group"
   import { ankiMode } from "$lib/state/anki.svelte"
 
   let {
     children,
     title = "",
     grades = "",
+    group = [],
     id
-  }: { children?: Snippet; title?: string; grades?: string; id?: string } = $props()
+  }: {
+    children?: Snippet
+    title?: string
+    grades?: string
+    group?: CgGroup[]
+    id?: string
+  } = $props()
 
   const isAnki = $derived(ankiMode.isAnki)
   const gradeList = $derived(grades ? gradeCSV2Array(grades as AftGradeCSV) : [])
@@ -24,6 +33,9 @@
       <div class="grade-tags">
         {#each gradeList as grade (grade)}
           <GradeTag {grade} />
+        {/each}
+        {#each group as g (g)}
+          <GroupTag group={g} />
         {/each}
       </div>
     </div>
