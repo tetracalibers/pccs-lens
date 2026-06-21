@@ -8,6 +8,7 @@
   import { guidePages } from "$lib/meta/guide-pages"
   import type { CgGroup } from "$lib/meta/group"
   import { SvelteSet, SvelteMap } from "svelte/reactivity"
+  import ALink from "$lib/components/m-html/ALink.svelte"
 
   const cgTag: CardTag = { label: "CG", color: "var(--color-cg)" }
   const imgpTag: CardTag = { label: "画像処理", color: "var(--color-image-processing)" }
@@ -93,6 +94,14 @@
     <p>架空の景色を映すCGと、画像を扱う広い世界</p>
   </header>
 
+  <p class="cg-lead">
+    <ALink href="https://www.cgarts.or.jp/kentei/">
+      CG-ARTS
+    </ALink>の「CGエンジニア検定」「画像処理エンジニア検定」エキスパートの内容に対応しています。
+    <br />
+    サクっと読めて、公式教科書の深い内容に飛び込めるようになる…そんな解説を目指しています。
+  </p>
+
   {#each cgGroupCards as group (group.id)}
     <section id={group.id} class="cg-group">
       <div class="cg-group-header">
@@ -141,6 +150,20 @@
     line-height: 1.7;
     color: var(--color-body);
     margin: 0;
+  }
+
+  .cg-lead {
+    font-size: 0.8rem;
+    line-height: 1.8;
+    color: var(--color-body);
+    margin: 0 0 3rem;
+    text-align: center;
+  }
+
+  @media (min-width: 430px) {
+    .cg-lead {
+      word-break: auto-phrase;
+    }
   }
 
   .cg-group {
