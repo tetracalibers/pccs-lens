@@ -8,6 +8,7 @@
   import { cgArticlePageNav } from "$lib/content-pages/cg-article-nav"
 
   const isConceptPage = $derived(page.route.id === "/concept")
+  const isCgIndexPage = $derived(page.route.id === "/cg")
 
   const pageNavInfo = $derived.by(() => {
     const id = page.route.id
@@ -96,9 +97,13 @@
     </nav>
   {:else}
     <div class="footer-inner">
-      <a href={isConceptPage ? resolve("/") : resolve("/concept")} class="footer-link">
-        {isConceptPage ? "トップページへ" : "このサイトの歩き方"}
-      </a>
+      {#if isCgIndexPage}
+        <a href={resolve("/")} class="footer-link">トップへ戻る</a>
+      {:else}
+        <a href={isConceptPage ? resolve("/") : resolve("/concept")} class="footer-link">
+          {isConceptPage ? "トップページへ" : "このサイトの歩き方"}
+        </a>
+      {/if}
     </div>
   {/if}
 </footer>
