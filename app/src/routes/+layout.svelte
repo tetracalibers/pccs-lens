@@ -73,6 +73,7 @@
 
     font-family: var(--font-en-base), var(--font-ja-base), sans-serif;
     font-synthesis-weight: none;
+    -webkit-text-size-adjust: 100%;
     margin: 0;
 
     display: flex;
