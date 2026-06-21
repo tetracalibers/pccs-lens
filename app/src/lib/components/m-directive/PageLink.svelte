@@ -30,7 +30,7 @@
   const group = $derived(meta.group)
   const { useful, title, draft } = $derived(meta)
 
-  // group を持つページ（CG・画像処理）は grades の代わりに group タグで表す。
+  // group を持つページ（CGと画像処理）は grades の代わりに group タグで表す。
   const isGroupPage = $derived(group.length > 0)
 
   // @ts-expect-error

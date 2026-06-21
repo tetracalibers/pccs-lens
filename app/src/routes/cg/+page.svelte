@@ -84,13 +84,13 @@
 </script>
 
 <svelte:head>
-  <title>CG・画像処理 - Color Prism</title>
+  <title>CGと画像処理 - Color Prism</title>
 </svelte:head>
 
 <main>
   <header class="cg-hero">
     <div class="cg-eyebrow">GRAPHICS & IMAGE</div>
-    <h1>CG・画像処理</h1>
+    <h1>CGと画像処理</h1>
     <p>架空の景色を映すCGと、画像を扱う広い世界</p>
   </header>
 

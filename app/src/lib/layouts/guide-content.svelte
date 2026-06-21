@@ -95,7 +95,7 @@
       const cgPage = slug ? cgPageByRoute.get(slug) : undefined
       return cgPage
         ? { label: cgPage.title, href: cgPage.href }
-        : { label: "CG・画像処理", href: resolve("/cg") }
+        : { label: "CGと画像処理", href: resolve("/cg") }
     }
     if (base === "color-theory") {
       const category = slug ? colorTheoryCategoryBySlug.get(slug) : undefined

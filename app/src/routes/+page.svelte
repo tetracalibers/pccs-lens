@@ -70,7 +70,7 @@
       href: resolve("/cg"),
       gradient: "linear-gradient(135deg, #4d96ff, #c77dff)",
       glow: "#4d96ff",
-      title: "色と画像（CG・画像処理）",
+      title: "色と画像（CGと画像処理）",
       desc: "光や色を計算して生み出す、CGと画像処理の世界",
       tags: [
         { label: "CG", color: "var(--color-cg)" },
