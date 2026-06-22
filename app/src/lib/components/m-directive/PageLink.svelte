@@ -19,7 +19,19 @@
 
   // 一覧ページ自身のパスを基準にする。色の理論/色の活用分野は `/color-theory/`、
   // CG はユニット込みの `/cg/basics/` などになり、その配下の個別ページを解決する。
-  const basePath = $derived(page.url.pathname.replace(/^\/+|\/+$/g, ""))
+  // page.url.pathname は GitHub Pages の base（/pccs-lens）を含むうえ、プリレンダー
+  // 時に base が空になり不整合を起こすため、常にルート相対な route.id を使う。
+  // CG 一覧は動的ルート `/cg/[slug]` で配信されるため、`[slug]` を実パラメータに展開する。
+  const basePath = $derived(
+    (page.route.id ?? "")
+      .replace(/^\/+|\/+$/g, "")
+      .split("/")
+      .map((seg) => {
+        const m = seg.match(/^\[(?:\.\.\.)?(.+?)\]$/)
+        return m ? ((page.params as Record<string, string>)[m[1]] ?? seg) : seg
+      })
+      .join("/")
+  )
 
   const meta = $derived.by(() => {
     const found = guidePages.get(`${basePath}/${slug}`)
