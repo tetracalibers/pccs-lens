@@ -234,7 +234,7 @@
 
   main :global(.katex *) {
     font-family: var(--font-math-base), var(--font-ja-base), KaTeX_Main;
-    font-size: 1.1rem;
+    font-style: normal;
     color: var(--color-body);
   }
 
