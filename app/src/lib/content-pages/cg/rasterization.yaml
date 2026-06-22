@@ -5,8 +5,7 @@ sections:
     id: rasterization
     links:
       - slug: shape-rasterization
-      - title: 画像生成時のアンチエイリアシング # CG 6-2-2
-        group: ["CG"]
+      - slug: anti-aliasing
       - title: 塗りつぶし処理 # CG 6-2-3
         group: ["CG"]
       - title: ブラシ処理 # CG 6-2-4
