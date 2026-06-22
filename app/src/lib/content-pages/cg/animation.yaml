@@ -1,0 +1,82 @@
+title: アニメーション
+summary: 仮現運動・アニメーション技法・カメラワーク
+sections:
+  - heading: CGアニメーションの構成要素
+    id: components
+    links:
+      - title: 仮現運動とコマ撮り # CG 5-1-2
+        group: ["CG"]
+      - title: アニメーション技法 # CG 5-1-4
+        group: ["CG"]
+      - title: カメラワーク # CG 5-1-5
+        group: ["CG"]
+  - heading: キーフレームアニメーション
+    id: keyframe
+    links:
+      - title: キーフレーム法とスケルトン法 # CG 5-2-1
+        group: ["CG"]
+      - title: キーフレームの補間 # CG 5-2-2
+        group: ["CG"]
+      - title: 形状変形アニメーション # CG 5-2-3
+        group: ["CG"]
+      - title: 自由形状変形 # CG 5-2-4
+        group: ["CG"]
+  - heading: 手続き型アニメーション
+    id: procedural
+    links:
+      - title: 進化・成長のアニメーション # CG 5-3-1
+        group: ["CG"]
+      - title: 自然現象のアニメーション # CG 5-3-2
+        group: ["CG"]
+      - title: パーティクルによるアニメーション # CG 5-3-3
+        group: ["CG"]
+      - title: AIを利用したアニメーション # CG 5-3-4
+        group: ["CG"]
+  - heading: キャラクターアニメーション
+    id: character
+    links:
+      - title: フォワードキネマティクス # CG 5-4-1
+        group: ["CG"]
+      - title: インバースキネマティクス # CG 5-4-2
+        group: ["CG"]
+      - title: パスアニメーション # CG 5-4-3
+        group: ["CG"]
+      - title: モーションキャプチャ # CG 5-4-4
+        group: ["CG"]
+      - title: 筋肉変形アニメーション # CG 5-4-5
+        group: ["CG"]
+      - title: 表情のアニメーション # CG 5-4-6
+        group: ["CG"]
+      - title: 布地のアニメーション # CG 5-4-7
+        group: ["CG"]
+      - title: 髪の毛のアニメーション # CG 5-4-8
+        group: ["CG"]
+      - title: 群集アニメーション # CG 5-4-9
+        group: ["CG"]
+  - heading: 物理ベースアニメーション
+    id: physics-based
+    links:
+      - title: 剛体の物理シミュレーション # CG 5-5-1
+        group: ["CG"]
+      - title: 弾性体の物理シミュレーション # CG 5-5-2
+        group: ["CG"]
+      - title: 衝突判定 # CG 5-5-3
+        group: ["CG"]
+  - heading: リアルタイムアニメーション
+    id: real-time
+    links:
+      - title: リアルタイムアニメーションの手法 # CG 5-6-1
+        group: ["CG"]
+      - title: レンダーマンとリアルタイムシェーダ # CG 5-6-2
+        group: ["CG"]
+      - title: ゲーム物理 # CG 5-6-3
+        group: ["CG"]
+  - heading: 実写映像との合成
+    id: live-action-compositing
+    links:
+      - title: 実写映像との合成時の条件 # CG 5-7-1
+        group: ["CG"]
+      - title: カメラパラメータの整合 # CG 5-7-2
+        group: ["CG"]
+      - title: 照明条件の整合 # CG 5-7-3
+        group: ["CG"]

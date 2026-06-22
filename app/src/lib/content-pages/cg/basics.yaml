@@ -1,0 +1,16 @@
+title: デジタル画像の基本
+summary: デジタル画像の仕組みとデジタルカメラモデル
+sections:
+  - heading: デジタルカメラモデル
+    id: camera-model
+    links:
+      - slug: camera-capture-and-cg
+      - slug: cg-and-image-processing
+  - heading: デジタル画像の表現
+    id: digital-image
+    links:
+      - slug: image-digitization
+      - slug: image-sampling
+      - slug: image-quantization
+      - slug: grayscale-and-color-images
+      - slug: vector-and-raster

@@ -34,4 +34,7 @@
   --color-grade-2: #6ee7b7;
   --color-grade-3: #c4b5fd;
   --color-grade-uc: #93c5fd;
+
+  --color-cg: var(--pastel-blue);
+  --color-image-processing: var(--pastel-green);
 }

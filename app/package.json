@@ -69,7 +69,8 @@
     "vitest": "^4.0.18",
     "vitest-browser-svelte": "^2.0.2",
     "wrangler": "^4.63.0",
-    "zx": "^8.8.5"
+    "zx": "^8.8.5",
+    "shiki": "^4.2.0"
   },
   "overrides": {
     "vite": {

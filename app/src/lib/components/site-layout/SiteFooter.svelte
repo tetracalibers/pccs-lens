@@ -4,12 +4,50 @@
   import Icon from "@iconify/svelte"
   import { colorTheoryPageNav } from "$lib/content-pages/color-theory-nav"
   import { colorFieldsPageNav } from "$lib/content-pages/color-fields-nav"
+  import { cgPagesInCurriculumOrder, cgGroupIdByRoute } from "$lib/content-pages/cg"
+  import { cgArticlePageNav } from "$lib/content-pages/cg-article-nav"
 
   const isConceptPage = $derived(page.route.id === "/concept")
+  const isCgIndexPage = $derived(page.route.id === "/cg")
 
   const pageNavInfo = $derived.by(() => {
     const id = page.route.id
     if (!id) return null
+
+    // CG ユニットページ（動的ルート /cg/[slug]）は cgGroups のカリキュラム順で前後に送る
+    const cgIndex =
+      id === "/cg/[slug]"
+        ? cgPagesInCurriculumOrder.findIndex((cgPage) => cgPage.route === page.params.slug)
+        : -1
+    if (cgIndex !== -1) {
+      const current = cgPagesInCurriculumOrder[cgIndex]
+      const prev = cgPagesInCurriculumOrder[cgIndex - 1]
+      const next = cgPagesInCurriculumOrder[cgIndex + 1]
+      const groupId = cgGroupIdByRoute.get(current.route)
+      return {
+        prev: prev ? { title: prev.title } : undefined,
+        next: next ? { title: next.title } : undefined,
+        prevHref: prev?.href,
+        nextHref: next?.href,
+        listHref: groupId ? `${resolve("/cg")}#${groupId}` : resolve("/cg"),
+        listLabel: "一覧へ戻る"
+      }
+    }
+
+    // CG 記事ページ（静的ネストルート /cg/<unit>/<article>）は記事の読み順で前後に送る
+    if (id.startsWith("/cg/") && id !== "/cg/[slug]") {
+      const nav = cgArticlePageNav.get(id.slice(1))
+      if (!nav) return null
+      return {
+        prev: nav.prev ? { title: nav.prev.title } : undefined,
+        next: nav.next ? { title: nav.next.title } : undefined,
+        prevHref: nav.prev?.href,
+        nextHref: nav.next?.href,
+        listHref: nav.listHref,
+        listLabel: "一覧へ戻る"
+      }
+    }
+
     for (const base of ["color-theory", "color-fields"] as const) {
       const prefix = `/${base}/`
       if (!id.startsWith(prefix)) continue
@@ -23,7 +61,14 @@
       // @ts-expect-error dynamic route path
       const nextHref = nav.next ? resolve(`/${base}/${nav.next.slug}`) : undefined
       const listHref = `${resolve(`/${base}`)}#${nav.categoryId}`
-      return { prev: nav.prev, next: nav.next, prevHref, nextHref, listHref }
+      return {
+        prev: nav.prev,
+        next: nav.next,
+        prevHref,
+        nextHref,
+        listHref,
+        listLabel: "一覧へ戻る"
+      }
     }
     return null
   })
@@ -38,7 +83,11 @@
           <span class="footer-page-nav-title">{pageNavInfo.prev.title}</span>
         </a>
       {/if}
-      <a class="footer-link footer-page-nav-list" href={pageNavInfo.listHref}>一覧へ戻る</a>
+      {#if pageNavInfo.listHref}
+        <a class="footer-link footer-page-nav-list" href={pageNavInfo.listHref}>
+          {pageNavInfo.listLabel}
+        </a>
+      {/if}
       {#if pageNavInfo.next && pageNavInfo.nextHref}
         <a class="footer-page-nav-link footer-page-nav-next" href={pageNavInfo.nextHref}>
           <span class="footer-page-nav-title">{pageNavInfo.next.title}</span>
@@ -48,9 +97,13 @@
     </nav>
   {:else}
     <div class="footer-inner">
-      <a href={isConceptPage ? resolve("/") : resolve("/concept")} class="footer-link">
-        {isConceptPage ? "トップページへ" : "このサイトの歩き方"}
-      </a>
+      {#if isCgIndexPage}
+        <a href={resolve("/")} class="footer-link">トップへ戻る</a>
+      {:else}
+        <a href={isConceptPage ? resolve("/") : resolve("/concept")} class="footer-link">
+          {isConceptPage ? "トップページへ" : "このサイトの歩き方"}
+        </a>
+      {/if}
     </div>
   {/if}
 </footer>

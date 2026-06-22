@@ -2,7 +2,8 @@
   import type { Snippet } from "svelte"
   import Heading1 from "$lib/components/Heading1.svelte"
 
-  let { title, children }: { title?: string; children: Snippet } = $props()
+  let { title, breadcrumb, children }: { title?: string; breadcrumb?: Snippet; children: Snippet } =
+    $props()
   const pageTitle = $derived(title ? `${title} - Color Prism` : "Color Prism")
 </script>
 
@@ -11,6 +12,7 @@
 </svelte:head>
 
 <main>
+  {@render breadcrumb?.()}
   <Heading1 icon="solar:pin-list-broken">{title}</Heading1>
   {@render children()}
 </main>

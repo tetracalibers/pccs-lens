@@ -1,0 +1,30 @@
+title: 深層学習による認識と生成
+summary: ニューラルネットワークとCNNによる認識・生成
+sections:
+  - heading: ニューラルネットワーク
+    id: neural-network
+    links:
+      - title: 単純パーセプトロン # ImgP 13-1-1
+        group: ["ImgP"]
+      - title: 誤差逆伝播法 # ImgP 13-1-2
+        group: ["ImgP"]
+  - heading: 深層学習
+    id: deep-learning
+    links:
+      - title: 畳み込みニューラルネットワーク（CNN） # ImgP 13-2-1
+        group: ["ImgP"]
+      - title: 汎化能力の向上 # ImgP 13-2-2
+        group: ["ImgP"]
+  - heading: CNNによる画像認識と画像生成
+    id: cnn
+    links:
+      - title: 画像分類 # ImgP 13-3-2
+        group: ["ImgP"]
+      - title: 物体検出 # ImgP 13-3-3
+        group: ["ImgP"]
+      - title: セマンティックセグメンテーション # ImgP 13-3-4
+        group: ["ImgP"]
+      - title: 姿勢推定 # ImgP 13-3-5
+        group: ["ImgP"]
+      - title: GAN # ImgP 13-3-6
+        group: ["ImgP"]

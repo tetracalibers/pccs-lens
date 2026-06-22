@@ -1,9 +1,12 @@
 <script lang="ts">
   import GradeTag from "./GradeTag.svelte"
+  import GroupTag from "./GroupTag.svelte"
   import { resolve } from "$app/paths"
   import { guidePages } from "$lib/meta/guide-pages"
   import { gradeArray2CSV, sortGrades } from "$lib/meta/grade"
+  import { groupColors } from "$lib/meta/group"
   import DraftPageTitle from "./DraftPageTitle.svelte"
+  import CgDraftPageTitle from "./CgDraftPageTitle.svelte"
   import { isProduction } from "$lib/env"
   import DraftTag from "../DraftTag.svelte"
   import { page } from "$app/state"
@@ -14,16 +17,36 @@
 
   let { slug }: Props = $props()
 
-  const baseSegment = $derived(page.route.id?.split("/")[1])
+  // 一覧ページ自身のパスを基準にする。色の理論/色の活用分野は `/color-theory/`、
+  // CG はユニット込みの `/cg/basics/` などになり、その配下の個別ページを解決する。
+  // page.url.pathname は GitHub Pages の base（/pccs-lens）を含むうえ、プリレンダー
+  // 時に base が空になり不整合を起こすため、常にルート相対な route.id を使う。
+  // CG 一覧は動的ルート `/cg/[slug]` で配信されるため、`[slug]` を実パラメータに展開する。
+  const basePath = $derived(
+    (page.route.id ?? "")
+      .replace(/^\/+|\/+$/g, "")
+      .split("/")
+      .map((seg) => {
+        const m = seg.match(/^\[(?:\.\.\.)?(.+?)\]$/)
+        return m ? ((page.params as Record<string, string>)[m[1]] ?? seg) : seg
+      })
+      .join("/")
+  )
 
-  const meta = $derived(guidePages.get(`${baseSegment}/${slug}`))
-  const { grades, useful, title, draft } = $derived.by(() => {
-    if (meta) return meta
-    throw new Error(`PageLink: No metadata found for slug "${baseSegment}/${slug}"`)
+  const meta = $derived.by(() => {
+    const found = guidePages.get(`${basePath}/${slug}`)
+    if (!found) throw new Error(`PageLink: No metadata found for slug "${basePath}/${slug}"`)
+    return found
   })
+  const grades = $derived(meta.grades)
+  const group = $derived(meta.group)
+  const { useful, title, draft } = $derived(meta)
+
+  // group を持つページ（CGと画像処理）は grades の代わりに group タグで表す。
+  const isGroupPage = $derived(group.length > 0)
 
   // @ts-expect-error
-  let href = $derived(resolve(`/${baseSegment}/${slug}`))
+  let href = $derived(resolve(`/${basePath}/${slug}`))
 
   const gradeColors = {
     "3": "#c4b5fd",
@@ -32,22 +55,33 @@
     uc: "#93c5fd"
   }
 
-  let accentColor = $derived(grades.length > 0 ? gradeColors[grades[0]] : "#94a3b8")
+  let accentColor = $derived.by(() => {
+    if (isGroupPage) return groupColors[group[0]]
+    if (grades.length > 0) return gradeColors[grades[0]]
+    return "#94a3b8"
+  })
   const gradesList = $derived(sortGrades(grades))
 </script>
 
 {#if draft && isProduction}
-  <DraftPageTitle grades={gradeArray2CSV(grades)} {title} />
+  {#if isGroupPage}
+    <CgDraftPageTitle {title} {group} />
+  {:else}
+    <DraftPageTitle grades={gradeArray2CSV(grades)} {title} />
+  {/if}
 {:else}
   <a {href} class="page-link" style="--pl-accent: {accentColor}">
     <span class="pl-title">{title}</span>
-    {#if grades.length > 0 || useful || draft}
+    {#if grades.length > 0 || group.length > 0 || useful || draft}
       <span class="pl-grades">
         {#if draft}
           <DraftTag />
         {/if}
         {#each gradesList as grade (grade)}
           <GradeTag {grade} />
+        {/each}
+        {#each group as g (g)}
+          <GroupTag group={g} />
         {/each}
         {#if useful}
           <GradeTag grade="useful" />
