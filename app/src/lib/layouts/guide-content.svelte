@@ -227,7 +227,7 @@
   main :global(figure.math-display) {
     margin-inline: auto;
     margin-block: 1rem;
-    max-width: 100%;
+    width: 100%;
     overflow-x: auto;
     box-sizing: border-box;
   }
