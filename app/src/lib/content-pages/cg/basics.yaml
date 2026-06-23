@@ -14,3 +14,13 @@ sections:
       - slug: image-quantization
       - slug: grayscale-and-color-images
       - slug: vector-and-raster
+  - heading: ラスタ化と描画
+    id: rasterization
+    links:
+      - slug: shape-rasterization
+      - slug: anti-aliasing
+      - slug: area-filling
+      #- title: ブラシ処理 # CG 6-2-4
+      #  group: ["CG"]
+      - title: グラデーション生成 # CG 6-2-5
+        group: ["CG"]
