@@ -238,10 +238,6 @@
     color: var(--color-body);
   }
 
-  main :global(.math-inline .katex *) {
-    font-size: 1rem;
-  }
-
   main :global(img) {
     width: 100%;
     height: auto;
