@@ -1,7 +1,7 @@
 title: 座標と図形の変換
 summary: 座標変換・投影・画像の幾何学的変換
 sections:
-  - heading: 座標変換
+  - heading: 図形の変換
     id: coordinate-transform
     links:
       - slug: coordinate-systems
