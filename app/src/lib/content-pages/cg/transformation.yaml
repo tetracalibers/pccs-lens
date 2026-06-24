@@ -6,8 +6,7 @@ sections:
     links:
       - slug: coordinate-systems
       - slug: basic-transformations
-      - title: 変換の合成と順序 # CG 2-1-4 / ImgP 8-1-6, 8-2-5
-        group: ["CG", "ImgP"]
+      - slug: transformation-composition
       - title: 鏡映とスキュー # CG 2-1-2 / ImgP 8-1-4, 8-1-5
         group: ["CG", "ImgP"]
       - title: アフィン変換と射影変換 # CG 2-1-5 / ImgP 8-2-3, 8-2-4
