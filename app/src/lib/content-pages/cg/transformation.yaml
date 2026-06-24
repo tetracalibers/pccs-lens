@@ -5,18 +5,14 @@ sections:
     id: coordinate-transform
     links:
       - slug: coordinate-systems
-      - title: 基本的な変換と同次座標 # CG 2-1-2, 2-1-3 / ImgP 8-1-1, 8-1-2, 8-2-2, 8-1-3
+      - title: 基本的な変換と同次座標 # CG 2-1-2, 2-1-3 / ImgP 8-1-1, 8-1-2, 8-1-3, 8-2-1, 8-2-2, 8-2-3
         group: ["CG", "ImgP"]
-      - title: 変換の合成 # CG 2-1-4 / ImgP 8-1-6, 8-2-5
+      - title: 変換の合成と順序 # CG 2-1-4 / ImgP 8-1-6, 8-2-5
         group: ["CG", "ImgP"]
-      - title: 鏡映 # CG 2-1-2 / ImgP 8-1-4
+      - title: 鏡映とスキュー # CG 2-1-2 / ImgP 8-1-4, 8-1-5
         group: ["CG", "ImgP"]
-      - title: スキュー # CG 2-1-2 / ImgP 8-1-5
+      - title: アフィン変換と射影変換 # CG 2-1-5 / ImgP 8-2-3, 8-2-4
         group: ["CG", "ImgP"]
-      - title: アフィン変換 # CG 2-1-5 / ImgP 8-2-3
-        group: ["CG", "ImgP"]
-      - title: 射影変換 # ImgP 8-2-4
-        group: ["ImgP"]
   - heading: 投影
     id: projection
     links:
