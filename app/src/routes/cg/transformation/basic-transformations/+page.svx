@@ -208,33 +208,47 @@ $$
 
 拡大・縮小や回転も、もとの`2`行`2`列の行列を左上に置き、平行移動量を`0`にすれば、同じ`3`行`3`列の枠組みに収まります。
 
+::::CardGrid
+:::TermCard{title="拡大・縮小（2次元）"}
 $$
-\begin{pmatrix} sx & 0 & 0 \\\\ 0 & sy & 0 \\\\ 0 & 0 & 1 \end{pmatrix} \qquad \begin{pmatrix} \cos\theta & -\sin\theta & 0 \\\\ \sin\theta & \cos\theta & 0 \\\\ 0 & 0 & 1 \end{pmatrix}
+\begin{pmatrix} sx & 0 & 0 \\\\ 0 & sy & 0 \\\\ 0 & 0 & 1 \end{pmatrix}
 $$
+:::
+:::TermCard{title="回転（2次元）"}
+$$
+\begin{pmatrix} \cos\theta & -\sin\theta & 0 \\\\ \sin\theta & \cos\theta & 0 \\\\ 0 & 0 & 1 \end{pmatrix}
+$$
+:::
+::::
 
 `3`次元の点でも同じ考え方で、`(x, y, z)`に`w`を加えた`(x, y, z, w)`という`4`次元のベクトルで表し、各変換を`4`行`4`列の行列で扱います。
 このときの最下行は`[0 0 0 1]`になります。
 
 `3`次元の拡大・縮小や回転も、さきほどの`3`行`3`列の行列を左上に置けば、そのまま`4`行`4`列の枠組みに収まります。
-拡大・縮小は、各軸の倍率を対角線に並べます。
+拡大・縮小は各軸の倍率を対角線に並べ、回転は軸ごとに`3`種類に分かれます。
 
+::::CardGrid
+:::TermCard{title="拡大・縮小（3次元）"}
 $$
 \begin{pmatrix} sx & 0 & 0 & 0 \\\\ 0 & sy & 0 & 0 \\\\ 0 & 0 & sz & 0 \\\\ 0 & 0 & 0 & 1 \end{pmatrix}
 $$
-
-回転は、軸ごとに分かれた`3`種類の回転行列を、それぞれ左上に置いた形になります。
-
+:::
+:::TermCard{title="x軸まわりの回転"}
 $$
-R_x = \begin{pmatrix} 1 & 0 & 0 & 0 \\\\ 0 & \cos\theta & -\sin\theta & 0 \\\\ 0 & \sin\theta & \cos\theta & 0 \\\\ 0 & 0 & 0 & 1 \end{pmatrix}
+\begin{pmatrix} 1 & 0 & 0 & 0 \\\\ 0 & \cos\theta & -\sin\theta & 0 \\\\ 0 & \sin\theta & \cos\theta & 0 \\\\ 0 & 0 & 0 & 1 \end{pmatrix}
 $$
-
+:::
+:::TermCard{title="y軸まわりの回転"}
 $$
-R_y = \begin{pmatrix} \cos\theta & 0 & \sin\theta & 0 \\\\ 0 & 1 & 0 & 0 \\\\ -\sin\theta & 0 & \cos\theta & 0 \\\\ 0 & 0 & 0 & 1 \end{pmatrix}
+\begin{pmatrix} \cos\theta & 0 & \sin\theta & 0 \\\\ 0 & 1 & 0 & 0 \\\\ -\sin\theta & 0 & \cos\theta & 0 \\\\ 0 & 0 & 0 & 1 \end{pmatrix}
 $$
-
+:::
+:::TermCard{title="z軸まわりの回転"}
 $$
-R_z = \begin{pmatrix} \cos\theta & -\sin\theta & 0 & 0 \\\\ \sin\theta & \cos\theta & 0 & 0 \\\\ 0 & 0 & 1 & 0 \\\\ 0 & 0 & 0 & 1 \end{pmatrix}
+\begin{pmatrix} \cos\theta & -\sin\theta & 0 & 0 \\\\ \sin\theta & \cos\theta & 0 & 0 \\\\ 0 & 0 & 1 & 0 \\\\ 0 & 0 & 0 & 1 \end{pmatrix}
 $$
+:::
+::::
 
 ところで、通常の点で`w`を`1`にしたのには意味があります。
 `w`が`1`の点は空間内の位置を表すのに対し、`w`を`0`にしたベクトルは:Mark[方向ベクトル]、つまり「位置」ではなく「向き」を表すものとして区別されます。
