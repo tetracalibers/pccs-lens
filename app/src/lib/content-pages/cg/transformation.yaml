@@ -5,8 +5,7 @@ sections:
     id: coordinate-transform
     links:
       - slug: coordinate-systems
-      - title: 基本的な変換と同次座標 # CG 2-1-2, 2-1-3 / ImgP 8-1-1, 8-1-2, 8-1-3, 8-2-1, 8-2-2, 8-2-3
-        group: ["CG", "ImgP"]
+      - slug: basic-transformations
       - title: 変換の合成と順序 # CG 2-1-4 / ImgP 8-1-6, 8-2-5
         group: ["CG", "ImgP"]
       - title: 鏡映とスキュー # CG 2-1-2 / ImgP 8-1-4, 8-1-5
