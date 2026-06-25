@@ -6,7 +6,7 @@ group: ["CG", "ImgP"]
 ---
 
 [平行移動・拡大縮小・回転](/cg/transformation/basic-transformations/)に加えてよく使われる`2`つの変換、鏡映とスキューを取り上げます。
-どちらも、すでに学んだ行列やその[合成](/cg/transformation/transformation-composition/)の考え方を使って表せる変換です。
+どちらも、すでに学んだ行列やその[合成](/cg/transformation/transformation-composition/)の考え方を使って表すことができます。
 
 ## :WithGroupTag[鏡映]{group="{['CG', 'ImgP']}"}
 
