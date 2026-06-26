@@ -8,8 +8,7 @@ sections:
       - slug: basic-transformations
       - slug: transformation-composition
       - slug: reflection-and-skew
-      - title: アフィン変換と射影変換 # CG 2-1-5 / ImgP 8-2-3, 8-2-4
-        group: ["CG", "ImgP"]
+      - slug: affine-and-projective-transformation
   - heading: 投影
     id: projection
     links:
