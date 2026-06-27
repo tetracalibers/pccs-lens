@@ -99,6 +99,11 @@
     margin-block: 0;
   }
 
+  .term-card :global(pre) {
+    margin-block-start: 0;
+    margin-block-end: 0.55rem;
+  }
+
   .term-card :global(.math-display) {
     margin-block: 0;
   }
