@@ -99,6 +99,10 @@
     margin-block: 0;
   }
 
+  .term-card :global(.katex-display) {
+    margin-block: 0;
+  }
+
   .term-card.text-centering :global(:is(p)) {
     justify-self: center;
   }
