@@ -99,7 +99,7 @@
     margin-block: 0;
   }
 
-  .term-card :global(.katex-display) {
+  .term-card :global(.math-display) {
     margin-block: 0;
   }
 
