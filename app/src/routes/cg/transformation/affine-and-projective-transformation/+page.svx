@@ -47,7 +47,7 @@ $$
 `2`次元のユークリッド変換は、回転を担う`2`行`2`列の部分と、平行移動量$$t_x, t_y$$をまとめた`3`行`3`列の行列で表せます。
 
 ::::CardGrid
-:::TermCard{title="ユークリッド変換の行列"}
+:::TermCard{title="ユークリッド変換を行う式"}
 $$
 \begin{pmatrix} x^{\prime} \\\\ y^{\prime} \\\\ 1 \end{pmatrix} = \begin{pmatrix} \cos\theta & -\sin\theta & t_x \\\\ \sin\theta & \cos\theta & t_y \\\\ 0 & 0 & 1 \end{pmatrix} \begin{pmatrix} x \\\\ y \\\\ 1 \end{pmatrix}
 $$
@@ -56,14 +56,13 @@ $$
 
 ユークリッド変換は回転と平行移動を組み合わせたものなので、ユークリッド変換を表す行列は、回転を表す行列と平行移動を表す行列の積で作ることができます。
 
-:::Note
-[変換の合成と順序](/cg/transformation/transformation-composition/)で見たように、複数の変換の組み合わせは対応する行列の積として`1`つにまとめられるからです。
-:::
-
 回転を表す行列を$$R$$、平行移動を表す行列を$$T$$とし、これらの積を計算した結果は、ユークリッド変換の行列に一致します。
 
 $$
-T R = \begin{pmatrix} 1 & 0 & t_x \\\\ 0 & 1 & t_y \\\\ 0 & 0 & 1 \end{pmatrix} \begin{pmatrix} \cos\theta & -\sin\theta & 0 \\\\ \sin\theta & \cos\theta & 0 \\\\ 0 & 0 & 1 \end{pmatrix}
+\begin{align*}
+T R &= \begin{pmatrix} 1 & 0 & t_x \\\\ 0 & 1 & t_y \\\\ 0 & 0 & 1 \end{pmatrix} \begin{pmatrix} \cos\theta & -\sin\theta & 0 \\\\ \sin\theta & \cos\theta & 0 \\\\ 0 & 0 & 1 \end{pmatrix} \\\\\\\\
+&= \begin{pmatrix} \cos\theta & -\sin\theta & t_x \\\\ \sin\theta & \cos\theta & t_y \\\\ 0 & 0 & 1 \end{pmatrix}
+\end{align*}
 $$
 
 ### 鏡映から平行移動と回転が生まれる
@@ -136,22 +135,25 @@ CGの分野では、ユークリッド変換（剛体変換）はオブジェク
 `2`次元の相似変換は、左上の`2`行`2`列が、回転（または鏡映）に倍率`s`を一様に掛けた形になっています。
 
 ::::CardGrid
-:::TermCard{title="相似変換の行列"}
+:::TermCard{title="相似変換を行う式"}
 $$
 \begin{pmatrix} x^{\prime} \\\\ y^{\prime} \\\\ 1 \end{pmatrix} = \begin{pmatrix} s\cos\theta & -s\sin\theta & t_x \\\\ s\sin\theta & s\cos\theta & t_y \\\\ 0 & 0 & 1 \end{pmatrix} \begin{pmatrix} x \\\\ y \\\\ 1 \end{pmatrix}
 $$
 :::
 ::::
 
+相似変換は等倍スケーリングとユークリッド変換を組み合わせたものなので、相似変換を表す行列は、拡大・縮小を表す行列とユークリッド変換を表す行列の積で作ることができます。
+
+原点を中心とする等倍スケーリングを表す行列を$$S$$、ユークリッド変換の行列を$$M$$とし、これらの積を計算した結果は、相似変換の行列に一致します。
+
+$$
+\begin{align*}
+M S &= \begin{pmatrix} \cos\theta & -\sin\theta & t_x \\\\ \sin\theta & \cos\theta & t_y \\\\ 0 & 0 & 1 \end{pmatrix} \begin{pmatrix} s & 0 & 0 \\\\ 0 & s & 0 \\\\ 0 & 0 & 1 \end{pmatrix} \\\\\\\\
+&= \begin{pmatrix} s\cos\theta & -s\sin\theta & t_x \\\\ s\sin\theta & s\cos\theta & t_y \\\\ 0 & 0 & 1 \end{pmatrix}
+\end{align*}
+$$
+
 倍率`s`を`1`にすればユークリッド変換に戻ることからも、相似変換がユークリッド変換を一段広げたものだとわかります。
-
-このことは、行列の積としても確かめられます。相似変換の行列も、ユークリッド変換のときと同じように、より基本的な変換の積に分解できるのです。原点を中心とする等倍スケーリングを表す行列を$$S$$、先ほど求めたユークリッド変換の行列を$$M$$とすると、相似変換の行列は両者の積で求められます。
-
-$$
-M S = \begin{pmatrix} \cos\theta & -\sin\theta & t_x \\\\ \sin\theta & \cos\theta & t_y \\\\ 0 & 0 & 1 \end{pmatrix} \begin{pmatrix} s & 0 & 0 \\\\ 0 & s & 0 \\\\ 0 & 0 & 1 \end{pmatrix}
-$$
-
-点にいちばん近い右側の$$S$$が先に働いて原点を中心に図形を拡大・縮小し、その外側のユークリッド変換$$M$$が回転と平行移動を加えます。この積を計算すると、先ほどの相似変換の行列に一致します。
 
 ### 相似変換で保たれる性質
 
