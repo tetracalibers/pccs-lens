@@ -4,6 +4,7 @@ sections:
   - heading: カメラを表す幾何モデル
     id: camera-geometry
     links:
+      - slug: digital-camera-structure
       - slug: pinhole-camera
       - title: 透視投影モデル # ImgP 2-2-2
         group: ["ImgP"]
