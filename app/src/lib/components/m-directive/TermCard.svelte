@@ -88,10 +88,6 @@
     line-height: 1.8;
   }
 
-  .term-card :global(li) {
-    line-height: 1.4;
-  }
-
   .term-card :global(p:last-child) {
     margin-block-end: 0;
   }
@@ -100,6 +96,15 @@
     margin-block: 0;
   }
   .term-card :global(p:has(+ ul)) {
+    margin-block: 0;
+  }
+
+  .term-card :global(pre) {
+    margin-block-start: 0;
+    margin-block-end: 0.55rem;
+  }
+
+  .term-card :global(.math-display) {
     margin-block: 0;
   }
 

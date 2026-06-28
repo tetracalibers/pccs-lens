@@ -215,8 +215,8 @@ export const cgHistory: CgPage = {
 export const cgPages: CgPage[] = [
   cgBasics,
   cgImageProperties,
-  cgCamera,
   cgTransformation,
+  cgCamera,
   cgModeling,
   cgRendering,
   cgAnimation,
@@ -255,7 +255,7 @@ export const cgGroups: CgGroupDef[] = [
   {
     id: "foundation",
     label: "基礎",
-    routes: ["basics", "image-properties", "camera", "transformation"]
+    routes: ["basics", "image-properties", "transformation", "camera"]
   },
   {
     id: "synthesis",

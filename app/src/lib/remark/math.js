@@ -11,7 +11,7 @@ import katex from "katex"
 /** @type {import("katex").KatexOptions} */
 const KATEX_OPTIONS = { throwOnError: false, output: "html" }
 
-const BLOCK_MATH_RE = /^\$\$\s*([\s\S]+?)\s*\$\$$/
+const BLOCK_MATH_RE = /^\$\$\s*([^$]+?)\s*\$\$$/
 const INLINE_MATH_RE = /\$\$([^$]+?)\$\$/g
 
 /**

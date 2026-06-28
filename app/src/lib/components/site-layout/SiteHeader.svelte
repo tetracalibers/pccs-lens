@@ -8,15 +8,50 @@
   let { isContentPage = false }: { isContentPage?: boolean } = $props()
 
   const toolItems = [
-    { href: resolve("/approximate"), path: "/approximate", label: "色の近似" },
-    { href: resolve("/analyze"), path: "/analyze", label: "配色分析" },
-    { href: resolve("/patterns"), path: "/patterns", label: "配色シミュレータ" }
+    {
+      href: resolve("/approximate"),
+      path: "/approximate",
+      label: "色の近似",
+      labelFull: "色の近似"
+    },
+    {
+      href: resolve("/analyze"),
+      path: "/analyze",
+      label: "配色分析",
+      labelFull: "配色の分析"
+    },
+    {
+      href: resolve("/patterns"),
+      path: "/patterns",
+      label: "配色実験",
+      labelFull: "配色シミュレータ"
+    }
   ]
   const contentItems = [
-    { href: resolve("/color-theory"), path: "/color-theory", label: "色の理論" },
-    { href: resolve("/color-fields"), path: "/color-fields", label: "色の活用分野" },
-    { href: resolve("/jis-color-map"), path: "/jis-color-map", label: "慣用色名マップ" },
-    { href: resolve("/cg"), path: "/cg", label: "色と画像" }
+    {
+      href: resolve("/color-theory"),
+      path: "/color-theory",
+      label: "色の理論",
+      labelFull: "色の理論"
+    },
+    {
+      href: resolve("/color-fields"),
+      path: "/color-fields",
+      label: "色の活用",
+      labelFull: "色の活用分野"
+    },
+    {
+      href: resolve("/jis-color-map"),
+      path: "/jis-color-map",
+      label: "慣用色名",
+      labelFull: "慣用色名マップ"
+    },
+    {
+      href: resolve("/cg"),
+      path: "/cg",
+      label: "色と画像",
+      labelFull: "色と画像（CGと画像処理）"
+    }
   ]
 
   let isNavOpen = $state(false)
@@ -114,7 +149,7 @@
               onclick={closeNav}
             >
               <span class="h-n-tree-dot" style="background:#ff6b6b"></span>
-              {item.label}
+              {item.labelFull}
             </a>
           {/each}
         </div>
@@ -139,7 +174,7 @@
               onclick={closeNav}
             >
               <span class="h-n-tree-dot" style="background:#4d96ff"></span>
-              {item.label}
+              {item.labelFull}
             </a>
           {/each}
         </div>
