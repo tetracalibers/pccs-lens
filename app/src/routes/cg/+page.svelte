@@ -77,8 +77,8 @@
   const cgGroupCards = cgGroups.map((group) => ({
     id: group.id,
     label: group.label,
-    items: group.routes
-      .map((route) => cardByRoute.get(route))
+    items: group.pages
+      .map((page) => cardByRoute.get(page.route))
       .filter((card): card is LinkCardItem => card != null)
   }))
 </script>

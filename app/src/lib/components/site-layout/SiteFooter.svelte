@@ -4,7 +4,7 @@
   import Icon from "@iconify/svelte"
   import { colorTheoryPageNav } from "$lib/content-pages/color-theory-nav"
   import { colorFieldsPageNav } from "$lib/content-pages/color-fields-nav"
-  import { cgPagesInCurriculumOrder, cgGroupIdByRoute } from "$lib/content-pages/cg"
+  import { cgPages, cgGroupIdByRoute } from "$lib/content-pages/cg"
   import { cgArticlePageNav } from "$lib/content-pages/cg-article-nav"
 
   const isConceptPage = $derived(page.route.id === "/concept")
@@ -17,12 +17,12 @@
     // CG ユニットページ（動的ルート /cg/[slug]）は cgGroups のカリキュラム順で前後に送る
     const cgIndex =
       id === "/cg/[slug]"
-        ? cgPagesInCurriculumOrder.findIndex((cgPage) => cgPage.route === page.params.slug)
+        ? cgPages.findIndex((cgPage) => cgPage.route === page.params.slug)
         : -1
     if (cgIndex !== -1) {
-      const current = cgPagesInCurriculumOrder[cgIndex]
-      const prev = cgPagesInCurriculumOrder[cgIndex - 1]
-      const next = cgPagesInCurriculumOrder[cgIndex + 1]
+      const current = cgPages[cgIndex]
+      const prev = cgPages[cgIndex - 1]
+      const next = cgPages[cgIndex + 1]
       const groupId = cgGroupIdByRoute.get(current.route)
       return {
         prev: prev ? { title: prev.title } : undefined,

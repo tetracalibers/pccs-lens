@@ -55,255 +55,98 @@ export interface CgPage extends CgPageData {
   href: ResolvedPathname
 }
 
-export const cgBasics: CgPage = {
-  route: "basics",
-  href: resolve("/cg/[slug]", { slug: "basics" }),
-  ...(cgBasicsData as unknown as CgPageData)
-}
-
-export const cgImageProperties: CgPage = {
-  route: "image-properties",
-  href: resolve("/cg/[slug]", { slug: "image-properties" }),
-  ...(cgImagePropertiesData as unknown as CgPageData)
-}
-
-export const cgCamera: CgPage = {
-  route: "camera",
-  href: resolve("/cg/[slug]", { slug: "camera" }),
-  ...(cgCameraData as unknown as CgPageData)
-}
-
-export const cgTransformation: CgPage = {
-  route: "transformation",
-  href: resolve("/cg/[slug]", { slug: "transformation" }),
-  ...(cgTransformationData as unknown as CgPageData)
-}
-
-export const cgModeling: CgPage = {
-  route: "modeling",
-  href: resolve("/cg/[slug]", { slug: "modeling" }),
-  ...(cgModelingData as unknown as CgPageData)
-}
-
-export const cgRendering: CgPage = {
-  route: "rendering",
-  href: resolve("/cg/[slug]", { slug: "rendering" }),
-  ...(cgRenderingData as unknown as CgPageData)
-}
-
-export const cgAnimation: CgPage = {
-  route: "animation",
-  href: resolve("/cg/[slug]", { slug: "animation" }),
-  ...(cgAnimationData as unknown as CgPageData)
-}
-
-export const cgToneConversion: CgPage = {
-  route: "tone-conversion",
-  href: resolve("/cg/[slug]", { slug: "tone-conversion" }),
-  ...(cgToneConversionData as unknown as CgPageData)
-}
-
-export const cgSpatialFiltering: CgPage = {
-  route: "spatial-filtering",
-  href: resolve("/cg/[slug]", { slug: "spatial-filtering" }),
-  ...(cgSpatialFilteringData as unknown as CgPageData)
-}
-
-export const cgFrequency: CgPage = {
-  route: "frequency",
-  href: resolve("/cg/[slug]", { slug: "frequency" }),
-  ...(cgFrequencyData as unknown as CgPageData)
-}
-
-export const cgBinaryImage: CgPage = {
-  route: "binary-image",
-  href: resolve("/cg/[slug]", { slug: "binary-image" }),
-  ...(cgBinaryImageData as unknown as CgPageData)
-}
-
-export const cgRestoration: CgPage = {
-  route: "restoration",
-  href: resolve("/cg/[slug]", { slug: "restoration" }),
-  ...(cgRestorationData as unknown as CgPageData)
-}
-
-export const cgEditing: CgPage = {
-  route: "editing",
-  href: resolve("/cg/[slug]", { slug: "editing" }),
-  ...(cgEditingData as unknown as CgPageData)
-}
-
-export const cgNpr: CgPage = {
-  route: "npr",
-  href: resolve("/cg/[slug]", { slug: "npr" }),
-  ...(cgNprData as unknown as CgPageData)
-}
-
-export const cgSegmentation: CgPage = {
-  route: "segmentation",
-  href: resolve("/cg/[slug]", { slug: "segmentation" }),
-  ...(cgSegmentationData as unknown as CgPageData)
-}
-
-export const cgFeatureDetection: CgPage = {
-  route: "feature-detection",
-  href: resolve("/cg/[slug]", { slug: "feature-detection" }),
-  ...(cgFeatureDetectionData as unknown as CgPageData)
-}
-
-export const cgPatternRecognition: CgPage = {
-  route: "pattern-recognition",
-  href: resolve("/cg/[slug]", { slug: "pattern-recognition" }),
-  ...(cgPatternRecognitionData as unknown as CgPageData)
-}
-
-export const cgDeepLearning: CgPage = {
-  route: "deep-learning",
-  href: resolve("/cg/[slug]", { slug: "deep-learning" }),
-  ...(cgDeepLearningData as unknown as CgPageData)
-}
-
-export const cgVideo: CgPage = {
-  route: "video",
-  href: resolve("/cg/[slug]", { slug: "video" }),
-  ...(cgVideoData as unknown as CgPageData)
-}
-
-export const cgReconstruction: CgPage = {
-  route: "3d-reconstruction",
-  href: resolve("/cg/[slug]", { slug: "3d-reconstruction" }),
-  ...(cgReconstructionData as unknown as CgPageData)
-}
-
-export const cgOpticalAnalysis: CgPage = {
-  route: "optical-analysis",
-  href: resolve("/cg/[slug]", { slug: "optical-analysis" }),
-  ...(cgOpticalAnalysisData as unknown as CgPageData)
-}
-
-export const cgImageCoding: CgPage = {
-  route: "image-coding",
-  href: resolve("/cg/[slug]", { slug: "image-coding" }),
-  ...(cgImageCodingData as unknown as CgPageData)
-}
-
-export const cgSystems: CgPage = {
-  route: "systems",
-  href: resolve("/cg/[slug]", { slug: "systems" }),
-  ...(cgSystemsData as unknown as CgPageData)
-}
-
-export const cgPerception: CgPage = {
-  route: "perception",
-  href: resolve("/cg/[slug]", { slug: "perception" }),
-  ...(cgPerceptionData as unknown as CgPageData)
-}
-
-export const cgIpRights: CgPage = {
-  route: "ip-rights",
-  href: resolve("/cg/[slug]", { slug: "ip-rights" }),
-  ...(cgIpRightsData as unknown as CgPageData)
-}
-
-export const cgHistory: CgPage = {
-  route: "history",
-  href: resolve("/cg/[slug]", { slug: "history" }),
-  ...(cgHistoryData as unknown as CgPageData)
-}
-
-// 学習カリキュラムの順序（基礎 → CG合成 → 基本的な画像処理 → NPR/可視化 → 画像解析 → 周辺）
-export const cgPages: CgPage[] = [
-  cgBasics,
-  cgImageProperties,
-  cgCamera,
-  cgTransformation,
-  cgModeling,
-  cgRendering,
-  cgAnimation,
-  cgToneConversion,
-  cgSpatialFiltering,
-  cgFrequency,
-  cgBinaryImage,
-  cgRestoration,
-  cgEditing,
-  cgNpr,
-  cgSegmentation,
-  cgFeatureDetection,
-  cgPatternRecognition,
-  cgDeepLearning,
-  cgVideo,
-  cgReconstruction,
-  cgOpticalAnalysis,
-  cgImageCoding,
-  cgSystems,
-  cgPerception,
-  cgIpRights,
-  cgHistory
-]
-
-export const cgPageByRoute: Map<string, CgPage> = new Map(cgPages.map((page) => [page.route, page]))
+// YAML データからユニットページを組み立てる。route は YAML ファイル名（slug）と一致させる。
+const makePage = (route: string, data: unknown): CgPage => ({
+  route,
+  href: resolve("/cg/[slug]", { slug: route }),
+  ...(data as CgPageData)
+})
 
 /** /cg 一覧での区分（カリキュラム上のグルーピング）。`id` は同ページ内のアンカー。 */
 export interface CgGroupDef {
   id: string
   label: string
-  /** この区分に属するページの route（slug）。cgPages の並び順に対応。 */
-  routes: string[]
+  /** この区分に属するユニットページ。表示順・前後ナビ・記事送りの順序の起点。 */
+  pages: CgPage[]
 }
 
+/**
+ * /cg のカリキュラム区分。ページの集合と並び順の「単一の情報源」。
+ * カードの表示順・フッターの前後ナビ・記事送りはすべてここから導出される。
+ * 並べ替え・入れ替え・追加・削除はこの配列だけを編集すればよい。
+ */
 export const cgGroups: CgGroupDef[] = [
   {
     id: "foundation",
     label: "基礎",
-    routes: ["basics", "image-properties", "camera", "transformation"]
+    pages: [
+      makePage("basics", cgBasicsData),
+      makePage("image-properties", cgImagePropertiesData),
+      makePage("camera", cgCameraData),
+      makePage("transformation", cgTransformationData)
+    ]
   },
   {
     id: "synthesis",
     label: "コンピュータグラフィックス",
-    routes: ["modeling", "rendering", "animation"]
+    pages: [
+      makePage("modeling", cgModelingData),
+      makePage("rendering", cgRenderingData),
+      makePage("animation", cgAnimationData)
+    ]
   },
   {
     id: "image-processing",
     label: "基本的な画像処理",
-    routes: [
-      "tone-conversion",
-      "spatial-filtering",
-      "frequency",
-      "binary-image",
-      "restoration",
-      "editing"
+    pages: [
+      makePage("tone-conversion", cgToneConversionData),
+      makePage("spatial-filtering", cgSpatialFilteringData),
+      makePage("frequency", cgFrequencyData),
+      makePage("binary-image", cgBinaryImageData),
+      makePage("restoration", cgRestorationData),
+      makePage("editing", cgEditingData)
     ]
   },
-  { id: "expression", label: "表現と可視化", routes: ["npr"] },
+  {
+    id: "expression",
+    label: "表現と可視化",
+    pages: [makePage("npr", cgNprData)]
+  },
   {
     id: "analysis",
     label: "画像処理の応用と解析",
-    routes: [
-      "segmentation",
-      "feature-detection",
-      "pattern-recognition",
-      "deep-learning",
-      "video",
-      "3d-reconstruction",
-      "optical-analysis"
+    pages: [
+      makePage("segmentation", cgSegmentationData),
+      makePage("feature-detection", cgFeatureDetectionData),
+      makePage("pattern-recognition", cgPatternRecognitionData),
+      makePage("deep-learning", cgDeepLearningData),
+      makePage("video", cgVideoData),
+      makePage("3d-reconstruction", cgReconstructionData),
+      makePage("optical-analysis", cgOpticalAnalysisData)
     ]
   },
-  { id: "systems", label: "データとシステム", routes: ["image-coding", "systems"] },
-  { id: "related", label: "知っておきたい関連知識", routes: ["perception", "ip-rights", "history"] }
+  {
+    id: "systems",
+    label: "データとシステム",
+    pages: [makePage("image-coding", cgImageCodingData), makePage("systems", cgSystemsData)]
+  },
+  {
+    id: "related",
+    label: "知っておきたい関連知識",
+    pages: [
+      makePage("perception", cgPerceptionData),
+      makePage("ip-rights", cgIpRightsData),
+      makePage("history", cgHistoryData)
+    ]
+  }
 ]
+
+/** 全ユニットページをカリキュラム順（cgGroups の区分・ページ順）に平坦化した一覧。 */
+export const cgPages: CgPage[] = cgGroups.flatMap((group) => group.pages)
+
+export const cgPageByRoute: Map<string, CgPage> = new Map(cgPages.map((page) => [page.route, page]))
 
 /** route(slug) → 所属区分の id。「一覧へ戻る」のアンカー解決に使う。 */
 export const cgGroupIdByRoute: Map<string, string> = new Map(
-  cgGroups.flatMap((group) => group.routes.map((route) => [route, group.id] as const))
-)
-
-/**
- * cgGroups の区分・route 順に並べたユニットページ一覧。
- * ページ送り（前後ナビ）の順序の単一の情報源。cgGroups を組み替えれば自動で追従する。
- */
-export const cgPagesInCurriculumOrder: CgPage[] = cgGroups.flatMap((group) =>
-  group.routes.flatMap((route) => {
-    const page = cgPageByRoute.get(route)
-    return page ? [page] : []
-  })
+  cgGroups.flatMap((group) => group.pages.map((page) => [page.route, group.id] as const))
 )

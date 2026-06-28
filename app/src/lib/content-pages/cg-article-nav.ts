@@ -27,14 +27,9 @@ interface OrderedArticle extends CgArticleNavEntry {
 let _pageNav: Map<string, CgArticleNavLinks> | undefined
 
 const buildPageNav = (): Map<string, CgArticleNavLinks> => {
-  // カリキュラム順（cgGroups の区分・route 順）× 各ユニットの YAML リンク順で記事を一列に並べる。
+  // カリキュラム順（cgGroups の区分・ページ順）× 各ユニットの YAML リンク順で記事を一列に並べる。
   // 並び順の単一の情報源は cgGroups。実ページが存在する PageLink（slug あり）のみ対象とし、下書きは除く。
-  const orderedUnits: CgPage[] = cgGroups.flatMap((group) =>
-    group.routes.flatMap((route) => {
-      const unit = cgPageByRoute.get(route)
-      return unit ? [unit] : []
-    })
-  )
+  const orderedUnits: CgPage[] = cgGroups.flatMap((group) => group.pages)
   const ordered: OrderedArticle[] = orderedUnits.flatMap((unit) =>
     unit.sections.flatMap((section) =>
       section.links.flatMap((link) => {
