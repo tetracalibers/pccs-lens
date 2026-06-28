@@ -1,16 +1,23 @@
 title: 画像の撮影とカメラモデル
 summary: カメラの幾何モデルと撮影パラメータ
 sections:
-  - heading: カメラの構成と幾何モデル
-    id: geometry
+  - heading: カメラを表す幾何モデル
+    id: camera-geometry
     links:
-      - title: デジタルカメラの構成 # ImgP 2-1
-        group: ["ImgP"]
-      - title: ピンホールカメラ # ImgP 2-2-1
-        group: ["ImgP"]
+      - slug: digital-camera-structure
+      - slug: pinhole-camera
       - title: 透視投影モデル # ImgP 2-2-2
         group: ["ImgP"]
-      - title: レンズモデル # ImgP 2-2-3
+  - heading: レンズモデル
+    id: lens-model
+    links:
+      - title: 薄肉レンズ # ImgP 2-2-3
+        group: ["ImgP"]
+      - title: 厚肉レンズ # ImgP 2-2-3
+        group: ["ImgP"]
+      - title: 歪曲収差 # ImgP 2-2-3
+        group: ["ImgP"]
+      - title: 周辺光量の低下 # ImgP 2-2-3
         group: ["ImgP"]
   - heading: 撮影パラメータ
     id: shooting-parameters
