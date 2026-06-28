@@ -227,19 +227,15 @@
   main :global(figure.math-display) {
     margin-inline: auto;
     margin-block: 1rem;
-    max-width: 100%;
+    width: 100%;
     overflow-x: auto;
     box-sizing: border-box;
   }
 
   main :global(.katex *) {
     font-family: var(--font-math-base), var(--font-ja-base), KaTeX_Main;
-    font-size: 1.1rem;
+    font-style: normal;
     color: var(--color-body);
-  }
-
-  main :global(.math-inline .katex *) {
-    font-size: 1rem;
   }
 
   main :global(.katex .overline-line) {

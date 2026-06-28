@@ -7,7 +7,6 @@ import cgTransformationData from "./cg/transformation.yaml"
 import cgModelingData from "./cg/modeling.yaml"
 import cgRenderingData from "./cg/rendering.yaml"
 import cgAnimationData from "./cg/animation.yaml"
-import cgRasterizationData from "./cg/rasterization.yaml"
 import cgToneConversionData from "./cg/tone-conversion.yaml"
 import cgSpatialFilteringData from "./cg/spatial-filtering.yaml"
 import cgFrequencyData from "./cg/frequency.yaml"
@@ -96,12 +95,6 @@ export const cgAnimation: CgPage = {
   route: "animation",
   href: resolve("/cg/[slug]", { slug: "animation" }),
   ...(cgAnimationData as unknown as CgPageData)
-}
-
-export const cgRasterization: CgPage = {
-  route: "rasterization",
-  href: resolve("/cg/[slug]", { slug: "rasterization" }),
-  ...(cgRasterizationData as unknown as CgPageData)
 }
 
 export const cgToneConversion: CgPage = {
@@ -222,12 +215,11 @@ export const cgHistory: CgPage = {
 export const cgPages: CgPage[] = [
   cgBasics,
   cgImageProperties,
-  cgCamera,
   cgTransformation,
+  cgCamera,
   cgModeling,
   cgRendering,
   cgAnimation,
-  cgRasterization,
   cgToneConversion,
   cgSpatialFiltering,
   cgFrequency,
@@ -263,7 +255,7 @@ export const cgGroups: CgGroupDef[] = [
   {
     id: "foundation",
     label: "基礎",
-    routes: ["basics", "rasterization", "image-properties", "camera", "transformation"]
+    routes: ["basics", "image-properties", "transformation", "camera"]
   },
   {
     id: "synthesis",

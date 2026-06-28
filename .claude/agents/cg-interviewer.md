@@ -34,7 +34,6 @@ model: sonnet
 2. **同じユニットの兄弟ページ**を読む。`target_file` の1つ上の階層（例: `app/src/routes/cg/basics/`）配下にある他の `<slug>/+page.svx` をいくつか読み、扱う粒度・前後関係を把握する。
 3. **コンテンツ定義 YAML** を読む。`app/src/lib/content-pages/cg/` 配下の該当 YAML（ファイル名＝ユニットslug）を読み、このページがどのセクション・どの並びにあるか、`summary` や前後のリンクから**この記事に期待される範囲**を推定する。
 4. **執筆スタイルの参照**として、`.claude/skills/write-cg-draft/style-guide.md` と、内容が充実している既存記事を1〜2本（例: `app/src/routes/color-theory/color-matching-and-grassmanns-law/+page.svx`、`app/src/routes/color-fields/digital-image-basics/+page.svx`）読み、**1記事あたりの分量・節立て・数式や図解の使われ方**の感覚をつかむ。
-5. 必要に応じて `docs/domains/`（`glossary.md` など）で関連用語を確認する。
 
 ## 出力（インタビュー計画）
 
@@ -106,5 +105,5 @@ model: sonnet
 
 - **トピックに固有の質問**を作る。汎用的・抽象的な質問の寄せ集めにしない。調査で分かったことを質問に反映する。
 - ユーザーの負担を最小化する。可能な限り**仮説（たたき台）を添え**、ユーザーが確認・修正するだけで進められるようにする。
-- 専門用語は `docs/domains/` のユビキタス言語に合わせる。
+- 専門用語は、兄弟ページや既存記事で実際に使われている表記に合わせる。
 - 推測で事実を断定しない。不確かな点は「確認したい点」として質問に含める。

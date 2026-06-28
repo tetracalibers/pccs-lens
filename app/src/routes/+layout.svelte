@@ -37,10 +37,7 @@
     href="https://fonts.googleapis.com/css2?family=Sigmar+One&family=Kiwi+Maru:wght@500&family=Flow+Circular&family=Flow+Rounded&family=Rakkas&family=Delius&family=Reddit+Mono:wght@400..700&family=SUSE+Mono:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap"
     rel="stylesheet"
   />
-  <link
-    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;1,300&display=swap&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]()≡,"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Marmelad&display=swap" rel="stylesheet" />
 </svelte:head>
 
 <SiteHeader {isContentPage} />
@@ -68,7 +65,7 @@
     --font-anki-round: "Flow Circular", system-ui;
     --font-round: "Kiwi Maru", serif;
     --font-mark: var(--font-mono-base), var(--font-ja-base);
-    --font-math-base: "DM Mono";
+    --font-math-base: "Marmelad";
     --font-math: var(--font-math-base), monospace;
     --font-bold-text-demo: "Sigmar One", sans-serif;
 
