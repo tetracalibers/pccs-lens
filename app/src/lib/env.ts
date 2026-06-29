@@ -1,4 +1,3 @@
-declare const __GITHUB_PAGES__: boolean
-const isGithubPages = __GITHUB_PAGES__
+declare const __PRODUCTION__: boolean
 
-export const isProduction = isGithubPages
+export const isProduction = __PRODUCTION__
