@@ -66,6 +66,7 @@
     --font-round: "Kiwi Maru", serif;
     --font-mark: var(--font-mono-base), var(--font-ja-base);
     --font-math-base: "Marmelad";
+    --font-math: var(--font-math-base), sans-serif;
     --font-bold-text-demo: "Sigmar One", sans-serif;
 
     font-family: var(--font-en-base), var(--font-ja-base), sans-serif;

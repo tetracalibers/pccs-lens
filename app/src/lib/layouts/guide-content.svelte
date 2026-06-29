@@ -238,6 +238,11 @@
     color: var(--color-body);
   }
 
+  main :global(.katex .overline-line) {
+    border-bottom-width: 0.065em !important;
+    translate: 0 -0.2em;
+  }
+
   main :global(img) {
     width: 100%;
     height: auto;
