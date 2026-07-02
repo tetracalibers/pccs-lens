@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { PCCS_HEX_MAP } from "$lib/data/pccs"
+  import { PCCS_HEX_MAP, PCCS_ALL_MAP } from "$lib/data/pccs"
 
   let {
     leftColor = "v2",
@@ -113,26 +113,42 @@
   }
   const CELLS = buildCells()
 
-  // 塗りつぶすセル：左ウイングは v セル（vividな補色）、右ウイングは d セル
-  const leftV = CELLS.find((c) => c.id === "L-v")!
-  const rightD = CELLS.find((c) => c.id === "R-d")!
+  // 塗りつぶすセルを色のPCCSトーンから求める（Propsの色に位置ごと連動する）
+  // 有彩色は該当ウイングのトーンセル、無彩色は中央の無彩色セルを対象にする
+  function findWingCell(notation: string, prefix: "L" | "R"): ToneCell | undefined {
+    const c = PCCS_ALL_MAP.get(notation)
+    if (!c) return undefined
+    const id = c.isNeutral ? `C-${c.achromaticBucket}` : `${prefix}-${c.toneSymbol}`
+    return CELLS.find((cell) => cell.id === id)
+  }
+
+  const leftCell = $derived(findWingCell(leftColor, "L"))
+  const rightCell = $derived(findWingCell(rightColor, "R"))
 
   const leftHex = $derived(PCCS_HEX_MAP.get(leftColor) ?? "#000000")
   const rightHex = $derived(PCCS_HEX_MAP.get(rightColor) ?? "#000000")
 
-  // ===== 矢印（右ウイングの d セル → v14 方向に右へ） =====
-  const arrowStartX = rightD.cx + SQ / 2 + ARROW_OFFSET
-  const arrowEndX = arrowStartX + ARROW_LENGTH
-  const arrowY = rightD.cy
+  // ===== 矢印（右の塗りつぶしセル → v14 方向に右へ） =====
+  const arrow = $derived.by(() => {
+    if (!rightCell) return null
+    const startX = rightCell.cx + SQ / 2 + ARROW_OFFSET
+    return { startX, endX: startX + ARROW_LENGTH, y: rightCell.cy }
+  })
 
   // ===== viewBox（矢印が右端輪郭より外へ伸びる分まで含める） =====
-  const minX = Math.min(OUTLINE_LEFT, arrowStartX, arrowEndX)
-  const maxX = Math.max(OUTLINE_RIGHT, arrowStartX, arrowEndX)
-  const vbX = minX - VIEWBOX_MARGIN
-  const vbY = OUTLINE_TOP - VIEWBOX_MARGIN
-  const vbW = maxX - minX + 2 * VIEWBOX_MARGIN
-  const vbH = OUTLINE_H + 2 * VIEWBOX_MARGIN
-  const viewBox = `${vbX} ${vbY} ${vbW} ${vbH}`
+  const viewBox = $derived.by(() => {
+    let minX = OUTLINE_LEFT
+    let maxX = OUTLINE_RIGHT
+    if (arrow) {
+      minX = Math.min(minX, arrow.startX, arrow.endX)
+      maxX = Math.max(maxX, arrow.startX, arrow.endX)
+    }
+    const vbX = minX - VIEWBOX_MARGIN
+    const vbY = OUTLINE_TOP - VIEWBOX_MARGIN
+    const vbW = maxX - minX + 2 * VIEWBOX_MARGIN
+    const vbH = OUTLINE_H + 2 * VIEWBOX_MARGIN
+    return `${vbX} ${vbY} ${vbW} ${vbH}`
+  })
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" {viewBox}>
@@ -212,22 +228,34 @@
     </text>
   {/each}
 
-  <!-- 左ウイングの v セルを leftColor で塗りつぶし -->
-  <rect x={leftV.cx - SQ / 2} y={leftV.cy - SQ / 2} width={SQ} height={SQ} fill={leftHex} />
+  <!-- 左ウイングの塗りつぶしセル（leftColor のトーン位置） -->
+  {#if leftCell}
+    <rect x={leftCell.cx - SQ / 2} y={leftCell.cy - SQ / 2} width={SQ} height={SQ} fill={leftHex} />
+  {/if}
 
-  <!-- 右ウイングの d セルを rightColor で塗りつぶし -->
-  <rect x={rightD.cx - SQ / 2} y={rightD.cy - SQ / 2} width={SQ} height={SQ} fill={rightHex} />
+  <!-- 右ウイングの塗りつぶしセル（rightColor のトーン位置） -->
+  {#if rightCell}
+    <rect
+      x={rightCell.cx - SQ / 2}
+      y={rightCell.cy - SQ / 2}
+      width={SQ}
+      height={SQ}
+      fill={rightHex}
+    />
+  {/if}
 
-  <!-- rightColor（d セル）から v14 方向（右）へ向かう矢印 -->
-  <line
-    x1={arrowStartX}
-    y1={arrowY}
-    x2={arrowEndX}
-    y2={arrowY}
-    stroke={COL_ARROW}
-    stroke-width={ARROW_STROKE_WIDTH}
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    marker-end="url(#comp-contrast-arrow-end)"
-  />
+  <!-- 右の塗りつぶしセルから v14 方向（右）へ向かう矢印 -->
+  {#if arrow}
+    <line
+      x1={arrow.startX}
+      y1={arrow.y}
+      x2={arrow.endX}
+      y2={arrow.y}
+      stroke={COL_ARROW}
+      stroke-width={ARROW_STROKE_WIDTH}
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      marker-end="url(#comp-contrast-arrow-end)"
+    />
+  {/if}
 </svg>
