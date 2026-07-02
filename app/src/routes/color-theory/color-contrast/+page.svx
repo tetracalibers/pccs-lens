@@ -126,7 +126,7 @@ graph LR
 
 - 明度対比により、同じ文字色であっても、背景が暗くなるほど文字色が明るくはっきり見える
 
-<SVGWrapper>
+<SVGWrapper maxW={430}>
   <TextBrightnessContrast />
 </SVGWrapper>
 
