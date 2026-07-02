@@ -151,5 +151,5 @@ description: 引数で受け取ったslugにマッチする記事ページ（CG 
 - フロントマター（`layout` / `title` / `group` / `grades` / `basic` / `useful`）は変更しない。`draft: true` は人間のレビューが済むまで残す。
 - サブエージェント（`content-interviewer` / `content-ghostwriter`）は独立コンテキストで動作するため、起動ごとに必要な情報（特に `article_type` と `classification`）をすべて prompt に含める。
 - 実際のユーザーへの質問は**必ずメインループ（あなた）が行う**。サブエージェントにユーザー対話をさせない。
-- 執筆スタイルは `.claude/skills/write-content-draft/style-guide.md` を唯一の基準とする。記事の種類によって異なるのは大見出しの分類タグ（`:WithGroupTag` / `:WithGradeTag`）だけで、それ以外のルールは共通。
+- 執筆スタイルは `.claude/skills/write-content-draft/style-guide.md` を唯一の基準とする。記事の種類によって異なるのは大見出しの分類タグ（`:WithGroupTag` / `:WithGradeTag`）と、記事冒頭の導入文のテイスト（CGは読者を案内する導入、色の理論・色の活用分野は主題の概念を一言で説明する導入）だけで、それ以外のルールは共通。
 - 本スキルでは `npm run check`（型チェック）は実行しない。
