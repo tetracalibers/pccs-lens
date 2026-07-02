@@ -15,6 +15,7 @@ draft: true
   import TextBrightnessContrast from "$lib/demo/visual-effect-contrast/LightnessContrastTextBrightness.svelte"
   import EqualBrightnessContrast from "$lib/demo/visual-effect-contrast/LightnessContrastEqualBrightness.svelte"
   import ComplementaryContrast from "$lib/demo/visual-effect-contrast/ComplementaryContrastDiagram.svelte"
+  import Halation from "$lib/demo/visual-effect-contrast/HalationDiagram.svelte"
 </script>
 
 ## :WithGradeTag[色の対比とは]{grades="3"}
@@ -175,7 +176,7 @@ TODO: 彩度差が大きいほど彩度対比は強くなる
 
 <ComplementaryContrast leftColor="v2" rightColor="d14" referenceColor="d14" />
 
-TODO: ハレーションの図
+<Halation />
 
 ## :WithGradeTag[色相対比]{grades="3"}
 
