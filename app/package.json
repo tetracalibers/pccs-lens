@@ -10,6 +10,7 @@
     "prepare": "svelte-kit sync || echo ''",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "check:contrast": "node scripts/check-lightness-contrast.mjs",
     "lint": "eslint .",
     "format": "prettier --write .",
     "test:unit": "vitest",
