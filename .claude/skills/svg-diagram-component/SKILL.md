@@ -81,6 +81,11 @@ import EmergencyExitSign from "$lib/demo/color-visibility/EmergencyExitSign.svel
 
 パターンCではページへの反映まで完了しているため、import 文の提示は不要。
 
+## 品質チェック
+
+- `npm run check` は**ユーザー側で実行する**。このスキルの作業中に勝手に実行しないこと。
+- ユーザーが `npm run check` を実行してエラーや警告が出た場合は指示を出すので、その内容に従って修正する。
+
 ## コンポーネント仕様
 
 ### 基本構造
