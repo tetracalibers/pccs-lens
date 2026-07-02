@@ -6,7 +6,8 @@
   const GAP_X = 16 // パネル同士の横の隙間
 
   // ===== フォントサイズ =====
-  const FONT_SIZE_SAMPLE = 60 // パネル内のサンプル文字
+  const FONT_SIZE_RATIO = 0.5 // パネルの一辺に対する文字サイズの比率
+  const FONT_SIZE_SAMPLE = PANEL_SIZE * FONT_SIZE_RATIO // パネル内のサンプル文字（PANEL_SIZE に連動）
 
   // ===== 色 =====
   // すべてのパネルで共通する固定の文字色（明度対比のデモ対象なので出し分けない）
