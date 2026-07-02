@@ -12,6 +12,7 @@ draft: true
   import ToneContrast from "$lib/demo/visual-effect-contrast/LightnessSaturationContrastDiagram.svelte"
   import HueContrast from "$lib/demo/visual-effect-contrast/HueContrastDiagram.svelte"
   import ContrastPreview from "$lib/demo/visual-effect-contrast/ContrastColorPreview.svelte"
+  import TextBrightnessContrast from "$lib/demo/visual-effect-contrast/LightnessContrastTextBrightness.svelte"
 </script>
 
 ## :WithGradeTag[色の対比とは]{grades="3"}
@@ -123,7 +124,11 @@ graph LR
 :::
 ::::
 
-TODO: 明度対比により、同じ文字色であっても、背景が暗くなるほど文字色が明るくはっきり見える
+- 明度対比により、同じ文字色であっても、背景が暗くなるほど文字色が明るくはっきり見える
+
+<SVGWrapper>
+  <TextBrightnessContrast />
+</SVGWrapper>
 
 TODO: 明度対比を活用して、明度の異なる色を同じ明るさに見せることもできる
 
