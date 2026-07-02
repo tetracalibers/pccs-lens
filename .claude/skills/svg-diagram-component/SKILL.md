@@ -97,6 +97,11 @@ import EmergencyExitSign from "$lib/demo/color-visibility/EmergencyExitSign.svel
 - `<svg>` 要素の `viewBox` は中身の図にフィットするサイズにする
   - `width`/`height` 属性は付与しない（`SVGWrapper` 側で `width: 100%; height: auto;` が指定される）
 
+### 図版のテキスト
+
+- 図の内容で指示がない限り、**図版にテキスト（ラベル・見出し・注釈など）は入れない**
+- テキストを入れる指示がある場合に限り、以下の関連項（「縦書きテキスト」「暗記モードでのテキスト非表示」「文字色のコントラスト確保」）に従う
+
 ### 描画方法
 
 - 原則としてSVGはSvelteのテンプレート構文で組み立てる
