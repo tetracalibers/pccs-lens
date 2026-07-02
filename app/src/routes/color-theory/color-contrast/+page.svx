@@ -13,6 +13,7 @@ draft: true
   import HueContrast from "$lib/demo/visual-effect-contrast/HueContrastDiagram.svelte"
   import ContrastPreview from "$lib/demo/visual-effect-contrast/ContrastColorPreview.svelte"
   import TextBrightnessContrast from "$lib/demo/visual-effect-contrast/LightnessContrastTextBrightness.svelte"
+  import EqualBrightnessContrast from "$lib/demo/visual-effect-contrast/LightnessContrastEqualBrightness.svelte"
 </script>
 
 ## :WithGradeTag[色の対比とは]{grades="3"}
@@ -130,7 +131,11 @@ graph LR
   <TextBrightnessContrast />
 </SVGWrapper>
 
-TODO: 明度対比を活用して、明度の異なる色を同じ明るさに見せることもできる
+明度対比を活用すれば、明度の異なる色を同じ明るさに見せることもできます。
+
+<SVGWrapper maxW={480}>
+  <EqualBrightnessContrast />
+</SVGWrapper>
 
 ## :WithGradeTag[彩度対比]{grades="3"}
 
