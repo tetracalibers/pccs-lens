@@ -173,7 +173,7 @@ TODO: 彩度差が大きいほど彩度対比は強くなる
 
 ## :WithGradeTag[補色対比]{grades="3"}
 
-<ComplementaryContrast leftColor="v2" rightColor="d14" referenceColor="d2" />
+<ComplementaryContrast leftColor="v2" rightColor="d14" referenceColor="d14" />
 
 TODO: ハレーションの図
 
