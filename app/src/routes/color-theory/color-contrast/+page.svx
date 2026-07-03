@@ -16,6 +16,7 @@ draft: true
   import EqualBrightnessContrast from "$lib/demo/visual-effect-contrast/LightnessContrastEqualBrightness.svelte"
   import ComplementaryContrast from "$lib/demo/visual-effect-contrast/ComplementaryContrastDiagram.svelte"
   import Halation from "$lib/demo/visual-effect-contrast/HalationDiagram.svelte"
+  import SaturationContrastDifference from "$lib/demo/visual-effect-contrast/SaturationContrastDifferenceDiagram.svelte"
 </script>
 
 ## :WithGradeTag[色の対比とは]{grades="3"}
@@ -174,7 +175,9 @@ graph LR
 :::
 ::::
 
-TODO: 彩度差が大きいほど彩度対比は強くなる
+<SVGWrapper>
+  <SaturationContrastDifference />
+</SVGWrapper>
 
 ## :WithGradeTag[補色対比]{grades="3"}
 
