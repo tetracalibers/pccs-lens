@@ -3,7 +3,8 @@
   import chroma from "chroma-js"
 
   // ===== レイアウト定数 =====
-  const N_PANELS = 4
+  const N_PANELS = 4 // 彩度が変化する地のパネル数（中央）
+  const N_COLS = N_PANELS + 2 // 両端の白背景（参照）を含めた列数
   const GROUND_SIZE = 120 // 地（外側の正方形）の一辺
   const ICON_ID = "mynaui:flower-solid" // 図（花アイコン）
   const ICON_SIZE = 84 // 図アイコンの一辺
@@ -29,25 +30,34 @@
   const GROUND_CHROMAS = [38, 54, 70, 88]
 
   const COL_ARROW = "var(--color-body)"
+  // 両端の参照パネル（図の実際の色を白背景で示す）
+  const COL_REF_BG = "#ffffff"
+  const COL_REF_OUTLINE = "var(--color-body)"
+  const REF_OUTLINE_WIDTH = 1
 
   const FIGURE_HEX = chroma.lch(LCH_L, FIGURE_CHROMA, LCH_H).hex()
   const GROUND_HEXES = GROUND_CHROMAS.map((c) => chroma.lch(LCH_L, c, LCH_H).hex())
 
   // ===== 座標計算 =====
   const STEP = GROUND_SIZE + GAP_X
-  const CONTENT_W = N_PANELS * GROUND_SIZE + (N_PANELS - 1) * GAP_X
+  const CONTENT_W = N_COLS * GROUND_SIZE + (N_COLS - 1) * GAP_X
   const ICON_OFFSET = (GROUND_SIZE - ICON_SIZE) / 2
 
+  // 白背景の参照パネルは両端、彩度が変化する地は中央（列 1..N_PANELS）
+  const LEFT_REF_X = 0
+  const RIGHT_REF_X = (N_PANELS + 1) * STEP
+
+  // 矢印は彩度が変化する中央パネル群の範囲にだけ引く
   const ARROW_Y = GROUND_SIZE + ARROW_GAP
-  const ARROW_X1 = 0
-  const ARROW_X2 = CONTENT_W
+  const ARROW_X1 = STEP
+  const ARROW_X2 = N_PANELS * STEP + GROUND_SIZE
 
   // ===== viewBox（内容にフィット） =====
   const VB_PAD = 6
   const HEAD_HALF = ARROW_HEAD_SIZE / 2
   const VB_X = -VB_PAD
   const VB_Y = -VB_PAD
-  const VB_W = CONTENT_W + HEAD_HALF + 2 * VB_PAD
+  const VB_W = CONTENT_W + 2 * VB_PAD
   const VB_H = ARROW_Y + HEAD_HALF + 2 * VB_PAD
 </script>
 
@@ -75,10 +85,8 @@
     </marker>
   </defs>
 
-  <!-- 図（花アイコン）は全パネル共通の色。地（外側）の彩度だけを右へ向かって上げる -->
-  {#each GROUND_HEXES as groundHex, i (i)}
-    <rect x={i * STEP} y="0" width={GROUND_SIZE} height={GROUND_SIZE} fill={groundHex} />
-    <foreignObject x={i * STEP + ICON_OFFSET} y={ICON_OFFSET} width={ICON_SIZE} height={ICON_SIZE}>
+  {#snippet figureIcon(colX: number)}
+    <foreignObject x={colX + ICON_OFFSET} y={ICON_OFFSET} width={ICON_SIZE} height={ICON_SIZE}>
       <div
         xmlns="http://www.w3.org/1999/xhtml"
         style="width: 100%; height: 100%; color: {FIGURE_HEX}; display: grid; place-items: center;"
@@ -86,7 +94,38 @@
         <Icon icon={ICON_ID} width={ICON_SIZE} height={ICON_SIZE} />
       </div>
     </foreignObject>
+  {/snippet}
+
+  <!-- 左端：白背景に図（実際の色の参照） -->
+  <rect
+    x={LEFT_REF_X}
+    y="0"
+    width={GROUND_SIZE}
+    height={GROUND_SIZE}
+    fill={COL_REF_BG}
+    stroke={COL_REF_OUTLINE}
+    stroke-width={REF_OUTLINE_WIDTH}
+  />
+  {@render figureIcon(LEFT_REF_X)}
+
+  <!-- 中央：地（外側）の彩度だけを右へ向かって上げる。図の色は全パネル共通 -->
+  {#each GROUND_HEXES as groundHex, i (i)}
+    {@const colX = (i + 1) * STEP}
+    <rect x={colX} y="0" width={GROUND_SIZE} height={GROUND_SIZE} fill={groundHex} />
+    {@render figureIcon(colX)}
   {/each}
+
+  <!-- 右端：白背景に図（実際の色の参照） -->
+  <rect
+    x={RIGHT_REF_X}
+    y="0"
+    width={GROUND_SIZE}
+    height={GROUND_SIZE}
+    fill={COL_REF_BG}
+    stroke={COL_REF_OUTLINE}
+    stroke-width={REF_OUTLINE_WIDTH}
+  />
+  {@render figureIcon(RIGHT_REF_X)}
 
   <!-- 彩度差が大きくなる方向＝彩度対比が強まる方向 -->
   <line
