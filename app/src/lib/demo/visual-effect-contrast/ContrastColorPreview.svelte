@@ -74,7 +74,7 @@
       x={SVG_W / 2}
       y={SVG_H / 2}
       text-anchor="middle"
-      dominant-baseline="hanging"
+      dominant-baseline="central"
       font-size={FIGURE_LABEL_FONT_SIZE}
       font-weight="bold"
       fill={figureLabelColor}
