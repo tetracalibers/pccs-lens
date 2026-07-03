@@ -1,10 +1,12 @@
 <script lang="ts">
+  import Icon from "@iconify/svelte"
   import chroma from "chroma-js"
 
   // ===== レイアウト定数 =====
   const N_PANELS = 4
   const GROUND_SIZE = 120 // 地（外側の正方形）の一辺
-  const FIGURE_SIZE = 62 // 図（内側の正方形）の一辺
+  const ICON_ID = "mynaui:flower-solid" // 図（花アイコン）
+  const ICON_SIZE = 84 // 図アイコンの一辺
   const GAP_X = 24 // パネル同士の隙間
 
   // ===== 矢印（彩度差＝彩度対比が増す方向を示す） =====
@@ -21,10 +23,10 @@
   // 明度・色相を固定し彩度（chroma）だけを変化させることで、
   // 明度対比・色相対比が混ざらない純粋な「彩度差」を作る
   const LCH_L = 58 // 明度（全色で共通）
-  const LCH_H = 38 // 色相（赤系・全色で共通）
-  const FIGURE_CHROMA = 12 // 図の彩度（全パネルで一定）
+  const LCH_H = 340 // 色相（赤紫系・全色で共通）
+  const FIGURE_CHROMA = 14 // 図の彩度（全パネルで一定）
   // 左→右で地の彩度が上がる＝図との彩度差が段階的に大きくなる
-  const GROUND_CHROMAS = [25, 45, 65, 85]
+  const GROUND_CHROMAS = [24, 44, 64, 84]
 
   const COL_ARROW = "var(--color-body)"
 
@@ -34,7 +36,7 @@
   // ===== 座標計算 =====
   const STEP = GROUND_SIZE + GAP_X
   const CONTENT_W = N_PANELS * GROUND_SIZE + (N_PANELS - 1) * GAP_X
-  const FIGURE_OFFSET = (GROUND_SIZE - FIGURE_SIZE) / 2
+  const ICON_OFFSET = (GROUND_SIZE - ICON_SIZE) / 2
 
   const ARROW_Y = GROUND_SIZE + ARROW_GAP
   const ARROW_X1 = 0
@@ -73,16 +75,17 @@
     </marker>
   </defs>
 
-  <!-- 図（内側）は全パネル共通の色。地（外側）の彩度だけを右へ向かって上げる -->
+  <!-- 図（花アイコン）は全パネル共通の色。地（外側）の彩度だけを右へ向かって上げる -->
   {#each GROUND_HEXES as groundHex, i (i)}
     <rect x={i * STEP} y="0" width={GROUND_SIZE} height={GROUND_SIZE} fill={groundHex} />
-    <rect
-      x={i * STEP + FIGURE_OFFSET}
-      y={FIGURE_OFFSET}
-      width={FIGURE_SIZE}
-      height={FIGURE_SIZE}
-      fill={FIGURE_HEX}
-    />
+    <foreignObject x={i * STEP + ICON_OFFSET} y={ICON_OFFSET} width={ICON_SIZE} height={ICON_SIZE}>
+      <div
+        xmlns="http://www.w3.org/1999/xhtml"
+        style="width: 100%; height: 100%; color: {FIGURE_HEX}; display: grid; place-items: center;"
+      >
+        <Icon icon={ICON_ID} width={ICON_SIZE} height={ICON_SIZE} />
+      </div>
+    </foreignObject>
   {/each}
 
   <!-- 彩度差が大きくなる方向＝彩度対比が強まる方向 -->
