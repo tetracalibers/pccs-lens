@@ -22,11 +22,11 @@
   // ===== 色 =====
   // 明度・色相を固定し彩度（chroma）だけを変化させることで、
   // 明度対比・色相対比が混ざらない純粋な「彩度差」を作る
-  const LCH_L = 58 // 明度（全色で共通）
-  const LCH_H = 340 // 色相（赤紫系・全色で共通）
-  const FIGURE_CHROMA = 14 // 図の彩度（全パネルで一定）
+  const LCH_L = 62 // 明度（全色で共通）
+  const LCH_H = 355 // 色相（ピンク系・全色で共通）
+  const FIGURE_CHROMA = 28 // 図の彩度（全パネルで一定）
   // 左→右で地の彩度が上がる＝図との彩度差が段階的に大きくなる
-  const GROUND_CHROMAS = [24, 44, 64, 84]
+  const GROUND_CHROMAS = [38, 54, 70, 88]
 
   const COL_ARROW = "var(--color-body)"
 
