@@ -10,7 +10,7 @@
   const GAP_Y = 28 // 行同士の縦の隙間
 
   // ===== 図 =====
-  const ICON_ID = "bi:star-fill"
+  const ICON_ID = "mynaui:flower-solid"
 
   // ===== レイアウト計算 =====
   const WIDTH = 2 * PANEL_SIZE + GAP_X

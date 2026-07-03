@@ -66,7 +66,7 @@ graph LR
 デザインなどで用いられる視覚的な表現では、主体となるものを:Mark[図]、背景となるものを:Mark[地]と呼びます。
 
 <SVGWrapper maxW={250}>
-  <ContrastPreview figure="sf24" ground="dk24" figureLabel="図" groundLabel="地" iconId="bi:star-fill" />
+  <ContrastPreview figure="sf24" ground="dk24" figureLabel="図" groundLabel="地" />
 </SVGWrapper>
 
 例えば、背景色の上に文字が書かれている場合は、文字が:Mark[図]で背景色が:Mark[地]になります。

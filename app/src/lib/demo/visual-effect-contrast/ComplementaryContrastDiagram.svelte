@@ -7,7 +7,7 @@
     leftColor = "v2",
     rightColor = "d14",
     referenceColor = "d14",
-    iconId = "bi:star-fill"
+    iconId = "mynaui:flower-solid"
   }: {
     /** 左ウイングの v セル塗り色・右プレビューの背景（PCCS表記） */
     leftColor?: string

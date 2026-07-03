@@ -7,12 +7,18 @@
   interface Props {
     figure: string
     ground: string
-    iconId: string
+    iconId?: string
     figureLabel?: string
     groundLabel?: string
   }
 
-  let { figure, ground, iconId, figureLabel, groundLabel }: Props = $props()
+  let {
+    figure,
+    ground,
+    iconId = "mynaui:flower-solid",
+    figureLabel,
+    groundLabel,
+  }: Props = $props()
 
   // ===== SVG dimensions =====
   const SQ_SIZE = 200

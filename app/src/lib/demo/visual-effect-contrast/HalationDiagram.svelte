@@ -7,7 +7,7 @@
     leftGround = "W",
     rightFigure = "v14",
     rightGround = "v2",
-    iconId = "bi:star-fill"
+    iconId = "mynaui:flower-solid"
   }: {
     /** 左プレビューの図の色（PCCS表記） */
     leftFigure?: string
