@@ -29,7 +29,6 @@
   // 左→右で地の彩度が上がる＝図との彩度差が段階的に大きくなる
   const GROUND_CHROMAS = [38, 54, 70, 88]
 
-  const COL_ARROW = "var(--color-body)"
   // 両端の参照パネル（図の実際の色を白背景で示す）
   const COL_REF_BG = "#ffffff"
   const COL_REF_OUTLINE = "var(--color-body)"
@@ -37,6 +36,8 @@
 
   const FIGURE_HEX = chroma.lch(LCH_L, FIGURE_CHROMA, LCH_H).hex()
   const GROUND_HEXES = GROUND_CHROMAS.map((c) => chroma.lch(LCH_L, c, LCH_H).hex())
+  // 矢印は地の彩度グラデーション。矢先は最も鮮やかな右端の地の色に合わせる
+  const COL_ARROW_HEAD = GROUND_HEXES[GROUND_HEXES.length - 1]
 
   // ===== 座標計算 =====
   const STEP = GROUND_SIZE + GAP_X
@@ -47,10 +48,29 @@
   const LEFT_REF_X = 0
   const RIGHT_REF_X = (N_PANELS + 1) * STEP
 
-  // 矢印は彩度が変化する中央パネル群の範囲にだけ引く
+  // 軸（矢印＋左右ラベル）は彩度が変化する中央パネル群の範囲に配置する
   const ARROW_Y = GROUND_SIZE + ARROW_GAP
-  const ARROW_X1 = STEP
-  const ARROW_X2 = N_PANELS * STEP + GROUND_SIZE
+  const AXIS_X1 = STEP // 軸の左端（「低」の位置）
+  const AXIS_X2 = N_PANELS * STEP + GROUND_SIZE // 軸の右端（「高」の位置）
+
+  // グラデーションの端点は各色パネルの中心に合わせ、地の色がその位置に並ぶようにする
+  const GRAD_X1 = STEP + GROUND_SIZE / 2
+  const GRAD_X2 = N_PANELS * STEP + GROUND_SIZE / 2
+
+  // ===== ラベル =====
+  const FONT_SIZE_AXIS_TITLE = 18 // 「地の彩度」
+  const FONT_SIZE_SIDE_LABEL = 18 // 「低」「高」
+  const SIDE_LABEL_W = FONT_SIZE_SIDE_LABEL // 「低」「高」1文字分の目安の幅
+  const SIDE_LABEL_GAP = 12 // 「低」「高」と矢印の間隔
+  // 「低」「高」を左右に置く分、矢印を内側へ短くする（右端は矢先の張り出しも考慮）
+  const ARROW_X1 = AXIS_X1 + SIDE_LABEL_W + SIDE_LABEL_GAP
+  const ARROW_X2 = AXIS_X2 - SIDE_LABEL_W - SIDE_LABEL_GAP - ARROW_HEAD_SIZE / 2
+  const BOTTOM_LABEL_GAP = 14 // 矢印から「地の彩度」上端までの距離
+  const BOTTOM_LABEL_Y = ARROW_Y + BOTTOM_LABEL_GAP
+  const LABEL_CENTER_X = (AXIS_X1 + AXIS_X2) / 2 // 「地の彩度」を中央に
+  const COL_LABEL = "var(--color-body)" // 「地の彩度」
+  const COL_LABEL_LOW = GROUND_HEXES[0] // 「低」＝最左の地の色
+  const COL_LABEL_HIGH = GROUND_HEXES[GROUND_HEXES.length - 1] // 「高」＝最右の地の色
 
   // ===== viewBox（内容にフィット） =====
   const VB_PAD = 6
@@ -58,7 +78,7 @@
   const VB_X = -VB_PAD
   const VB_Y = -VB_PAD
   const VB_W = CONTENT_W + 2 * VB_PAD
-  const VB_H = ARROW_Y + HEAD_HALF + 2 * VB_PAD
+  const VB_H = Math.max(ARROW_Y + HEAD_HALF, BOTTOM_LABEL_Y + FONT_SIZE_AXIS_TITLE) + 2 * VB_PAD
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="{VB_X} {VB_Y} {VB_W} {VB_H}">
@@ -76,13 +96,26 @@
       <polyline
         points="0,3.5 3.5,1.75 0,0"
         fill="none"
-        stroke={COL_ARROW}
+        stroke={COL_ARROW_HEAD}
         stroke-width={ARROW_HEAD_STROKE}
         stroke-linecap="round"
         stroke-linejoin="round"
         transform="translate(1.1667 1.75)"
       />
     </marker>
+
+    <linearGradient
+      id="saturation-contrast-gradient"
+      gradientUnits="userSpaceOnUse"
+      x1={GRAD_X1}
+      y1={ARROW_Y}
+      x2={GRAD_X2}
+      y2={ARROW_Y}
+    >
+      {#each GROUND_HEXES as hex, i (i)}
+        <stop offset="{(i / (GROUND_HEXES.length - 1)) * 100}%" stop-color={hex} />
+      {/each}
+    </linearGradient>
   </defs>
 
   {#snippet figureIcon(colX: number)}
@@ -133,9 +166,45 @@
     y1={ARROW_Y}
     x2={ARROW_X2}
     y2={ARROW_Y}
-    stroke={COL_ARROW}
+    stroke="url(#saturation-contrast-gradient)"
     stroke-width={ARROW_STROKE_WIDTH}
     stroke-linecap="round"
     marker-end="url(#saturation-contrast-arrow)"
   />
+
+  <!-- 矢印中央下に「地の彩度」 -->
+  <text
+    x={LABEL_CENTER_X}
+    y={BOTTOM_LABEL_Y}
+    text-anchor="middle"
+    dominant-baseline="hanging"
+    font-size={FONT_SIZE_AXIS_TITLE}
+    fill={COL_LABEL}
+  >
+    地の彩度
+  </text>
+
+  <!-- 矢印の左右に「低」「高」（それぞれ最左・最右の地の色） -->
+  <text
+    x={AXIS_X1}
+    y={ARROW_Y}
+    text-anchor="start"
+    dominant-baseline="central"
+    font-size={FONT_SIZE_SIDE_LABEL}
+    font-weight="bold"
+    fill={COL_LABEL_LOW}
+  >
+    低
+  </text>
+  <text
+    x={AXIS_X2}
+    y={ARROW_Y}
+    text-anchor="end"
+    dominant-baseline="central"
+    font-size={FONT_SIZE_SIDE_LABEL}
+    font-weight="bold"
+    fill={COL_LABEL_HIGH}
+  >
+    高
+  </text>
 </svg>
