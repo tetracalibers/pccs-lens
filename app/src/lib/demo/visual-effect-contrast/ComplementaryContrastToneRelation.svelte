@@ -152,8 +152,10 @@
   const rightHex = $derived(PCCS_HEX_MAP.get(rightColor) ?? "#000000")
 
   // ===== 矢印（右の塗りつぶしセル → v14 方向に右へ） =====
+  // rightColor が v トーン（最も鮮やか）のときは向かう先がないので矢印を出さない
   const arrow = $derived.by(() => {
     if (!rightCell) return null
+    if (PCCS_ALL_MAP.get(rightColor)?.toneSymbol === "v") return null
     const startX = rightCell.cx + SQ / 2 + ARROW_OFFSET
     return { startX, endX: startX + ARROW_LENGTH, y: rightCell.cy }
   })
