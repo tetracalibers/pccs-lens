@@ -3,8 +3,6 @@
   import chroma from "chroma-js"
 
   // ===== レイアウト定数 =====
-  const N_PANELS = 4 // 彩度が変化する地のパネル数（中央）
-  const N_COLS = N_PANELS + 2 // 両端の白背景（参照）を含めた列数
   const GROUND_SIZE = 120 // 地（外側の正方形）の一辺
   const ICON_ID = "mynaui:flower-solid" // 図（花アイコン）
   const ICON_SIZE = 84 // 図アイコンの一辺
@@ -27,12 +25,9 @@
   const LCH_H = 355 // 色相（ピンク系・全色で共通）
   const FIGURE_CHROMA = 28 // 図の彩度（全パネルで一定）
   // 左→右で地の彩度が上がる＝図との彩度差が段階的に大きくなる
-  const GROUND_CHROMAS = [38, 54, 70, 88]
-
-  // 両端の参照パネル（図の実際の色を白背景で示す）
-  const COL_REF_BG = "#ffffff"
-  const COL_REF_OUTLINE = "var(--color-body)"
-  const REF_OUTLINE_WIDTH = 1
+  // 先頭は彩度0＝無彩色（グレイ）の地
+  const GROUND_CHROMAS = [0, 38, 54, 70, 88]
+  const N_PANELS = GROUND_CHROMAS.length
 
   const FIGURE_HEX = chroma.lch(LCH_L, FIGURE_CHROMA, LCH_H).hex()
   const GROUND_HEXES = GROUND_CHROMAS.map((c) => chroma.lch(LCH_L, c, LCH_H).hex())
@@ -41,21 +36,17 @@
 
   // ===== 座標計算 =====
   const STEP = GROUND_SIZE + GAP_X
-  const CONTENT_W = N_COLS * GROUND_SIZE + (N_COLS - 1) * GAP_X
+  const CONTENT_W = N_PANELS * GROUND_SIZE + (N_PANELS - 1) * GAP_X
   const ICON_OFFSET = (GROUND_SIZE - ICON_SIZE) / 2
 
-  // 白背景の参照パネルは両端、彩度が変化する地は中央（列 1..N_PANELS）
-  const LEFT_REF_X = 0
-  const RIGHT_REF_X = (N_PANELS + 1) * STEP
-
-  // 軸（矢印＋左右ラベル）は彩度が変化する中央パネル群の範囲に配置する
+  // 軸（矢印＋左右ラベル）は全パネルにわたって配置する
   const ARROW_Y = GROUND_SIZE + ARROW_GAP
-  const AXIS_X1 = STEP // 軸の左端（「低」の位置）
-  const AXIS_X2 = N_PANELS * STEP + GROUND_SIZE // 軸の右端（「高」の位置）
+  const AXIS_X1 = 0 // 軸の左端（「低」の位置）
+  const AXIS_X2 = (N_PANELS - 1) * STEP + GROUND_SIZE // 軸の右端（「高」の位置）
 
-  // グラデーションの端点は各色パネルの中心に合わせ、地の色がその位置に並ぶようにする
-  const GRAD_X1 = STEP + GROUND_SIZE / 2
-  const GRAD_X2 = N_PANELS * STEP + GROUND_SIZE / 2
+  // グラデーションの端点は各パネルの中心に合わせ、地の色がその位置に並ぶようにする
+  const GRAD_X1 = GROUND_SIZE / 2
+  const GRAD_X2 = (N_PANELS - 1) * STEP + GROUND_SIZE / 2
 
   // ===== ラベル =====
   const FONT_SIZE_AXIS_TITLE = 18 // 「地の彩度」
@@ -69,7 +60,7 @@
   const BOTTOM_LABEL_Y = ARROW_Y + BOTTOM_LABEL_GAP
   const LABEL_CENTER_X = (AXIS_X1 + AXIS_X2) / 2 // 「地の彩度」を中央に
   const COL_LABEL = "var(--color-body)" // 「地の彩度」
-  const COL_LABEL_LOW = GROUND_HEXES[0] // 「低」＝最左の地の色
+  const COL_LABEL_LOW = GROUND_HEXES[0] // 「低」＝最左（無彩色グレイ）の地の色
   const COL_LABEL_HIGH = GROUND_HEXES[GROUND_HEXES.length - 1] // 「高」＝最右の地の色
 
   // ===== viewBox（内容にフィット） =====
@@ -78,7 +69,8 @@
   const VB_X = -VB_PAD
   const VB_Y = -VB_PAD
   const VB_W = CONTENT_W + 2 * VB_PAD
-  const VB_H = Math.max(ARROW_Y + HEAD_HALF, BOTTOM_LABEL_Y + FONT_SIZE_AXIS_TITLE) + 2 * VB_PAD
+  const VB_BOTTOM = Math.max(ARROW_Y + HEAD_HALF, BOTTOM_LABEL_Y + FONT_SIZE_AXIS_TITLE)
+  const VB_H = VB_BOTTOM - VB_Y + VB_PAD
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="{VB_X} {VB_Y} {VB_W} {VB_H}">
@@ -129,36 +121,12 @@
     </foreignObject>
   {/snippet}
 
-  <!-- 左端：白背景に図（実際の色の参照） -->
-  <rect
-    x={LEFT_REF_X}
-    y="0"
-    width={GROUND_SIZE}
-    height={GROUND_SIZE}
-    fill={COL_REF_BG}
-    stroke={COL_REF_OUTLINE}
-    stroke-width={REF_OUTLINE_WIDTH}
-  />
-  {@render figureIcon(LEFT_REF_X)}
-
-  <!-- 中央：地（外側）の彩度だけを右へ向かって上げる。図の色は全パネル共通 -->
+  <!-- 地（外側）の彩度を左（無彩色）→右へ上げる。図の色は全パネル共通 -->
   {#each GROUND_HEXES as groundHex, i (i)}
-    {@const colX = (i + 1) * STEP}
+    {@const colX = i * STEP}
     <rect x={colX} y="0" width={GROUND_SIZE} height={GROUND_SIZE} fill={groundHex} />
     {@render figureIcon(colX)}
   {/each}
-
-  <!-- 右端：白背景に図（実際の色の参照） -->
-  <rect
-    x={RIGHT_REF_X}
-    y="0"
-    width={GROUND_SIZE}
-    height={GROUND_SIZE}
-    fill={COL_REF_BG}
-    stroke={COL_REF_OUTLINE}
-    stroke-width={REF_OUTLINE_WIDTH}
-  />
-  {@render figureIcon(RIGHT_REF_X)}
 
   <!-- 彩度差が大きくなる方向＝彩度対比が強まる方向 -->
   <line
