@@ -182,7 +182,11 @@ TODO: 彩度差が大きいほど彩度対比は強くなる
 
 ### 鮮やかな配色の注意点
 
-<Halation leftFigure="v14" leftGround="W" rightFigure="v14" rightGround="v2" />
+<ComplementaryContrast leftColor="v2" rightColor="v14" referenceColor="v14" />
+
+- ハレーションを和らげるには、セパレーションが効果的
+
+<Halation leftFigure="v14" leftGround="W" rightFigure="v14" rightGround="v2" separationPCCS="W" />
 
 ## :WithGradeTag[色相対比]{grades="3"}
 

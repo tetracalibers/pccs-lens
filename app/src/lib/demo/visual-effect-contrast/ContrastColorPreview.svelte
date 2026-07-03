@@ -28,7 +28,7 @@
   const ICON_SIZE = 110
 
   // ===== セパレーション（図と地の境界線）=====
-  const SEPARATION_STROKE_WIDTH = 0.6 // アイコン座標系での線幅
+  const SEPARATION_STROKE_WIDTH = 0.5 // アイコン座標系での線幅
 
   const SVG_W = SQ_SIZE
   const SVG_H = SQ_SIZE
