@@ -1,5 +1,6 @@
 <script lang="ts">
   import { PCCS_HEX_MAP, PCCS_ALL_MAP } from "$lib/data/pccs"
+  import { isLightColor } from "$lib/color/utils"
 
   let {
     leftColor = "v2",
@@ -47,6 +48,9 @@
   const COL_OUTLINE = "var(--color-body)"
   const COL_DIVIDER = "var(--color-body)"
   const COL_ARROW = "var(--canvas-pen-pink)"
+
+  // ===== フォント =====
+  const FONT_SIZE_NOTATION = 12 // 塗りつぶしセルに表示するPCCS記号
 
   // ===== 列間距離 =====
   const D_ACH = SQ + COL_GAP_ACH // 無彩色列中心 → 有彩色1列目中心
@@ -150,6 +154,10 @@
 
   const leftHex = $derived(PCCS_HEX_MAP.get(leftColor) ?? "#000000")
   const rightHex = $derived(PCCS_HEX_MAP.get(rightColor) ?? "#000000")
+
+  // 塗りつぶし色の明暗で記号の文字色を出し分ける（規約: isLightColor）
+  const leftTextColor = $derived(isLightColor(leftHex) ? "#000" : "#fff")
+  const rightTextColor = $derived(isLightColor(rightHex) ? "#000" : "#fff")
 
   // ===== 矢印（右の塗りつぶしセル → v14 方向に右へ） =====
   // rightColor が v トーン（最も鮮やか）のときは向かう先がないので矢印を出さない
@@ -256,6 +264,17 @@
   <!-- 左ウイングの塗りつぶしセル（leftColor のトーン位置） -->
   {#if leftCell}
     <rect x={leftCell.cx - SQ / 2} y={leftCell.cy - SQ / 2} width={SQ} height={SQ} fill={leftHex} />
+    <text
+      x={leftCell.cx}
+      y={leftCell.cy}
+      text-anchor="middle"
+      dominant-baseline="central"
+      font-size={FONT_SIZE_NOTATION}
+      font-weight="bold"
+      fill={leftTextColor}
+    >
+      {leftColor}
+    </text>
   {/if}
 
   <!-- 右ウイングの塗りつぶしセル（rightColor のトーン位置） -->
@@ -267,6 +286,17 @@
       height={SQ}
       fill={rightHex}
     />
+    <text
+      x={rightCell.cx}
+      y={rightCell.cy}
+      text-anchor="middle"
+      dominant-baseline="central"
+      font-size={FONT_SIZE_NOTATION}
+      font-weight="bold"
+      fill={rightTextColor}
+    >
+      {rightColor}
+    </text>
   {/if}
 
   <!-- 右の塗りつぶしセルから v14 方向（右）へ向かう矢印 -->
