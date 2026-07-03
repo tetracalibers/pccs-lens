@@ -1,6 +1,7 @@
 <script lang="ts">
   import Icon from "@iconify/svelte"
   import chroma from "chroma-js"
+  import { PCCS_HEX_MAP } from "$lib/data/pccs"
 
   // ===== レイアウト定数 =====
   const GROUND_SIZE = 120 // 地（外側の正方形）の一辺
@@ -19,15 +20,28 @@
   const ARROW_HEAD_STROKE = (ARROW_STROKE_WIDTH * ARROW_HEAD_VIEWBOX) / ARROW_HEAD_SIZE
 
   // ===== 色 =====
-  // 明度・色相を固定し彩度（chroma）だけを変化させることで、
-  // 明度対比・色相対比が混ざらない純粋な「彩度差」を作る
-  const LCH_L = 62 // 明度（全色で共通）
-  const LCH_H = 355 // 色相（ピンク系・全色で共通）
-  const FIGURE_CHROMA = 28 // 図の彩度（全パネルで一定）
-  // 左→右で地の彩度が上がる＝図との彩度差が段階的に大きくなる
-  // 先頭は彩度0＝無彩色（グレイ）の地
-  const GROUND_CHROMAS = [0, 38, 54, 70, 88]
-  const N_PANELS = GROUND_CHROMAS.length
+  // 図と最高彩度の地を PCCS 記号で指定し、他の地の色・図の彩度はここから算出する。
+  // 純度優先：全体を最高彩度地の明度・色相 (L,H) に固定し、彩度だけを変化させることで
+  // 明度対比・色相対比が混ざらない純粋な「彩度差」を作る。
+  // 色選びの制約：
+  // - 図と最高彩度地は同系色相・明度が近いものを選ぶ（L・H は地に合わせるため、
+  //   図はその L・H 上に「図PCCSの彩度」だけを反映＝厳密な PCCS 色にはならない）
+  // - 最高彩度地の彩度 ＞ 図の彩度（図がランプの内側に入り「地が鮮やか→図がくすむ」を示す）
+  const FIGURE_PCCS = "d2" // 図（この色の彩度だけを使う）
+  const GROUND_MAX_PCCS = "v2" // 最も彩度の高い地（図の L・H・彩度上限の基準）
+  const N_PANELS = 5 // 地のパネル数（先頭は彩度0＝無彩色グレイ）
+
+  // 最高彩度地から明度 L・色相 H・彩度上限 C を取得
+  const [LCH_L, GROUND_MAX_CHROMA, LCH_H] = chroma(
+    PCCS_HEX_MAP.get(GROUND_MAX_PCCS) ?? "#000000"
+  ).lch()
+  // 図は L・H を地に合わせ、図PCCSの彩度だけを採用
+  const FIGURE_CHROMA = chroma(PCCS_HEX_MAP.get(FIGURE_PCCS) ?? "#000000").lch()[1]
+  // 彩度0（無彩色グレイ）→ 最高彩度まで等間隔
+  const GROUND_CHROMAS = Array.from(
+    { length: N_PANELS },
+    (_, i) => (GROUND_MAX_CHROMA * i) / (N_PANELS - 1)
+  )
 
   const FIGURE_HEX = chroma.lch(LCH_L, FIGURE_CHROMA, LCH_H).hex()
   const GROUND_HEXES = GROUND_CHROMAS.map((c) => chroma.lch(LCH_L, c, LCH_H).hex())
