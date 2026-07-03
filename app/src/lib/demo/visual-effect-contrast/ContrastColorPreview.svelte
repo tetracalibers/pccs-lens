@@ -11,7 +11,7 @@
     figureLabel?: string
     groundLabel?: string
     /** 指定された場合、図と地の境界線（図の輪郭）をこの色で描く（PCCS表記） */
-    separationColor?: string
+    separationPCCS?: string
   }
 
   let {
@@ -20,7 +20,7 @@
     iconId = "mynaui:flower-solid",
     figureLabel,
     groundLabel,
-    separationColor
+    separationPCCS
   }: Props = $props()
 
   // ===== SVG dimensions =====
@@ -46,10 +46,10 @@
   const figureLabelColor = $derived(isLightColor(figureHex) ? "#000" : "#fff")
   const groundLabelColor = $derived(isLightColor(groundHex) ? "#000" : "#fff")
 
-  // separationColor は figure/ground と同じく PCCS 表記で受け取り HEX に解決する
+  // separationPCCS は figure/ground と同じく PCCS 表記で受け取り HEX に解決する
   // （生の CSS カラーが渡された場合はそのまま使う）
   const separationHex = $derived(
-    separationColor ? (PCCS_HEX_MAP.get(separationColor) ?? separationColor) : undefined
+    separationPCCS ? (PCCS_HEX_MAP.get(separationPCCS) ?? separationPCCS) : undefined
   )
 
   // stroke はアイコン内の path に継承され、図と地の境界線として描画される
