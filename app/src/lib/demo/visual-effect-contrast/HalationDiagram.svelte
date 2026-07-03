@@ -7,7 +7,8 @@
     leftGround = "W",
     rightFigure = "v14",
     rightGround = "v2",
-    iconId = "mynaui:flower-solid"
+    iconId = "mynaui:flower-solid",
+    separationColor
   }: {
     /** 左プレビューの図の色（PCCS表記） */
     leftFigure?: string
@@ -19,18 +20,20 @@
     rightGround?: string
     /** 図として表示するアイコンID */
     iconId?: string
+    /** 指定された場合、図と地の境界線をこの色で描く（PCCS表記） */
+    separationColor?: string
   } = $props()
 </script>
 
 <div class="previews">
   <div class="preview">
     <SVGWrapper>
-      <ContrastColorPreview figure={leftFigure} ground={leftGround} {iconId} />
+      <ContrastColorPreview figure={leftFigure} ground={leftGround} {iconId} {separationColor} />
     </SVGWrapper>
   </div>
   <div class="preview">
     <SVGWrapper>
-      <ContrastColorPreview figure={rightFigure} ground={rightGround} {iconId} />
+      <ContrastColorPreview figure={rightFigure} ground={rightGround} {iconId} {separationColor} />
     </SVGWrapper>
   </div>
 </div>
