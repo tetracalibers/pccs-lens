@@ -1,6 +1,7 @@
 <script lang="ts">
   import { PCCS_HEX_MAP, PCCS_ALL_MAP } from "$lib/data/pccs"
   import { isLightColor } from "$lib/color/utils"
+  import { ankiMode } from "$lib/state/anki.svelte"
 
   let {
     leftColor = "v2",
@@ -159,6 +160,9 @@
   const leftTextColor = $derived(isLightColor(leftHex) ? "#000" : "#fff")
   const rightTextColor = $derived(isLightColor(rightHex) ? "#000" : "#fff")
 
+  // 暗記モードでは記号を隠す（レイアウトを保つため visibility で制御）
+  const isAnki = $derived(ankiMode.isAnki)
+
   // ===== 矢印（右の塗りつぶしセル → v14 方向に右へ） =====
   // rightColor が v トーン（最も鮮やか）のときは向かう先がないので矢印を出さない
   const arrow = $derived.by(() => {
@@ -272,6 +276,7 @@
       font-size={FONT_SIZE_NOTATION}
       font-weight="bold"
       fill={leftTextColor}
+      visibility={isAnki ? "hidden" : "visible"}
     >
       {leftColor}
     </text>
@@ -294,6 +299,7 @@
       font-size={FONT_SIZE_NOTATION}
       font-weight="bold"
       fill={rightTextColor}
+      visibility={isAnki ? "hidden" : "visible"}
     >
       {rightColor}
     </text>
