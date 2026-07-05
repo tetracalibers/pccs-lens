@@ -5,12 +5,12 @@
 
   // ===== パネル =====
   const PANEL_SIZE = 200 // 地の正方形の一辺
-  const ICON_SIZE = 110 // 図（星アイコン）の一辺
+  const ICON_SIZE = 110 // 図（花アイコン）の一辺
   const GAP_X = 28 // パネル同士の横の隙間
   const GAP_Y = 28 // 行同士の縦の隙間
 
   // ===== 図 =====
-  const ICON_ID = "mynaui:flower-solid"
+  const ICON_ID = "mdi:clover"
 
   // ===== レイアウト計算 =====
   const WIDTH = 2 * PANEL_SIZE + GAP_X

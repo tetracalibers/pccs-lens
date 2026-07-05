@@ -137,7 +137,7 @@ graph LR
 
 明度の異なる色も、明度対比を活用すれば、明度が近い色に見せることもできます。
 
-<SVGWrapper maxW={480}>
+<SVGWrapper maxW={370}>
   <EqualBrightnessContrast />
 </SVGWrapper>
 
