@@ -18,6 +18,14 @@
   // 地→補色を結ぶ直線上での図の位置。7:3（補色寄り）= 地から 0.7。
   const FIGURE_RATIO = 0.7
 
+  // ===== 色相環内の矢印（内側の正方形 → 図アイコン）=====
+  const ARROW_STROKE_WIDTH = 1.5
+  const ARROW_OFFSET = 3 // 正方形・アイコンの端から矢印端までの隙間
+  const ARROW_HEAD_VIEWBOX = 7 // marker viewBox の一辺
+  const ARROW_HEAD_SIZE = 12 // 矢先のレンダリングサイズ（user space）
+  const ARROW_HEAD_STROKE = (ARROW_STROKE_WIDTH * ARROW_HEAD_VIEWBOX) / ARROW_HEAD_SIZE
+  // 矢印の色は図アイコンと同じ（ICON_HEX を使用）
+
   const MARGIN = 10 // viewBox 外周の余白
 
   // ===== アイコン・色 =====
@@ -62,6 +70,10 @@
     compHex: string
     figX: number
     figY: number
+    arrowX1: number
+    arrowY1: number
+    arrowX2: number
+    arrowY2: number
     wheelTransform: string
   }
 
@@ -86,6 +98,14 @@
     // 図：地→補色の直線上 7:3（補色寄り）
     const figX = groundX + FIGURE_RATIO * (compX - groundX)
     const figY = groundY + FIGURE_RATIO * (compY - groundY)
+    // 内側（地）の正方形から図アイコンへ向かう矢印（両端を少し内側に寄せる）
+    const arrowLen = Math.hypot(compX - groundX, compY - groundY) || 1
+    const aux = (compX - groundX) / arrowLen
+    const auy = (compY - groundY) / arrowLen
+    const arrowX1 = groundX + aux * (WHEEL_SQ / 2 + ARROW_OFFSET)
+    const arrowY1 = groundY + auy * (WHEEL_SQ / 2 + ARROW_OFFSET)
+    const arrowX2 = figX - aux * (WHEEL_ICON_SIZE / 2 + ARROW_OFFSET)
+    const arrowY2 = figY - auy * (WHEEL_ICON_SIZE / 2 + ARROW_OFFSET)
     // プレビューの横（左右）にある色相環は左右反転、縦（上下）にある色相環は上下反転（環の中心まわり）
     const wheelTransform =
       Math.abs(dx) > Math.abs(dy)
@@ -105,12 +125,39 @@
       compHex: PCCS_HEX_MAP.get(`v${compH}`) ?? "#000000",
       figX,
       figY,
+      arrowX1,
+      arrowY1,
+      arrowX2,
+      arrowY2,
       wheelTransform
     }
   })
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {VIEW_SIZE} {VIEW_SIZE}">
+  <defs>
+    <marker
+      id="wheel-arrow"
+      viewBox="0 0 {ARROW_HEAD_VIEWBOX} {ARROW_HEAD_VIEWBOX}"
+      refX={ARROW_HEAD_VIEWBOX / 2}
+      refY={ARROW_HEAD_VIEWBOX / 2}
+      markerWidth={ARROW_HEAD_SIZE}
+      markerHeight={ARROW_HEAD_SIZE}
+      markerUnits="userSpaceOnUse"
+      orient="auto"
+    >
+      <polyline
+        points="0,3.5 3.5,1.75 0,0"
+        fill="none"
+        stroke={ICON_HEX}
+        stroke-width={ARROW_HEAD_STROKE}
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        transform="translate(1.1667 1.75)"
+      />
+    </marker>
+  </defs>
+
   {#snippet grayFlower(x: number, y: number, size: number)}
     <foreignObject x={x - size / 2} y={y - size / 2} width={size} height={size}>
       <div
@@ -151,6 +198,18 @@
         width={WHEEL_SQ}
         height={WHEEL_SQ}
         fill={cell.compHex}
+      />
+
+      <!-- 内側（地）の正方形 → 図アイコン の矢印 -->
+      <line
+        x1={cell.arrowX1}
+        y1={cell.arrowY1}
+        x2={cell.arrowX2}
+        y2={cell.arrowY2}
+        stroke={ICON_HEX}
+        stroke-width={ARROW_STROKE_WIDTH}
+        stroke-linecap="round"
+        marker-end="url(#wheel-arrow)"
       />
 
       <!-- 図のアイコン（地→補色の 7:3・補色寄り） -->
