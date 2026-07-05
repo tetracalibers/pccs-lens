@@ -7,6 +7,11 @@ grades: ["2"]
 draft: true
 ---
 
+<script>
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import HermannGrid from "$lib/demo/illusion/HermannGrid.svelte"
+</script>
+
 ## :WithGradeTag[錯視とは]{grades="2"}
 
 - 物差しで測った長さや大きさ、色を測る機器で測った色の数値などを、視対象の:Mark[物理]的性質という
@@ -22,6 +27,10 @@ draft: true
 - ハーマングリッドは、:Mark[縁辺対比]に関連する現象と考えられている
 - 白線に幅があり、白線の黒と接している部分では縁辺対比が起こって、より明るく見える。一方、十字路の中心部分は、黒と接している部分より少し距離があり、縁辺対比が弱くなることから、影が見えると解釈されている
 - ただし、歪んだ線を組み合わせた図形ではこの錯視は生じないことから、他のメカニズムも関与しているのではないかとも考えられている
+
+<SVGWrapper maxW="250">
+  <HermannGrid />
+</SVGWrapper>
 
 ### エーレンシュタイン効果
 
