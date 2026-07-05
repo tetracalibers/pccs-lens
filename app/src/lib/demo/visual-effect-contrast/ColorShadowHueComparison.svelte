@@ -32,8 +32,8 @@
   const MARGIN = 10 // viewBox 外周の余白
 
   // ===== アイコン・色 =====
-  const ICON_ID = "mynaui:flower-solid"
-  const GY_NOTATION = "Gy-8.0" // 図アイコンの色（PCCS 無彩色）
+  const ICON_ID = "material-symbols-light:square"
+  const GY_NOTATION = "Gy-6.0" // 図アイコンの色（PCCS 無彩色）
   const ICON_HEX = PCCS_HEX_MAP.get(GY_NOTATION) ?? "#C8C8C8"
 
   // ===== 放射方向の各要素の半径（合成の中心からの距離）=====
