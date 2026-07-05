@@ -13,6 +13,7 @@ draft: true
   import AchromaticEdgeContrast from "$lib/demo/visual-effect-contrast/AchromaticEdgeContrast.svelte"
   import ChromaticEdgeContrast from "$lib/demo/visual-effect-contrast/ChromaticEdgeContrast.svelte"
   import SaturationEdgeContrast from "$lib/demo/visual-effect-contrast/SaturationEdgeContrast.svelte"
+  import VasarelyIllusion from "$lib/demo/visual-effect-contrast/VasarelyIllusion.svelte"
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
 </script>
 
@@ -66,4 +67,8 @@ draft: true
 
 <SVGWrapper>
   <SaturationEdgeContrast />
+</SVGWrapper>
+
+<SVGWrapper maxW="250">
+  <VasarelyIllusion />
 </SVGWrapper>
