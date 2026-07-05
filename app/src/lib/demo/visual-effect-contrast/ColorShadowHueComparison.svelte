@@ -167,4 +167,7 @@
     <!-- プレビュー中央の Gy-8.0 アイコン -->
     {@render grayFlower(cell.px, cell.py, ICON_SIZE)}
   {/each}
+
+  <!-- 4つのプレビュー中央の基準アイコン（プレビュー内の図と同じサイズ） -->
+  {@render grayFlower(CX, CY, ICON_SIZE)}
 </svg>
