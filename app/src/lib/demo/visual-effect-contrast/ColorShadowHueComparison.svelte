@@ -62,6 +62,7 @@
     compHex: string
     figX: number
     figY: number
+    wheelTransform: string
   }
 
   const CELLS: HueCell[] = HUES.map((hue) => {
@@ -85,6 +86,11 @@
     // 図：地→補色の直線上 7:3（補色寄り）
     const figX = groundX + FIGURE_RATIO * (compX - groundX)
     const figY = groundY + FIGURE_RATIO * (compY - groundY)
+    // プレビューの横（左右）にある色相環は左右反転、縦（上下）にある色相環は上下反転（環の中心まわり）
+    const wheelTransform =
+      Math.abs(dx) > Math.abs(dy)
+        ? `translate(${2 * wx} 0) scale(-1 1)`
+        : `translate(0 ${2 * wy}) scale(1 -1)`
     return {
       hue,
       px,
@@ -98,7 +104,8 @@
       compY,
       compHex: PCCS_HEX_MAP.get(`v${compH}`) ?? "#000000",
       figX,
-      figY
+      figY,
+      wheelTransform
     }
   })
 </script>
@@ -116,36 +123,39 @@
   {/snippet}
 
   {#each CELLS as cell (cell.hue)}
-    <!-- プレビュー外側の色相環（円） -->
-    <circle
-      cx={cell.wx}
-      cy={cell.wy}
-      r={WHEEL_RADIUS}
-      fill="none"
-      stroke={COL_WHEEL}
-      stroke-width={WHEEL_STROKE_WIDTH}
-    />
+    <!-- 色相環（横は左右反転・上は上下反転） -->
+    <g transform={cell.wheelTransform}>
+      <!-- プレビュー外側の色相環（円） -->
+      <circle
+        cx={cell.wx}
+        cy={cell.wy}
+        r={WHEEL_RADIUS}
+        fill="none"
+        stroke={COL_WHEEL}
+        stroke-width={WHEEL_STROKE_WIDTH}
+      />
 
-    <!-- 地の正方形（その色相の色相角） -->
-    <rect
-      x={cell.groundX - WHEEL_SQ / 2}
-      y={cell.groundY - WHEEL_SQ / 2}
-      width={WHEEL_SQ}
-      height={WHEEL_SQ}
-      fill={cell.hex}
-    />
+      <!-- 地の正方形（その色相の色相角） -->
+      <rect
+        x={cell.groundX - WHEEL_SQ / 2}
+        y={cell.groundY - WHEEL_SQ / 2}
+        width={WHEEL_SQ}
+        height={WHEEL_SQ}
+        fill={cell.hex}
+      />
 
-    <!-- 補色の正方形（補色の色相角） -->
-    <rect
-      x={cell.compX - WHEEL_SQ / 2}
-      y={cell.compY - WHEEL_SQ / 2}
-      width={WHEEL_SQ}
-      height={WHEEL_SQ}
-      fill={cell.compHex}
-    />
+      <!-- 補色の正方形（補色の色相角） -->
+      <rect
+        x={cell.compX - WHEEL_SQ / 2}
+        y={cell.compY - WHEEL_SQ / 2}
+        width={WHEEL_SQ}
+        height={WHEEL_SQ}
+        fill={cell.compHex}
+      />
 
-    <!-- 図のアイコン（地→補色の 7:3・補色寄り） -->
-    {@render grayFlower(cell.figX, cell.figY, WHEEL_ICON_SIZE)}
+      <!-- 図のアイコン（地→補色の 7:3・補色寄り） -->
+      {@render grayFlower(cell.figX, cell.figY, WHEEL_ICON_SIZE)}
+    </g>
 
     <!-- プレビュー：その色相の v トーンで塗りつぶした正方形 -->
     <rect x={cell.px - SQ / 2} y={cell.py - SQ / 2} width={SQ} height={SQ} fill={cell.hex} />
