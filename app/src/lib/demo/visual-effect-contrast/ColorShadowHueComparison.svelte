@@ -13,14 +13,17 @@
   const WHEEL_SQ_RADIUS_RATIO = 0.5 // 正方形の一辺を色相環の半径の何倍にするか（初期値 ≒ 0.62）
   const WHEEL_SQ = Math.round(WHEEL_RADIUS * WHEEL_SQ_RADIUS_RATIO) // 地・補色の正方形の一辺
   const WHEEL_ICON_SIZE = WHEEL_SQ // 図アイコンは正方形と同じサイズ
-  const WHEEL_GAP = 18 // プレビュー外縁と色相環の隙間
-  const WHEEL_STROKE_WIDTH = 1.2
-  // 地→補色を結ぶ直線上での図の位置。7:3（補色寄り）= 地から 0.7。
+  const WHEEL_GAP = 9 // プレビュー外縁と色相環（内側の図アイコン）の隙間
+  // 図アイコンと外側（補色）の正方形との間隔。従来 7:3（補色寄り）の位置にあった
+  // 図アイコンと外側正方形との間隔を採用し、図アイコン→矢印→外側正方形 をこの間隔で並べる。
   const FIGURE_RATIO = 0.7
+  const FIG_TO_OUTER_GAP =
+    (1 - FIGURE_RATIO) * 2 * WHEEL_RADIUS - WHEEL_ICON_SIZE / 2 - WHEEL_SQ / 2
 
-  // ===== 色相環内の矢印（内側の正方形 → 図アイコン）=====
+  // ===== 色相環内の矢印（図アイコン → 外側の正方形）=====
+  // 矢（矢じり）と、指し示す外側正方形との間隔。数値に変えて調整できる。
+  const ARROW_HEAD_GAP = 8
   const ARROW_STROKE_WIDTH = 1.5
-  const ARROW_OFFSET = 3 // 正方形・アイコンの端から矢印端までの隙間
   const ARROW_HEAD_VIEWBOX = 7 // marker viewBox の一辺
   const ARROW_HEAD_SIZE = 12 // 矢先のレンダリングサイズ（user space）
   const ARROW_HEAD_STROKE = (ARROW_STROKE_WIDTH * ARROW_HEAD_VIEWBOX) / ARROW_HEAD_SIZE
@@ -32,7 +35,6 @@
   const ICON_ID = "mynaui:flower-solid"
   const GY_NOTATION = "Gy-8.0" // 図アイコンの色（PCCS 無彩色）
   const ICON_HEX = PCCS_HEX_MAP.get(GY_NOTATION) ?? "#C8C8C8"
-  const COL_WHEEL = "var(--color-body)"
 
   // ===== 半径・キャンバスサイズ =====
   const PREVIEW_OUTER = RING_R + SQ / 2
@@ -95,17 +97,17 @@
     const groundY = wy + WHEEL_RADIUS * Math.sin(groundA)
     const compX = wx + WHEEL_RADIUS * Math.cos(compA)
     const compY = wy + WHEEL_RADIUS * Math.sin(compA)
-    // 図：地→補色の直線上 7:3（補色寄り）
-    const figX = groundX + FIGURE_RATIO * (compX - groundX)
-    const figY = groundY + FIGURE_RATIO * (compY - groundY)
-    // 内側（地）の正方形から図アイコンへ向かう矢印（両端を少し内側に寄せる）
+    // 図アイコンは、元は内側にあった正方形の位置（地の色相角）に置く
+    const figX = groundX
+    const figY = groundY
+    // 図アイコン → 外側（補色）の正方形 への矢印。両端の隙間は FIG_TO_OUTER_GAP に合わせる
     const arrowLen = Math.hypot(compX - groundX, compY - groundY) || 1
     const aux = (compX - groundX) / arrowLen
     const auy = (compY - groundY) / arrowLen
-    const arrowX1 = groundX + aux * (WHEEL_SQ / 2 + ARROW_OFFSET)
-    const arrowY1 = groundY + auy * (WHEEL_SQ / 2 + ARROW_OFFSET)
-    const arrowX2 = figX - aux * (WHEEL_ICON_SIZE / 2 + ARROW_OFFSET)
-    const arrowY2 = figY - auy * (WHEEL_ICON_SIZE / 2 + ARROW_OFFSET)
+    const arrowX1 = figX + aux * (WHEEL_ICON_SIZE / 2 + FIG_TO_OUTER_GAP)
+    const arrowY1 = figY + auy * (WHEEL_ICON_SIZE / 2 + FIG_TO_OUTER_GAP)
+    const arrowX2 = compX - aux * (WHEEL_SQ / 2 + ARROW_HEAD_GAP)
+    const arrowY2 = compY - auy * (WHEEL_SQ / 2 + ARROW_HEAD_GAP)
     // プレビューの横（左右）にある色相環は左右反転、縦（上下）にある色相環は上下反転（環の中心まわり）
     const wheelTransform =
       Math.abs(dx) > Math.abs(dy)
@@ -172,26 +174,7 @@
   {#each CELLS as cell (cell.hue)}
     <!-- 色相環（横は左右反転・上は上下反転） -->
     <g transform={cell.wheelTransform}>
-      <!-- プレビュー外側の色相環（円） -->
-      <circle
-        cx={cell.wx}
-        cy={cell.wy}
-        r={WHEEL_RADIUS}
-        fill="none"
-        stroke={COL_WHEEL}
-        stroke-width={WHEEL_STROKE_WIDTH}
-      />
-
-      <!-- 地の正方形（その色相の色相角） -->
-      <rect
-        x={cell.groundX - WHEEL_SQ / 2}
-        y={cell.groundY - WHEEL_SQ / 2}
-        width={WHEEL_SQ}
-        height={WHEEL_SQ}
-        fill={cell.hex}
-      />
-
-      <!-- 補色の正方形（補色の色相角） -->
+      <!-- 補色の正方形（補色の色相角・外側） -->
       <rect
         x={cell.compX - WHEEL_SQ / 2}
         y={cell.compY - WHEEL_SQ / 2}
@@ -200,7 +183,7 @@
         fill={cell.compHex}
       />
 
-      <!-- 内側（地）の正方形 → 図アイコン の矢印 -->
+      <!-- 図アイコン → 外側（補色）の正方形 への矢印 -->
       <line
         x1={cell.arrowX1}
         y1={cell.arrowY1}
@@ -212,7 +195,7 @@
         marker-end="url(#wheel-arrow)"
       />
 
-      <!-- 図のアイコン（地→補色の 7:3・補色寄り） -->
+      <!-- 図のアイコン（内側＝地の色相角の位置） -->
       {@render grayFlower(cell.figX, cell.figY, WHEEL_ICON_SIZE)}
     </g>
 
