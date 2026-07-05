@@ -8,10 +8,11 @@
   const ICON_SIZE = Math.round(SQ * 0.85) // プレビュー中央のアイコンサイズ
 
   // ===== 各プレビュー外側に描く色相環のジオメトリ =====
-  const WHEEL_RADIUS = SQ / 2 // 色相環の半径（直径をプレビューの一辺 SQ に合わせる）
-  // 正方形・図アイコンは半径に対する初期比率（半径 52 : 正方形 32 : アイコン 26）を維持
-  const WHEEL_SQ = Math.round(WHEEL_RADIUS * (32 / 52)) // 地・補色の正方形の一辺
-  const WHEEL_ICON_SIZE = Math.round(WHEEL_RADIUS * (26 / 52)) // 色相環上に置く図アイコンのサイズ
+  const WHEEL_DIAMETER_RATIO = 1.25 // 色相環の直径をプレビューの一辺 SQ の何倍にするか（1 で SQ と同じ）
+  const WHEEL_RADIUS = (SQ * WHEEL_DIAMETER_RATIO) / 2 // 色相環の半径
+  const WHEEL_SQ_RADIUS_RATIO = 0.5 // 正方形の一辺を色相環の半径の何倍にするか（初期値 ≒ 0.62）
+  const WHEEL_SQ = Math.round(WHEEL_RADIUS * WHEEL_SQ_RADIUS_RATIO) // 地・補色の正方形の一辺
+  const WHEEL_ICON_SIZE = WHEEL_SQ // 図アイコンは正方形と同じサイズ
   const WHEEL_GAP = 18 // プレビュー外縁と色相環の隙間
   const WHEEL_STROKE_WIDTH = 1.2
   // 地→補色を結ぶ直線上での図の位置。7:3（補色寄り）= 地から 0.7。
