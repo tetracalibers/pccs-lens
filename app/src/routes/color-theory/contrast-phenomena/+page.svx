@@ -10,6 +10,7 @@ draft: true
 <script>
   import ComplementaryAfterimage from "$lib/demo/visual-effect/ComplementaryAfterimage.svelte"
   import ColorShadowHueComparison from "$lib/demo/visual-effect-contrast/ColorShadowHueComparison.svelte"
+  import AchromaticEdgeContrast from "$lib/demo/visual-effect-contrast/AchromaticEdgeContrast.svelte"
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
 </script>
 
@@ -53,4 +54,6 @@ draft: true
 - 異なる色が隣接する図形の、境界付近で起こる対比現象は:Mark[縁辺対比]という
 - 縁辺対比は、色相、明度、彩度のいずれの対比でも生じる
 
-TODO：図（詳細未定）
+<SVGWrapper>
+  <AchromaticEdgeContrast />
+</SVGWrapper>
