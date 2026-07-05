@@ -5,7 +5,7 @@
   // ===== プレビュー（色陰現象の見本）のジオメトリ =====
   const RING_R = 90 // プレビュー正方形の中心が並ぶ円の半径
   const SQ = 76 // プレビュー正方形の一辺
-  const ICON_SIZE = Math.round(SQ * 0.85) // プレビュー中央のアイコンサイズ
+  const ICON_SIZE = Math.round(SQ * 0.75) // プレビュー中央のアイコンサイズ
 
   // ===== 各プレビュー外側の「図アイコン → 矢印 → 補色の正方形」のサイズ =====
   // 正方形・図アイコンのサイズ基準（プレビュー一辺 SQ に対する比率で決める）
@@ -32,7 +32,7 @@
   const MARGIN = 10 // viewBox 外周の余白
 
   // ===== アイコン・色 =====
-  const ICON_ID = "material-symbols-light:square"
+  const ICON_ID = "game-icons:spades"
   const GY_NOTATION = "Gy-6.0" // 図アイコンの色（PCCS 無彩色）
   const ICON_HEX = PCCS_HEX_MAP.get(GY_NOTATION) ?? "#C8C8C8"
 
