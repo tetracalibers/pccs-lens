@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { PCCS_HEX_MAP } from "$lib/data/pccs"
+
   // ===== レイアウト =====
   const NI = 5 // 1辺あたりの格子線（＝十字路）の数
   const CELL = 70 // 格子線どうしの間隔
@@ -17,9 +19,9 @@
   const COL_BG = "#ffffff" // 白背景・抜けた部分
   // 十字路をつなぐ色線の色（上の行から順に）
   const COL_ROW = [
-    "var(--canvas-pen-red)", // 赤
-    "var(--canvas-pen-yellow)", // 黄
-    "var(--canvas-pen-green)", // 緑
+    PCCS_HEX_MAP.get("v2")!, // 赤
+    PCCS_HEX_MAP.get("v8")!, // 黄
+    PCCS_HEX_MAP.get("b12")!, // 緑
     "var(--canvas-pen-water)", // シアン
     "var(--canvas-pen-blue)", // 青
   ]
