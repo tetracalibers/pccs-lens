@@ -93,8 +93,8 @@
     transform: translateX(-50%);
     padding: 0.2rem 0.5rem;
     border-radius: 0.25rem;
-    background: var(--color-text, #333);
-    color: #fff;
+    background: light-dark(var(--color-bg--dark), var(--color-bg--light));
+    color: light-dark(var(--color-heading--dark), var(--color-heading--light));
     font-size: 0.75rem;
     white-space: nowrap;
     pointer-events: none;
@@ -107,6 +107,6 @@
     left: 50%;
     transform: translateX(-50%);
     border: 4px solid transparent;
-    border-top-color: var(--color-text, #333);
+    border-top-color: light-dark(var(--color-bg--dark), var(--color-bg--light));
   }
 </style>
