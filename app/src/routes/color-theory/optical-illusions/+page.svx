@@ -11,6 +11,7 @@ draft: true
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
   import HermannGrid from "$lib/demo/illusion/HermannGrid.svelte"
   import MachBands from "$lib/demo/illusion/MachBands.svelte"
+  import EhrensteinEffect from "$lib/demo/illusion/EhrensteinEffect.svelte"
 </script>
 
 ## :WithGradeTag[錯視とは]{grades="2"}
@@ -37,6 +38,10 @@ draft: true
 
 - 格子の十字路の部分が抜けているとき、白背景では抜けた部分が明るく見え、黒背景では抜けた部分が暗く見える現象を:Mark[エーレンシュタイン効果]という
 - 抜けた部分に円を描き足すと、この錯視は消失する
+
+<SVGWrapper maxW="250">
+  <EhrensteinEffect />
+</SVGWrapper>
 
 ### ネオンカラー効果
 
