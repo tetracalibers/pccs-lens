@@ -129,8 +129,7 @@
         - slug: adjacent-color-influence
         - slug: color-contrast
         - slug: contrast-phenomena
-        - title: 色の同化
-          grades: ["3"]
+        - slug: color-assimilation
         - title: 面積と見え方
           grades: ["3"]
         - slug: subjective-color
