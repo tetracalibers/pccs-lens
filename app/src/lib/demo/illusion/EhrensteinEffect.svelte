@@ -32,9 +32,9 @@
     LINE_POS.map((x, col) => ({ x, y, row, col }))
   )
 
-  // 実線で囲む十字路（中央）
-  const RING_ROW = 2
-  const RING_COL = 2
+  // 実線で囲む十字路（中央から1区画右下）
+  const RING_ROW = 3
+  const RING_COL = 3
   const ringPoint = intersections.find(
     (p) => p.row === RING_ROW && p.col === RING_COL
   )!
