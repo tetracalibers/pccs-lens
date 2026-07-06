@@ -13,6 +13,7 @@ draft: true
   import MachBands from "$lib/demo/illusion/MachBands.svelte"
   import EhrensteinEffect from "$lib/demo/illusion/EhrensteinEffect.svelte"
   import EhrensteinEffectDark from "$lib/demo/illusion/EhrensteinEffectDark.svelte"
+  import NeonColorEffect from "$lib/demo/illusion/NeonColorEffect.svelte"
 </script>
 
 ## :WithGradeTag[錯視とは]{grades="2"}
@@ -51,6 +52,10 @@ draft: true
 ### ネオンカラー効果
 
 - エーレンシュタイン図形の抜けていた十字路を色線でつなぐと、その色が線からにじみ出て広がるように見える。これは:Mark[ネオンカラー効果]と呼ばれる錯視である
+
+<SVGWrapper maxW="250">
+  <NeonColorEffect />
+</SVGWrapper>
 
 ## :WithGradeTag[色の境界で発生する錯視]{grades="2"}
 
