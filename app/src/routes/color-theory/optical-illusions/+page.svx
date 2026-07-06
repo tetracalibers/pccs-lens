@@ -10,6 +10,7 @@ draft: true
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
   import HermannGrid from "$lib/demo/illusion/HermannGrid.svelte"
+  import MachBands from "$lib/demo/illusion/MachBands.svelte"
 </script>
 
 ## :WithGradeTag[錯視とは]{grades="2"}
@@ -50,6 +51,10 @@ draft: true
 - グレイのグラデーションのような図の中で、明るさが変わらない面と、明るさがスムーズに変化している面との境界線部分に生じる帯を:Mark[マッハバンド]という
 - マッハバンドは、:Mark[網膜]で生じる:Mark[側抑制]の働きによる、:Mark[縁辺対比]の一種だと説明できる
 - マッハバンドが見える2箇所の位置は明と暗の境界になっている。:Mark[側抑制]による境界の強調により、明るい領域の境界はほかよりも:Mark[明るく]見え、暗い領域の境界はほかよりも:Mark[暗く]見えることから、帯として際立って見える
+
+<SVGWrapper>
+  <MachBands />
+</SVGWrapper>
 
 ## :WithGradeTag[錯視から学ぶ見やすさ]{grades="2"}
 
