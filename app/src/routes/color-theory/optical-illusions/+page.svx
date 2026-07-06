@@ -12,6 +12,7 @@ draft: true
   import HermannGrid from "$lib/demo/illusion/HermannGrid.svelte"
   import MachBands from "$lib/demo/illusion/MachBands.svelte"
   import EhrensteinEffect from "$lib/demo/illusion/EhrensteinEffect.svelte"
+  import EhrensteinEffectDark from "$lib/demo/illusion/EhrensteinEffectDark.svelte"
 </script>
 
 ## :WithGradeTag[錯視とは]{grades="2"}
@@ -41,6 +42,10 @@ draft: true
 
 <SVGWrapper maxW="250">
   <EhrensteinEffect />
+</SVGWrapper>
+
+<SVGWrapper maxW="250">
+  <EhrensteinEffectDark />
 </SVGWrapper>
 
 ### ネオンカラー効果
