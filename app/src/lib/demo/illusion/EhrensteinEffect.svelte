@@ -16,10 +16,7 @@
   const COL_RING = "#000000" // 抜けた部分を囲む実線
 
   // 十字路（交点）の位置（水平線・垂直線で共通）
-  const LINE_POS = Array.from(
-    { length: NI },
-    (_, i) => MARGIN + OVERHANG + i * CELL
-  )
+  const LINE_POS = Array.from({ length: NI }, (_, i) => MARGIN + OVERHANG + i * CELL)
   // 格子線を描く範囲（両端を OVERHANG ぶん外へ伸ばす）
   const LINE_START = LINE_POS[0] - OVERHANG
   const LINE_END = LINE_POS[NI - 1] + OVERHANG
@@ -28,16 +25,12 @@
   const SIZE = LINE_END + MARGIN
 
   // 十字路（交点）の座標
-  const intersections = LINE_POS.flatMap((y, row) =>
-    LINE_POS.map((x, col) => ({ x, y, row, col }))
-  )
+  const intersections = LINE_POS.flatMap((y, row) => LINE_POS.map((x, col) => ({ x, y, row, col })))
 
   // 実線で囲む十字路（中央から1区画右下）
   const RING_ROW = 3
   const RING_COL = 3
-  const ringPoint = intersections.find(
-    (p) => p.row === RING_ROW && p.col === RING_COL
-  )!
+  const ringPoint = intersections.find((p) => p.row === RING_ROW && p.col === RING_COL)!
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {SIZE} {SIZE}">

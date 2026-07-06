@@ -23,14 +23,11 @@
     PCCS_HEX_MAP.get("v8")!, // 黄
     PCCS_HEX_MAP.get("b12")!, // 緑
     "var(--canvas-pen-water)", // シアン
-    "var(--canvas-pen-blue)", // 青
+    "var(--canvas-pen-blue)" // 青
   ]
 
   // 十字路（交点）の位置（水平線・垂直線で共通）
-  const LINE_POS = Array.from(
-    { length: NI },
-    (_, i) => MARGIN + OVERHANG + i * CELL
-  )
+  const LINE_POS = Array.from({ length: NI }, (_, i) => MARGIN + OVERHANG + i * CELL)
   // 格子線を描く範囲（両端を OVERHANG ぶん外へ伸ばす）
   const LINE_START = LINE_POS[0] - OVERHANG
   const LINE_END = LINE_POS[NI - 1] + OVERHANG
@@ -39,9 +36,7 @@
   const SIZE = LINE_END + MARGIN
 
   // 十字路（交点）の座標
-  const intersections = LINE_POS.flatMap((y, row) =>
-    LINE_POS.map((x, col) => ({ x, y, row, col }))
-  )
+  const intersections = LINE_POS.flatMap((y, row) => LINE_POS.map((x, col) => ({ x, y, row, col })))
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {SIZE} {SIZE}">
