@@ -15,6 +15,7 @@ draft: true
   import EhrensteinEffectDark from "$lib/demo/illusion/EhrensteinEffectDark.svelte"
   import NeonColorEffect from "$lib/demo/illusion/NeonColorEffect.svelte"
   import LiebmannCheckerboard from "$lib/demo/illusion/LiebmannCheckerboard.svelte"
+  import LiebmannFigureGround from "$lib/demo/illusion/LiebmannFigureGround.svelte"
 </script>
 
 ## :WithGradeTag[錯視とは]{grades="2"}
@@ -84,7 +85,9 @@ draft: true
   <LiebmannCheckerboard />
 </SVGWrapper>
 
-TODO：地と図の関係が不安定なリープマン効果の図（図には`fa6-solid:dragon`のアイコンを使う）
+<SVGWrapper maxW="250">
+  <LiebmannFigureGround />
+</SVGWrapper>
 
 ## :WithGradeTag[錯視を利用した表現]{grades="2"}
 
