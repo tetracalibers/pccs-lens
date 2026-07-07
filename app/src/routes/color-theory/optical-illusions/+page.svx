@@ -14,6 +14,7 @@ draft: true
   import EhrensteinEffect from "$lib/demo/illusion/EhrensteinEffect.svelte"
   import EhrensteinEffectDark from "$lib/demo/illusion/EhrensteinEffectDark.svelte"
   import NeonColorEffect from "$lib/demo/illusion/NeonColorEffect.svelte"
+  import LiebmannCheckerboard from "$lib/demo/illusion/LiebmannCheckerboard.svelte"
 </script>
 
 ## :WithGradeTag[錯視とは]{grades="2"}
@@ -78,6 +79,12 @@ draft: true
 - 異なる有彩色が隣接し、その明度差がほとんどないとき、色と色の境界線が曖昧になり、ちらついて見えたり、地と図の関係が不安定になることを:Mark[リープマン効果]という
 - リープマン効果は、色相差や彩度差があっても明度差がない刺激では、:Mark[形]の認識が困難になることを示している
 - リープマン効果から、標識などで文字や形がよく見えるようにするためには、:Mark[明度]差が必要だといえる
+
+<SVGWrapper maxW="250">
+  <LiebmannCheckerboard />
+</SVGWrapper>
+
+TODO：地と図の関係が不安定なリープマン効果の図（図には`fa6-solid:dragon`のアイコンを使う）
 
 ## :WithGradeTag[錯視を利用した表現]{grades="2"}
 
