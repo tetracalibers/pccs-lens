@@ -1,162 +1,280 @@
 <script lang="ts">
   import { resolve } from "$app/paths"
+  import { getContext } from "svelte"
+
+  const theme = getContext<{ isLight: boolean; toggle: () => void }>("designD")
+
+  const components = [
+    {
+      href: resolve("/components/heading"),
+      title: "見出し",
+      desc: "セクション見出しのスタイルパターン",
+      glow: "#ff6b6b",
+      gradient: "linear-gradient(135deg, #ff6b6b, #ffd93d)"
+    },
+    {
+      href: resolve("/components/mark"),
+      title: "マーク",
+      desc: "テキスト内のハイライト・マークアップ表現",
+      glow: "#ffd93d",
+      gradient: "linear-gradient(135deg, #ffd93d, #6bcb77)"
+    },
+    {
+      href: resolve("/components/tips"),
+      title: "Tips",
+      desc: "補足情報や注意書きを示すコールアウト",
+      glow: "#6bcb77",
+      gradient: "linear-gradient(135deg, #6bcb77, #4d96ff)"
+    },
+    {
+      href: resolve("/components/term-card"),
+      title: "用語カード",
+      desc: "専門用語の定義や説明を表示するカード",
+      glow: "#c77dff",
+      gradient: "linear-gradient(135deg, #4d96ff, #c77dff)"
+    },
+    {
+      href: resolve("/components/ulist"),
+      title: "リスト",
+      desc: "ulリストのバレットスタイルパターン",
+      glow: "#67e8f9",
+      gradient: "linear-gradient(135deg, #c77dff, #67e8f9)"
+    },
+    {
+      href: resolve("/components/switch-light-dark"),
+      title: "ライト/ダーク切替",
+      desc: "ダークモードとライトモードを切り替えるボタンのスタイルパターン",
+      glow: "#fbbf24",
+      gradient: "linear-gradient(135deg, #67e8f9, #fbbf24)"
+    },
+    {
+      href: resolve("/components/header"),
+      title: "ヘッダー",
+      desc: "ナビゲーションのレイアウトパターン（モバイル・デスクトップ対応）",
+      glow: "#a78bfa",
+      gradient: "linear-gradient(135deg, #fbbf24, #a78bfa)"
+    },
+    {
+      href: resolve("/components/toc"),
+      title: "目次",
+      desc: "h2〜h4の階層構造を表す目次のスタイルパターン",
+      glow: "#34d399",
+      gradient: "linear-gradient(135deg, #a78bfa, #34d399)"
+    },
+    {
+      href: resolve("/components/global-nav"),
+      title: "グローバルナビ",
+      desc: "ツール群・コンテンツ群をグルーピングするナビゲーションのスタイルパターン",
+      glow: "#f97316",
+      gradient: "linear-gradient(135deg, #34d399, #f97316)"
+    },
+    {
+      href: resolve("/components/hamburger-button"),
+      title: "ハンバーガーボタン",
+      desc: "メニューを開閉するボタンのスタイルパターン（カラフルなオリジナルアイコン含む）",
+      glow: "#c77dff",
+      gradient: "linear-gradient(135deg, #f97316, #c77dff)"
+    },
+    {
+      href: resolve("/components/link-list"),
+      title: "リンクリスト",
+      desc: "章内のページ一覧を表すリストのスタイルパターン（雫・インク形状のシェイプ装飾）",
+      glow: "#38bdf8",
+      gradient: "linear-gradient(135deg, #6bcb77, #38bdf8)"
+    },
+    {
+      href: resolve("/components/tag"),
+      title: "タグ",
+      desc: "「入門」「3級」〜「UC級」などのグレードを示すラベルのスタイルパターン",
+      glow: "#c77dff",
+      gradient: "linear-gradient(135deg, #38bdf8, #c77dff)"
+    },
+    {
+      href: resolve("/components/breadcrumb"),
+      title: "パンくずリスト",
+      desc: "ページの階層構造を示すナビゲーションのスタイルパターン",
+      glow: "#818cf8",
+      gradient: "linear-gradient(135deg, #c77dff, #818cf8)"
+    },
+    {
+      href: resolve("/components/footer"),
+      title: "フッター",
+      desc: "前へ・次へ・一覧リンクを備えたページナビゲーションフッターのスタイルパターン",
+      glow: "#34d399",
+      gradient: "linear-gradient(135deg, #818cf8, #34d399)"
+    },
+    {
+      href: resolve("/components/toggle"),
+      title: "切替トグル",
+      desc: "暗記モードと解説モードを切り替えるトグルボタンのスタイルパターン（8案）",
+      glow: "#c77dff",
+      gradient: "linear-gradient(135deg, #34d399, #c77dff)"
+    }
+  ]
 </script>
 
 <svelte:head>
-  <title>PCCS Lens - UIプロトタイプ一覧</title>
+  <title>コンポーネント一覧 - 案D</title>
 </svelte:head>
 
-<main>
-  <header>
-    <h1>PCCS Lens トップページ デザイン案</h1>
-    <p>デザイン案を比較・検討してください</p>
-  </header>
+<div class="page" class:light={theme.isLight}>
+  <main>
+    <header class="page-header">
+      <p class="eyebrow">Design D</p>
+      <h1>コンポーネント</h1>
+      <p class="subtitle">UIパーツのスタイルパターン一覧</p>
+    </header>
 
-  <div class="design-list">
-    <a href={resolve("/design-d")} class="design-card">
-      <div class="preview preview-d">
-        <div class="neon-title">
-          PCCS
-          <br />
-          <span>Lens</span>
-        </div>
-        <div class="neon-dots">
-          {#each ["#ff6b6b", "#ffd93d", "#6bcb77", "#4d96ff", "#c77dff"] as color (color)}
-            <div class="ndot" style="background:{color}; box-shadow: 0 0 8px {color}"></div>
-          {/each}
-        </div>
-      </div>
-      <div class="design-info">
-        <span class="label">案D</span>
-        <h2>ネオン・ダーク</h2>
-        <p>ダーク背景にネオングローで彩る、モダンでインパクトのあるデザイン</p>
-      </div>
-    </a>
-  </div>
-</main>
+    <div class="grid">
+      {#each components as item (item.title)}
+        <a href={item.href} class="card" style="--glow: {item.glow}">
+          <div class="card-bar" style="background: {item.gradient}"></div>
+          <div class="card-body">
+            <h2>{item.title}</h2>
+            <p>{item.desc}</p>
+            <span class="cta" style="color: {item.glow}">見る →</span>
+          </div>
+        </a>
+      {/each}
+    </div>
+  </main>
+</div>
 
 <style>
-  main {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 2rem 1rem 4rem;
-    font-family: system-ui, sans-serif;
+  .page {
+    min-height: 100vh;
+    background: #0c0c14;
+    color: #f0f0f0;
+    transition:
+      background 0.4s,
+      color 0.4s;
   }
 
-  header {
-    text-align: center;
+  .light {
+    background: #ffffff;
+    color: #1a1a1a;
+  }
+
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 3rem 1.25rem 4rem;
+  }
+
+  .page-header {
     margin-bottom: 2.5rem;
   }
 
-  header h1 {
-    font-size: 1.5rem;
+  .eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #555;
     margin: 0 0 0.5rem;
+    transition: color 0.4s;
   }
 
-  header p {
+  .light .eyebrow {
+    color: #999;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    margin: 0 0 0.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle {
+    font-size: 0.88rem;
     color: #666;
     margin: 0;
+    transition: color 0.4s;
   }
 
-  .design-list {
+  .light .subtitle {
+    color: #888;
+  }
+
+  .grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
+    gap: 1rem;
   }
 
-  @media (max-width: 600px) {
-    .design-list {
+  @media (max-width: 480px) {
+    .grid {
       grid-template-columns: 1fr;
     }
   }
 
-  .design-card {
+  .card {
     display: flex;
     flex-direction: column;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
     text-decoration: none;
     color: inherit;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    overflow: hidden;
+    backdrop-filter: blur(8px);
     transition:
+      border-color 0.2s,
+      transform 0.2s,
       box-shadow 0.2s,
-      transform 0.2s;
+      background 0.4s;
   }
 
-  .design-card:hover {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    transform: translateY(-2px);
+  .card:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 24px color-mix(in srgb, var(--glow) 20%, transparent);
   }
 
-  .preview {
-    height: 180px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
+  .light .card {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(0, 0, 0, 0.07);
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
   }
 
-  /* Preview D */
-  .preview-d {
-    background: #0f0f14;
-    border-bottom: 1px solid #222;
-    flex-direction: column;
-    gap: 12px;
+  .light .card:hover {
+    border-color: rgba(0, 0, 0, 0.12);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
   }
 
-  .neon-title {
-    font-weight: 800;
-    font-size: 1.3rem;
-    line-height: 1.2;
-    text-align: center;
-    background: linear-gradient(135deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #c77dff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .card-bar {
+    height: 3px;
   }
 
-  .neon-title span {
-    font-size: 1.5rem;
+  .card-body {
+    padding: 1.25rem;
   }
 
-  .neon-dots {
-    display: flex;
-    gap: 8px;
-  }
-
-  .ndot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-  }
-
-  /* Design info */
-  .design-info {
-    padding: 1rem 1.25rem;
-  }
-
-  .label {
-    display: inline-block;
-    background: #f0f0f0;
-    border-radius: 4px;
-    padding: 2px 8px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #555;
-    margin-bottom: 0.4rem;
-  }
-
-  .design-info h2 {
+  .card-body h2 {
     font-size: 1rem;
-    margin: 0 0 0.3rem;
+    font-weight: 700;
+    margin: 0 0 0.4rem;
+    color: #f0f0f0;
+    transition: color 0.4s;
   }
 
-  .design-info p {
-    font-size: 0.83rem;
+  .light .card-body h2 {
+    color: #1a1a1a;
+  }
+
+  .card-body p {
+    font-size: 0.82rem;
     color: #666;
-    margin: 0;
+    margin: 0 0 0.75rem;
     line-height: 1.5;
+    transition: color 0.4s;
+  }
+
+  .light .card-body p {
+    color: #888;
+  }
+
+  .cta {
+    font-size: 0.8rem;
+    font-weight: 700;
   }
 </style>
