@@ -786,7 +786,7 @@
   </section>
 
   <footer class="page-footer">
-    <a href={resolve("/design-d/components")} class="back-link">← コンポーネント一覧に戻る</a>
+    <a href={resolve("/")} class="back-link">← コンポーネント一覧に戻る</a>
   </footer>
 </main>
 
