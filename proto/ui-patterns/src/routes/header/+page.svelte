@@ -580,7 +580,7 @@
     <!-- /patterns -->
 
     <footer class="page-footer">
-      <a href="/design-d/components" class="back-link">← コンポーネント一覧に戻る</a>
+      <a href="/" class="back-link">← コンポーネント一覧に戻る</a>
     </footer>
   </main>
 </div>
