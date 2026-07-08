@@ -6,105 +6,105 @@
 
   const components = [
     {
-      href: resolve("/components/heading"),
+      href: resolve("/heading"),
       title: "見出し",
       desc: "セクション見出しのスタイルパターン",
       glow: "#ff6b6b",
       gradient: "linear-gradient(135deg, #ff6b6b, #ffd93d)"
     },
     {
-      href: resolve("/components/mark"),
+      href: resolve("/mark"),
       title: "マーク",
       desc: "テキスト内のハイライト・マークアップ表現",
       glow: "#ffd93d",
       gradient: "linear-gradient(135deg, #ffd93d, #6bcb77)"
     },
     {
-      href: resolve("/components/tips"),
+      href: resolve("/tips"),
       title: "Tips",
       desc: "補足情報や注意書きを示すコールアウト",
       glow: "#6bcb77",
       gradient: "linear-gradient(135deg, #6bcb77, #4d96ff)"
     },
     {
-      href: resolve("/components/term-card"),
+      href: resolve("/term-card"),
       title: "用語カード",
       desc: "専門用語の定義や説明を表示するカード",
       glow: "#c77dff",
       gradient: "linear-gradient(135deg, #4d96ff, #c77dff)"
     },
     {
-      href: resolve("/components/ulist"),
+      href: resolve("/ulist"),
       title: "リスト",
       desc: "ulリストのバレットスタイルパターン",
       glow: "#67e8f9",
       gradient: "linear-gradient(135deg, #c77dff, #67e8f9)"
     },
     {
-      href: resolve("/components/switch-light-dark"),
+      href: resolve("/switch-light-dark"),
       title: "ライト/ダーク切替",
       desc: "ダークモードとライトモードを切り替えるボタンのスタイルパターン",
       glow: "#fbbf24",
       gradient: "linear-gradient(135deg, #67e8f9, #fbbf24)"
     },
     {
-      href: resolve("/components/header"),
+      href: resolve("/header"),
       title: "ヘッダー",
       desc: "ナビゲーションのレイアウトパターン（モバイル・デスクトップ対応）",
       glow: "#a78bfa",
       gradient: "linear-gradient(135deg, #fbbf24, #a78bfa)"
     },
     {
-      href: resolve("/components/toc"),
+      href: resolve("/toc"),
       title: "目次",
       desc: "h2〜h4の階層構造を表す目次のスタイルパターン",
       glow: "#34d399",
       gradient: "linear-gradient(135deg, #a78bfa, #34d399)"
     },
     {
-      href: resolve("/components/global-nav"),
+      href: resolve("/global-nav"),
       title: "グローバルナビ",
       desc: "ツール群・コンテンツ群をグルーピングするナビゲーションのスタイルパターン",
       glow: "#f97316",
       gradient: "linear-gradient(135deg, #34d399, #f97316)"
     },
     {
-      href: resolve("/components/hamburger-button"),
+      href: resolve("/hamburger-button"),
       title: "ハンバーガーボタン",
       desc: "メニューを開閉するボタンのスタイルパターン（カラフルなオリジナルアイコン含む）",
       glow: "#c77dff",
       gradient: "linear-gradient(135deg, #f97316, #c77dff)"
     },
     {
-      href: resolve("/components/link-list"),
+      href: resolve("/link-list"),
       title: "リンクリスト",
       desc: "章内のページ一覧を表すリストのスタイルパターン（雫・インク形状のシェイプ装飾）",
       glow: "#38bdf8",
       gradient: "linear-gradient(135deg, #6bcb77, #38bdf8)"
     },
     {
-      href: resolve("/components/tag"),
+      href: resolve("/tag"),
       title: "タグ",
       desc: "「入門」「3級」〜「UC級」などのグレードを示すラベルのスタイルパターン",
       glow: "#c77dff",
       gradient: "linear-gradient(135deg, #38bdf8, #c77dff)"
     },
     {
-      href: resolve("/components/breadcrumb"),
+      href: resolve("/breadcrumb"),
       title: "パンくずリスト",
       desc: "ページの階層構造を示すナビゲーションのスタイルパターン",
       glow: "#818cf8",
       gradient: "linear-gradient(135deg, #c77dff, #818cf8)"
     },
     {
-      href: resolve("/components/footer"),
+      href: resolve("/footer"),
       title: "フッター",
       desc: "前へ・次へ・一覧リンクを備えたページナビゲーションフッターのスタイルパターン",
       glow: "#34d399",
       gradient: "linear-gradient(135deg, #818cf8, #34d399)"
     },
     {
-      href: resolve("/components/toggle"),
+      href: resolve("/toggle"),
       title: "切替トグル",
       desc: "暗記モードと解説モードを切り替えるトグルボタンのスタイルパターン（8案）",
       glow: "#c77dff",
