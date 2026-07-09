@@ -19,7 +19,7 @@ draft: true
 - 鏡のような滑らかな面に起こる反射は:Mark[正反射]（:Mark[鏡面反射]）である
 - 正反射では、入射角（光が入る角度）と同じ角度で反射するため、同じ方向に光が集中して、眼に入ると眩しく感じる
 
-<SVGWrapper>
+<SVGWrapper maxW="600">
   <SpecularReflection />
 </SVGWrapper>
 

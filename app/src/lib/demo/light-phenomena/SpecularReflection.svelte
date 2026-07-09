@@ -29,9 +29,9 @@
 
   // ===== 色 =====
   const COL_GROUND = "var(--color-body)"
-  const COL_NORMAL = "var(--color-body)"
-  const COL_IN = "var(--canvas-pen-blue)" // 入射側
-  const COL_REFL = "var(--canvas-pen-orange)" // 反射側
+  const COL_NORMAL = "var(--canvas-pen-gray)" // 法線
+  const COL_IN = "var(--canvas-pen-orange)" // 入射側
+  const COL_REFL = "var(--canvas-pen-yellow)" // 反射側
   const SECTOR_OPACITY = 0.32
 
   // ===== 余白 =====
@@ -71,14 +71,26 @@
   const reflSectorPath = `M ${O.x} ${O.y} L ${arcNormal.x} ${arcNormal.y} A ${ARC_R} ${ARC_R} 0 0 1 ${arcRefl.x} ${arcRefl.y} Z`
 
   // 角度ラベル（角の二等分線上）
-  const inAngleLabel: Pt = { x: -LABEL_ANGLE_R * Math.sin(HALF), y: -LABEL_ANGLE_R * Math.cos(HALF) }
-  const reflAngleLabel: Pt = { x: LABEL_ANGLE_R * Math.sin(HALF), y: -LABEL_ANGLE_R * Math.cos(HALF) }
+  const inAngleLabel: Pt = {
+    x: -LABEL_ANGLE_R * Math.sin(HALF),
+    y: -LABEL_ANGLE_R * Math.cos(HALF)
+  }
+  const reflAngleLabel: Pt = {
+    x: LABEL_ANGLE_R * Math.sin(HALF),
+    y: -LABEL_ANGLE_R * Math.cos(HALF)
+  }
 
   // 光線ラベル（各光線の外側＝地面寄りに配置し、線や扇形に重ならないようにする）
   const inRayPt: Pt = { x: -RAY_LABEL_FRAC * RAY_LEN * S, y: -RAY_LABEL_FRAC * RAY_LEN * C }
-  const inRayLabel: Pt = { x: inRayPt.x - RAY_LABEL_OFFSET * C, y: inRayPt.y + RAY_LABEL_OFFSET * S }
+  const inRayLabel: Pt = {
+    x: inRayPt.x - RAY_LABEL_OFFSET * C,
+    y: inRayPt.y + RAY_LABEL_OFFSET * S
+  }
   const reflRayPt: Pt = { x: RAY_LABEL_FRAC * RAY_LEN * S, y: -RAY_LABEL_FRAC * RAY_LEN * C }
-  const reflRayLabel: Pt = { x: reflRayPt.x + RAY_LABEL_OFFSET * C, y: reflRayPt.y + RAY_LABEL_OFFSET * S }
+  const reflRayLabel: Pt = {
+    x: reflRayPt.x + RAY_LABEL_OFFSET * C,
+    y: reflRayPt.y + RAY_LABEL_OFFSET * S
+  }
 
   // ===== viewBox =====
   const VB_X = -(GROUND_HALF + PAD)
