@@ -6,9 +6,12 @@
   const TRI_H = (Math.sqrt(3) / 2) * TRI // 正三角形の高さ
 
   // ===== 色（ピンク・薄紫系）=====
+  // 淡すぎると単色部分まで「白地越し」に見えて半透明に感じるため、彩度を上げて不透明感を出す
   const COL_BG = "#ffffff" // 白背景
-  const COL_SQUARE = "#fba5c0" // 正方形：ピンク
-  const COL_TRIANGLE = "#b9a3e8" // 正三角形：薄紫（ラベンダー）
+  const COL_SQUARE = "#e86a9e" // 正方形：ピンク
+  const COL_TRIANGLE = "#9776cf" // 正三角形：薄紫（ラベンダー）
+  // 重なり部分：上2色の乗算値。透明なフィルムが重なったように見える色
+  const COL_OVERLAP = "#893180"
 
   // ===== 正方形（左）=====
   const SQ_X = MARGIN
@@ -30,11 +33,19 @@
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {WIDTH} {HEIGHT}">
-  <!-- isolation で重なりの乗算混色を図の内部だけで完結させる（背景色の影響を受けない） -->
-  <g style="isolation: isolate">
-    <rect x="0" y="0" width={WIDTH} height={HEIGHT} fill={COL_BG} />
-    <!-- 正方形と正三角形を乗算で重ねる。重なった部分は透明なフィルムが重なったように見える -->
-    <rect x={SQ_X} y={SQ_Y} width={SQ} height={SQ} fill={COL_SQUARE} style="mix-blend-mode: multiply" />
-    <polygon points={trianglePoints} fill={COL_TRIANGLE} style="mix-blend-mode: multiply" />
-  </g>
+  <defs>
+    <!-- 正方形の領域。三角形をこの範囲に切り抜いて重なり部分だけを塗る -->
+    <clipPath id="transparency-overlap-clip">
+      <rect x={SQ_X} y={SQ_Y} width={SQ} height={SQ} />
+    </clipPath>
+  </defs>
+
+  <rect x="0" y="0" width={WIDTH} height={HEIGHT} fill={COL_BG} />
+
+  <!-- 正方形・正三角形はどちらも不透明の単色 -->
+  <rect x={SQ_X} y={SQ_Y} width={SQ} height={SQ} fill={COL_SQUARE} />
+  <polygon points={trianglePoints} fill={COL_TRIANGLE} />
+
+  <!-- 重なり部分（正方形と三角形の交差領域）だけを透明に見える色で塗る -->
+  <polygon points={trianglePoints} fill={COL_OVERLAP} clip-path="url(#transparency-overlap-clip)" />
 </svg>
