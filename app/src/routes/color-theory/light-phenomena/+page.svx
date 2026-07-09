@@ -10,6 +10,7 @@ draft: true
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
   import SpecularReflection from "$lib/demo/light-phenomena/SpecularReflection.svelte"
+  import DiffuseReflection from "$lib/demo/light-phenomena/DiffuseReflection.svelte"
 </script>
 
 ## :WithGradeTag[光の反射]{grades="3"}
@@ -27,7 +28,9 @@ draft: true
 - 表面に凹凸のあるマットな面に起こる反射は:Mark[拡散反射]である
 - 拡散反射は光があらゆる方向に散らばるため、柔らかい光に感じる
 
-TODO：拡散反射の図
+<SVGWrapper maxW="600">
+  <DiffuseReflection />
+</SVGWrapper>
 
 - 入射した光がまんべんなく反射、すなわち:Mark[拡散反射]すると、見る方向に関係なく、どこから見ても同じ強さの明るさに感じる
 - 入射した光が特定の方向に強く反射、すなわち:Mark[正反射]すると、光沢やきらめきを感じることになる
