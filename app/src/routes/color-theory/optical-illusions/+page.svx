@@ -17,6 +17,7 @@ draft: true
   import LiebmannCheckerboard from "$lib/demo/illusion/LiebmannCheckerboard.svelte"
   import LiebmannFigureGround from "$lib/demo/illusion/LiebmannFigureGround.svelte"
   import TransparencyPerception from "$lib/demo/illusion/TransparencyPerception.svelte"
+  import TransparencyPerceptionShifted from "$lib/demo/illusion/TransparencyPerceptionShifted.svelte"
 </script>
 
 ## :WithGradeTag[錯視とは]{grades="2"}
@@ -102,7 +103,9 @@ draft: true
 
 - 図形をわずかにずらすだけで、透明感は失われる
 
-TODO：図形をわずかにずらすことで透明感が失われる図
+<SVGWrapper maxW="280">
+  <TransparencyPerceptionShifted />
+</SVGWrapper>
 
 - 透明視は、有彩色どうしでも無彩色どうしでも起こる
 
