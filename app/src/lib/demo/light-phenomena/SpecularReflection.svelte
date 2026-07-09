@@ -13,8 +13,8 @@
   const ARROW_FRAC = 0.5 // 矢じりを置く位置（O からの比率）
 
   // ===== フォントサイズ =====
-  const FONT_SIZE_RAY = 16
-  const FONT_SIZE_ANGLE = 15
+  const FONT_SIZE_RAY = 14
+  const FONT_SIZE_ANGLE = 13
 
   // ===== 線幅 =====
   const STROKE_WIDTH_GROUND = 2.5
@@ -90,12 +90,18 @@
   }
 
   // 光線ラベル（各光線の外側＝地面寄りに配置し、線や扇形に重ならないようにする）
-  const inRayPt: Pt = { x: O.x - RAY_LABEL_FRAC * RAY_LEN * S, y: O.y - RAY_LABEL_FRAC * RAY_LEN * C }
+  const inRayPt: Pt = {
+    x: O.x - RAY_LABEL_FRAC * RAY_LEN * S,
+    y: O.y - RAY_LABEL_FRAC * RAY_LEN * C
+  }
   const inRayLabel: Pt = {
     x: inRayPt.x - RAY_LABEL_OFFSET * C,
     y: inRayPt.y + RAY_LABEL_OFFSET * S
   }
-  const reflRayPt: Pt = { x: O.x + RAY_LABEL_FRAC * RAY_LEN * S, y: O.y - RAY_LABEL_FRAC * RAY_LEN * C }
+  const reflRayPt: Pt = {
+    x: O.x + RAY_LABEL_FRAC * RAY_LEN * S,
+    y: O.y - RAY_LABEL_FRAC * RAY_LEN * C
+  }
   const reflRayLabel: Pt = {
     x: reflRayPt.x + RAY_LABEL_OFFSET * C,
     y: reflRayPt.y + RAY_LABEL_OFFSET * S
