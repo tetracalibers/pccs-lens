@@ -96,7 +96,7 @@ draft: true
 
 - 重なりあった図形の一部が透明に感じられる現象を:Mark[透明視]という
 
-<SVGWrapper maxW="320">
+<SVGWrapper maxW="280">
   <TransparencyPerception />
 </SVGWrapper>
 

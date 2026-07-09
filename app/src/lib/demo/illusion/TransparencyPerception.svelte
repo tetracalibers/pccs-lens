@@ -17,13 +17,18 @@
   const COL_H1 = "#f5c518" // 横帯1：黄
   const COL_H2 = "#8a5cd0" // 横帯2：紫
 
-  // 2色を掛け合わせて重なり色を作る（減法混色＝透明フィルムが重なった色）。blend-modeは使わない
+  // 前面の帯（横帯）を半透明フィルムとして背面の帯（縦帯）に重ねた色を作る。
+  // blend-modeは使わず、重なり色をJS側で算出する
+  const ALPHA_FRONT = 0.6 // 前面の帯の不透明度（1で完全に前面色、0で背面色）
   const hexToRgb = (hex: string): [number, number, number] =>
     [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)) as [number, number, number]
-  const multiply = (a: string, b: string): string => {
-    const ca = hexToRgb(a)
-    const cb = hexToRgb(b)
-    const comp = (i: number) => Math.round((ca[i] * cb[i]) / 255).toString(16).padStart(2, "0")
+  const overlay = (front: string, back: string): string => {
+    const f = hexToRgb(front)
+    const b = hexToRgb(back)
+    const comp = (i: number) =>
+      Math.round(ALPHA_FRONT * f[i] + (1 - ALPHA_FRONT) * b[i])
+        .toString(16)
+        .padStart(2, "0")
     return `#${comp(0)}${comp(1)}${comp(2)}`
   }
 
@@ -38,9 +43,10 @@
   ]
 
   // ===== 重なり領域（縦帯∩横帯）=====
-  // 軸に平行な帯どうしの交差はそのまま矩形になる。その矩形を重なり色で塗る
+  // 軸に平行な帯どうしの交差はそのまま矩形になる。その矩形を重なり色で塗る。
+  // 横帯（黄・紫）を前面、縦帯（赤・シアン）を背面として重ねるので、黄帯が前面に見える
   const crossings = vBands.flatMap((v) =>
-    hBands.map((h) => ({ x: v.x, y: h.y, fill: multiply(v.fill, h.fill) }))
+    hBands.map((h) => ({ x: v.x, y: h.y, fill: overlay(h.fill, v.fill) }))
   )
 </script>
 
