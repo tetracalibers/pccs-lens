@@ -18,6 +18,8 @@ draft: true
   import LiebmannFigureGround from "$lib/demo/illusion/LiebmannFigureGround.svelte"
   import TransparencyPerception from "$lib/demo/illusion/TransparencyPerception.svelte"
   import TransparencyPerceptionShifted from "$lib/demo/illusion/TransparencyPerceptionShifted.svelte"
+  import TransparencyPerceptionAchromatic from "$lib/demo/illusion/TransparencyPerceptionAchromatic.svelte"
+  import TransparencyPerceptionShiftedAchromatic from "$lib/demo/illusion/TransparencyPerceptionShiftedAchromatic.svelte"
 </script>
 
 ## :WithGradeTag[錯視とは]{grades="2"}
@@ -109,7 +111,13 @@ draft: true
 
 - 透明視は、有彩色どうしでも無彩色どうしでも起こる
 
-TODO：無彩色の重なり合った部分が透明に見える図
+<SVGWrapper maxW="280">
+  <TransparencyPerceptionAchromatic />
+</SVGWrapper>
+
+<SVGWrapper maxW="280">
+  <TransparencyPerceptionShiftedAchromatic />
+</SVGWrapper>
 
 - 透明視は、私たちの視覚が、より:Mark[単純]で:Mark[規則]的な見え方を好むことによって生じる錯視である
 
