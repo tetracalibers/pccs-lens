@@ -57,8 +57,9 @@
   const groundL: Pt = { x: -GROUND_HALF, y: 0 }
   const groundR: Pt = { x: GROUND_HALF, y: 0 }
 
-  // 法線（地面の表面から反射点を通って上向きに伸ばす）
-  const normalBase: Pt = { x: O.x, y: 0 }
+  // 法線（地面の直線の上端に接し、反射点を通って上向きに伸ばす）
+  // 縦線・butt キャップなので下端の y をそのまま地面の直線の上端に合わせれば接する
+  const normalBase: Pt = { x: O.x, y: -STROKE_WIDTH_GROUND / 2 }
   const normalTop: Pt = { x: O.x, y: O.y - NORMAL_LEN }
 
   // 光線の端点
