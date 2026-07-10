@@ -21,6 +21,31 @@
 
 - `Anki_`で始まるノードは暗記モード時にテキストが隠れるようになる
 
+### 文体分析・執筆（author-style スキル）
+
+著者の文体を分析してガイド化する `author-style-analyzer` と、そのガイドを使って著者らしい文章を書く `author-style-writer` の2スキルがある。仕組みと役割分担は [`author-style-skills.md`](./author-style-skills.md) を参照。
+
+`author-style-analyzer` は、複数の役割（Coordinator・各分析担当・レビュー担当）が独立分析と相互レビューを行う構成で、**Claude Code の Agent Teams（teammates）機能**での実行を想定している。
+
+#### Agent Teams の有効化
+
+Agent Teams は既定で無効な実験的機能。ユーザー全体の設定 `~/.claude/settings.json` に次を追加して有効化する（プロジェクト単位の設定では有効化できない）。
+
+```json
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "teammateMode": "auto"
+}
+```
+
+- `teammateMode` … `in-process`（既定・どの端末でも動作）／`auto`／`tmux`／`iterm2`。分割ペイン表示（`tmux`・`iterm2`）には tmux または iTerm2（＋ `it2` CLI）が必要。こだわりがなければ `in-process` でよい。
+- 環境変数なので、`~/.claude/settings.json` の代わりにシェルで `export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` を設定してもよい。
+- teammate ごとに独立したコンテキストを持つため**トークン消費が大きい**。分析対象はスキル引数（カンマ区切り slug）で絞れる。
+
+有効化後は、スキル実行中に必要な teammate が spawn される。無効のままでも、サブエージェントや単一エージェントの役割切り替えで代替実行できる（相互レビューの忠実度は下がる）。
+
 ## データ更新スクリプト
 
 ### 慣用色名データの更新
