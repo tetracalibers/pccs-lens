@@ -6,7 +6,7 @@
   let {
     figure,
     ground,
-    iconId = "bi:star-fill"
+    iconId = "mynaui:flower-solid"
   }: {
     figure: string
     ground: string

@@ -38,7 +38,7 @@ $$
 
 $$
 \begin{align*}
-x' &= \frac{kX}{kX + kY + kZ} = \frac{kX}{k(X + Y + Z)} \\\\
+x^{\prime} &= \frac{kX}{kX + kY + kZ} = \frac{kX}{k(X + Y + Z)} \\\\
 &= \frac{X}{X + Y + Z} = x
 \end{align*}
 $$

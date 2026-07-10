@@ -16,9 +16,7 @@
 
     // CG ユニットページ（動的ルート /cg/[slug]）は cgGroups のカリキュラム順で前後に送る
     const cgIndex =
-      id === "/cg/[slug]"
-        ? cgPages.findIndex((cgPage) => cgPage.route === page.params.slug)
-        : -1
+      id === "/cg/[slug]" ? cgPages.findIndex((cgPage) => cgPage.route === page.params.slug) : -1
     if (cgIndex !== -1) {
       const current = cgPages[cgIndex]
       const prev = cgPages[cgIndex - 1]

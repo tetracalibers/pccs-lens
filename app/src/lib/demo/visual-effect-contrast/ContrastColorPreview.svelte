@@ -7,16 +7,28 @@
   interface Props {
     figure: string
     ground: string
-    iconId: string
+    iconId?: string
     figureLabel?: string
     groundLabel?: string
+    /** 指定された場合、図と地の境界線（図の輪郭）をこの色で描く（PCCS表記） */
+    separationPCCS?: string
   }
 
-  let { figure, ground, iconId, figureLabel, groundLabel }: Props = $props()
+  let {
+    figure,
+    ground,
+    iconId = "mynaui:flower-solid",
+    figureLabel,
+    groundLabel,
+    separationPCCS
+  }: Props = $props()
 
   // ===== SVG dimensions =====
   const SQ_SIZE = 200
   const ICON_SIZE = 110
+
+  // ===== セパレーション（図と地の境界線）=====
+  const SEPARATION_STROKE_WIDTH = 0.4 // アイコン座標系での線幅
 
   const SVG_W = SQ_SIZE
   const SVG_H = SQ_SIZE
@@ -33,6 +45,20 @@
 
   const figureLabelColor = $derived(isLightColor(figureHex) ? "#000" : "#fff")
   const groundLabelColor = $derived(isLightColor(groundHex) ? "#000" : "#fff")
+
+  // separationPCCS は figure/ground と同じく PCCS 表記で受け取り HEX に解決する
+  // （生の CSS カラーが渡された場合はそのまま使う）
+  const separationHex = $derived(
+    separationPCCS ? (PCCS_HEX_MAP.get(separationPCCS) ?? separationPCCS) : undefined
+  )
+
+  // stroke はアイコン内の path に継承され、図と地の境界線として描画される
+  const iconStyle = $derived(
+    `width: 100%; height: 100%; color: ${figureHex}; display: grid; place-items: center;` +
+      (separationHex
+        ? ` stroke: ${separationHex}; stroke-width: ${SEPARATION_STROKE_WIDTH}; stroke-linejoin: round;`
+        : "")
+  )
 
   const isAnki = $derived(ankiMode.isAnki)
 </script>
@@ -55,10 +81,7 @@
   {/if}
 
   <foreignObject x={ICON_X} y={ICON_Y} width={ICON_SIZE} height={ICON_SIZE}>
-    <div
-      xmlns="http://www.w3.org/1999/xhtml"
-      style="width: 100%; height: 100%; color: {figureHex}; display: grid; place-items: center;"
-    >
+    <div xmlns="http://www.w3.org/1999/xhtml" style={iconStyle}>
       <Icon icon={iconId} width={ICON_SIZE} height={ICON_SIZE} />
     </div>
   </foreignObject>
@@ -68,7 +91,7 @@
       x={SVG_W / 2}
       y={SVG_H / 2}
       text-anchor="middle"
-      dominant-baseline="hanging"
+      dominant-baseline="central"
       font-size={FIGURE_LABEL_FONT_SIZE}
       font-weight="bold"
       fill={figureLabelColor}

@@ -7,15 +7,31 @@ grades: ["3"]
 draft: true
 ---
 
+<script>
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import SpecularReflection from "$lib/demo/light-phenomena/SpecularReflection.svelte"
+  import DiffuseReflection from "$lib/demo/light-phenomena/DiffuseReflection.svelte"
+</script>
+
 ## :WithGradeTag[光の反射]{grades="3"}
 
 - 反射には:Mark[正反射]（:Mark[鏡面反射]）と:Mark[拡散反射]の2種類がある
 - 正反射は、光の:Mark[入射角]と:Mark[反射角]が等しい反射である
-- :Mark[拡散反射]では、光があらゆる方向に散らばって反射する
 - 鏡のような滑らかな面に起こる反射は:Mark[正反射]（:Mark[鏡面反射]）である
 - 正反射では、入射角（光が入る角度）と同じ角度で反射するため、同じ方向に光が集中して、眼に入ると眩しく感じる
+
+<SVGWrapper maxW="600">
+  <SpecularReflection />
+</SVGWrapper>
+
+- :Mark[拡散反射]では、光があらゆる方向に散らばって反射する
 - 表面に凹凸のあるマットな面に起こる反射は:Mark[拡散反射]である
 - 拡散反射は光があらゆる方向に散らばるため、柔らかい光に感じる
+
+<SVGWrapper maxW="600">
+  <DiffuseReflection />
+</SVGWrapper>
+
 - 入射した光がまんべんなく反射、すなわち:Mark[拡散反射]すると、見る方向に関係なく、どこから見ても同じ強さの明るさに感じる
 - 入射した光が特定の方向に強く反射、すなわち:Mark[正反射]すると、光沢やきらめきを感じることになる
 - 実際の物体の表面では、正反射と拡散反射が混在している。たとえば、ツヤのある紙は、拡散反射の中に正反射を一部含んでいる

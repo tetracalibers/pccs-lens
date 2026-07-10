@@ -7,6 +7,21 @@ grades: ["2"]
 draft: true
 ---
 
+<script>
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import HermannGrid from "$lib/demo/illusion/HermannGrid.svelte"
+  import MachBands from "$lib/demo/illusion/MachBands.svelte"
+  import EhrensteinEffect from "$lib/demo/illusion/EhrensteinEffect.svelte"
+  import EhrensteinEffectDark from "$lib/demo/illusion/EhrensteinEffectDark.svelte"
+  import NeonColorEffect from "$lib/demo/illusion/NeonColorEffect.svelte"
+  import LiebmannCheckerboard from "$lib/demo/illusion/LiebmannCheckerboard.svelte"
+  import LiebmannFigureGround from "$lib/demo/illusion/LiebmannFigureGround.svelte"
+  import TransparencyPerception from "$lib/demo/illusion/TransparencyPerception.svelte"
+  import TransparencyPerceptionShifted from "$lib/demo/illusion/TransparencyPerceptionShifted.svelte"
+  import TransparencyPerceptionAchromatic from "$lib/demo/illusion/TransparencyPerceptionAchromatic.svelte"
+  import TransparencyPerceptionShiftedAchromatic from "$lib/demo/illusion/TransparencyPerceptionShiftedAchromatic.svelte"
+</script>
+
 ## :WithGradeTag[錯視とは]{grades="2"}
 
 - 物差しで測った長さや大きさ、色を測る機器で測った色の数値などを、視対象の:Mark[物理]的性質という
@@ -23,14 +38,30 @@ draft: true
 - 白線に幅があり、白線の黒と接している部分では縁辺対比が起こって、より明るく見える。一方、十字路の中心部分は、黒と接している部分より少し距離があり、縁辺対比が弱くなることから、影が見えると解釈されている
 - ただし、歪んだ線を組み合わせた図形ではこの錯視は生じないことから、他のメカニズムも関与しているのではないかとも考えられている
 
+<SVGWrapper maxW="250">
+  <HermannGrid />
+</SVGWrapper>
+
 ### エーレンシュタイン効果
 
 - 格子の十字路の部分が抜けているとき、白背景では抜けた部分が明るく見え、黒背景では抜けた部分が暗く見える現象を:Mark[エーレンシュタイン効果]という
 - 抜けた部分に円を描き足すと、この錯視は消失する
 
+<SVGWrapper maxW="250">
+  <EhrensteinEffect />
+</SVGWrapper>
+
+<SVGWrapper maxW="250">
+  <EhrensteinEffectDark />
+</SVGWrapper>
+
 ### ネオンカラー効果
 
 - エーレンシュタイン図形の抜けていた十字路を色線でつなぐと、その色が線からにじみ出て広がるように見える。これは:Mark[ネオンカラー効果]と呼ばれる錯視である
+
+<SVGWrapper maxW="250">
+  <NeonColorEffect />
+</SVGWrapper>
 
 ## :WithGradeTag[色の境界で発生する錯視]{grades="2"}
 
@@ -42,6 +73,10 @@ draft: true
 - マッハバンドは、:Mark[網膜]で生じる:Mark[側抑制]の働きによる、:Mark[縁辺対比]の一種だと説明できる
 - マッハバンドが見える2箇所の位置は明と暗の境界になっている。:Mark[側抑制]による境界の強調により、明るい領域の境界はほかよりも:Mark[明るく]見え、暗い領域の境界はほかよりも:Mark[暗く]見えることから、帯として際立って見える
 
+<SVGWrapper>
+  <MachBands />
+</SVGWrapper>
+
 ## :WithGradeTag[錯視から学ぶ見やすさ]{grades="2"}
 
 ### リープマン効果
@@ -50,13 +85,40 @@ draft: true
 - リープマン効果は、色相差や彩度差があっても明度差がない刺激では、:Mark[形]の認識が困難になることを示している
 - リープマン効果から、標識などで文字や形がよく見えるようにするためには、:Mark[明度]差が必要だといえる
 
+<SVGWrapper maxW="250">
+  <LiebmannCheckerboard />
+</SVGWrapper>
+
+<SVGWrapper maxW="250">
+  <LiebmannFigureGround />
+</SVGWrapper>
+
 ## :WithGradeTag[錯視を利用した表現]{grades="2"}
 
 ### 透明視
 
 - 重なりあった図形の一部が透明に感じられる現象を:Mark[透明視]という
+
+<SVGWrapper maxW="280">
+  <TransparencyPerception />
+</SVGWrapper>
+
 - 図形をわずかにずらすだけで、透明感は失われる
+
+<SVGWrapper maxW="280">
+  <TransparencyPerceptionShifted />
+</SVGWrapper>
+
 - 透明視は、有彩色どうしでも無彩色どうしでも起こる
+
+<SVGWrapper maxW="280">
+  <TransparencyPerceptionAchromatic />
+</SVGWrapper>
+
+<SVGWrapper maxW="280">
+  <TransparencyPerceptionShiftedAchromatic />
+</SVGWrapper>
+
 - 透明視は、私たちの視覚が、より:Mark[単純]で:Mark[規則]的な見え方を好むことによって生じる錯視である
 
 ## :WithGradeTag[その他の錯視]{grades="2"}
