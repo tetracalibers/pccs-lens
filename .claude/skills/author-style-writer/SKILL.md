@@ -11,7 +11,13 @@ description: thinking-flow.md、writing-style.md、stylistic-quirks.md、refine-
 
 ## 参照するスタイルガイド
 
-執筆対象に応じて、リポジトリ直下の `writing-guides/` 配下の次のファイルを読む。
+### 必須の記法・書式ルール
+
+本文を書く前に、リポジトリ直下の `writing-guides/syntax-guide.md` を必ず読み、そのすべてのルールに従う。これは記事本文の記法・書式（独自ディレクティブ、`:Mark[]`、数式、コード、禁止事項など）を定めた必須ガイドで、著者の文体に関わらず常に適用する。文体上の癖よりも、この記法・書式ルールを優先する。
+
+### 著者の文体を再現するガイド
+
+そのうえで、著者らしい文章にするために、執筆対象に応じて `writing-guides/` 配下の次のファイルを読む。
 
 - `writing-guides/thinking-flow.md`
   - 何をどの順番で考え、どの地点で説明を補うか
@@ -30,10 +36,11 @@ description: thinking-flow.md、writing-style.md、stylistic-quirks.md、refine-
 
 1. ユーザーが今回明示した指示
 2. 記事の目的と技術的な正確さ
-3. `thinking-flow.md`
-4. `writing-style.md`
-5. `refine-style.md`
-6. `stylistic-quirks.md`
+3. `writing-guides/syntax-guide.md`（記法・書式の必須ルール）
+4. `thinking-flow.md`
+5. `writing-style.md`
+6. `refine-style.md`
+7. `stylistic-quirks.md`
 
 表面的な言い回しより、説明の目的、思考の流れ、情報構成を優先する。
 
@@ -212,6 +219,7 @@ description: thinking-flow.md、writing-style.md、stylistic-quirks.md、refine-
 
 - 記事の目的と読者に合っている
 - 技術的または論理的に正確である
+- 記法・書式が `writing-guides/syntax-guide.md` に従っている
 - 思考の流れが自然である
 - 構成が著者の傾向を反映している
 - 表現上の癖が過剰でない
