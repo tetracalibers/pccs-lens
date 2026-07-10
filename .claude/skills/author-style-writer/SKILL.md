@@ -11,18 +11,18 @@ description: thinking-flow.md、writing-style.md、stylistic-quirks.md、refine-
 
 ## 参照するスタイルガイド
 
-執筆対象に応じて次のファイルを読む。
+執筆対象に応じて、リポジトリ直下の `writing-guides/` 配下の次のファイルを読む。
 
-- `thinking-flow.md`
+- `writing-guides/thinking-flow.md`
   - 何をどの順番で考え、どの地点で説明を補うか
-- `writing-style.md`
+- `writing-guides/writing-style.md`
   - 記事、セクション、段落、文をどう構成するか
-- `stylistic-quirks.md`
+- `writing-guides/stylistic-quirks.md`
   - 語り口、頻出表現、文末、接続表現、表記上の癖
-- `refine-style.md`
+- `writing-guides/refine-style.md`
   - AI生成文に対して著者が行いやすい修正
 
-ファイルの実際の保存場所が異なる場合は、リポジトリ内を検索して特定する。
+`writing-guides/` に見つからない場合は、リポジトリ内を検索して保存場所を特定する。
 
 ## 優先順位
 
