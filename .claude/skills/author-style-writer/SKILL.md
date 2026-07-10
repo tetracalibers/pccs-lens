@@ -1,5 +1,4 @@
 ---
-
 name: author-style-writer
 description: thinking-flow.md、writing-style.md、stylistic-quirks.md、refine-style.mdを参照し、著者の思考過程、文章構成、言い回し、修正傾向を反映した文章を生成・推敲する。著者本人らしい技術記事や解説文を書きたい場合、AI生成文を著者らしく修正したい場合、既存のスタイルガイドに沿って記事をレビューしたい場合に使用する。
 ---
