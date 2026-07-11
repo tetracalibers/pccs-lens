@@ -5,17 +5,17 @@
   import {
     generateRound,
     CANDIDATE_COUNT,
-    type Difficulty,
+    type Mode,
     type Round
   } from "$lib/games/lightness-match/round"
 
-  const DIFFICULTIES: { id: Difficulty; label: string; hint: string }[] = [
-    { id: "beginner", label: "初級", hint: "色相の近い札が並ぶ" },
-    { id: "advanced", label: "上級", hint: "色相・彩度がバラバラ" }
+  const MODES: { id: Mode; label: string; hint: string }[] = [
+    { id: "hue", label: "色相が近い色", hint: "似た色相の中から明度で見分ける" },
+    { id: "chroma", label: "彩度が近い色", hint: "似た彩度の中から明度で見分ける" }
   ]
 
-  let difficulty = $state<Difficulty>("beginner")
-  let round = $state<Round>(generateRound("beginner"))
+  let mode = $state<Mode>("hue")
+  let round = $state<Round>(generateRound("hue"))
   let flipped = $state<boolean[]>(new Array(CANDIDATE_COUNT).fill(false))
 
   const foundCount = $derived(
@@ -24,14 +24,14 @@
   const remaining = $derived(round.correctCount - foundCount)
   const cleared = $derived(remaining === 0)
 
-  const startRound = (next: Difficulty = difficulty) => {
+  const startRound = (next: Mode = mode) => {
     round = generateRound(next)
     flipped = round.candidates.map(() => false)
   }
 
-  const selectDifficulty = (next: Difficulty) => {
-    if (next === difficulty) return
-    difficulty = next
+  const selectMode = (next: Mode) => {
+    if (next === mode) return
+    mode = next
     startRound(next)
   }
 
@@ -61,17 +61,17 @@
   </p>
 
   <section class="controls">
-    <div class="difficulty" role="group" aria-label="難易度">
-      {#each DIFFICULTIES as level (level.id)}
+    <div class="difficulty" role="group" aria-label="出題モード">
+      {#each MODES as m (m.id)}
         <button
           type="button"
           class="difficulty-btn"
-          class:active={difficulty === level.id}
-          aria-pressed={difficulty === level.id}
-          onclick={() => selectDifficulty(level.id)}
+          class:active={mode === m.id}
+          aria-pressed={mode === m.id}
+          onclick={() => selectMode(m.id)}
         >
-          <span class="difficulty-label">{level.label}</span>
-          <span class="difficulty-hint">{level.hint}</span>
+          <span class="difficulty-label">{m.label}</span>
+          <span class="difficulty-hint">{m.hint}</span>
         </button>
       {/each}
     </div>

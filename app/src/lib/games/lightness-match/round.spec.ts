@@ -6,7 +6,7 @@ import {
   MIN_CORRECT,
   MAX_CORRECT,
   NEAR_MISS_THRESHOLD,
-  type Difficulty
+  type Mode
 } from "./round"
 import { parseMunsell } from "$lib/color/munsell"
 
@@ -33,15 +33,13 @@ const isNeutral = (munsell: string): boolean => {
   return m !== null && m.isNeutral
 }
 
-const difficulties: Difficulty[] = ["beginner", "advanced"]
+const modes: Mode[] = ["hue", "chroma"]
 
 describe("generateRound", () => {
-  for (const difficulty of difficulties) {
-    describe(difficulty, () => {
+  for (const mode of modes) {
+    describe(mode, () => {
       // 多数シードで不変条件を検証する。
-      const rounds = Array.from({ length: 300 }, (_, i) =>
-        generateRound(difficulty, makeRng(i + 1))
-      )
+      const rounds = Array.from({ length: 300 }, (_, i) => generateRound(mode, makeRng(i + 1)))
 
       it("候補は常に 8 枚", () => {
         for (const r of rounds) expect(r.candidates).toHaveLength(CANDIDATE_COUNT)
@@ -95,16 +93,18 @@ describe("generateRound", () => {
     })
   }
 
-  it("初級の基準色は必ず有彩色（無彩色は除外）", () => {
-    for (let i = 0; i < 300; i++) {
-      const r = generateRound("beginner", makeRng(i + 1))
-      expect(isNeutral(r.base.munsell)).toBe(false)
+  it("基準色は必ず有彩色（無彩色は除外）", () => {
+    for (const mode of modes) {
+      for (let i = 0; i < 300; i++) {
+        const r = generateRound(mode, makeRng(i + 1))
+        expect(isNeutral(r.base.munsell)).toBe(false)
+      }
     }
   })
 
   it("同一シードでは同一ラウンドを再現する", () => {
-    const a = generateRound("advanced", makeRng(42))
-    const b = generateRound("advanced", makeRng(42))
+    const a = generateRound("chroma", makeRng(42))
+    const b = generateRound("chroma", makeRng(42))
     expect(a.base.id).toBe(b.base.id)
     expect(a.candidates.map((c) => c.color.id)).toEqual(b.candidates.map((c) => c.color.id))
   })
