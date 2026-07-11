@@ -144,7 +144,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.9rem;
     padding: 1.25rem;
     border-radius: 16px;
     background: var(--color-surface);
@@ -154,10 +154,10 @@
 
   .controls-label {
     margin: 0;
-    align-self: flex-start;
-    font-size: 0.8rem;
+    align-self: center;
+    font-size: 0.9rem;
     font-weight: 700;
-    color: var(--color-body);
+    color: var(--color-heading);
     letter-spacing: 0.04em;
   }
 
