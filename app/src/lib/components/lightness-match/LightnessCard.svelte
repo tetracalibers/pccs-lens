@@ -46,8 +46,9 @@
     verdict === "correct" ? "正解" : verdict === "near" ? "惜しい！" : "不正解"
   )
 
-  // 基準色との明度差（マンセル Value 差）。0 なら一致＝正解。
-  const valueDiff = $derived(Math.abs(baseValue - candidate.value))
+  // 基準色との明度差（マンセル Value 差）。符号付きで、基準より低ければ負・高ければ正。0 なら一致＝正解。
+  const valueDiff = $derived(candidate.value - baseValue)
+  const valueDiffLabel = $derived(valueDiff > 0 ? `+${valueDiff}` : String(valueDiff))
 </script>
 
 <div class="card" class:flipped>
@@ -104,7 +105,7 @@
 
       <span class="meta">
         <span class="diff-label">明度差</span>
-        <span class="diff-value">{valueDiff}</span>
+        <span class="diff-value">{valueDiffLabel}</span>
       </span>
     </div>
   </div>
@@ -232,6 +233,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 2px;
     line-height: 1.2;
     text-align: center;
   }
