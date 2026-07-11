@@ -25,6 +25,9 @@
   // 見つけた正解は確定（再クリックで戻せない）。不正解は表に戻して選び直せる。
   const locked = $derived(flipped && candidate.isCorrect)
 
+  // 基準色との明度差（マンセル Value 差）。0 なら一致＝正解。
+  const valueDiff = $derived(Math.abs(baseValue - candidate.value))
+
   const ariaLabel = $derived(
     flipped
       ? `候補 ${index + 1}：${candidate.color.name}。${verdictLabel}`
@@ -74,8 +77,8 @@
       {/if}
 
       <span class="meta">
-        <span class="name">{candidate.color.name}</span>
-        <span class="munsell">{candidate.color.munsell}</span>
+        <span class="diff-label">明度差</span>
+        <span class="diff-value">{valueDiff}</span>
       </span>
     </span>
   </span>
@@ -206,16 +209,15 @@
     text-align: center;
   }
 
-  .name {
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: var(--color-heading);
+  .diff-label {
+    font-size: 0.66rem;
+    color: var(--color-body);
   }
 
-  .munsell {
-    font-size: 0.66rem;
-    font-family: var(--font-mono, monospace);
-    color: var(--color-body);
+  .diff-value {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--color-heading);
   }
 
   /* 動きを減らす設定を尊重する */
