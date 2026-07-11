@@ -91,6 +91,7 @@
     border-radius: 999px;
     background: linear-gradient(135deg, #7c3aed, #4d96ff);
     color: #fff;
+    font-family: var(--font-ja);
     font-size: 0.95rem;
     font-weight: 800;
     cursor: pointer;
