@@ -119,9 +119,6 @@
   <section class="controls">
     <p class="controls-label">探すトーンを選ぶ</p>
     <ToneMapSelector selected={target} onselect={selectTone} />
-    <p class="note">
-      このゲームは色相・彩度・トーンの見分けに頼るため、色覚タイプによって難しさが変わることがあります。
-    </p>
   </section>
 </main>
 
@@ -162,14 +159,6 @@
     font-weight: 700;
     color: var(--color-body);
     letter-spacing: 0.04em;
-  }
-
-  .note {
-    margin: 0;
-    font-size: 0.72rem;
-    line-height: 1.6;
-    color: var(--color-body);
-    opacity: 0.85;
   }
 
   /* ===== 指示・進捗 ===== */
