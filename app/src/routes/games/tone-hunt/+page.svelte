@@ -1,24 +1,37 @@
 <script lang="ts">
   import Heading1 from "$lib/components/Heading1.svelte"
   import Mark from "$lib/components/m-directive/Mark.svelte"
-  import LightnessCard from "$lib/components/lightness-match/LightnessCard.svelte"
+  import ToneHuntCard from "$lib/components/tone-hunt/ToneHuntCard.svelte"
   import ClearOverlay from "$lib/components/games/ClearOverlay.svelte"
-  import {
-    generateRound,
-    generateRoundForBase,
-    CANDIDATE_COUNT,
-    type Mode,
-    type Round
-  } from "$lib/games/lightness-match/round"
+  import { generateRound, CANDIDATE_COUNT, type Mode, type Round } from "$lib/games/tone-hunt/round"
 
-  const MODES: { id: Mode; label: string; hint: string }[] = [
-    { id: "hue", label: "色相が近い色", hint: "似た色相の中から明度で見分ける" },
-    { id: "chroma", label: "彩度が近い色", hint: "似た彩度の中から明度で見分ける" }
+  const MODES: { id: Mode; label: string; hint: string; prompt: string }[] = [
+    {
+      id: "tint",
+      label: "明清色",
+      hint: "純色＋白",
+      prompt: "明清色のカードをすべて選ぼう"
+    },
+    {
+      id: "shade",
+      label: "暗清色",
+      hint: "純色＋黒",
+      prompt: "暗清色のカードをすべて選ぼう"
+    },
+    {
+      id: "mid",
+      label: "中間色",
+      hint: "純色＋灰",
+      prompt: "中間色のカードをすべて選ぼう"
+    }
   ]
 
-  let mode = $state<Mode>("hue")
-  let round = $state<Round>(generateRound("hue"))
+  // 既定モードは「明清色を探す」。永続化しないためアクセスのたびに都度リセットされる。
+  let mode = $state<Mode>("tint")
+  let round = $state<Round>(generateRound("tint"))
   let flipped = $state<boolean[]>(new Array(CANDIDATE_COUNT).fill(false))
+
+  const activeMode = $derived(MODES.find((m) => m.id === mode) ?? MODES[0])
 
   const foundCount = $derived(
     round.candidates.reduce((n, c, i) => n + (flipped[i] && c.isCorrect ? 1 : 0), 0)
@@ -33,11 +46,9 @@
 
   const selectMode = (next: Mode) => {
     if (next === mode) return
-    // 基準色は変えず、候補だけを新モードで組み直す。
-    const base = round.base
+    // モード切替でそのモードの新しいラウンドを配り直す（基準色を持たないので候補ごと作り直す）。
     mode = next
-    round = generateRoundForBase(next, base)
-    flipped = round.candidates.map(() => false)
+    startRound(next)
   }
 
   const onselect = (index: number) => {
@@ -53,30 +64,32 @@
 </script>
 
 <svelte:head>
-  <title>明度を見分ける - Color Prism</title>
+  <title>PCCSの清色・濁色を見分ける - Color Prism</title>
 </svelte:head>
 
 <main>
-  <Heading1 icon="mdi:contrast-circle" grayscale compact>明度を見分ける</Heading1>
+  <Heading1 icon="mdi:invert-colors" grayscale compact>PCCSの清色・濁色を見分ける</Heading1>
 
   <p class="lead">
-    基準色と
-    <Mark>明度が同じ</Mark>
-    カードを探すゲームです。同じ明度でも鮮やかな色ほど明るく見えます。色相や彩度の印象に惑わされず、明度だけを見抜きましょう。
+    色そのものを見て、白が混ざった<Mark>明清色</Mark>・黒が混ざった<Mark>
+      暗清色
+    </Mark>・灰が混ざった<Mark>
+      中間色（濁色）
+    </Mark>のどれに属すかを見分けるゲームです。鮮やかさを明るさと思い込まず、トーンの位置で判断しましょう。
   </p>
 
   <section class="controls">
-    <div class="difficulty" role="group" aria-label="出題モード">
+    <div class="modes" role="group" aria-label="探すトーン群">
       {#each MODES as m (m.id)}
         <button
           type="button"
-          class="difficulty-btn"
+          class="mode-btn"
           class:active={mode === m.id}
           aria-pressed={mode === m.id}
           onclick={() => selectMode(m.id)}
         >
-          <span class="difficulty-label">{m.label}</span>
-          <span class="difficulty-hint">{m.hint}</span>
+          <span class="mode-label">{m.label}</span>
+          <span class="mode-hint">{m.hint}</span>
         </button>
       {/each}
     </div>
@@ -84,13 +97,8 @@
 
   <section class="board-section">
     <div class="prompt">
-      <div class="base-card" style="background: {round.base._hex}"></div>
       <div class="prompt-body">
-        <p class="prompt-title">同じ明度の色を探そう</p>
-        <p class="base-meta">
-          <span class="base-name">{round.base.name}</span>
-          <span class="base-munsell">{round.base.munsell}</span>
-        </p>
+        <p class="prompt-title">{activeMode.prompt}</p>
         <p class="progress" aria-live="polite">
           残り <strong>{remaining}</strong>
           枚
@@ -100,23 +108,14 @@
 
     <div class="board">
       <div class="grid" class:dimmed={cleared}>
-        {#each round.candidates as candidate, i (candidate.color.id)}
-          <LightnessCard
-            {candidate}
-            baseValue={round.baseValue}
-            baseColor={round.base._hex}
-            baseName={round.base.name}
-            baseNameSegments={round.base.nameSegments}
-            flipped={flipped[i]}
-            index={i}
-            {onselect}
-          />
+        {#each round.candidates as candidate, i (candidate.color.notation)}
+          <ToneHuntCard {candidate} {mode} flipped={flipped[i]} index={i} {onselect} />
         {/each}
       </div>
 
       {#if cleared}
         <ClearOverlay oncontinue={() => startRound()}>
-          同じ明度の色を{round.correctCount}枚すべて見つけました。
+          {activeMode.label}のカードを{round.correctCount}枚すべて見つけました。
         </ClearOverlay>
       {/if}
     </div>
@@ -140,22 +139,22 @@
     margin: 0 0 1.75rem;
   }
 
-  /* ===== 難易度切替 ===== */
+  /* ===== モード切替 ===== */
   .controls {
     margin-bottom: 1.5rem;
   }
 
-  .difficulty {
+  .modes {
     display: inline-flex;
+    flex-wrap: wrap;
     gap: 0.4rem;
     padding: 0.3rem;
     border-radius: 14px;
-    /* 明度軸のガイド線と共有する --color-muted とは切り離し、トラックだけ独立の地色にする */
     background: light-dark(#f0f0f3, #33333f);
     border: 1px solid var(--color-border);
   }
 
-  .difficulty-btn {
+  .mode-btn {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -172,32 +171,32 @@
       color 0.2s;
   }
 
-  .difficulty-btn:hover {
+  .mode-btn:hover {
     color: var(--color-heading);
   }
 
-  .difficulty-btn.active {
+  .mode-btn.active {
     background: light-dark(#ffffff, #52526a);
     color: var(--color-heading);
     box-shadow: 0 1px 6px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5));
   }
 
-  .difficulty-btn:focus-visible {
+  .mode-btn:focus-visible {
     outline: 3px solid light-dark(#7c3aed, #c4b5fd);
     outline-offset: 2px;
   }
 
-  .difficulty-label {
+  .mode-label {
     font-size: 0.95rem;
     font-weight: 800;
   }
 
-  .difficulty-hint {
+  .mode-hint {
     font-size: 0.68rem;
     color: var(--color-body);
   }
 
-  /* ===== 基準色 ===== */
+  /* ===== 指示・進捗 ===== */
   .prompt {
     display: flex;
     align-items: center;
@@ -207,15 +206,6 @@
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     margin-bottom: 1.5rem;
-  }
-
-  .base-card {
-    flex-shrink: 0;
-    width: 84px;
-    height: 100px;
-    border-radius: 12px;
-    border: 1px solid var(--color-border);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
   }
 
   .prompt-body {
@@ -229,25 +219,6 @@
     font-size: 1rem;
     font-weight: 800;
     color: var(--color-heading);
-  }
-
-  .base-meta {
-    display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
-    margin: 0;
-  }
-
-  .base-name {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--color-heading);
-  }
-
-  .base-munsell {
-    font-size: 0.78rem;
-    font-family: var(--font-mono, monospace);
-    color: var(--color-body);
   }
 
   .progress {
