@@ -213,7 +213,7 @@
   }
 
   .verdict-near {
-    color: light-dark(#e8590c, #ffa94d);
+    color: light-dark(#ef8c00, #ffc266);
   }
 
   .verdict-wrong {
