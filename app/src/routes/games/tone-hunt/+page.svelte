@@ -1,10 +1,9 @@
 <script lang="ts">
-  import Icon from "@iconify/svelte"
   import Heading1 from "$lib/components/Heading1.svelte"
   import Mark from "$lib/components/m-directive/Mark.svelte"
   import ToneHuntCard from "$lib/components/tone-hunt/ToneHuntCard.svelte"
+  import ClearOverlay from "$lib/components/games/ClearOverlay.svelte"
   import { generateRound, CANDIDATE_COUNT, type Mode, type Round } from "$lib/games/tone-hunt/round"
-  import { portal } from "$lib/actions/portal"
 
   const MODES: { id: Mode; label: string; hint: string; prompt: string }[] = [
     {
@@ -115,18 +114,9 @@
       </div>
 
       {#if cleared}
-        <div class="clear-overlay" role="status" aria-live="assertive" use:portal>
-          <div class="clear-card">
-            <Icon icon="mdi:party-popper" />
-            <p class="clear-title">クリア！</p>
-            <p class="clear-desc">
-              {activeMode.label}のカードを{round.correctCount}枚すべて見つけました。
-            </p>
-            <button type="button" class="continue-btn" onclick={() => startRound()}>
-              もっと続ける
-            </button>
-          </div>
-        </div>
+        <ClearOverlay oncontinue={() => startRound()}>
+          {activeMode.label}のカードを{round.correctCount}枚すべて見つけました。
+        </ClearOverlay>
       {/if}
     </div>
   </section>
@@ -263,94 +253,6 @@
   @media (max-width: 540px) {
     .grid {
       grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  /* ===== クリア演出 ===== */
-  .clear-overlay {
-    /* body 直下へ portal しているので fixed はビューポート基準。スクロール位置に
-       関わらず画面中央に表示する。overlay 自体はクリックを透過し、カードのみ操作可能。 */
-    /* portal で main の外へ出るため、カードが参照する局所トークンをここで補う */
-    --color-surface: light-dark(#ffffff, #16161f);
-    --color-border: light-dark(#e0e0e0, #2e2e3e);
-    position: fixed;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    pointer-events: none;
-  }
-
-  .clear-card {
-    pointer-events: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 1.5rem 2rem;
-    border-radius: 18px;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    box-shadow: 0 12px 40px light-dark(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.55));
-    text-align: center;
-    animation: pop 0.4s cubic-bezier(0.2, 1.4, 0.4, 1);
-  }
-
-  .clear-card :global(svg) {
-    font-size: 2.5rem;
-    color: light-dark(#f59f00, #ffd43b);
-  }
-
-  .clear-title {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 900;
-    color: var(--color-heading);
-  }
-
-  .clear-desc {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--color-body);
-  }
-
-  .continue-btn {
-    margin-top: 0.6rem;
-    padding: 0.6rem 1.6rem;
-    border: none;
-    border-radius: 999px;
-    background: linear-gradient(135deg, #7c3aed, #4d96ff);
-    color: #fff;
-    font-size: 0.95rem;
-    font-weight: 800;
-    cursor: pointer;
-    transition: transform 0.15s;
-  }
-
-  .continue-btn:hover {
-    transform: translateY(-1px);
-  }
-
-  .continue-btn:focus-visible {
-    outline: 3px solid light-dark(#7c3aed, #c4b5fd);
-    outline-offset: 3px;
-  }
-
-  @keyframes pop {
-    from {
-      transform: scale(0.8);
-      opacity: 0;
-    }
-    to {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .clear-card {
-      animation: none;
     }
   }
 </style>
