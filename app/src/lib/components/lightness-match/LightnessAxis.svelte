@@ -42,11 +42,18 @@
   const valueToY = (v: number): number =>
     axisBottom - (Math.max(0, Math.min(V_MAX, v)) / V_MAX) * (axisBottom - axisTop)
 
-  // グレースケール軸のグラデーション。マンセル Value を L* 近似でグレー化し、知覚的に均す。
-  const STOPS = Array.from({ length: V_MAX + 1 }, (_, v) => ({
-    offset: (1 - v / V_MAX) * 100,
-    color: grayHexForLightness(v * 10)
-  }))
+  // マンセル明度スケール。Value 1 段ごとの無彩色セルを、下（暗）から上（明）へ離散的に並べる。
+  // 各セルの色は L* ≈ Value×10 でグレー化する（帯の中央値を採用）。
+  const SCALE_CELLS = Array.from({ length: V_MAX }, (_, i) => {
+    const yTop = valueToY(i + 1)
+    const yBottom = valueToY(i)
+    return {
+      value: i,
+      y: yTop,
+      height: yBottom - yTop,
+      color: grayHexForLightness((i + 0.5) * 10)
+    }
+  })
 
   const baseY = $derived(valueToY(baseValue))
   const selY = $derived(valueToY(selectedValue))
@@ -59,24 +66,18 @@
   role="img"
   aria-label="明度スケール。基準色の明度 {baseValue}、選択色の明度 {selectedValue}。"
 >
-  <defs>
-    <linearGradient id="lm-gray-scale" x1="0" y1="0" x2="0" y2="1">
-      {#each STOPS as stop (stop.offset)}
-        <stop offset="{stop.offset}%" stop-color={stop.color} />
-      {/each}
-    </linearGradient>
-  </defs>
-
-  <!-- 明度スケール本体 -->
+  <!-- マンセル明度スケール本体：無彩色を下（暗）から上（明）へ段階的に並べる -->
+  {#each SCALE_CELLS as cell (cell.value)}
+    <rect x={BAR_X} y={cell.y} width={BAR_W} height={cell.height} fill={cell.color} />
+  {/each}
   <rect
     x={BAR_X}
     y={axisTop}
     width={BAR_W}
     height={axisBottom - axisTop}
-    fill="url(#lm-gray-scale)"
+    fill="none"
     stroke={COL_BORDER}
     stroke-width="1"
-    rx="2"
   />
 
   <!-- 明 / 暗 のキャプション -->
