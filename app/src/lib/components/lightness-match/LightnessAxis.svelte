@@ -38,6 +38,8 @@
   const MARK_GAP = 5
   const LABEL_GAP = 5
   const FONT_SIZE_VALUE = 12
+  // フォント 12 のおおよそのキャップハイト。値ラベルを下側に置くときの位置合わせに使う。
+  const VALUE_ASCENT = 9
   const STROKE_WIDTH_SWATCH = 1
 
   // ===== 大きい色スウォッチの縦並び＋慣用色名（右） =====
@@ -80,6 +82,19 @@
   const selMarkX = BAR_X + BAR_W + MARK_GAP
   const baseMarkY = $derived(valueToY(baseValue) - CELL / 2)
   const selMarkY = $derived(valueToY(selectedValue) - CELL / 2)
+
+  // 値ラベルは基本マーカーの中央上に置く。ただしマンセル最高明度（V=10）は
+  // スケール最上部にあり上に置くと見切れるため、そのときだけスウォッチの下に置く。
+  const baseCenterX = baseMarkX + MARK_W / 2
+  const selCenterX = selMarkX + MARK_W / 2
+  const valueLabelBaseline = (value: number, below: boolean): number =>
+    below
+      ? valueToY(value) + CELL / 2 + LABEL_GAP + VALUE_ASCENT
+      : valueToY(value) - CELL / 2 - LABEL_GAP
+  const baseLabelBelow = $derived(baseValue >= V_MAX)
+  const selLabelBelow = $derived(selectedValue >= V_MAX)
+  const baseLabelY = $derived(valueLabelBaseline(baseValue, baseLabelBelow))
+  const selLabelY = $derived(valueLabelBaseline(selectedValue, selLabelBelow))
 
   // 右：色を見比べる大きいスウォッチ。明度が高い色ほど上に配置し、上下に慣用色名を添える。
   const nameCenterX = BIG_X + BIG / 2
@@ -124,7 +139,7 @@
     stroke-width="1"
   />
 
-  <!-- 基準色マーカー（左）：同じ明度のセルの真横（値ラベルは選択色側だけに表示） -->
+  <!-- 基準色マーカー（左）：同じ明度のセルの真横。値ラベルは上（最高明度なら下）に表示 -->
   <rect
     x={baseMarkX}
     y={baseMarkY}
@@ -134,8 +149,18 @@
     stroke={COL_BORDER}
     stroke-width={STROKE_WIDTH_SWATCH}
   />
+  <text
+    x={baseCenterX}
+    y={baseLabelY}
+    text-anchor="middle"
+    font-size={FONT_SIZE_VALUE}
+    font-weight="700"
+    fill={COL_TEXT}
+  >
+    {baseValue}
+  </text>
 
-  <!-- 選択色マーカー（右）：同じ明度のセルの真横 -->
+  <!-- 選択色マーカー（右）：同じ明度のセルの真横。値ラベルは上（最高明度なら下）に表示 -->
   <rect
     x={selMarkX}
     y={selMarkY}
@@ -146,9 +171,9 @@
     stroke-width={STROKE_WIDTH_SWATCH}
   />
   <text
-    x={selMarkX + MARK_W + LABEL_GAP}
-    y={valueToY(selectedValue) + FONT_SIZE_VALUE / 3}
-    text-anchor="start"
+    x={selCenterX}
+    y={selLabelY}
+    text-anchor="middle"
     font-size={FONT_SIZE_VALUE}
     font-weight="700"
     fill={COL_TEXT}
