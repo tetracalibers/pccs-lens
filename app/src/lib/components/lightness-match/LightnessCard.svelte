@@ -74,7 +74,7 @@
           disabled={!flipped}
           onclick={() => onselect(index)}
         >
-          <Icon icon="mdi:restore" />
+          <Icon icon="eva:flip-2-outline" />
         </button>
       {/if}
 
@@ -249,14 +249,14 @@
 
   .flip-back {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 7px;
+    right: 7px;
     z-index: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.75rem;
+    height: 1.75rem;
     padding: 0;
     border: 1px solid var(--_border);
     border-radius: 50%;
