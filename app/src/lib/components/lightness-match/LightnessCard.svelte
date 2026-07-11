@@ -14,8 +14,16 @@
     onselect: (index: number) => void
   }
 
-  let { candidate, baseValue, baseColor, baseName, baseNameSegments, flipped, index, onselect }: Props =
-    $props()
+  let {
+    candidate,
+    baseValue,
+    baseColor,
+    baseName,
+    baseNameSegments,
+    flipped,
+    index,
+    onselect
+  }: Props = $props()
 
   // 慣用色名を最大 2 行に分ける。nameSegments があればそれを行として使い、なければ 1 行。
   const toNameLines = (name: string, segments?: string[]): string[] => {
@@ -26,7 +34,9 @@
   }
 
   const baseNameLines = $derived(toNameLines(baseName, baseNameSegments))
-  const selectedNameLines = $derived(toNameLines(candidate.color.name, candidate.color.nameSegments))
+  const selectedNameLines = $derived(
+    toNameLines(candidate.color.name, candidate.color.nameSegments)
+  )
 
   const nearMiss = $derived(!candidate.isCorrect && isNearMiss(baseValue, candidate.value))
   const verdict = $derived(
@@ -188,6 +198,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.2rem;
+    margin-top: 0.4rem;
     font-size: 0.85rem;
     font-weight: 800;
     line-height: 1;
