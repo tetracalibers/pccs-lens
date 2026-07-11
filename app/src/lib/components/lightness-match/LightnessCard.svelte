@@ -8,12 +8,25 @@
     baseValue: number
     baseColor: string
     baseName: string
+    baseNameSegments?: string[]
     flipped: boolean
     index: number
     onselect: (index: number) => void
   }
 
-  let { candidate, baseValue, baseColor, baseName, flipped, index, onselect }: Props = $props()
+  let { candidate, baseValue, baseColor, baseName, baseNameSegments, flipped, index, onselect }: Props =
+    $props()
+
+  // 慣用色名を最大 2 行に分ける。nameSegments があればそれを行として使い、なければ 1 行。
+  const toNameLines = (name: string, segments?: string[]): string[] => {
+    if (!segments || segments.length < 2) return [name]
+    if (segments.length === 2) return segments
+    const mid = Math.ceil(segments.length / 2)
+    return [segments.slice(0, mid).join(""), segments.slice(mid).join("")]
+  }
+
+  const baseNameLines = $derived(toNameLines(baseName, baseNameSegments))
+  const selectedNameLines = $derived(toNameLines(candidate.color.name, candidate.color.nameSegments))
 
   const nearMiss = $derived(!candidate.isCorrect && isNearMiss(baseValue, candidate.value))
   const verdict = $derived(
@@ -71,10 +84,10 @@
           <LightnessAxis
             {baseValue}
             {baseColor}
-            {baseName}
+            {baseNameLines}
             selectedValue={candidate.value}
             selectedColor={candidate.color._hex}
-            selectedName={candidate.color.name}
+            {selectedNameLines}
           />
         </span>
       {/if}

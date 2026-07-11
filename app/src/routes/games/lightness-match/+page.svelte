@@ -101,6 +101,7 @@
             baseValue={round.baseValue}
             baseColor={round.base._hex}
             baseName={round.base.name}
+            baseNameSegments={round.base.nameSegments}
             flipped={flipped[i]}
             index={i}
             {onselect}

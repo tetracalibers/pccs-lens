@@ -6,22 +6,22 @@
     baseValue: number
     /** 基準色の HEX。 */
     baseColor: string
-    /** 基準色の慣用色名。 */
-    baseName: string
+    /** 基準色の慣用色名（1〜2 行）。 */
+    baseNameLines: string[]
     /** 選択色のマンセル Value（0〜10）。 */
     selectedValue: number
     /** 選択色の HEX。 */
     selectedColor: string
-    /** 選択色の慣用色名。 */
-    selectedName: string
+    /** 選択色の慣用色名（1〜2 行）。 */
+    selectedNameLines: string[]
   }
 
-  let { baseValue, baseColor, baseName, selectedValue, selectedColor, selectedName }: Props =
+  let { baseValue, baseColor, baseNameLines, selectedValue, selectedColor, selectedNameLines }: Props =
     $props()
 
   // ===== SVG dimensions =====
-  const WIDTH = 200
-  const HEIGHT = 168
+  const WIDTH = 216
+  const HEIGHT = 190
 
   // ===== 明度スケール＋セル横のマーカー（左） =====
   const PAD_TOP = 6
@@ -35,11 +35,17 @@
   const STROKE_WIDTH_SWATCH = 1
 
   // ===== 大きい色スウォッチの縦並び＋慣用色名（右） =====
-  const BIG = 52
+  const BIG = 46
   const BIG_GAP = 8
-  const BIG_X = 127
+  const BIG_X = 140
   const NAME_FS = 14
-  const NAME_GAP = 8
+  const NAME_LINE_H = 15
+  // 慣用色名は最大 2 行。行数によらずレイアウトが崩れないよう、名前の帯は 2 行ぶん確保する。
+  const NAME_BAND = 2 * NAME_LINE_H
+  // スウォッチと色名ラベルの余白（1 行・2 行いずれでも一定にする）。
+  const SWATCH_NAME_GAP = 7
+  // フォント 14 のおおよそのキャップハイト。下側の名前を上詰めするのに使う。
+  const NAME_ASCENT = 10
 
   // ===== Colors =====
   const COL_TEXT = "var(--color-heading)"
@@ -72,18 +78,21 @@
   // 右：色を見比べる大きいスウォッチ。明度が高い色ほど上に配置し、上下に慣用色名を添える。
   const nameCenterX = BIG_X + BIG / 2
   const centerY = (axisTop + axisBottom) / 2
-  const blockH = 2 * BIG + BIG_GAP + 2 * (NAME_GAP + NAME_FS)
+  const blockH = 2 * NAME_BAND + 2 * SWATCH_NAME_GAP + 2 * BIG + BIG_GAP
   const blockTop = centerY - blockH / 2
-  const topNameY = blockTop + NAME_FS
-  const topBigY = blockTop + NAME_FS + NAME_GAP
+  const topBigY = blockTop + NAME_BAND + SWATCH_NAME_GAP
   const bottomBigY = topBigY + BIG + BIG_GAP
-  const bottomNameY = bottomBigY + BIG + NAME_GAP + NAME_FS
+  // 上の名前は下詰め（最下行がスウォッチ上端の手前）、下の名前は上詰め（最上行がスウォッチ下端の下）。
+  // どちらもスウォッチとの余白が SWATCH_NAME_GAP で一定になる。
+  const topNameLastBaseline = blockTop + NAME_BAND
+  const bottomNameFirstBaseline = bottomBigY + BIG + SWATCH_NAME_GAP + NAME_ASCENT
 
   const topIsBase = $derived(baseValue >= selectedValue)
   const topColor = $derived(topIsBase ? baseColor : selectedColor)
   const bottomColor = $derived(topIsBase ? selectedColor : baseColor)
-  const topName = $derived(topIsBase ? baseName : selectedName)
-  const bottomName = $derived(topIsBase ? selectedName : baseName)
+  const topNameLines = $derived(topIsBase ? baseNameLines : selectedNameLines)
+  const bottomNameLines = $derived(topIsBase ? selectedNameLines : baseNameLines)
+  const topNameFirstBaseline = $derived(topNameLastBaseline - (topNameLines.length - 1) * NAME_LINE_H)
 </script>
 
 <svg
@@ -123,10 +132,8 @@
     text-anchor="end"
     font-size={FONT_SIZE_VALUE}
     font-weight="700"
-    fill={COL_TEXT}
+    fill={COL_TEXT}>{baseValue}</text
   >
-    {baseValue}
-  </text>
 
   <!-- 選択色マーカー（右）：同じ明度のセルの真横 -->
   <rect
@@ -144,14 +151,20 @@
     text-anchor="start"
     font-size={FONT_SIZE_VALUE}
     font-weight="700"
+    fill={COL_TEXT}>{selectedValue}</text
+  >
+
+  <!-- 大きい色スウォッチ（上＝明度が高い色 / 下＝明度が低い色）と慣用色名（最大 2 行） -->
+  <text
+    x={nameCenterX}
+    y={topNameFirstBaseline}
+    text-anchor="middle"
+    font-size={NAME_FS}
     fill={COL_TEXT}
   >
-    {selectedValue}
-  </text>
-
-  <!-- 大きい色スウォッチ（上＝明度が高い色 / 下＝明度が低い色）と慣用色名 -->
-  <text x={nameCenterX} y={topNameY} text-anchor="middle" font-size={NAME_FS} fill={COL_TEXT}>
-    {topName}
+    {#each topNameLines as line, i (i)}
+      <tspan x={nameCenterX} dy={i === 0 ? 0 : NAME_LINE_H}>{line}</tspan>
+    {/each}
   </text>
   <rect
     x={BIG_X}
@@ -171,8 +184,16 @@
     stroke={COL_BORDER}
     stroke-width={STROKE_WIDTH_SWATCH}
   />
-  <text x={nameCenterX} y={bottomNameY} text-anchor="middle" font-size={NAME_FS} fill={COL_TEXT}>
-    {bottomName}
+  <text
+    x={nameCenterX}
+    y={bottomNameFirstBaseline}
+    text-anchor="middle"
+    font-size={NAME_FS}
+    fill={COL_TEXT}
+  >
+    {#each bottomNameLines as line, i (i)}
+      <tspan x={nameCenterX} dy={i === 0 ? 0 : NAME_LINE_H}>{line}</tspan>
+    {/each}
   </text>
 </svg>
 
