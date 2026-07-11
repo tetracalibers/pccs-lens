@@ -15,20 +15,17 @@
   let { baseValue, baseColor, selectedValue, selectedColor }: Props = $props()
 
   // ===== SVG dimensions =====
-  const WIDTH = 168
+  const WIDTH = 144
   const HEIGHT = 150
 
   // ===== Layout constants =====
-  const PAD_TOP = 8
-  const PAD_BOTTOM = 8
-  const BAR_W = 26
-  const BAR_X = (WIDTH - BAR_W) / 2
+  const PAD_TOP = 6
+  const PAD_BOTTOM = 6
   const V_MAX = 10
-  const SWATCH_W = 28
-  const SWATCH_GAP = 5
+  const SWATCH_GAP = 6
   const LABEL_GAP = 5
   const FONT_SIZE_VALUE = 12
-  const STROKE_WIDTH_SWATCH = 1.5
+  const STROKE_WIDTH_SWATCH = 1
 
   // ===== Colors =====
   const COL_TEXT = "var(--color-heading)"
@@ -36,12 +33,16 @@
 
   const axisTop = PAD_TOP
   const axisBottom = HEIGHT - PAD_BOTTOM
-  const cellH = (axisBottom - axisTop) / V_MAX
+  // セルの高さ（縦に V_MAX 段並ぶ）。幅はこれより少し広くして横長のセルにする。
+  const CELL = (axisBottom - axisTop) / V_MAX
+  const BAR_W = 20
+  const BAR_X = (WIDTH - BAR_W) / 2
+  const SWATCH_W = CELL
 
   const valueToY = (v: number): number =>
     axisBottom - (Math.max(0, Math.min(V_MAX, v)) / V_MAX) * (axisBottom - axisTop)
 
-  // マンセル明度スケール。Value 1 段ごとの無彩色セルを、下（暗）から上（明）へ離散的に並べる。
+  // マンセル明度スケール。Value 1 段ごとの無彩色セルを、下（暗）から上（明）へ並べる。
   // 各セルの色は L* ≈ Value×10 でグレー化する（帯の中央値を採用）。
   const SCALE_CELLS = Array.from({ length: V_MAX }, (_, i) => ({
     value: i,
@@ -50,12 +51,12 @@
     color: grayHexForLightness((i + 0.5) * 10)
   }))
 
-  // 実際の色の長方形は、同じ明度のセルの真横（基準色=左、選択色=右）に置く。
+  // 実際の色の四角形は、同じ明度のセルの真横（基準色=左、選択色=右）に置く。
   const baseSwatchX = BAR_X - SWATCH_GAP - SWATCH_W
   const selSwatchX = BAR_X + BAR_W + SWATCH_GAP
 
-  const baseSwatchY = $derived(valueToY(baseValue) - cellH / 2)
-  const selSwatchY = $derived(valueToY(selectedValue) - cellH / 2)
+  const baseSwatchY = $derived(valueToY(baseValue) - CELL / 2)
+  const selSwatchY = $derived(valueToY(selectedValue) - CELL / 2)
 </script>
 
 <svg
@@ -84,9 +85,9 @@
     x={baseSwatchX}
     y={baseSwatchY}
     width={SWATCH_W}
-    height={cellH}
+    height={CELL}
     fill={baseColor}
-    stroke={COL_TEXT}
+    stroke={COL_BORDER}
     stroke-width={STROKE_WIDTH_SWATCH}
   />
   <text
@@ -103,9 +104,9 @@
     x={selSwatchX}
     y={selSwatchY}
     width={SWATCH_W}
-    height={cellH}
+    height={CELL}
     fill={selectedColor}
-    stroke={COL_TEXT}
+    stroke={COL_BORDER}
     stroke-width={STROKE_WIDTH_SWATCH}
   />
   <text
