@@ -1,6 +1,7 @@
 <script lang="ts">
   import Icon from "@iconify/svelte"
   import Heading1 from "$lib/components/Heading1.svelte"
+  import Mark from "$lib/components/m-directive/Mark.svelte"
   import LightnessCard from "$lib/components/lightness-match/LightnessCard.svelte"
   import {
     generateRound,
@@ -60,7 +61,7 @@
 
   <p class="lead">
     基準色と
-    <strong>明度が同じ</strong>
+    <Mark>明度が同じ</Mark>
     カードを探すゲームです。同じ明度でも鮮やかな色ほど明るく見えます。色相や彩度の印象に惑わされず、明度だけを見抜きましょう。
   </p>
 
@@ -127,10 +128,6 @@
       {/if}
     </div>
   </section>
-
-  <p class="note">
-    カードをめくると、明度スケール上に基準色と選んだ色の高さが並びます。高さがそろえば同じ明度＝正解です。
-  </p>
 </main>
 
 <style>
@@ -148,10 +145,6 @@
     line-height: 1.8;
     color: var(--color-body);
     margin: 0 0 1.75rem;
-  }
-
-  .lead strong {
-    color: light-dark(#7c3aed, #c4b5fd);
   }
 
   /* ===== 難易度切替 ===== */
@@ -273,7 +266,7 @@
   .progress strong {
     font-size: 1.4rem;
     font-weight: 900;
-    color: light-dark(#7c3aed, #c4b5fd);
+    color: var(--color-anki);
   }
 
   /* ===== 候補ボード ===== */
@@ -372,13 +365,6 @@
       transform: scale(1);
       opacity: 1;
     }
-  }
-
-  .note {
-    margin: 1.75rem 0 0;
-    font-size: 0.8rem;
-    line-height: 1.7;
-    color: var(--color-body);
   }
 
   @media (prefers-reduced-motion: reduce) {
