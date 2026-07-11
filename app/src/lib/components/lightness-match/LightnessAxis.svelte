@@ -116,7 +116,7 @@
     stroke-width="1"
   />
 
-  <!-- 基準色マーカー（左）：同じ明度のセルの真横 -->
+  <!-- 基準色マーカー（左）：同じ明度のセルの真横（値ラベルは選択色側だけに表示） -->
   <rect
     x={baseMarkX}
     y={baseMarkY}
@@ -126,14 +126,6 @@
     stroke={COL_BORDER}
     stroke-width={STROKE_WIDTH_SWATCH}
   />
-  <text
-    x={baseMarkX - LABEL_GAP}
-    y={valueToY(baseValue) + FONT_SIZE_VALUE / 3}
-    text-anchor="end"
-    font-size={FONT_SIZE_VALUE}
-    font-weight="700"
-    fill={COL_TEXT}>{baseValue}</text
-  >
 
   <!-- 選択色マーカー（右）：同じ明度のセルの真横 -->
   <rect
