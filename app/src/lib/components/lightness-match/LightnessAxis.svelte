@@ -6,17 +6,22 @@
     baseValue: number
     /** 基準色の HEX。 */
     baseColor: string
+    /** 基準色の慣用色名。 */
+    baseName: string
     /** 選択色のマンセル Value（0〜10）。 */
     selectedValue: number
     /** 選択色の HEX。 */
     selectedColor: string
+    /** 選択色の慣用色名。 */
+    selectedName: string
   }
 
-  let { baseValue, baseColor, selectedValue, selectedColor }: Props = $props()
+  let { baseValue, baseColor, baseName, selectedValue, selectedColor, selectedName }: Props =
+    $props()
 
   // ===== SVG dimensions =====
-  const WIDTH = 188
-  const HEIGHT = 150
+  const WIDTH = 200
+  const HEIGHT = 168
 
   // ===== 明度スケール＋セル横のマーカー（左） =====
   const PAD_TOP = 6
@@ -29,10 +34,12 @@
   const FONT_SIZE_VALUE = 12
   const STROKE_WIDTH_SWATCH = 1
 
-  // ===== 大きい色スウォッチの縦並び（右） =====
-  const BIG = 60
-  const BIG_GAP = 12
-  const BIG_X = 120
+  // ===== 大きい色スウォッチの縦並び＋慣用色名（右） =====
+  const BIG = 52
+  const BIG_GAP = 8
+  const BIG_X = 127
+  const NAME_FS = 14
+  const NAME_GAP = 8
 
   // ===== Colors =====
   const COL_TEXT = "var(--color-heading)"
@@ -62,12 +69,21 @@
   const baseMarkY = $derived(valueToY(baseValue) - CELL / 2)
   const selMarkY = $derived(valueToY(selectedValue) - CELL / 2)
 
-  // 右：色を見比べる大きいスウォッチ。明度が高い色ほど上に配置する。
-  const stackTop = (axisTop + axisBottom) / 2 - (2 * BIG + BIG_GAP) / 2
-  const topBigY = stackTop
-  const bottomBigY = stackTop + BIG + BIG_GAP
-  const topColor = $derived(baseValue >= selectedValue ? baseColor : selectedColor)
-  const bottomColor = $derived(baseValue >= selectedValue ? selectedColor : baseColor)
+  // 右：色を見比べる大きいスウォッチ。明度が高い色ほど上に配置し、上下に慣用色名を添える。
+  const nameCenterX = BIG_X + BIG / 2
+  const centerY = (axisTop + axisBottom) / 2
+  const blockH = 2 * BIG + BIG_GAP + 2 * (NAME_GAP + NAME_FS)
+  const blockTop = centerY - blockH / 2
+  const topNameY = blockTop + NAME_FS
+  const topBigY = blockTop + NAME_FS + NAME_GAP
+  const bottomBigY = topBigY + BIG + BIG_GAP
+  const bottomNameY = bottomBigY + BIG + NAME_GAP + NAME_FS
+
+  const topIsBase = $derived(baseValue >= selectedValue)
+  const topColor = $derived(topIsBase ? baseColor : selectedColor)
+  const bottomColor = $derived(topIsBase ? selectedColor : baseColor)
+  const topName = $derived(topIsBase ? baseName : selectedName)
+  const bottomName = $derived(topIsBase ? selectedName : baseName)
 </script>
 
 <svg
@@ -107,8 +123,10 @@
     text-anchor="end"
     font-size={FONT_SIZE_VALUE}
     font-weight="700"
-    fill={COL_TEXT}>{baseValue}</text
+    fill={COL_TEXT}
   >
+    {baseValue}
+  </text>
 
   <!-- 選択色マーカー（右）：同じ明度のセルの真横 -->
   <rect
@@ -126,10 +144,15 @@
     text-anchor="start"
     font-size={FONT_SIZE_VALUE}
     font-weight="700"
-    fill={COL_TEXT}>{selectedValue}</text
+    fill={COL_TEXT}
   >
+    {selectedValue}
+  </text>
 
-  <!-- 大きい色スウォッチ（上＝明度が高い色 / 下＝明度が低い色） -->
+  <!-- 大きい色スウォッチ（上＝明度が高い色 / 下＝明度が低い色）と慣用色名 -->
+  <text x={nameCenterX} y={topNameY} text-anchor="middle" font-size={NAME_FS} fill={COL_TEXT}>
+    {topName}
+  </text>
   <rect
     x={BIG_X}
     y={topBigY}
@@ -148,6 +171,9 @@
     stroke={COL_BORDER}
     stroke-width={STROKE_WIDTH_SWATCH}
   />
+  <text x={nameCenterX} y={bottomNameY} text-anchor="middle" font-size={NAME_FS} fill={COL_TEXT}>
+    {bottomName}
+  </text>
 </svg>
 
 <style>

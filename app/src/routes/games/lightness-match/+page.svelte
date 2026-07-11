@@ -97,6 +97,7 @@
             {candidate}
             baseValue={round.baseValue}
             baseColor={round.base._hex}
+            baseName={round.base.name}
             flipped={flipped[i]}
             index={i}
             {onselect}

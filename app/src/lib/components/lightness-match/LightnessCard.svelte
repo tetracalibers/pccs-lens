@@ -7,12 +7,13 @@
     candidate: CandidateColor
     baseValue: number
     baseColor: string
+    baseName: string
     flipped: boolean
     index: number
     onselect: (index: number) => void
   }
 
-  let { candidate, baseValue, baseColor, flipped, index, onselect }: Props = $props()
+  let { candidate, baseValue, baseColor, baseName, flipped, index, onselect }: Props = $props()
 
   const nearMiss = $derived(!candidate.isCorrect && isNearMiss(baseValue, candidate.value))
   const verdict = $derived(
@@ -64,8 +65,10 @@
           <LightnessAxis
             {baseValue}
             {baseColor}
+            {baseName}
             selectedValue={candidate.value}
             selectedColor={candidate.color._hex}
+            selectedName={candidate.color.name}
           />
         </span>
       {/if}
@@ -189,7 +192,6 @@
 
   .axis-wrap {
     width: 100%;
-    max-width: 132px;
     flex: 1;
     min-height: 0;
     display: flex;
