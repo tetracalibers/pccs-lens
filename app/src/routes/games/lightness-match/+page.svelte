@@ -48,15 +48,15 @@
 </script>
 
 <svelte:head>
-  <title>明度マッチング - Color Prism</title>
+  <title>明度を見分ける - Color Prism</title>
 </svelte:head>
 
 <main>
-  <Heading1 icon="mdi:contrast-circle" grayscale compact>明度マッチング</Heading1>
+  <Heading1 icon="mdi:contrast-circle" grayscale compact>明度を見分ける</Heading1>
 
   <p class="lead">
     基準色と
-    <strong>明度（マンセル Value）が同じ</strong>
+    <strong>明度が同じ</strong>
     カードを探すゲームです。同じ明度でも鮮やかな色ほど明るく見えます。色相や彩度の印象に惑わされず、明度だけを見抜きましょう。
   </p>
 
@@ -81,7 +81,7 @@
     <div class="prompt">
       <div class="base-card" style="background: {round.base._hex}"></div>
       <div class="prompt-body">
-        <p class="prompt-title">この明度と同じ色を探そう</p>
+        <p class="prompt-title">同じ明度の色を探そう</p>
         <p class="base-meta">
           <span class="base-name">{round.base.name}</span>
           <span class="base-munsell">{round.base.munsell}</span>
