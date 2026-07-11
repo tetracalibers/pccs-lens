@@ -88,7 +88,7 @@
         </p>
         <p class="progress" aria-live="polite">
           残り <strong>{remaining}</strong>
-           枚
+          枚
         </p>
       </div>
     </div>

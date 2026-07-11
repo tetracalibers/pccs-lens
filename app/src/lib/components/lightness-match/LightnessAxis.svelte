@@ -16,8 +16,14 @@
     selectedNameLines: string[]
   }
 
-  let { baseValue, baseColor, baseNameLines, selectedValue, selectedColor, selectedNameLines }: Props =
-    $props()
+  let {
+    baseValue,
+    baseColor,
+    baseNameLines,
+    selectedValue,
+    selectedColor,
+    selectedNameLines
+  }: Props = $props()
 
   // ===== SVG dimensions =====
   const WIDTH = 216
@@ -92,7 +98,9 @@
   const bottomColor = $derived(topIsBase ? selectedColor : baseColor)
   const topNameLines = $derived(topIsBase ? baseNameLines : selectedNameLines)
   const bottomNameLines = $derived(topIsBase ? selectedNameLines : baseNameLines)
-  const topNameFirstBaseline = $derived(topNameLastBaseline - (topNameLines.length - 1) * NAME_LINE_H)
+  const topNameFirstBaseline = $derived(
+    topNameLastBaseline - (topNameLines.length - 1) * NAME_LINE_H
+  )
 </script>
 
 <svg
@@ -143,8 +151,10 @@
     text-anchor="start"
     font-size={FONT_SIZE_VALUE}
     font-weight="700"
-    fill={COL_TEXT}>{selectedValue}</text
+    fill={COL_TEXT}
   >
+    {selectedValue}
+  </text>
 
   <!-- 大きい色スウォッチ（上＝明度が高い色 / 下＝明度が低い色）と慣用色名（最大 2 行） -->
   <text
