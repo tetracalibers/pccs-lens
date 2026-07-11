@@ -4,6 +4,7 @@
   import Mark from "$lib/components/m-directive/Mark.svelte"
   import ToneHuntCard from "$lib/components/tone-hunt/ToneHuntCard.svelte"
   import { generateRound, CANDIDATE_COUNT, type Mode, type Round } from "$lib/games/tone-hunt/round"
+  import { portal } from "$lib/actions/portal"
 
   const MODES: { id: Mode; label: string; hint: string; prompt: string }[] = [
     {
@@ -114,7 +115,7 @@
       </div>
 
       {#if cleared}
-        <div class="clear-overlay" role="status" aria-live="assertive">
+        <div class="clear-overlay" role="status" aria-live="assertive" use:portal>
           <div class="clear-card">
             <Icon icon="mdi:party-popper" />
             <p class="clear-title">クリア！</p>
@@ -267,15 +268,22 @@
 
   /* ===== クリア演出 ===== */
   .clear-overlay {
-    position: absolute;
+    /* body 直下へ portal しているので fixed はビューポート基準。スクロール位置に
+       関わらず画面中央に表示する。overlay 自体はクリックを透過し、カードのみ操作可能。 */
+    /* portal で main の外へ出るため、カードが参照する局所トークンをここで補う */
+    --color-surface: light-dark(#ffffff, #16161f);
+    --color-border: light-dark(#e0e0e0, #2e2e3e);
+    position: fixed;
     inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2;
+    z-index: 1000;
+    pointer-events: none;
   }
 
   .clear-card {
+    pointer-events: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
