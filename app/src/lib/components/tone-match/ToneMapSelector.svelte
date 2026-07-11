@@ -16,10 +16,6 @@
   const COL_STEP = 50 // 列の中心間隔（横のセル間隔）。大きくすると横余白が増える
   const ROW_STEP = 44 // 行の中心間隔（縦のセル間隔）。大きくすると縦余白が増える
 
-  // 列 0・行 0 の基準中心
-  const X0 = PAD + CELL_R
-  const Y0 = PAD + CELL_R
-
   // 有彩色トーンの配置（無彩色列を除いた 4 列。s は選べないダミーセル）。
   // col: 列インデックス（0〜3）、row: 基準からの行ステップ数（0.5 刻みの互い違い配置）。
   type CellDef = { tone: string; col: number; row: number; selectable: boolean }
@@ -38,16 +34,22 @@
     { tone: "v", col: 3, row: 2, selectable: true }
   ]
 
-  // 定数から各セルの中心座標と描画領域を導出する。
+  // 実際に使う最小・最大の列/行から描画領域を導出する。
+  // 行は 0.5 始まりのため、最小行を基準にして上下の余白を PAD に揃える
+  // （行 0 を基準にすると最上段の上だけ余白が広くなってしまう）。
+  const MIN_COL = Math.min(...CELL_DEFS.map((c) => c.col))
+  const MAX_COL = Math.max(...CELL_DEFS.map((c) => c.col))
+  const MIN_ROW = Math.min(...CELL_DEFS.map((c) => c.row))
+  const MAX_ROW = Math.max(...CELL_DEFS.map((c) => c.row))
+
+  // 定数から各セルの中心座標を導出する。最小列・最小行のセルの外縁が PAD になる。
   const CELLS = CELL_DEFS.map((c) => ({
     ...c,
-    cx: X0 + c.col * COL_STEP,
-    cy: Y0 + c.row * ROW_STEP
+    cx: PAD + CELL_R + (c.col - MIN_COL) * COL_STEP,
+    cy: PAD + CELL_R + (c.row - MIN_ROW) * ROW_STEP
   }))
-  const MAX_COL = Math.max(...CELL_DEFS.map((c) => c.col))
-  const MAX_ROW = Math.max(...CELL_DEFS.map((c) => c.row))
-  const VIEW_W = X0 + MAX_COL * COL_STEP + CELL_R + PAD
-  const VIEW_H = Y0 + MAX_ROW * ROW_STEP + CELL_R + PAD
+  const VIEW_W = 2 * (PAD + CELL_R) + (MAX_COL - MIN_COL) * COL_STEP
+  const VIEW_H = 2 * (PAD + CELL_R) + (MAX_ROW - MIN_ROW) * ROW_STEP
 
   const pct = (value: number, total: number): number => (value / total) * 100
   const SIZE_PCT = pct(2 * CELL_R, VIEW_W)
