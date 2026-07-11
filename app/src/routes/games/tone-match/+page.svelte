@@ -79,8 +79,9 @@
   <Heading1 icon="mdi:palette-swatch" grayscale compact>PCCSのトーンを見分ける</Heading1>
 
   <p class="lead">
-    トーンマップで選んだ<Mark>1 つのトーン</Mark
-    >に属する色を、候補の中から探すゲームです。清濁のグループではなく、<Mark>
+    トーンマップで選んだ<Mark>
+      1 つのトーン
+    </Mark>に属する色を、候補の中から探すゲームです。清濁のグループではなく、<Mark>
       個々のトーン
     </Mark>を見分けます。紛らわしい隣接トーンに惑わされず、狙いのトーンだけを選びましょう。
   </p>
@@ -90,8 +91,7 @@
       <div class="prompt-body">
         <p class="prompt-title">
           <code>{target}</code>
-          <span class="prompt-tone-name">{targetName}</span>
-          トーンを探そう
+          トーンのカードをすべて選ぼう
         </p>
         <p class="progress" aria-live="polite">
           残り <strong>{remaining}</strong>
@@ -206,10 +206,6 @@
     font-size: 1.3rem;
     font-weight: 900;
     color: var(--color-anki);
-  }
-
-  .prompt-tone-name {
-    font-weight: 800;
   }
 
   .progress {
