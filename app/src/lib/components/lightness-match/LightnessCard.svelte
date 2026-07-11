@@ -61,7 +61,7 @@
       disabled={flipped}
       onclick={() => onselect(index)}
     >
-      <span class="peek" aria-hidden="true"><Icon icon="mdi:magnify" /></span>
+      <span class="peek" aria-hidden="true"><Icon icon="si:click-duotone" /></span>
     </button>
 
     <!-- 裏：結果と明度差の可視化 -->
@@ -175,7 +175,7 @@
     width: 2rem;
     height: 2rem;
     border-radius: 50%;
-    font-size: 1.1rem;
+    font-size: 1.5rem;
     color: rgba(0, 0, 0, 0.35);
     background: rgba(255, 255, 255, 0.35);
     opacity: 0;
