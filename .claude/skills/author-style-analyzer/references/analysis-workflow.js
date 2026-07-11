@@ -27,7 +27,7 @@ export const meta = {
 // }
 // ---------------------------------------------------------------------------
 
-const m = args
+const m = typeof args === 'string' ? JSON.parse(args) : args
 const refs = m.refs
 const AGENT = 'general-purpose' // Read/Write を確実に持たせる
 
