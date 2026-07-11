@@ -11,10 +11,10 @@
   let { selected, onselect }: Props = $props()
 
   // --- トーンマップの寸法（間隔はここの定数で管理する）---
-  const CELL_R = 21 // セル半径
+  const CELL_R = 18 // セル半径
   const PAD = 4 // 外周の余白
-  const COL_STEP = 52 // 列の中心間隔（横のセル間隔）。大きくすると横余白が増える
-  const ROW_STEP = 52 // 行の中心間隔（縦のセル間隔）。大きくすると縦余白が増える
+  const COL_STEP = 50 // 列の中心間隔（横のセル間隔）。大きくすると横余白が増える
+  const ROW_STEP = 44 // 行の中心間隔（縦のセル間隔）。大きくすると縦余白が増える
 
   // 列 0・行 0 の基準中心
   const X0 = PAD + CELL_R
