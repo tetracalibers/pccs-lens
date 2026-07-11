@@ -1,9 +1,5 @@
 import { PCCS_CARD_199 } from "$lib/data/pccs"
-import {
-  PCCS_CHROMATIC_TONE_SYMBOLS,
-  PCCS_TONES,
-  getAdjacentTones
-} from "$lib/data/pccs-tone"
+import { PCCS_CHROMATIC_TONE_SYMBOLS, PCCS_TONES, getAdjacentTones } from "$lib/data/pccs-tone"
 import type { PCCSColor } from "$lib/data/types"
 
 /**
@@ -66,9 +62,7 @@ const CHROMATIC_POOL: PCCSColor[] = PCCS_CARD_199.filter((c) => !c.isNeutral)
  * 無彩色 distractor プール = 代表 5 グレー（W / ltGy / mGy / dkGy / Bk）。
  * PCCS_CARD_199 の無彩色のうち toneSymbol を持つ 5 色。
  */
-const NEUTRAL_POOL: PCCSColor[] = PCCS_CARD_199.filter(
-  (c) => c.isNeutral && c.toneSymbol !== null
-)
+const NEUTRAL_POOL: PCCSColor[] = PCCS_CARD_199.filter((c) => c.isNeutral && c.toneSymbol !== null)
 
 /** トーンの明度水準。無彩色 distractor をお題トーンの明度に近づけるのに使う。 */
 type LightnessLevel = "high" | "medium" | "low"
@@ -101,9 +95,7 @@ const NEUTRAL_TONE_NAME_JA: Record<string, string> = {
 export const toneNameJa = (tone: string | null): string => {
   if (!tone) return ""
   return (
-    PCCS_TONES.find((t) => t.toneSymbol === tone)?.toneNameJa ??
-    NEUTRAL_TONE_NAME_JA[tone] ??
-    tone
+    PCCS_TONES.find((t) => t.toneSymbol === tone)?.toneNameJa ?? NEUTRAL_TONE_NAME_JA[tone] ?? tone
   )
 }
 
