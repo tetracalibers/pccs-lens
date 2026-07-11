@@ -19,44 +19,43 @@
   const HEIGHT = 150
 
   // ===== Layout constants =====
-  const PAD_TOP = 18
-  const PAD_BOTTOM = 18
-  const BAR_W = 22
+  const PAD_TOP = 8
+  const PAD_BOTTOM = 8
+  const BAR_W = 26
   const BAR_X = (WIDTH - BAR_W) / 2
   const V_MAX = 10
-  const MARKER_R = 9
-  const CONNECTOR = 20
+  const SWATCH_W = 28
+  const SWATCH_GAP = 5
+  const LABEL_GAP = 5
   const FONT_SIZE_VALUE = 12
-  const FONT_SIZE_CAPTION = 10
-  const STROKE_WIDTH_MARKER = 2
+  const STROKE_WIDTH_SWATCH = 1.5
 
   // ===== Colors =====
   const COL_TEXT = "var(--color-heading)"
-  const COL_MUTED = "var(--color-body)"
   const COL_BORDER = "var(--color-border, rgba(128, 128, 128, 0.5))"
-  const COL_GUIDE = "var(--color-muted, rgba(128, 128, 128, 0.4))"
 
   const axisTop = PAD_TOP
   const axisBottom = HEIGHT - PAD_BOTTOM
+  const cellH = (axisBottom - axisTop) / V_MAX
 
   const valueToY = (v: number): number =>
     axisBottom - (Math.max(0, Math.min(V_MAX, v)) / V_MAX) * (axisBottom - axisTop)
 
   // マンセル明度スケール。Value 1 段ごとの無彩色セルを、下（暗）から上（明）へ離散的に並べる。
   // 各セルの色は L* ≈ Value×10 でグレー化する（帯の中央値を採用）。
-  const SCALE_CELLS = Array.from({ length: V_MAX }, (_, i) => {
-    const yTop = valueToY(i + 1)
-    const yBottom = valueToY(i)
-    return {
-      value: i,
-      y: yTop,
-      height: yBottom - yTop,
-      color: grayHexForLightness((i + 0.5) * 10)
-    }
-  })
+  const SCALE_CELLS = Array.from({ length: V_MAX }, (_, i) => ({
+    value: i,
+    y: valueToY(i + 1),
+    height: valueToY(i) - valueToY(i + 1),
+    color: grayHexForLightness((i + 0.5) * 10)
+  }))
 
-  const baseY = $derived(valueToY(baseValue))
-  const selY = $derived(valueToY(selectedValue))
+  // 実際の色の長方形は、同じ明度のセルの真横（基準色=左、選択色=右）に置く。
+  const baseSwatchX = BAR_X - SWATCH_GAP - SWATCH_W
+  const selSwatchX = BAR_X + BAR_W + SWATCH_GAP
+
+  const baseSwatchY = $derived(valueToY(baseValue) - cellH / 2)
+  const selSwatchY = $derived(valueToY(selectedValue) - cellH / 2)
 </script>
 
 <svg
@@ -80,81 +79,38 @@
     stroke-width="1"
   />
 
-  <!-- 明 / 暗 のキャプション -->
-  <text
-    x={WIDTH / 2}
-    y={axisTop - 6}
-    text-anchor="middle"
-    font-size={FONT_SIZE_CAPTION}
-    fill={COL_MUTED}>明</text
-  >
-  <text
-    x={WIDTH / 2}
-    y={axisBottom + 12}
-    text-anchor="middle"
-    font-size={FONT_SIZE_CAPTION}
-    fill={COL_MUTED}>暗</text
-  >
-
-  <!-- 高さ比較用のガイド線（同じ明度なら重なる） -->
-  <line
-    x1="0"
-    y1={baseY}
-    x2={WIDTH}
-    y2={baseY}
-    stroke={COL_GUIDE}
-    stroke-width="1"
-    stroke-dasharray="3 3"
-  />
-  <line
-    x1="0"
-    y1={selY}
-    x2={WIDTH}
-    y2={selY}
-    stroke={COL_GUIDE}
-    stroke-width="1"
-    stroke-dasharray="3 3"
-  />
-
-  <!-- 基準色マーカー（左） -->
-  <line x1={BAR_X} y1={baseY} x2={BAR_X - CONNECTOR} y2={baseY} stroke={COL_TEXT} stroke-width="1" />
-  <circle
-    cx={BAR_X - CONNECTOR}
-    cy={baseY}
-    r={MARKER_R}
+  <!-- 基準色（左）：同じ明度のセルの隣に実際の色を配置 -->
+  <rect
+    x={baseSwatchX}
+    y={baseSwatchY}
+    width={SWATCH_W}
+    height={cellH}
     fill={baseColor}
     stroke={COL_TEXT}
-    stroke-width={STROKE_WIDTH_MARKER}
+    stroke-width={STROKE_WIDTH_SWATCH}
   />
   <text
-    x={BAR_X - CONNECTOR - MARKER_R - 4}
-    y={baseY + FONT_SIZE_VALUE / 3}
+    x={baseSwatchX - LABEL_GAP}
+    y={valueToY(baseValue) + FONT_SIZE_VALUE / 3}
     text-anchor="end"
     font-size={FONT_SIZE_VALUE}
     font-weight="700"
     fill={COL_TEXT}>{baseValue}</text
   >
 
-  <!-- 選択色マーカー（右） -->
-  <line
-    x1={BAR_X + BAR_W}
-    y1={selY}
-    x2={BAR_X + BAR_W + CONNECTOR}
-    y2={selY}
-    stroke={COL_TEXT}
-    stroke-width="1"
-  />
-  <circle
-    cx={BAR_X + BAR_W + CONNECTOR}
-    cy={selY}
-    r={MARKER_R}
+  <!-- 選択色（右）：同じ明度のセルの隣に実際の色を配置 -->
+  <rect
+    x={selSwatchX}
+    y={selSwatchY}
+    width={SWATCH_W}
+    height={cellH}
     fill={selectedColor}
     stroke={COL_TEXT}
-    stroke-width={STROKE_WIDTH_MARKER}
+    stroke-width={STROKE_WIDTH_SWATCH}
   />
   <text
-    x={BAR_X + BAR_W + CONNECTOR + MARKER_R + 4}
-    y={selY + FONT_SIZE_VALUE / 3}
+    x={selSwatchX + SWATCH_W + LABEL_GAP}
+    y={valueToY(selectedValue) + FONT_SIZE_VALUE / 3}
     text-anchor="start"
     font-size={FONT_SIZE_VALUE}
     font-weight="700"
