@@ -71,8 +71,16 @@
       gradient: "linear-gradient(135deg, #ff6b6b, #ffd93d)",
       glow: "#ff6b6b",
       title: "明度マッチング",
-      desc: "基準色と明度が同じ色を探すカードゲーム",
+      desc: "明度が同じ色を探すカードゲーム",
       grades: ["3", "2"]
+    },
+    {
+      href: resolve("/games/tone-hunt"),
+      gradient: "linear-gradient(135deg, #7c3aed, #4d96ff)",
+      glow: "#7c3aed",
+      title: "清色・濁色の見極め",
+      desc: "PCCSの明清色・暗清色・中間色を見分けるカードゲーム",
+      grades: ["3"]
     }
   ]
 
