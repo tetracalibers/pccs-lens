@@ -31,8 +31,8 @@
   const STROKE_WIDTH_MARKER = 2
 
   // ===== Colors =====
-  const COL_TEXT = "var(--color-text, currentColor)"
-  const COL_MUTED = "var(--color-text-secondary, gray)"
+  const COL_TEXT = "var(--color-heading)"
+  const COL_MUTED = "var(--color-body)"
   const COL_BORDER = "var(--color-border, rgba(128, 128, 128, 0.5))"
   const COL_GUIDE = "var(--color-muted, rgba(128, 128, 128, 0.4))"
 

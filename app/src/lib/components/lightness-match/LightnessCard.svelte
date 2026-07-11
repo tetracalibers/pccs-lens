@@ -83,7 +83,6 @@
     /* card-back 内で使う局所トークン（未定義環境でも読めるようフォールバック付き） */
     --_surface: var(--color-surface, light-dark(#ffffff, #16161f));
     --_border: var(--color-border, light-dark(#e0e0e0, #2e2e3e));
-    --_text: var(--color-text, light-dark(#1a1a1a, #f0f0f0));
 
     display: block;
     width: 100%;
@@ -94,7 +93,7 @@
     perspective: 900px;
     cursor: pointer;
     font: inherit;
-    color: var(--_text);
+    color: var(--color-heading);
   }
 
   .card:disabled {
@@ -208,13 +207,13 @@
   .name {
     font-size: 0.78rem;
     font-weight: 700;
-    color: var(--_text);
+    color: var(--color-heading);
   }
 
   .munsell {
     font-size: 0.66rem;
     font-family: var(--font-mono, monospace);
-    color: var(--color-text-secondary, gray);
+    color: var(--color-body);
   }
 
   /* 動きを減らす設定を尊重する */

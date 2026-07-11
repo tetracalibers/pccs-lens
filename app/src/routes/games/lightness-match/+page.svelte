@@ -128,8 +128,6 @@
   main {
     --color-surface: light-dark(#ffffff, #16161f);
     --color-border: light-dark(#e0e0e0, #2e2e3e);
-    --color-text: light-dark(#1a1a1a, #f0f0f0);
-    --color-text-secondary: light-dark(#5a5a6a, #a0a0b5);
     --color-muted: light-dark(#f0f0f3, #22222e);
 
     max-width: 720px;
@@ -139,7 +137,7 @@
   .lead {
     font-size: 0.95rem;
     line-height: 1.8;
-    color: var(--color-text);
+    color: var(--color-body);
     margin: 0 0 1.75rem;
   }
 
@@ -170,7 +168,7 @@
     border: none;
     border-radius: 10px;
     background: transparent;
-    color: var(--color-text-secondary);
+    color: var(--color-body);
     cursor: pointer;
     font: inherit;
     transition:
@@ -179,12 +177,12 @@
   }
 
   .difficulty-btn:hover {
-    color: var(--color-text);
+    color: var(--color-heading);
   }
 
   .difficulty-btn.active {
     background: var(--color-surface);
-    color: var(--color-text);
+    color: var(--color-heading);
     box-shadow: 0 1px 6px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4));
   }
 
@@ -200,7 +198,7 @@
 
   .difficulty-hint {
     font-size: 0.68rem;
-    color: var(--color-text-secondary);
+    color: var(--color-body);
   }
 
   /* ===== 基準色 ===== */
@@ -234,7 +232,7 @@
     margin: 0;
     font-size: 1rem;
     font-weight: 800;
-    color: var(--color-text);
+    color: var(--color-heading);
   }
 
   .base-meta {
@@ -247,19 +245,19 @@
   .base-name {
     font-size: 0.95rem;
     font-weight: 700;
-    color: var(--color-text);
+    color: var(--color-heading);
   }
 
   .base-munsell {
     font-size: 0.78rem;
     font-family: var(--font-mono, monospace);
-    color: var(--color-text-secondary);
+    color: var(--color-body);
   }
 
   .progress {
     margin: 0.2rem 0 0;
     font-size: 0.9rem;
-    color: var(--color-text-secondary);
+    color: var(--color-body);
   }
 
   .progress strong {
@@ -324,13 +322,13 @@
     margin: 0;
     font-size: 1.5rem;
     font-weight: 900;
-    color: var(--color-text);
+    color: var(--color-heading);
   }
 
   .clear-desc {
     margin: 0;
     font-size: 0.85rem;
-    color: var(--color-text-secondary);
+    color: var(--color-body);
   }
 
   .continue-btn {
@@ -370,7 +368,7 @@
     margin: 1.75rem 0 0;
     font-size: 0.8rem;
     line-height: 1.7;
-    color: var(--color-text-secondary);
+    color: var(--color-body);
   }
 
   @media (prefers-reduced-motion: reduce) {
