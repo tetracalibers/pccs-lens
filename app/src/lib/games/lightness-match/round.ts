@@ -99,6 +99,9 @@ const BASE_POOL: EnrichedColor[] = ENRICHED.filter(
   (e) => e.hueRank !== null && sameValueInventory(e.value) >= 2
 )
 
+/** 色 ID から EnrichedColor を引く（基準色を固定してラウンドを組み直すのに使う）。 */
+const ENRICHED_BY_ID: Map<string, EnrichedColor> = new Map(ENRICHED.map((e) => [e.color.id, e]))
+
 const approxEq = (a: number, b: number): boolean => Math.abs(a - b) < 1e-9
 
 const isMissValueDelta = (diff: number): boolean => MISS_VALUE_DELTAS.some((d) => approxEq(diff, d))
@@ -152,14 +155,8 @@ const pickMissColors = (
   return sample(neighborhood, count, rng)
 }
 
-/**
- * 1 ラウンド分の基準色＋候補 8 枚を生成する。
- *
- * @param mode 出題モード（色相が近い / 彩度が近い）
- * @param rng テスト用に差し替え可能な乱数源（既定は Math.random）
- */
-export const generateRound = (mode: Mode, rng: Rng = Math.random): Round => {
-  const base = pickOne(BASE_POOL, rng)
+/** 指定した基準色でラウンドを組む（正解札・はずれ札・シャッフルを行う）。 */
+const buildRound = (base: EnrichedColor, mode: Mode, rng: Rng): Round => {
   const baseValue = base.value
 
   // 正解札: 基準色と同 Value（基準色自身を除く）。色相・彩度の制約なし。
@@ -190,6 +187,26 @@ export const generateRound = (mode: Mode, rng: Rng = Math.random): Round => {
 
   return { mode, base: base.color, baseValue, correctCount, candidates }
 }
+
+/**
+ * 1 ラウンド分の基準色＋候補 8 枚を生成する（基準色はプールからランダムに選ぶ）。
+ *
+ * @param mode 出題モード（色相が近い / 彩度が近い）
+ * @param rng テスト用に差し替え可能な乱数源（既定は Math.random）
+ */
+export const generateRound = (mode: Mode, rng: Rng = Math.random): Round =>
+  buildRound(pickOne(BASE_POOL, rng), mode, rng)
+
+/**
+ * 基準色を固定したまま、指定モードでラウンドを組み直す。
+ * モード切替時に基準色を変えずに候補だけを作り直すのに使う。
+ * 未知の基準色が渡された場合はランダムな基準色にフォールバックする。
+ */
+export const generateRoundForBase = (
+  mode: Mode,
+  baseColor: JISColor,
+  rng: Rng = Math.random
+): Round => buildRound(ENRICHED_BY_ID.get(baseColor.id) ?? pickOne(BASE_POOL, rng), mode, rng)
 
 /** 不正解カードのうち「惜しい！」に該当するか（明度差が 0 より大きく NEAR_MISS_THRESHOLD 以内）。 */
 export const isNearMiss = (baseValue: number, cardValue: number): boolean => {

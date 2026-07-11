@@ -4,6 +4,7 @@
   import LightnessCard from "$lib/components/lightness-match/LightnessCard.svelte"
   import {
     generateRound,
+    generateRoundForBase,
     CANDIDATE_COUNT,
     type Mode,
     type Round
@@ -31,8 +32,11 @@
 
   const selectMode = (next: Mode) => {
     if (next === mode) return
+    // 基準色は変えず、候補だけを新モードで組み直す。
+    const base = round.base
     mode = next
-    startRound(next)
+    round = generateRoundForBase(next, base)
+    flipped = round.candidates.map(() => false)
   }
 
   const onselect = (index: number) => {

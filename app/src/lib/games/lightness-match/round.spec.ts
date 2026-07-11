@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest"
 import {
   generateRound,
+  generateRoundForBase,
   isNearMiss,
   CANDIDATE_COUNT,
   MIN_CORRECT,
@@ -99,6 +100,19 @@ describe("generateRound", () => {
         const r = generateRound(mode, makeRng(i + 1))
         expect(isNeutral(r.base.munsell)).toBe(false)
       }
+    }
+  })
+
+  it("generateRoundForBase は基準色を維持し、モードだけ切り替わる", () => {
+    for (let i = 0; i < 100; i++) {
+      const r1 = generateRound("hue", makeRng(i + 1))
+      const r2 = generateRoundForBase("chroma", r1.base, makeRng(i + 500))
+      expect(r2.base.id).toBe(r1.base.id)
+      expect(r2.baseValue).toBeCloseTo(r1.baseValue, 6)
+      expect(r2.mode).toBe("chroma")
+      expect(r2.candidates).toHaveLength(CANDIDATE_COUNT)
+      // 基準色は候補に含まれない
+      expect(r2.candidates.some((c) => c.color.id === r2.base.id)).toBe(false)
     }
   })
 
