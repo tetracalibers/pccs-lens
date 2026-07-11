@@ -25,26 +25,15 @@
 
 著者の文体を分析してガイド化する `author-style-analyzer` と、そのガイドを使って著者らしい文章を書く `author-style-writer` の2スキルがある。仕組みと役割分担は [`author-style-skills.md`](./author-style-skills.md) を参照。
 
-`author-style-analyzer` は、複数の役割（Coordinator・各分析担当・レビュー担当）が独立分析と相互レビューを行う構成で、**Claude Code の Agent Teams（teammates）機能**での実行を想定している。
+`author-style-analyzer` は、複数の役割（各分析担当・反証／境界レビュー担当・統合担当）が独立分析と反証レビューを行う構成で、**Workflow ツールによる決定論的オーケストレーション**で実行する。正典スクリプトは `.claude/skills/author-style-analyzer/references/analysis-workflow.js`。
 
-#### Agent Teams の有効化
+#### 実行方式と有効化
 
-Agent Teams は既定で無効な実験的機能。ユーザー全体の設定 `~/.claude/settings.json` に次を追加して有効化する（プロジェクト単位の設定では有効化できない）。
+以前は Agent Teams（teammates）で実行していたが、teammate 同士のピア通信がアイドル・デッドロックでハングしやすかったため、Workflow ベースへ移行した。**特別な有効化設定は不要**。スキル実行時にメインセッションがスコープを解決し、`references/analysis-workflow.js` を Workflow で実行する。
 
-```json
-{
-  "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
-  },
-  "teammateMode": "auto"
-}
-```
-
-- `teammateMode` … `in-process`（既定・どの端末でも動作）／`auto`／`tmux`／`iterm2`。分割ペイン表示（`tmux`・`iterm2`）には tmux または iTerm2（＋ `it2` CLI）が必要。こだわりがなければ `in-process` でよい。
-- 環境変数なので、`~/.claude/settings.json` の代わりにシェルで `export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` を設定してもよい。
-- teammate ごとに独立したコンテキストを持つため**トークン消費が大きい**。分析対象はスキル引数（カンマ区切り slug）で絞れる。
-
-有効化後は、スキル実行中に必要な teammate が spawn される。無効のままでも、サブエージェントや単一エージェントの役割切り替えで代替実行できる（相互レビューの忠実度は下がる）。
+- 制御フローが JS のため**ハングしない**。各エージェントは構造化出力を返して終了し、待機プロセス（idle teammate）が残らない。
+- **引数なしの全記事一括分析は行わない**。分析対象はスキル引数（`#id` またはカンマ区切り slug）で必ず絞る。全記事を対象にしたい場合はカテゴリ／セクション単位のチャンクに分割して順に実行する。
+- Workflow を使えない環境では、サブエージェント（`Agent` ツール）を同じ3ステージ構成で順に呼ぶか、単一エージェントの役割切り替えで代替できる。
 
 ## データ更新スクリプト
 
