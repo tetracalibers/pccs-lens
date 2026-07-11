@@ -9,19 +9,19 @@
     {
       id: "tint",
       label: "明清色",
-      hint: "純色＋白の澄んだ色",
+      hint: "純色＋白",
       prompt: "明清色のカードをすべて選ぼう"
     },
     {
       id: "shade",
       label: "暗清色",
-      hint: "純色＋黒の澄んだ色",
+      hint: "純色＋黒",
       prompt: "暗清色のカードをすべて選ぼう"
     },
     {
       id: "mid",
       label: "中間色",
-      hint: "純色＋灰の濁った色",
+      hint: "純色＋灰",
       prompt: "中間色のカードをすべて選ぼう"
     }
   ]
@@ -88,7 +88,7 @@
           aria-pressed={mode === m.id}
           onclick={() => selectMode(m.id)}
         >
-          <span class="mode-label">{m.label}を探す</span>
+          <span class="mode-label">{m.label}</span>
           <span class="mode-hint">{m.hint}</span>
         </button>
       {/each}
@@ -155,6 +155,7 @@
 
   .modes {
     display: inline-flex;
+    flex-wrap: wrap;
     gap: 0.4rem;
     padding: 0.3rem;
     border-radius: 14px;
@@ -202,18 +203,6 @@
   .mode-hint {
     font-size: 0.68rem;
     color: var(--color-body);
-  }
-
-  @media (max-width: 540px) {
-    .modes {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      width: 100%;
-    }
-
-    .mode-btn {
-      padding: 0.5rem 0.5rem;
-    }
   }
 
   /* ===== 指示・進捗 ===== */
