@@ -10,29 +10,47 @@
 
   let { selected, onselect }: Props = $props()
 
-  // 有彩色トーンマップの座標（無彩色列を除いた 4 列。s は選べないダミーセル）。
-  const VIEW_W = 206
-  const VIEW_H = 204
-  const R = 21
+  // --- トーンマップの寸法（間隔はここの定数で管理する）---
+  const CELL_R = 21 // セル半径
+  const PAD = 4 // 外周の余白
+  const COL_STEP = 52 // 列の中心間隔（横のセル間隔）。大きくすると横余白が増える
+  const ROW_STEP = 52 // 行の中心間隔（縦のセル間隔）。大きくすると縦余白が増える
 
-  type Cell = { tone: string; cx: number; cy: number; selectable: boolean }
-  const CELLS: Cell[] = [
-    { tone: "p", cx: 25, cy: 47, selectable: true },
-    { tone: "ltg", cx: 25, cy: 91, selectable: true },
-    { tone: "g", cx: 25, cy: 135, selectable: true },
-    { tone: "dkg", cx: 25, cy: 179, selectable: true },
-    { tone: "lt", cx: 77, cy: 47, selectable: true },
-    { tone: "sf", cx: 77, cy: 91, selectable: true },
-    { tone: "d", cx: 77, cy: 135, selectable: true },
-    { tone: "dk", cx: 77, cy: 179, selectable: true },
-    { tone: "b", cx: 129, cy: 69, selectable: true },
-    { tone: "s", cx: 129, cy: 113, selectable: false },
-    { tone: "dp", cx: 129, cy: 157, selectable: true },
-    { tone: "v", cx: 181, cy: 113, selectable: true }
+  // 列 0・行 0 の基準中心
+  const X0 = PAD + CELL_R
+  const Y0 = PAD + CELL_R
+
+  // 有彩色トーンの配置（無彩色列を除いた 4 列。s は選べないダミーセル）。
+  // col: 列インデックス（0〜3）、row: 基準からの行ステップ数（0.5 刻みの互い違い配置）。
+  type CellDef = { tone: string; col: number; row: number; selectable: boolean }
+  const CELL_DEFS: CellDef[] = [
+    { tone: "p", col: 0, row: 0.5, selectable: true },
+    { tone: "ltg", col: 0, row: 1.5, selectable: true },
+    { tone: "g", col: 0, row: 2.5, selectable: true },
+    { tone: "dkg", col: 0, row: 3.5, selectable: true },
+    { tone: "lt", col: 1, row: 0.5, selectable: true },
+    { tone: "sf", col: 1, row: 1.5, selectable: true },
+    { tone: "d", col: 1, row: 2.5, selectable: true },
+    { tone: "dk", col: 1, row: 3.5, selectable: true },
+    { tone: "b", col: 2, row: 1, selectable: true },
+    { tone: "s", col: 2, row: 2, selectable: false },
+    { tone: "dp", col: 2, row: 3, selectable: true },
+    { tone: "v", col: 3, row: 2, selectable: true }
   ]
 
+  // 定数から各セルの中心座標と描画領域を導出する。
+  const CELLS = CELL_DEFS.map((c) => ({
+    ...c,
+    cx: X0 + c.col * COL_STEP,
+    cy: Y0 + c.row * ROW_STEP
+  }))
+  const MAX_COL = Math.max(...CELL_DEFS.map((c) => c.col))
+  const MAX_ROW = Math.max(...CELL_DEFS.map((c) => c.row))
+  const VIEW_W = X0 + MAX_COL * COL_STEP + CELL_R + PAD
+  const VIEW_H = Y0 + MAX_ROW * ROW_STEP + CELL_R + PAD
+
   const pct = (value: number, total: number): number => (value / total) * 100
-  const SIZE_PCT = pct(2 * R, VIEW_W)
+  const SIZE_PCT = pct(2 * CELL_R, VIEW_W)
 </script>
 
 <div
