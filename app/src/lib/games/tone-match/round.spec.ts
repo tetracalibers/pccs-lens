@@ -6,6 +6,7 @@ import {
   isNearMissTone,
   toneNameJa,
   TARGET_TONES,
+  SELECTABLE_HUES,
   CANDIDATE_COUNT,
   MIN_CORRECT,
   MAX_CORRECT
@@ -43,7 +44,9 @@ describe("generateRound", () => {
   for (const target of TARGET_TONES) {
     describe(`お題 ${target}`, () => {
       // 多数シードで不変条件を検証する。
-      const rounds = Array.from({ length: 300 }, (_, i) => generateRound(target, makeRng(i + 1)))
+      const rounds = Array.from({ length: 300 }, (_, i) =>
+        generateRound(target, null, makeRng(i + 1))
+      )
 
       it("候補は常に 8 枚", () => {
         for (const r of rounds) expect(r.candidates).toHaveLength(CANDIDATE_COUNT)
@@ -108,7 +111,7 @@ describe("generateRound", () => {
     for (const target of TARGET_TONES) {
       const adjacent = adjacentChromaticTones(target)
       for (let i = 0; i < 100; i++) {
-        const r = generateRound(target, makeRng(i + 1))
+        const r = generateRound(target, null, makeRng(i + 1))
         for (const c of r.candidates.filter((c) => !c.isCorrect && !c.color.isNeutral)) {
           expect(adjacent).toContain(c.color.toneSymbol)
         }
@@ -117,12 +120,52 @@ describe("generateRound", () => {
   })
 
   it("同一シードでは同一ラウンドを再現する", () => {
-    const a = generateRound("lt", makeRng(42))
-    const b = generateRound("lt", makeRng(42))
+    const a = generateRound("lt", null, makeRng(42))
+    const b = generateRound("lt", null, makeRng(42))
     expect(a.candidates.map((c) => c.color.notation)).toEqual(
       b.candidates.map((c) => c.color.notation)
     )
   })
+})
+
+describe("generateRound（色相フィルタ）", () => {
+  for (const target of TARGET_TONES) {
+    for (const hue of SELECTABLE_HUES) {
+      const rounds = Array.from({ length: 20 }, (_, i) =>
+        generateRound(target, hue, makeRng(i + 1))
+      )
+
+      it(`お題 ${target} × 色相 ${hue}: 全カードがその色相で 8 枚`, () => {
+        for (const r of rounds) {
+          expect(r.hue).toBe(hue)
+          expect(r.candidates).toHaveLength(CANDIDATE_COUNT)
+          for (const c of r.candidates) {
+            expect(c.color.isNeutral).toBe(false)
+            expect(c.color.hueNumber).toBe(hue)
+          }
+        }
+      })
+
+      it(`お題 ${target} × 色相 ${hue}: 正解はお題トーンちょうど 1 枚`, () => {
+        for (const r of rounds) {
+          expect(r.correctCount).toBe(1)
+          const correct = r.candidates.filter((c) => c.isCorrect)
+          expect(correct).toHaveLength(1)
+          expect(correct[0].color.toneSymbol).toBe(target)
+        }
+      })
+
+      it(`お題 ${target} × 色相 ${hue}: はずれ札は別トーンで重複なし`, () => {
+        for (const r of rounds) {
+          for (const c of r.candidates.filter((c) => !c.isCorrect)) {
+            expect(c.color.toneSymbol).not.toBe(target)
+          }
+          const notations = r.candidates.map((c) => c.color.notation)
+          expect(new Set(notations).size).toBe(notations.length)
+        }
+      })
+    }
+  }
 })
 
 describe("adjacentChromaticTones", () => {

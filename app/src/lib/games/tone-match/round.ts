@@ -31,6 +31,12 @@ export const TARGET_TONES: readonly string[] = PCCS_CHROMATIC_TONE_SYMBOLS.filte
   (tone) => tone !== "s"
 )
 
+/**
+ * 色相フィルタで選べる色相（全トーン共通の偶数 12 色相）。
+ * 奇数色相は v 以外のトーンに色が無いため、どのお題でも成立する偶数のみを対象にする。
+ */
+export const SELECTABLE_HUES: readonly number[] = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24]
+
 export type CandidateColor = {
   color: PCCSColor
   /** カードのトーンがお題トーンと一致するか。 */
@@ -40,7 +46,9 @@ export type CandidateColor = {
 export type Round = {
   /** お題トーン（探す対象）。 */
   target: string
-  /** このラウンドの正解枚数（1〜3、在庫でクランプ済み）。 */
+  /** 出題を絞り込む色相（null は全色相）。 */
+  hue: number | null
+  /** このラウンドの正解枚数（1〜3。色相フィルタ時は必然的に 1）。 */
   correctCount: number
   /** 候補 8 枚（正解・はずれを混ぜてシャッフル済み）。 */
   candidates: CandidateColor[]
@@ -131,17 +139,27 @@ const randInt = (min: number, max: number, rng: Rng): number =>
 /**
  * 1 ラウンド分の候補 8 枚を生成する。
  *
- * 正解札 = お題トーンから 1〜3 枚。
+ * 正解札 = お題トーンから 1〜3 枚（色相フィルタ時はその色相の 1 枚のみ）。
  * はずれ札 = なるべく隣接トーンの有彩色から。不足分は非隣接の有彩色でフォールバック。
- *   さらに確率で 1 枚だけ、お題トーンの明度水準に近い無彩色（変化球）を混ぜる。
+ *   色相フィルタが無いときは、確率で 1 枚だけお題トーンの明度水準に近い無彩色（変化球）を混ぜる。
+ * 色相フィルタが有るときは全カードをその色相にそろえる（無彩色は色相を持たないため混ぜない）。
  * 正解トーンの混入・同一色の重複は起こらない（プール分割＋重複なしサンプリング）。
  *
  * @param target お題トーン（探す対象の有彩色トーン）
+ * @param hue 出題を絞り込む色相（null は全色相）
  * @param rng テスト用に差し替え可能な乱数源（既定は Math.random）
  */
-export const generateRound = (target: string, rng: Rng = Math.random): Round => {
-  // 正解札: お題トーンの色から 1〜3 枚（在庫でクランプ）。各トーンは 12 色相以上あり常に確保できる。
-  const correctPool = CHROMATIC_POOL.filter((c) => c.toneSymbol === target)
+export const generateRound = (
+  target: string,
+  hue: number | null = null,
+  rng: Rng = Math.random
+): Round => {
+  // 色相フィルタが有効なら、その色相の色だけを候補にする。
+  const inHue = (c: PCCSColor): boolean => hue === null || c.hueNumber === hue
+
+  // 正解札: お題トーンの色から 1〜3 枚（在庫でクランプ）。
+  // 色相フィルタ時は該当色相の 1 色しかないため必然的に 1 枚になる。
+  const correctPool = CHROMATIC_POOL.filter((c) => c.toneSymbol === target && inHue(c))
   const correctCount = Math.min(randInt(MIN_CORRECT, MAX_CORRECT, rng), correctPool.length)
   const correct = sample(correctPool, correctCount, rng)
 
@@ -150,8 +168,9 @@ export const generateRound = (target: string, rng: Rng = Math.random): Round => 
   const miss: PCCSColor[] = []
 
   // 変化球: たまに無彩色を 1 枚。お題トーンの明度水準に近いグレーを選ぶ。
+  // 色相フィルタ時は全カードを同一色相にそろえるため無彩色は入れない。
   let neutralSlots = 0
-  if (missCount > 0 && rng() < NEUTRAL_MIX_PROBABILITY) {
+  if (hue === null && missCount > 0 && rng() < NEUTRAL_MIX_PROBABILITY) {
     const allowed = NEUTRAL_TONE_BY_LEVEL[toneLightnessLevel(target)]
     const neutralCandidates = NEUTRAL_POOL.filter((c) => allowed.includes(c.toneSymbol!))
     const [gray] = sample(neutralCandidates, 1, rng)
@@ -170,7 +189,8 @@ export const generateRound = (target: string, rng: Rng = Math.random): Round => 
       c.toneSymbol !== target &&
       !usedNotations.has(c.notation) &&
       c.toneSymbol !== null &&
-      adjacent.includes(c.toneSymbol)
+      adjacent.includes(c.toneSymbol) &&
+      inHue(c)
   )
   const fromAdjacent = sample(adjacentPool, Math.min(chromaticMissCount, adjacentPool.length), rng)
   for (const c of fromAdjacent) usedNotations.add(c.notation)
@@ -180,7 +200,7 @@ export const generateRound = (target: string, rng: Rng = Math.random): Round => 
   const shortfall = chromaticMissCount - fromAdjacent.length
   if (shortfall > 0) {
     const fallbackPool = CHROMATIC_POOL.filter(
-      (c) => c.toneSymbol !== target && !usedNotations.has(c.notation)
+      (c) => c.toneSymbol !== target && !usedNotations.has(c.notation) && inHue(c)
     )
     const fallback = sample(fallbackPool, Math.min(shortfall, fallbackPool.length), rng)
     for (const c of fallback) usedNotations.add(c.notation)
@@ -195,5 +215,5 @@ export const generateRound = (target: string, rng: Rng = Math.random): Round => 
     rng
   )
 
-  return { target, correctCount, candidates }
+  return { target, hue, correctCount, candidates }
 }

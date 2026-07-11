@@ -4,6 +4,7 @@
   import Mark from "$lib/components/m-directive/Mark.svelte"
   import ToneMatchCard from "$lib/components/tone-match/ToneMatchCard.svelte"
   import ToneMapSelector from "$lib/components/tone-match/ToneMapSelector.svelte"
+  import HueWheelSelector from "$lib/components/tone-match/HueWheelSelector.svelte"
   import ClearOverlay from "$lib/components/games/ClearOverlay.svelte"
   import {
     generateRound,
@@ -15,6 +16,8 @@
 
   // 既定のお題は v トーン。永続化しないためアクセスのたびに都度リセットされる。
   let target = $state<string>("v")
+  // 出題を絞り込む色相（null は全色相）。永続化しない。
+  let selectedHue = $state<number | null>(null)
   let round = $state<Round>(generateRound("v"))
   let flipped = $state<boolean[]>(new Array(CANDIDATE_COUNT).fill(false))
 
@@ -34,9 +37,9 @@
     if (cleared) clearedTones.add(target)
   })
 
-  const startRound = (next: string) => {
+  const startRound = (next: string, hue: number | null = selectedHue) => {
     target = next
-    round = generateRound(next)
+    round = generateRound(next, hue)
     flipped = round.candidates.map(() => false)
   }
 
@@ -44,6 +47,12 @@
   const selectTone = (next: string) => {
     if (next === target) return
     startRound(next)
+  }
+
+  // 色相環からの絞り込み。同じ色相を再クリックしたら解除して全色相に戻す。
+  const selectHue = (hue: number) => {
+    selectedHue = selectedHue === hue ? null : hue
+    startRound(target, selectedHue)
   }
 
   // クリア後「もっと続ける」。未クリアトーンからランダムに次のお題を選ぶ。
@@ -117,8 +126,14 @@
   </section>
 
   <section class="controls">
-    <p class="controls-label">探すトーンを選ぶ</p>
-    <ToneMapSelector selected={target} onselect={selectTone} />
+    <div class="picker">
+      <p class="controls-label">探すトーンを選ぶ</p>
+      <ToneMapSelector selected={target} onselect={selectTone} />
+    </div>
+    <div class="picker">
+      <p class="controls-label">色相を絞り込む</p>
+      <HueWheelSelector selected={selectedHue} onselect={selectHue} />
+    </div>
   </section>
 </main>
 
@@ -139,12 +154,13 @@
     margin: 0 0 1.75rem;
   }
 
-  /* ===== トーンマップ選択 ===== */
+  /* ===== トーンマップ・色相環の選択 ===== */
   .controls {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.9rem;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 1.5rem 2rem;
     padding: 1.25rem;
     border-radius: 16px;
     background: var(--color-surface);
@@ -152,9 +168,17 @@
     margin-top: 1.5rem;
   }
 
+  .picker {
+    flex: 1 1 200px;
+    max-width: 260px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
   .controls-label {
     margin: 0;
-    align-self: center;
     font-size: 0.9rem;
     font-weight: 700;
     color: var(--color-heading);
