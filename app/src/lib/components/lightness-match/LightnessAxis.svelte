@@ -15,17 +15,24 @@
   let { baseValue, baseColor, selectedValue, selectedColor }: Props = $props()
 
   // ===== SVG dimensions =====
-  const WIDTH = 144
+  const WIDTH = 188
   const HEIGHT = 150
 
-  // ===== Layout constants =====
+  // ===== 明度スケール＋セル横のマーカー（左） =====
   const PAD_TOP = 6
   const PAD_BOTTOM = 6
   const V_MAX = 10
-  const SWATCH_GAP = 6
+  const BAR_X = 46
+  const BAR_W = 20
+  const MARK_GAP = 5
   const LABEL_GAP = 5
   const FONT_SIZE_VALUE = 12
   const STROKE_WIDTH_SWATCH = 1
+
+  // ===== 大きい色スウォッチの縦並び（右） =====
+  const BIG = 60
+  const BIG_GAP = 12
+  const BIG_X = 120
 
   // ===== Colors =====
   const COL_TEXT = "var(--color-heading)"
@@ -35,9 +42,7 @@
   const axisBottom = HEIGHT - PAD_BOTTOM
   // セルの高さ（縦に V_MAX 段並ぶ）。幅はこれより少し広くして横長のセルにする。
   const CELL = (axisBottom - axisTop) / V_MAX
-  const BAR_W = 20
-  const BAR_X = (WIDTH - BAR_W) / 2
-  const SWATCH_W = CELL
+  const MARK_W = CELL
 
   const valueToY = (v: number): number =>
     axisBottom - (Math.max(0, Math.min(V_MAX, v)) / V_MAX) * (axisBottom - axisTop)
@@ -51,12 +56,18 @@
     color: grayHexForLightness((i + 0.5) * 10)
   }))
 
-  // 実際の色の四角形は、同じ明度のセルの真横（基準色=左、選択色=右）に置く。
-  const baseSwatchX = BAR_X - SWATCH_GAP - SWATCH_W
-  const selSwatchX = BAR_X + BAR_W + SWATCH_GAP
+  // 左：同じ明度のセルの真横に置く小さなマーカー（基準色=左、選択色=右）。
+  const baseMarkX = BAR_X - MARK_GAP - MARK_W
+  const selMarkX = BAR_X + BAR_W + MARK_GAP
+  const baseMarkY = $derived(valueToY(baseValue) - CELL / 2)
+  const selMarkY = $derived(valueToY(selectedValue) - CELL / 2)
 
-  const baseSwatchY = $derived(valueToY(baseValue) - CELL / 2)
-  const selSwatchY = $derived(valueToY(selectedValue) - CELL / 2)
+  // 右：色を見比べる大きいスウォッチ。明度が高い色ほど上に配置する。
+  const stackTop = (axisTop + axisBottom) / 2 - (2 * BIG + BIG_GAP) / 2
+  const topBigY = stackTop
+  const bottomBigY = stackTop + BIG + BIG_GAP
+  const topColor = $derived(baseValue >= selectedValue ? baseColor : selectedColor)
+  const bottomColor = $derived(baseValue >= selectedValue ? selectedColor : baseColor)
 </script>
 
 <svg
@@ -80,18 +91,18 @@
     stroke-width="1"
   />
 
-  <!-- 基準色（左）：同じ明度のセルの隣に実際の色を配置 -->
+  <!-- 基準色マーカー（左）：同じ明度のセルの真横 -->
   <rect
-    x={baseSwatchX}
-    y={baseSwatchY}
-    width={SWATCH_W}
+    x={baseMarkX}
+    y={baseMarkY}
+    width={MARK_W}
     height={CELL}
     fill={baseColor}
     stroke={COL_BORDER}
     stroke-width={STROKE_WIDTH_SWATCH}
   />
   <text
-    x={baseSwatchX - LABEL_GAP}
+    x={baseMarkX - LABEL_GAP}
     y={valueToY(baseValue) + FONT_SIZE_VALUE / 3}
     text-anchor="end"
     font-size={FONT_SIZE_VALUE}
@@ -99,24 +110,44 @@
     fill={COL_TEXT}>{baseValue}</text
   >
 
-  <!-- 選択色（右）：同じ明度のセルの隣に実際の色を配置 -->
+  <!-- 選択色マーカー（右）：同じ明度のセルの真横 -->
   <rect
-    x={selSwatchX}
-    y={selSwatchY}
-    width={SWATCH_W}
+    x={selMarkX}
+    y={selMarkY}
+    width={MARK_W}
     height={CELL}
     fill={selectedColor}
     stroke={COL_BORDER}
     stroke-width={STROKE_WIDTH_SWATCH}
   />
   <text
-    x={selSwatchX + SWATCH_W + LABEL_GAP}
+    x={selMarkX + MARK_W + LABEL_GAP}
     y={valueToY(selectedValue) + FONT_SIZE_VALUE / 3}
     text-anchor="start"
     font-size={FONT_SIZE_VALUE}
     font-weight="700"
     fill={COL_TEXT}>{selectedValue}</text
   >
+
+  <!-- 大きい色スウォッチ（上＝明度が高い色 / 下＝明度が低い色） -->
+  <rect
+    x={BIG_X}
+    y={topBigY}
+    width={BIG}
+    height={BIG}
+    fill={topColor}
+    stroke={COL_BORDER}
+    stroke-width={STROKE_WIDTH_SWATCH}
+  />
+  <rect
+    x={BIG_X}
+    y={bottomBigY}
+    width={BIG}
+    height={BIG}
+    fill={bottomColor}
+    stroke={COL_BORDER}
+    stroke-width={STROKE_WIDTH_SWATCH}
+  />
 </svg>
 
 <style>
