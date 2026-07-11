@@ -22,36 +22,39 @@
   const verdictLabel = $derived(
     verdict === "correct" ? "正解" : verdict === "near" ? "惜しい！" : "不正解"
   )
-  // 見つけた正解は確定（再クリックで戻せない）。不正解は表に戻して選び直せる。
-  const locked = $derived(flipped && candidate.isCorrect)
 
   // 基準色との明度差（マンセル Value 差）。0 なら一致＝正解。
   const valueDiff = $derived(Math.abs(baseValue - candidate.value))
-
-  const ariaLabel = $derived(
-    flipped
-      ? `候補 ${index + 1}：${candidate.color.name}。${verdictLabel}`
-      : `候補 ${index + 1}。めくって明度を確かめる`
-  )
 </script>
 
-<button
-  type="button"
-  class="card"
-  class:flipped
-  aria-pressed={flipped}
-  aria-label={ariaLabel}
-  disabled={locked}
-  onclick={() => onselect(index)}
->
-  <span class="inner">
-    <!-- 表：色だけを見せて明度を判断させる -->
-    <span class="face front" style="background: {candidate.color._hex}">
+<div class="card" class:flipped>
+  <div class="inner">
+    <!-- 表：色だけを見せて明度を判断させる。クリックでめくる。 -->
+    <button
+      type="button"
+      class="face front"
+      style="background: {candidate.color._hex}"
+      aria-label="候補 {index + 1}。めくって明度を確かめる"
+      disabled={flipped}
+      onclick={() => onselect(index)}
+    >
       <span class="peek" aria-hidden="true"><Icon icon="mdi:magnify" /></span>
-    </span>
+    </button>
 
     <!-- 裏：結果と明度差の可視化 -->
-    <span class="face back">
+    <div class="face back">
+      {#if !candidate.isCorrect}
+        <button
+          type="button"
+          class="flip-back"
+          aria-label="表に戻す"
+          disabled={!flipped}
+          onclick={() => onselect(index)}
+        >
+          <Icon icon="mdi:restore" />
+        </button>
+      {/if}
+
       <span class="verdict verdict-{verdict}">
         {#if verdict === "correct"}
           <Icon icon="mdi:check-circle" />
@@ -80,9 +83,9 @@
         <span class="diff-label">明度差</span>
         <span class="diff-value">{valueDiff}</span>
       </span>
-    </span>
-  </span>
-</button>
+    </div>
+  </div>
+</div>
 
 <style>
   .card {
@@ -93,23 +96,8 @@
     display: block;
     width: 100%;
     aspect-ratio: 3 / 4;
-    padding: 0;
-    border: none;
-    background: none;
     perspective: 900px;
-    cursor: pointer;
-    font: inherit;
     color: var(--color-heading);
-  }
-
-  .card:disabled {
-    cursor: default;
-  }
-
-  .card:focus-visible {
-    outline: 3px solid light-dark(#7c3aed, #c4b5fd);
-    outline-offset: 3px;
-    border-radius: 12px;
   }
 
   .inner {
@@ -139,7 +127,22 @@
   }
 
   .front {
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    appearance: none;
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+  }
+
+  .front:disabled {
+    cursor: default;
+  }
+
+  .front:focus-visible,
+  .flip-back:focus-visible {
+    outline: 3px solid light-dark(#7c3aed, #c4b5fd);
+    outline-offset: 3px;
   }
 
   .peek {
@@ -156,8 +159,8 @@
     transition: opacity 0.2s;
   }
 
-  .card:hover .front .peek,
-  .card:focus-visible .front .peek {
+  .front:hover .peek,
+  .front:focus-visible .peek {
     opacity: 1;
   }
 
@@ -205,7 +208,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    line-height: 1.25;
+    line-height: 1.2;
     text-align: center;
   }
 
@@ -218,6 +221,34 @@
     font-size: 0.85rem;
     font-weight: 800;
     color: var(--color-heading);
+  }
+
+  .flip-back {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    border: 1px solid var(--_border);
+    border-radius: 50%;
+    background: var(--_surface);
+    color: var(--color-body);
+    font-size: 0.95rem;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      color 0.2s,
+      border-color 0.2s;
+  }
+
+  .flip-back:hover:not(:disabled) {
+    color: var(--color-heading);
+    border-color: var(--color-heading);
   }
 
   /* 動きを減らす設定を尊重する */
