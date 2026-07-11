@@ -65,6 +65,17 @@
     }
   ]
 
+  const games: LinkCardItem[] = [
+    {
+      href: resolve("/games/lightness-match"),
+      gradient: "linear-gradient(135deg, #ff6b6b, #ffd93d)",
+      glow: "#ff6b6b",
+      title: "明度マッチング",
+      desc: "基準色と明度が同じ色を探すカードゲーム",
+      grades: ["3", "2"]
+    }
+  ]
+
   const cgContents: LinkCardItem[] = [
     {
       href: resolve("/cg"),
@@ -150,7 +161,7 @@
     <!-- Contents -->
     <section class="contents-section">
       <div class="tools-header">
-        <span class="tools-label">色彩コンテンツ</span>
+        <span class="tools-label">色を学ぶ</span>
         <div class="tools-divider"></div>
       </div>
       <div class="contents-grid">
@@ -163,7 +174,7 @@
     <!-- Tools -->
     <section class="tools-section">
       <div class="tools-header">
-        <span class="tools-label">色彩ツール</span>
+        <span class="tools-label">色を使う</span>
         <div class="tools-divider"></div>
       </div>
       <div class="tools-grid">
@@ -173,10 +184,23 @@
       </div>
     </section>
 
+    <!-- Games -->
+    <section class="tools-section">
+      <div class="tools-header">
+        <span class="tools-label">色を見分ける</span>
+        <div class="tools-divider"></div>
+      </div>
+      <div class="tools-grid">
+        {#each games as game (game.title)}
+          <LinkCard {...game} />
+        {/each}
+      </div>
+    </section>
+
     <!-- CG / Image processing -->
     <section id="cg" class="contents-section">
       <div class="tools-header">
-        <span class="tools-label">色のしくみと関わる分野</span>
+        <span class="tools-label">色と関わる</span>
         <div class="tools-divider"></div>
       </div>
       <div class="contents-grid">
