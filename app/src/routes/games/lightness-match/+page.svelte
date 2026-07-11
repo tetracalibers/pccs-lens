@@ -155,7 +155,8 @@
     gap: 0.4rem;
     padding: 0.3rem;
     border-radius: 14px;
-    background: var(--color-muted);
+    /* 明度軸のガイド線と共有する --color-muted とは切り離し、トラックだけ独立の地色にする */
+    background: light-dark(#f0f0f3, #33333f);
     border: 1px solid var(--color-border);
   }
 
@@ -181,9 +182,9 @@
   }
 
   .difficulty-btn.active {
-    background: var(--color-surface);
+    background: light-dark(#ffffff, #52526a);
     color: var(--color-heading);
-    box-shadow: 0 1px 6px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4));
+    box-shadow: 0 1px 6px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5));
   }
 
   .difficulty-btn:focus-visible {
