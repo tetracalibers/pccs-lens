@@ -85,14 +85,6 @@
     </Mark>を見分けます。紛らわしい隣接トーンに惑わされず、狙いのトーンだけを選びましょう。
   </p>
 
-  <section class="controls">
-    <p class="controls-label">探すトーンを選ぶ</p>
-    <ToneMapSelector selected={target} onselect={selectTone} />
-    <p class="note">
-      このゲームは色相・彩度・トーンの見分けに頼るため、色覚タイプによって難しさが変わることがあります。
-    </p>
-  </section>
-
   <section class="board-section">
     <div class="prompt">
       <div class="prompt-body">
@@ -123,6 +115,14 @@
       {/if}
     </div>
   </section>
+
+  <section class="controls">
+    <p class="controls-label">探すトーンを選ぶ</p>
+    <ToneMapSelector selected={target} onselect={selectTone} />
+    <p class="note">
+      このゲームは色相・彩度・トーンの見分けに頼るため、色覚タイプによって難しさが変わることがあります。
+    </p>
+  </section>
 </main>
 
 <style>
@@ -152,7 +152,7 @@
     border-radius: 16px;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
-    margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
   }
 
   .controls-label {

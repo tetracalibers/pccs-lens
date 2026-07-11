@@ -1,10 +1,8 @@
 <script lang="ts">
-  import { PCCS_HEX_MAP } from "$lib/data/pccs"
-  import { isLightColor } from "$lib/color/utils"
   import { toneNameJa } from "$lib/games/tone-match/round"
 
   interface Props {
-    /** 現在のお題トーン（リングで強調するセル）。 */
+    /** 現在のお題トーン（強調するセル）。 */
     selected: string
     /** トーンをクリックしたときのハンドラ。 */
     onselect: (tone: string) => void
@@ -33,8 +31,6 @@
     { tone: "v", cx: 181, cy: 113, selectable: true }
   ]
 
-  // 各トーンの代表色（色相 2 = R でそろえた縦のトーン列としてマップを見せる）。
-  const repHex = (tone: string): string => PCCS_HEX_MAP.get(`${tone}2`) ?? "#888888"
   const pct = (value: number, total: number): number => (value / total) * 100
   const SIZE_PCT = pct(2 * R, VIEW_W)
 </script>
@@ -46,16 +42,13 @@
   style="aspect-ratio: {VIEW_W} / {VIEW_H};"
 >
   {#each CELLS as cell (cell.tone)}
-    {@const hex = repHex(cell.tone)}
-    {@const labelDark = isLightColor(hex)}
     {@const style = `left: ${pct(cell.cx, VIEW_W)}%; top: ${pct(cell.cy, VIEW_H)}%; width: ${SIZE_PCT}%;`}
     {#if cell.selectable}
       <button
         type="button"
         class="cell"
         class:selected={selected === cell.tone}
-        class:label-dark={labelDark}
-        style="{style} background: {hex};"
+        {style}
         aria-pressed={selected === cell.tone}
         aria-label="{cell.tone} {toneNameJa(cell.tone)}トーンを探す"
         onclick={() => onselect(cell.tone)}
@@ -64,7 +57,7 @@
       </button>
     {:else}
       <!-- s トーンはプール外なので選べない。マップの形を保つためだけに薄く表示する。 -->
-      <span class="cell disabled" style={style} aria-hidden="true">{cell.tone}</span>
+      <span class="cell disabled" {style} aria-hidden="true">{cell.tone}</span>
     {/if}
   {/each}
 </div>
@@ -73,7 +66,7 @@
   .map {
     position: relative;
     width: 100%;
-    max-width: 300px;
+    max-width: 232px;
     margin: 0 auto;
   }
 
@@ -85,26 +78,26 @@
     align-items: center;
     justify-content: center;
     padding: 0;
-    border: 1px solid rgba(0, 0, 0, 0.15);
+    background: transparent;
+    border: 1.5px solid rgb(from var(--color-body) r g b / 0.4);
     border-radius: 50%;
     font-family: var(--font-mono);
-    font-size: 0.82rem;
+    font-size: 0.78rem;
     font-weight: 700;
     line-height: 1;
-    color: light-dark(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95));
+    color: var(--color-body);
     cursor: pointer;
     transition:
       transform 0.15s,
+      border-color 0.2s,
+      color 0.2s,
       box-shadow 0.2s;
-  }
-
-  /* 明るい代表色のセルは濃い文字色にして可読性を保つ。 */
-  .cell.label-dark {
-    color: rgba(0, 0, 0, 0.72);
   }
 
   .cell:hover {
     transform: translate(-50%, -50%) scale(1.08);
+    border-color: var(--color-heading);
+    color: var(--color-heading);
   }
 
   .cell:focus-visible {
@@ -113,17 +106,19 @@
   }
 
   .cell.selected {
+    border-color: var(--color-heading);
+    color: var(--color-heading);
+    font-weight: 900;
     box-shadow:
       0 0 0 3px var(--color-surface, light-dark(#ffffff, #16161f)),
-      0 0 0 6px light-dark(#7c3aed, #c4b5fd);
+      0 0 0 5px var(--color-heading);
   }
 
   .cell.disabled {
     cursor: default;
-    background: light-dark(#e6e6ea, #2a2a38);
     border-style: dashed;
-    border-color: light-dark(#c4c4cc, #44445a);
-    color: light-dark(#9a9aa4, #6a6a80);
+    border-color: rgb(from var(--color-body) r g b / 0.2);
+    color: rgb(from var(--color-body) r g b / 0.35);
     font-weight: 600;
   }
 
