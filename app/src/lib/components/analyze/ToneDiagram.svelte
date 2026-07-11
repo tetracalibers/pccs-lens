@@ -4,10 +4,16 @@
 
   let {
     displayedPCCSList,
-    isCard199
+    isCard199,
+    targetTones = [],
+    selectedTone = null
   }: {
     displayedPCCSList: PCCSColor[]
     isCard199: boolean
+    /** ハイライトするターゲットトーン群（該当セルの背後にゾーンの光彩を描く）。 */
+    targetTones?: string[]
+    /** 選択セルとして強調するトーン記号（該当セルにリングを描く）。 */
+    selectedTone?: string | null
   } = $props()
 
   type ToneCell = {
@@ -159,6 +165,8 @@
       {@const strokeOpacity = isUsed ? 1 : isSCell && isCard199 ? 0.5 : 0.6}
       {@const cellOpacity = isSCell && isCard199 && !isUsed ? 0.5 : 1}
       {@const textOpacity = isUsed ? 1 : showHatch ? 0.5 : 0.6}
+      {@const isTarget = targetTones.includes(cell.key)}
+      {@const isSelected = selectedTone === cell.key}
 
       <g
         role={isUsed ? "img" : undefined}
@@ -173,6 +181,28 @@
             }
           : undefined}
       >
+        {#if isTarget}
+          <!-- ターゲット領域の光彩。隣接ターゲット同士は重なってひとつのゾーンに繋がる。 -->
+          {#if cell.shape === "circle"}
+            <circle
+              cx={cell.cx}
+              cy={cell.cy}
+              r={CIRCLE_R + 5}
+              fill="var(--target-fill)"
+              style="pointer-events: none;"
+            />
+          {:else}
+            <rect
+              x={cell.cx - RECT_W / 2 - 5}
+              y={cell.cy - RECT_H / 2 - 5}
+              width={RECT_W + 10}
+              height={RECT_H + 10}
+              rx="9"
+              fill="var(--target-fill)"
+              style="pointer-events: none;"
+            />
+          {/if}
+        {/if}
         {#if showHatch}
           <line
             x1={cell.cx + CIRCLE_R}
@@ -209,6 +239,32 @@
             stroke-width={strokeWidth}
             stroke-opacity={strokeOpacity}
           />
+        {/if}
+        {#if isSelected}
+          <!-- 選択セルのリング。選んだ色がマップ上どこに位置するかを示す。 -->
+          {#if cell.shape === "circle"}
+            <circle
+              cx={cell.cx}
+              cy={cell.cy}
+              r={CIRCLE_R + 2.5}
+              fill="none"
+              stroke="var(--selected-stroke)"
+              stroke-width="2.5"
+              style="pointer-events: none;"
+            />
+          {:else}
+            <rect
+              x={cell.cx - RECT_W / 2 - 2.5}
+              y={cell.cy - RECT_H / 2 - 2.5}
+              width={RECT_W + 5}
+              height={RECT_H + 5}
+              rx="6"
+              fill="none"
+              stroke="var(--selected-stroke)"
+              stroke-width="2.5"
+              style="pointer-events: none;"
+            />
+          {/if}
         {/if}
         <text
           x={cell.cx}
@@ -248,6 +304,9 @@
     --cell-empty-fill: light-dark(white, #1c1c2e);
     --cell-empty-stroke: var(--color-body);
     --hatch-stroke: var(--color-body);
+    /* tone-hunt: ターゲット領域の光彩と選択セルのリング（既定利用では未使用） */
+    --target-fill: light-dark(rgba(245, 159, 0, 0.22), rgba(255, 212, 59, 0.16));
+    --selected-stroke: light-dark(#7c3aed, #c4b5fd);
   }
 
   .tooltip {
