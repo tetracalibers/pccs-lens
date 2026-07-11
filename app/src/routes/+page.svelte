@@ -68,8 +68,8 @@
   const games: LinkCardItem[] = [
     {
       href: resolve("/games/lightness-match"),
-      gradient: "linear-gradient(135deg, #2b2b2b, #d9d9d9)",
-      glow: "#8a8a8a",
+      gradient: "linear-gradient(135deg, #ff6b6b, #ffd93d)",
+      glow: "#ff6b6b",
       title: "明度マッチング",
       desc: "基準色と明度が同じ色を探すカードゲーム",
       grades: ["3", "2"]
