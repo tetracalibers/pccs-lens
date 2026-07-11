@@ -39,7 +39,9 @@ describe("generateRound", () => {
   for (const difficulty of difficulties) {
     describe(difficulty, () => {
       // 多数シードで不変条件を検証する。
-      const rounds = Array.from({ length: 300 }, (_, i) => generateRound(difficulty, makeRng(i + 1)))
+      const rounds = Array.from({ length: 300 }, (_, i) =>
+        generateRound(difficulty, makeRng(i + 1))
+      )
 
       it("候補は常に 8 枚", () => {
         for (const r of rounds) expect(r.candidates).toHaveLength(CANDIDATE_COUNT)

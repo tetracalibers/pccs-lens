@@ -55,7 +55,9 @@
   <Heading1 icon="mdi:contrast-circle" grayscale compact>明度マッチング</Heading1>
 
   <p class="lead">
-    基準色と<strong>明度（マンセル Value）が同じ</strong>カードを探すゲームです。同じ明度でも鮮やかな色ほど明るく見えます。色相や彩度の印象に惑わされず、明度だけを見抜きましょう。
+    基準色と
+    <strong>明度（マンセル Value）が同じ</strong>
+    カードを探すゲームです。同じ明度でも鮮やかな色ほど明るく見えます。色相や彩度の印象に惑わされず、明度だけを見抜きましょう。
   </p>
 
   <section class="controls">
@@ -85,7 +87,8 @@
           <span class="base-munsell">{round.base.munsell}</span>
         </p>
         <p class="progress" aria-live="polite">
-          残り <strong>{remaining}</strong> 枚
+          残り <strong>{remaining}</strong>
+           枚
         </p>
       </div>
     </div>

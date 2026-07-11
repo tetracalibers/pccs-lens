@@ -88,8 +88,7 @@ const CHROMATIC_BASE_POOL: EnrichedColor[] = ALL_BASE_POOL.filter((e) => e.hueRa
 
 const approxEq = (a: number, b: number): boolean => Math.abs(a - b) < 1e-9
 
-const isMissValueDelta = (diff: number): boolean =>
-  MISS_VALUE_DELTAS.some((d) => approxEq(diff, d))
+const isMissValueDelta = (diff: number): boolean => MISS_VALUE_DELTAS.some((d) => approxEq(diff, d))
 
 /** 色相ランクの循環距離（0〜50）。 */
 const hueRankDistance = (a: number, b: number): number => {
@@ -199,9 +198,7 @@ export const generateRound = (difficulty: Difficulty, rng: Rng = Math.random): R
   )
   // 在庫が枚数に満たない場合のフォールバック（Value 条件を緩め、同 Value のみ避ける）。
   if (missPool.length < missCount) {
-    missPool = ENRICHED.filter(
-      (e) => !excludedIds.has(e.color.id) && !approxEq(e.value, baseValue)
-    )
+    missPool = ENRICHED.filter((e) => !excludedIds.has(e.color.id) && !approxEq(e.value, baseValue))
   }
   const miss = pickMissColors(missPool, missCount, difficulty, base, rng)
 
