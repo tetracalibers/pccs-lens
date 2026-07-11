@@ -81,6 +81,14 @@
       title: "清色・濁色の見極め",
       desc: "PCCSの明清色・暗清色・中間色を見分けるカードゲーム",
       grades: ["3"]
+    },
+    {
+      href: resolve("/games/tone-match"),
+      gradient: "linear-gradient(135deg, #c2255c, #7c3aed)",
+      glow: "#c2255c",
+      title: "トーンの見極め",
+      desc: "PCCSの個々のトーンを見分けるカードゲーム",
+      grades: ["3", "2"]
     }
   ]
 
