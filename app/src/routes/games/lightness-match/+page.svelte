@@ -1,0 +1,381 @@
+<script lang="ts">
+  import Icon from "@iconify/svelte"
+  import Heading1 from "$lib/components/Heading1.svelte"
+  import LightnessCard from "$lib/components/lightness-match/LightnessCard.svelte"
+  import {
+    generateRound,
+    CANDIDATE_COUNT,
+    type Difficulty,
+    type Round
+  } from "$lib/games/lightness-match/round"
+
+  const DIFFICULTIES: { id: Difficulty; label: string; hint: string }[] = [
+    { id: "beginner", label: "初級", hint: "色相の近い札が並ぶ" },
+    { id: "advanced", label: "上級", hint: "色相・彩度がバラバラ" }
+  ]
+
+  let difficulty = $state<Difficulty>("beginner")
+  let round = $state<Round>(generateRound("beginner"))
+  let flipped = $state<boolean[]>(new Array(CANDIDATE_COUNT).fill(false))
+
+  const foundCount = $derived(
+    round.candidates.reduce((n, c, i) => n + (flipped[i] && c.isCorrect ? 1 : 0), 0)
+  )
+  const remaining = $derived(round.correctCount - foundCount)
+  const cleared = $derived(remaining === 0)
+
+  const startRound = (next: Difficulty = difficulty) => {
+    round = generateRound(next)
+    flipped = round.candidates.map(() => false)
+  }
+
+  const selectDifficulty = (next: Difficulty) => {
+    if (next === difficulty) return
+    difficulty = next
+    startRound(next)
+  }
+
+  const onselect = (index: number) => {
+    const candidate = round.candidates[index]
+    if (flipped[index]) {
+      // 見つけた正解は確定。不正解は表に戻して選び直せる。
+      if (candidate.isCorrect) return
+      flipped[index] = false
+    } else {
+      flipped[index] = true
+    }
+  }
+</script>
+
+<svelte:head>
+  <title>明度マッチング - Color Prism</title>
+</svelte:head>
+
+<main>
+  <Heading1 icon="mdi:contrast-circle" grayscale compact>明度マッチング</Heading1>
+
+  <p class="lead">
+    基準色と<strong>明度（マンセル Value）が同じ</strong>カードを探すゲームです。同じ明度でも鮮やかな色ほど明るく見えます。色相や彩度の印象に惑わされず、明度だけを見抜きましょう。
+  </p>
+
+  <section class="controls">
+    <div class="difficulty" role="group" aria-label="難易度">
+      {#each DIFFICULTIES as level (level.id)}
+        <button
+          type="button"
+          class="difficulty-btn"
+          class:active={difficulty === level.id}
+          aria-pressed={difficulty === level.id}
+          onclick={() => selectDifficulty(level.id)}
+        >
+          <span class="difficulty-label">{level.label}</span>
+          <span class="difficulty-hint">{level.hint}</span>
+        </button>
+      {/each}
+    </div>
+  </section>
+
+  <section class="board-section">
+    <div class="prompt">
+      <div class="base-card" style="background: {round.base._hex}"></div>
+      <div class="prompt-body">
+        <p class="prompt-title">この明度と同じ色を探そう</p>
+        <p class="base-meta">
+          <span class="base-name">{round.base.name}</span>
+          <span class="base-munsell">{round.base.munsell}</span>
+        </p>
+        <p class="progress" aria-live="polite">
+          残り <strong>{remaining}</strong> 枚
+        </p>
+      </div>
+    </div>
+
+    <div class="board">
+      <div class="grid" class:dimmed={cleared}>
+        {#each round.candidates as candidate, i (candidate.color.id)}
+          <LightnessCard
+            {candidate}
+            baseValue={round.baseValue}
+            baseColor={round.base._hex}
+            flipped={flipped[i]}
+            index={i}
+            {onselect}
+          />
+        {/each}
+      </div>
+
+      {#if cleared}
+        <div class="clear-overlay" role="status" aria-live="assertive">
+          <div class="clear-card">
+            <Icon icon="mdi:party-popper" />
+            <p class="clear-title">クリア！</p>
+            <p class="clear-desc">同じ明度の色を{round.correctCount}枚すべて見つけました。</p>
+            <button type="button" class="continue-btn" onclick={() => startRound()}>
+              もっと続ける
+            </button>
+          </div>
+        </div>
+      {/if}
+    </div>
+  </section>
+
+  <p class="note">
+    カードをめくると、明度スケール上に基準色と選んだ色の高さが並びます。高さがそろえば同じ明度＝正解です。
+  </p>
+</main>
+
+<style>
+  main {
+    --color-surface: light-dark(#ffffff, #16161f);
+    --color-border: light-dark(#e0e0e0, #2e2e3e);
+    --color-text: light-dark(#1a1a1a, #f0f0f0);
+    --color-text-secondary: light-dark(#5a5a6a, #a0a0b5);
+    --color-muted: light-dark(#f0f0f3, #22222e);
+
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .lead {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--color-text);
+    margin: 0 0 1.75rem;
+  }
+
+  .lead strong {
+    color: light-dark(#7c3aed, #c4b5fd);
+  }
+
+  /* ===== 難易度切替 ===== */
+  .controls {
+    margin-bottom: 1.5rem;
+  }
+
+  .difficulty {
+    display: inline-flex;
+    gap: 0.4rem;
+    padding: 0.3rem;
+    border-radius: 14px;
+    background: var(--color-muted);
+    border: 1px solid var(--color-border);
+  }
+
+  .difficulty-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.1rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    font: inherit;
+    transition:
+      background 0.2s,
+      color 0.2s;
+  }
+
+  .difficulty-btn:hover {
+    color: var(--color-text);
+  }
+
+  .difficulty-btn.active {
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: 0 1px 6px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4));
+  }
+
+  .difficulty-btn:focus-visible {
+    outline: 3px solid light-dark(#7c3aed, #c4b5fd);
+    outline-offset: 2px;
+  }
+
+  .difficulty-label {
+    font-size: 0.95rem;
+    font-weight: 800;
+  }
+
+  .difficulty-hint {
+    font-size: 0.68rem;
+    color: var(--color-text-secondary);
+  }
+
+  /* ===== 基準色 ===== */
+  .prompt {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1rem 1.25rem;
+    border-radius: 16px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    margin-bottom: 1.5rem;
+  }
+
+  .base-card {
+    flex-shrink: 0;
+    width: 84px;
+    height: 100px;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+  }
+
+  .prompt-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .prompt-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--color-text);
+  }
+
+  .base-meta {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin: 0;
+  }
+
+  .base-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .base-munsell {
+    font-size: 0.78rem;
+    font-family: var(--font-mono, monospace);
+    color: var(--color-text-secondary);
+  }
+
+  .progress {
+    margin: 0.2rem 0 0;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+  }
+
+  .progress strong {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: light-dark(#7c3aed, #c4b5fd);
+  }
+
+  /* ===== 候補ボード ===== */
+  .board {
+    position: relative;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    transition: filter 0.3s;
+  }
+
+  .grid.dimmed {
+    filter: blur(2px) saturate(0.7);
+    pointer-events: none;
+  }
+
+  @media (max-width: 540px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* ===== クリア演出 ===== */
+  .clear-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+  }
+
+  .clear-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 1.5rem 2rem;
+    border-radius: 18px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 12px 40px light-dark(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.55));
+    text-align: center;
+    animation: pop 0.4s cubic-bezier(0.2, 1.4, 0.4, 1);
+  }
+
+  .clear-card :global(svg) {
+    font-size: 2.5rem;
+    color: light-dark(#f59f00, #ffd43b);
+  }
+
+  .clear-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--color-text);
+  }
+
+  .clear-desc {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+  }
+
+  .continue-btn {
+    margin-top: 0.6rem;
+    padding: 0.6rem 1.6rem;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #7c3aed, #4d96ff);
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+
+  .continue-btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .continue-btn:focus-visible {
+    outline: 3px solid light-dark(#7c3aed, #c4b5fd);
+    outline-offset: 3px;
+  }
+
+  @keyframes pop {
+    from {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .note {
+    margin: 1.75rem 0 0;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .clear-card {
+      animation: none;
+    }
+  }
+</style>

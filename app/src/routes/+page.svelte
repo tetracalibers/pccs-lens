@@ -65,6 +65,17 @@
     }
   ]
 
+  const games: LinkCardItem[] = [
+    {
+      href: resolve("/games/lightness-match"),
+      gradient: "linear-gradient(135deg, #2b2b2b, #d9d9d9)",
+      glow: "#8a8a8a",
+      title: "明度マッチング",
+      desc: "基準色と明度が同じ色を探すカードゲーム",
+      grades: ["3", "2"]
+    }
+  ]
+
   const cgContents: LinkCardItem[] = [
     {
       href: resolve("/cg"),
@@ -169,6 +180,19 @@
       <div class="tools-grid">
         {#each tools as tool (tool.title)}
           <LinkCard {...tool} />
+        {/each}
+      </div>
+    </section>
+
+    <!-- Games -->
+    <section class="tools-section">
+      <div class="tools-header">
+        <span class="tools-label">色を見分ける</span>
+        <div class="tools-divider"></div>
+      </div>
+      <div class="tools-grid">
+        {#each games as game (game.title)}
+          <LinkCard {...game} />
         {/each}
       </div>
     </section>
