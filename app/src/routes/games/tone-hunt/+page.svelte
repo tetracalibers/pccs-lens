@@ -115,7 +115,7 @@
 
       {#if cleared}
         <ClearOverlay oncontinue={() => startRound()}>
-          {activeMode.label}のカードを{round.correctCount}枚すべて見つけました。
+          {activeMode.label}のカードをすべて見つけました。
         </ClearOverlay>
       {/if}
     </div>

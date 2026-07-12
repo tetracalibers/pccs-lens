@@ -119,7 +119,7 @@
 
       {#if cleared}
         <ClearOverlay oncontinue={continueNext}>
-          <code>{target}</code>トーンのカードを{round.correctCount}枚すべて見つけました。
+          <code>{target}</code>トーンのカードをすべて見つけました。
         </ClearOverlay>
       {/if}
     </div>

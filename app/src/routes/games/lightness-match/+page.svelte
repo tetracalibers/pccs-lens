@@ -116,7 +116,7 @@
 
       {#if cleared}
         <ClearOverlay oncontinue={() => startRound()}>
-          同じ明度の色を{round.correctCount}枚すべて見つけました。
+          同じ明度の色をすべて見つけました。
         </ClearOverlay>
       {/if}
     </div>
