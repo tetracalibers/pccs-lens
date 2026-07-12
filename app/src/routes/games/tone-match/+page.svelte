@@ -14,11 +14,15 @@
     type Round
   } from "$lib/games/tone-match/round"
 
-  // 既定のお題は v トーン。永続化しないためアクセスのたびに都度リセットされる。
-  let target = $state<string>("v")
+  // 有彩色 11 トーンからランダムに 1 つ選ぶ。
+  const randomTone = (): string => TARGET_TONES[Math.floor(Math.random() * TARGET_TONES.length)]
+
+  // 既定のお題はランダムなトーン。永続化しないためアクセスのたびに都度選び直される。
+  const initialTone = randomTone()
+  let target = $state<string>(initialTone)
   // 出題を絞り込む色相（null は全色相）。永続化しない。
   let selectedHue = $state<number | null>(null)
-  let round = $state<Round>(generateRound("v"))
+  let round = $state<Round>(generateRound(initialTone))
   let flipped = $state<boolean[]>(new Array(CANDIDATE_COUNT).fill(false))
 
   // クリア済みトーン集合（セッション内・自動出題の対象制御にのみ使用。マップ表示には反映しない）。
@@ -57,10 +61,10 @@
 
   // クリア後「もっと続ける」。未クリアトーンからランダムに次のお題を選ぶ。
   const continueNext = () => {
-    // 全 11 トーンをクリアしたらリセットして初期状態（v）に戻す（演出は挟まない）。
+    // 全 11 トーンをクリアしたらリセットして最初から（ランダムなトーン。演出は挟まない）。
     if (clearedTones.size >= TARGET_TONES.length) {
       clearedTones.clear()
-      startRound("v")
+      startRound(randomTone())
       return
     }
     const remainingTones = TARGET_TONES.filter((tone) => !clearedTones.has(tone))
