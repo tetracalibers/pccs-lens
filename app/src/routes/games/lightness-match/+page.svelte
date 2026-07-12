@@ -3,6 +3,7 @@
   import Mark from "$lib/components/m-directive/Mark.svelte"
   import LightnessCard from "$lib/components/lightness-match/LightnessCard.svelte"
   import ClearOverlay from "$lib/components/games/ClearOverlay.svelte"
+  import ClearSwatches from "$lib/components/games/ClearSwatches.svelte"
   import {
     generateRound,
     generateRoundForBase,
@@ -117,12 +118,12 @@
       {#if cleared}
         <ClearOverlay oncontinue={() => startRound()}>
           同じ明度の色をすべて見つけました。
-          <span class="clear-swatches">
-            <span class="clear-swatch" style="background: {round.base._hex}"></span>
-            {#each round.candidates.filter((c) => c.isCorrect) as c (c.color.id)}
-              <span class="clear-swatch" style="background: {c.color._hex}"></span>
-            {/each}
-          </span>
+          <ClearSwatches
+            colors={[
+              round.base._hex,
+              ...round.candidates.filter((c) => c.isCorrect).map((c) => c.color._hex)
+            ]}
+          />
         </ClearOverlay>
       {/if}
     </div>
@@ -289,22 +290,5 @@
     .grid {
       grid-template-columns: repeat(2, 1fr);
     }
-  }
-
-  /* クリア演出：基準色と正解色のスウォッチを中央揃えの横並びで見せる */
-  .clear-swatches {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-top: 0.75rem;
-  }
-
-  .clear-swatch {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 6px;
-    border: 1px solid var(--color-border, rgba(128, 128, 128, 0.4));
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
   }
 </style>
