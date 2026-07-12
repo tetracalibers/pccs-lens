@@ -45,12 +45,34 @@
       path: "/jis-color-map",
       label: "慣用色名",
       labelFull: "慣用色名マップ"
+    }
+  ]
+  const gameItems = [
+    {
+      href: resolve("/games/lightness-match"),
+      path: "/games/lightness-match",
+      label: "明度マッチング",
+      labelFull: "明度マッチング"
     },
+    {
+      href: resolve("/games/tone-hunt"),
+      path: "/games/tone-hunt",
+      label: "清色・濁色の見極め",
+      labelFull: "清色・濁色の見極め"
+    },
+    {
+      href: resolve("/games/tone-match"),
+      path: "/games/tone-match",
+      label: "トーンの見極め",
+      labelFull: "トーンの見極め"
+    }
+  ]
+  const extraItems = [
     {
       href: resolve("/cg"),
       path: "/cg",
-      label: "色と画像",
-      labelFull: "色と画像（CGと画像処理）"
+      label: "CGと画像処理",
+      labelFull: "CGと画像処理"
     }
   ]
 
@@ -67,6 +89,18 @@
       accent: "#4d96ff",
       gradient: "linear-gradient(135deg,#4d96ff,#c77dff,#6bcb77)",
       items: contentItems
+    },
+    {
+      label: "ゲーム",
+      accent: "#c77dff",
+      gradient: "linear-gradient(135deg,#c77dff,#4d96ff)",
+      items: gameItems
+    },
+    {
+      label: "その他",
+      accent: "#f76707",
+      gradient: "linear-gradient(135deg,#f76707,#f59f00)",
+      items: extraItems
     }
   ]
 
@@ -167,7 +201,10 @@
   <div class="header-drip-bar" aria-hidden="true">
     {#each ["#e03131", "#f76707", "#f59f00", "#94d82d", "#2f9e44", "#0c8599", "#1971c2", "#3b5bdb", "#6741d9", "#9c36b5", "#c2255c", "#e84393"] as c, i (c)}
       <div class="hd-col" style="background:{c}">
-        <div class="hd-drip" style="--dh:{10.5 + (i % 3) * 7.5}px; --dl:{((i * 41) % 65) + 18}%"></div>
+        <div
+          class="hd-drip"
+          style="--dh:{10.5 + (i % 3) * 7.5}px; --dl:{((i * 41) % 65) + 18}%"
+        ></div>
       </div>
     {/each}
   </div>
