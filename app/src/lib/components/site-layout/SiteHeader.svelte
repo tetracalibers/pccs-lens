@@ -339,11 +339,10 @@
   }
 
   .secondary-bar-inner {
-    max-width: 960px;
-    margin: 0 auto;
     padding-inline: 1.25rem;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.35rem;
     overflow-x: auto;
     /* スクロールバーは隠す（横スクロールはタッチ・トラックパッドで操作） */
