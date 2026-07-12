@@ -64,27 +64,27 @@
   .tone {
     display: grid;
     justify-items: center;
-    gap: 0.15rem;
+    gap: 0.25rem;
     line-height: 1.1;
   }
 
   .tone-symbol {
     font-family: var(--font-mono);
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     font-weight: 800;
     color: var(--color-heading);
   }
 
   .tone-name {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     font-weight: 700;
     color: var(--color-body);
   }
 
   .swatch {
-    width: 4rem;
+    width: 5rem;
     height: 4rem;
-    margin-top: 0.2rem;
+    margin-top: 0.4rem;
     border-radius: 6px;
     border: 1px solid var(--color-border, light-dark(#e0e0e0, #2e2e3e));
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
