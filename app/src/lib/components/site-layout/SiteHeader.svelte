@@ -69,25 +69,25 @@
   // C — セカンダリスクロールバー用: セクションを1本の横バーにまとめる
   const navSections = [
     {
-      label: "ツール",
+      label: "色を使う",
       accent: "#ff6b6b",
       gradient: "linear-gradient(135deg,#ff6b6b,#ffd93d)",
       items: toolItems
     },
     {
-      label: "コンテンツ",
+      label: "色を学ぶ",
       accent: "#4d96ff",
       gradient: "linear-gradient(135deg,#4d96ff,#c77dff,#6bcb77)",
       items: contentItems
     },
     {
-      label: "ゲーム",
+      label: "色を見分ける",
       accent: "#c77dff",
       gradient: "linear-gradient(135deg,#c77dff,#4d96ff)",
       items: gameItems
     },
     {
-      label: "その他",
+      label: "色と関わる",
       accent: "#f76707",
       gradient: "linear-gradient(135deg,#f76707,#f59f00)",
       items: extraItems
@@ -521,7 +521,7 @@
     font-weight: 800;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: light-dark(#aaa, #7b7b7b);
+    color: var(--color-body);
     margin: 8px 0 4px;
   }
 
@@ -534,7 +534,7 @@
     align-items: center;
     gap: 7px;
     padding: 5px 6px;
-    color: light-dark(#555, #bbb);
+    color: var(--color-body);
     text-decoration: none;
     border-radius: 4px;
     font-size: 0.8rem;
