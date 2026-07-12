@@ -418,7 +418,7 @@
     background-image: var(--sb-gradient);
     background-repeat: no-repeat;
     background-size: 0 2px;
-    background-position: 50% 100%;
+    background-position: 50% calc(100% - 6px);
     transition:
       color 0.15s,
       background-size 0.15s;
