@@ -46,6 +46,8 @@
   const BIG = 46
   const BIG_GAP = 8
   const BIG_X = 140
+  // 大きい色スウォッチの角丸（px 相当）。
+  const BIG_RADIUS = 4
   const NAME_FS = 14
   const NAME_LINE_H = 15
   // 慣用色名は最大 2 行。行数によらずレイアウトが崩れないよう、名前の帯は 2 行ぶん確保する。
@@ -199,6 +201,7 @@
     y={topBigY}
     width={BIG}
     height={BIG}
+    rx={BIG_RADIUS}
     fill={topColor}
     stroke={COL_BORDER}
     stroke-width={STROKE_WIDTH_SWATCH}
@@ -208,6 +211,7 @@
     y={bottomBigY}
     width={BIG}
     height={BIG}
+    rx={BIG_RADIUS}
     fill={bottomColor}
     stroke={COL_BORDER}
     stroke-width={STROKE_WIDTH_SWATCH}
