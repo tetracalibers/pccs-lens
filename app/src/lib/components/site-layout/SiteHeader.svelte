@@ -338,7 +338,7 @@
   }
 
   .secondary-bar-inner {
-    --fade-size: 28px;
+    --fade-size: 40px;
     padding-inline: 1.25rem;
     display: flex;
     align-items: center;
