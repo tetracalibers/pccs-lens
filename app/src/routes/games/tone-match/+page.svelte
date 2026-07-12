@@ -120,7 +120,8 @@
 
       {#if cleared}
         <ClearOverlay oncontinue={continueNext}>
-          <code>{target}</code>トーンのカードをすべて見つけました。
+          <code>{target}</code>
+          トーンのカードをすべて見つけました。
           <ClearSwatches
             colors={round.candidates.filter((c) => c.isCorrect).map((c) => c.color.hex)}
           />
