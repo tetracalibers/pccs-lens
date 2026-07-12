@@ -339,6 +339,7 @@
   }
 
   .secondary-bar-inner {
+    --fade-size: 28px;
     padding-inline: 1.25rem;
     display: flex;
     align-items: center;
@@ -348,12 +349,87 @@
     /* スクロールバーは隠す（横スクロールはタッチ・トラックパッドで操作） */
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
-    /* スクロール末端の項目が途切れて「続きがある」ことを示すための右端フェード */
     scroll-padding-inline: 1.25rem;
+    /* 両端フェードでスクロール可能を示唆。
+       スクロール駆動アニメーション非対応環境では常時両端をフェード（フォールバック）。 */
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 var(--fade-size),
+      #000 calc(100% - var(--fade-size)),
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 var(--fade-size),
+      #000 calc(100% - var(--fade-size)),
+      transparent 100%
+    );
   }
 
   .secondary-bar-inner::-webkit-scrollbar {
     display: none;
+  }
+
+  /* スクロール位置に応じて左右のフェード量を出し分けるための登録済みカスタムプロパティ */
+  @property --sb-fade-l {
+    syntax: "<length>";
+    inherits: false;
+    initial-value: 0px;
+  }
+  @property --sb-fade-r {
+    syntax: "<length>";
+    inherits: false;
+    initial-value: 0px;
+  }
+
+  /* 左端まで戻ると左フェードは消え、スクロールすると現れる */
+  @keyframes sb-fade-left {
+    from {
+      --sb-fade-l: 0px;
+    }
+    to {
+      --sb-fade-l: var(--fade-size);
+    }
+  }
+  /* 右端まで進むと右フェードは消える */
+  @keyframes sb-fade-right {
+    from {
+      --sb-fade-r: var(--fade-size);
+    }
+    to {
+      --sb-fade-r: 0px;
+    }
+  }
+
+  /* JSでのoverflow判定を使わず、スクロール駆動アニメーションで
+     現在のスクロール位置から左右フェードを制御する（非オーバーフロー時は
+     タイムラインが非アクティブになり初期値0pxに戻るのでフェードは出ない）。 */
+  @supports (animation-timeline: scroll()) {
+    .secondary-bar-inner {
+      mask-image: linear-gradient(
+        to right,
+        transparent 0,
+        #000 var(--sb-fade-l),
+        #000 calc(100% - var(--sb-fade-r)),
+        transparent 100%
+      );
+      -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0,
+        #000 var(--sb-fade-l),
+        #000 calc(100% - var(--sb-fade-r)),
+        transparent 100%
+      );
+      animation:
+        sb-fade-left linear both,
+        sb-fade-right linear both;
+      animation-timeline: scroll(self inline), scroll(self inline);
+      animation-range:
+        0 var(--fade-size),
+        calc(100% - var(--fade-size)) 100%;
+    }
   }
 
   /* セクション間の区切り */
