@@ -343,7 +343,8 @@
     padding-inline: 1.25rem;
     display: flex;
     align-items: center;
-    justify-content: center;
+    /* 収まる時は中央寄せ、溢れる時は start に退避して先頭が見切れないようにする */
+    justify-content: safe center;
     gap: 0.35rem;
     overflow-x: auto;
     /* スクロールバーは隠す（横スクロールはタッチ・トラックパッドで操作） */
