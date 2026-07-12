@@ -471,8 +471,8 @@
 
   .sb-item.active {
     color: light-dark(#1a1a1a, #f0f0f0);
-    font-weight: 700;
-    background-size: 100% 2px;
+    /* 塗りつぶし・下線・glowはやめ、ドットの大きさだけで強調する */
+    background-size: 0 2px;
   }
 
   /* 各項目の左に付くカテゴリのドット */
@@ -481,6 +481,16 @@
     height: 7px;
     border-radius: 50%;
     flex-shrink: 0;
+    transition:
+      width 0.15s,
+      height 0.15s;
+  }
+
+  .sb-item.active .sb-item-dot {
+    width: 14px;
+    height: 14px;
+    margin-inline-end: -2px;
+    opacity: 0.8;
   }
 
   /* ===== ナロー画面（スマホ）用ドロップダウンナビ ===== */
