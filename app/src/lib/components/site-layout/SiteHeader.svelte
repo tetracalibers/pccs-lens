@@ -54,6 +54,23 @@
     }
   ]
 
+  // C — セカンダリスクロールバー用: セクションを1本の横バーにまとめる
+  const navSections = [
+    {
+      label: "ツール",
+      accent: "#ff6b6b",
+      gradient: "linear-gradient(135deg,#ff6b6b,#ffd93d)",
+      items: toolItems
+    },
+    {
+      label: "コンテンツ",
+      accent: "#4d96ff",
+      gradient: "linear-gradient(135deg,#4d96ff,#c77dff,#6bcb77)",
+      items: contentItems
+    }
+  ]
+
+  // ナロー画面（スマホ）用のハンバーガーメニュー開閉
   let isNavOpen = $state(false)
   function closeNav() {
     isNavOpen = false
@@ -61,10 +78,10 @@
 </script>
 
 <header class="site-header">
+  <!-- 上段：（スマホ）ハンバーガー + サイト名 + モード切り替えなどのアクション -->
   <div class="header-inner">
-    <!-- 左：ハンバーガーボタン（ナロー専用）+ サイト名 -->
     <div class="header-left">
-      <!-- G — スペクトラムバー ハンバーガーボタン -->
+      <!-- G — スペクトラムバー ハンバーガーボタン（ナロー専用） -->
       <button
         class="hamburger-btn"
         class:open={isNavOpen}
@@ -83,43 +100,6 @@
       </a>
     </div>
 
-    <!-- 中央：ワイド画面用グローバルナビ（H — ドット + テキスト階層型） -->
-    <nav class="wide-nav nav-h" aria-label="メインナビゲーション">
-      <!-- ツールセクション -->
-      <div class="h-section" style="--hc-gradient:linear-gradient(135deg,#ff6b6b,#ffd93d)">
-        <div class="h-section-label">
-          <span class="h-dot" style="background:linear-gradient(135deg,#ff6b6b,#ffd93d)"></span>
-          <span>ツール</span>
-        </div>
-        <div class="h-links">
-          {#each toolItems as item (item.href)}
-            <a href={item.href} class="h-link" class:active={page.url.pathname.includes(item.path)}>
-              {item.label}
-            </a>
-          {/each}
-        </div>
-      </div>
-
-      <!-- コンテンツセクション -->
-      <div class="h-section" style="--hc-gradient:linear-gradient(135deg,#4d96ff,#c77dff,#6bcb77)">
-        <div class="h-section-label">
-          <span
-            class="h-dot"
-            style="background:linear-gradient(135deg,#4d96ff,#c77dff,#6bcb77)"
-          ></span>
-          <span>コンテンツ</span>
-        </div>
-        <div class="h-links">
-          {#each contentItems as item (item.href)}
-            <a href={item.href} class="h-link" class:active={page.url.pathname.includes(item.path)}>
-              {item.label}
-            </a>
-          {/each}
-        </div>
-      </div>
-    </nav>
-
-    <!-- 右：モード切り替えボタン -->
     <div class="header-right">
       {#if isContentPage}
         <AnkiModeToggle isAnki={ankiMode.isAnki} ontoggle={ankiMode.toggle} />
@@ -128,56 +108,57 @@
     </div>
   </div>
 
-  <!-- ナロー画面用ドロップダウンナビ（H — ドット + テキスト階層型 Narrow） -->
+  <!-- 下段：C — セカンダリスクロールバー（ワイド画面用の主ナビ・横スクロール） -->
+  <nav class="secondary-bar" aria-label="メインナビゲーション">
+    <div class="secondary-bar-inner">
+      {#each navSections as section, i (section.label)}
+        {#if i > 0}
+          <span class="sb-divider" aria-hidden="true"></span>
+        {/if}
+        <span class="sb-group-label">
+          <span class="sb-dot" style="background:{section.gradient}"></span>
+          {section.label}
+        </span>
+        {#each section.items as item (item.href)}
+          <a
+            href={item.href}
+            class="sb-item"
+            class:active={page.url.pathname.includes(item.path)}
+            style="--sb-accent:{section.accent}; --sb-gradient:{section.gradient}"
+          >
+            {item.label}
+          </a>
+        {/each}
+      {/each}
+    </div>
+  </nav>
+
+  <!-- ナロー画面（スマホ）用ドロップダウンナビ（H — ドット + テキスト階層型 Narrow） -->
   {#if isNavOpen}
     <nav id="dropdown-nav" class="dropdown-nav" aria-label="メインナビゲーション">
       <div class="h-n-drawer">
-        <!-- ツールセクション -->
-        <p class="h-n-tree-sec">
-          <span class="h-dot" style="background:linear-gradient(135deg,#ff6b6b,#ffd93d)"></span>
-          ツール
-        </p>
-        <div
-          class="h-n-tree-links"
-          style="--hc:#ff6b6b; --hc-gradient:linear-gradient(135deg,#ff6b6b,#ffd93d)"
-        >
-          {#each toolItems as item (item.href)}
-            <a
-              href={item.href}
-              class="h-n-tree-link"
-              class:active={page.url.pathname.includes(item.path)}
-              onclick={closeNav}
-            >
-              <span class="h-n-tree-dot" style="background:#ff6b6b"></span>
-              {item.labelFull}
-            </a>
-          {/each}
-        </div>
-
-        <!-- コンテンツセクション -->
-        <p class="h-n-tree-sec">
-          <span
-            class="h-dot"
-            style="background:linear-gradient(135deg,#4d96ff,#c77dff,#6bcb77)"
-          ></span>
-          コンテンツ
-        </p>
-        <div
-          class="h-n-tree-links"
-          style="--hc:#4d96ff; --hc-gradient:linear-gradient(135deg,#4d96ff,#c77dff,#6bcb77)"
-        >
-          {#each contentItems as item (item.href)}
-            <a
-              href={item.href}
-              class="h-n-tree-link"
-              class:active={page.url.pathname.includes(item.path)}
-              onclick={closeNav}
-            >
-              <span class="h-n-tree-dot" style="background:#4d96ff"></span>
-              {item.labelFull}
-            </a>
-          {/each}
-        </div>
+        {#each navSections as section (section.label)}
+          <p class="h-n-tree-sec">
+            <span class="h-dot" style="background:{section.gradient}"></span>
+            {section.label}
+          </p>
+          <div
+            class="h-n-tree-links"
+            style="--hc:{section.accent}; --hc-gradient:{section.gradient}"
+          >
+            {#each section.items as item (item.href)}
+              <a
+                href={item.href}
+                class="h-n-tree-link"
+                class:active={page.url.pathname.includes(item.path)}
+                onclick={closeNav}
+              >
+                <span class="h-n-tree-dot" style="background:{section.accent}"></span>
+                {item.labelFull}
+              </a>
+            {/each}
+          </div>
+        {/each}
       </div>
     </nav>
   {/if}
@@ -213,8 +194,8 @@
     min-height: 56px;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    gap: 2rem;
+    justify-content: space-between;
+    gap: 1rem;
   }
 
   /* ===== ヘッダー左側 ===== */
@@ -225,117 +206,7 @@
     flex-shrink: 0;
   }
 
-  /* ===== サイト名 ===== */
-  .site-name {
-    display: flex;
-    gap: 0.35rem;
-    text-decoration: none;
-    line-height: 1;
-    flex-shrink: 0;
-
-    font-size: 1rem;
-    font-weight: 900;
-    letter-spacing: -0.03em;
-  }
-
-  .site-name-pccs {
-    color: light-dark(#1a1a1a, #f0f0f0);
-    transition: color 0.4s;
-  }
-
-  .site-name-lens {
-    background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #c77dff, #ff6b6b);
-    background-size: 200%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  /* ===== ワイド画面用ナビ（H — ドット + テキスト階層型） ===== */
-  .wide-nav {
-    display: none;
-    justify-content: center;
-  }
-
-  @media (min-width: 640px) {
-    .wide-nav {
-      display: flex;
-    }
-  }
-
-  /* nav-h: プロトタイプの .nav-h に対応（display は .wide-nav で制御） */
-  .nav-h {
-    align-items: flex-start;
-    margin-inline: 2rem;
-    gap: 1.25rem;
-    font-size: 0.82rem;
-  }
-
-  .h-section {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .h-section-label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.62rem;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: light-dark(#aaa, #828282);
-    transition: color 0.4s;
-  }
-
-  .h-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    display: inline-block;
-    flex-shrink: 0;
-  }
-
-  .h-links {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    column-gap: 1rem;
-    padding-inline-start: 16px;
-  }
-
-  .h-link {
-    color: light-dark(#555, #bbb);
-    text-decoration: none;
-    padding-block: 4px;
-    padding-inline: 0;
-    font-size: 0.82rem;
-    white-space: nowrap;
-    background-image: var(--hc-gradient);
-    background-repeat: no-repeat;
-    background-size: 0 1.5px;
-    background-position: 0 100%;
-    transition:
-      color 0.15s,
-      background-size 0.15s;
-  }
-
-  .h-link:hover,
-  .h-link.active {
-    background-size: 100% 1.5px;
-  }
-
-  /* ===== ヘッダー右側 ===== */
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-shrink: 0;
-    margin-inline-start: auto;
-  }
-
-  /* ===== G — スペクトラムバー ハンバーガーボタン ===== */
+  /* ===== G — スペクトラムバー ハンバーガーボタン（ナロー専用） ===== */
   .hamburger-btn {
     display: flex;
     flex-direction: column;
@@ -396,7 +267,138 @@
     transform-origin: center center;
   }
 
-  /* ===== ナロー画面用ドロップダウンナビ ===== */
+  /* ===== サイト名 ===== */
+  .site-name {
+    display: flex;
+    gap: 0.35rem;
+    text-decoration: none;
+    line-height: 1;
+    flex-shrink: 0;
+
+    font-size: 1rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+  }
+
+  .site-name-pccs {
+    color: light-dark(#1a1a1a, #f0f0f0);
+    transition: color 0.4s;
+  }
+
+  .site-name-lens {
+    background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #c77dff, #ff6b6b);
+    background-size: 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ===== ヘッダー右側 ===== */
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+  }
+
+  /* ===== C — セカンダリスクロールバー（ワイド画面専用） ===== */
+  .secondary-bar {
+    display: none;
+    border-top: 1px solid light-dark(rgba(0, 0, 0, 0.07), rgba(255, 255, 255, 0.06));
+    transition: border-color 0.4s;
+  }
+
+  @media (min-width: 640px) {
+    .secondary-bar {
+      display: block;
+    }
+  }
+
+  .secondary-bar-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding-inline: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    overflow-x: auto;
+    /* スクロールバーは隠す（横スクロールはタッチ・トラックパッドで操作） */
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    /* スクロール末端の項目が途切れて「続きがある」ことを示すための右端フェード */
+    scroll-padding-inline: 1.25rem;
+  }
+
+  .secondary-bar-inner::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* セクションラベル（ツール / コンテンツ） */
+  .sb-group-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: light-dark(#aaa, #828282);
+    transition: color 0.4s;
+    padding-inline-end: 0.15rem;
+    user-select: none;
+  }
+
+  .sb-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  /* セクション間の区切り */
+  .sb-divider {
+    flex-shrink: 0;
+    width: 1px;
+    align-self: stretch;
+    margin-block: 0.5rem;
+    margin-inline: 0.4rem;
+    background: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+  }
+
+  /* 各ナビ項目（タブ的に横並び） */
+  .sb-item {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    height: 40px;
+    padding-inline: 0.55rem;
+    color: light-dark(#555, #bbb);
+    text-decoration: none;
+    font-size: 0.82rem;
+    white-space: nowrap;
+    background-image: var(--sb-gradient);
+    background-repeat: no-repeat;
+    background-size: 0 2px;
+    background-position: 50% 100%;
+    transition:
+      color 0.15s,
+      background-size 0.15s;
+  }
+
+  .sb-item:hover {
+    color: light-dark(#1a1a1a, #f0f0f0);
+    background-size: 60% 2px;
+  }
+
+  .sb-item.active {
+    color: light-dark(#1a1a1a, #f0f0f0);
+    font-weight: 700;
+    background-size: 100% 2px;
+  }
+
+  /* ===== ナロー画面（スマホ）用ドロップダウンナビ ===== */
   .dropdown-nav {
     padding: 0 1.25rem 0.5rem;
     border-top: 1px solid light-dark(rgba(0, 0, 0, 0.07), rgba(255, 255, 255, 0.06));
@@ -406,6 +408,14 @@
     .dropdown-nav {
       display: none;
     }
+  }
+
+  .h-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
   }
 
   /* H — ドット + テキスト階層型 Narrow の中身 */
