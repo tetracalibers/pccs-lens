@@ -6,7 +6,8 @@
     displayedPCCSList,
     isCard199,
     targetTones = [],
-    selectedTone = null
+    selectedTone = null,
+    enableTooltip = true
   }: {
     displayedPCCSList: PCCSColor[]
     isCard199: boolean
@@ -14,6 +15,8 @@
     targetTones?: string[]
     /** 選択セルとして強調するトーン記号（該当セルにリングを描く）。 */
     selectedTone?: string | null
+    /** セル hover 時に色記号ツールチップを出すか（狭い枠では見切れるため false にできる）。 */
+    enableTooltip?: boolean
   } = $props()
 
   type ToneCell = {
@@ -174,8 +177,8 @@
           ? `${cell.label}: ${cell.usedColors.map((c) => c.notation).join(", ")}`
           : undefined}
         style={isUsed ? "touch-action: none; cursor: default;" : ""}
-        onpointerenter={isUsed ? (e) => showTooltip(e, cell) : undefined}
-        onpointerleave={isUsed
+        onpointerenter={isUsed && enableTooltip ? (e) => showTooltip(e, cell) : undefined}
+        onpointerleave={isUsed && enableTooltip
           ? (e) => {
               if (e.pointerType === "mouse") hideTooltip()
             }
@@ -281,7 +284,7 @@
     {/each}
   </svg>
 
-  {#if tooltip.visible}
+  {#if enableTooltip && tooltip.visible}
     <div
       class="tooltip"
       style="left: {tooltip.anchorX}px; top: {tooltip.anchorY}px;"

@@ -47,6 +47,7 @@
           isCard199={false}
           targetTones={[...TARGET_TONES[mode]]}
           selectedTone={toneSymbol}
+          enableTooltip={false}
         />
       </span>
     {/if}
