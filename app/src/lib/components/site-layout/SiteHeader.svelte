@@ -149,10 +149,6 @@
         {#if i > 0}
           <span class="sb-divider" aria-hidden="true"></span>
         {/if}
-        <span class="sb-group-label">
-          <span class="sb-dot" style="background:{section.gradient}"></span>
-          {section.label}
-        </span>
         {#each section.items as item (item.href)}
           <a
             href={item.href}
@@ -160,6 +156,7 @@
             class:active={page.url.pathname.includes(item.path)}
             style="--sb-accent:{section.accent}; --sb-gradient:{section.gradient}"
           >
+            <span class="sb-item-dot" style="background:{section.gradient}"></span>
             {item.label}
           </a>
         {/each}
@@ -370,30 +367,6 @@
     display: none;
   }
 
-  /* セクションラベル（ツール / コンテンツ） */
-  .sb-group-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    flex-shrink: 0;
-    font-size: 0.62rem;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: light-dark(#aaa, #828282);
-    transition: color 0.4s;
-    padding-inline-end: 0.15rem;
-    user-select: none;
-  }
-
-  .sb-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    display: inline-block;
-    flex-shrink: 0;
-  }
-
   /* セクション間の区切り */
   .sb-divider {
     flex-shrink: 0;
@@ -404,10 +377,11 @@
     background: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
   }
 
-  /* 各ナビ項目（タブ的に横並び） */
+  /* 各ナビ項目（タブ的に横並び。左にカテゴリのドット） */
   .sb-item {
     display: inline-flex;
     align-items: center;
+    gap: 6px;
     flex-shrink: 0;
     height: 40px;
     padding-inline: 0.55rem;
@@ -433,6 +407,14 @@
     color: light-dark(#1a1a1a, #f0f0f0);
     font-weight: 700;
     background-size: 100% 2px;
+  }
+
+  /* 各項目の左に付くカテゴリのドット */
+  .sb-item-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
   }
 
   /* ===== ナロー画面（スマホ）用ドロップダウンナビ ===== */
