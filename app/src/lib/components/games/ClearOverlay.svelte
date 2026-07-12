@@ -47,6 +47,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    /* 画面端に張り付かないよう左右に余白を確保する（モバイル対策） */
+    padding: 1.25rem;
+    box-sizing: border-box;
     z-index: 1000;
     pointer-events: none;
   }
@@ -57,6 +60,7 @@
     flex-direction: column;
     align-items: center;
     gap: 0.4rem;
+    max-width: 22rem;
     padding: 1.5rem 2rem;
     border-radius: 18px;
     background: var(--color-surface);
