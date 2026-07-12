@@ -21,8 +21,10 @@
     frontAriaLabel?: string
     /** カードの縦横比（既定 3/4。トーンマップを載せる tone-hunt などは 3/4.4）。 */
     aspectRatio?: string
-    /** 裏面の本文（正誤バッジの下に入る、ゲーム固有の中身）。 */
-    children: Snippet
+    /** 裏面中央の主要内容（明度軸・トーンマップ・トーン記号など）。伸縮領域に中央寄せ。 */
+    main?: Snippet
+    /** 裏面下部の補足（PCCS 記号・分類・明度差など）。 */
+    footer?: Snippet
   }
 
   let {
@@ -35,7 +37,8 @@
     verdictLabel,
     frontAriaLabel = "候補をめくる",
     aspectRatio = "3 / 4",
-    children
+    main,
+    footer
   }: Props = $props()
 </script>
 
@@ -67,6 +70,7 @@
         </button>
       {/if}
 
+      <!-- header：正誤バッジ -->
       <span class="verdict verdict-{verdict}">
         {#if verdict === "correct"}
           <Icon icon="mdi:check-circle" />
@@ -78,7 +82,15 @@
         {verdictLabel}
       </span>
 
-      {@render children()}
+      <!-- main：伸縮する主要領域 -->
+      {#if main}
+        <div class="main">{@render main()}</div>
+      {/if}
+
+      <!-- footer：下部の補足 -->
+      {#if footer}
+        <div class="footer">{@render footer()}</div>
+      {/if}
     </div>
   </div>
 </div>
@@ -157,11 +169,12 @@
   }
 
   .back {
+    /* header（正誤）／main（伸縮）／footer（補足）を 1 つの grid でレイアウトする。 */
     transform: rotateY(180deg);
     background: var(--_surface);
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto 1fr;
+    grid-template-rows: auto 1fr auto;
     gap: 0.3rem;
     /* 上下対称の余白（正誤バッジの上と、本文下端の下を同じにする） */
     padding: 0.9rem 0.4rem;
@@ -176,6 +189,17 @@
     font-size: 0.85rem;
     font-weight: 800;
     line-height: 1;
+  }
+
+  .main {
+    min-height: 0;
+    display: grid;
+    place-items: center;
+  }
+
+  .footer {
+    display: grid;
+    justify-items: center;
   }
 
   .verdict :global(svg) {

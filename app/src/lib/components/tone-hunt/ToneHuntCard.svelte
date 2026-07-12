@@ -38,8 +38,8 @@
   frontAriaLabel="候補 {index + 1}。めくってトーンを確かめる"
   aspectRatio="3 / 4.4"
 >
-  <!-- 裏面：トーンマップ上の位置と、PCCS 記号／分類。 -->
-  <span class="body">
+  <!-- 裏面：トーンマップ上の位置（main）と、PCCS 記号／分類（footer）。 -->
+  {#snippet main()}
     {#if flipped}
       <span class="map-wrap">
         <ToneDiagram
@@ -51,25 +51,17 @@
         />
       </span>
     {/if}
+  {/snippet}
+  {#snippet footer()}
     <span class="meta">
       <span class="notation">{candidate.color.notation}</span>
       <span class="sep">／</span>
       <span class="cls">{classLabel}</span>
     </span>
-  </span>
+  {/snippet}
 </GameCard>
 
 <style>
-  .body {
-    display: grid;
-    grid-template-rows: 1fr auto;
-    align-items: center;
-    justify-items: center;
-    gap: 0.3rem;
-    width: 100%;
-    min-height: 0;
-  }
-
   .map-wrap {
     width: 100%;
     min-height: 0;
@@ -79,7 +71,7 @@
   }
 
   .map-wrap :global(.diagram-wrapper) {
-    display: block;
+    display: flex;
     width: 100%;
     max-width: 168px;
   }

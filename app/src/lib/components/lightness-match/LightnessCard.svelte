@@ -61,8 +61,8 @@
   {verdictLabel}
   frontAriaLabel="候補 {index + 1}。めくって明度を確かめる"
 >
-  <!-- 裏面：明度差の可視化（明度軸）と明度差の数値。 -->
-  <span class="body">
+  <!-- 裏面：明度差の可視化（明度軸＝main）と明度差の数値（footer）。 -->
+  {#snippet main()}
     {#if flipped}
       <span class="axis-wrap">
         <LightnessAxis
@@ -75,24 +75,16 @@
         />
       </span>
     {/if}
+  {/snippet}
+  {#snippet footer()}
     <span class="meta">
       <span class="diff-label">明度差</span>
       <span class="diff-value">{valueDiffLabel}</span>
     </span>
-  </span>
+  {/snippet}
 </GameCard>
 
 <style>
-  .body {
-    display: grid;
-    grid-template-rows: 1fr auto;
-    align-items: center;
-    justify-items: center;
-    gap: 0.3rem;
-    width: 100%;
-    min-height: 0;
-  }
-
   .axis-wrap {
     width: 100%;
     min-height: 0;

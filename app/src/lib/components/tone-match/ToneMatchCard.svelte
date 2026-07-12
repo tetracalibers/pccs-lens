@@ -42,11 +42,13 @@
   frontAriaLabel="候補 {index + 1}。めくってトーンを確かめる"
 >
   <!-- 裏面：実トーン（記号＋和名）と PCCS 記号。トーンマップ上の位置などは載せない。 -->
-  <span class="body">
+  {#snippet main()}
     <span class="tone">
       <span class="tone-symbol">{toneSymbol}</span>
       <span class="tone-name">{toneName}</span>
     </span>
+  {/snippet}
+  {#snippet footer()}
     <span class="identity">
       <span class="notation">{candidate.color.notation}</span>
       {#if hueName}
@@ -54,18 +56,10 @@
         {hueName}
       {/if}
     </span>
-  </span>
+  {/snippet}
 </GameCard>
 
 <style>
-  .body {
-    display: grid;
-    place-content: center;
-    justify-items: center;
-    gap: 0.5rem;
-    text-align: center;
-  }
-
   .tone {
     display: grid;
     justify-items: center;
