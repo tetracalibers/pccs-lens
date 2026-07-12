@@ -46,6 +46,7 @@
     <span class="tone">
       <span class="tone-symbol">{toneSymbol}</span>
       <span class="tone-name">{toneName}</span>
+      <span class="swatch" style="background: {candidate.color.hex}"></span>
     </span>
   {/snippet}
   {#snippet footer()}
@@ -80,13 +81,24 @@
     color: var(--color-body);
   }
 
+  .swatch {
+    width: 4rem;
+    height: 4rem;
+    margin-top: 0.2rem;
+    border-radius: 6px;
+    border: 1px solid var(--color-border, light-dark(#e0e0e0, #2e2e3e));
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+  }
+
+  /* フッターの文字サイズは tone-hunt のカード（notation 0.9rem / その他 0.78rem）に揃える。 */
   .identity {
-    font-size: 0.64rem;
+    font-size: 0.78rem;
     color: var(--color-body);
   }
 
   .identity .notation {
     font-family: var(--font-mono);
+    font-size: 0.9rem;
     font-weight: 700;
     color: var(--color-heading);
   }
