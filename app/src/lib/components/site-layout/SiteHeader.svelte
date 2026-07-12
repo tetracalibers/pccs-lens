@@ -481,16 +481,27 @@
     height: 7px;
     border-radius: 50%;
     flex-shrink: 0;
-    transition:
-      width 0.15s,
-      height 0.15s;
   }
 
+  /* アクティブ時の拡大は width ではなく transform: scale で行い、中心から広げる
+     （transformはレイアウトに影響しないので横ズレが起きない）。 */
   .sb-item.active .sb-item-dot {
     width: 14px;
     height: 14px;
     margin-inline-end: -2px;
     opacity: 0.8;
+    transform-origin: center;
+    animation: sb-dot-grow 0.2s ease;
+  }
+
+  /* 7px 相当（14px × 0.5 ≒ 7px）から等倍へ、中心から拡大 */
+  @keyframes sb-dot-grow {
+    from {
+      transform: scale(0.5);
+    }
+    to {
+      transform: scale(1);
+    }
   }
 
   /* ===== ナロー画面（スマホ）用ドロップダウンナビ ===== */
