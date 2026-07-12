@@ -11,68 +11,58 @@
     {
       href: resolve("/approximate"),
       path: "/approximate",
-      label: "色の近似",
-      labelFull: "色の近似"
+      label: "色の近似"
     },
     {
       href: resolve("/analyze"),
       path: "/analyze",
-      label: "配色分析",
-      labelFull: "配色の分析"
+      label: "配色の分析"
     },
     {
       href: resolve("/patterns"),
       path: "/patterns",
-      label: "配色実験",
-      labelFull: "配色シミュレータ"
+      label: "配色シミュレータ"
     }
   ]
   const contentItems = [
     {
       href: resolve("/color-theory"),
       path: "/color-theory",
-      label: "色の理論",
-      labelFull: "色の理論"
+      label: "色の理論"
     },
     {
       href: resolve("/color-fields"),
       path: "/color-fields",
-      label: "色の活用",
-      labelFull: "色の活用分野"
+      label: "色の活用分野"
     },
     {
       href: resolve("/jis-color-map"),
       path: "/jis-color-map",
-      label: "慣用色名",
-      labelFull: "慣用色名マップ"
+      label: "慣用色名マップ"
     }
   ]
   const gameItems = [
     {
       href: resolve("/games/lightness-match"),
       path: "/games/lightness-match",
-      label: "明度マッチング",
-      labelFull: "明度マッチング"
+      label: "明度比較クイズ"
     },
     {
       href: resolve("/games/tone-hunt"),
       path: "/games/tone-hunt",
-      label: "清色・濁色の見極め",
-      labelFull: "清色・濁色の見極め"
+      label: "清色・濁色の見極め"
     },
     {
       href: resolve("/games/tone-match"),
       path: "/games/tone-match",
-      label: "トーンの見極め",
-      labelFull: "トーンの見極め"
+      label: "トーン当てクイズ"
     }
   ]
   const extraItems = [
     {
       href: resolve("/cg"),
       path: "/cg",
-      label: "CGと画像処理",
-      labelFull: "CGと画像処理"
+      label: "CGと画像処理"
     }
   ]
 
@@ -185,7 +175,7 @@
                 onclick={closeNav}
               >
                 <span class="h-n-tree-dot" style="background:{section.accent}"></span>
-                {item.labelFull}
+                {item.label}
               </a>
             {/each}
           </div>
