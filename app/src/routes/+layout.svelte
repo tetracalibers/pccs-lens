@@ -7,6 +7,7 @@
   import SiteFooter from "$lib/components/site-layout/SiteFooter.svelte"
   import { ankiMode } from "$lib/state/anki.svelte"
   import "$lib/styles/color.css"
+  import "$lib/styles/layout.css"
   import "$lib/styles/shiki.css"
 
   let { children } = $props()
@@ -99,7 +100,8 @@
     flex: 1 0 auto;
     width: 100%;
     box-sizing: border-box;
-    margin: 3rem auto;
+    /* 上は色相ドリップバーの垂れ短縮に合わせて詰める（下は従来どおり） */
+    margin: 2.5rem auto 3rem;
     padding: 1.5rem 1.5rem 0;
     container-type: inline-size;
   }
