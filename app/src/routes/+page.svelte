@@ -426,7 +426,7 @@
   }
 
   #cg {
-    scroll-margin-top: 120px;
+    scroll-margin-top: var(--scroll-offset);
   }
 
   .contents-grid {

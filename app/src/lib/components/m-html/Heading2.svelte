@@ -56,7 +56,7 @@
     line-height: 1.3;
     margin: 2rem 0 0.75rem;
     min-height: 1lh;
-    scroll-margin-top: 120px;
+    scroll-margin-top: var(--scroll-offset);
   }
 
   h2.--_anki {

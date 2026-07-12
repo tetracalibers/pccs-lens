@@ -37,4 +37,16 @@
 
   --color-cg: var(--pastel-blue);
   --color-image-processing: var(--pastel-green);
+
+  /* アンカー移動時にスティッキーヘッダー（ヘッダー本体＋色相ドリップバー）へ
+     隠れないための scroll-margin-top 用オフセット。
+     ナロー: ヘッダー約62px + ドリップバー5px + ドリップの垂れ約25px ≒ 92px。
+     ワイド(≥640px)ではセカンダリバー約41px 分が加わる。 */
+  --scroll-offset: 100px;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --scroll-offset: 140px;
+  }
 }
