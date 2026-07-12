@@ -91,7 +91,7 @@
 
   <p class="lead">
     トーンマップで選んだ<Mark>
-      1 つのトーン
+      1つのトーン
     </Mark>に属する色を、候補の中から探すゲームです。清濁のグループではなく、<Mark>
       個々のトーン
     </Mark>を見分けます。紛らわしい隣接トーンに惑わされず、狙いのトーンだけを選びましょう。
@@ -120,8 +120,8 @@
 
       {#if cleared}
         <ClearOverlay oncontinue={continueNext}>
-          <code>{target}</code>
-          トーンのカードをすべて見つけました。
+          <!-- prettier-ignore -->
+          <span><code>{target}</code>トーンのカードをすべて見つけました。</span>
           <ClearSwatches
             colors={round.candidates.filter((c) => c.isCorrect).map((c) => c.color.hex)}
           />
