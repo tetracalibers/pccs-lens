@@ -88,7 +88,7 @@
       glow: "#c77dff",
       title: "トーンの見極め",
       desc: "PCCSの個々のトーンを見分けるカードゲーム",
-      grades: ["3", "2"]
+      grades: ["3"]
     }
   ]
 
