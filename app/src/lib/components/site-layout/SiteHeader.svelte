@@ -167,7 +167,7 @@
   <div class="header-drip-bar" aria-hidden="true">
     {#each ["#e03131", "#f76707", "#f59f00", "#94d82d", "#2f9e44", "#0c8599", "#1971c2", "#3b5bdb", "#6741d9", "#9c36b5", "#c2255c", "#e84393"] as c, i (c)}
       <div class="hd-col" style="background:{c}">
-        <div class="hd-drip" style="--dh:{14 + (i % 3) * 10}px; --dl:{((i * 41) % 65) + 18}%"></div>
+        <div class="hd-drip" style="--dh:{10.5 + (i % 3) * 7.5}px; --dl:{((i * 41) % 65) + 18}%"></div>
       </div>
     {/each}
   </div>
