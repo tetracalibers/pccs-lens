@@ -159,7 +159,7 @@
     font-size: 1.1rem;
     font-weight: 700;
     margin: 0;
-    scroll-margin-top: 120px;
+    scroll-margin-top: var(--scroll-offset);
     color: var(--color-heading);
   }
 
@@ -312,7 +312,9 @@
     }
 
     .color-name {
-      scroll-margin-top: 250px;
+      /* ナロー幅ではエントリ上部（スウォッチ等）も見えるよう、
+         ヘッダーオフセットに加えて余分にマージンを確保する */
+      scroll-margin-top: calc(var(--scroll-offset) + 130px);
     }
 
     .pccs-list {

@@ -168,7 +168,7 @@
 
   .cg-group {
     margin-bottom: 2.75rem;
-    scroll-margin-top: 120px;
+    scroll-margin-top: var(--scroll-offset);
   }
 
   .cg-group-header {

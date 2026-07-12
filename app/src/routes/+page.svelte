@@ -70,7 +70,7 @@
       href: resolve("/games/lightness-match"),
       gradient: "linear-gradient(135deg, #ff6b6b, #ffd93d)",
       glow: "#ff6b6b",
-      title: "明度マッチング",
+      title: "明度比較クイズ",
       desc: "明度が同じ色を探すカードゲーム",
       grades: ["3", "2"]
     },
@@ -86,7 +86,7 @@
       href: resolve("/games/tone-match"),
       gradient: "linear-gradient(135deg, #c77dff, #4d96ff)",
       glow: "#c77dff",
-      title: "トーンの見極め",
+      title: "トーン当てクイズ",
       desc: "PCCSの個々のトーンを見分けるカードゲーム",
       grades: ["3"]
     }
@@ -426,7 +426,7 @@
   }
 
   #cg {
-    scroll-margin-top: 120px;
+    scroll-margin-top: var(--scroll-offset);
   }
 
   .contents-grid {
