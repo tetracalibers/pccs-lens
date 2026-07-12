@@ -99,7 +99,8 @@
     flex: 1 0 auto;
     width: 100%;
     box-sizing: border-box;
-    margin: 3rem auto;
+    /* 上は色相ドリップバーの垂れ短縮に合わせて詰める（下は従来どおり） */
+    margin: 2.5rem auto 3rem;
     padding: 1.5rem 1.5rem 0;
     container-type: inline-size;
   }
