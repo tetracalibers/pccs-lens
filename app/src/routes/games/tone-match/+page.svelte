@@ -8,7 +8,6 @@
   import ClearOverlay from "$lib/components/games/ClearOverlay.svelte"
   import {
     generateRound,
-    toneNameJa,
     CANDIDATE_COUNT,
     TARGET_TONES,
     type Round
@@ -27,8 +26,6 @@
 
   // クリア済みトーン集合（セッション内・自動出題の対象制御にのみ使用。マップ表示には反映しない）。
   const clearedTones = new SvelteSet<string>()
-
-  const targetName = $derived(toneNameJa(target))
 
   const foundCount = $derived(
     round.candidates.reduce((n, c, i) => n + (flipped[i] && c.isCorrect ? 1 : 0), 0)
@@ -122,8 +119,7 @@
 
       {#if cleared}
         <ClearOverlay oncontinue={continueNext}>
-          <code>{target}</code>
-          {targetName}トーンのカードを{round.correctCount}枚すべて見つけました。
+          <code>{target}</code>トーンのカードを{round.correctCount}枚すべて見つけました。
         </ClearOverlay>
       {/if}
     </div>
