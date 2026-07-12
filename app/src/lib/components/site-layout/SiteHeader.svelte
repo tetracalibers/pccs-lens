@@ -455,53 +455,37 @@
     text-decoration: none;
     font-size: 0.82rem;
     white-space: nowrap;
-    background-image: var(--sb-gradient);
-    background-repeat: no-repeat;
-    background-size: 0 2px;
-    background-position: 50% calc(100% - 6px);
-    transition:
-      color 0.15s,
-      background-size 0.15s;
+    transition: color 0.15s;
   }
 
-  .sb-item:hover {
-    color: light-dark(#1a1a1a, #f0f0f0);
-    background-size: 60% 2px;
-  }
-
+  .sb-item:hover,
   .sb-item.active {
     color: light-dark(#1a1a1a, #f0f0f0);
-    /* 塗りつぶし・下線・glowはやめ、ドットの大きさだけで強調する */
-    background-size: 0 2px;
   }
 
-  /* 各項目の左に付くカテゴリのドット */
+  /* 各項目の左に付くカテゴリのドット。
+     箱サイズは常に拡大後（14px）で確保し、通常時は transform: scale(0.5) で
+     7px相当に縮小。hover/active では scale(1) に戻す。拡大は transform で行うため
+     レイアウトに影響せず、間隔が動かない（カタつかない）。 */
   .sb-item-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  /* アクティブ時の拡大は width ではなく transform: scale で行い、中心から広げる
-     （transformはレイアウトに影響しないので横ズレが起きない）。 */
-  .sb-item.active .sb-item-dot {
     width: 14px;
     height: 14px;
     margin-inline-end: -2px;
-    opacity: 0.8;
+    border-radius: 50%;
+    flex-shrink: 0;
+    transform: scale(0.5);
     transform-origin: center;
-    animation: sb-dot-grow 0.2s ease;
+    opacity: 0.65;
+    transition:
+      transform 0.2s ease,
+      opacity 0.2s ease;
   }
 
-  /* 7px 相当（14px × 0.5 ≒ 7px）から等倍へ、中心から拡大 */
-  @keyframes sb-dot-grow {
-    from {
-      transform: scale(0.5);
-    }
-    to {
-      transform: scale(1);
-    }
+  /* hover・アクティブとも同じエフェクト（下線なし、ドットを中心から拡大） */
+  .sb-item:hover .sb-item-dot,
+  .sb-item.active .sb-item-dot {
+    transform: scale(1);
+    opacity: 0.8;
   }
 
   /* ===== ナロー画面（スマホ）用ドロップダウンナビ ===== */
