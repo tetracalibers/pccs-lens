@@ -46,6 +46,8 @@
   const BIG = 46
   const BIG_GAP = 8
   const BIG_X = 140
+  // 大きい色スウォッチの角丸（px 相当）。
+  const BIG_RADIUS = 4
   const NAME_FS = 14
   const NAME_LINE_H = 15
   // 慣用色名は最大 2 行。行数によらずレイアウトが崩れないよう、名前の帯は 2 行ぶん確保する。
@@ -83,16 +85,17 @@
   const baseMarkY = $derived(valueToY(baseValue) - CELL / 2)
   const selMarkY = $derived(valueToY(selectedValue) - CELL / 2)
 
-  // 値ラベルは基本マーカーの中央上に置く。ただしマンセル最高明度（V=10）は
-  // スケール最上部にあり上に置くと見切れるため、そのときだけスウォッチの下に置く。
+  // 値ラベルは基本マーカーの中央上に置く。ただし明度が高い（9 以上）マーカーは
+  // スケール上端に近く、上に置くと見切れるため、値ラベルをスウォッチの下に置く。
+  const LABEL_BELOW_MIN_VALUE = 9
   const baseCenterX = baseMarkX + MARK_W / 2
   const selCenterX = selMarkX + MARK_W / 2
   const valueLabelBaseline = (value: number, below: boolean): number =>
     below
       ? valueToY(value) + CELL / 2 + LABEL_GAP + VALUE_ASCENT
       : valueToY(value) - CELL / 2 - LABEL_GAP
-  const baseLabelBelow = $derived(baseValue >= V_MAX)
-  const selLabelBelow = $derived(selectedValue >= V_MAX)
+  const baseLabelBelow = $derived(baseValue >= LABEL_BELOW_MIN_VALUE)
+  const selLabelBelow = $derived(selectedValue >= LABEL_BELOW_MIN_VALUE)
   const baseLabelY = $derived(valueLabelBaseline(baseValue, baseLabelBelow))
   const selLabelY = $derived(valueLabelBaseline(selectedValue, selLabelBelow))
 
@@ -198,6 +201,7 @@
     y={topBigY}
     width={BIG}
     height={BIG}
+    rx={BIG_RADIUS}
     fill={topColor}
     stroke={COL_BORDER}
     stroke-width={STROKE_WIDTH_SWATCH}
@@ -207,6 +211,7 @@
     y={bottomBigY}
     width={BIG}
     height={BIG}
+    rx={BIG_RADIUS}
     fill={bottomColor}
     stroke={COL_BORDER}
     stroke-width={STROKE_WIDTH_SWATCH}

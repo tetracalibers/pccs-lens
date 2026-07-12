@@ -40,13 +40,17 @@
     /* portal で body 直下へ出るため fixed はビューポート基準。overlay 自体は
        クリックを透過し、カードのみ操作可能。main の外へ出る分、カードが参照する
        局所トークンをここで補う。 */
-    --color-surface: light-dark(#ffffff, #16161f);
-    --color-border: light-dark(#e0e0e0, #2e2e3e);
+    /* ダークでは背景(#0c0c14)と面が近く影も効かないため、面を明るく・枠線をはっきりさせて浮かせる。 */
+    --color-surface: light-dark(#ffffff, #23232f);
+    --color-border: light-dark(#e0e0e0, #45455c);
     position: fixed;
     inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    /* 画面端に張り付かないよう左右に余白を確保する（モバイル対策） */
+    padding: 1.25rem;
+    box-sizing: border-box;
     z-index: 1000;
     pointer-events: none;
   }
@@ -57,6 +61,7 @@
     flex-direction: column;
     align-items: center;
     gap: 0.4rem;
+    max-width: 22rem;
     padding: 1.5rem 2rem;
     border-radius: 18px;
     background: var(--color-surface);

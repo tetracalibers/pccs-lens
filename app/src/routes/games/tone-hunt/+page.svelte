@@ -3,6 +3,7 @@
   import Mark from "$lib/components/m-directive/Mark.svelte"
   import ToneHuntCard from "$lib/components/tone-hunt/ToneHuntCard.svelte"
   import ClearOverlay from "$lib/components/games/ClearOverlay.svelte"
+  import ClearSwatches from "$lib/components/games/ClearSwatches.svelte"
   import { generateRound, CANDIDATE_COUNT, type Mode, type Round } from "$lib/games/tone-hunt/round"
 
   const MODES: { id: Mode; label: string; hint: string; prompt: string }[] = [
@@ -115,7 +116,10 @@
 
       {#if cleared}
         <ClearOverlay oncontinue={() => startRound()}>
-          {activeMode.label}のカードを{round.correctCount}枚すべて見つけました。
+          {activeMode.label}のカードをすべて見つけました。
+          <ClearSwatches
+            colors={round.candidates.filter((c) => c.isCorrect).map((c) => c.color.hex)}
+          />
         </ClearOverlay>
       {/if}
     </div>

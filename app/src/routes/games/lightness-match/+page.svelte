@@ -3,6 +3,7 @@
   import Mark from "$lib/components/m-directive/Mark.svelte"
   import LightnessCard from "$lib/components/lightness-match/LightnessCard.svelte"
   import ClearOverlay from "$lib/components/games/ClearOverlay.svelte"
+  import ClearSwatches from "$lib/components/games/ClearSwatches.svelte"
   import {
     generateRound,
     generateRoundForBase,
@@ -116,7 +117,13 @@
 
       {#if cleared}
         <ClearOverlay oncontinue={() => startRound()}>
-          同じ明度の色を{round.correctCount}枚すべて見つけました。
+          同じ明度の色をすべて見つけました。
+          <ClearSwatches
+            colors={[
+              round.base._hex,
+              ...round.candidates.filter((c) => c.isCorrect).map((c) => c.color._hex)
+            ]}
+          />
         </ClearOverlay>
       {/if}
     </div>

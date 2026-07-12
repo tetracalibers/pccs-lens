@@ -105,6 +105,18 @@ const getDiagonallyAdjacentTones = (toneSymbol: string): string[] => {
     .map(([tone]) => tone)
 }
 
+/**
+ * トーンマップ上で縦・横・斜めに隣り合うトーンをまとめて返す（重複除去）。
+ * s を含みうる（呼び出し側でプール外の s を除外して扱う）。
+ */
+export const getAdjacentTones = (toneSymbol: string): string[] => [
+  ...new Set([
+    ...getVerticallyAdjacentTones(toneSymbol),
+    ...getHorizontallyAdjacentTones(toneSymbol),
+    ...getDiagonallyAdjacentTones(toneSymbol)
+  ])
+]
+
 interface ToneBasedPaletteRule {
   // ルール名
   label: string
