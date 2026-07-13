@@ -4,7 +4,7 @@ export const meta = {
   phases: [
     { title: '独立分析', detail: '4観点を独立したエージェントで並行分析し、構造化された特徴を返す' },
     { title: '反証・境界レビュー', detail: '各分析を反証的に検証し、4ファイル間の責務境界を横断確認する' },
-    { title: '統合', detail: '既存ガイドを読み、4ファイルを並列に差分Editで更新する' },
+    { title: '統合', detail: '各観点ごとにガイド本体と pending 保留ファイルを読み、昇格・追記・削除を差分Editで反映する' },
   ],
 }
 
@@ -22,7 +22,8 @@ export const meta = {
 //   targets: [{ path, title, type }],        // 分析対象記事（絶対パス・タイトル・記事タイプ）
 //   excluded: [string],                      // 除外した記事（任意）
 //   gitAnalyzable: [{ title, draftCommit, editCommits: [string] }], // refine-style 用
-//   existingGuides: { thinkingFlow, writingStyle, stylisticQuirks, refineStyle }, // 出力先パス
+//   existingGuides: { thinkingFlow, writingStyle, stylisticQuirks, refineStyle }, // ガイド本体の出力先パス
+//   pendingGuides: { thinkingFlow, writingStyle, stylisticQuirks, refineStyle }, // 保留プールのパス（任意。省略時は guidesDir/pending/ から導出）
 //   refs: { thinkingFlow, writingStyle, stylisticQuirks, refineStyle, outputContract }, // 参照プロンプトのパス
 // }
 // ---------------------------------------------------------------------------
@@ -140,6 +141,9 @@ const FILE_REPORT_SCHEMA = {
     action: { type: 'string', enum: ['created', 'updated', 'unchanged'] },
     changes: { type: 'array', items: { type: 'string' } },
     heldItems: { type: 'array', items: { type: 'string' } },
+    promoted: { type: 'array', items: { type: 'string' } }, // pending → 本体へ昇格した項目
+    pendingPath: { type: 'string' }, // 更新した保留プールのパス
+    pendingAction: { type: 'string', enum: ['created', 'updated', 'unchanged'] }, // 保留プールの更新結果
     notes: { type: 'string' },
   },
   required: ['path', 'action'],
@@ -202,13 +206,22 @@ const ANALYSTS = [
   },
 ]
 
-// 統合ステージの出力ファイル（分析キー → 出力先パス）。4成果物は責務が独立するため、
-// ファイル単位に分割して並列に差分更新する。
+// 各ガイドに対応する保留プール（writing-guides/pending/<同名>.md）。主要ルールに満たない
+// 観察はガイド本体ではなくこの pending ファイルに置き、根拠が増えた項目を本体へ昇格させる。
+// writer は pending を読まない（分析専用）。manifest.pendingGuides があればそれを、無ければ
+// ガイドパスの basename の前に pending/ を差し込んで導出する。
+const CAMEL = { 'thinking-flow': 'thinkingFlow', 'writing-style': 'writingStyle', 'stylistic-quirks': 'stylisticQuirks', 'refine-style': 'refineStyle' }
+const pendingOf = (guidePath, key) =>
+  (m.pendingGuides && m.pendingGuides[CAMEL[key]]) || guidePath.replace(/([^/]+)$/, 'pending/$1')
+
+// 統合ステージの出力ファイル（分析キー → ガイド本体パス／保留プールパス）。4成果物は責務が
+// 独立するため、ファイル単位に分割して並列に差分更新する。各エージェントは自分の観点の
+// 「本体＋pending」の2ファイルだけを編集する（他観点のファイルには触れない）。
 const OUTPUT_FILES = [
-  { key: 'thinking-flow', path: m.existingGuides.thinkingFlow },
-  { key: 'writing-style', path: m.existingGuides.writingStyle },
-  { key: 'stylistic-quirks', path: m.existingGuides.stylisticQuirks },
-  { key: 'refine-style', path: m.existingGuides.refineStyle },
+  { key: 'thinking-flow', path: m.existingGuides.thinkingFlow, pendingPath: pendingOf(m.existingGuides.thinkingFlow, 'thinking-flow') },
+  { key: 'writing-style', path: m.existingGuides.writingStyle, pendingPath: pendingOf(m.existingGuides.writingStyle, 'writing-style') },
+  { key: 'stylistic-quirks', path: m.existingGuides.stylisticQuirks, pendingPath: pendingOf(m.existingGuides.stylisticQuirks, 'stylistic-quirks') },
+  { key: 'refine-style', path: m.existingGuides.refineStyle, pendingPath: pendingOf(m.existingGuides.refineStyle, 'refine-style') },
 ]
 
 // ---- Stage 1: 独立分析（barrier — 境界レビューが4分析すべてを必要とする）----
@@ -287,10 +300,12 @@ const boundary = await agent(
 )
 log('反証・境界レビュー完了')
 
-// ---- Stage 3: 統合（4ファイルを並列に、差分 Edit で書き込む）----
-// 4成果物は責務が独立し、Boundary が横断的な重複・配置を解決済みなので、ファイル単位に
-// 分割して並列化する。各エージェントは自分の1ファイルだけを編集し、更新時は全文 Write では
-// なく差分 Edit を使う（巨大ガイドの全書き換えを避け、出力トークンと壁時計を大幅に削減）。
+// ---- Stage 3: 統合（4観点を並列に、本体＋pending を差分 Edit で書き込む）----
+// 4成果物は責務が独立し、Boundary が横断的な重複・配置を解決済みなので、観点単位に
+// 分割して並列化する。各エージェントは自分の観点の「ガイド本体＋pending 保留ファイル」の
+// 2ファイルだけを編集し、更新時は全文 Write ではなく差分 Edit を使う（巨大ガイドの
+// 全書き換えを避け、出力トークンと壁時計を大幅に削減）。保留（held）は本体ではなく pending
+// に置き、根拠が増えた保留は pending から本体へ昇格させる。
 phase('統合')
 
 // 4分析の特徴（保留含む）。各エージェントは自ファイル分＋Boundaryで移送指定された分だけを反映する。
@@ -304,16 +319,18 @@ const perFile = await parallel(
   OUTPUT_FILES.map((f) => () =>
     agent(
       [
-        `あなたは Synthesis Editor（担当ファイル：${f.key}）です。著者スタイルガイドのうち ${f.path} だけを${m.isUpdate ? '差分更新' : '新規作成'}します。他の3ファイルは絶対に編集しません。`,
+        `あなたは Synthesis Editor（担当観点：${f.key}）です。この観点の2ファイル、ガイド本体 ${f.path} と保留プール ${f.pendingPath} だけを${m.isUpdate ? '差分更新' : '作成/更新'}します。他観点のファイルには絶対に触れません。`,
         m.isUpdate
-          ? `まず ${f.path} を Read し、有効な既存記述を保持します。変わる箇所だけを Edit で差分更新してください（全文を Write で書き直さない／既存内容の破棄・全面的な書き直しは禁止）。反映は、加筆・適用条件の追加・例外の追加・確度の変更・新規ルールの追加・根拠不足ルールの削除として行います。`
-          : `${m.guidesDir}/ ディレクトリが無ければ作成し、${f.path} を新規に Write します。`,
-        `Markdown の記述形式・ルールの基本形式（対象／ルール／適用する状況／目的／適用しない状況／確度／根拠／反例・例外）・${f.key} の必須要素は ${refs.outputContract} を Read して従います。固定テンプレートではなく条件付きの判断として記述し、頻出表現の機械的な挿入指示にはしません。Agent間の議論ログや分析の生ログは成果物に含めません。`,
-        `反映するのは ${f.key} に属する特徴だけです。Evidence反証で「根拠不足／反例が多い／著者固有とは判断できない」とされた特徴は主要ルールに採用しません（弱い傾向・保留として分離）。Boundary が ${f.key} へ移すべきとした特徴は、対応する分析の features から内容を取り込みます。逆に ${f.key} から他ファイルへ移す／重複削除とされた特徴は削除します。同じ文を他ファイルと重複させません。`,
-        `4分析の採用候補（保留含む。反映するのは ${f.key} 分＋Boundaryで移送指定された分のみ）:\n\n${JSON.stringify(allFeatures, null, 2)}`,
+          ? `まず ${f.path}（本体）と ${f.pendingPath}（保留プール）を両方 Read し、有効な既存記述を保持します。変わる箇所だけを Edit で差分更新してください（全文を Write で書き直さない／既存内容の破棄・全面的な書き直しは禁止）。本体への反映は、加筆・適用条件の追加・例外の追加・確度の変更・新規ルールの追加・根拠不足ルールの削除として行います。`
+          : `${m.guidesDir}/ ディレクトリが無ければ作成して ${f.path} を新規に Write します。保留プール ${f.pendingPath} は、既にあれば Read して差分更新し、無ければ「このファイルの位置づけ」節（writer は読まず analyzer が昇格判断で読む旨）を先頭に付けて Write します。`,
+        `本体 ${f.path} には、生成時に適用する主要ルール（強い傾向・条件付きの傾向）だけを置きます。保留プール ${f.pendingPath} には、根拠不足・単一記事偏り・一般技法との切り分け困難などで主要ルールに満たない観察（保留）だけを置きます。両者を混在させません。保留プール先頭の「このファイルの位置づけ」注記（writer は読まない／analyzer が昇格・追記・棄却の対象として読む）は必ず残します。`,
+        `保留の扱いは次のとおり。① 昇格：${f.pendingPath} の既存保留のうち、今回の分析で根拠が増え Evidence反証も通ったものは、本体 ${f.path} の主要ルールへ移し、pending 側の当該項目は削除します（report.promoted に記録）。② 追記：今回 heldFeatures に入った、または Evidence反証で「根拠不足／反例が多い／著者固有とは判断できない」とされた特徴は、本体ではなく ${f.pendingPath} に追記・更新します。③ 棄却：根拠の誤読が判明した等で不要になった保留は pending から削除します。`,
+        `Markdown の記述形式・ルールの基本形式（対象／ルール／適用する状況／目的／適用しない状況／確度／根拠／反例・例外）・${f.key} の必須要素・「廃止と保留の扱い」は ${refs.outputContract} を Read して従います。固定テンプレートではなく条件付きの判断として記述し、頻出表現の機械的な挿入指示にはしません。Agent間の議論ログや分析の生ログは成果物に含めません。`,
+        `本体に反映するのは ${f.key} に属する特徴だけです。Boundary が ${f.key} へ移すべきとした特徴は、対応する分析の features から内容を取り込みます。逆に ${f.key} から他ファイルへ移す／重複削除とされた特徴は削除します。同じ文を他ファイルと重複させません。観点をまたぐ関連ルール参照で保留項目を指すときは \`pending/<観点>.md\` を指す形にします。`,
+        `4分析の採用候補（held＝保留候補を含む。反映するのは ${f.key} 分＋Boundaryで移送指定された分のみ）:\n\n${JSON.stringify(allFeatures, null, 2)}`,
         `Evidence反証の判定（全分析）:\n\n${JSON.stringify(evidence, null, 2)}`,
         `Boundary境界の判定:\n\n${JSON.stringify(boundary || {}, null, 2)}`,
-        `${f.path} を ${m.isUpdate ? 'Edit（差分）' : 'Write'} で実際に書き込み、action（created/updated/unchanged）と主な変更点、保留事項を報告します。`,
+        `本体 ${f.path} と保留プール ${f.pendingPath} を実際に書き込み、path・action（本体）／pendingPath・pendingAction（保留プール）／主な変更点（changes）／昇格した項目（promoted）／新たに保留にした項目（heldItems）を報告します。`,
       ].join('\n\n'),
       { label: `synthesize:${f.key}`, phase: '統合', agentType: AGENT, schema: FILE_REPORT_SCHEMA },
     ),
@@ -329,6 +346,10 @@ if (doneFiles.length < OUTPUT_FILES.length) {
 
 return {
   files: doneFiles.map((r) => ({ path: r.path, action: r.action, changes: r.changes || [] })),
+  pendingFiles: doneFiles
+    .filter((r) => r.pendingPath)
+    .map((r) => ({ path: r.pendingPath, action: r.pendingAction || 'unchanged' })),
+  promoted: doneFiles.flatMap((r) => r.promoted || []),
   heldItems: doneFiles.flatMap((r) => r.heldItems || []),
   notes: doneFiles.map((r) => r.notes).filter(Boolean).join(' | '),
 }
