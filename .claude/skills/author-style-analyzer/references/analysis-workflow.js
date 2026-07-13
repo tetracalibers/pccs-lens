@@ -4,7 +4,7 @@ export const meta = {
   phases: [
     { title: '独立分析', detail: '4観点を独立したエージェントで並行分析し、構造化された特徴を返す' },
     { title: '反証・境界レビュー', detail: '各分析を反証的に検証し、4ファイル間の責務境界を横断確認する' },
-    { title: '統合', detail: '既存ガイドを読み、差分更新で4ファイルを書き込む' },
+    { title: '統合', detail: '既存ガイドを読み、4ファイルを並列に差分Editで更新する' },
   ],
 }
 
@@ -132,26 +132,31 @@ const BOUNDARY_SCHEMA = {
   },
 }
 
-const REPORT_SCHEMA = {
+// 統合はファイル単位に分割・並列化するため、per-file の報告スキーマを使う。
+const FILE_REPORT_SCHEMA = {
   type: 'object',
   properties: {
-    files: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          path: { type: 'string' },
-          action: { type: 'string', enum: ['created', 'updated', 'unchanged'] },
-          changes: { type: 'array', items: { type: 'string' } },
-        },
-        required: ['path', 'action'],
-      },
-    },
+    path: { type: 'string' },
+    action: { type: 'string', enum: ['created', 'updated', 'unchanged'] },
+    changes: { type: 'array', items: { type: 'string' } },
     heldItems: { type: 'array', items: { type: 'string' } },
     notes: { type: 'string' },
   },
-  required: ['files'],
+  required: ['path', 'action'],
 }
+
+// output-contract の「分析側」要点のみを抜き出したもの。分析・反証エージェントは
+// これに従い、24.7KB の output-contract 全文 Read は行わない（Markdown の記述形式・
+// ルールの基本形式・ファイル別必須要素など「執筆側」の規約は最終Markdownを書く統合段階でのみ使う）。
+const ANALYSIS_CRITERIA = [
+  '## 分析の品質基準（output-contract の分析側要点。これに従い、output-contract 全文の Read は不要）',
+  '- 根拠：各特徴は複数記事で確認する。1記事だけの特徴は「弱い傾向」か heldFeatures に回す。引用箇所は主張を実際に支えるものにする。',
+  '- 著者固有性：一般的な文章術・技術記事に共通する書き方・記事テーマ固有の専門用語は、著者の癖として採用しない。他の書き手にも当てはまる特徴は除外する。',
+  '- 確度：強い傾向＝複数記事・複数タイプで一貫／条件付きの傾向＝特定タイプや文脈に限る／弱い傾向＝少数例または反例あり。',
+  '- 事実と推測：本文から直接読み取れる事実か、リバースエンジニアリングした推測かを区別する。推測は推測と明記し、断定しない。',
+  '- 反例と適用条件：反例を隠さず記録し、適用しない記事タイプ・条件を必ず添える。記事タイプによる差を一律に一般化しない。',
+  '- 用例：本文の転載は最小限にし、特徴が確認できる範囲に切り詰める。',
+].join('\n')
 
 // 全アナリスト共通の分析対象コンテキスト
 const targetLines = m.targets.map((t) => `- ${t.title} [${t.type || '種別不明'}] : ${t.path}`)
@@ -197,6 +202,15 @@ const ANALYSTS = [
   },
 ]
 
+// 統合ステージの出力ファイル（分析キー → 出力先パス）。4成果物は責務が独立するため、
+// ファイル単位に分割して並列に差分更新する。
+const OUTPUT_FILES = [
+  { key: 'thinking-flow', path: m.existingGuides.thinkingFlow },
+  { key: 'writing-style', path: m.existingGuides.writingStyle },
+  { key: 'stylistic-quirks', path: m.existingGuides.stylisticQuirks },
+  { key: 'refine-style', path: m.existingGuides.refineStyle },
+]
+
 // ---- Stage 1: 独立分析（barrier — 境界レビューが4分析すべてを必要とする）----
 phase('独立分析')
 log(`独立分析を開始：対象記事 ${m.targets.length} 本 / 4観点を並行分析`)
@@ -207,7 +221,8 @@ const rawAnalyses = await parallel(
       [
         `あなたは ${a.role} です。他の分析結果を見ず、次の観点だけを独立して分析します：${a.scope}。`,
         a.out,
-        `分析手順は ${a.ref} を、出力の品質基準・確度・根拠・ファイル責務は ${refs.outputContract} を必ず Read して厳守します。`,
+        `分析手順は ${a.ref} を必ず Read して厳守します。出力の品質基準は下記「分析の品質基準」に従い、output-contract 全文の Read は不要です（執筆側の記述形式は最終Markdownを書く統合段階でのみ使います）。`,
+        ANALYSIS_CRITERIA,
         a.git
           ? 'refine-style の根拠は Git 差分に限定します。下記「Git履歴を利用できる記事」のコミットを git show / git diff で確認し、AI草稿から人手編集への変更を分析します。誤字・メタデータ・リンク・整形・技術的訂正・無関係なリファクタは文体修正から分離します。'
           : '完成記事の本文のみを根拠にし、Git 差分は使いません。',
@@ -243,11 +258,12 @@ const rawEvidence = await parallel(
         `あなたは Evidence Reviewer です。次の分析（${a.key}）の各特徴を反証的に検証します。新しいルールは提案せず、既存の主張の根拠だけを検証します。`,
         '各特徴について確認する：根拠記事が複数あるか／同一シリーズ・同一時期に偏っていないか／引用箇所が主張を実際に支えるか／記事テーマ固有の事情ではないか／反例となる記事はないか／別の説明で同じ現象を説明できないか／一般的な文章術ではなく著者固有か。',
         '疑わしい場合は棄却寄りに判定します。judgment は 根拠十分／条件を限定すれば妥当／根拠不足／反例が多い／著者固有とは判断できない／追加調査が必要 から選びます。',
-        `品質基準は ${refs.outputContract} を参照します。必要なら対象記事を Read で再確認します。`,
+        '品質基準は下記「分析の品質基準」に従います（output-contract 全文の Read は不要）。必要なら対象記事を Read で再確認します。',
+        ANALYSIS_CRITERIA,
         targetBlock,
         `検証対象の特徴一覧（${a.key}）:\n\n${JSON.stringify(a.features, null, 2)}`,
       ].join('\n\n'),
-      { label: `verify:${a.key}`, phase: '反証・境界レビュー', agentType: AGENT, schema: VERDICT_SCHEMA },
+      { label: `verify:${a.key}`, phase: '反証・境界レビュー', agentType: AGENT, model: 'sonnet', effort: 'medium', schema: VERDICT_SCHEMA },
     ),
   ),
 )
@@ -267,37 +283,52 @@ const boundary = await agent(
       2,
     )}`,
   ].join('\n\n'),
-  { label: 'verify:boundary', phase: '反証・境界レビュー', agentType: AGENT, schema: BOUNDARY_SCHEMA },
+  { label: 'verify:boundary', phase: '反証・境界レビュー', agentType: AGENT, model: 'sonnet', effort: 'high', schema: BOUNDARY_SCHEMA },
 )
 log('反証・境界レビュー完了')
 
-// ---- Stage 3: 統合（単一エージェントが4ファイルを書き込む）----
+// ---- Stage 3: 統合（4ファイルを並列に、差分 Edit で書き込む）----
+// 4成果物は責務が独立し、Boundary が横断的な重複・配置を解決済みなので、ファイル単位に
+// 分割して並列化する。各エージェントは自分の1ファイルだけを編集し、更新時は全文 Write では
+// なく差分 Edit を使う（巨大ガイドの全書き換えを避け、出力トークンと壁時計を大幅に削減）。
 phase('統合')
-const report = await agent(
-  [
-    `あなたは Synthesis Editor です。反証・境界レビューの結果を反映し、著者スタイルガイド4ファイルを${m.isUpdate ? '差分更新' : '新規作成'}します。`,
-    m.isUpdate
-      ? '既存の各ファイルをまず Read し、有効な記述を保持したうえで、加筆・条件追加・例外追加・確度変更・新規ルール追加・根拠不足ルールの削除として反映します。全面的な書き直しや既存内容の破棄は禁止です。'
-      : `${m.guidesDir}/ ディレクトリが無ければ作成します。`,
-    [
-      '出力先ファイル:',
-      `- thinking-flow: ${m.existingGuides.thinkingFlow}`,
-      `- writing-style: ${m.existingGuides.writingStyle}`,
-      `- stylistic-quirks: ${m.existingGuides.stylisticQuirks}`,
-      `- refine-style: ${m.existingGuides.refineStyle}`,
-    ].join('\n'),
-    'Evidence反証で「根拠不足／反例が多い／著者固有とは判断できない」とされた特徴は主要ルールに採用しません（弱い傾向・保留として分離）。Boundary が指摘した重複と配置先を反映します。',
-    `各ルールは出力契約（${refs.outputContract}）の形式（対象／ルール／適用する状況／目的／適用しない状況／確度／根拠／反例・例外）で、固定テンプレートではなく条件付きの判断として記述します。頻出表現の機械的な挿入指示にはしません。Agent間の議論ログや分析の生ログは最終成果物に含めません。`,
-    `採用候補の分析（保留含む）:\n\n${JSON.stringify(
-      analyses.map((a) => ({ key: a.key, features: a.features, held: a.heldFeatures || [] })),
-      null,
-      2,
-    )}`,
-    `Evidence反証の判定:\n\n${JSON.stringify(evidence, null, 2)}`,
-    `Boundary境界の判定:\n\n${JSON.stringify(boundary || {}, null, 2)}`,
-    '4ファイルを Write/Edit で実際に書き込み、各ファイルの action（created/updated/unchanged）と主な変更点、保留事項を報告します。',
-  ].join('\n\n'),
-  { label: 'synthesize', phase: '統合', agentType: AGENT, schema: REPORT_SCHEMA },
+
+// 4分析の特徴（保留含む）。各エージェントは自ファイル分＋Boundaryで移送指定された分だけを反映する。
+const allFeatures = analyses.map((a) => ({
+  key: a.key,
+  features: a.features || [],
+  held: a.heldFeatures || [],
+}))
+
+const perFile = await parallel(
+  OUTPUT_FILES.map((f) => () =>
+    agent(
+      [
+        `あなたは Synthesis Editor（担当ファイル：${f.key}）です。著者スタイルガイドのうち ${f.path} だけを${m.isUpdate ? '差分更新' : '新規作成'}します。他の3ファイルは絶対に編集しません。`,
+        m.isUpdate
+          ? `まず ${f.path} を Read し、有効な既存記述を保持します。変わる箇所だけを Edit で差分更新してください（全文を Write で書き直さない／既存内容の破棄・全面的な書き直しは禁止）。反映は、加筆・適用条件の追加・例外の追加・確度の変更・新規ルールの追加・根拠不足ルールの削除として行います。`
+          : `${m.guidesDir}/ ディレクトリが無ければ作成し、${f.path} を新規に Write します。`,
+        `Markdown の記述形式・ルールの基本形式（対象／ルール／適用する状況／目的／適用しない状況／確度／根拠／反例・例外）・${f.key} の必須要素は ${refs.outputContract} を Read して従います。固定テンプレートではなく条件付きの判断として記述し、頻出表現の機械的な挿入指示にはしません。Agent間の議論ログや分析の生ログは成果物に含めません。`,
+        `反映するのは ${f.key} に属する特徴だけです。Evidence反証で「根拠不足／反例が多い／著者固有とは判断できない」とされた特徴は主要ルールに採用しません（弱い傾向・保留として分離）。Boundary が ${f.key} へ移すべきとした特徴は、対応する分析の features から内容を取り込みます。逆に ${f.key} から他ファイルへ移す／重複削除とされた特徴は削除します。同じ文を他ファイルと重複させません。`,
+        `4分析の採用候補（保留含む。反映するのは ${f.key} 分＋Boundaryで移送指定された分のみ）:\n\n${JSON.stringify(allFeatures, null, 2)}`,
+        `Evidence反証の判定（全分析）:\n\n${JSON.stringify(evidence, null, 2)}`,
+        `Boundary境界の判定:\n\n${JSON.stringify(boundary || {}, null, 2)}`,
+        `${f.path} を ${m.isUpdate ? 'Edit（差分）' : 'Write'} で実際に書き込み、action（created/updated/unchanged）と主な変更点、保留事項を報告します。`,
+      ].join('\n\n'),
+      { label: `synthesize:${f.key}`, phase: '統合', agentType: AGENT, schema: FILE_REPORT_SCHEMA },
+    ),
+  ),
 )
 
-return report
+const doneFiles = perFile.filter(Boolean)
+if (doneFiles.length < OUTPUT_FILES.length) {
+  log(`統合：${doneFiles.length}/${OUTPUT_FILES.length} ファイルが完了（残りは失敗の可能性。後処理でファイルを要確認）`)
+} else {
+  log('統合完了：4ファイルを差分更新')
+}
+
+return {
+  files: doneFiles.map((r) => ({ path: r.path, action: r.action, changes: r.changes || [] })),
+  heldItems: doneFiles.flatMap((r) => r.heldItems || []),
+  notes: doneFiles.map((r) => r.notes).filter(Boolean).join(' | '),
+}

@@ -125,17 +125,25 @@ Workflow を使えない場合は、サブエージェント（`Agent` ツール
 | Writing Structure Analyst | 記事・セクション・段落・文の構成傾向を分析（→ writing-style） |
 | Stylistic Quirks Analyst | 語彙・言い回し・文末・接続・表記の癖を分析（→ stylistic-quirks） |
 | Revision Diff Analyst | Git履歴からAI草稿と人間編集の差分を分析（→ refine-style） |
-| Evidence Reviewer | 根拠の強さ（記事数・引用対応・反例・偏り）を反証検証 |
-| Boundary Reviewer | 4成果物間の責務と境界（重複・混同）を横断検証 |
-| Synthesis Editor | 反証・境界の結果を反映し、最終成果物へ統合・差分更新 |
+| Evidence Reviewer | 根拠の強さ（記事数・引用対応・反例・偏り）を反証検証（sonnet / effort medium） |
+| Boundary Reviewer | 4成果物間の責務と境界（重複・混同）を横断検証（sonnet / effort high — 配置判定が微妙なため思考量を上げる） |
+| Synthesis Editor（ファイル単位で4並行） | 反証・境界の結果を反映し、担当1ファイルを差分 Edit で更新 |
 
 Coordinator の進行管理は JS の制御フローが担うため、独立した役割としては置きません。作業は次の3ステージを順に進めます（barrier を JS で明示するため、独立分析とレビューは同時に走りません）。
 
 1. **独立分析** … 4アナリストを並行実行（`parallel`）。他の結果を見ずに担当領域を分析し、構造化された特徴を返す
 2. **反証・境界レビュー** … Evidence Reviewer が各分析を独立に反証検証、Boundary Reviewer が4分析を横断して重複・配置を検証（4分析が揃う barrier 必須）
-3. **統合** … Synthesis Editor が反証・境界の verdict を反映し、既存ガイドを読んで差分更新で4ファイルを書き込む
+3. **統合** … ファイル単位に分割した4つの Synthesis Editor を並行実行（`parallel`）。各エージェントは反証・境界の verdict を反映し、担当する1ファイルだけを読んで**差分 Edit** で更新する（更新時は全文 Write を禁止）
 
 （旧9フェーズとの対応や各ステージのレビュー観点の詳細は `collaboration-workflow.md` を参照。）
+
+#### 実行コストの最適化
+
+大量トークン・長時間実行を避けるため、`analysis-workflow.js` は次の設計を採る。
+
+- **統合のファイル単位並列＋差分 Edit**（最大の効き目）… 4成果物は責務が独立し、Boundary が横断的な重複・配置を解決済みのため、統合を1エージェントの直列処理にせず、ファイルごとに1エージェントを割り当てて並行実行する。更新時は巨大ガイドを全文 `Write` で書き直さず、変わる箇所だけを `Edit` する。統合はもっとも直列で出力トークンが重いステージなので、並列化と差分化の効果が最も大きい。
+- **反証・境界レビューの軽量ティア**（C）… 構造化 JSON の検証が主で上位モデルの上積みが小さいため、`model: 'sonnet'` で実行する。Evidence Reviewer（×4、チェックリスト的検証）は `effort: 'medium'`。Boundary Reviewer（×1、4ファイル横断で上位ルールと下位表現の分離・配置を判定する）は判断がより微妙なため `effort: 'high'`（モデルを上げるより思考量を上げる方が費用対効果が高い）。判断の重い独立分析（ステージ1）と統合（ステージ3）はセッション既定の上位ティアを継承する。
+- **共通参照の重複読み込み削減**（D）… 分析・反証エージェントは `output-contract.md` の全文（約 24.7KB）を Read せず、分析側の品質基準だけをスクリプト内にインライン展開したものに従う。記法・書式など「執筆側」の規約が要るのは最終 Markdown を書く統合ステージと責務境界を見る Boundary だけなので、`output-contract.md` の全文 Read はその2箇所に限定する。
 
 ## author-style-writer（利用側）
 
