@@ -8,10 +8,11 @@ pccs-lens/                          リポジトリルート
 ├── assets/                         ブランドアセット・デザインリソース
 ├── blog/                           ブログコンテンツ
 ├── docs/                           永続的ドキュメント
+├── spec/                           spec-sparringで固めた機能単位の仕様
 ├── proto/                          プロトタイプ集
 ├── .claude/                        Claude Code設定
 ├── .github/                        GitHub Actions・設定
-├── .steering/                      作業単位のステアリングファイル
+├── .steering/                      （旧）作業単位のステアリング記録。新規作成せず履歴として保持
 ├── .vscode/                        VSCode設定
 ├── .gitignore
 ├── CLAUDE.md                       Claude向けプロジェクトメモリ
