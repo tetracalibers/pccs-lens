@@ -173,11 +173,11 @@ draft: true
 
 - slug は一度決めたら、`+page.svx` のファイル内容、ディレクトリ名、YAML の `slug` フィールドですべて同一の値を使うこと。
 - 雛形を書き込んだ後の作業（具体的な内容の執筆）はこのスキルの対象外。`draft: true` のまま残し、雛形を作成したことだけをユーザーに報告する。
-- 報告の最後に、本文の草稿執筆へ進むための `write-content-draft` スキルの呼び出し方を、**手順 1 で決めた実際の slug を埋め込んで**明記する。例（`<slug>` は具体的な文字列に置き換える）:
+- 報告の最後に、本文の草稿執筆へ進むための `author-style-writer` スキルの呼び出し方を、**手順 1 で決めた実際の slug を埋め込んで**明記する。例（`<slug>` は具体的な文字列に置き換える）:
 
   ```
-  /write-content-draft <slug>
+  /author-style-writer <slug>
   ```
 
-  たとえば slug が `color-management` なら `/write-content-draft color-management` と案内する。
+  たとえば slug が `color-management` なら `/author-style-writer color-management` と案内する。
 - 置き換え後、`color-fields.yaml` の同セクション内で `DraftLink` から `PageLink` への置き換えが正しく反映されていることを確認する（前後のエントリの位置がずれていないこと、`basic` 行の取り残しがないこと）。

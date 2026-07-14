@@ -149,12 +149,12 @@ draft: true
 - `group` の値（`["CG", "ImgP"]` など）は、`+page.svx` のフロントマターと一致させること。一覧ページのタグ表示はページのフロントマターの `group` を参照する。
 - YAML の `title` 行に行末コメント（`# CG 1-2-1 / ImgP 2-4` など）が添えられていた場合は、そのコメントを `+page.svx` フロントマターの `title:` 行末にそのまま書き写すこと（文言・記号・スペースを改変しない）。コメントが無い場合は何も付けない。
 - 雛形を書き込んだ後の作業（具体的な内容の執筆）はこのスキルの対象外。`draft: true` のまま残し、雛形を作成したことをユーザーに報告する。
-- 報告の最後に、本文の草稿執筆へ進むための `write-content-draft` スキルの呼び出し方を、**手順 2 で決めた実際の slug を埋め込んで**明記する。例（`<slug>` は具体的な文字列に置き換える）:
+- 報告の最後に、本文の草稿執筆へ進むための `author-style-writer` スキルの呼び出し方を、**手順 2 で決めた実際の slug を埋め込んで**明記する。例（`<slug>` は具体的な文字列に置き換える）:
 
   ```
-  /write-content-draft <slug>
+  /author-style-writer <slug>
   ```
 
-  たとえば slug が `image-digitization` なら `/write-content-draft image-digitization` と案内する。
+  たとえば slug が `image-digitization` なら `/author-style-writer image-digitization` と案内する。
 - 置き換え後、対象の `cg/*.yaml` の同セクション内で `CgDraftLink` から `PageLink` への置き換えが正しく反映されていることを確認する（前後のエントリの位置がずれていないこと、`group` 行の取り残しがないこと）。
 - 雛形作成では `npm run check`（型チェック）は実行しない。
