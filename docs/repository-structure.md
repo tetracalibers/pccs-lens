@@ -274,8 +274,8 @@ docs/
 ├── repository-structure.md     リポジトリ構造定義書（本ファイル）
 ├── development-guidelines.md   開発ガイドライン
 ├── domains/                    ドメイン用語・ルール定義
-├── ideas/                      初期アイデア・検討資料（参照用）
-└── .reviews/                   レビュー記録（参照用）
+├── ideas/                      （旧）初期アイデア・検討資料。新規作成せず履歴として保持
+└── .reviews/                   （旧）レビュー記録。新規作成せず履歴として保持
 ```
 
 ## protoディレクトリ
