@@ -8,10 +8,11 @@ pccs-lens/                          リポジトリルート
 ├── assets/                         ブランドアセット・デザインリソース
 ├── blog/                           ブログコンテンツ
 ├── docs/                           永続的ドキュメント
+├── spec/                           spec-sparringで固めた機能単位の仕様
 ├── proto/                          プロトタイプ集
 ├── .claude/                        Claude Code設定
 ├── .github/                        GitHub Actions・設定
-├── .steering/                      作業単位のステアリングファイル
+├── .steering/                      （旧）作業単位のステアリング記録。新規作成せず履歴として保持
 ├── .vscode/                        VSCode設定
 ├── .gitignore
 ├── CLAUDE.md                       Claude向けプロジェクトメモリ
@@ -268,13 +269,12 @@ app/
 
 ```
 docs/
-├── product-requirements.md     プロダクト要求定義書
 ├── architecture.md             技術仕様書
 ├── repository-structure.md     リポジトリ構造定義書（本ファイル）
 ├── development-guidelines.md   開発ガイドライン
 ├── domains/                    ドメイン用語・ルール定義
-├── ideas/                      初期アイデア・検討資料（参照用）
-└── .reviews/                   レビュー記録（参照用）
+├── ideas/                      （旧）初期アイデア・検討資料。新規作成せず履歴として保持
+└── .reviews/                   （旧）レビュー記録。新規作成せず履歴として保持
 ```
 
 ## protoディレクトリ
