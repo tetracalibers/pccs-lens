@@ -119,7 +119,7 @@ npm run data:jis-update
 /spec-sparring トーン別配色のお気に入り保存
 ```
 
-必要に応じて、関連する機能要件（`docs/product-requirements.md`）やドメインルール（`docs/domains/`）を参照させる。用語や命名は既存コード・既存仕様に合わせる。
+必要に応じて、関連するドメインルール（`docs/domains/`）や既存の仕様（`spec/`）を参照させる。用語や命名は既存コード・既存仕様に合わせる。
 
 ### 2. 実装
 

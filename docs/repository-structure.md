@@ -269,7 +269,6 @@ app/
 
 ```
 docs/
-├── product-requirements.md     プロダクト要求定義書
 ├── architecture.md             技術仕様書
 ├── repository-structure.md     リポジトリ構造定義書（本ファイル）
 ├── development-guidelines.md   開発ガイドライン
