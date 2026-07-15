@@ -94,6 +94,11 @@
     }
   ]
 
+  // ナロー画面（スマホ）用のハンバーガーメニュー内はデスクトップと順序を変える
+  const narrowNavSections = ["色を学ぶ", "色を見分ける", "色を使う", "色と関わる"].map(
+    (label) => navSections.find((section) => section.label === label)!
+  )
+
   // ナロー画面（スマホ）用のハンバーガーメニュー開閉
   let isNavOpen = $state(false)
   function closeNav() {
@@ -158,7 +163,7 @@
   {#if isNavOpen}
     <nav id="dropdown-nav" class="dropdown-nav" aria-label="メインナビゲーション">
       <div class="h-n-drawer">
-        {#each navSections as section (section.label)}
+        {#each narrowNavSections as section (section.label)}
           <p class="h-n-tree-sec">
             <span class="h-dot" style="background:{section.gradient}"></span>
             {section.label}
