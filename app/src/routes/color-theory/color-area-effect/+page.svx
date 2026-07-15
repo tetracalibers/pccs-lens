@@ -1,0 +1,19 @@
+---
+layout: guide-content
+title: 面積と見え方
+
+grades: ["3"]
+
+draft: true
+---
+
+## :WithGradeTag[対比・同化と色の面積]{grades="3"}
+
+- 組み合わせた色の面積が大きい時には[色の対比](/color-theory/color-contrast/)が起こりやすく、図や模様が細かい時には[色の同化](/color-theory/color-assimilation/)が起こりやすくなる
+- 同じ図であっても、近くで大きく見ると:Mark[対比]、離れて小さく見ると:Mark[同化]というように、現象は変化して見える
+
+## :WithGradeTag[色の面積効果]{grades="3"}
+
+- 同じ色でも、大きさ（面積）が変わると見え方や印象が変化する
+- これを色の:Mark[面積効果]という
+- 一般的に、面積が:Mark[大きく]なるほど、明るく鮮やかに見える

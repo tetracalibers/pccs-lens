@@ -128,8 +128,7 @@
         - slug: color-contrast
         - slug: contrast-phenomena
         - slug: color-assimilation
-        - title: 面積と見え方
-          grades: ["3"]
+        - slug: color-area-effect
         - slug: subjective-color
         - slug: optical-illusions
     - title: 照明
