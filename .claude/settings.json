@@ -1,4 +1,59 @@
 {
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:qiita.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(npm run:*)",
+      "Bash(npx prettier:*)",
+      "Bash(node:*)",
+      "Bash(ls:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx eslint:*)",
+      "Bash(grep:*)",
+      "mcp__context7__query-docs",
+      "Bash(npm test:*)",
+      "Bash(npx svelte-check:*)",
+      "Bash(find:*)"
+    ],
+    "deny": [
+      "Bash(git push --force *)",
+      "Bash(git push -f *)",
+      "Bash(git push * --force *)",
+      "Bash(git push * -f *)",
+      "Bash(git reset --hard *)",
+      "Bash(git clean -f *)",
+      "Bash(git clean -fd *)",
+      "Bash(gh repo sync --force *)",
+      "Bash(gh repo sync -f *)",
+      "Bash(gh repo sync * --force *)",
+      "Bash(gh repo sync * -f *)",
+      "Bash(gh repo delete *)",
+      "Bash(gh api --method DELETE *)",
+      "Bash(gh api -X DELETE *)",
+      "Bash(rm -rf *)",
+      "Bash(sudo *)"
+    ],
+    "ask": [
+      "Bash(git push *)",
+      "Bash(git commit *)",
+      "Bash(gh repo sync *)",
+      "Bash(gh pr merge *)",
+      "Bash(gh release delete *)",
+      "Bash(gh secret set *)",
+      "Bash(gh secret delete *)",
+      "Bash(gh api --method POST *)",
+      "Bash(gh api --method PUT *)",
+      "Bash(gh api --method PATCH *)",
+      "Bash(gh api -X POST *)",
+      "Bash(gh api -X PUT *)",
+      "Bash(gh api -X PATCH *)",
+      "Bash(npm install *)",
+      "Bash(npm uninstall *)",
+      "Bash(npx *)",
+      "Bash(curl *)",
+      "Bash(wget *)"
+    ]
+  },
   "hooks": {
     "PostToolUse": [
       {
