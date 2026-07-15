@@ -100,8 +100,7 @@
     - title: デジタル空間の色
       links:
         - slug: digital-color-generation
-        - title: 色再現領域
-          grades: ["2"]
+        - slug: color-gamut
     - title: 混色の原理による色表示
       links:
         - slug: color-matching-and-grassmanns-law
