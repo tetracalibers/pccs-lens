@@ -99,8 +99,7 @@
         - slug: real-world-color-mixing
     - title: デジタル空間の色
       links:
-        - title: コンピュータで色を作る
-          grades: ["2"]
+        - slug: digital-color-generation
         - title: 色再現領域
           grades: ["2"]
     - title: 混色の原理による色表示
