@@ -149,11 +149,11 @@ const FILE_REPORT_SCHEMA = {
   required: ['path', 'action'],
 }
 
-// output-contract の「分析側」要点のみを抜き出したもの。分析・反証エージェントは
-// これに従い、24.7KB の output-contract 全文 Read は行わない（Markdown の記述形式・
-// ルールの基本形式・ファイル別必須要素など「執筆側」の規約は最終Markdownを書く統合段階でのみ使う）。
+// output-contract-analysis.md（分析・反証段階の判断基準の正典）を要約したもの。分析・反証
+// エージェントはこれに従い、契約ファイルの全文 Read は行わない。記述形式・ルールの基本形式・
+// ファイル別必須要素など「統合側」の規約は output-contract.md にあり、最終Markdownを書く統合段階でのみ使う。
 const ANALYSIS_CRITERIA = [
-  '## 分析の品質基準（output-contract の分析側要点。これに従い、output-contract 全文の Read は不要）',
+  '## 分析の品質基準（output-contract-analysis.md の要約。これに従い、契約ファイルの全文 Read は不要）',
   '- 根拠：各特徴は複数記事で確認する。1記事だけの特徴は「弱い傾向」か heldFeatures に回す。引用箇所は主張を実際に支えるものにする。',
   '- 著者固有性：一般的な文章術・技術記事に共通する書き方・記事テーマ固有の専門用語は、著者の癖として採用しない。他の書き手にも当てはまる特徴は除外する。',
   '- 確度：強い傾向＝複数記事・複数タイプで一貫／条件付きの傾向＝特定タイプや文脈に限る／弱い傾向＝少数例または反例あり。',
@@ -246,7 +246,7 @@ const rawAnalyses = await parallel(
       ]
         .filter(Boolean)
         .join('\n\n'),
-      { label: `analyze:${a.key}`, phase: '独立分析', agentType: AGENT, schema: FEATURE_SCHEMA },
+      { label: `analyze:${a.key}`, phase: '独立分析', agentType: AGENT, effort: 'high', schema: FEATURE_SCHEMA },
     ),
   ),
 )
@@ -263,41 +263,47 @@ log(`独立分析完了：${analyses.length}/4 観点が特徴を抽出`)
 // ---- Stage 2: 反証・境界レビュー ----
 phase('反証・境界レビュー')
 
-// Evidence 反証：各分析を独立に反証検証（synthesis 前に全て必要なので barrier）
-const rawEvidence = await parallel(
-  analyses.map((a) => () =>
-    agent(
-      [
-        `あなたは Evidence Reviewer です。次の分析（${a.key}）の各特徴を反証的に検証します。新しいルールは提案せず、既存の主張の根拠だけを検証します。`,
-        '各特徴について確認する：根拠記事が複数あるか／同一シリーズ・同一時期に偏っていないか／引用箇所が主張を実際に支えるか／記事テーマ固有の事情ではないか／反例となる記事はないか／別の説明で同じ現象を説明できないか／一般的な文章術ではなく著者固有か。',
-        '疑わしい場合は棄却寄りに判定します。judgment は 根拠十分／条件を限定すれば妥当／根拠不足／反例が多い／著者固有とは判断できない／追加調査が必要 から選びます。',
-        '品質基準は下記「分析の品質基準」に従います（output-contract 全文の Read は不要）。必要なら対象記事を Read で再確認します。',
-        ANALYSIS_CRITERIA,
-        targetBlock,
-        `検証対象の特徴一覧（${a.key}）:\n\n${JSON.stringify(a.features, null, 2)}`,
-      ].join('\n\n'),
-      { label: `verify:${a.key}`, phase: '反証・境界レビュー', agentType: AGENT, model: 'sonnet', effort: 'medium', schema: VERDICT_SCHEMA },
-    ),
+// Evidence 反証（各分析を独立に検証）と Boundary 境界（4分析を横断）は、いずれも analyses だけに
+// 依存し互いに独立。Boundary を Evidence の後に直列実行すると評価待ちが critパスに丸ごと乗る
+// （synthesis 開始 = evidence_max + boundary）。両者を同一 barrier に入れて同時に走らせることで、
+// synthesis 開始を max(evidence_max, boundary) まで前倒しする（どちらも analyses が揃えば実行可能）。
+const evidenceThunks = analyses.map((a) => () =>
+  agent(
+    [
+      `あなたは Evidence Reviewer です。次の分析（${a.key}）の各特徴を反証的に検証します。新しいルールは提案せず、既存の主張の根拠だけを検証します。`,
+      '各特徴について確認する：根拠記事が複数あるか／同一シリーズ・同一時期に偏っていないか／引用箇所が主張を実際に支えるか／記事テーマ固有の事情ではないか／反例となる記事はないか／別の説明で同じ現象を説明できないか／一般的な文章術ではなく著者固有か。',
+      '疑わしい場合は棄却寄りに判定します。judgment は 根拠十分／条件を限定すれば妥当／根拠不足／反例が多い／著者固有とは判断できない／追加調査が必要 から選びます。',
+      '品質基準は下記「分析の品質基準」に従います（output-contract 全文の Read は不要）。必要なら対象記事を Read で再確認します。',
+      ANALYSIS_CRITERIA,
+      targetBlock,
+      `検証対象の特徴一覧（${a.key}）:\n\n${JSON.stringify(a.features, null, 2)}`,
+    ].join('\n\n'),
+    { label: `verify:${a.key}`, phase: '反証・境界レビュー', agentType: AGENT, model: 'sonnet', effort: 'medium', schema: VERDICT_SCHEMA },
   ),
 )
+
+const boundaryThunk = () =>
+  agent(
+    [
+      'あなたは Boundary Reviewer です。4つの分析結果を横断し、成果物間の責務境界を検証します。',
+      '検出する：同一特徴の重複／配置先の誤り（thinking-flow・writing-style・stylistic-quirks・refine-style のどれに属すべきか）／思考・構成・表現・修正の混同／上位ルールと下位表現の未分離／因果と相関の混同。',
+      `一つの現象が複数階層に現れる場合は重複ではなく抽象度の違いとして分解します（同じ文を複数ファイルへ複製するのは不可）。判断基準は ${refs.outputContract} の「ファイル間の責務」に従います。`,
+      `4分析の特徴:\n\n${JSON.stringify(
+        analyses.map((a) => ({ key: a.key, features: a.features })),
+        null,
+        2,
+      )}`,
+    ].join('\n\n'),
+    { label: 'verify:boundary', phase: '反証・境界レビュー', agentType: AGENT, model: 'sonnet', effort: 'high', schema: BOUNDARY_SCHEMA },
+  )
+
+// Evidence(×N) と Boundary(×1) を同一 barrier で同時実行。末尾要素が Boundary の結果。
+const stage2 = await parallel([...evidenceThunks, boundaryThunk])
+const rawEvidence = stage2.slice(0, analyses.length)
+const boundary = stage2[analyses.length] // 失敗時は null（synthesis 側で boundary || {} を渡す）
 const evidence = rawEvidence
   .map((r, i) => (r ? { key: analyses[i].key, ...r } : null))
   .filter(Boolean)
-
-// Boundary 境界：4分析を横断（barrier 必須 — 全分析が揃って初めて重複・配置を判定できる）
-const boundary = await agent(
-  [
-    'あなたは Boundary Reviewer です。4つの分析結果を横断し、成果物間の責務境界を検証します。',
-    '検出する：同一特徴の重複／配置先の誤り（thinking-flow・writing-style・stylistic-quirks・refine-style のどれに属すべきか）／思考・構成・表現・修正の混同／上位ルールと下位表現の未分離／因果と相関の混同。',
-    `一つの現象が複数階層に現れる場合は重複ではなく抽象度の違いとして分解します（同じ文を複数ファイルへ複製するのは不可）。判断基準は ${refs.outputContract} の「ファイル間の責務」に従います。`,
-    `4分析の特徴:\n\n${JSON.stringify(
-      analyses.map((a) => ({ key: a.key, features: a.features })),
-      null,
-      2,
-    )}`,
-  ].join('\n\n'),
-  { label: 'verify:boundary', phase: '反証・境界レビュー', agentType: AGENT, model: 'sonnet', effort: 'high', schema: BOUNDARY_SCHEMA },
-)
 log('反証・境界レビュー完了')
 
 // ---- Stage 3: 統合（4観点を並列に、本体＋pending を差分 Edit で書き込む）----
@@ -332,7 +338,7 @@ const perFile = await parallel(
         `Boundary境界の判定:\n\n${JSON.stringify(boundary || {}, null, 2)}`,
         `本体 ${f.path} と保留プール ${f.pendingPath} を実際に書き込み、path・action（本体）／pendingPath・pendingAction（保留プール）／主な変更点（changes）／昇格した項目（promoted）／新たに保留にした項目（heldItems）を報告します。`,
       ].join('\n\n'),
-      { label: `synthesize:${f.key}`, phase: '統合', agentType: AGENT, schema: FILE_REPORT_SCHEMA },
+      { label: `synthesize:${f.key}`, phase: '統合', agentType: AGENT, effort: 'high', schema: FILE_REPORT_SCHEMA },
     ),
   ),
 )
