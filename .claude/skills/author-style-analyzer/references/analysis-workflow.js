@@ -246,7 +246,7 @@ const rawAnalyses = await parallel(
       ]
         .filter(Boolean)
         .join('\n\n'),
-      { label: `analyze:${a.key}`, phase: '独立分析', agentType: AGENT, schema: FEATURE_SCHEMA },
+      { label: `analyze:${a.key}`, phase: '独立分析', agentType: AGENT, effort: 'high', schema: FEATURE_SCHEMA },
     ),
   ),
 )
@@ -332,7 +332,7 @@ const perFile = await parallel(
         `Boundary境界の判定:\n\n${JSON.stringify(boundary || {}, null, 2)}`,
         `本体 ${f.path} と保留プール ${f.pendingPath} を実際に書き込み、path・action（本体）／pendingPath・pendingAction（保留プール）／主な変更点（changes）／昇格した項目（promoted）／新たに保留にした項目（heldItems）を報告します。`,
       ].join('\n\n'),
-      { label: `synthesize:${f.key}`, phase: '統合', agentType: AGENT, schema: FILE_REPORT_SCHEMA },
+      { label: `synthesize:${f.key}`, phase: '統合', agentType: AGENT, effort: 'high', schema: FILE_REPORT_SCHEMA },
     ),
   ),
 )
