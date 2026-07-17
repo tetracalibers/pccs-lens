@@ -187,19 +187,6 @@
       </div>
     </section>
 
-    <!-- Tools -->
-    <section class="tools-section">
-      <div class="tools-header">
-        <span class="tools-label">色を使う</span>
-        <div class="tools-divider"></div>
-      </div>
-      <div class="tools-grid">
-        {#each tools as tool (tool.title)}
-          <LinkCard {...tool} />
-        {/each}
-      </div>
-    </section>
-
     <!-- Games -->
     <section class="tools-section">
       <div class="tools-header">
@@ -209,6 +196,19 @@
       <div class="tools-grid">
         {#each games as game (game.title)}
           <LinkCard {...game} />
+        {/each}
+      </div>
+    </section>
+
+    <!-- Tools -->
+    <section class="tools-section">
+      <div class="tools-header">
+        <span class="tools-label">色を使う</span>
+        <div class="tools-divider"></div>
+      </div>
+      <div class="tools-grid">
+        {#each tools as tool (tool.title)}
+          <LinkCard {...tool} />
         {/each}
       </div>
     </section>
