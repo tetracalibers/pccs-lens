@@ -104,8 +104,7 @@
         - slug: fashion-color
         - slug: fashion-trend
         - slug: fashion-style-categories
-        - title: ファッションイメージ
-          grades: ["2"]
+        - slug: fashion-image
         - title: ファッションカラーの変遷
           grades: ["1"]
     - title: 素材とテキスタイル
