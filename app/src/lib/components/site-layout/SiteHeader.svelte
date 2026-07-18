@@ -70,7 +70,7 @@
   const navSections = [
     {
       label: "色を学ぶ",
-      accent: "#4d96ff",
+      accent: "#c77dff",
       gradient: "linear-gradient(135deg,#4d96ff,#c77dff,#6bcb77)",
       items: contentItems
     },
