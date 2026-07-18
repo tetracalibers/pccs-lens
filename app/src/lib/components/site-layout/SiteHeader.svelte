@@ -69,12 +69,6 @@
   // C — セカンダリスクロールバー用: セクションを1本の横バーにまとめる
   const navSections = [
     {
-      label: "色を使う",
-      accent: "#ff6b6b",
-      gradient: "linear-gradient(135deg,#ff6b6b,#ffd93d)",
-      items: toolItems
-    },
-    {
       label: "色を学ぶ",
       accent: "#4d96ff",
       gradient: "linear-gradient(135deg,#4d96ff,#c77dff,#6bcb77)",
@@ -87,17 +81,18 @@
       items: gameItems
     },
     {
+      label: "色を使う",
+      accent: "#ff6b6b",
+      gradient: "linear-gradient(135deg,#ff6b6b,#ffd93d)",
+      items: toolItems
+    },
+    {
       label: "色と関わる",
       accent: "#c77dff",
       gradient: "linear-gradient(135deg,#c77dff,#4d96ff)",
       items: extraItems
     }
   ]
-
-  // ナロー画面（スマホ）用のハンバーガーメニュー内はデスクトップと順序を変える
-  const narrowNavSections = ["色を学ぶ", "色を見分ける", "色を使う", "色と関わる"].map(
-    (label) => navSections.find((section) => section.label === label)!
-  )
 
   // ナロー画面（スマホ）用のハンバーガーメニュー開閉
   let isNavOpen = $state(false)
@@ -163,7 +158,7 @@
   {#if isNavOpen}
     <nav id="dropdown-nav" class="dropdown-nav" aria-label="メインナビゲーション">
       <div class="h-n-drawer">
-        {#each narrowNavSections as section (section.label)}
+        {#each navSections as section (section.label)}
           <p class="h-n-tree-sec">
             <span class="h-dot" style="background:{section.gradient}"></span>
             {section.label}
