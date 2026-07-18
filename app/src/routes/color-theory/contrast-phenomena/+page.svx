@@ -3,8 +3,6 @@ layout: guide-content
 title: さまざまな対比現象
 
 grades: ["3"]
-
-draft: true
 ---
 
 <script>
@@ -46,34 +44,59 @@ draft: true
 
 ## :WithGradeTag[色陰現象]{grades="3"}
 
-- 周囲を鮮やかな有彩色に囲まれたグレイは、その有彩色の心理補色の色みを帯びて見える
-- この現象を:Mark[色陰現象]という
+周囲を:Mark[高彩度]の有彩色に囲まれたグレイは、その有彩色の:Mark[心理補色]の色みを帯びて見えます。
+この現象を:Mark[色陰現象]といい、無彩色を鮮やかな色で囲むようなデザインは注意が必要です。
 
+::::CardGrid
+:::TermCard{title="図が地の心理補色を帯びて見える"}
 <SVGWrapper>
   <ColorShadowHueComparison />
 </SVGWrapper>
+:::
+::::
 
 ## :WithGradeTag[縁辺対比]{grades="3"}
 
-- 異なる色が隣接する図形の、境界付近で起こる対比現象は:Mark[縁辺対比]という
-- 縁辺対比は、色相、明度、彩度のいずれの対比でも生じる
+異なる色どうしが接している境界付近では、その境界が強調されて見えます。
+これは色の境界で起こる対比現象であり、:Mark[縁辺対比]と呼ばれます。
 
+縁辺対比は、色相・明度・彩度のいずれの対比でも生じるものです。
+
+::::CardGrid{cols=1}
+:::TermCard{title="明度の縁辺対比"}
 <SVGWrapper>
   <AchromaticEdgeContrast />
 </SVGWrapper>
-
+:::
+:::TermCard{title="色相の縁辺対比"}
 <SVGWrapper>
   <ChromaticEdgeContrast />
 </SVGWrapper>
-
+:::
+:::TermCard{title="彩度の縁辺対比"}
 <SVGWrapper>
   <SaturationEdgeContrast />
 </SVGWrapper>
+:::
+::::
 
+### 縁辺対比を使ったデザイン
+
+明度が段階的に変化する正方形を重ねると、対角線が浮かび上がり、立体的な見え方になります。
+
+:::Note
+この図は:Mark[ヴァザレリ錯視]と呼ばれるものです。
+:::
+
+::::CardGrid
+:::TermCard{title="明るい色は前にとび出して見える"}
 <SVGWrapper maxW="250">
   <VasarelyIllusion />
 </SVGWrapper>
-
+:::
+:::TermCard{title="暗い色は奥に凹んで見える"}
 <SVGWrapper maxW="250">
   <VasarelyIllusionInverted />
 </SVGWrapper>
+:::
+::::
