@@ -1,10 +1,16 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
   import Icon from "@iconify/svelte"
+  import { cardFaceBackground } from "./cardFace"
 
   interface Props {
     /** 表面に表示する色（HEX）。 */
     hex: string
+    /**
+     * ヒント用の下半分の色（HEX）。指定すると表面を上下 50/50 に分割し、下半分をこの色で塗る
+     * （上半分は hex のまま・境界線なし）。未指定なら従来どおり hex の単色。
+     */
+    hintHex?: string
     /** 裏返っているか。 */
     flipped: boolean
     /** カードの通し番号（onselect に渡す）。 */
@@ -29,6 +35,7 @@
 
   let {
     hex,
+    hintHex,
     flipped,
     index,
     onselect,
@@ -40,6 +47,9 @@
     main,
     footer
   }: Props = $props()
+
+  // ヒント時は下半分をグレー帯にした背景、通常時は単色。
+  const frontBackground = $derived(cardFaceBackground(hex, hintHex))
 </script>
 
 <div class="card" class:flipped style="aspect-ratio: {aspectRatio};">
@@ -48,7 +58,7 @@
     <button
       type="button"
       class="face front"
-      style="background: {hex}"
+      style="background: {frontBackground}"
       aria-label={frontAriaLabel}
       disabled={flipped}
       onclick={() => onselect(index)}
