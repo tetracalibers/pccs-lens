@@ -76,8 +76,8 @@
     },
     {
       label: "色を見分ける",
-      accent: "#f76707",
-      gradient: "linear-gradient(135deg,#f76707,#f59f00)",
+      accent: "#e64980",
+      gradient: "linear-gradient(135deg,#f783ac,#e64980)",
       items: gameItems
     },
     {
@@ -88,8 +88,8 @@
     },
     {
       label: "色と関わる",
-      accent: "#c77dff",
-      gradient: "linear-gradient(135deg,#c77dff,#4d96ff)",
+      accent: "#4dabf7",
+      gradient: "linear-gradient(135deg,#4dabf7,#1971c2)",
       items: extraItems
     }
   ]
