@@ -7,17 +7,15 @@
   import ColorPalettePreview from "./ColorPalettePreview.svelte"
 
   interface Props {
-    pccsCSV: string
+    pccs: string[]
     hideTone?: boolean
     useToneColor?: boolean
   }
 
-  let { pccsCSV, hideTone = false, useToneColor = false }: Props = $props()
-
-  const pccsSymbols = $derived(() => pccsCSV.split(",").map((s) => s.trim()))
+  let { pccs, hideTone = false, useToneColor = false }: Props = $props()
 
   const displayedPCCSList = $derived(() => {
-    return pccsSymbols()
+    return pccs
       .map((sym) => PCCS_ALL_MAP.get(sym))
       .filter((c): c is PCCSColor => c !== undefined)
   })
@@ -26,7 +24,7 @@
 </script>
 
 <div class="analyzed-palette-root" class:--_anki={isAnki}>
-  <div class="palette-preview"><ColorPalettePreview pccsSymbols={pccsSymbols()} /></div>
+  <div class="palette-preview"><ColorPalettePreview pccsSymbols={pccs} /></div>
   <div class="hue-wheel"><HueWheel displayedPCCSList={displayedPCCSList()} {useToneColor} /></div>
   {#if !hideTone}
     <div class="tone-diagram">

@@ -28,18 +28,18 @@ useful: true
 
 ::::CardGrid{lastWide}
 :::TermCard
-<AnalyzedPalette pccsCSV="ltg10, sf10, d10, g10" />
+<AnalyzedPalette pccs={["ltg10", "sf10", "d10", "g10"]} />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="sf16, g8, d8, d18" />
+<AnalyzedPalette pccs={["sf16", "g8", "d8", "d18"]} />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="ltg8, g12, d4" />
+<AnalyzedPalette pccs={["ltg8", "g12", "d4"]} />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="sf6, d6" />
+<AnalyzedPalette pccs={["sf6", "d6"]} />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="ltGy, ltg6, g6, g8, g12" />
+<AnalyzedPalette pccs={["ltGy", "ltg6", "g6", "g8", "g12"]} />
 :::
 ::::

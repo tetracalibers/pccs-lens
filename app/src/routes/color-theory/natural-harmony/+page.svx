@@ -42,16 +42,16 @@ useful: true
 
 ::::CardGrid
 :::TermCard
-<AnalyzedPalette pccsCSV="v9, dp10" useToneColor />
+<AnalyzedPalette pccs={["v9", "dp10"]} useToneColor />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="lt6, d4" useToneColor />
+<AnalyzedPalette pccs={["lt6", "d4"]} useToneColor />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="sf8, dk6" useToneColor />
+<AnalyzedPalette pccs={["sf8", "dk6"]} useToneColor />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="g24, ltg2" useToneColor />
+<AnalyzedPalette pccs={["g24", "ltg2"]} useToneColor />
 :::
 ::::
 
@@ -72,13 +72,13 @@ useful: true
 
 ::::CardGrid{firstWide}
 :::TermCard
-<AnalyzedPalette pccsCSV="d14, p16" useToneColor />
+<AnalyzedPalette pccs={["d14", "p16"]} useToneColor />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="b18, dk6" useToneColor />
+<AnalyzedPalette pccs={["b18", "dk6"]} useToneColor />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="dk2, v24" useToneColor />
+<AnalyzedPalette pccs={["dk2", "v24"]} useToneColor />
 :::
 ::::
 
@@ -93,7 +93,7 @@ useful: true
 
 ::::CardGrid{cols=1}
 :::TermCard
-<AnalyzedPalette pccsCSV="W, b24" useToneColor />
+<AnalyzedPalette pccs={["W", "b24"]} useToneColor />
 :::
 ::::
 
@@ -103,7 +103,7 @@ useful: true
 
 ::::CardGrid{cols=1}
 :::TermCard
-<AnalyzedPalette pccsCSV="v1, v15" useToneColor />
+<AnalyzedPalette pccs={["v1", "v15"]} useToneColor />
 :::
 ::::
 
@@ -113,7 +113,7 @@ useful: true
 
 ::::CardGrid{cols=1}
 :::TermCard
-<AnalyzedPalette pccsCSV="sf6, lt14" useToneColor />
+<AnalyzedPalette pccs={["sf6", "lt14"]} useToneColor />
 :::
 ::::
 
