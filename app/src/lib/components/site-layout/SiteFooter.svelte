@@ -221,8 +221,8 @@
     align-items: center;
     padding-block-start: 1.5rem;
     padding-block-end: 1rem;
-    /* 幅は現在ページの main に合わせる（layout.css の --main-width-current） */
-    max-width: min(var(--main-width-current), 870px);
+    /* 幅は現在ページの main に合わせる（--main-width-current）。ただし下限 680px・上限 870px。 */
+    max-width: clamp(680px, var(--main-width-current), 870px);
     margin-inline: auto;
   }
 
