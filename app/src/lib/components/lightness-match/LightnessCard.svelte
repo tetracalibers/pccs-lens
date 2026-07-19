@@ -1,6 +1,7 @@
 <script lang="ts">
   import GameCard from "$lib/components/games/GameCard.svelte"
   import LightnessAxis from "./LightnessAxis.svelte"
+  import { grayHexForLightness } from "$lib/color/lightnessContrast"
   import { isNearMiss, type CandidateColor } from "$lib/games/lightness-match/round"
 
   interface Props {
@@ -12,6 +13,8 @@
     flipped: boolean
     index: number
     onselect: (index: number) => void
+    /** ヒント ON なら表面の下半分を Value 由来グレーで塗る。 */
+    hint?: boolean
   }
 
   let {
@@ -22,8 +25,12 @@
     baseNameSegments,
     flipped,
     index,
-    onselect
+    onselect,
+    hint = false
   }: Props = $props()
+
+  // ヒント時の下半分グレー。マンセル Value → L*≈Value×10 で明度軸と同一換算のグレーにする。
+  const hintHex = $derived(hint ? grayHexForLightness(candidate.value * 10) : undefined)
 
   // 慣用色名を最大 2 行に分ける。nameSegments があればそれを行として使い、なければ 1 行。
   const toNameLines = (name: string, segments?: string[]): string[] => {
@@ -53,6 +60,7 @@
 
 <GameCard
   hex={candidate.color._hex}
+  {hintHex}
   {flipped}
   {index}
   {onselect}

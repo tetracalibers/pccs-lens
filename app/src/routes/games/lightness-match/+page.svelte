@@ -4,6 +4,8 @@
   import LightnessCard from "$lib/components/lightness-match/LightnessCard.svelte"
   import ClearOverlay from "$lib/components/games/ClearOverlay.svelte"
   import ClearSwatches from "$lib/components/games/ClearSwatches.svelte"
+  import { cardFaceBackground } from "$lib/components/games/cardFace"
+  import { grayHexForLightness } from "$lib/color/lightnessContrast"
   import {
     generateRound,
     generateRoundForBase,
@@ -20,12 +22,18 @@
   let mode = $state<Mode>("hue")
   let round = $state<Round>(generateRound("hue"))
   let flipped = $state<boolean[]>(new Array(CANDIDATE_COUNT).fill(false))
+  // ヒント（下半分グレー化）。セッション中は保持し、ラウンド再生成・モード切替でもリセットしない。
+  // 永続化はしないため、ページ再読み込みで既定の OFF に戻る。
+  let hint = $state(false)
 
   const foundCount = $derived(
     round.candidates.reduce((n, c, i) => n + (flipped[i] && c.isCorrect ? 1 : 0), 0)
   )
   const remaining = $derived(round.correctCount - foundCount)
   const cleared = $derived(remaining === 0)
+
+  // 基準色カードのヒントグレー。候補と同じ Value → 同じグレーになるよう baseValue から作る。
+  const baseHintHex = $derived(hint ? grayHexForLightness(round.baseValue * 10) : undefined)
 
   const startRound = (next: Mode = mode) => {
     round = generateRound(next)
@@ -81,11 +89,19 @@
         </button>
       {/each}
     </div>
+
+    <label class="hint-toggle">
+      <input type="checkbox" bind:checked={hint} />
+      <span class="hint-toggle-label">ヒントを表示</span>
+    </label>
   </section>
 
   <section class="board-section">
     <div class="prompt">
-      <div class="base-card" style="background: {round.base._hex}"></div>
+      <div
+        class="base-card"
+        style="background: {cardFaceBackground(round.base._hex, baseHintHex)}"
+      ></div>
       <div class="prompt-body">
         <p class="prompt-title">同じ明度の色を探そう</p>
         <p class="base-meta">
@@ -111,6 +127,7 @@
             flipped={flipped[i]}
             index={i}
             {onselect}
+            {hint}
           />
         {/each}
       </div>
@@ -147,8 +164,13 @@
     margin: 0 0 1.75rem;
   }
 
-  /* ===== 難易度切替 ===== */
+  /* ===== 難易度切替＋ヒント ===== */
   .controls {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
     margin-bottom: 1.5rem;
   }
 
@@ -202,6 +224,37 @@
   .difficulty-hint {
     font-size: 0.68rem;
     color: var(--color-body);
+  }
+
+  /* ヒントトグル：ネイティブ checkbox ＋ label で状態を露出する（aria-pressed には頼らない）。
+     コントロール行が折り返しても margin-left:auto で右寄せを保つ。 */
+  .hint-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: auto;
+    cursor: pointer;
+    user-select: none;
+    line-height: 1;
+  }
+
+  .hint-toggle input {
+    flex-shrink: 0;
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: light-dark(#7c3aed, #c4b5fd);
+    cursor: pointer;
+  }
+
+  .hint-toggle input:focus-visible {
+    outline: 3px solid light-dark(#7c3aed, #c4b5fd);
+    outline-offset: 2px;
+  }
+
+  .hint-toggle-label {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--color-heading);
   }
 
   /* ===== 基準色 ===== */
