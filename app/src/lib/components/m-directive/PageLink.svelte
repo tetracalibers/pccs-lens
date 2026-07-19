@@ -77,15 +77,15 @@
         {#if draft}
           <DraftTag />
         {/if}
+        {#if useful}
+          <GradeTag grade="useful" />
+        {/if}
         {#each gradesList as grade (grade)}
           <GradeTag {grade} />
         {/each}
         {#each group as g (g)}
           <GroupTag group={g} />
         {/each}
-        {#if useful}
-          <GradeTag grade="useful" />
-        {/if}
       </span>
     {/if}
   </a>
