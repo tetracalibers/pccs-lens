@@ -7,6 +7,7 @@
   import { cgPages, cgGroupIdByRoute } from "$lib/content-pages/cg"
   import { cgArticlePageNav } from "$lib/content-pages/cg-article-nav"
   import { JIS_COLOR_FAMILIES } from "$lib/data/jis-colors"
+  import { FOOTER_NAV_ITEMS } from "$lib/meta/site-nav"
 
   const isConceptPage = $derived(page.route.id === "/concept")
   const isCgIndexPage = $derived(page.route.id === "/cg")
@@ -61,6 +62,23 @@
         nextHref: resolve("/jis-color-map/[family]", { family: next.id }),
         listHref: resolve("/jis-color-map"),
         listLabel: "一覧へ戻る"
+      }
+    }
+
+    // ヘッダーナビのインデックスページ（CG は除外）は、ヘッダーと同じ順で循環的に前後へ送る。
+    // 中央リンクは footer-inner と同じ「このサイトの歩き方」(/concept) のまま。
+    const navIndex = FOOTER_NAV_ITEMS.findIndex((item) => item.path === id)
+    if (navIndex !== -1) {
+      const count = FOOTER_NAV_ITEMS.length
+      const prev = FOOTER_NAV_ITEMS[(navIndex - 1 + count) % count]
+      const next = FOOTER_NAV_ITEMS[(navIndex + 1) % count]
+      return {
+        prev: { title: prev.label },
+        next: { title: next.label },
+        prevHref: prev.href,
+        nextHref: next.href,
+        listHref: resolve("/concept"),
+        listLabel: "このサイトの歩き方"
       }
     }
 
