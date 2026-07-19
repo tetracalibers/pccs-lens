@@ -24,16 +24,16 @@ useful: true
 
 ::::CardGrid{lastWide}
 :::TermCard
-<AnalyzedPalette pccsCSV="b10, dp22" hideTone />
+<AnalyzedPalette pccs={["b10", "dp22"]} hideTone />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="g4, g16" hideTone />
+<AnalyzedPalette pccs={["g4", "g16"]} hideTone />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="lt6, lt18" hideTone />
+<AnalyzedPalette pccs={["lt6", "lt18"]} hideTone />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="v18, v5" hideTone />
+<AnalyzedPalette pccs={["v18", "v5"]} hideTone />
 :::
 ::::
 
@@ -49,16 +49,16 @@ useful: true
 
 ::::CardGrid{lastWide}
 :::TermCard
-<AnalyzedPalette pccsCSV="v24, v8, v16" hideTone />
+<AnalyzedPalette pccs={["v24", "v8", "v16"]} hideTone />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="p4, p12, p20" hideTone />
+<AnalyzedPalette pccs={["p4", "p12", "p20"]} hideTone />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="b24, b10, b18" hideTone />
+<AnalyzedPalette pccs={["b24", "b10", "b18"]} hideTone />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="b8, v2, v17" hideTone />
+<AnalyzedPalette pccs={["b8", "v2", "v17"]} hideTone />
 :::
 ::::
 
@@ -72,16 +72,16 @@ useful: true
 
 ::::CardGrid{lastWide}
 :::TermCard
-<AnalyzedPalette pccsCSV="v7, v20, v9" hideTone />
+<AnalyzedPalette pccs={["v7", "v20", "v9"]} hideTone />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="lt14, lt4, lt24" hideTone />
+<AnalyzedPalette pccs={["lt14", "lt4", "lt24"]} hideTone />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="v5, v18, v7" hideTone />
+<AnalyzedPalette pccs={["v5", "v18", "v7"]} hideTone />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="lt16, v6, lt20" hideTone />
+<AnalyzedPalette pccs={["lt16", "v6", "lt20"]} hideTone />
 :::
 ::::
 
@@ -94,16 +94,16 @@ useful: true
 
 ::::CardGrid{lastWide}
 :::TermCard
-<AnalyzedPalette pccsCSV="v4, v10, v16, v22" hideTone />
+<AnalyzedPalette pccs={["v4", "v10", "v16", "v22"]} hideTone />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="p2, p8, p14, p20" hideTone />
+<AnalyzedPalette pccs={["p2", "p8", "p14", "p20"]} hideTone />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="dp10, dp21, dp2, dp17" hideTone />
+<AnalyzedPalette pccs={["dp10", "dp21", "dp2", "dp17"]} hideTone />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="v8, v2, v12, b18" hideTone />
+<AnalyzedPalette pccs={["v8", "v2", "v12", "b18"]} hideTone />
 :::
 ::::
 
@@ -115,10 +115,10 @@ PCCSなど色相環を5等分することができない場合は、:Mark[トラ
 
 ::::CardGrid{lastWide}
 :::TermCard
-<AnalyzedPalette pccsCSV="v3, v6, v12, v23, v18" hideTone />
+<AnalyzedPalette pccs={["v3", "v6", "v12", "v23", "v18"]} hideTone />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="v18, W, v2, Bk, v10" hideTone />
+<AnalyzedPalette pccs={["v18", "W", "v2", "Bk", "v10"]} hideTone />
 :::
 ::::
 
@@ -131,9 +131,9 @@ PCCSなど色相環を5等分することができない場合は、:Mark[トラ
 
 ::::CardGrid{lastWide}
 :::TermCard
-<AnalyzedPalette pccsCSV="v2, v14, v18, v6, v10, v22" hideTone />
+<AnalyzedPalette pccs={["v2", "v14", "v18", "v6", "v10", "v22"]} hideTone />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="b16, Bk, b4, b10, W, b22" hideTone />
+<AnalyzedPalette pccs={["b16", "Bk", "b4", "b10", "W", "b22"]} hideTone />
 :::
 ::::

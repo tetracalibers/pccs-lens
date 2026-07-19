@@ -31,13 +31,13 @@ useful: true
 
 ::::CardGrid{cols=1}
 :::TermCard
-<AnalyzedPalette pccsCSV="v12, v11, v10, v9" />
+<AnalyzedPalette pccs={["v12", "v11", "v10", "v9"]} />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="v24, v22, v20, v18" />
+<AnalyzedPalette pccs={["v24", "v22", "v20", "v18"]} />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="v8, v5, v2, v23" />
+<AnalyzedPalette pccs={["v8", "v5", "v2", "v23"]} />
 :::
 ::::
 
@@ -49,10 +49,10 @@ useful: true
 
 ::::CardGrid{cols=1}
 :::TermCard
-<AnalyzedPalette pccsCSV="lt2, sf2, d2, dk2" />
+<AnalyzedPalette pccs={["lt2", "sf2", "d2", "dk2"]} />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="Gy-8.0, Gy-7.0, Gy-6.0, Gy-5.0" />
+<AnalyzedPalette pccs={["Gy-8.0", "Gy-7.0", "Gy-6.0", "Gy-5.0"]} />
 :::
 ::::
 
@@ -64,7 +64,7 @@ useful: true
 
 ::::CardGrid{cols=1}
 :::TermCard
-<AnalyzedPalette pccsCSV="W, p18, lt18, b18" />
+<AnalyzedPalette pccs={["W", "p18", "lt18", "b18"]} />
 :::
 ::::
 
@@ -79,9 +79,9 @@ useful: true
 
 ::::CardGrid{cols=1}
 :::TermCard
-<AnalyzedPalette pccsCSV="p24, lt24, b24, v24" />
+<AnalyzedPalette pccs={["p24", "lt24", "b24", "v24"]} />
 :::
 :::TermCard
-<AnalyzedPalette pccsCSV="dkg12, dk12, dp12, v12" />
+<AnalyzedPalette pccs={["dkg12", "dk12", "dp12", "v12"]} />
 :::
 ::::
