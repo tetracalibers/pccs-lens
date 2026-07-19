@@ -40,7 +40,7 @@
   <title>すべての慣用色名一覧 — Color Prism</title>
 </svelte:head>
 
-<main data-smooth-scroll>
+<main>
   <div class="main-inner">
     <div class="header">
       <Breadcrumb {crumbs} category="contents" />
