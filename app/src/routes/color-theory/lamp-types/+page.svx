@@ -3,7 +3,7 @@ layout: guide-content
 title: ランプの種類
 
 grades: ["2"]
-useful: true
+visual: true
 ---
 
 <script>

@@ -3,7 +3,7 @@ layout: guide-content
 title: 色の対比と三属性
 
 grades: ["3"]
-useful: true
+visual: true
 ---
 
 <script>

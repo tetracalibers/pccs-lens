@@ -3,7 +3,7 @@ layout: guide-content
 title: マンセル表色系
 
 grades: ["2"]
-useful: true
+visual: true
 ---
 
 <script>

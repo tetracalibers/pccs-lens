@@ -3,7 +3,7 @@ layout: guide-content
 title: 視細胞の種類と分布
 
 grades: ["2", "3", "uc"]
-useful: true
+visual: true
 ---
 
 <script>

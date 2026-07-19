@@ -3,7 +3,7 @@ layout: guide-content
 title: 明るさに対する感度と順応
 
 grades: ["2"]
-useful: true
+visual: true
 ---
 
 <script>

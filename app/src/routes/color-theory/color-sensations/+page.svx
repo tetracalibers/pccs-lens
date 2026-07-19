@@ -3,7 +3,7 @@ layout: guide-content
 title: 色と感覚
 
 grades: ["3"]
-useful: true
+visual: true
 ---
 
 <script>

@@ -3,7 +3,7 @@ layout: guide-content
 title: 見やすさの性質
 
 grades: ["2", "uc"]
-useful: true
+visual: true
 ---
 
 <script>

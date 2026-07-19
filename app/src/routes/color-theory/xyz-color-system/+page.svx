@@ -3,7 +3,7 @@ layout: guide-content
 title: XYZ表色系
 
 grades: ["1"]
-useful: true
+visual: true
 ---
 
 <script>

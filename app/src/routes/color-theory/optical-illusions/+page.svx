@@ -3,7 +3,7 @@ layout: guide-content
 title: 錯視
 
 grades: ["2"]
-useful: true
+visual: true
 
 draft: true
 ---

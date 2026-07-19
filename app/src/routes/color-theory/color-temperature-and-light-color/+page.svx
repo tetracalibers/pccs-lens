@@ -3,7 +3,7 @@ layout: guide-content
 title: 色温度と光色
 
 grades: ["2", "1"]
-useful: true
+visual: true
 
 draft: true
 ---

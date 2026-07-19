@@ -3,7 +3,7 @@ layout: guide-content
 title: 光のいろいろな現象
 
 grades: ["3"]
-useful: true
+visual: true
 
 draft: true
 ---

@@ -3,7 +3,7 @@ layout: guide-content
 title: 実世界でみられる混色
 
 grades: ["3"]
-useful: true
+visual: true
 ---
 
 <script>

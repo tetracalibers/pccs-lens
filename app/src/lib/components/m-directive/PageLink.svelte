@@ -40,7 +40,7 @@
   })
   const grades = $derived(meta.grades)
   const group = $derived(meta.group)
-  const { useful, title, draft } = $derived(meta)
+  const { visual, title, draft } = $derived(meta)
 
   // group を持つページ（CGと画像処理）は grades の代わりに group タグで表す。
   const isGroupPage = $derived(group.length > 0)
@@ -72,13 +72,13 @@
 {:else}
   <a {href} class="page-link" style="--pl-accent: {accentColor}">
     <span class="pl-title">{title}</span>
-    {#if grades.length > 0 || group.length > 0 || useful || draft}
+    {#if grades.length > 0 || group.length > 0 || visual || draft}
       <span class="pl-grades">
         {#if draft}
           <DraftTag />
         {/if}
-        {#if useful}
-          <GradeTag grade="useful" />
+        {#if visual}
+          <GradeTag grade="visual" />
         {/if}
         {#each gradesList as grade (grade)}
           <GradeTag {grade} />

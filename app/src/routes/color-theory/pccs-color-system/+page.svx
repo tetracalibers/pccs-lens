@@ -3,7 +3,7 @@ layout: guide-content
 title: PCCSによる色表示
 
 grades: ["3"]
-useful: true
+visual: true
 ---
 
 <script>

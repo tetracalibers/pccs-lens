@@ -3,7 +3,7 @@ layout: guide-content
 title: 加法混色と減法混色
 
 grades: ["3"]
-useful: true
+visual: true
 ---
 
 <script lang="ts">
