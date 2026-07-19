@@ -24,6 +24,7 @@ draft: true
   import McColloughGreenVertical from "$lib/demo/illusion/McColloughGreenVertical.svelte"
   import McColloughRedHorizontal from "$lib/demo/illusion/McColloughRedHorizontal.svelte"
   import McColloughTestGrating from "$lib/demo/illusion/McColloughTestGrating.svelte"
+  import McColloughTestTinted from "$lib/demo/illusion/McColloughTestTinted.svelte"
 </script>
 
 ## :WithGradeTag[錯視とは]{grades="2"}
@@ -147,7 +148,9 @@ draft: true
   <McColloughTestGrating />
 </SVGWrapper>
 
-TODO：1つ前の白黒の図をベースに、左半分の白部分は薄いピンクで、右半分の白部分は薄い緑で塗りつぶした図
+<SVGWrapper maxW="280">
+  <McColloughTestTinted />
+</SVGWrapper>
 
 TODO：2つ前の白黒の図を時計回りに90度回転させた図
 
