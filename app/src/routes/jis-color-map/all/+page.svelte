@@ -40,7 +40,7 @@
   <title>すべての慣用色名一覧 — Color Prism</title>
 </svelte:head>
 
-<main>
+<main data-page="jis-all">
   <div class="main-inner">
     <div class="header">
       <Breadcrumb {crumbs} category="contents" />
@@ -66,7 +66,7 @@
 
 <style>
   main {
-    max-width: min(800px, 95cqw);
+    max-width: var(--main-width-current);
     margin: 0 auto;
     padding-inline: 1rem;
   }

@@ -24,7 +24,7 @@
   <title>{family.name}の慣用色名マップ — Color Prism</title>
 </svelte:head>
 
-<main>
+<main data-page="jis-family">
   <div class="header">
     <Breadcrumb {crumbs} category="contents" />
     <h1>{family.name}の慣用色名マップ</h1>
@@ -52,7 +52,7 @@
 <style>
   main {
     margin: 0 auto;
-    max-width: 90cqw;
+    max-width: var(--main-width-current);
     display: grid;
     justify-items: flex-start;
     grid-template-columns: min-content;

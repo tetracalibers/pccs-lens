@@ -128,7 +128,7 @@
     {/each}
   </div>
 
-  <main>
+  <main data-page="top">
     <!-- Hero -->
     <header class="hero">
       <div class="hero-eyebrow">HOW WE SEE COLOR</div>
@@ -258,7 +258,7 @@
   main {
     position: relative;
     z-index: 1;
-    max-width: 720px;
+    max-width: var(--main-width-current);
     margin: 0 auto;
   }
 

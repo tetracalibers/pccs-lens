@@ -87,7 +87,7 @@
   <title>CGと画像処理 - Color Prism</title>
 </svelte:head>
 
-<main>
+<main data-page="cg-list">
   <header class="cg-hero">
     <div class="cg-eyebrow">GRAPHICS & IMAGE</div>
     <h1>CGと画像処理</h1>
@@ -119,7 +119,7 @@
 
 <style>
   main {
-    max-width: 720px;
+    max-width: var(--main-width-current);
     margin: 0 auto;
   }
 

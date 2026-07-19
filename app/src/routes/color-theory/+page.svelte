@@ -10,7 +10,7 @@
   import { parseParagraphs } from "$lib/md/paragraph"
 </script>
 
-<GuideMap title="色の理論一覧">
+<GuideMap title="色の理論一覧" dataPage="color-theory">
   {#each colorTheoryCategories as category (category.id)}
     <Heading2 id={category.id}>{category.title}</Heading2>
     {#each parseParagraphs(category.summary) as lines, pi (pi)}

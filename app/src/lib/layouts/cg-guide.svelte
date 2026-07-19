@@ -11,7 +11,7 @@
   let { page }: { page: CgPage } = $props()
 </script>
 
-<GuideMap title={page.title}>
+<GuideMap title={page.title} dataPage="cg-guide">
   {#snippet breadcrumb()}
     <Breadcrumb
       category="contents"

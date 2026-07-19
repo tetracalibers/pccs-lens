@@ -101,7 +101,7 @@
   <title>{theme.labelJa} — 配色シミュレータ — Color Prism</title>
 </svelte:head>
 
-<main>
+<main data-page="patterns">
   <Breadcrumb
     category="tool"
     crumbs={[{ label: "配色シミュレータ", href: resolve("/patterns") }, { label: theme.labelJa }]}
@@ -196,7 +196,7 @@
 
 <style>
   main {
-    max-width: 720px;
+    max-width: var(--main-width-current);
     margin: 0 auto;
     --color-surface: light-dark(#ffffff, #16161f);
     --color-border: light-dark(#e0e0e0, #2e2e3e);

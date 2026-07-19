@@ -35,7 +35,7 @@
   <title>配色シミュレータ — Color Prism</title>
 </svelte:head>
 
-<main>
+<main data-page="patterns">
   <div class="header">
     <Heading1 icon="famicons:color-palette-sharp" grayscale compact>配色シミュレータ</Heading1>
     <p class="subtitle">イメージを選んで、配色ルールに沿った色の組み合わせを試してみよう</p>
@@ -64,7 +64,7 @@
 
 <style>
   main {
-    max-width: 720px;
+    max-width: var(--main-width-current);
     margin: 0 auto;
     --color-surface: light-dark(#ffffff, #16161f);
     --color-border: light-dark(#e0e0e0, #2e2e3e);

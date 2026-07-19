@@ -65,7 +65,7 @@
   <title>明度を見分ける - Color Prism</title>
 </svelte:head>
 
-<main>
+<main data-page="games">
   <Heading1 icon="mdi:contrast-circle" grayscale compact>明度を見分ける</Heading1>
 
   <p class="lead">
@@ -153,7 +153,7 @@
     --color-border: light-dark(#e0e0e0, #2e2e3e);
     --color-muted: light-dark(#f0f0f3, #22222e);
 
-    max-width: 720px;
+    max-width: var(--main-width-current);
     margin: 0 auto;
   }
 
