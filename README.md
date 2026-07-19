@@ -114,6 +114,10 @@ npm run data:jis-update
   - `/design-doc-updater` — 引数なし。全観点を分析し `DESIGN.md` 全体を差分更新
   - `/design-doc-updater <コンポーネント名／ディレクトリ名／ブランチ名／観点>` — 指定範囲に限って分析・加筆修正
 - **repository-structure** — リポジトリ構造定義書を更新するためのガイドライン（引数なし）
+- **update-pr-description** — PRのタイトルと説明文を変更内容に合わせて更新（引数任意）
+  - `/update-pr-description <PRのURL>` — 指定したPRを対象にする
+  - `/update-pr-description` — 引数なし。現在チェックアウト中のブランチに紐づくPRが対象（PRが無ければ促す）
+  - svxの差分から `draft: true` を外して公開された記事を検出し、カテゴリ別に説明文へリストアップする
 
 ## ドキュメント構成
 
