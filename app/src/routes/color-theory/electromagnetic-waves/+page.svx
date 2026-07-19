@@ -3,6 +3,7 @@ layout: guide-content
 title: 光とは何か
 
 grades: ["3", "uc"]
+visual: true
 ---
 
 <script>

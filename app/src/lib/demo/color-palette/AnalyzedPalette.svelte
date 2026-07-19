@@ -15,9 +15,7 @@
   let { pccs, hideTone = false, useToneColor = false }: Props = $props()
 
   const displayedPCCSList = $derived(() => {
-    return pccs
-      .map((sym) => PCCS_ALL_MAP.get(sym))
-      .filter((c): c is PCCSColor => c !== undefined)
+    return pccs.map((sym) => PCCS_ALL_MAP.get(sym)).filter((c): c is PCCSColor => c !== undefined)
   })
 
   const isAnki = $derived(ankiMode.isAnki)

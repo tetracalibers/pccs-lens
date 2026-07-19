@@ -4,7 +4,7 @@ export type GuideFrontmatter = {
   title: string
   grades: ("3" | "2" | "1" | "uc")[]
   group: CgGroup[]
-  useful?: boolean
+  visual?: boolean
   draft?: boolean
 }
 
@@ -32,7 +32,7 @@ export const guidePages: Map<string, GuideFrontmatter> = new Map(
         title: meta.title ?? "",
         grades: meta.grades ?? [],
         group: meta.group ?? [],
-        useful: meta.useful ?? false,
+        visual: meta.visual ?? false,
         draft: meta.draft ?? false
       }
     ]

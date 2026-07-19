@@ -3,6 +3,7 @@ layout: guide-content
 title: ファッションカラー
 
 grades: ["2"]
+visual: true
 ---
 
 <script lang="ts">

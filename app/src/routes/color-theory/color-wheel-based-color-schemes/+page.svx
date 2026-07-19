@@ -3,7 +3,7 @@ layout: guide-content
 title: 色相環を分割した配色
 
 grades: ["2"]
-useful: true
+visual: true
 ---
 
 <script>

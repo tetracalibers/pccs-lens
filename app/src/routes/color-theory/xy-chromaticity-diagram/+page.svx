@@ -3,6 +3,7 @@ layout: guide-content
 title: 色度座標とxy色度図
 
 grades: ["1"]
+visual: true
 
 draft: true
 ---
