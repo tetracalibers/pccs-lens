@@ -23,6 +23,7 @@ draft: true
   import TransparencyPerceptionShiftedAchromatic from "$lib/demo/illusion/TransparencyPerceptionShiftedAchromatic.svelte"
   import McColloughGreenVertical from "$lib/demo/illusion/McColloughGreenVertical.svelte"
   import McColloughRedHorizontal from "$lib/demo/illusion/McColloughRedHorizontal.svelte"
+  import McColloughTestGrating from "$lib/demo/illusion/McColloughTestGrating.svelte"
 </script>
 
 ## :WithGradeTag[錯視とは]{grades="2"}
@@ -142,7 +143,9 @@ draft: true
   <McColloughRedHorizontal />
 </SVGWrapper>
 
-TODO：左半分は白黒の縦縞、右半分は白黒の横縞の正方形
+<SVGWrapper maxW="280">
+  <McColloughTestGrating />
+</SVGWrapper>
 
 TODO：1つ前の白黒の図をベースに、左半分の白部分は薄いピンクで、右半分の白部分は薄い緑で塗りつぶした図
 
