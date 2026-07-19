@@ -1,5 +1,4 @@
 <script lang="ts">
-  import Icon from "@iconify/svelte"
   import type { AftGrade } from "$lib/meta/grade"
 
   export type Grade = "visual" | AftGrade
@@ -24,9 +23,6 @@
 </script>
 
 <span class="grade-tag" data-grade={grade} data-variant={variant} class:--_compact-h={compactH}>
-  {#if grade === "visual"}
-    <Icon icon="solar:star-shine-bold" class="grade-tag-icon" />
-  {/if}
   {labels[grade]}
 </span>
 
@@ -58,15 +54,6 @@
     color: #ffffff;
     font-size: 0.82rem;
     padding: 4px 6px;
-    display: inline-flex;
-    gap: 2px;
-    justify-content: center;
-  }
-
-  .grade-tag[data-grade="visual"] :global(.grade-tag-icon) {
-    width: 1em;
-    height: 1em;
-    flex-shrink: 0;
   }
 
   .grade-tag[data-grade="3"] {
