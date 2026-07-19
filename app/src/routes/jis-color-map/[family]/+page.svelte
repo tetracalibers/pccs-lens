@@ -52,7 +52,7 @@
 <style>
   main {
     margin: 0 auto;
-    max-width: 90cqw;
+    max-width: var(--main-width-current);
     display: grid;
     justify-items: flex-start;
     grid-template-columns: min-content;

@@ -101,7 +101,7 @@
 
 <style>
   main {
-    max-width: 600px;
+    max-width: var(--main-width-current);
     margin: 0 auto;
     --color-surface: light-dark(#ffffff, #16161f);
     --color-border: light-dark(#e0e0e0, #2e2e3e);

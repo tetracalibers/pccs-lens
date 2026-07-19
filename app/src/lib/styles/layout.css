@@ -12,3 +12,12 @@
     --scroll-offset: 150px;
   }
 }
+
+/* ページ内アンカー移動をスムーズにしたいページは、root 要素に data-smooth-scroll を付ける。
+   scroll-behavior はスクロールコンテナ（html）に指定する必要があり、かつ
+   コンポーネント側で html に直接指定すると <head> に残ってセッション中の他ページ遷移
+   （SvelteKit の scrollTo(0,0)）まで滑らかにアニメーションしてしまう。
+   :has() で対象ページが表示されているときだけ有効にすることで波及を防ぐ。 */
+html:has([data-smooth-scroll]) {
+  scroll-behavior: smooth;
+}

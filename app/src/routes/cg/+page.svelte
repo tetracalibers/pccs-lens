@@ -119,7 +119,7 @@
 
 <style>
   main {
-    max-width: 720px;
+    max-width: var(--main-width-current);
     margin: 0 auto;
   }
 

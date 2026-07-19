@@ -19,7 +19,7 @@
 
 <style>
   main {
-    max-width: 680px;
+    max-width: var(--main-width-current);
     margin: 0 auto;
     padding: 0;
   }

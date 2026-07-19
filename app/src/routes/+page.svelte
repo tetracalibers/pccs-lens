@@ -258,7 +258,7 @@
   main {
     position: relative;
     z-index: 1;
-    max-width: 720px;
+    max-width: var(--main-width-current);
     margin: 0 auto;
   }
 

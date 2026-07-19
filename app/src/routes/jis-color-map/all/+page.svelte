@@ -65,12 +65,8 @@
 </main>
 
 <style>
-  :global(html) {
-    scroll-behavior: smooth;
-  }
-
   main {
-    max-width: min(800px, 95cqw);
+    max-width: var(--main-width-current);
     margin: 0 auto;
     padding-inline: 1rem;
   }

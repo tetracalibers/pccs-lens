@@ -5,6 +5,7 @@
   import { page } from "$app/state"
   import SiteHeader from "$lib/components/site-layout/SiteHeader.svelte"
   import SiteFooter from "$lib/components/site-layout/SiteFooter.svelte"
+  import { mainWidthForRoute } from "$lib/styles/main-width"
   import { ankiMode } from "$lib/state/anki.svelte"
   import "$lib/styles/color.css"
   import "$lib/styles/layout.css"
@@ -22,6 +23,10 @@
         page.route.id === "/jis-color-map/[family]")) ||
       page.route.id === "/concept"
   )
+  // ページ系統ごとの main 最大幅。分岐はこの1箇所（mainWidthForRoute）に集約し、
+  // ラッパーの --main-width-current を main と SiteFooter が継承して参照する。
+  const mainMaxWidth = $derived(mainWidthForRoute(page.route.id))
+
   $effect(() => {
     if (!isContentPage) ankiMode.reset()
   })
@@ -41,11 +46,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Marmelad&display=swap" rel="stylesheet" />
 </svelte:head>
 
-<SiteHeader {isContentPage} />
+<!-- display: contents なので描画ボックスは作らず（レイアウト不変）、--main-width-current だけを
+     子孫（main / SiteFooter）へ継承させる。 -->
+<div class="page-shell" style="--main-width-current: {mainMaxWidth}">
+  <SiteHeader {isContentPage} />
 
-<div class="container">{@render children()}</div>
+  <div class="container">{@render children()}</div>
 
-<SiteFooter />
+  <SiteFooter />
+</div>
 
 <style>
   /* ===== グローバル ===== */
@@ -93,6 +102,11 @@
 
   :global(body.dark) {
     color-scheme: dark;
+  }
+
+  /* CSS 変数を子孫へ配るだけのラッパー。描画ボックスは作らない（既存レイアウトに影響しない）。 */
+  .page-shell {
+    display: contents;
   }
 
   /* ===== メインコンテンツラッパー ===== */

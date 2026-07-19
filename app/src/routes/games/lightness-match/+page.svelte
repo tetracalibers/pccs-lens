@@ -153,7 +153,7 @@
     --color-border: light-dark(#e0e0e0, #2e2e3e);
     --color-muted: light-dark(#f0f0f3, #22222e);
 
-    max-width: 720px;
+    max-width: var(--main-width-current);
     margin: 0 auto;
   }
 
