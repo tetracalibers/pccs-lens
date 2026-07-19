@@ -67,7 +67,6 @@
     title,
     grades = [],
     group = [],
-    visual,
     draft,
     children
   }: GuideFrontmatter & { children: Snippet } = $props()
@@ -121,7 +120,7 @@
   <Breadcrumb category="contents" crumbs={[parentCrumb, { label: title }]} />
   <Heading1 icon="solar:pen-new-round-broken">{title}</Heading1>
   <div class="page-meta">
-    {#if grades.length > 0 || group.length > 0 || visual || draft}
+    {#if grades.length > 0 || group.length > 0 || draft}
       <div class="page-grades">
         {#if draft}
           <DraftTag />
@@ -132,9 +131,6 @@
         {#each group as g (g)}
           <GroupTag group={g} />
         {/each}
-        {#if visual}
-          <GradeTag grade="visual" />
-        {/if}
       </div>
     {/if}
   </div>
