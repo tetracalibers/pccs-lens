@@ -99,10 +99,8 @@
         - slug: real-world-color-mixing
     - title: デジタル空間の色
       links:
-        - title: コンピュータで色を作る
-          grades: ["2"]
-        - title: 色再現領域
-          grades: ["2"]
+        - slug: digital-color-generation
+        - slug: color-gamut
     - title: 混色の原理による色表示
       links:
         - slug: color-matching-and-grassmanns-law
@@ -130,8 +128,7 @@
         - slug: color-contrast
         - slug: contrast-phenomena
         - slug: color-assimilation
-        - title: 面積と見え方
-          grades: ["3"]
+        - slug: color-area-effect
         - slug: subjective-color
         - slug: optical-illusions
     - title: 照明

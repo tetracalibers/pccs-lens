@@ -7,4 +7,7 @@ grades: ["3"]
 draft: true
 ---
 
-## :WithGradeTag[TODO]{grades="3"}
+## :WithGradeTag[色の同化とは]{grades="3"}
+
+- 差し込まれた特定の色によって、周辺の色（背景色）が影響を受けて同じ色みを帯びる現象を、色の:Mark[同化]という
+- [色の対比](/color-theory/color-contrast/)では隣接する色が離れて見えるが、逆に色の:Mark[同化]では隣接する色が近く見える

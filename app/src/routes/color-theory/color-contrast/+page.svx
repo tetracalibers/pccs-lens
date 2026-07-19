@@ -3,8 +3,6 @@ layout: guide-content
 title: 色の対比と三属性
 
 grades: ["3"]
-
-draft: true
 ---
 
 <script>
@@ -76,12 +74,12 @@ graph LR
 
 ## :WithGradeTag[明度対比]{grades="3"}
 
-明度が異なる2色が接したときに、明度差が強調されて見える現象を:Mark[明度対比]といいます。
+明度対比は、明度が異なる2色が接したときに、:Mark[明度差]が強調されて見える現象です。
 
 - 背景の明度が:Mark[低い]とき、図の色は実際よりも明るく見える
 - 背景の明度が:Mark[高い]とき、図の色は実際よりも暗く見える
 
-明度対比は、無彩色だけでなく、有彩色でも起こる現象です。
+明度対比は、無彩色だけでなく有彩色でも起こります。
 トーンマップで見ると、図の色が上下に移動する形で見え方が変化します。
 
 :::Action
@@ -129,13 +127,14 @@ graph LR
 
 ### 明度対比と効果的な見せ方
 
-明度対比により、同じ文字色であっても、背景が暗くなるほど文字色が明るくはっきり見えます。
+明度対比により、同じ文字色であっても、背景が暗くなるほど文字が明るくはっきり見えます。
 
 <SVGWrapper maxW={430}>
   <TextBrightnessContrast />
 </SVGWrapper>
 
-明度の異なる色も、明度対比を活用すれば、明度が近い色に見せることもできます。
+明度対比を活用すれば、図がどれくらい明るく見えるかを:Mark[地]の色によって変化させることができます。
+明度の異なる色を、明度が近い色に見せるには、明るい図は:Mark[明るい]背景の上に、暗い図は:Mark[暗い]背景の上に置くようにします。
 
 <SVGWrapper maxW={370}>
   <EqualBrightnessContrast />
@@ -143,7 +142,7 @@ graph LR
 
 ## :WithGradeTag[彩度対比]{grades="3"}
 
-彩度が異なる2色が接したときに、彩度差が強調されて見える現象を:Mark[彩度対比]といいます。
+彩度対比は、彩度が異なる2色が接したときに、:Mark[彩度差]が強調されて見える現象です。
 
 - 背景の彩度が:Mark[低い]とき、図の色は実際よりも鮮やかに見える
 - 背景の彩度が:Mark[高い]とき、図の色は実際よりもくすんで見える
@@ -175,31 +174,66 @@ graph LR
 :::
 ::::
 
+### 地の影響による図の見え方
+
+地と図の:Mark[彩度差]が大きくなるほど、彩度対比は強くなります。
+同じ色の図であっても、地の:Mark[彩度]が高いほど、そこから離れるように図の彩度は:Mark[低く]見えるのです。
+
 <SVGWrapper>
   <SaturationContrastDifference />
 </SVGWrapper>
 
 ## :WithGradeTag[補色対比]{grades="3"}
 
+補色対比は、:Mark[補色]の関係にある2色が接したときに、どちらの色も:Mark[彩度]が高く見える現象です。
+これは:Mark[彩度対比]の特別な場合であり、:Mark[補色]による:Mark[彩度]対比と呼ばれることもあります。
+
+補色対比の場合は、次のように2枚のトーンマップを並べることで、両方の色が彩度の:Mark[高い]方に引っ張られて離れていく様子が整理できます。
+
+::::CardGrid
+:::TermCard{title="図と地が補色の関係"}
 <ComplementaryContrast leftColor="v2" rightColor="g14" referenceColor="g14" />
+:::
+::::
 
 ### 鮮やかな配色の注意点
 
-<ComplementaryContrast leftColor="v2" rightColor="v14" referenceColor="v14" />
+補色の関係にある図と地がどちらも:Mark[高彩度]色の場合、図の彩度がさらに増すことで、色の:Mark[境界]がギラギラして見えるようになります。
+この現象は:Mark[ハレーション]と呼ばれ、図の色が見づらくなるため注意が必要です。
 
-- ハレーションを和らげるには、セパレーションが効果的
+::::CardGrid
+:::TermCard{title="高彩度の図と地が補色の関係"}
+<ComplementaryContrast leftColor="v2" rightColor="v14" referenceColor="v14" />
+:::
+::::
+
+ハレーションを和らげるには、白や黒による[セパレーション](/color-theory/color-area-proportion/)が効果的です。
 
 <Halation leftFigure="v14" leftGround="W" rightFigure="v14" rightGround="v2" separationPCCS="W" />
 
 ## :WithGradeTag[色相対比]{grades="3"}
 
-色相が異なる2色が接したときに、色相差が強調されて色みがずれて見える現象を:Mark[色相対比]といいます。
+色相対比は、色相が異なる2色が接したときに、:Mark[色相差]が強調されて色みがずれて見える現象です。
+図と地の:Mark[面積差]が大きいほど、また:Mark[高彩度]色であるほど強く見られるようになります。
+
+ここでは、高彩度色である`v`トーンの色を使って例を見てみましょう。
+色相環で見ると、図の色相が背景の色相から遠ざかる形で見え方が変化します。
+
+:::Action
+背景とは正反対の色（背景の:Mark[心理補色]）に図の色相が近づいていく様子に注目しよう
+:::
 
 ::::CardGrid
-:::TermCard{textCentering}
+:::TermCard{title="地がv2、図がv5" textCentering}
 <HueContrast figure="v5" ground="v2" />
+
+図v5が、地v2の心理補色v14の方向に近づく
+結果として、図は:Mark[黄み]を帯びて見える
 :::
-:::TermCard{textCentering}
+:::TermCard{title="地がv8、図がv5" textCentering}
 <HueContrast figure="v5" ground="v8" />
+
+図v5が、地v8の心理補色v20の方向に近づく
+結果として、図は:Mark[赤み]を帯びて見える
 :::
 ::::
