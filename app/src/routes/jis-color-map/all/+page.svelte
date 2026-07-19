@@ -40,7 +40,7 @@
   <title>すべての慣用色名一覧 — Color Prism</title>
 </svelte:head>
 
-<main>
+<main data-smooth-scroll>
   <div class="main-inner">
     <div class="header">
       <Breadcrumb {crumbs} category="contents" />
@@ -65,10 +65,6 @@
 </main>
 
 <style>
-  :global(html) {
-    scroll-behavior: smooth;
-  }
-
   main {
     max-width: min(800px, 95cqw);
     margin: 0 auto;
