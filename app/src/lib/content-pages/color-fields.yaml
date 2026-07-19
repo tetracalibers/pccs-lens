@@ -150,8 +150,7 @@
       links:
         - slug: interior-space-zoning
         - slug: public-space-color-scheme
-        - title: プライベート空間の配色
-          grades: ["2"]
+        - slug: private-space-color-scheme
         - title: サービス空間の配色
           grades: ["2"]
     - title: インテリアスタイル
