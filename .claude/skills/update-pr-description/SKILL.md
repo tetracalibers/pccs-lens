@@ -31,13 +31,13 @@ description: 引数で受け取ったPRのURLをもとに、そのPRのタイト
 
 ### カテゴリ（ルート）と日本語見出しの対応
 
-公開記事は `app/src/routes/<カテゴリ>/<slug>/+page.svx` に置かれる。説明文の見出しには次の日本語名を使う（`app/src/routes/+page.svelte` のトップページ定義が正典）。
+公開記事は `app/src/routes/<カテゴリ>/<slug>/+page.svx` に置かれる。説明文の見出しには次の日本語名を使う。
 
 | ルート（`<カテゴリ>`） | 日本語見出し |
 | --- | --- |
 | `color-theory` | 色の理論 |
 | `color-fields` | 色の活用分野 |
-| `cg` | 色と画像（CGと画像処理） |
+| `cg` | CGと画像処理 |
 
 表にないカテゴリが出た場合は、`app/src/routes/+page.svelte` の該当 `title` を確認して見出しを補う。
 
