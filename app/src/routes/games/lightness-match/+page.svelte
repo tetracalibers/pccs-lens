@@ -98,7 +98,10 @@
 
   <section class="board-section">
     <div class="prompt">
-      <div class="base-card" style="background: {cardFaceBackground(round.base._hex, baseHintHex)}"></div>
+      <div
+        class="base-card"
+        style="background: {cardFaceBackground(round.base._hex, baseHintHex)}"
+      ></div>
       <div class="prompt-body">
         <p class="prompt-title">同じ明度の色を探そう</p>
         <p class="base-meta">
@@ -164,7 +167,7 @@
   /* ===== 難易度切替＋ヒント ===== */
   .controls {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 0.75rem 1rem;
@@ -228,10 +231,11 @@
   .hint-toggle {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.25rem;
     margin-left: auto;
     cursor: pointer;
     user-select: none;
+    line-height: 1;
   }
 
   .hint-toggle input {
