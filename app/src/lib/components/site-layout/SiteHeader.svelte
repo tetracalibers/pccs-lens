@@ -4,95 +4,10 @@
   import SwitchLightDark from "$lib/components/SwitchLightDark.svelte"
   import AnkiModeToggle from "$lib/components/AnkiModeToggle.svelte"
   import { ankiMode } from "$lib/state/anki.svelte"
+  // C — セカンダリスクロールバー用: セクションを1本の横バーにまとめる（SiteFooter と共有）
+  import { NAV_SECTIONS as navSections } from "$lib/meta/site-nav"
 
   let { isContentPage = false }: { isContentPage?: boolean } = $props()
-
-  const toolItems = [
-    {
-      href: resolve("/approximate"),
-      path: "/approximate",
-      label: "色の近似"
-    },
-    {
-      href: resolve("/analyze"),
-      path: "/analyze",
-      label: "配色の分析"
-    },
-    {
-      href: resolve("/patterns"),
-      path: "/patterns",
-      label: "配色シミュレータ"
-    }
-  ]
-  const contentItems = [
-    {
-      href: resolve("/color-theory"),
-      path: "/color-theory",
-      label: "色の理論"
-    },
-    {
-      href: resolve("/color-fields"),
-      path: "/color-fields",
-      label: "色の活用分野"
-    },
-    {
-      href: resolve("/jis-color-map"),
-      path: "/jis-color-map",
-      label: "慣用色名マップ"
-    }
-  ]
-  const gameItems = [
-    {
-      href: resolve("/games/lightness-match"),
-      path: "/games/lightness-match",
-      label: "明度比較クイズ"
-    },
-    {
-      href: resolve("/games/tone-hunt"),
-      path: "/games/tone-hunt",
-      label: "清色・濁色の見極め"
-    },
-    {
-      href: resolve("/games/tone-match"),
-      path: "/games/tone-match",
-      label: "トーン当てクイズ"
-    }
-  ]
-  const extraItems = [
-    {
-      href: resolve("/cg"),
-      path: "/cg",
-      label: "CGと画像処理"
-    }
-  ]
-
-  // C — セカンダリスクロールバー用: セクションを1本の横バーにまとめる
-  const navSections = [
-    {
-      label: "色を学ぶ",
-      accent: "#c77dff",
-      gradient: "linear-gradient(135deg,#4d96ff,#c77dff,#6bcb77)",
-      items: contentItems
-    },
-    {
-      label: "色を見分ける",
-      accent: "#e64980",
-      gradient: "linear-gradient(135deg,#f783ac,#e64980)",
-      items: gameItems
-    },
-    {
-      label: "色を使う",
-      accent: "#ff6b6b",
-      gradient: "linear-gradient(135deg,#ff6b6b,#ffd93d)",
-      items: toolItems
-    },
-    {
-      label: "色と関わる",
-      accent: "#4dabf7",
-      gradient: "linear-gradient(135deg,#4dabf7,#1971c2)",
-      items: extraItems
-    }
-  ]
 
   // ナロー画面（スマホ）用のハンバーガーメニュー開閉
   let isNavOpen = $state(false)

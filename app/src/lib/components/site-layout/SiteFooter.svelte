@@ -7,6 +7,10 @@
   import { cgPages, cgGroupIdByRoute } from "$lib/content-pages/cg"
   import { cgArticlePageNav } from "$lib/content-pages/cg-article-nav"
   import { JIS_COLOR_FAMILIES } from "$lib/data/jis-colors"
+  import { FOOTER_NAV_ITEMS } from "$lib/meta/site-nav"
+
+  // 中央ラベル・主リンクで共有する「このサイトの歩き方」。描画時にこの値かどうかで <wbr /> 挿入を判定する。
+  const SITE_GUIDE_LABEL = "このサイトの歩き方"
 
   const isConceptPage = $derived(page.route.id === "/concept")
   const isCgIndexPage = $derived(page.route.id === "/cg")
@@ -64,6 +68,23 @@
       }
     }
 
+    // ヘッダーナビのインデックスページ（CG は除外）は、ヘッダーと同じ順で循環的に前後へ送る。
+    // 中央リンクは footer-inner と同じ「このサイトの歩き方」(/concept) のまま。
+    const navIndex = FOOTER_NAV_ITEMS.findIndex((item) => item.path === id)
+    if (navIndex !== -1) {
+      const count = FOOTER_NAV_ITEMS.length
+      const prev = FOOTER_NAV_ITEMS[(navIndex - 1 + count) % count]
+      const next = FOOTER_NAV_ITEMS[(navIndex + 1) % count]
+      return {
+        prev: { title: prev.label },
+        next: { title: next.label },
+        prevHref: prev.href,
+        nextHref: next.href,
+        listHref: resolve("/concept"),
+        listLabel: SITE_GUIDE_LABEL
+      }
+    }
+
     for (const base of ["color-theory", "color-fields"] as const) {
       const prefix = `/${base}/`
       if (!id.startsWith(prefix)) continue
@@ -100,8 +121,9 @@
         </a>
       {/if}
       {#if pageNavInfo.listHref}
+        <!-- prettier-ignore -->
         <a class="footer-link footer-page-nav-list" href={pageNavInfo.listHref}>
-          {pageNavInfo.listLabel}
+          {#if pageNavInfo.listLabel === SITE_GUIDE_LABEL}このサイトの<wbr />歩き方{:else}{pageNavInfo.listLabel}{/if}
         </a>
       {/if}
       {#if pageNavInfo.next && pageNavInfo.nextHref}
@@ -116,8 +138,9 @@
       {#if isCgIndexPage}
         <a href={resolve("/")} class="footer-link">トップへ戻る</a>
       {:else}
+        <!-- prettier-ignore -->
         <a href={isConceptPage ? resolve("/") : resolve("/concept")} class="footer-link">
-          {isConceptPage ? "トップページへ" : "このサイトの歩き方"}
+          {#if isConceptPage}トップページへ{:else}このサイトの<wbr />歩き方{/if}
         </a>
       {/if}
     </div>
@@ -198,13 +221,13 @@
   /* ===== prev / next ページ送り ===== */
   .footer-page-nav {
     display: grid;
-    grid-template-columns: minmax(0, 33cqw) 1fr minmax(0, 33cqw);
-    column-gap: 1rem;
+    grid-template-columns: minmax(0, 33%) 1fr minmax(0, 33%);
+    column-gap: 1.5rem;
     align-items: center;
     padding-block-start: 1.5rem;
     padding-block-end: 1rem;
-    /* 幅は現在ページの main に合わせる（layout.css の --main-width-current） */
-    max-width: min(var(--main-width-current), 870px);
+    /* 幅は現在ページの main に合わせる（--main-width-current）。ただし下限 680px・上限 870px。 */
+    max-width: clamp(680px, var(--main-width-current), 870px);
     margin-inline: auto;
   }
 
@@ -240,6 +263,7 @@
     justify-self: center;
     padding-block-start: 0;
     white-space: nowrap;
+    text-align: center;
   }
 
   .footer-page-nav-next {
