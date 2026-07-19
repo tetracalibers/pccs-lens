@@ -204,8 +204,14 @@
     padding-block-start: 1.5rem;
     padding-block-end: 1rem;
     /* 幅は現在ページの main に合わせる（layout.css の --main-width-current） */
-    max-width: var(--main-width-current);
+    max-width: min(var(--main-width-current), 870px);
     margin-inline: auto;
+  }
+
+  @media (width <= 870px) {
+    .footer-page-nav {
+      max-width: none;
+    }
   }
 
   .footer-page-nav-link {
