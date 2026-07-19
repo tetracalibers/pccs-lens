@@ -1,8 +1,7 @@
 <script lang="ts">
-  import Icon from "@iconify/svelte"
   import type { AftGrade } from "$lib/meta/grade"
 
-  export type Grade = "useful" | AftGrade
+  export type Grade = AftGrade
 
   export type Variant = "default" | "light"
 
@@ -15,7 +14,6 @@
   let { grade, compactH = false, variant = "default" }: Props = $props()
 
   const labels: Record<Grade, string> = {
-    useful: "実用",
     "3": "3級",
     "2": "2級",
     "1": "1級",
@@ -24,9 +22,6 @@
 </script>
 
 <span class="grade-tag" data-grade={grade} data-variant={variant} class:--_compact-h={compactH}>
-  {#if grade === "useful"}
-    <Icon icon="solar:star-shine-bold" class="grade-tag-icon" />
-  {/if}
   {labels[grade]}
 </span>
 
@@ -49,24 +44,6 @@
 
   .grade-tag.--_compact-h {
     padding-block: 3px;
-  }
-
-  .grade-tag[data-grade="useful"] {
-    --_color: #ff7675;
-    --_glow-color: rgb(from var(--_color) r g b / 0.7);
-    background: var(--_color);
-    color: #ffffff;
-    font-size: 0.82rem;
-    padding: 4px 6px;
-    display: inline-flex;
-    gap: 2px;
-    justify-content: center;
-  }
-
-  .grade-tag[data-grade="useful"] :global(.grade-tag-icon) {
-    width: 1em;
-    height: 1em;
-    flex-shrink: 0;
   }
 
   .grade-tag[data-grade="3"] {

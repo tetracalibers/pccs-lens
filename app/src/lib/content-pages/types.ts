@@ -7,7 +7,6 @@ export interface PageLink {
 export interface DraftLink {
   title: string
   grades: AftGrade[]
-  useful?: boolean
 }
 
 export type Link = PageLink | DraftLink
