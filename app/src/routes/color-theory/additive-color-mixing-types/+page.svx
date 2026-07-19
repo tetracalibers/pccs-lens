@@ -3,6 +3,7 @@ layout: guide-content
 title: さまざまな加法混色
 
 grades: ["3"]
+useful: true
 ---
 
 <script>

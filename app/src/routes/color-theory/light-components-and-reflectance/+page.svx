@@ -3,6 +3,7 @@ layout: guide-content
 title: 光の成分と反射率
 
 grades: ["2", "3", "uc"]
+useful: true
 ---
 
 <script>

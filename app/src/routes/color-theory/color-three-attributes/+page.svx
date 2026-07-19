@@ -3,7 +3,6 @@ layout: guide-content
 title: 色の三属性
 
 grades: ["3", "uc"]
-useful: true
 ---
 
 ## 色を特徴づける要素

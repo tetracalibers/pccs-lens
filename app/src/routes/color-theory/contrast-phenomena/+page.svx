@@ -3,6 +3,7 @@ layout: guide-content
 title: さまざまな対比現象
 
 grades: ["3"]
+useful: true
 ---
 
 <script>

@@ -3,6 +3,7 @@ layout: guide-content
 title: 照度と照明設計
 
 grades: ["2"]
+useful: true
 ---
 
 <script>

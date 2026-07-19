@@ -3,6 +3,7 @@ layout: guide-content
 title: 反対色応答と色の識別
 
 grades: ["uc"]
+useful: true
 ---
 
 <script>
