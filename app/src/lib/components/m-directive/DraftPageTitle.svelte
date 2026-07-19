@@ -4,10 +4,7 @@
 
   const gradeColors = { "3": "#c4b5fd", "2": "#6ee7b7", "1": "#fde68a", uc: "#93c5fd" }
 
-  let {
-    grades,
-    title
-  }: { grades: AftGradeCSV; title: string } = $props()
+  let { grades, title }: { grades: AftGradeCSV; title: string } = $props()
 
   const gradeList = $derived(gradeCSV2Array(grades))
   let accentColor = $derived(gradeList.length > 0 ? gradeColors[gradeList[0]] : "#94a3b8")

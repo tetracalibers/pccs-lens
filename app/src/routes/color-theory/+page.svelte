@@ -28,10 +28,7 @@
             {#if isPageLink(link)}
               <PageLink slug={link.slug} />
             {:else}
-              <DraftPageTitle
-                title={link.title}
-                grades={gradeArray2CSV(link.grades)}
-              />
+              <DraftPageTitle title={link.title} grades={gradeArray2CSV(link.grades)} />
             {/if}
           </li>
         {/each}
