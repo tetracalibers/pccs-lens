@@ -92,10 +92,7 @@
 
     <label class="hint-toggle">
       <input type="checkbox" bind:checked={hint} />
-      <span class="hint-toggle-text">
-        <span class="hint-toggle-label">ヒント</span>
-        <span class="hint-toggle-note">下半分を明度のグレーで表示</span>
-      </span>
+      <span class="hint-toggle-label">ヒントを表示</span>
     </label>
   </section>
 
@@ -250,22 +247,10 @@
     outline-offset: 2px;
   }
 
-  .hint-toggle-text {
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
-    line-height: 1.2;
-  }
-
   .hint-toggle-label {
     font-size: 0.9rem;
     font-weight: 800;
     color: var(--color-heading);
-  }
-
-  .hint-toggle-note {
-    font-size: 0.68rem;
-    color: var(--color-body);
   }
 
   /* ===== 基準色 ===== */
