@@ -6,6 +6,7 @@
   import { colorFieldsPageNav } from "$lib/content-pages/color-fields-nav"
   import { cgPages, cgGroupIdByRoute } from "$lib/content-pages/cg"
   import { cgArticlePageNav } from "$lib/content-pages/cg-article-nav"
+  import { JIS_COLOR_FAMILIES } from "$lib/data/jis-colors"
 
   const isConceptPage = $derived(page.route.id === "/concept")
   const isCgIndexPage = $derived(page.route.id === "/cg")
@@ -42,6 +43,23 @@
         prevHref: nav.prev?.href,
         nextHref: nav.next?.href,
         listHref: nav.listHref,
+        listLabel: "一覧へ戻る"
+      }
+    }
+
+    // 色系統ごとの慣用色名マップ（/jis-color-map/[family]）は色系統の並び順で循環的に前後へ送る
+    if (id === "/jis-color-map/[family]") {
+      const index = JIS_COLOR_FAMILIES.findIndex((f) => f.id === page.params.family)
+      if (index === -1) return null
+      const count = JIS_COLOR_FAMILIES.length
+      const prev = JIS_COLOR_FAMILIES[(index - 1 + count) % count]
+      const next = JIS_COLOR_FAMILIES[(index + 1) % count]
+      return {
+        prev: { title: prev.name },
+        next: { title: next.name },
+        prevHref: resolve("/jis-color-map/[family]", { family: prev.id }),
+        nextHref: resolve("/jis-color-map/[family]", { family: next.id }),
+        listHref: resolve("/jis-color-map"),
         listLabel: "一覧へ戻る"
       }
     }
