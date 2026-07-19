@@ -52,7 +52,8 @@
     --_glow-color: rgb(from var(--_color) r g b / 0.7);
     background: var(--_color);
     color: #ffffff;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
+    line-height: 0.95;
     padding: 4px 6px;
   }
 
