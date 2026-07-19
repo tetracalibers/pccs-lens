@@ -149,8 +149,7 @@
     - title: 空間のゾーニング
       links:
         - slug: interior-space-zoning
-        - title: パブリック空間の配色
-          grades: ["2"]
+        - slug: public-space-color-scheme
         - title: プライベート空間の配色
           grades: ["2"]
         - title: サービス空間の配色
