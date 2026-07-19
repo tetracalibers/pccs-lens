@@ -128,7 +128,7 @@
     {/each}
   </div>
 
-  <main data-page="top">
+  <main>
     <!-- Hero -->
     <header class="hero">
       <div class="hero-eyebrow">HOW WE SEE COLOR</div>

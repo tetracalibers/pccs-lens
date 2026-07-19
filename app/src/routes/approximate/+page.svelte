@@ -43,7 +43,7 @@
   <title>色のPCCS近似 - Color Prism</title>
 </svelte:head>
 
-<main data-page="approximate">
+<main>
   <Heading1 icon="fluent:color-background-20-filled" grayscale compact>色のPCCS近似</Heading1>
 
   <section class="input-section">

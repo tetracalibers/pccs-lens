@@ -13,64 +13,6 @@
   }
 }
 
-/* 各ページ系統の main 最大幅トークン。main と SiteFooter がこの値を参照する。
-   ページは main に data-page="<系統>" を宣言し、下の :has() が現在ページの値を
-   --main-width-current に反映する（footer は main と別サブツリーだが :root 経由で受け取れる）。 */
-:root {
-  --main-width-top: 720px;
-  --main-width-analyze: 800px;
-  --main-width-approximate: 600px;
-  --main-width-cg-list: 720px;
-  --main-width-cg-guide: 680px;
-  --main-width-color-theory: 680px;
-  --main-width-color-fields: 680px;
-  --main-width-concept: 680px;
-  --main-width-games: 720px;
-  --main-width-patterns: 720px;
-  --main-width-jis-index: 720px;
-  --main-width-jis-all: min(800px, 95cqw);
-  --main-width-jis-family: 90cqw;
-
-  /* 現在ページの main 幅。既定は top（top ページは :has ルール不要で既定に従う）。 */
-  --main-width-current: var(--main-width-top);
-}
-:root:has(main[data-page="analyze"]) {
-  --main-width-current: var(--main-width-analyze);
-}
-:root:has(main[data-page="approximate"]) {
-  --main-width-current: var(--main-width-approximate);
-}
-:root:has(main[data-page="cg-list"]) {
-  --main-width-current: var(--main-width-cg-list);
-}
-:root:has(main[data-page="cg-guide"]) {
-  --main-width-current: var(--main-width-cg-guide);
-}
-:root:has(main[data-page="color-theory"]) {
-  --main-width-current: var(--main-width-color-theory);
-}
-:root:has(main[data-page="color-fields"]) {
-  --main-width-current: var(--main-width-color-fields);
-}
-:root:has(main[data-page="concept"]) {
-  --main-width-current: var(--main-width-concept);
-}
-:root:has(main[data-page="games"]) {
-  --main-width-current: var(--main-width-games);
-}
-:root:has(main[data-page="patterns"]) {
-  --main-width-current: var(--main-width-patterns);
-}
-:root:has(main[data-page="jis-index"]) {
-  --main-width-current: var(--main-width-jis-index);
-}
-:root:has(main[data-page="jis-all"]) {
-  --main-width-current: var(--main-width-jis-all);
-}
-:root:has(main[data-page="jis-family"]) {
-  --main-width-current: var(--main-width-jis-family);
-}
-
 /* ページ内アンカー移動をスムーズにしたいページは、root 要素に data-smooth-scroll を付ける。
    scroll-behavior はスクロールコンテナ（html）に指定する必要があり、かつ
    コンポーネント側で html に直接指定すると <head> に残ってセッション中の他ページ遷移

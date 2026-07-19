@@ -43,7 +43,7 @@
   <title>このサイトの歩き方 — Color Prism</title>
 </svelte:head>
 
-<main data-page="concept">
+<main>
   <Heading1 icon="hugeicons:message-question" grayscale>このサイトの歩き方</Heading1>
   <div>{@render children()}</div>
 </main>

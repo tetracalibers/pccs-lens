@@ -77,14 +77,6 @@
   const pageTitle = $derived(title ? `${title} - Color Prism` : "Color Prism")
   const gradeList = $derived(sortGrades(grades))
 
-  // 記事の系統（main 幅トークンの選択に使う）。ルート先頭セグメントで判定。
-  const dataPage = $derived.by(() => {
-    const base = page.route.id?.split("/").filter(Boolean)[0]
-    if (base === "color-fields") return "color-fields"
-    if (base === "cg") return "cg-guide"
-    return "color-theory"
-  })
-
   const parentCrumb = $derived.by(() => {
     const routeSegments = page.route.id?.split("/").filter(Boolean) ?? []
     const base = routeSegments[0]
@@ -125,7 +117,7 @@
   {/if}
 </svelte:head>
 
-<main data-page={dataPage}>
+<main>
   <Breadcrumb category="contents" crumbs={[parentCrumb, { label: title }]} />
   <Heading1 icon="solar:pen-new-round-broken">{title}</Heading1>
   <div class="page-meta">

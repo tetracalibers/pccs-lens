@@ -68,7 +68,7 @@
   <title>PCCSの清色・濁色を見分ける - Color Prism</title>
 </svelte:head>
 
-<main data-page="games">
+<main>
   <Heading1 icon="mdi:invert-colors" grayscale compact>PCCSの清色・濁色を見分ける</Heading1>
 
   <p class="lead">

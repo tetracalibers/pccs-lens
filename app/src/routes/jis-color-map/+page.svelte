@@ -43,7 +43,7 @@
   <title>慣用色名マップ — Color Prism</title>
 </svelte:head>
 
-<main data-page="jis-index">
+<main>
   <div class="header">
     <Heading1 icon="mdi:palette-swatch" grayscale compact>慣用色名マップ</Heading1>
   </div>

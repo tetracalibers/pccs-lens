@@ -65,7 +65,7 @@
   <title>明度を見分ける - Color Prism</title>
 </svelte:head>
 
-<main data-page="games">
+<main>
   <Heading1 icon="mdi:contrast-circle" grayscale compact>明度を見分ける</Heading1>
 
   <p class="lead">

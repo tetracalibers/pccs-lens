@@ -11,7 +11,7 @@
   import { parseParagraphs } from "$lib/md/paragraph"
 </script>
 
-<GuideMap title="色の活用分野" dataPage="color-fields">
+<GuideMap title="色の活用分野">
   <p>
     <ALink href="/color-theory">
       色の理論

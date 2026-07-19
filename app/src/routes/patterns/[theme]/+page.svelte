@@ -101,7 +101,7 @@
   <title>{theme.labelJa} — 配色シミュレータ — Color Prism</title>
 </svelte:head>
 
-<main data-page="patterns">
+<main>
   <Breadcrumb
     category="tool"
     crumbs={[{ label: "配色シミュレータ", href: resolve("/patterns") }, { label: theme.labelJa }]}

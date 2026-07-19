@@ -82,7 +82,7 @@
   <title>PCCSによる配色の分析 - Color Prism</title>
 </svelte:head>
 
-<main data-page="analyze">
+<main>
   <Heading1 icon="famicons:color-palette-sharp" grayscale compact>配色の分析</Heading1>
 
   <section class="approximation-section">

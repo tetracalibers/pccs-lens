@@ -86,7 +86,7 @@
   <title>PCCSのトーンを見分ける - Color Prism</title>
 </svelte:head>
 
-<main data-page="games">
+<main>
   <Heading1 icon="mdi:palette-swatch" grayscale compact>PCCSのトーンを見分ける</Heading1>
 
   <p class="lead">
