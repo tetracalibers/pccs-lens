@@ -371,11 +371,13 @@
 
   // ===== 全層の色域を囲むバウンディングボックス =====
   // x は層に依らず一定。y は最上層（index 0）が最も高く、最下層が最も低い。
+  let minX = Infinity
   let maxX = -Infinity
   let minY = Infinity
   let maxY = -Infinity
   for (const p of denseLocus) {
     const sx = projX(p.x, p.y)
+    minX = Math.min(minX, sx)
     maxX = Math.max(maxX, sx)
     minY = Math.min(minY, projY(p.x, p.y, 0))
     maxY = Math.max(maxY, projY(p.x, p.y, N_LAYERS - 1))
@@ -385,8 +387,9 @@
   const ROD_TOP_Y = minY - 40
   const ROD_BOTTOM_Y = maxY + 22
 
-  // ===== 座標軸（xyY 座標系）=====
-  // x軸（斜め右上）・y軸（斜め左上・奥行き）・Y軸（縦・輝度）を最下段の色度図の原点で交わらせる。
+  // ===== 座標軸（xy 平面）=====
+  // x軸（斜め右上）・y軸（斜め左上・奥行き）を最下段の色度図の原点で交わらせる。
+  // 縦の輝度方向（Y軸）は無彩色軸（白色点を貫く棒）が兼ねる。
   const BASE_LAYER = N_LAYERS - 1
   const ORIGIN_SX = projX(0, 0) // 原点（x=0, y=0）の画面 x
   const ORIGIN_SY = projY(0, 0, BASE_LAYER) // 原点の画面 y（最下段の原点）
@@ -406,28 +409,21 @@
   const YAXIS_END_SX = yCornerSX + (AXIS_EXT * (yCornerSX - ORIGIN_SX)) / yAxisLen
   const YAXIS_END_SY = yCornerSY + (AXIS_EXT * (yCornerSY - ORIGIN_SY)) / yAxisLen
 
-  // Y軸（輝度・縦）：原点から真上へ、最上段の少し上まで
-  const LUM_AXIS_TOP_EXT = 40
-  const LUMAXIS_X = ORIGIN_SX
-  const LUMAXIS_BOTTOM_SY = ORIGIN_SY
-  const LUMAXIS_TOP_SY = projY(0, 0, 0) - LUM_AXIS_TOP_EXT
+  // 軸ラベル（x・y いずれも矢の先＝矢印の延長上に置く）
+  const LABEL_TIP_GAP = 20 // 矢の先からラベル中心までの距離
+  const XLABEL_X = XAXIS_END_SX + (LABEL_TIP_GAP * (xCornerSX - ORIGIN_SX)) / xAxisLen
+  const XLABEL_Y = XAXIS_END_SY + (LABEL_TIP_GAP * (xCornerSY - ORIGIN_SY)) / xAxisLen
+  const YLABEL_X = YAXIS_END_SX + (LABEL_TIP_GAP * (yCornerSX - ORIGIN_SX)) / yAxisLen
+  const YLABEL_Y = YAXIS_END_SY + (LABEL_TIP_GAP * (yCornerSY - ORIGIN_SY)) / yAxisLen
 
-  // 軸ラベル
-  const XLABEL_X = XAXIS_END_SX + 10
-  const XLABEL_Y = XAXIS_END_SY + 8
-  const YLABEL_X = YAXIS_END_SX + 10
-  const YLABEL_Y = YAXIS_END_SY - 8
-  const LUMLABEL_X = LUMAXIS_X - 12
-  const LUMLABEL_Y = LUMAXIS_TOP_SY + 2
-
-  // ===== 「無彩色軸」ラベル（棒の上端付近・右側） =====
-  const ROD_LABEL_X = whitePointX + 12
-  const ROD_LABEL_Y = (ROD_TOP_Y + minY) / 2
+  // ===== 「Y」ラベル（無彩色軸＝Y軸の上向き矢印の先） =====
+  const ROD_LABEL_X = whitePointX
+  const ROD_LABEL_Y = ROD_TOP_Y - 26 // 上向き矢じり分＋余白だけ上へ
 
   // ===== viewBox（中身にフィットさせる） =====
-  const VB_LEFT = LUMLABEL_X - 50
-  const VB_TOP = ROD_TOP_Y - 8
-  const VB_RIGHT = Math.max(maxX, XLABEL_X + 44)
+  const VB_LEFT = Math.min(minX, YLABEL_X - 14) - 6
+  const VB_TOP = ROD_LABEL_Y - 16 // Y ラベル（無彩色軸上端）まで含める
+  const VB_RIGHT = Math.max(maxX, XLABEL_X + 14)
   const VB_BOTTOM = Math.max(ROD_BOTTOM_Y, XAXIS_END_SY + 22) + 8
   const VB_WIDTH = VB_RIGHT - VB_LEFT
   const VB_HEIGHT = VB_BOTTOM - VB_TOP
@@ -473,7 +469,7 @@
     </marker>
   </defs>
 
-  <!-- 無彩色軸（白色点を貫く棒）：各層より背面に描く -->
+  <!-- 無彩色軸（＝Y軸。白色点を貫く棒）：各層より背面に描き、上端に上向き矢印 -->
   <line
     x1={whitePointX}
     y1={ROD_TOP_Y}
@@ -482,6 +478,7 @@
     stroke={COL_AXIS}
     stroke-width={STROKE_WIDTH_ROD}
     stroke-linecap="round"
+    marker-start="url(#arrow-{ID})"
   />
 
   <!-- 各層の色度図（明るい層が上、暗い層が下） -->
@@ -502,7 +499,7 @@
     />
   {/each}
 
-  <!-- 座標軸：x軸（横）・y軸（奥行き）・Y軸（縦・輝度）を原点で交わらせる -->
+  <!-- 座標軸：x軸（斜め右上）・y軸（斜め左上）を原点で交わらせる -->
   <line
     x1={ORIGIN_SX}
     y1={ORIGIN_SY}
@@ -518,16 +515,6 @@
     y1={ORIGIN_SY}
     x2={YAXIS_END_SX}
     y2={YAXIS_END_SY}
-    stroke={COL_AXIS}
-    stroke-width={ARROW_STROKE_WIDTH}
-    stroke-linecap="round"
-    marker-end="url(#arrow-{ID})"
-  />
-  <line
-    x1={LUMAXIS_X}
-    y1={LUMAXIS_BOTTOM_SY}
-    x2={LUMAXIS_X}
-    y2={LUMAXIS_TOP_SY}
     stroke={COL_AXIS}
     stroke-width={ARROW_STROKE_WIDTH}
     stroke-linecap="round"
@@ -556,47 +543,36 @@
   <text
     x={XLABEL_X}
     y={XLABEL_Y}
-    text-anchor="start"
+    text-anchor="middle"
     dominant-baseline="central"
     font-family="var(--font-ja-base)"
     font-size={FONT_SIZE_LABEL}
     fill={COL_LABEL}
   >
-    x軸
+    x
   </text>
   <text
     x={YLABEL_X}
     y={YLABEL_Y}
-    text-anchor="start"
+    text-anchor="middle"
     dominant-baseline="central"
     font-family="var(--font-ja-base)"
     font-size={FONT_SIZE_LABEL}
     fill={COL_LABEL}
   >
-    y軸
-  </text>
-  <text
-    x={LUMLABEL_X}
-    y={LUMLABEL_Y}
-    text-anchor="end"
-    dominant-baseline="central"
-    font-family="var(--font-ja-base)"
-    font-size={FONT_SIZE_LABEL}
-    fill={COL_LABEL}
-  >
-    Y軸
+    y
   </text>
 
-  <!-- 「無彩色軸」ラベル -->
+  <!-- 「Y」ラベル（無彩色軸＝Y軸の上向き矢印の先） -->
   <text
     x={ROD_LABEL_X}
     y={ROD_LABEL_Y}
-    text-anchor="start"
+    text-anchor="middle"
     dominant-baseline="central"
     font-family="var(--font-ja-base)"
     font-size={FONT_SIZE_LABEL}
     fill={COL_LABEL}
   >
-    無彩色軸
+    Y
   </text>
 </svg>
