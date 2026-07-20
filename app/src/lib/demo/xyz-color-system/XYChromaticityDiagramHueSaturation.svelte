@@ -54,7 +54,7 @@
   // ===== 注釈の矢印・ラベル =====
   // 色相（境界を回る円弧矢印・ラベル）はピンク、彩度（放射状矢印・ラベル）は白で描く。
   const COL_HUE = "var(--canvas-pen-pink)"
-  const COL_SATURATION = "var(--canvas-pen-water)"
+  const COL_SATURATION = "var(--canvas-pen-blue)"
   const ARROW_STROKE_WIDTH = 3.5
   // 矢じり（タイプA）
   const ARROW_HEAD_VIEWBOX = 7 // marker viewBox の一辺
@@ -698,5 +698,5 @@
   </text>
 
   <!-- 白色点（放射状矢印の起点） -->
-  <circle cx={whiteCx} cy={whiteCy} r={WHITE_DOT_RADIUS} fill={COL_AXIS} />
+  <circle cx={whiteCx} cy={whiteCy} r={WHITE_DOT_RADIUS} fill="var(--color-body--light)" />
 </svg>
