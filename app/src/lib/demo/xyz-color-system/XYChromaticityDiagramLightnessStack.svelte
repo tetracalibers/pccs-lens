@@ -533,7 +533,7 @@
     y={XLABEL_Y}
     text-anchor="middle"
     dominant-baseline="central"
-    font-family="var(--font-ja-base)"
+    font-family="var(--font-mono)"
     font-size={FONT_SIZE_LABEL}
     fill={COL_LABEL}
   >
@@ -544,7 +544,7 @@
     y={YLABEL_Y}
     text-anchor="middle"
     dominant-baseline="central"
-    font-family="var(--font-ja-base)"
+    font-family="var(--font-mono)"
     font-size={FONT_SIZE_LABEL}
     fill={COL_LABEL}
   >
@@ -557,7 +557,7 @@
     y={ROD_LABEL_Y}
     text-anchor="middle"
     dominant-baseline="central"
-    font-family="var(--font-ja-base)"
+    font-family="var(--font-mono)"
     font-size={FONT_SIZE_LABEL}
     fill={COL_LABEL}
   >
