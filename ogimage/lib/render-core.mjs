@@ -37,7 +37,9 @@ export const resolveFromCwd = (p) => (isAbsolute(p) ? p : resolve(process.cwd(),
 export const prepareItem = (item) => {
   const variation = item.variation
   if (!VARIATIONS.has(variation)) {
-    throw new Error(`variation が不正です: ${JSON.stringify(variation)}（default|title-only|nested|nested-fig）`)
+    throw new Error(
+      `variation が不正です: ${JSON.stringify(variation)}（default|title-only|nested|nested-fig）`
+    )
   }
 
   const key = item.route != null ? routeKey(item.route) : ""
@@ -57,10 +59,14 @@ export const prepareItem = (item) => {
         : []
 
   if (variation !== "default" && titleLines.length === 0) {
-    throw new Error(`title / titleLines が必要です（variation=${variation}, route=${item.route ?? "?"}）`)
+    throw new Error(
+      `title / titleLines が必要です（variation=${variation}, route=${item.route ?? "?"}）`
+    )
   }
   if (titleLines.length > 2) {
-    throw new Error(`タイトルは最大 2 行です（${titleLines.length} 行が渡されました, route=${item.route ?? "?"}）`)
+    throw new Error(
+      `タイトルは最大 2 行です（${titleLines.length} 行が渡されました, route=${item.route ?? "?"}）`
+    )
   }
 
   const needsCrumbs = variation === "nested" || variation === "nested-fig"
@@ -71,7 +77,8 @@ export const prepareItem = (item) => {
 
   let figure
   if (variation === "nested-fig") {
-    if (!item.figure) throw new Error(`nested-fig には figure（図版パス）が必要です（route=${item.route ?? "?"}）`)
+    if (!item.figure)
+      throw new Error(`nested-fig には figure（図版パス）が必要です（route=${item.route ?? "?"}）`)
     figure = resolveFromCwd(item.figure)
     if (!existsSync(figure)) throw new Error(`図版ファイルが見つかりません: ${figure}`)
   }
@@ -108,12 +115,19 @@ export const renderPrepared = (prepared, ctx) => {
   // 記録の書き込み（route があり default 以外。title-only も書く＝再生成のスイープから漏れないため）
   if (!ctx.noRecord && prepared.key && prepared.variation !== "default") {
     const dataDir = ctx.dataDir ?? DEFAULT_DATA_DIR
-    const figureRel = prepared.figure ? copyFigureIntoData(dataDir, prepared.key, prepared.figure) : undefined
+    const figureRel = prepared.figure
+      ? copyFigureIntoData(dataDir, prepared.key, prepared.figure)
+      : undefined
     const record = { route: prepared.key, title: prepared.title, titleLines: prepared.titleLines }
     if (prepared.crumbs.length > 0) record.crumbs = prepared.crumbs
     if (figureRel) record.figure = figureRel
     writeRecord(dataDir, prepared.key, record)
   }
 
-  return { key: prepared.key, title: prepared.title, variation: prepared.variation, out: prepared.out }
+  return {
+    key: prepared.key,
+    title: prepared.title,
+    variation: prepared.variation,
+    out: prepared.out
+  }
 }

@@ -43,7 +43,9 @@ const fetchBuffer = async (url) => {
 const save = (name, buf, renameTo) => {
   const out = renameTo ? renameFontFamily(buf, renameTo) : buf
   writeFileSync(join(FONTS_DIR, name), out)
-  console.log(`  ✓ ${name}  (${(out.length / 1024).toFixed(0)} KB)${renameTo ? ` [family="${renameTo}"]` : ""}`)
+  console.log(
+    `  ✓ ${name}  (${(out.length / 1024).toFixed(0)} KB)${renameTo ? ` [family="${renameTo}"]` : ""}`
+  )
 }
 
 /** google/fonts ミラーから完全版 静的 TTF を取得。 */
@@ -83,7 +85,9 @@ const main = async () => {
   console.log("\nSUSE Mono (500) — 英字ロゴ / Fontsource 静的インスタンス→TTF→ファミリー名正規化")
   await fetchFontsourceTtf("suse-mono", "latin", 500, "SUSEMono-500.ttf", "SUSE Mono")
 
-  console.log("\nReddit Mono (500) — crumb ラテン部分 / Fontsource 静的インスタンス→TTF→ファミリー名正規化")
+  console.log(
+    "\nReddit Mono (500) — crumb ラテン部分 / Fontsource 静的インスタンス→TTF→ファミリー名正規化"
+  )
   await fetchFontsourceTtf("reddit-mono", "latin", 500, "RedditMono-500.ttf", "Reddit Mono")
 
   const files = existsSync(FONTS_DIR)

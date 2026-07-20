@@ -70,15 +70,15 @@ node ogimage/regenerate.mjs '/color-theory/*'
 
 ### JSON（1 件）
 
-| フィールド | 必須 | 説明 |
-| --- | --- | --- |
-| `variation` | ○ | `default` / `title-only` / `nested` / `nested-fig` |
-| `route` | ○（default 以外） | マニフェスト用キー & 出力パス算出（例: `color-theory/pccs-basics`） |
-| `title` | ○（default 以外） | og:title 用の完全なタイトル（改行なし・サイト名サフィックス無し） |
-| `titleLines` | ○（default 以外） | 描画用の改行済みタイトル（1〜2 要素） |
-| `crumbs` | ○（nested/nested-fig） | パンくずラベル配列（可変個） |
-| `figure` | ○（nested-fig） | 図版画像のパス（実行時 cwd 基準。png/jpg/svg/webp）。`data/assets/<route>/figure.<ext>` へコピーされ、記録には永続パスが書かれる |
-| `out` | 省略可 | 出力先。省略時は `app/static/ogp/<route>.png` |
+| フィールド   | 必須                   | 説明                                                                                                                             |
+| ------------ | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `variation`  | ○                      | `default` / `title-only` / `nested` / `nested-fig`                                                                               |
+| `route`      | ○（default 以外）      | マニフェスト用キー & 出力パス算出（例: `color-theory/pccs-basics`）                                                              |
+| `title`      | ○（default 以外）      | og:title 用の完全なタイトル（改行なし・サイト名サフィックス無し）                                                                |
+| `titleLines` | ○（default 以外）      | 描画用の改行済みタイトル（1〜2 要素）                                                                                            |
+| `crumbs`     | ○（nested/nested-fig） | パンくずラベル配列（可変個）                                                                                                     |
+| `figure`     | ○（nested-fig）        | 図版画像のパス（実行時 cwd 基準。png/jpg/svg/webp）。`data/assets/<route>/figure.<ext>` へコピーされ、記録には永続パスが書かれる |
+| `out`        | 省略可                 | 出力先。省略時は `app/static/ogp/<route>.png`                                                                                    |
 
 配列 or `{ "items": [ ... ] }` を渡すと一括生成。`variation` が `default` 以外なら、生成のたびに記録 `data/<route>.json` が書かれる（title-only も書く。書かないと一括再生成のスイープから漏れるため）。
 
@@ -121,12 +121,12 @@ ogimage/
 
 ## データ・状態
 
-| パス | 役割 | 追跡 |
-| --- | --- | --- |
-| `ogimage/data/<route>.json` | 記録（**正**） | コミット |
+| パス                                       | 役割                   | 追跡     |
+| ------------------------------------------ | ---------------------- | -------- |
+| `ogimage/data/<route>.json`                | 記録（**正**）         | コミット |
 | `ogimage/data/assets/<route>/figure.<ext>` | 図版アセット（**正**） | コミット |
-| `app/src/lib/meta/og-manifest.json` | 派生（記録から導出） | コミット |
-| `app/static/ogp/<route>.png` | 生成物（出力画像） | コミット |
+| `app/src/lib/meta/og-manifest.json`        | 派生（記録から導出）   | コミット |
+| `app/static/ogp/<route>.png`               | 生成物（出力画像）     | コミット |
 
 - 記録の `figure` は `ogimage/data/` 基準の相対パス。バリエーションは記録に持たず、route から `config.mjs` の `resolveVariation` で引き直す（`figure` の有無で `optional → nested-fig` を昇格）。
 

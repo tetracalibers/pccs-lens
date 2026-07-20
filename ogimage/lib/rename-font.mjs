@@ -51,7 +51,13 @@ export const renameFontFamily = (ttf, family) => {
   const records = []
   for (const [id, str] of entries) {
     records.push({ plat: enc.WIN, enc: enc.WIN_UCS2, lang: enc.WIN_EN, id, buf: utf16be(str) })
-    records.push({ plat: enc.MAC, enc: enc.MAC_ROMAN, lang: enc.MAC_EN, id, buf: Buffer.from(str, "latin1") })
+    records.push({
+      plat: enc.MAC,
+      enc: enc.MAC_ROMAN,
+      lang: enc.MAC_EN,
+      id,
+      buf: Buffer.from(str, "latin1")
+    })
   }
   records.sort((a, b) => a.plat - b.plat || a.enc - b.enc || a.lang - b.lang || a.id - b.id)
 
@@ -79,7 +85,12 @@ export const renameFontFamily = (ttf, family) => {
   // 末尾に 4 バイト境界で追記
   const align = (n) => (n % 4 === 0 ? n : n + (4 - (n % 4)))
   const newOffset = align(ttf.length)
-  const out = Buffer.concat([ttf, Buffer.alloc(newOffset - ttf.length), newName, Buffer.alloc(align(nameLen) - nameLen)])
+  const out = Buffer.concat([
+    ttf,
+    Buffer.alloc(newOffset - ttf.length),
+    newName,
+    Buffer.alloc(align(nameLen) - nameLen)
+  ])
 
   // ディレクトリの name エントリを更新（checksum は 0）
   out.writeUInt32BE(0, nameEntry.dirOffset + 4)

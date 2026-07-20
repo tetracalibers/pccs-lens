@@ -7,7 +7,14 @@
 // 図版は手渡しの一時パスから ogimage/data/assets/<route>/figure.<ext> へコピーして永続化し、
 // 記録の figure には data ディレクトリ基準の相対パスを書く。
 
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync, readdirSync } from "node:fs"
+import {
+  readFileSync,
+  writeFileSync,
+  mkdirSync,
+  copyFileSync,
+  existsSync,
+  readdirSync
+} from "node:fs"
 import { dirname, join, resolve, extname, relative, sep } from "node:path"
 
 /**

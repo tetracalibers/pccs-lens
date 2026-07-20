@@ -63,9 +63,13 @@ const main = () => {
 
   for (const { key, record, path, error } of selected) {
     try {
-      if (!record) throw new Error(`記録の読み込みに失敗しました: ${path}${error ? `（${error.message}）` : ""}`)
+      if (!record)
+        throw new Error(
+          `記録の読み込みに失敗しました: ${path}${error ? `（${error.message}）` : ""}`
+        )
       const variation = resolveVariation(key, { hasFigure: Boolean(record.figure) })
-      if (!variation) throw new Error(`config.mjs に該当する規則がありません（削除/リネーム済みルート?）`)
+      if (!variation)
+        throw new Error(`config.mjs に該当する規則がありません（削除/リネーム済みルート?）`)
 
       const prepared = prepareItem({
         variation,
@@ -87,7 +91,10 @@ const main = () => {
   // 全再生成のときだけ default.png も無条件生成する。
   if (isFull) {
     try {
-      const prepared = prepareItem({ variation: "default", out: join(DEFAULT_OUT_DIR, "default.png") })
+      const prepared = prepareItem({
+        variation: "default",
+        out: join(DEFAULT_OUT_DIR, "default.png")
+      })
       renderPrepared(prepared, ctx)
       console.log(`✓ ${"default".padEnd(10)} → ${prepared.out}`)
     } catch (err) {
@@ -105,7 +112,8 @@ const main = () => {
     rebuildManifest(DEFAULT_MANIFEST, entries)
   } else {
     for (const r of succeeded) {
-      if (r.key && r.variation !== "default") upsertManifest(DEFAULT_MANIFEST, r.key, { title: r.title })
+      if (r.key && r.variation !== "default")
+        upsertManifest(DEFAULT_MANIFEST, r.key, { title: r.title })
     }
   }
 

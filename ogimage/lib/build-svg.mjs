@@ -68,10 +68,7 @@ export const LAYOUT = {
 const buildTitle = (lines, cfg) => {
   const { fontSize, letterSpacing, baselines } = layoutLines(lines, cfg)
   const tspans = lines
-    .map(
-      (line, i) =>
-        `<tspan x="${cfg.x}" y="${round(baselines[i])}">${escapeXml(line)}</tspan>`
-    )
+    .map((line, i) => `<tspan x="${cfg.x}" y="${round(baselines[i])}">${escapeXml(line)}</tspan>`)
     .join("")
   return (
     `<text font-family="${FONT_JA}" font-weight="700" fill="${TITLE_FILL}"` +
@@ -147,7 +144,10 @@ export const fillTemplate = (template, variation, content) => {
   }
 
   if (svg.includes("<!--FIGURE-->")) {
-    svg = svg.replace("<!--FIGURE-->", content.figure ? buildFigure(content.figure, layout.figure) : "")
+    svg = svg.replace(
+      "<!--FIGURE-->",
+      content.figure ? buildFigure(content.figure, layout.figure) : ""
+    )
   }
 
   return svg

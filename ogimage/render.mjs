@@ -47,7 +47,15 @@ import {
 
 /** コマンドライン引数を素朴にパースする。 */
 const parseArgs = (argv) => {
-  const opts = { json: null, input: null, manifest: null, noManifest: false, data: null, noRecord: false, fonts: null }
+  const opts = {
+    json: null,
+    input: null,
+    manifest: null,
+    noManifest: false,
+    data: null,
+    noRecord: false,
+    fonts: null
+  }
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]
     if (a === "--json") opts.json = argv[++i]
@@ -86,7 +94,9 @@ const main = () => {
   const opts = parseArgs(process.argv.slice(2))
   const raw = readPayload(opts)
   if (!raw || !raw.trim()) {
-    throw new Error("入力 JSON がありません。--json / --input / 標準入力 のいずれかで渡してください。")
+    throw new Error(
+      "入力 JSON がありません。--json / --input / 標準入力 のいずれかで渡してください。"
+    )
   }
 
   const items = normalizeItems(raw)
@@ -114,7 +124,8 @@ const main = () => {
   // マニフェスト更新（単発・部分は upsert＝対象外ページの項目を消さない）
   if (!opts.noManifest) {
     for (const r of results) {
-      if (r.key && r.variation !== "default") upsertManifest(manifestPath, r.key, { title: r.title })
+      if (r.key && r.variation !== "default")
+        upsertManifest(manifestPath, r.key, { title: r.title })
     }
   }
 
