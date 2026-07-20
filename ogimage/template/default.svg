@@ -31,7 +31,7 @@
 
     <rect width="1200" height="10" fill="url(#rainbow)"></rect>
 
-    <text font-family="SUSE Mono" x="600" y="300" text-anchor="middle" font-size="132" font-weight="800" letter-spacing="-5" fill="#1a1a1a">Color <tspan fill="url(#prism)">Prism</tspan></text>
+    <text font-family="SUSE Mono" x="600" y="300" text-anchor="middle" font-size="132" font-weight="500" letter-spacing="-5" fill="#1a1a1a">Color <tspan fill="url(#prism)">Prism</tspan></text>
 
     <text font-family="Zen Kaku Gothic New" x="600" y="378" text-anchor="middle" font-size="34" font-weight="500" letter-spacing="1.3" fill="#55556a">見て・触って学ぶ 色彩の暗記帳</text>
 

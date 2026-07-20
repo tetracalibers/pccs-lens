@@ -34,6 +34,6 @@
 
     <!--FIGURE-->
 
-    <text font-family="SUSE Mono" x="88" y="572" font-size="42" font-weight="800" letter-spacing="-1" fill="#1a1a1a">Color <tspan fill="url(#prism)">Prism</tspan></text>
+    <text font-family="SUSE Mono" x="88" y="572" font-size="42" font-weight="500" letter-spacing="-1" fill="#1a1a1a">Color <tspan fill="url(#prism)">Prism</tspan></text>
   </g>
 </svg>
