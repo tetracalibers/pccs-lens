@@ -45,6 +45,13 @@ echo '<JSON>' | node ogimage/render.mjs
 node ogimage/render.mjs --json '{"variation":"default","out":"app/static/ogp/default.png"}'
 ```
 
+サイト既定画像は専用スクリプトでも生成できる（`ogimage/` から実行。`template/default.svg` を編集したら再実行で上書き）:
+
+```sh
+cd ogimage
+npm run default-image   # → app/static/ogp/default.png を生成・上書き
+```
+
 ### JSON（1 件）
 
 | フィールド | 必須 | 説明 |

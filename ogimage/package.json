@@ -6,7 +6,8 @@
   "description": "Color Prism の OGP 画像をテンプレート SVG から手動生成するツール（resvg-js）。app の Svelte/Vite 実行環境からは独立。",
   "scripts": {
     "render": "node render.mjs",
-    "fonts": "node scripts/download-fonts.mjs"
+    "fonts": "node scripts/download-fonts.mjs",
+    "default-image": "node render.mjs --json '{\"variation\":\"default\",\"out\":\"../app/static/ogp/default.png\"}'"
   },
   "dependencies": {
     "@resvg/resvg-js": "^2.6.2",
