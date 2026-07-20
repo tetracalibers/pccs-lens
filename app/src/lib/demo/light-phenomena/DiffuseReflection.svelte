@@ -1,9 +1,9 @@
 <script lang="ts">
   // ===== 地面（波線）のパラメータ =====
   const GROUND_HALF = 210 // 地面（波線）の半分の長さ
-  const AMP = 6 // 波の振幅（凹凸の大きさ）
-  const WAVELEN = 44 // 波の波長
-  const WAVE_STEP = 3 // 波線をサンプリングする刻み幅
+  const AMP = 3 // 波の振幅。波長を半分にしたのに合わせて半分にし、各波のカーブの形（縦横比）を元と同じに保つ
+  const WAVELEN = 20 // 波の波長（元の 40 の半分＝波の本数は2倍。20 の倍数に反射点 ±20, ±60 が乗る）
+  const WAVE_STEP = 1.5 // 波線をサンプリングする刻み幅
 
   // ===== 光線のパラメータ =====
   const RAY_LEN = 125 // 光線の長さ
@@ -46,8 +46,9 @@
 
   type Pt = { x: number; y: number }
 
-  // 波線（地面）の高さ。頂上（凸部）で最も上（y が最小）になる
-  const wave = (x: number) => AMP * Math.sin((2 * Math.PI * x) / WAVELEN)
+  // 波線（地面）の高さ。反射点 x=±20, ±60 がちょうど頂上（凸部）に乗るよう位相を合わせる。
+  // -cos により x が 20 の倍数（±20, ±60 を含む）で頂上（y が最小＝最も上）になる。左右対称。
+  const wave = (x: number) => -AMP * Math.cos((2 * Math.PI * x) / WAVELEN)
 
   // 波線のパス（細かくサンプリングした折れ線を丸めて滑らかに見せる）
   const N_SEG = Math.round((2 * GROUND_HALF) / WAVE_STEP)
@@ -56,14 +57,17 @@
     return `${i === 0 ? "M" : "L"} ${x.toFixed(2)} ${wave(x).toFixed(2)}`
   }).join(" ")
 
-  // 各反射点の設定。入射角（θin）を少しずつ変え（＝異なる角度で入射）、
-  // 反射角（θrefl）はバラバラにして拡散反射を表す。角度は鉛直から測り、右向きが正。
+  // 各反射点の設定。角度は鉛直（法線）から測り、右向きが正。
+  // 入射（θin）は必ず左から（すべて負）、反射（θrefl）は必ず右上へ（すべて正）。
+  // 入射光と反射光のなす角（開き角＝|θin|+|θrefl|）を点ごとに大きく振って
+  // 不規則にする。開き角が揃っていると、どのV字も同じ正反射を傾けて並べたように
+  // 見えてしまうため、開き角自体を散らして拡散反射（バラバラな跳ね返り）を表す。
   type RaySpec = { x: number; thetaIn: number; thetaRefl: number }
   const RAY_SPECS: RaySpec[] = [
-    { x: -143, thetaIn: -38, thetaRefl: 48 },
-    { x: -55, thetaIn: -32, thetaRefl: -8 },
-    { x: 33, thetaIn: -26, thetaRefl: 30 },
-    { x: 121, thetaIn: -20, thetaRefl: 12 }
+    { x: -60, thetaIn: -44, thetaRefl: 20 }, // 開き角 64°
+    { x: -20, thetaIn: -64, thetaRefl: 44 }, // 開き角 108°
+    { x: 20, thetaIn: -14, thetaRefl: 36 }, // 開き角 50°
+    { x: 60, thetaIn: -26, thetaRefl: 48 } // 開き角 74°
   ]
 
   // 各光線の座標を算出（反射点は波の頂上に接する高さに置く）

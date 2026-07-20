@@ -21,6 +21,12 @@ draft: true
   import TransparencyPerceptionShifted from "$lib/demo/illusion/TransparencyPerceptionShifted.svelte"
   import TransparencyPerceptionAchromatic from "$lib/demo/illusion/TransparencyPerceptionAchromatic.svelte"
   import TransparencyPerceptionShiftedAchromatic from "$lib/demo/illusion/TransparencyPerceptionShiftedAchromatic.svelte"
+  import McColloughGreenVertical from "$lib/demo/illusion/McColloughGreenVertical.svelte"
+  import McColloughRedHorizontal from "$lib/demo/illusion/McColloughRedHorizontal.svelte"
+  import McColloughTestGrating from "$lib/demo/illusion/McColloughTestGrating.svelte"
+  import McColloughTestTinted from "$lib/demo/illusion/McColloughTestTinted.svelte"
+  import McColloughTestRotated from "$lib/demo/illusion/McColloughTestRotated.svelte"
+  import McColloughTestRotatedTinted from "$lib/demo/illusion/McColloughTestRotatedTinted.svelte"
 </script>
 
 ## :WithGradeTag[錯視とは]{grades="2"}
@@ -131,3 +137,27 @@ draft: true
 - 白黒の図の向きを変えても、縞模様の向きと色は対応して見える
 - この現象を:Mark[マッカロー効果]という
 - マッカロー効果は、私たちの視覚系が、縞模様の:Mark[方向]（縦/横）と:Mark[色]（緑/赤）という2つの情報の組み合わせに順応した結果生じる現象である
+
+<SVGWrapper maxW="280">
+  <McColloughGreenVertical />
+</SVGWrapper>
+
+<SVGWrapper maxW="280">
+  <McColloughRedHorizontal />
+</SVGWrapper>
+
+<SVGWrapper maxW="280">
+  <McColloughTestGrating />
+</SVGWrapper>
+
+<SVGWrapper maxW="280">
+  <McColloughTestTinted />
+</SVGWrapper>
+
+<SVGWrapper maxW="280">
+  <McColloughTestRotated />
+</SVGWrapper>
+
+<SVGWrapper maxW="280">
+  <McColloughTestRotatedTinted />
+</SVGWrapper>

@@ -1,0 +1,12 @@
+---
+layout: guide-content
+title: 黒体放射
+
+grades: ["1"]
+
+draft: true
+---
+
+## :WithGradeTag[TODO]{grades="1"}
+
+- 色温度は、架空の理想的な黒い物質（:Mark[黒体]）を加熱し続けた時に変わっていく色をその温度で表したもので、2000K付近では:Mark[赤]みがかった色をしているが、そのまま数値が上がると:Mark[白]くなり、最終的に:Mark[青]に近くなっていく
