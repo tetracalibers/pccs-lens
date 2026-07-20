@@ -41,7 +41,6 @@
 
   // ===== Stroke / サイズ =====
   const STROKE_WIDTH_ROD = 3 // 無彩色軸（白色点を貫く棒）の太さ
-  const STROKE_WIDTH_OUTLINE = 1.2 // 各層の輪郭線の太さ
 
   // ===== ラベル =====
   const FONT_SIZE_LABEL = 24
@@ -59,7 +58,6 @@
   // ===== 色定数 =====
   const COL_AXIS = "var(--color-body)"
   const COL_LABEL = "var(--color-body)"
-  const COL_OUTLINE = "var(--canvas-pen-gray)"
 
   // SVG 内 id の衝突を避けるための固定サフィックス
   const ID = "xy-chromaticity-lightness-stack"
@@ -492,15 +490,6 @@
       <!-- 下の層ほど黒を重ねて暗くする -->
       <path d={clipPath} transform={layer.matrix} fill="#000000" opacity={layer.overlay} />
     {/if}
-    <!-- 暗くしても各面の形が見えるよう輪郭を描く（線幅は投影で歪ませない） -->
-    <path
-      d={clipPath}
-      transform={layer.matrix}
-      fill="none"
-      stroke={COL_OUTLINE}
-      stroke-width={STROKE_WIDTH_OUTLINE}
-      vector-effect="non-scaling-stroke"
-    />
   {/each}
 
   <!-- 座標軸：x軸（斜め右上）・y軸（斜め左上）を原点で交わらせる -->
