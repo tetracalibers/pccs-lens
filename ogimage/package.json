@@ -1,0 +1,16 @@
+{
+  "name": "ogimage",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Color Prism の OGP 画像をテンプレート SVG から手動生成するツール（resvg-js）。app の Svelte/Vite 実行環境からは独立。",
+  "scripts": {
+    "render": "node render.mjs",
+    "fonts": "node scripts/download-fonts.mjs"
+  },
+  "dependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "picomatch": "^4.0.2",
+    "wawoff2": "^2.0.1"
+  }
+}
