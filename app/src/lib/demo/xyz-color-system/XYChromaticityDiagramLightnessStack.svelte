@@ -7,11 +7,16 @@
   // ===== レイアウト（斜投影による積層） =====
   // 1 枚の xy 色度図を「斜投影された水平面」として描き、明度ごとに縦に積み重ねる。
   // 上の層ほど明るく、下の層ほど暗い色度図になる。
-  const PROJ_W = 360 // 1 枚の色度図の x 軸（0〜XMAX）の投影幅
-  const OBLIQUE_DX = 175 // 奥行き（y 軸 0〜YMAX）方向の水平シフト量
-  const OBLIQUE_DY = 115 // 奥行き方向の垂直シフト量（小さいほど寝かせた面に見える）
+  const PROJ_W = 360 // 内部プロット空間（正面図）の幅。斜投影行列で各層へ変換する
   const N_LAYERS = 5 // 積み重ねる色度図の枚数
-  const LAYER_GAP = 165 // 隣り合う層の垂直間隔（面の厚みより大きくして隙間をつくる）
+  const LAYER_GAP = 120 // 隣り合う層の垂直間隔
+
+  // x軸・y軸の画面ベクトル（色度 0→最大値 での画面変位）。斜投影の向きを決める。
+  // x軸・y軸をともに右上へ伸ばし、赤端（x が最大）が右上へ向くようにする。
+  const XAXIS_VEC_X = 325 // x軸：右方向の伸び
+  const XAXIS_VEC_Y = -40 // x軸：縦方向の伸び（正で下＝赤端が右下、負で上＝赤端が右上）
+  const YAXIS_VEC_X = -40 // y軸：横方向の伸び（小さいほど開き角が広がる。負でY軸より左＝向こう側へ倒れる）
+  const YAXIS_VEC_Y = -120 // y軸：上方向の伸び（負で上向き＝奥行き）
 
   // ===== 軸の範囲（参考: XYChromaticityDiagram.svelte と同じ） =====
   const XMAX = 0.8
@@ -38,12 +43,11 @@
   const STROKE_WIDTH_ROD = 3 // 無彩色軸（白色点を貫く棒）の太さ
   const STROKE_WIDTH_OUTLINE = 1.2 // 各層の輪郭線の太さ
   const WHITE_DOT_RADIUS = 5 // 白色点の半径
-  const WHITE_DOT_STROKE = 1.5 // 白色点の縁取り
 
   // ===== ラベル =====
   const FONT_SIZE_LABEL = 24
 
-  // ===== 矢の形状（タイプA）：明度の向きを示す矢印に使う =====
+  // ===== 矢の形状（タイプA）：座標軸の矢印に使う =====
   const ARROW_STROKE_WIDTH = 3
   const ARROW_HEAD_VIEWBOX = 7 // marker viewBox の一辺
   const ARROW_HEAD_SIZE = 20 // 矢先のレンダリングサイズ（user space）
@@ -321,15 +325,19 @@
   const cellH = (STEP / YMAX) * PG_H + CELL_OVERLAP_Y
 
   // ===== 斜投影 =====
-  // プロット空間 (gx, gy) → 画面座標へのアフィン変換 matrix(1 0 c d e f)。
-  // 各層は f だけ縦にずらすことで積み重なる。導出は projX / projY と一致する。
-  const M_C = -OBLIQUE_DX / PG_H
-  const M_D = OBLIQUE_DY / PG_H
-  const M_E = OBLIQUE_DX
+  // プロット空間 (gx, gy) → 画面座標へのアフィン変換 matrix(a b c d e f)。
+  // gx = (x/XMAX)*PG_W, gy = PG_H - (y/YMAX)*PG_H。x軸・y軸の画面ベクトルから導く。
+  const M_A = XAXIS_VEC_X / PG_W
+  const M_B = XAXIS_VEC_Y / PG_W
+  const M_C = -YAXIS_VEC_X / PG_H
+  const M_D = -YAXIS_VEC_Y / PG_H
+  const M_E = YAXIS_VEC_X
 
   // 色度座標 (x, y) を第 L 層の画面座標へ投影する（ラベルや軸の配置に使う）。
-  const projX = (x: number, y: number): number => (x / XMAX) * PROJ_W + (y / YMAX) * OBLIQUE_DX
-  const projY = (y: number, layer: number): number => layer * LAYER_GAP - (y / YMAX) * OBLIQUE_DY
+  const projX = (x: number, y: number): number =>
+    (x / XMAX) * XAXIS_VEC_X + (y / YMAX) * YAXIS_VEC_X
+  const projY = (x: number, y: number, layer: number): number =>
+    layer * LAYER_GAP + (x / XMAX) * XAXIS_VEC_Y + (y / YMAX) * YAXIS_VEC_Y
 
   interface Layer {
     index: number
@@ -338,10 +346,10 @@
   }
   const layers: Layer[] = Array.from({ length: N_LAYERS }, (_, index) => {
     const brightness = 1 - (index / (N_LAYERS - 1)) * (1 - B_MIN)
-    const f = index * LAYER_GAP - OBLIQUE_DY
+    const f = index * LAYER_GAP + YAXIS_VEC_Y
     return {
       index,
-      matrix: `matrix(1 0 ${M_C} ${M_D} ${M_E} ${f})`,
+      matrix: `matrix(${M_A} ${M_B} ${M_C} ${M_D} ${M_E} ${f})`,
       overlay: 1 - brightness
     }
   })
@@ -350,40 +358,77 @@
   const whitePointX = projX(WHITE_X, WHITE_Y)
   const whitePoints = Array.from({ length: N_LAYERS }, (_, index) => ({
     x: whitePointX,
-    y: projY(WHITE_Y, index)
+    y: projY(WHITE_X, WHITE_Y, index)
   }))
+
+  // ===== 無彩色軸のうち「白色点より上」を前面に描くセグメント =====
+  // 各層で白色点から少し上まで棒を前面に重ね、色度図を貫いて見せる。
+  const ROD_PIERCE_UP = 55 // 白色点より上に前面表示する長さ（画面 px）
+  const rodFrontSegments = Array.from({ length: N_LAYERS }, (_, index) => {
+    const wy = projY(WHITE_X, WHITE_Y, index)
+    return { y1: wy - ROD_PIERCE_UP, y2: wy }
+  })
 
   // ===== 全層の色域を囲むバウンディングボックス =====
   // x は層に依らず一定。y は最上層（index 0）が最も高く、最下層が最も低い。
-  let minX = Infinity
   let maxX = -Infinity
   let minY = Infinity
   let maxY = -Infinity
   for (const p of denseLocus) {
     const sx = projX(p.x, p.y)
-    minX = Math.min(minX, sx)
     maxX = Math.max(maxX, sx)
-    minY = Math.min(minY, projY(p.y, 0))
-    maxY = Math.max(maxY, projY(p.y, N_LAYERS - 1))
+    minY = Math.min(minY, projY(p.x, p.y, 0))
+    maxY = Math.max(maxY, projY(p.x, p.y, N_LAYERS - 1))
   }
 
   // ===== 無彩色軸（白色点を貫く棒）の上下端 =====
   const ROD_TOP_Y = minY - 40
   const ROD_BOTTOM_Y = maxY + 22
 
-  // ===== 明度の向きを示す軸（左・上向き矢印）=====
-  const LIGHTNESS_AXIS_X = minX - 34
-  const LIGHTNESS_AXIS_LABEL_X = LIGHTNESS_AXIS_X - 22
+  // ===== 座標軸（xyY 座標系）=====
+  // x軸（斜め右上）・y軸（斜め左上・奥行き）・Y軸（縦・輝度）を最下段の色度図の原点で交わらせる。
+  const BASE_LAYER = N_LAYERS - 1
+  const ORIGIN_SX = projX(0, 0) // 原点（x=0, y=0）の画面 x
+  const ORIGIN_SY = projY(0, 0, BASE_LAYER) // 原点の画面 y（最下段の原点）
+  const AXIS_EXT = 24 // 軸を色域の端より少し先へ伸ばす量
+
+  // x軸：原点から (XMAX, 0) 方向（斜め右上）へ、少し先まで
+  const xCornerSX = projX(XMAX, 0)
+  const xCornerSY = projY(XMAX, 0, BASE_LAYER)
+  const xAxisLen = Math.hypot(xCornerSX - ORIGIN_SX, xCornerSY - ORIGIN_SY)
+  const XAXIS_END_SX = xCornerSX + (AXIS_EXT * (xCornerSX - ORIGIN_SX)) / xAxisLen
+  const XAXIS_END_SY = xCornerSY + (AXIS_EXT * (xCornerSY - ORIGIN_SY)) / xAxisLen
+
+  // y軸：原点から (0, YMAX) 方向（斜め左上・奥行き）へ、少し先まで
+  const yCornerSX = projX(0, YMAX)
+  const yCornerSY = projY(0, YMAX, BASE_LAYER)
+  const yAxisLen = Math.hypot(yCornerSX - ORIGIN_SX, yCornerSY - ORIGIN_SY)
+  const YAXIS_END_SX = yCornerSX + (AXIS_EXT * (yCornerSX - ORIGIN_SX)) / yAxisLen
+  const YAXIS_END_SY = yCornerSY + (AXIS_EXT * (yCornerSY - ORIGIN_SY)) / yAxisLen
+
+  // Y軸（輝度・縦）：原点から真上へ、最上段の少し上まで
+  const LUM_AXIS_TOP_EXT = 40
+  const LUMAXIS_X = ORIGIN_SX
+  const LUMAXIS_BOTTOM_SY = ORIGIN_SY
+  const LUMAXIS_TOP_SY = projY(0, 0, 0) - LUM_AXIS_TOP_EXT
+
+  // 軸ラベル
+  const XLABEL_X = XAXIS_END_SX + 10
+  const XLABEL_Y = XAXIS_END_SY + 8
+  const YLABEL_X = YAXIS_END_SX + 10
+  const YLABEL_Y = YAXIS_END_SY - 8
+  const LUMLABEL_X = LUMAXIS_X - 12
+  const LUMLABEL_Y = LUMAXIS_TOP_SY + 2
 
   // ===== 「無彩色軸」ラベル（棒の上端付近・右側） =====
   const ROD_LABEL_X = whitePointX + 12
   const ROD_LABEL_Y = (ROD_TOP_Y + minY) / 2
 
   // ===== viewBox（中身にフィットさせる） =====
-  const VB_LEFT = LIGHTNESS_AXIS_LABEL_X - 22
+  const VB_LEFT = LUMLABEL_X - 50
   const VB_TOP = ROD_TOP_Y - 8
-  const VB_RIGHT = maxX + 16
-  const VB_BOTTOM = ROD_BOTTOM_Y + 8
+  const VB_RIGHT = Math.max(maxX, XLABEL_X + 44)
+  const VB_BOTTOM = Math.max(ROD_BOTTOM_Y, XAXIS_END_SY + 22) + 8
   const VB_WIDTH = VB_RIGHT - VB_LEFT
   const VB_HEIGHT = VB_BOTTOM - VB_TOP
 </script>
@@ -405,7 +450,7 @@
         />
       {/each}
     </g>
-    <!-- 矢じり（タイプA）：明度の向きを示す矢印用 -->
+    <!-- 矢じり（タイプA）：座標軸の矢印用 -->
     <marker
       id="arrow-{ID}"
       viewBox="0 0 {ARROW_HEAD_VIEWBOX} {ARROW_HEAD_VIEWBOX}"
@@ -457,40 +502,89 @@
     />
   {/each}
 
-  <!-- 各層の白色点（無彩色軸が貫く点） -->
-  {#each whitePoints as wp, i (i)}
-    <circle
-      cx={wp.x}
-      cy={wp.y}
-      r={WHITE_DOT_RADIUS}
-      fill={COL_AXIS}
-      stroke="var(--color-bg)"
-      stroke-width={WHITE_DOT_STROKE}
-    />
-  {/each}
-
-  <!-- 明度の向きを示す軸（左・上向き矢印） -->
+  <!-- 座標軸：x軸（横）・y軸（奥行き）・Y軸（縦・輝度）を原点で交わらせる -->
   <line
-    x1={LIGHTNESS_AXIS_X}
-    y1={maxY}
-    x2={LIGHTNESS_AXIS_X}
-    y2={minY}
+    x1={ORIGIN_SX}
+    y1={ORIGIN_SY}
+    x2={XAXIS_END_SX}
+    y2={XAXIS_END_SY}
     stroke={COL_AXIS}
     stroke-width={ARROW_STROKE_WIDTH}
     stroke-linecap="round"
     marker-end="url(#arrow-{ID})"
   />
+  <line
+    x1={ORIGIN_SX}
+    y1={ORIGIN_SY}
+    x2={YAXIS_END_SX}
+    y2={YAXIS_END_SY}
+    stroke={COL_AXIS}
+    stroke-width={ARROW_STROKE_WIDTH}
+    stroke-linecap="round"
+    marker-end="url(#arrow-{ID})"
+  />
+  <line
+    x1={LUMAXIS_X}
+    y1={LUMAXIS_BOTTOM_SY}
+    x2={LUMAXIS_X}
+    y2={LUMAXIS_TOP_SY}
+    stroke={COL_AXIS}
+    stroke-width={ARROW_STROKE_WIDTH}
+    stroke-linecap="round"
+    marker-end="url(#arrow-{ID})"
+  />
+
+  <!-- 無彩色軸：白色点より上の区間を前面に描き、各色度図を貫いて見せる -->
+  {#each rodFrontSegments as seg, i (i)}
+    <line
+      x1={whitePointX}
+      y1={seg.y1}
+      x2={whitePointX}
+      y2={seg.y2}
+      stroke={COL_AXIS}
+      stroke-width={STROKE_WIDTH_ROD}
+      stroke-linecap="round"
+    />
+  {/each}
+
+  <!-- 各層の白色点（無彩色軸が貫く点・縁取りなし） -->
+  {#each whitePoints as wp, i (i)}
+    <circle cx={wp.x} cy={wp.y} r={WHITE_DOT_RADIUS} fill={COL_AXIS} />
+  {/each}
+
+  <!-- 座標軸ラベル -->
   <text
-    x={LIGHTNESS_AXIS_LABEL_X}
-    y={(minY + maxY) / 2}
-    writing-mode="vertical-rl"
-    text-anchor="middle"
+    x={XLABEL_X}
+    y={XLABEL_Y}
+    text-anchor="start"
     dominant-baseline="central"
     font-family="var(--font-ja-base)"
     font-size={FONT_SIZE_LABEL}
     fill={COL_LABEL}
   >
-    明度
+    x軸
+  </text>
+  <text
+    x={YLABEL_X}
+    y={YLABEL_Y}
+    text-anchor="start"
+    dominant-baseline="central"
+    font-family="var(--font-ja-base)"
+    font-size={FONT_SIZE_LABEL}
+    fill={COL_LABEL}
+  >
+    y軸
+  </text>
+  <text
+    x={LUMLABEL_X}
+    y={LUMLABEL_Y}
+    text-anchor="end"
+    dominant-baseline="central"
+    font-family="var(--font-ja-base)"
+    font-size={FONT_SIZE_LABEL}
+    fill={COL_LABEL}
+  >
+    Y軸
   </text>
 
   <!-- 「無彩色軸」ラベル -->
