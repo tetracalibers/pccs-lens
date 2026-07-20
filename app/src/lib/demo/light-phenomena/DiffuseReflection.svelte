@@ -1,9 +1,9 @@
 <script lang="ts">
   // ===== 地面（波線）のパラメータ =====
   const GROUND_HALF = 210 // 地面（波線）の半分の長さ
-  const AMP = 6 // 波の振幅（凹凸の大きさ）
-  const WAVELEN = 40 // 波の波長
-  const WAVE_STEP = 3 // 波線をサンプリングする刻み幅
+  const AMP = 3 // 波の振幅。波長を半分にしたのに合わせて半分にし、各波のカーブの形（縦横比）を元と同じに保つ
+  const WAVELEN = 20 // 波の波長（元の 40 の半分＝波の本数は2倍。20 の倍数に反射点 ±20, ±60 が乗る）
+  const WAVE_STEP = 1.5 // 波線をサンプリングする刻み幅
 
   // ===== 光線のパラメータ =====
   const RAY_LEN = 125 // 光線の長さ
@@ -46,9 +46,9 @@
 
   type Pt = { x: number; y: number }
 
-  // 波線（地面）の高さ。中央付近（x = ±20, ±60）を頂上（凸部）にして、
-  // 反射点が中央付近に集まるよう cos で左右対称に配置する（頂上で y が最小＝最も上）
-  const wave = (x: number) => AMP * Math.cos((2 * Math.PI * x) / WAVELEN)
+  // 波線（地面）の高さ。反射点 x=±20, ±60 がちょうど頂上（凸部）に乗るよう位相を合わせる。
+  // -cos により x が 20 の倍数（±20, ±60 を含む）で頂上（y が最小＝最も上）になる。左右対称。
+  const wave = (x: number) => -AMP * Math.cos((2 * Math.PI * x) / WAVELEN)
 
   // 波線のパス（細かくサンプリングした折れ線を丸めて滑らかに見せる）
   const N_SEG = Math.round((2 * GROUND_HALF) / WAVE_STEP)
