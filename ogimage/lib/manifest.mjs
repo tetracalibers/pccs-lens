@@ -1,6 +1,9 @@
 // 生成済みルートのマニフェスト（app/src/lib/meta/og-manifest.json）を読み書きする。
 // アプリ側の <SiteMeta> がこの JSON を import し、載っているルートは固有の og:image / og:title を、
 // 無ければ既定画像・サイト名にフォールバックする。
+//
+// マニフェストは記録（ogimage/data/）からの「派生物」。単発・部分再生成では upsert（対象外ページを
+// 消さない）、全再生成では rebuild（記録の全集合から作り直し、削除ページの項目を自己修復で落とす）。
 
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs"
 import { dirname } from "node:path"
@@ -34,6 +37,21 @@ export const readManifest = (path) => {
 export const upsertManifest = (path, key, entry) => {
   const manifest = readManifest(path)
   manifest.routes[key] = { title: entry.title }
+  writeManifest(path, manifest)
+  return manifest
+}
+
+/**
+ * マニフェストを記録の全集合から作り直す（全再生成用）。既存の項目は破棄して置き換えるため、
+ * 削除されたページの項目は自動的に消える（派生物としての自己修復）。
+ * @param {string} path
+ * @param {{ key: string, title: string }[]} entries
+ * @returns {Manifest}
+ */
+export const rebuildManifest = (path, entries) => {
+  const routes = {}
+  for (const { key, title } of entries) routes[key] = { title }
+  const manifest = { routes }
   writeManifest(path, manifest)
   return manifest
 }
