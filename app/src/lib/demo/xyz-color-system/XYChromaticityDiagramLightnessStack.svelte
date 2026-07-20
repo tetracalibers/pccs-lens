@@ -42,7 +42,6 @@
   // ===== Stroke / サイズ =====
   const STROKE_WIDTH_ROD = 3 // 無彩色軸（白色点を貫く棒）の太さ
   const STROKE_WIDTH_OUTLINE = 1.2 // 各層の輪郭線の太さ
-  const WHITE_DOT_RADIUS = 5 // 白色点の半径
 
   // ===== ラベル =====
   const FONT_SIZE_LABEL = 24
@@ -245,7 +244,7 @@
     return c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055
   }
 
-  function xyToRGB(x: number, y: number): string {
+  function xyToRGB255(x: number, y: number): [number, number, number] {
     const X = x / y
     const Y = 1
     const Z = (1 - x - y) / y
@@ -265,9 +264,15 @@
       b /= max
     }
 
-    const ri = Math.round(gammaEncode(r) * 255)
-    const gi = Math.round(gammaEncode(g) * 255)
-    const bi = Math.round(gammaEncode(b) * 255)
+    return [
+      Math.round(gammaEncode(r) * 255),
+      Math.round(gammaEncode(g) * 255),
+      Math.round(gammaEncode(b) * 255)
+    ]
+  }
+
+  function xyToRGB(x: number, y: number): string {
+    const [ri, gi, bi] = xyToRGB255(x, y)
     return `rgb(${ri}, ${gi}, ${bi})`
   }
 
@@ -339,13 +344,16 @@
   const projY = (x: number, y: number, layer: number): number =>
     layer * LAYER_GAP + (x / XMAX) * XAXIS_VEC_Y + (y / YMAX) * YAXIS_VEC_Y
 
+  // 各層の明るさ（最上層 = 1.0 → 最下層 = B_MIN）
+  const layerBrightness = (index: number): number => 1 - (index / (N_LAYERS - 1)) * (1 - B_MIN)
+
   interface Layer {
     index: number
     matrix: string
     overlay: number // 暗くするための黒の不透明度（最上層は 0）
   }
   const layers: Layer[] = Array.from({ length: N_LAYERS }, (_, index) => {
-    const brightness = 1 - (index / (N_LAYERS - 1)) * (1 - B_MIN)
+    const brightness = layerBrightness(index)
     const f = index * LAYER_GAP + YAXIS_VEC_Y
     return {
       index,
@@ -354,12 +362,8 @@
     }
   })
 
-  // ===== 各層の白色点（無彩色軸が貫く点） =====
+  // ===== 無彩色軸が貫く白色点の画面 x（軸・ラベルの配置に使う） =====
   const whitePointX = projX(WHITE_X, WHITE_Y)
-  const whitePoints = Array.from({ length: N_LAYERS }, (_, index) => ({
-    x: whitePointX,
-    y: projY(WHITE_X, WHITE_Y, index)
-  }))
 
   // ===== 無彩色軸のうち「白色点より上」を前面に描くセグメント =====
   // 各層で白色点から少し上まで棒を前面に重ね、色度図を貫いて見せる。
@@ -532,11 +536,6 @@
       stroke-width={STROKE_WIDTH_ROD}
       stroke-linecap="round"
     />
-  {/each}
-
-  <!-- 各層の白色点（無彩色軸が貫く点・縁取りなし） -->
-  {#each whitePoints as wp, i (i)}
-    <circle cx={wp.x} cy={wp.y} r={WHITE_DOT_RADIUS} fill={COL_AXIS} />
   {/each}
 
   <!-- 座標軸ラベル -->
