@@ -70,7 +70,7 @@
 - [x] `/color-theory/medieval-european-colors`
 - [x] `/color-theory/modern-european-colors`
 - [x] `/color-theory/munsell-color-system`
-- [ ] `/color-theory/natural-harmony`
+- [x] `/color-theory/natural-harmony`
 - [x] `/color-theory/opponent-color-response`
 - [x] `/color-theory/pccs-basics`
 - [x] `/color-theory/pccs-color-system`

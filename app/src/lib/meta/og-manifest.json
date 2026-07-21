@@ -252,6 +252,9 @@
     "color-theory/munsell-color-system": {
       "title": "マンセル表色系"
     },
+    "color-theory/natural-harmony": {
+      "title": "ナチュラルハーモニー"
+    },
     "color-theory/opponent-color-response": {
       "title": "反対色応答と色の識別"
     },
