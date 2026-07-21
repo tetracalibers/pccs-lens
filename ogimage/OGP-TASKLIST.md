@@ -69,7 +69,7 @@
 - [x] `/color-theory/light-path-through-the-retina`
 - [x] `/color-theory/medieval-european-colors`
 - [x] `/color-theory/modern-european-colors`
-- [ ] `/color-theory/munsell-color-system`
+- [x] `/color-theory/munsell-color-system`
 - [ ] `/color-theory/natural-harmony`
 - [ ] `/color-theory/opponent-color-response`
 - [x] `/color-theory/pccs-basics`

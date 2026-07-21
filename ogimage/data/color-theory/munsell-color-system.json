@@ -1,0 +1,12 @@
+{
+  "route": "color-theory/munsell-color-system",
+  "title": "マンセル表色系",
+  "titleLines": [
+    "マンセル表色系"
+  ],
+  "crumbs": [
+    "色の理論",
+    "色の表し方"
+  ],
+  "figure": "assets/color-theory/munsell-color-system/figure.png"
+}

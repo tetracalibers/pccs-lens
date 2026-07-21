@@ -219,6 +219,9 @@
     "color-theory/modern-european-colors": {
       "title": "近代ヨーロッパの色彩"
     },
+    "color-theory/munsell-color-system": {
+      "title": "マンセル表色系"
+    },
     "color-theory/pccs-basics": {
       "title": "PCCSと色の分類"
     },
