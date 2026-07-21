@@ -65,7 +65,7 @@
 - [x] `/color-theory/hue-tone-difference`
 - [ ] `/color-theory/illuminance-and-lighting-design`
 - [ ] `/color-theory/lamp-types`
-- [ ] `/color-theory/light-components-and-reflectance`
+- [x] `/color-theory/light-components-and-reflectance`
 - [x] `/color-theory/light-path-through-the-retina`
 - [x] `/color-theory/medieval-european-colors`
 - [x] `/color-theory/modern-european-colors`
