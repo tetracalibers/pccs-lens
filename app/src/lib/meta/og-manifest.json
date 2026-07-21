@@ -162,6 +162,9 @@
     "color-theory": {
       "title": "色の理論"
     },
+    "color-theory/basic-color-terms": {
+      "title": "基本色彩語"
+    },
     "color-theory/color-mixing-basics": {
       "title": "加法混色と減法混色"
     },

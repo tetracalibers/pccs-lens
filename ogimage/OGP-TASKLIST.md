@@ -37,7 +37,7 @@
 - [ ] `/color-theory/additive-color-mixing-types`
 - [ ] `/color-theory/adjacent-color-influence`
 - [ ] `/color-theory/ancient-european-colors`
-- [ ] `/color-theory/basic-color-terms`
+- [x] `/color-theory/basic-color-terms`
 - [ ] `/color-theory/bicolor-and-tricolor`
 - [ ] `/color-theory/brightness-sensitivity-and-adaptation`
 - [ ] `/color-theory/camaieu-and-faux-camaieu`
