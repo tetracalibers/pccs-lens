@@ -41,7 +41,7 @@
 - [x] `/color-theory/bicolor-and-tricolor`
 - [x] `/color-theory/brightness-sensitivity-and-adaptation`
 - [x] `/color-theory/camaieu-and-faux-camaieu`
-- [ ] `/color-theory/color-area-proportion`
+- [x] `/color-theory/color-area-proportion`
 - [x] `/color-theory/color-association-symbolism`
 - [ ] `/color-theory/color-contrast`
 - [x] `/color-theory/color-matching-and-grassmanns-law`

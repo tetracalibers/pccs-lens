@@ -1,0 +1,13 @@
+{
+  "route": "color-theory/color-area-proportion",
+  "title": "色の面積比による配色",
+  "titleLines": [
+    "色の面積比",
+    "による配色"
+  ],
+  "crumbs": [
+    "色の理論",
+    "配色と色彩調和"
+  ],
+  "figure": "assets/color-theory/color-area-proportion/figure.png"
+}
