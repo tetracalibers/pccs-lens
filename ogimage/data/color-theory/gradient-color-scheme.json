@@ -1,0 +1,12 @@
+{
+  "route": "color-theory/gradient-color-scheme",
+  "title": "グラデーション",
+  "titleLines": [
+    "グラデーション"
+  ],
+  "crumbs": [
+    "色の理論",
+    "配色と色彩調和"
+  ],
+  "figure": "assets/color-theory/gradient-color-scheme/figure.png"
+}
