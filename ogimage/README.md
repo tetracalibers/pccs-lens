@@ -93,6 +93,7 @@ node ogimage/regenerate.mjs '/color-theory/*'
 - **生成時に ImageMagick 7（`magick`）が必要**（例: `brew install imagemagick`）。未導入で `knockoutWhite: true` を使うと明確なエラーで停止する。
 - PNG 図版のみ対応（jpg/svg/webp に付けるとエラー）。
 - `magickFuzz`（既定 `"5%"`）でアンチエイリアスや微妙な off-white の吸収量＝縁の抜け具合を調整する。
+- 透過後は `-trim` で外周の余白を切り詰める（図版が埋め込みスロットいっぱいに収まる）。
 
 ### オプション
 

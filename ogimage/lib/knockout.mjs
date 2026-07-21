@@ -3,6 +3,7 @@
 // nested-fig で白背景の図版をそのまま埋め込むと、装飾背景の上に白い「箱」として浮く。
 // 埋め込み前に ImageMagick 7（`magick`）の flood-fill で外周から繋がった白だけを透過し、
 // 装飾背景に馴染ませる。内部で囲まれた白（白抜き文字・白い塗り）は flood が届かず残る（意図通り）。
+// 透過後は -trim で外周の（透明になった）余白を切り詰め、図版をスロットいっぱいに使う。
 //
 // 生成時のローカル処理専用。得た透過 PNG が data/assets へ永続コピーされるので、regenerate は
 // 保存済み透過アセットをそのまま使い magick を再実行しない（CI・regenerate は magick 非依存）。
@@ -42,7 +43,8 @@ export const knockoutWhiteBackground = (srcAbsPath, magickFuzz) => {
   const outPath = join(dir, "figure.png")
 
   // 外周に白 1px を足して -floodfill +0+0 の種を必ず白にし（角まで描かれた図版でも背景から flood できる）、
-  // 背景に繋がった白のみ透過してから、足した枠を除去する。
+  // 背景に繋がった白のみ透過してから、足した枠を除去する。最後に -trim +repage で
+  // 透明になった外周余白を切り詰める（+repage で仮想キャンバスのオフセットを消す）。
   const args = [
     srcAbsPath,
     "-bordercolor",
@@ -62,6 +64,8 @@ export const knockoutWhiteBackground = (srcAbsPath, magickFuzz) => {
     "white",
     "-shave",
     "1x1",
+    "-trim",
+    "+repage",
     outPath
   ]
 
