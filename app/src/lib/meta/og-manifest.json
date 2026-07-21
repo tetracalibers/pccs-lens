@@ -3,6 +3,9 @@
     "cg/3d-reconstruction": {
       "title": "画像からの3次元復元"
     },
+    "color-theory/color-mixing-basics": {
+      "title": "加法混色と減法混色"
+    },
     "concept": {
       "title": "このサイトの歩き方"
     }

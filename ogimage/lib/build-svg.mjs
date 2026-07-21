@@ -56,7 +56,10 @@ export const LAYOUT = {
       letterSpacing: -0.8,
       minFontSize: 40
     },
-    figure: { x: 772, y: 190, width: 340, height: 340 }
+    // 下辺をロゴ「Color Prism」のベースライン（テンプレートの y=572）に揃える。
+    // height を保ったまま y = 572 - height としてボックス下辺を 572 に合わせ、
+    // buildFigure 側で xMidYMax（下寄せ）にして実画像の下辺＝ボックス下辺にする。
+    figure: { x: 772, y: 232, width: 340, height: 340 }
   }
 }
 
@@ -117,7 +120,7 @@ const buildFigure = (figurePath, cfg) => {
   const href = `data:${mime};base64,${base64}`
   return (
     `<image x="${cfg.x}" y="${cfg.y}" width="${cfg.width}" height="${cfg.height}"` +
-    ` href="${href}" preserveAspectRatio="xMidYMid meet"></image>`
+    ` href="${href}" preserveAspectRatio="xMidYMax meet"></image>`
   )
 }
 

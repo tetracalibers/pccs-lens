@@ -45,7 +45,7 @@
 - [ ] `/color-theory/color-association-symbolism`
 - [ ] `/color-theory/color-contrast`
 - [ ] `/color-theory/color-matching-and-grassmanns-law`
-- [ ] `/color-theory/color-mixing-basics`
+- [x] `/color-theory/color-mixing-basics`
 - [ ] `/color-theory/color-name-types`
 - [ ] `/color-theory/color-roles`
 - [ ] `/color-theory/color-sensations`
