@@ -1,0 +1,13 @@
+{
+  "route": "color-theory/real-world-color-mixing",
+  "title": "実世界でみられる混色",
+  "titleLines": [
+    "実世界で",
+    "みられる混色"
+  ],
+  "crumbs": [
+    "色の理論",
+    "色の作り方と色再現"
+  ],
+  "figure": "assets/color-theory/real-world-color-mixing/figure.png"
+}

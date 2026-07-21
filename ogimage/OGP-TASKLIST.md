@@ -77,7 +77,7 @@
 - [x] `/color-theory/photometric-and-radiometric-quantities`
 - [x] `/color-theory/photoreceptor-types-and-distribution`
 - [x] `/color-theory/psychological-scaling-method`
-- [ ] `/color-theory/real-world-color-mixing`
+- [x] `/color-theory/real-world-color-mixing`
 - [x] `/color-theory/rgb-color-system`
 - [ ] `/color-theory/subjective-color`
 - [ ] `/color-theory/tonal-color-scheme`
