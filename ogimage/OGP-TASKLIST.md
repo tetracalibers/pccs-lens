@@ -72,7 +72,7 @@
 - [ ] `/color-theory/munsell-color-system`
 - [ ] `/color-theory/natural-harmony`
 - [ ] `/color-theory/opponent-color-response`
-- [ ] `/color-theory/pccs-basics`
+- [x] `/color-theory/pccs-basics`
 - [ ] `/color-theory/pccs-color-system`
 - [x] `/color-theory/photometric-and-radiometric-quantities`
 - [ ] `/color-theory/photoreceptor-types-and-distribution`
