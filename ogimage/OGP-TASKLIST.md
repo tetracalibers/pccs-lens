@@ -61,7 +61,7 @@
 - [x] `/color-theory/eye-structure`
 - [ ] `/color-theory/gradient-color-scheme`
 - [x] `/color-theory/how-color-works`
-- [ ] `/color-theory/how-to-draw-pccs-color-wheel`
+- [x] `/color-theory/how-to-draw-pccs-color-wheel`
 - [ ] `/color-theory/hue-tone-difference`
 - [ ] `/color-theory/illuminance-and-lighting-design`
 - [ ] `/color-theory/lamp-types`
