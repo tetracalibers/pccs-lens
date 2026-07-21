@@ -21,11 +21,44 @@
     "cg/basics/anti-aliasing": {
       "title": "画像生成時のアンチエイリアシング"
     },
+    "cg/basics/area-filling": {
+      "title": "塗りつぶし処理"
+    },
+    "cg/basics/camera-capture-and-cg": {
+      "title": "カメラでの撮影とCG"
+    },
+    "cg/basics/cg-and-image-processing": {
+      "title": "CGと画像処理"
+    },
+    "cg/basics/gradient-generation": {
+      "title": "グラデーション生成"
+    },
+    "cg/basics/grayscale-and-color-images": {
+      "title": "カラー画像とデータ量"
+    },
+    "cg/basics/image-digitization": {
+      "title": "画像のデジタル化"
+    },
+    "cg/basics/image-quantization": {
+      "title": "画像の量子化"
+    },
+    "cg/basics/image-sampling": {
+      "title": "画像の標本化"
+    },
+    "cg/basics/shape-rasterization": {
+      "title": "ラスタ化による図形の描画"
+    },
+    "cg/basics/vector-and-raster": {
+      "title": "ベクタ表現とラスタ表現"
+    },
     "cg/binary-image": {
       "title": "2値画像処理"
     },
     "cg/camera": {
       "title": "画像の撮影とカメラモデル"
+    },
+    "cg/camera/digital-camera-structure": {
+      "title": "デジタルカメラの構成"
     },
     "cg/deep-learning": {
       "title": "深層学習による認識と生成"
@@ -47,6 +80,9 @@
     },
     "cg/image-properties": {
       "title": "画像の性質と色"
+    },
+    "cg/image-properties/dynamic-range-and-gradation": {
+      "title": "画像のダイナミックレンジと階調"
     },
     "cg/ip-rights": {
       "title": "知的財産権"
@@ -86,6 +122,21 @@
     },
     "cg/transformation": {
       "title": "座標や図形の変換"
+    },
+    "cg/transformation/affine-and-projective-transformation": {
+      "title": "アフィン変換と射影変換"
+    },
+    "cg/transformation/basic-transformations": {
+      "title": "基本的な変換と同次座標"
+    },
+    "cg/transformation/coordinate-systems": {
+      "title": "座標系"
+    },
+    "cg/transformation/reflection-and-skew": {
+      "title": "鏡映とスキュー"
+    },
+    "cg/transformation/transformation-composition": {
+      "title": "変換の合成と順序"
     },
     "cg/video": {
       "title": "動画像処理"

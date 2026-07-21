@@ -126,23 +126,23 @@
 ## CGと画像処理（nested） — 記事
 
 - [x] `/cg/basics/anti-aliasing`
-- [ ] `/cg/basics/area-filling`
-- [ ] `/cg/basics/camera-capture-and-cg`
-- [ ] `/cg/basics/cg-and-image-processing`
-- [ ] `/cg/basics/gradient-generation`
-- [ ] `/cg/basics/grayscale-and-color-images`
-- [ ] `/cg/basics/image-digitization`
-- [ ] `/cg/basics/image-quantization`
-- [ ] `/cg/basics/image-sampling`
-- [ ] `/cg/basics/shape-rasterization`
-- [ ] `/cg/basics/vector-and-raster`
-- [ ] `/cg/camera/digital-camera-structure`
-- [ ] `/cg/image-properties/dynamic-range-and-gradation`
-- [ ] `/cg/transformation/affine-and-projective-transformation`
-- [ ] `/cg/transformation/basic-transformations`
-- [ ] `/cg/transformation/coordinate-systems`
-- [ ] `/cg/transformation/reflection-and-skew`
-- [ ] `/cg/transformation/transformation-composition`
+- [x] `/cg/basics/area-filling`
+- [x] `/cg/basics/camera-capture-and-cg`
+- [x] `/cg/basics/cg-and-image-processing`
+- [x] `/cg/basics/gradient-generation`
+- [x] `/cg/basics/grayscale-and-color-images`
+- [x] `/cg/basics/image-digitization`
+- [x] `/cg/basics/image-quantization`
+- [x] `/cg/basics/image-sampling`
+- [x] `/cg/basics/shape-rasterization`
+- [x] `/cg/basics/vector-and-raster`
+- [x] `/cg/camera/digital-camera-structure`
+- [x] `/cg/image-properties/dynamic-range-and-gradation`
+- [x] `/cg/transformation/affine-and-projective-transformation`
+- [x] `/cg/transformation/basic-transformations`
+- [x] `/cg/transformation/coordinate-systems`
+- [x] `/cg/transformation/reflection-and-skew`
+- [x] `/cg/transformation/transformation-composition`
 
 ## 慣用色名マップ（nested-fig） — 色系統ごと ※図版が必要
 
