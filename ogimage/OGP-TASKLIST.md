@@ -75,7 +75,7 @@
 - [x] `/color-theory/pccs-basics`
 - [x] `/color-theory/pccs-color-system`
 - [x] `/color-theory/photometric-and-radiometric-quantities`
-- [ ] `/color-theory/photoreceptor-types-and-distribution`
+- [x] `/color-theory/photoreceptor-types-and-distribution`
 - [x] `/color-theory/psychological-scaling-method`
 - [ ] `/color-theory/real-world-color-mixing`
 - [x] `/color-theory/rgb-color-system`
