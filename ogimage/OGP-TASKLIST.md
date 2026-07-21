@@ -63,7 +63,7 @@
 - [x] `/color-theory/how-color-works`
 - [x] `/color-theory/how-to-draw-pccs-color-wheel`
 - [x] `/color-theory/hue-tone-difference`
-- [ ] `/color-theory/illuminance-and-lighting-design`
+- [x] `/color-theory/illuminance-and-lighting-design`
 - [ ] `/color-theory/lamp-types`
 - [x] `/color-theory/light-components-and-reflectance`
 - [x] `/color-theory/light-path-through-the-retina`
