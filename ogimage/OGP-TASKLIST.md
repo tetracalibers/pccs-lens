@@ -147,7 +147,7 @@
 ## 慣用色名マップ（nested-fig） — 色系統ごと ※図版が必要
 
 - [ ] `/jis-color-map/red`
-- [ ] `/jis-color-map/brown`
+- [x] `/jis-color-map/brown`
 - [ ] `/jis-color-map/yellow`
 - [ ] `/jis-color-map/green`
 - [x] `/jis-color-map/blue`
