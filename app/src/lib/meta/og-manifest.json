@@ -273,6 +273,9 @@
     "color-theory/rgb-color-system": {
       "title": "RGB表色系"
     },
+    "color-theory/tonal-color-scheme": {
+      "title": "トーナル配色"
+    },
     "color-theory/unity-and-variety": {
       "title": "統一と変化の調和"
     },

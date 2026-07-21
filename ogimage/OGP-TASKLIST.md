@@ -80,7 +80,7 @@
 - [x] `/color-theory/real-world-color-mixing`
 - [x] `/color-theory/rgb-color-system`
 - [ ] `/color-theory/subjective-color`
-- [ ] `/color-theory/tonal-color-scheme`
+- [x] `/color-theory/tonal-color-scheme`
 - [x] `/color-theory/unity-and-variety`
 - [ ] `/color-theory/visual-clarity-and-visibility`
 - [x] `/color-theory/what-is-lighting`
