@@ -66,7 +66,7 @@
 - [ ] `/color-theory/illuminance-and-lighting-design`
 - [ ] `/color-theory/lamp-types`
 - [ ] `/color-theory/light-components-and-reflectance`
-- [ ] `/color-theory/light-path-through-the-retina`
+- [x] `/color-theory/light-path-through-the-retina`
 - [ ] `/color-theory/medieval-european-colors`
 - [ ] `/color-theory/modern-european-colors`
 - [ ] `/color-theory/munsell-color-system`
