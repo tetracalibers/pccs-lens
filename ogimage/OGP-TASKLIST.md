@@ -159,7 +159,7 @@
 - [x] `/patterns/elegant`
 - [x] `/patterns/casual`
 - [x] `/patterns/classic`
-- [ ] `/patterns/clear`
+- [x] `/patterns/clear`
 - [ ] `/patterns/chic`
 - [ ] `/patterns/dynamic`
 - [ ] `/patterns/warm-natural`

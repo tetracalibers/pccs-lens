@@ -321,6 +321,9 @@
     "patterns/classic": {
       "title": "クラシック"
     },
+    "patterns/clear": {
+      "title": "クリア"
+    },
     "patterns/elegant": {
       "title": "エレガント"
     }

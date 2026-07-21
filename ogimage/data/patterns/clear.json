@@ -1,0 +1,11 @@
+{
+  "route": "patterns/clear",
+  "title": "クリア",
+  "titleLines": [
+    "クリア"
+  ],
+  "crumbs": [
+    "配色シミュレータ"
+  ],
+  "figure": "assets/patterns/clear/figure.png"
+}
