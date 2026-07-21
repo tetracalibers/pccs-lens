@@ -297,6 +297,9 @@
     "color-theory/rgb-color-system": {
       "title": "RGB表色系"
     },
+    "color-theory/subjective-color": {
+      "title": "主観色"
+    },
     "color-theory/tonal-color-scheme": {
       "title": "トーナル配色"
     },
