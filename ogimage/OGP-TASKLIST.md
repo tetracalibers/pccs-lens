@@ -53,7 +53,7 @@
 - [x] `/color-theory/color-three-attributes`
 - [x] `/color-theory/color-vision-characteristics`
 - [x] `/color-theory/color-vision-theories`
-- [ ] `/color-theory/color-wheel-and-color-solid`
+- [x] `/color-theory/color-wheel-and-color-solid`
 - [ ] `/color-theory/color-wheel-based-color-schemes`
 - [ ] `/color-theory/contrast-phenomena`
 - [ ] `/color-theory/dominant-and-tone-on-tone`
