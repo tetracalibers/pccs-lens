@@ -234,6 +234,9 @@
     "color-theory/munsell-color-system": {
       "title": "マンセル表色系"
     },
+    "color-theory/opponent-color-response": {
+      "title": "反対色応答と色の識別"
+    },
     "color-theory/pccs-basics": {
       "title": "PCCSと色の分類"
     },
