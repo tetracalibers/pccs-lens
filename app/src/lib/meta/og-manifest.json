@@ -327,6 +327,9 @@
     "patterns/clear": {
       "title": "クリア"
     },
+    "patterns/dynamic": {
+      "title": "ダイナミック"
+    },
     "patterns/elegant": {
       "title": "エレガント"
     }
