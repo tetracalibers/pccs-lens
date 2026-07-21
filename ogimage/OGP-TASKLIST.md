@@ -48,7 +48,7 @@
 - [x] `/color-theory/color-mixing-basics`
 - [x] `/color-theory/color-name-types`
 - [x] `/color-theory/color-roles`
-- [ ] `/color-theory/color-sensations`
+- [x] `/color-theory/color-sensations`
 - [x] `/color-theory/color-system-types`
 - [x] `/color-theory/color-three-attributes`
 - [x] `/color-theory/color-vision-characteristics`
