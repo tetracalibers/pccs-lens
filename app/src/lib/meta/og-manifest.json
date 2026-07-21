@@ -1,16 +1,37 @@
 {
   "routes": {
+    "analyze": {
+      "title": "PCCSによる配色の分析"
+    },
+    "approximate": {
+      "title": "色のPCCS近似"
+    },
+    "cg": {
+      "title": "CGと画像処理"
+    },
     "cg/3d-reconstruction": {
       "title": "画像からの3次元復元"
     },
     "cg/basics/anti-aliasing": {
       "title": "画像生成時のアンチエイリアシング"
     },
+    "color-fields": {
+      "title": "色の活用分野"
+    },
+    "color-theory": {
+      "title": "色の理論"
+    },
     "color-theory/color-mixing-basics": {
       "title": "加法混色と減法混色"
     },
     "concept": {
       "title": "このサイトの歩き方"
+    },
+    "jis-color-map": {
+      "title": "慣用色名マップ"
+    },
+    "patterns": {
+      "title": "配色シミュレータ"
     }
   }
 }

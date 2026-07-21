@@ -17,14 +17,14 @@
 ## 単体・一覧ページ（title-only）
 
 - [x] `/concept`
-- [ ] `/color-theory`
-- [ ] `/color-fields`
-- [ ] `/jis-color-map`
-- [ ] `/cg`
-- [ ] `/patterns`
+- [x] `/color-theory`
+- [x] `/color-fields`
+- [x] `/jis-color-map`
+- [x] `/cg`
+- [x] `/patterns`
 - [ ] `/jis-color-map/all`
-- [ ] `/approximate`
-- [ ] `/analyze`
+- [x] `/approximate`
+- [x] `/analyze`
 
 ## ゲーム（title-only）
 
