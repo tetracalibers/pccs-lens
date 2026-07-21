@@ -35,7 +35,7 @@ export const LAYOUT = {
     crumbs: { x: 96, y: 112, fontSize: 32, gap: 14 },
     title: {
       x: 96,
-      baseline: 360,
+      baseline: 335,
       anchor: "start",
       fontSize: 90,
       maxWidth: 1008,
