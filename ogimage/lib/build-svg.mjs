@@ -26,7 +26,7 @@ export const LAYOUT = {
       anchor: "middle",
       fontSize: 90,
       maxWidth: 1040,
-      lineHeightRatio: 1.12,
+      lineHeightRatio: 1.22,
       letterSpacing: -1.1,
       minFontSize: 52
     }
