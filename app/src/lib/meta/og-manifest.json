@@ -314,6 +314,9 @@
     },
     "patterns": {
       "title": "配色シミュレータ"
+    },
+    "patterns/elegant": {
+      "title": "エレガント"
     }
   }
 }
