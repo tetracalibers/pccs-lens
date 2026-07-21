@@ -60,7 +60,7 @@
 - [ ] `/color-theory/electromagnetic-waves`
 - [ ] `/color-theory/eye-structure`
 - [ ] `/color-theory/gradient-color-scheme`
-- [ ] `/color-theory/how-color-works`
+- [x] `/color-theory/how-color-works`
 - [ ] `/color-theory/how-to-draw-pccs-color-wheel`
 - [ ] `/color-theory/hue-tone-difference`
 - [ ] `/color-theory/illuminance-and-lighting-design`
