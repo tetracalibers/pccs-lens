@@ -336,6 +336,9 @@
     "patterns/fresh-natural": {
       "title": "フレッシュナチュラル"
     },
+    "patterns/modern": {
+      "title": "モダン"
+    },
     "patterns/warm-natural": {
       "title": "ウォームナチュラル"
     }

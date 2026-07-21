@@ -164,5 +164,5 @@
 - [x] `/patterns/dynamic`
 - [x] `/patterns/warm-natural`
 - [x] `/patterns/fresh-natural`
-- [ ] `/patterns/modern`
+- [x] `/patterns/modern`
 - [ ] `/patterns/romantic`
