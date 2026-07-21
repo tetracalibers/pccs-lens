@@ -1,0 +1,10 @@
+{
+  "route": "cg/editing",
+  "title": "画像の編集と合成",
+  "titleLines": [
+    "画像の編集と合成"
+  ],
+  "crumbs": [
+    "CGと画像処理"
+  ]
+}

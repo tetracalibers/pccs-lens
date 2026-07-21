@@ -1,0 +1,11 @@
+{
+  "route": "cg/transformation/affine-and-projective-transformation",
+  "title": "アフィン変換と射影変換",
+  "titleLines": [
+    "アフィン変換と射影変換"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "座標や図形の変換"
+  ]
+}

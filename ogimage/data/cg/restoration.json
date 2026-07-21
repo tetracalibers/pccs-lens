@@ -1,0 +1,10 @@
+{
+  "route": "cg/restoration",
+  "title": "画像の復元と生成",
+  "titleLines": [
+    "画像の復元と生成"
+  ],
+  "crumbs": [
+    "CGと画像処理"
+  ]
+}

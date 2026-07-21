@@ -1,0 +1,11 @@
+{
+  "route": "cg/basics/image-digitization",
+  "title": "画像のデジタル化",
+  "titleLines": [
+    "画像のデジタル化"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "デジタル画像の基本"
+  ]
+}

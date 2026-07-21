@@ -1,0 +1,13 @@
+{
+  "route": "color-theory/hue-tone-difference",
+  "title": "色相差とトーン差による配色",
+  "titleLines": [
+    "色相差とトーン差",
+    "による配色"
+  ],
+  "crumbs": [
+    "色の理論",
+    "配色と色彩調和"
+  ],
+  "figure": "assets/color-theory/hue-tone-difference/figure.png"
+}

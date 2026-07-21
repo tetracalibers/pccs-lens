@@ -1,0 +1,12 @@
+{
+  "route": "color-theory/xyz-color-system",
+  "title": "XYZ表色系",
+  "titleLines": [
+    "XYZ表色系"
+  ],
+  "crumbs": [
+    "色の理論",
+    "色の作り方と色再現"
+  ],
+  "figure": "assets/color-theory/xyz-color-system/figure.png"
+}

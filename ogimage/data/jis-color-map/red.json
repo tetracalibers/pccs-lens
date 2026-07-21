@@ -1,0 +1,12 @@
+{
+  "route": "jis-color-map/red",
+  "title": "赤系の慣用色名マップ",
+  "titleLines": [
+    "赤系の",
+    "慣用色名マップ"
+  ],
+  "crumbs": [
+    "慣用色名マップ"
+  ],
+  "figure": "assets/jis-color-map/red/figure.png"
+}

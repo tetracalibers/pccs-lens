@@ -1,0 +1,13 @@
+{
+  "route": "color-theory/pccs-color-system",
+  "title": "PCCSによる色表示",
+  "titleLines": [
+    "PCCSによる",
+    "色表示"
+  ],
+  "crumbs": [
+    "色の理論",
+    "色の表し方"
+  ],
+  "figure": "assets/color-theory/pccs-color-system/figure.png"
+}

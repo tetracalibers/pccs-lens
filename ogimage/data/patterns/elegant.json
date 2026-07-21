@@ -1,0 +1,11 @@
+{
+  "route": "patterns/elegant",
+  "title": "エレガント",
+  "titleLines": [
+    "エレガント"
+  ],
+  "crumbs": [
+    "配色シミュレータ"
+  ],
+  "figure": "assets/patterns/elegant/figure.png"
+}

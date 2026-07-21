@@ -1,0 +1,12 @@
+{
+  "route": "color-theory/color-mixing-basics",
+  "title": "加法混色と減法混色",
+  "titleLines": [
+    "加法混色と減法混色"
+  ],
+  "crumbs": [
+    "色の理論",
+    "色の作り方と色再現"
+  ],
+  "figure": "assets/color-theory/color-mixing-basics/figure.png"
+}
