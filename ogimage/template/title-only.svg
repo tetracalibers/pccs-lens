@@ -34,12 +34,16 @@
 
     <!--TITLE-->
 
-    <g>
-      <circle cx="540" cy="378" r="8" fill="#ff6b6b"></circle><circle cx="570" cy="378" r="8" fill="#ffd93d"></circle>
-      <circle cx="600" cy="378" r="8" fill="#6bcb77"></circle><circle cx="630" cy="378" r="8" fill="#4d96ff"></circle>
-      <circle cx="660" cy="378" r="8" fill="#c77dff"></circle>
-    </g>
+    <!-- フッター（ドット＋ロゴ）。タイトルが複数行のとき FOOTER_DY だけ下へ平行移動し、
+         文字下端↔ドット・ドット↔ロゴの間隔を 1 行時と同じに保つ（タイトルは中央揃えのまま）。 -->
+    <g transform="translate(0, {{FOOTER_DY}})">
+      <g>
+        <circle cx="540" cy="378" r="8" fill="#ff6b6b"></circle><circle cx="570" cy="378" r="8" fill="#ffd93d"></circle>
+        <circle cx="600" cy="378" r="8" fill="#6bcb77"></circle><circle cx="630" cy="378" r="8" fill="#4d96ff"></circle>
+        <circle cx="660" cy="378" r="8" fill="#c77dff"></circle>
+      </g>
 
-    <text font-family="SUSE Mono" x="600" y="470" text-anchor="middle" font-size="45" font-weight="500" letter-spacing="-1" fill="#1a1a1a">Color <tspan fill="url(#prism)">Prism</tspan></text>
+      <text font-family="SUSE Mono" x="600" y="470" text-anchor="middle" font-size="45" font-weight="500" letter-spacing="-1" fill="#1a1a1a">Color <tspan fill="url(#prism)">Prism</tspan></text>
+    </g>
   </g>
 </svg>

@@ -153,5 +153,15 @@ export const fillTemplate = (template, variation, content) => {
     )
   }
 
+  // title-only: タイトルが複数行のとき、フッター（ドット＋ロゴ）を最終行の下がり幅ぶん平行移動する。
+  // タイトルは中央揃えのままなので、最終行は baseline より (baselines[last]-baseline) だけ下がる。
+  // その同量ぶんフッターも下げると、文字下端↔ドットの間隔が 1 行時と一致し、全体の縦バランスも保てる。
+  if (svg.includes("{{FOOTER_DY}}")) {
+    const lines = content.titleLines ?? []
+    const { baselines } = layoutLines(lines, layout.title)
+    const dy = baselines.length > 0 ? round(baselines[baselines.length - 1] - layout.title.baseline) : 0
+    svg = svg.replaceAll("{{FOOTER_DY}}", String(dy))
+  }
+
   return svg
 }
