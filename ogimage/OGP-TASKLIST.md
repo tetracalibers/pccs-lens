@@ -157,7 +157,7 @@
 ## 配色シミュレータ（nested-fig） — テーマごと ※図版が必要
 
 - [x] `/patterns/elegant`
-- [ ] `/patterns/casual`
+- [x] `/patterns/casual`
 - [ ] `/patterns/classic`
 - [ ] `/patterns/clear`
 - [ ] `/patterns/chic`
