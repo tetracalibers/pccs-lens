@@ -16,6 +16,8 @@ npm install      # @resvg/resvg-js, picomatch, wawoff2
 npm run fonts    # Google Fonts / OFL からフォント実体を fonts/ に取得
 ```
 
+> **任意**: 図版の白背景を透過する `knockoutWhite` オプション（後述）を使う場合のみ、**生成時のローカル依存**として ImageMagick 7（`magick`）が要る（例: `brew install imagemagick`）。使わなければ不要。一括再生成（`regenerate`）・CI は ImageMagick 非依存。
+
 `npm run fonts` が取得するフォント（すべて OFL）:
 
 - **Zen Kaku Gothic New** 500/700 … 日本語（500=タグライン/crumb 日本語部分、700=タイトル）。完全版の静的 TTF を google/fonts ミラーから取得（css2 の subset だと日本語カバレッジが欠けるため）。
@@ -70,17 +72,27 @@ node ogimage/regenerate.mjs '/color-theory/*'
 
 ### JSON（1 件）
 
-| フィールド   | 必須                   | 説明                                                                                                                             |
-| ------------ | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `variation`  | ○                      | `default` / `title-only` / `nested` / `nested-fig`                                                                               |
-| `route`      | ○（default 以外）      | マニフェスト用キー & 出力パス算出（例: `color-theory/pccs-basics`）                                                              |
-| `title`      | ○（default 以外）      | og:title 用の完全なタイトル（改行なし・サイト名サフィックス無し）                                                                |
-| `titleLines` | ○（default 以外）      | 描画用の改行済みタイトル（1〜2 要素）                                                                                            |
-| `crumbs`     | ○（nested/nested-fig） | パンくずラベル配列（可変個）                                                                                                     |
-| `figure`     | ○（nested-fig）        | 図版画像のパス（実行時 cwd 基準。png/jpg/svg/webp）。`data/assets/<route>/figure.<ext>` へコピーされ、記録には永続パスが書かれる |
-| `out`        | 省略可                 | 出力先。省略時は `app/static/ogp/<route>.png`                                                                                    |
+| フィールド      | 必須                   | 説明                                                                                                                                                      |
+| --------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `variation`     | ○                      | `default` / `title-only` / `nested` / `nested-fig`                                                                                                        |
+| `route`         | ○（default 以外）      | マニフェスト用キー & 出力パス算出（例: `color-theory/pccs-basics`）                                                                                       |
+| `title`         | ○（default 以外）      | og:title 用の完全なタイトル（改行なし・サイト名サフィックス無し）                                                                                         |
+| `titleLines`    | ○（default 以外）      | 描画用の改行済みタイトル（1〜2 要素）                                                                                                                     |
+| `crumbs`        | ○（nested/nested-fig） | パンくずラベル配列（可変個）                                                                                                                              |
+| `figure`        | ○（nested-fig）        | 図版画像のパス（実行時 cwd 基準。png/jpg/svg/webp）。`data/assets/<route>/figure.<ext>` へコピーされ、記録には永続パスが書かれる                          |
+| `knockoutWhite` | 省略可                 | `true` で nested-fig の **PNG** 図版の「背景に繋がった白」を透過してから埋め込む（装飾背景に馴染ませる）。**生成時に ImageMagick が必要**。省略時 `false` |
+| `magickFuzz`    | 省略可                 | `knockoutWhite` 時の `-fuzz` 値（例 `"5%"`）。縁の抜け具合を調整。省略時 `"5%"`                                                                           |
+| `out`           | 省略可                 | 出力先。省略時は `app/static/ogp/<route>.png`                                                                                                             |
 
 配列 or `{ "items": [ ... ] }` を渡すと一括生成。`variation` が `default` 以外なら、生成のたびに記録 `data/<route>.json` が書かれる（title-only も書く。書かないと一括再生成のスイープから漏れるため）。
+
+#### 白背景のノックアウト（透過）
+
+白背景の図版を nested-fig にそのまま埋め込むと、装飾背景の上に白い「箱」として浮く。`knockoutWhite: true` を付けると、埋め込み前に ImageMagick の flood-fill で **背景に繋がった白だけ**を透過し、装飾背景に馴染ませる（内部で囲まれた白＝白抜き文字・白い塗りは残る）。透過した PNG を埋め込みつつ `data/assets/<route>/figure.png` にも永続コピーするので、**記録には透過フラグを持たせない**。一括再生成（`regenerate`）は保存済みの透過アセットをそのまま使い ImageMagick を再実行しない（**regenerate・CI は ImageMagick 非依存**）。
+
+- **生成時に ImageMagick 7（`magick`）が必要**（例: `brew install imagemagick`）。未導入で `knockoutWhite: true` を使うと明確なエラーで停止する。
+- PNG 図版のみ対応（jpg/svg/webp に付けるとエラー）。
+- `magickFuzz`（既定 `"5%"`）でアンチエイリアスや微妙な off-white の吸収量＝縁の抜け具合を調整する。
 
 ### オプション
 
@@ -103,6 +115,7 @@ ogimage/
     build-svg.mjs        テンプレートのプレースホルダ埋め（LAYOUT にバリエーション別座標を集約）
     render-core.mjs      描画＋簿記コア（render.mjs / regenerate.mjs が共有する prepareItem / renderPrepared）
     record.mjs           記録（data/<route>.json）の読み書き・図版の永続コピー・記録の列挙
+    knockout.mjs         figure PNG の背景白を透過（ImageMagick flood-fill・生成時のみ）
     fonts.mjs            fonts/ のフォント収集
     manifest.mjs         マニフェストの読み書き（upsert / rebuild・冪等・キー昇順）
     rename-font.mjs      TTF の name テーブルのファミリー名を正規化（フォント取得時に使用）
@@ -133,5 +146,6 @@ ogimage/
 ## 制約
 
 - resvg（usvg）は CSS の `var()` / `light-dark()` を解決できない。埋め込む図版は自己完結（手渡し PNG）とする。
+- `knockoutWhite`（白背景の透過）は **PNG 入力・生成時のローカル処理のみ**。ImageMagick 7（`magick`）を前提とし、CI では走らせない（regenerate は保存済み透過アセットを使う）。
 - ヘッドレスブラウザでのスクリーンショットは行わない。
 - 出力 PNG の見た目（日本語・ロゴ・crumb・図版の描画）は**ユーザーが目視確認**する。

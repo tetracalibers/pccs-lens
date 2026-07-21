@@ -81,6 +81,18 @@ cd ogimage && npm install && npm run fonts && cd ..
 - `figure: "required"`（`/jis-color-map/<family>`, `/patterns/<theme>`）: 定型プレビュー。当面は**ユーザーが用意した手渡し PNG のパスを受け取る**。
 - 一括処理中でも、図版の要否は**ページごとに確認**する（改行案の一括承認とは別）。
 
+#### 白背景の透過（knockoutWhite）の要否も確認する
+
+図版を入れると決めたら、**その図版が白背景の PNG かどうかを見て、背景の白を透過するか確認する**。
+
+- 白背景の PNG をそのまま埋め込むと、装飾背景（白ベース＋淡いにじみ）の上に白い「箱」として浮く。透過すると装飾背景に馴染む。
+- **白背景の PNG のときだけ確認**し、yes なら payload に `knockoutWhite: true` を載せる。黒背景・その他色背景・透過済み・PNG 以外の図版には**付けない**（PNG 以外に付けると描画スクリプトがエラーで停止する）。
+- 内部で囲まれた白（白抜き文字・白い塗り）は残る（背景に繋がった白だけ消える）。
+- 縁の抜け具合を調整したいときだけ `magickFuzz`（既定 `"5%"`）を一緒に載せる。値は数値＋任意の `%`（例 `"5%"`, `"10"`, `"12.5%"`）。
+- **生成時に ImageMagick 7（`magick`）が必要**。未導入で `knockoutWhite: true` を使うと描画スクリプトが明確なエラーで停止するので、その旨をユーザーに伝えて導入を促す（`brew install imagemagick` など）。
+- 透過は生成時のローカル処理で、**記録には透過フラグを持たせない**。透過済み PNG が `data/assets/<route>/figure.png` に保存され、一括再生成はそれをそのまま使う（regenerate は ImageMagick 非依存）。
+- 既存記録の図版を流用する場合（手順 0）は**すでに透過済みなので `knockoutWhite` は付けない**（再度付けても概ね無害だが不要）。差し替えで新しい白背景 PNG を受け取ったときだけ改めて確認する。
+
 ### 6. 描画スクリプトを実行する
 
 確定値を JSON にして `ogimage/render.mjs` に渡す（リポジトリのルートから実行）。
@@ -110,6 +122,21 @@ node ogimage/render.mjs --json '{
 }'
 ```
 
+白背景の図版を透過して埋め込む場合（`knockoutWhite`。要 ImageMagick。`magickFuzz` は任意）:
+
+```sh
+node ogimage/render.mjs --json '{
+  "variation": "nested-fig",
+  "route": "color-theory/pccs-basics",
+  "title": "PCCSと色の分類",
+  "titleLines": ["PCCSと", "色の分類"],
+  "crumbs": ["色の理論", "PCCSと色彩調和"],
+  "figure": "tmp/pccs-tone.png",
+  "knockoutWhite": true,
+  "magickFuzz": "5%"
+}'
+```
+
 一括（配列。長い JSON は一時ファイルにして `--input` で渡すと安全）:
 
 ```sh
@@ -126,6 +153,8 @@ JSON フィールド:
 | `titleLines` | ○（default 以外） | 描画用の改行済みタイトル（1〜2 要素の配列） |
 | `crumbs` | ○（nested / nested-fig） | パンくずラベルの配列（可変個） |
 | `figure` | ○（nested-fig） | 図版 PNG のパス（実行時 cwd 基準）。png/jpg/svg/webp 可。`data/assets/<route>/figure.<ext>` へコピーされ永続化される。再利用時はこの永続パスを渡せばよい（同一パスなのでコピーはスキップ） |
+| `knockoutWhite` | 省略可 | `true` で nested-fig の **PNG** 図版の背景白を透過してから埋め込む（要 ImageMagick）。白背景の PNG のときだけ付ける。省略時 `false` |
+| `magickFuzz` | 省略可 | `knockoutWhite` 時の `-fuzz` 値（数値＋任意の `%`。例 `"5%"`）。縁の抜け具合を調整。省略時 `"5%"` |
 | `out` | 省略可 | 出力先。省略時は `app/static/ogp/<route>.png` |
 
 - default 画像（サイト全体の既定 og:image）は既に `app/static/ogp/default.png` にある。再生成する場合のみ:
@@ -172,6 +201,7 @@ JSON フィールド:
 
 - スラッグ該当なし／`config.mjs` に規則が無い: 明確なエラーで停止する。
 - nested-fig 指定で図版パスが無効・不在（単一ページ時）: 描画スクリプトがエラーで停止する。
+- `knockoutWhite: true` で ImageMagick 未導入 / PNG 以外の図版 / 不正な `magickFuzz`: 描画スクリプトがエラーで停止する。ImageMagick 未導入ならユーザーに導入を促す。
 - draft ページ: 個別生成しない（既定画像にフォールバック）。
 - 既存画像の再生成: 同一パスへ上書き（冪等）。記録・図版アセットも同一パスへ上書き。
 - 記録の再利用時に保存済み図版アセットが欠損: 流用せず、新規手渡しを促す。

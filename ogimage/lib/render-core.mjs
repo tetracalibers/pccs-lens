@@ -6,12 +6,16 @@
 // 呼び出し側が決めるので、ここでは触らない。
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs"
-import { dirname, join, resolve, isAbsolute } from "node:path"
+import { dirname, join, resolve, isAbsolute, extname } from "node:path"
 import { fileURLToPath } from "node:url"
 import { Resvg } from "@resvg/resvg-js"
 import { fillTemplate } from "./build-svg.mjs"
+import { isValidMagickFuzz, knockoutWhiteBackground } from "./knockout.mjs"
 import { copyFigureIntoData, writeRecord } from "./record.mjs"
 import { routeKey } from "../config.mjs"
+
+/** knockoutWhite の magickFuzz 省略時の既定値。 */
+export const DEFAULT_MAGICK_FUZZ = "5%"
 
 const HERE = dirname(fileURLToPath(import.meta.url)) // ogimage/lib
 const OGIMAGE_DIR = resolve(HERE, "..") // ogimage
@@ -32,7 +36,7 @@ export const resolveFromCwd = (p) => (isAbsolute(p) ? p : resolve(process.cwd(),
  * 1 件の確定値を検証し、描画に必要な値へ整形する。不正なら例外を投げる（呼び出し側で握る）。
  * figure は絶対パス or cwd 基準の相対パスで受け取る（regenerate は data 基準の相対を絶対に解決してから渡す）。
  * @param {object} item
- * @returns {{ variation: string, key: string, out: string, title: string, titleLines: string[], crumbs: string[], figure: string | undefined }}
+ * @returns {{ variation: string, key: string, out: string, title: string, titleLines: string[], crumbs: string[], figure: string | undefined, knockoutWhite: boolean, magickFuzz: string }}
  */
 export const prepareItem = (item) => {
   const variation = item.variation
@@ -83,7 +87,31 @@ export const prepareItem = (item) => {
     if (!existsSync(figure)) throw new Error(`図版ファイルが見つかりません: ${figure}`)
   }
 
-  return { variation, key, out, title, titleLines, crumbs, figure }
+  // 白背景ノックアウト（透過）: nested-fig の PNG 図版のみ有効。ここで描画前に fail-fast 検証する。
+  const knockoutWhite = item.knockoutWhite === true
+  let magickFuzz = DEFAULT_MAGICK_FUZZ
+  if (knockoutWhite) {
+    if (!figure) {
+      throw new Error(
+        `knockoutWhite は nested-fig の図版がある場合のみ指定できます（variation=${variation}, route=${item.route ?? "?"}）`
+      )
+    }
+    if (extname(figure).toLowerCase() !== ".png") {
+      throw new Error(
+        `knockoutWhite は PNG 図版のみ対応です（figure=${figure}, route=${item.route ?? "?"}）`
+      )
+    }
+    if (item.magickFuzz != null) {
+      if (!isValidMagickFuzz(item.magickFuzz)) {
+        throw new Error(
+          `magickFuzz の値が不正です: ${JSON.stringify(item.magickFuzz)}（例: "5%", route=${item.route ?? "?"}）`
+        )
+      }
+      magickFuzz = item.magickFuzz
+    }
+  }
+
+  return { variation, key, out, title, titleLines, crumbs, figure, knockoutWhite, magickFuzz }
 }
 
 /**
@@ -94,40 +122,52 @@ export const prepareItem = (item) => {
  * @returns {{ key: string, title: string, variation: string, out: string }}
  */
 export const renderPrepared = (prepared, ctx) => {
-  const templatePath = join(TEMPLATE_DIR, `${prepared.variation}.svg`)
-  const template = readFileSync(templatePath, "utf8")
-  const svg = fillTemplate(template, prepared.variation, {
-    titleLines: prepared.titleLines,
-    crumbs: prepared.crumbs,
-    figure: prepared.figure
-  })
-
-  const resvg = new Resvg(svg, {
-    fitTo: { mode: "width", value: 1200 },
-    font: ctx.fontOptions,
-    background: "#ffffff"
-  })
-  const png = resvg.render().asPng()
-
-  mkdirSync(dirname(prepared.out), { recursive: true })
-  writeFileSync(prepared.out, png)
-
-  // 記録の書き込み（route があり default 以外。title-only も書く＝再生成のスイープから漏れないため）
-  if (!ctx.noRecord && prepared.key && prepared.variation !== "default") {
-    const dataDir = ctx.dataDir ?? DEFAULT_DATA_DIR
-    const figureRel = prepared.figure
-      ? copyFigureIntoData(dataDir, prepared.key, prepared.figure)
-      : undefined
-    const record = { route: prepared.key, title: prepared.title, titleLines: prepared.titleLines }
-    if (prepared.crumbs.length > 0) record.crumbs = prepared.crumbs
-    if (figureRel) record.figure = figureRel
-    writeRecord(dataDir, prepared.key, record)
+  // knockoutWhite: 手渡し PNG の背景白を透過してから、埋め込み＆永続コピーの両方に渡す。
+  // 得た透過 PNG は一時ファイルなので、描画・記録が済んだら（例外時も）必ず削除する。
+  let figure = prepared.figure
+  let cleanupFigure = null
+  if (prepared.knockoutWhite && figure) {
+    const knocked = knockoutWhiteBackground(figure, prepared.magickFuzz)
+    figure = knocked.path
+    cleanupFigure = knocked.cleanup
   }
 
-  return {
-    key: prepared.key,
-    title: prepared.title,
-    variation: prepared.variation,
-    out: prepared.out
+  try {
+    const templatePath = join(TEMPLATE_DIR, `${prepared.variation}.svg`)
+    const template = readFileSync(templatePath, "utf8")
+    const svg = fillTemplate(template, prepared.variation, {
+      titleLines: prepared.titleLines,
+      crumbs: prepared.crumbs,
+      figure
+    })
+
+    const resvg = new Resvg(svg, {
+      fitTo: { mode: "width", value: 1200 },
+      font: ctx.fontOptions,
+      background: "#ffffff"
+    })
+    const png = resvg.render().asPng()
+
+    mkdirSync(dirname(prepared.out), { recursive: true })
+    writeFileSync(prepared.out, png)
+
+    // 記録の書き込み（route があり default 以外。title-only も書く＝再生成のスイープから漏れないため）
+    if (!ctx.noRecord && prepared.key && prepared.variation !== "default") {
+      const dataDir = ctx.dataDir ?? DEFAULT_DATA_DIR
+      const figureRel = figure ? copyFigureIntoData(dataDir, prepared.key, figure) : undefined
+      const record = { route: prepared.key, title: prepared.title, titleLines: prepared.titleLines }
+      if (prepared.crumbs.length > 0) record.crumbs = prepared.crumbs
+      if (figureRel) record.figure = figureRel
+      writeRecord(dataDir, prepared.key, record)
+    }
+
+    return {
+      key: prepared.key,
+      title: prepared.title,
+      variation: prepared.variation,
+      out: prepared.out
+    }
+  } finally {
+    if (cleanupFigure) cleanupFigure()
   }
 }
