@@ -152,7 +152,7 @@
 - [x] `/jis-color-map/green`
 - [x] `/jis-color-map/blue`
 - [x] `/jis-color-map/purple`
-- [ ] `/jis-color-map/neutral`
+- [x] `/jis-color-map/neutral`
 
 ## 配色シミュレータ（nested-fig） — テーマごと ※図版が必要
 
