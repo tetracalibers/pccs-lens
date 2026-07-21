@@ -149,7 +149,7 @@
 - [x] `/jis-color-map/red`
 - [x] `/jis-color-map/brown`
 - [x] `/jis-color-map/yellow`
-- [ ] `/jis-color-map/green`
+- [x] `/jis-color-map/green`
 - [x] `/jis-color-map/blue`
 - [ ] `/jis-color-map/purple`
 - [ ] `/jis-color-map/neutral`
