@@ -58,7 +58,7 @@
 - [ ] `/color-theory/contrast-phenomena`
 - [ ] `/color-theory/dominant-and-tone-on-tone`
 - [ ] `/color-theory/electromagnetic-waves`
-- [ ] `/color-theory/eye-structure`
+- [x] `/color-theory/eye-structure`
 - [ ] `/color-theory/gradient-color-scheme`
 - [x] `/color-theory/how-color-works`
 - [ ] `/color-theory/how-to-draw-pccs-color-wheel`
