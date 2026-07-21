@@ -189,6 +189,9 @@
     "color-theory/color-association-symbolism": {
       "title": "色の連想と象徴性"
     },
+    "color-theory/color-contrast": {
+      "title": "色の対比と三属性"
+    },
     "color-theory/color-matching-and-grassmanns-law": {
       "title": "等色実験とグラスマンの法則"
     },

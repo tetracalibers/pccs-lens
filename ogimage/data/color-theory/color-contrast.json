@@ -1,0 +1,13 @@
+{
+  "route": "color-theory/color-contrast",
+  "title": "色の対比と三属性",
+  "titleLines": [
+    "色の対比と",
+    "三属性"
+  ],
+  "crumbs": [
+    "色の理論",
+    "色の見え方"
+  ],
+  "figure": "assets/color-theory/color-contrast/figure.png"
+}

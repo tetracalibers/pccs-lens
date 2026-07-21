@@ -43,7 +43,7 @@
 - [x] `/color-theory/camaieu-and-faux-camaieu`
 - [x] `/color-theory/color-area-proportion`
 - [x] `/color-theory/color-association-symbolism`
-- [ ] `/color-theory/color-contrast`
+- [x] `/color-theory/color-contrast`
 - [x] `/color-theory/color-matching-and-grassmanns-law`
 - [x] `/color-theory/color-mixing-basics`
 - [x] `/color-theory/color-name-types`
