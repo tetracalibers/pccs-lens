@@ -1,6 +1,7 @@
 ---
 name: generate-ogp-image
 description: 引数で受け取ったページスラッグ（glob 可）の OGP 画像を手動生成するスキル。ogimage/ の正典設定でバリエーションを判定し、対象ページのコードからタイトル・パンくずを解決し、長いタイトルの改行案を提示・確認し、図版は第2引数のパスで受け取り（nested-fig 対象で未指定のときのみ要否を対話確認）、確定値を JSON で描画スクリプト（ogimage/render.mjs）に渡して PNG を app/static/ogp/ に生成し、マニフェストを更新する。OGP画像を作りたい・生成したい場合に使用する。
+effort: high
 ---
 
 # OGP 画像生成スキル
