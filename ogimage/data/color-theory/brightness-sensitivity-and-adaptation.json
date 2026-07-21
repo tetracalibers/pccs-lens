@@ -1,0 +1,13 @@
+{
+  "route": "color-theory/brightness-sensitivity-and-adaptation",
+  "title": "明るさに対する感度と順応",
+  "titleLines": [
+    "明るさに対する",
+    "感度と順応"
+  ],
+  "crumbs": [
+    "色の理論",
+    "色が見えるしくみ"
+  ],
+  "figure": "assets/color-theory/brightness-sensitivity-and-adaptation/figure.png"
+}
