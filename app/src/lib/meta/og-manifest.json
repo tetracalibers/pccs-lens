@@ -291,6 +291,9 @@
     "jis-color-map/all": {
       "title": "すべての慣用色名一覧"
     },
+    "jis-color-map/blue": {
+      "title": "青系の慣用色名マップ"
+    },
     "patterns": {
       "title": "配色シミュレータ"
     }
