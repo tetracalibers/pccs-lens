@@ -158,7 +158,7 @@
 
 - [x] `/patterns/elegant`
 - [x] `/patterns/casual`
-- [ ] `/patterns/classic`
+- [x] `/patterns/classic`
 - [ ] `/patterns/clear`
 - [ ] `/patterns/chic`
 - [ ] `/patterns/dynamic`

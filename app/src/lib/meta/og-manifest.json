@@ -318,6 +318,9 @@
     "patterns/casual": {
       "title": "カジュアル"
     },
+    "patterns/classic": {
+      "title": "クラシック"
+    },
     "patterns/elegant": {
       "title": "エレガント"
     }
