@@ -27,6 +27,15 @@
     "concept": {
       "title": "このサイトの歩き方"
     },
+    "games/lightness-match": {
+      "title": "明度を見分ける"
+    },
+    "games/tone-hunt": {
+      "title": "PCCSの清色・濁色を見分ける"
+    },
+    "games/tone-match": {
+      "title": "PCCSのトーンを見分ける"
+    },
     "jis-color-map": {
       "title": "慣用色名マップ"
     },

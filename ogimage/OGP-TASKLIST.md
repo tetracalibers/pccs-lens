@@ -28,9 +28,9 @@
 
 ## ゲーム（title-only）
 
-- [ ] `/games/lightness-match`
-- [ ] `/games/tone-hunt`
-- [ ] `/games/tone-match`
+- [x] `/games/lightness-match`
+- [x] `/games/tone-hunt`
+- [x] `/games/tone-match`
 
 ## 色の理論（nested） — 記事
 
