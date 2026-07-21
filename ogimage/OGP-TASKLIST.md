@@ -81,7 +81,7 @@
 - [ ] `/color-theory/rgb-color-system`
 - [ ] `/color-theory/subjective-color`
 - [ ] `/color-theory/tonal-color-scheme`
-- [ ] `/color-theory/unity-and-variety`
+- [x] `/color-theory/unity-and-variety`
 - [ ] `/color-theory/visual-clarity-and-visibility`
 - [ ] `/color-theory/what-is-lighting`
 - [ ] `/color-theory/xyz-color-system`
