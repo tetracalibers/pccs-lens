@@ -1,0 +1,13 @@
+{
+  "route": "color-theory/color-wheel-based-color-schemes",
+  "title": "色相環を分割した配色",
+  "titleLines": [
+    "色相環を",
+    "分割した配色"
+  ],
+  "crumbs": [
+    "色の理論",
+    "配色と色彩調和"
+  ],
+  "figure": "assets/color-theory/color-wheel-based-color-schemes/figure.png"
+}

@@ -54,7 +54,7 @@
 - [x] `/color-theory/color-vision-characteristics`
 - [x] `/color-theory/color-vision-theories`
 - [x] `/color-theory/color-wheel-and-color-solid`
-- [ ] `/color-theory/color-wheel-based-color-schemes`
+- [x] `/color-theory/color-wheel-based-color-schemes`
 - [x] `/color-theory/contrast-phenomena`
 - [x] `/color-theory/dominant-and-tone-on-tone`
 - [x] `/color-theory/electromagnetic-waves`

@@ -213,6 +213,9 @@
     "color-theory/color-wheel-and-color-solid": {
       "title": "色相環と色立体"
     },
+    "color-theory/color-wheel-based-color-schemes": {
+      "title": "色相環を分割した配色"
+    },
     "color-theory/contrast-phenomena": {
       "title": "さまざまな対比現象"
     },
