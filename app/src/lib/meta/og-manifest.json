@@ -18,6 +18,21 @@
     "color-fields": {
       "title": "色の活用分野"
     },
+    "color-fields/fashion-color": {
+      "title": "ファッションカラー"
+    },
+    "color-fields/fashion-color-concepts": {
+      "title": "ファッション色彩の考え方"
+    },
+    "color-fields/housing-color-design-process": {
+      "title": "住宅の色彩設計プロセス"
+    },
+    "color-fields/landscape-color-approach": {
+      "title": "景観色彩の考え方"
+    },
+    "color-fields/visual-design-and-color": {
+      "title": "ビジュアルデザインの分野"
+    },
     "color-theory": {
       "title": "色の理論"
     },

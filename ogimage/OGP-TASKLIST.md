@@ -88,11 +88,11 @@
 
 ## 色の活用分野（nested） — 記事
 
-- [ ] `/color-fields/fashion-color-concepts`
-- [ ] `/color-fields/fashion-color`
-- [ ] `/color-fields/housing-color-design-process`
-- [ ] `/color-fields/landscape-color-approach`
-- [ ] `/color-fields/visual-design-and-color`
+- [x] `/color-fields/fashion-color-concepts`
+- [x] `/color-fields/fashion-color`
+- [x] `/color-fields/housing-color-design-process`
+- [x] `/color-fields/landscape-color-approach`
+- [x] `/color-fields/visual-design-and-color`
 
 ## CGと画像処理（nested） — ユニット一覧ページ
 
