@@ -300,6 +300,9 @@
     "jis-color-map/green": {
       "title": "緑系の慣用色名マップ"
     },
+    "jis-color-map/purple": {
+      "title": "紫系の慣用色名マップ"
+    },
     "jis-color-map/red": {
       "title": "赤系の慣用色名マップ"
     },

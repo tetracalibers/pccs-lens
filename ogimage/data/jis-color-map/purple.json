@@ -1,0 +1,12 @@
+{
+  "route": "jis-color-map/purple",
+  "title": "紫系の慣用色名マップ",
+  "titleLines": [
+    "紫系の",
+    "慣用色名マップ"
+  ],
+  "crumbs": [
+    "慣用色名マップ"
+  ],
+  "figure": "assets/jis-color-map/purple/figure.png"
+}
