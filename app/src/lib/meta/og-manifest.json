@@ -339,6 +339,9 @@
     "patterns/modern": {
       "title": "モダン"
     },
+    "patterns/romantic": {
+      "title": "ロマンチック"
+    },
     "patterns/warm-natural": {
       "title": "ウォームナチュラル"
     }
