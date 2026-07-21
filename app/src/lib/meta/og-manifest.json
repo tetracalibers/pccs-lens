@@ -12,8 +12,83 @@
     "cg/3d-reconstruction": {
       "title": "画像からの3次元復元"
     },
+    "cg/animation": {
+      "title": "アニメーション"
+    },
+    "cg/basics": {
+      "title": "デジタル画像の基本"
+    },
     "cg/basics/anti-aliasing": {
       "title": "画像生成時のアンチエイリアシング"
+    },
+    "cg/binary-image": {
+      "title": "2値画像処理"
+    },
+    "cg/camera": {
+      "title": "画像の撮影とカメラモデル"
+    },
+    "cg/deep-learning": {
+      "title": "深層学習による認識と生成"
+    },
+    "cg/editing": {
+      "title": "画像の編集と合成"
+    },
+    "cg/feature-detection": {
+      "title": "パターン・特徴の検出とマッチング"
+    },
+    "cg/frequency": {
+      "title": "周波数領域における処理"
+    },
+    "cg/history": {
+      "title": "歴史"
+    },
+    "cg/image-coding": {
+      "title": "画像符号化"
+    },
+    "cg/image-properties": {
+      "title": "画像の性質と色"
+    },
+    "cg/ip-rights": {
+      "title": "知的財産権"
+    },
+    "cg/modeling": {
+      "title": "モデリング"
+    },
+    "cg/npr": {
+      "title": "NPRと可視化"
+    },
+    "cg/optical-analysis": {
+      "title": "光学的解析とシーンの復元"
+    },
+    "cg/pattern-recognition": {
+      "title": "パターン認識と機械学習"
+    },
+    "cg/perception": {
+      "title": "知覚"
+    },
+    "cg/rendering": {
+      "title": "レンダリング"
+    },
+    "cg/restoration": {
+      "title": "画像の復元と生成"
+    },
+    "cg/segmentation": {
+      "title": "領域分割"
+    },
+    "cg/spatial-filtering": {
+      "title": "空間フィルタリング"
+    },
+    "cg/systems": {
+      "title": "CGシステムとデバイス"
+    },
+    "cg/tone-conversion": {
+      "title": "画素ごとの濃淡・色変換"
+    },
+    "cg/transformation": {
+      "title": "座標や図形の変換"
+    },
+    "cg/video": {
+      "title": "動画像処理"
     },
     "color-fields": {
       "title": "色の活用分野"

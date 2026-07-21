@@ -1,0 +1,10 @@
+{
+  "route": "cg/segmentation",
+  "title": "領域分割",
+  "titleLines": [
+    "領域分割"
+  ],
+  "crumbs": [
+    "CGと画像処理"
+  ]
+}

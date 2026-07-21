@@ -97,31 +97,31 @@
 ## CGと画像処理（nested） — ユニット一覧ページ
 
 - [x] `/cg/3d-reconstruction`
-- [ ] `/cg/animation`
-- [ ] `/cg/basics`
-- [ ] `/cg/binary-image`
-- [ ] `/cg/camera`
-- [ ] `/cg/deep-learning`
-- [ ] `/cg/editing`
-- [ ] `/cg/feature-detection`
-- [ ] `/cg/frequency`
-- [ ] `/cg/history`
-- [ ] `/cg/image-coding`
-- [ ] `/cg/image-properties`
-- [ ] `/cg/ip-rights`
-- [ ] `/cg/modeling`
-- [ ] `/cg/npr`
-- [ ] `/cg/optical-analysis`
-- [ ] `/cg/pattern-recognition`
-- [ ] `/cg/perception`
-- [ ] `/cg/rendering`
-- [ ] `/cg/restoration`
-- [ ] `/cg/segmentation`
-- [ ] `/cg/spatial-filtering`
-- [ ] `/cg/systems`
-- [ ] `/cg/tone-conversion`
-- [ ] `/cg/transformation`
-- [ ] `/cg/video`
+- [x] `/cg/animation`
+- [x] `/cg/basics`
+- [x] `/cg/binary-image`
+- [x] `/cg/camera`
+- [x] `/cg/deep-learning`
+- [x] `/cg/editing`
+- [x] `/cg/feature-detection`
+- [x] `/cg/frequency`
+- [x] `/cg/history`
+- [x] `/cg/image-coding`
+- [x] `/cg/image-properties`
+- [x] `/cg/ip-rights`
+- [x] `/cg/modeling`
+- [x] `/cg/npr`
+- [x] `/cg/optical-analysis`
+- [x] `/cg/pattern-recognition`
+- [x] `/cg/perception`
+- [x] `/cg/rendering`
+- [x] `/cg/restoration`
+- [x] `/cg/segmentation`
+- [x] `/cg/spatial-filtering`
+- [x] `/cg/systems`
+- [x] `/cg/tone-conversion`
+- [x] `/cg/transformation`
+- [x] `/cg/video`
 
 ## CGと画像処理（nested） — 記事
 
