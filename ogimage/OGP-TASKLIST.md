@@ -125,7 +125,7 @@
 
 ## CGと画像処理（nested） — 記事
 
-- [ ] `/cg/basics/anti-aliasing`
+- [x] `/cg/basics/anti-aliasing`
 - [ ] `/cg/basics/area-filling`
 - [ ] `/cg/basics/camera-capture-and-cg`
 - [ ] `/cg/basics/cg-and-image-processing`

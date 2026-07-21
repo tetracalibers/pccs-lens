@@ -39,7 +39,7 @@ export const LAYOUT = {
       anchor: "start",
       fontSize: 90,
       maxWidth: 1008,
-      lineHeightRatio: 1.1,
+      lineHeightRatio: 1.22,
       letterSpacing: -1.1,
       minFontSize: 52
     }
