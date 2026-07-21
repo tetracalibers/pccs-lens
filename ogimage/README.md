@@ -72,27 +72,35 @@ node ogimage/regenerate.mjs '/color-theory/*'
 
 ### JSON（1 件）
 
-| フィールド      | 必須                   | 説明                                                                                                                                                      |
-| --------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `variation`     | ○                      | `default` / `title-only` / `nested` / `nested-fig`                                                                                                        |
-| `route`         | ○（default 以外）      | マニフェスト用キー & 出力パス算出（例: `color-theory/pccs-basics`）                                                                                       |
-| `title`         | ○（default 以外）      | og:title 用の完全なタイトル（改行なし・サイト名サフィックス無し）                                                                                         |
-| `titleLines`    | ○（default 以外）      | 描画用の改行済みタイトル（1〜2 要素）                                                                                                                     |
-| `crumbs`        | ○（nested/nested-fig） | パンくずラベル配列（可変個）                                                                                                                              |
-| `figure`        | ○（nested-fig）        | 図版画像のパス（実行時 cwd 基準。png/jpg/svg/webp）。`data/assets/<route>/figure.<ext>` へコピーされ、記録には永続パスが書かれる                          |
-| `knockoutWhite` | 省略可                 | `true` で nested-fig の **PNG** 図版の「背景に繋がった白」を透過してから埋め込む（装飾背景に馴染ませる）。**生成時に ImageMagick が必要**。省略時 `false` |
-| `magickFuzz`    | 省略可                 | `knockoutWhite` 時の `-fuzz` 値（例 `"5%"`）。縁の抜け具合を調整。省略時 `"5%"`                                                                           |
-| `out`           | 省略可                 | 出力先。省略時は `app/static/ogp/<route>.png`                                                                                                             |
+| フィールド      | 必須                   | 説明                                                                                                                                    |
+| --------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `variation`     | ○                      | `default` / `title-only` / `nested` / `nested-fig`                                                                                      |
+| `route`         | ○（default 以外）      | マニフェスト用キー & 出力パス算出（例: `color-theory/pccs-basics`）                                                                     |
+| `title`         | ○（default 以外）      | og:title 用の完全なタイトル（改行なし・サイト名サフィックス無し）                                                                       |
+| `titleLines`    | ○（default 以外）      | 描画用の改行済みタイトル（1〜2 要素）                                                                                                   |
+| `crumbs`        | ○（nested/nested-fig） | パンくずラベル配列（可変個）                                                                                                            |
+| `figure`        | ○（nested-fig）        | 図版画像のパス（実行時 cwd 基準。png/jpg/svg/webp）。`data/assets/<route>/figure.<ext>` へコピーされ、記録には永続パスが書かれる        |
+| `knockoutWhite` | 省略可                 | `true` で nested-fig の **PNG** 図版の白を透過してから埋め込む（装飾背景に馴染ませる）。**生成時に ImageMagick が必要**。省略時 `false` |
+| `knockoutMode`  | 省略可                 | 透過範囲。`"background"`＝背景に繋がった白だけ（既定）/ `"all"`＝全ての白を一律透過。`knockoutWhite: true` のときだけ有効               |
+| `magickFuzz`    | 省略可                 | `knockoutWhite` 時の `-fuzz` 値（例 `"5%"`）。縁の抜け具合を調整。省略時はモード別（background=`"5%"` / all=`"2%"`）                    |
+| `out`           | 省略可                 | 出力先。省略時は `app/static/ogp/<route>.png`                                                                                           |
 
 配列 or `{ "items": [ ... ] }` を渡すと一括生成。`variation` が `default` 以外なら、生成のたびに記録 `data/<route>.json` が書かれる（title-only も書く。書かないと一括再生成のスイープから漏れるため）。
 
 #### 白背景のノックアウト（透過）
 
-白背景の図版を nested-fig にそのまま埋め込むと、装飾背景の上に白い「箱」として浮く。`knockoutWhite: true` を付けると、埋め込み前に ImageMagick の flood-fill で **背景に繋がった白だけ**を透過し、装飾背景に馴染ませる（内部で囲まれた白＝白抜き文字・白い塗りは残る）。透過した PNG を埋め込みつつ `data/assets/<route>/figure.png` にも永続コピーするので、**記録には透過フラグを持たせない**。一括再生成（`regenerate`）は保存済みの透過アセットをそのまま使い ImageMagick を再実行しない（**regenerate・CI は ImageMagick 非依存**）。
+白背景の図版を nested-fig にそのまま埋め込むと、装飾背景の上に白い「箱」として浮く。`knockoutWhite: true` を付けると、埋め込み前に ImageMagick で白を透過し、装飾背景に馴染ませる。透過した PNG を埋め込みつつ `data/assets/<route>/figure.png` にも永続コピーするので、**記録には透過フラグ・モードを持たせない**。一括再生成（`regenerate`）は保存済みの透過アセットをそのまま使い ImageMagick を再実行しない（**regenerate・CI は ImageMagick 非依存**）。
+
+透過範囲を `knockoutMode` で選べる:
+
+- `"background"`（既定）: 外周からの flood-fill で **背景に繋がった白だけ**を透過する。内部で囲まれた白（白抜き文字・白い塗り）は残る。
+- `"all"`: `-transparent white` で **fuzz 閾値内の白を背景・内部を問わず一律**透過する。背景白が図版内で分断されていて flood が届かない白ポケット（要素の隙間・囲まれた白）も消せる。ただし内部の白も消えるので、**消えて困る内部白が無い図版に使う**。
+
+補足:
 
 - **生成時に ImageMagick 7（`magick`）が必要**（例: `brew install imagemagick`）。未導入で `knockoutWhite: true` を使うと明確なエラーで停止する。
 - PNG 図版のみ対応（jpg/svg/webp に付けるとエラー）。
-- `magickFuzz`（既定 `"5%"`）でアンチエイリアスや微妙な off-white の吸収量＝縁の抜け具合を調整する。
+- `magickFuzz` でアンチエイリアスや微妙な off-white の吸収量＝縁の抜け具合を調整する。省略時の既定はモード別（background=`"5%"` / all=`"2%"`）。all は画像全体の near-white に一律で効くため、淡色を巻き込みにくいよう既定を控えめにしている。
 - 透過後は `-trim` で外周の余白を切り詰める（図版が埋め込みスロットいっぱいに収まる）。
 
 ### オプション
@@ -116,7 +124,7 @@ ogimage/
     build-svg.mjs        テンプレートのプレースホルダ埋め（LAYOUT にバリエーション別座標を集約）
     render-core.mjs      描画＋簿記コア（render.mjs / regenerate.mjs が共有する prepareItem / renderPrepared）
     record.mjs           記録（data/<route>.json）の読み書き・図版の永続コピー・記録の列挙
-    knockout.mjs         figure PNG の背景白を透過（ImageMagick flood-fill・生成時のみ）
+    knockout.mjs         figure PNG の白を透過（ImageMagick・生成時のみ。background=flood-fill / all=一律）
     fonts.mjs            fonts/ のフォント収集
     manifest.mjs         マニフェストの読み書き（upsert / rebuild・冪等・キー昇順）
     rename-font.mjs      TTF の name テーブルのファミリー名を正規化（フォント取得時に使用）

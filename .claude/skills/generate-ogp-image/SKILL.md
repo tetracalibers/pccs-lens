@@ -99,8 +99,11 @@ cd ogimage && npm install && npm run fonts && cd ..
 
 - 白背景の PNG をそのまま埋め込むと、装飾背景（白ベース＋淡いにじみ）の上に白い「箱」として浮く。透過すると装飾背景に馴染む。
 - **白背景の PNG のときだけ確認**し、yes なら payload に `knockoutWhite: true` を載せる。黒背景・その他色背景・透過済み・PNG 以外の図版には**付けない**（PNG 以外に付けると描画スクリプトがエラーで停止する）。
-- 内部で囲まれた白（白抜き文字・白い塗り）は残る（背景に繋がった白だけ消える）。
-- 縁の抜け具合を調整したいときだけ `magickFuzz`（既定 `"5%"`）を一緒に載せる。値は数値＋任意の `%`（例 `"5%"`, `"10"`, `"12.5%"`）。
+- **透過すると決めたら、続けて透過範囲（`knockoutMode`）も確認する。** 目視確認はユーザーが行う（結果画像を見て後から気づくと二度手間）ため、最初に意図を聞く。既定は `"background"`。
+  - `"background"`（既定）＝**背景と繋がった白だけ**透過する。内部で囲まれた白（白抜き文字・白い塗り）は残る。
+  - `"all"`＝**全ての白**を一律透過する（`-transparent white`）。背景白が図版内で分断されていて flood が届かない白ポケット（要素の隙間・囲まれた白）も消せる。ただし**内部の白も消える**ので、消えて困る内部白が無い図版のときだけ選ぶ（選ぶ際はその旨を伝える）。
+  - 既定の `"background"` でよければ `knockoutMode` は省略してよい。`"all"` を選んだときだけ `"knockoutMode": "all"` を payload に載せる。
+- 縁の抜け具合を調整したいときだけ `magickFuzz` を一緒に載せる。値は数値＋任意の `%`（例 `"5%"`, `"10"`, `"12.5%"`）。省略時の既定はモード別（background=`"5%"` / all=`"2%"`）。
 - **生成時に ImageMagick 7（`magick`）が必要**。未導入で `knockoutWhite: true` を使うと描画スクリプトが明確なエラーで停止するので、その旨をユーザーに伝えて導入を促す（`brew install imagemagick` など）。
 - 透過は生成時のローカル処理で、**記録には透過フラグを持たせない**。透過済み PNG が `data/assets/<route>/figure.png` に保存され、一括再生成はそれをそのまま使う（regenerate は ImageMagick 非依存）。
 - 既存記録の図版を流用する場合（手順 0）は**すでに透過済みなので `knockoutWhite` は付けない**（再度付けても概ね無害だが不要）。差し替えで新しい白背景 PNG を受け取ったときだけ改めて確認する。
@@ -134,7 +137,7 @@ node ogimage/render.mjs --json '{
 }'
 ```
 
-白背景の図版を透過して埋め込む場合（`knockoutWhite`。要 ImageMagick。`magickFuzz` は任意）:
+白背景の図版を透過して埋め込む場合（`knockoutWhite`。要 ImageMagick。`knockoutMode`・`magickFuzz` は任意）:
 
 ```sh
 node ogimage/render.mjs --json '{
@@ -145,9 +148,12 @@ node ogimage/render.mjs --json '{
   "crumbs": ["色の理論", "PCCSと色彩調和"],
   "figure": "tmp/pccs-tone.png",
   "knockoutWhite": true,
-  "magickFuzz": "5%"
+  "knockoutMode": "all",
+  "magickFuzz": "2%"
 }'
 ```
+
+`knockoutMode` を省略すると `"background"`（背景に繋がった白だけ透過）。`"all"`（全ての白を一律透過）を選んだときだけ載せる。`magickFuzz` も省略でよく、既定はモード別（background=`"5%"` / all=`"2%"`）。
 
 一括（配列。長い JSON は一時ファイルにして `--input` で渡すと安全）:
 
@@ -165,8 +171,9 @@ JSON フィールド:
 | `titleLines` | ○（default 以外） | 描画用の改行済みタイトル（1〜2 要素の配列） |
 | `crumbs` | ○（nested / nested-fig） | パンくずラベルの配列（可変個） |
 | `figure` | ○（nested-fig） | 図版 PNG のパス（実行時 cwd 基準）。png/jpg/svg/webp 可。`data/assets/<route>/figure.<ext>` へコピーされ永続化される。再利用時はこの永続パスを渡せばよい（同一パスなのでコピーはスキップ） |
-| `knockoutWhite` | 省略可 | `true` で nested-fig の **PNG** 図版の背景白を透過してから埋め込む（要 ImageMagick）。白背景の PNG のときだけ付ける。省略時 `false` |
-| `magickFuzz` | 省略可 | `knockoutWhite` 時の `-fuzz` 値（数値＋任意の `%`。例 `"5%"`）。縁の抜け具合を調整。省略時 `"5%"` |
+| `knockoutWhite` | 省略可 | `true` で nested-fig の **PNG** 図版の白を透過してから埋め込む（要 ImageMagick）。白背景の PNG のときだけ付ける。省略時 `false` |
+| `knockoutMode` | 省略可 | 透過範囲。`"background"`＝背景に繋がった白だけ（既定）/ `"all"`＝全ての白を一律。`knockoutWhite: true` のときだけ有効 |
+| `magickFuzz` | 省略可 | `knockoutWhite` 時の `-fuzz` 値（数値＋任意の `%`。例 `"5%"`）。縁の抜け具合を調整。省略時はモード別（background=`"5%"` / all=`"2%"`） |
 | `out` | 省略可 | 出力先。省略時は `app/static/ogp/<route>.png` |
 
 - default 画像（サイト全体の既定 og:image）は既に `app/static/ogp/default.png` にある。再生成する場合のみ:
@@ -227,6 +234,7 @@ render.mjs は nested-fig の図版を `ogimage/data/assets/<route>/figure.<ext>
 - スラッグ該当なし／`config.mjs` に規則が無い: 明確なエラーで停止する。
 - nested-fig 指定で図版パスが無効・不在（単一ページ時）: 描画スクリプトがエラーで停止する。
 - `knockoutWhite: true` で ImageMagick 未導入 / PNG 以外の図版 / 不正な `magickFuzz`: 描画スクリプトがエラーで停止する。ImageMagick 未導入ならユーザーに導入を促す。
+- `knockoutMode` が `background`/`all` 以外 / `knockoutWhite` 無しで `knockoutMode` を指定: 描画スクリプトがエラーで停止する。
 - draft ページ: 個別生成しない（既定画像にフォールバック）。
 - 既存画像の再生成: 同一パスへ上書き（冪等）。記録・図版アセットも同一パスへ上書き。
 - 記録の再利用時に保存済み図版アセットが欠損: 流用せず、新規手渡しを促す。

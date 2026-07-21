@@ -10,12 +10,16 @@ import { dirname, join, resolve, isAbsolute, extname } from "node:path"
 import { fileURLToPath } from "node:url"
 import { Resvg } from "@resvg/resvg-js"
 import { fillTemplate } from "./build-svg.mjs"
-import { isValidMagickFuzz, knockoutWhiteBackground } from "./knockout.mjs"
+import { isValidMagickFuzz, knockoutWhiteAll, knockoutWhiteBackground } from "./knockout.mjs"
 import { copyFigureIntoData, writeRecord } from "./record.mjs"
 import { routeKey } from "../config.mjs"
 
-/** knockoutWhite の magickFuzz 省略時の既定値。 */
-export const DEFAULT_MAGICK_FUZZ = "5%"
+// knockoutWhite の magickFuzz 省略時の既定値（モード別）。all は画像全体の near-white に一律で
+// 効くため、淡色を巻き込みにくいよう background より控えめにする。明示指定があればそれが優先。
+/** background モード（背景連結のみ透過）の既定 fuzz。 */
+export const DEFAULT_MAGICK_FUZZ_BACKGROUND = "5%"
+/** all モード（全白を一律透過）の既定 fuzz。 */
+export const DEFAULT_MAGICK_FUZZ_ALL = "2%"
 
 const HERE = dirname(fileURLToPath(import.meta.url)) // ogimage/lib
 const OGIMAGE_DIR = resolve(HERE, "..") // ogimage
@@ -36,7 +40,7 @@ export const resolveFromCwd = (p) => (isAbsolute(p) ? p : resolve(process.cwd(),
  * 1 件の確定値を検証し、描画に必要な値へ整形する。不正なら例外を投げる（呼び出し側で握る）。
  * figure は絶対パス or cwd 基準の相対パスで受け取る（regenerate は data 基準の相対を絶対に解決してから渡す）。
  * @param {object} item
- * @returns {{ variation: string, key: string, out: string, title: string, titleLines: string[], crumbs: string[], figure: string | undefined, knockoutWhite: boolean, magickFuzz: string }}
+ * @returns {{ variation: string, key: string, out: string, title: string, titleLines: string[], crumbs: string[], figure: string | undefined, knockoutWhite: boolean, knockoutMode: "background" | "all", magickFuzz: string }}
  */
 export const prepareItem = (item) => {
   const variation = item.variation
@@ -89,7 +93,25 @@ export const prepareItem = (item) => {
 
   // 白背景ノックアウト（透過）: nested-fig の PNG 図版のみ有効。ここで描画前に fail-fast 検証する。
   const knockoutWhite = item.knockoutWhite === true
-  let magickFuzz = DEFAULT_MAGICK_FUZZ
+
+  // knockoutMode は knockoutWhite: true のときだけ意味を持つ。省略時は "background"（背景連結のみ透過）。
+  let knockoutMode = "background"
+  if (item.knockoutMode != null) {
+    if (!knockoutWhite) {
+      throw new Error(
+        `knockoutMode は knockoutWhite: true のときだけ指定できます（route=${item.route ?? "?"}）`
+      )
+    }
+    if (item.knockoutMode !== "background" && item.knockoutMode !== "all") {
+      throw new Error(
+        `knockoutMode の値が不正です: ${JSON.stringify(item.knockoutMode)}（background|all, route=${item.route ?? "?"}）`
+      )
+    }
+    knockoutMode = item.knockoutMode
+  }
+
+  // magickFuzz の省略時既定はモード別。明示指定があればそれを優先する。
+  let magickFuzz = knockoutMode === "all" ? DEFAULT_MAGICK_FUZZ_ALL : DEFAULT_MAGICK_FUZZ_BACKGROUND
   if (knockoutWhite) {
     if (!figure) {
       throw new Error(
@@ -111,7 +133,18 @@ export const prepareItem = (item) => {
     }
   }
 
-  return { variation, key, out, title, titleLines, crumbs, figure, knockoutWhite, magickFuzz }
+  return {
+    variation,
+    key,
+    out,
+    title,
+    titleLines,
+    crumbs,
+    figure,
+    knockoutWhite,
+    knockoutMode,
+    magickFuzz
+  }
 }
 
 /**
@@ -127,7 +160,10 @@ export const renderPrepared = (prepared, ctx) => {
   let figure = prepared.figure
   let cleanupFigure = null
   if (prepared.knockoutWhite && figure) {
-    const knocked = knockoutWhiteBackground(figure, prepared.magickFuzz)
+    const knocked =
+      prepared.knockoutMode === "all"
+        ? knockoutWhiteAll(figure, prepared.magickFuzz)
+        : knockoutWhiteBackground(figure, prepared.magickFuzz)
     figure = knocked.path
     cleanupFigure = knocked.cleanup
   }

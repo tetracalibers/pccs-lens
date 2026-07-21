@@ -22,8 +22,9 @@
 //     "titleLines": ["PCCSと", "色の分類"],            // 描画用の改行済みタイトル（default 以外で必須）
 //     "crumbs": ["色を学ぶ", "色の理論"],               // nested / nested-fig で必須
 //     "figure": "tmp/pccs-fig.png",                  // nested-fig で必須（手渡し画像のパス。data/assets へコピーされる）
-//     "knockoutWhite": true,                          // 任意。nested-fig の PNG 図版の背景白を透過してから埋め込む（要 ImageMagick）
-//     "magickFuzz": "5%",                             // 任意。knockoutWhite 時の -fuzz 値（省略時 "5%"）
+//     "knockoutWhite": true,                          // 任意。nested-fig の PNG 図版の白を透過してから埋め込む（要 ImageMagick）
+//     "knockoutMode": "background",                    // 任意。透過範囲。background=背景連結のみ（既定）/ all=全白を一律
+//     "magickFuzz": "5%",                             // 任意。knockoutWhite 時の -fuzz 値（省略時 background=5% / all=2%）
 //     "out": "app/static/ogp/color-theory/pccs-basics.png"  // 省略時は route から算出
 //   }
 //
