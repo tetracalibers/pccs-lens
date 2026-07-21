@@ -252,6 +252,9 @@
     "color-theory/illuminance-and-lighting-design": {
       "title": "照度と照明設計"
     },
+    "color-theory/lamp-types": {
+      "title": "ランプの種類"
+    },
     "color-theory/light-components-and-reflectance": {
       "title": "光の成分と反射率"
     },
