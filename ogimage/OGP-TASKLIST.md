@@ -40,7 +40,7 @@
 - [x] `/color-theory/basic-color-terms`
 - [x] `/color-theory/bicolor-and-tricolor`
 - [x] `/color-theory/brightness-sensitivity-and-adaptation`
-- [ ] `/color-theory/camaieu-and-faux-camaieu`
+- [x] `/color-theory/camaieu-and-faux-camaieu`
 - [ ] `/color-theory/color-area-proportion`
 - [x] `/color-theory/color-association-symbolism`
 - [ ] `/color-theory/color-contrast`
