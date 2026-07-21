@@ -35,24 +35,24 @@
 ## 色の理論（nested） — 記事
 
 - [ ] `/color-theory/additive-color-mixing-types`
-- [ ] `/color-theory/adjacent-color-influence`
-- [ ] `/color-theory/ancient-european-colors`
+- [x] `/color-theory/adjacent-color-influence`
+- [x] `/color-theory/ancient-european-colors`
 - [x] `/color-theory/basic-color-terms`
 - [ ] `/color-theory/bicolor-and-tricolor`
 - [ ] `/color-theory/brightness-sensitivity-and-adaptation`
 - [ ] `/color-theory/camaieu-and-faux-camaieu`
 - [ ] `/color-theory/color-area-proportion`
-- [ ] `/color-theory/color-association-symbolism`
+- [x] `/color-theory/color-association-symbolism`
 - [ ] `/color-theory/color-contrast`
-- [ ] `/color-theory/color-matching-and-grassmanns-law`
+- [x] `/color-theory/color-matching-and-grassmanns-law`
 - [x] `/color-theory/color-mixing-basics`
 - [x] `/color-theory/color-name-types`
-- [ ] `/color-theory/color-roles`
+- [x] `/color-theory/color-roles`
 - [ ] `/color-theory/color-sensations`
 - [x] `/color-theory/color-system-types`
 - [x] `/color-theory/color-three-attributes`
-- [ ] `/color-theory/color-vision-characteristics`
-- [ ] `/color-theory/color-vision-theories`
+- [x] `/color-theory/color-vision-characteristics`
+- [x] `/color-theory/color-vision-theories`
 - [ ] `/color-theory/color-wheel-and-color-solid`
 - [ ] `/color-theory/color-wheel-based-color-schemes`
 - [ ] `/color-theory/contrast-phenomena`
@@ -67,23 +67,23 @@
 - [ ] `/color-theory/lamp-types`
 - [ ] `/color-theory/light-components-and-reflectance`
 - [x] `/color-theory/light-path-through-the-retina`
-- [ ] `/color-theory/medieval-european-colors`
-- [ ] `/color-theory/modern-european-colors`
+- [x] `/color-theory/medieval-european-colors`
+- [x] `/color-theory/modern-european-colors`
 - [ ] `/color-theory/munsell-color-system`
 - [ ] `/color-theory/natural-harmony`
 - [ ] `/color-theory/opponent-color-response`
 - [ ] `/color-theory/pccs-basics`
 - [ ] `/color-theory/pccs-color-system`
-- [ ] `/color-theory/photometric-and-radiometric-quantities`
+- [x] `/color-theory/photometric-and-radiometric-quantities`
 - [ ] `/color-theory/photoreceptor-types-and-distribution`
-- [ ] `/color-theory/psychological-scaling-method`
+- [x] `/color-theory/psychological-scaling-method`
 - [ ] `/color-theory/real-world-color-mixing`
-- [ ] `/color-theory/rgb-color-system`
+- [x] `/color-theory/rgb-color-system`
 - [ ] `/color-theory/subjective-color`
 - [ ] `/color-theory/tonal-color-scheme`
 - [x] `/color-theory/unity-and-variety`
 - [ ] `/color-theory/visual-clarity-and-visibility`
-- [ ] `/color-theory/what-is-lighting`
+- [x] `/color-theory/what-is-lighting`
 - [ ] `/color-theory/xyz-color-system`
 
 ## 色の活用分野（nested） — 記事
