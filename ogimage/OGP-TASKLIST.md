@@ -38,7 +38,7 @@
 - [x] `/color-theory/adjacent-color-influence`
 - [x] `/color-theory/ancient-european-colors`
 - [x] `/color-theory/basic-color-terms`
-- [ ] `/color-theory/bicolor-and-tricolor`
+- [x] `/color-theory/bicolor-and-tricolor`
 - [x] `/color-theory/brightness-sensitivity-and-adaptation`
 - [ ] `/color-theory/camaieu-and-faux-camaieu`
 - [ ] `/color-theory/color-area-proportion`
