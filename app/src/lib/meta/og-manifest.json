@@ -1,5 +1,8 @@
 {
   "routes": {
+    "cg/3d-reconstruction": {
+      "title": "画像からの3次元復元"
+    },
     "concept": {
       "title": "このサイトの歩き方"
     }

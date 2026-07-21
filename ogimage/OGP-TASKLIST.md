@@ -96,7 +96,7 @@
 
 ## CGと画像処理（nested） — ユニット一覧ページ
 
-- [ ] `/cg/3d-reconstruction`
+- [x] `/cg/3d-reconstruction`
 - [ ] `/cg/animation`
 - [ ] `/cg/basics`
 - [ ] `/cg/binary-image`
