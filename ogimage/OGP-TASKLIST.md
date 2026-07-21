@@ -84,7 +84,7 @@
 - [x] `/color-theory/unity-and-variety`
 - [ ] `/color-theory/visual-clarity-and-visibility`
 - [x] `/color-theory/what-is-lighting`
-- [ ] `/color-theory/xyz-color-system`
+- [x] `/color-theory/xyz-color-system`
 
 ## 色の活用分野（nested） — 記事
 
