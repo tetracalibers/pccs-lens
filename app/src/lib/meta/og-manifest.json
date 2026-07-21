@@ -297,6 +297,9 @@
     "jis-color-map/brown": {
       "title": "茶系の慣用色名マップ"
     },
+    "jis-color-map/red": {
+      "title": "赤系の慣用色名マップ"
+    },
     "patterns": {
       "title": "配色シミュレータ"
     }
