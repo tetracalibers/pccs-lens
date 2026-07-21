@@ -56,7 +56,7 @@
 - [x] `/color-theory/color-wheel-and-color-solid`
 - [ ] `/color-theory/color-wheel-based-color-schemes`
 - [x] `/color-theory/contrast-phenomena`
-- [ ] `/color-theory/dominant-and-tone-on-tone`
+- [x] `/color-theory/dominant-and-tone-on-tone`
 - [x] `/color-theory/electromagnetic-waves`
 - [x] `/color-theory/eye-structure`
 - [ ] `/color-theory/gradient-color-scheme`
