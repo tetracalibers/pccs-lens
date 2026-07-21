@@ -49,7 +49,7 @@
 - [ ] `/color-theory/color-name-types`
 - [ ] `/color-theory/color-roles`
 - [ ] `/color-theory/color-sensations`
-- [ ] `/color-theory/color-system-types`
+- [x] `/color-theory/color-system-types`
 - [x] `/color-theory/color-three-attributes`
 - [ ] `/color-theory/color-vision-characteristics`
 - [ ] `/color-theory/color-vision-theories`

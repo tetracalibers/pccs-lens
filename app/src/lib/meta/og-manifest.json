@@ -165,6 +165,9 @@
     "color-theory/color-mixing-basics": {
       "title": "加法混色と減法混色"
     },
+    "color-theory/color-system-types": {
+      "title": "色彩体系と表色系"
+    },
     "color-theory/color-three-attributes": {
       "title": "色の三属性"
     },
