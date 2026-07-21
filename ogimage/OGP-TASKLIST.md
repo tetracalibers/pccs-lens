@@ -73,7 +73,7 @@
 - [ ] `/color-theory/natural-harmony`
 - [ ] `/color-theory/opponent-color-response`
 - [x] `/color-theory/pccs-basics`
-- [ ] `/color-theory/pccs-color-system`
+- [x] `/color-theory/pccs-color-system`
 - [x] `/color-theory/photometric-and-radiometric-quantities`
 - [ ] `/color-theory/photoreceptor-types-and-distribution`
 - [x] `/color-theory/psychological-scaling-method`

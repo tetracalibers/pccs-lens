@@ -219,6 +219,9 @@
     "color-theory/pccs-basics": {
       "title": "PCCSと色の分類"
     },
+    "color-theory/pccs-color-system": {
+      "title": "PCCSによる色表示"
+    },
     "color-theory/photometric-and-radiometric-quantities": {
       "title": "光のエネルギーと明るさ"
     },
