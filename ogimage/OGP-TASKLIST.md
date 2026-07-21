@@ -22,7 +22,7 @@
 - [x] `/jis-color-map`
 - [x] `/cg`
 - [x] `/patterns`
-- [ ] `/jis-color-map/all`
+- [x] `/jis-color-map/all`
 - [x] `/approximate`
 - [x] `/analyze`
 

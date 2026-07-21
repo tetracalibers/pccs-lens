@@ -30,6 +30,9 @@
     "jis-color-map": {
       "title": "慣用色名マップ"
     },
+    "jis-color-map/all": {
+      "title": "すべての慣用色名一覧"
+    },
     "patterns": {
       "title": "配色シミュレータ"
     }
