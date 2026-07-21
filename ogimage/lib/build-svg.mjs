@@ -52,7 +52,7 @@ export const LAYOUT = {
       anchor: "start",
       fontSize: 82,
       maxWidth: 656,
-      lineHeightRatio: 1.12,
+      lineHeightRatio: 1.22,
       letterSpacing: -0.8,
       minFontSize: 40
     },
@@ -159,7 +159,8 @@ export const fillTemplate = (template, variation, content) => {
   if (svg.includes("{{FOOTER_DY}}")) {
     const lines = content.titleLines ?? []
     const { baselines } = layoutLines(lines, layout.title)
-    const dy = baselines.length > 0 ? round(baselines[baselines.length - 1] - layout.title.baseline) : 0
+    const dy =
+      baselines.length > 0 ? round(baselines[baselines.length - 1] - layout.title.baseline) : 0
     svg = svg.replaceAll("{{FOOTER_DY}}", String(dy))
   }
 
