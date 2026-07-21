@@ -50,7 +50,7 @@
 - [ ] `/color-theory/color-roles`
 - [ ] `/color-theory/color-sensations`
 - [ ] `/color-theory/color-system-types`
-- [ ] `/color-theory/color-three-attributes`
+- [x] `/color-theory/color-three-attributes`
 - [ ] `/color-theory/color-vision-characteristics`
 - [ ] `/color-theory/color-vision-theories`
 - [ ] `/color-theory/color-wheel-and-color-solid`
