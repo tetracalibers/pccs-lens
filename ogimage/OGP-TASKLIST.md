@@ -82,7 +82,7 @@
 - [x] `/color-theory/subjective-color`
 - [x] `/color-theory/tonal-color-scheme`
 - [x] `/color-theory/unity-and-variety`
-- [ ] `/color-theory/visual-clarity-and-visibility`
+- [x] `/color-theory/visual-clarity-and-visibility`
 - [x] `/color-theory/what-is-lighting`
 - [x] `/color-theory/xyz-color-system`
 
