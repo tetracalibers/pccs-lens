@@ -34,7 +34,7 @@
 
 ## 色の理論（nested） — 記事
 
-- [ ] `/color-theory/additive-color-mixing-types`
+- [x] `/color-theory/additive-color-mixing-types`
 - [x] `/color-theory/adjacent-color-influence`
 - [x] `/color-theory/ancient-european-colors`
 - [x] `/color-theory/basic-color-terms`

@@ -162,6 +162,9 @@
     "color-theory": {
       "title": "色の理論"
     },
+    "color-theory/additive-color-mixing-types": {
+      "title": "さまざまな加法混色"
+    },
     "color-theory/adjacent-color-influence": {
       "title": "近接した色の影響"
     },
