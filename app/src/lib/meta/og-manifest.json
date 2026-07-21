@@ -332,6 +332,9 @@
     },
     "patterns/elegant": {
       "title": "エレガント"
+    },
+    "patterns/warm-natural": {
+      "title": "ウォームナチュラル"
     }
   }
 }

@@ -162,7 +162,7 @@
 - [x] `/patterns/clear`
 - [x] `/patterns/chic`
 - [x] `/patterns/dynamic`
-- [ ] `/patterns/warm-natural`
+- [x] `/patterns/warm-natural`
 - [ ] `/patterns/fresh-natural`
 - [ ] `/patterns/modern`
 - [ ] `/patterns/romantic`
