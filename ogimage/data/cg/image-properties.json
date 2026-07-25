@@ -1,0 +1,10 @@
+{
+  "route": "cg/image-properties",
+  "title": "画像の性質と色",
+  "titleLines": [
+    "画像の性質と色"
+  ],
+  "crumbs": [
+    "CGと画像処理"
+  ]
+}

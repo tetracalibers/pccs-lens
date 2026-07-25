@@ -1,0 +1,11 @@
+{
+  "route": "cg/basics/image-quantization",
+  "title": "画像の量子化",
+  "titleLines": [
+    "画像の量子化"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "デジタル画像の基本"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "route": "patterns/modern",
+  "title": "モダン",
+  "titleLines": [
+    "モダン"
+  ],
+  "crumbs": [
+    "配色シミュレータ"
+  ],
+  "figure": "assets/patterns/modern/figure.png"
+}

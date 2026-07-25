@@ -1,0 +1,11 @@
+{
+  "route": "cg/transformation/coordinate-systems",
+  "title": "座標系",
+  "titleLines": [
+    "座標系"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "座標や図形の変換"
+  ]
+}

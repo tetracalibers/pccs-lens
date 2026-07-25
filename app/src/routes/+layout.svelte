@@ -5,6 +5,7 @@
   import { page } from "$app/state"
   import SiteHeader from "$lib/components/site-layout/SiteHeader.svelte"
   import SiteFooter from "$lib/components/site-layout/SiteFooter.svelte"
+  import SiteMeta from "$lib/components/SiteMeta.svelte"
   import { mainWidthForRoute } from "$lib/styles/main-width"
   import { ankiMode } from "$lib/state/anki.svelte"
   import "$lib/styles/color.css"
@@ -45,6 +46,8 @@
   />
   <link href="https://fonts.googleapis.com/css2?family=Marmelad&display=swap" rel="stylesheet" />
 </svelte:head>
+
+<SiteMeta />
 
 <!-- display: contents なので描画ボックスは作らず（レイアウト不変）、--main-width-current だけを
      子孫（main / SiteFooter）へ継承させる。 -->

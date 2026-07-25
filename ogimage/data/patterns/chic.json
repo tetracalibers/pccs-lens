@@ -1,0 +1,11 @@
+{
+  "route": "patterns/chic",
+  "title": "シック",
+  "titleLines": [
+    "シック"
+  ],
+  "crumbs": [
+    "配色シミュレータ"
+  ],
+  "figure": "assets/patterns/chic/figure.png"
+}

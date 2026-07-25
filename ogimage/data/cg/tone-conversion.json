@@ -1,0 +1,10 @@
+{
+  "route": "cg/tone-conversion",
+  "title": "画素ごとの濃淡・色変換",
+  "titleLines": [
+    "画素ごとの濃淡・色変換"
+  ],
+  "crumbs": [
+    "CGと画像処理"
+  ]
+}

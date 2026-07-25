@@ -106,6 +106,17 @@ npm run data:jis-update
 - **svelte-component-guideline** — Svelteコンポーネント実装時に参照するガイドライン（引数なし）
 - **css-styling-guideline** — CSS記述時に参照するガイドライン（引数なし）
 
+### OGP画像
+
+- **generate-ogp-image** — 指定ページのOGP画像（1200×630 PNG）を生成し、記録・マニフェスト・`ogimage/OGP-TASKLIST.md` を更新
+  - `/generate-ogp-image <スラッグ>` — 対象ルートを指定（glob 可。例 `/color-theory/*`）
+  - `/generate-ogp-image <自然言語の条件>` — 「図版のないページ」など。対象ルート一覧に解決して提示し、承認を得てから生成する
+  - `/generate-ogp-image <スラッグ> <図版パス>` — 図版（png/jpg/svg/webp）を埋め込む（図版の要否は確認しない）
+  - `/generate-ogp-image <スラッグ> <図版パス> <all|background>` — 白背景の透過モードを指定（白背景かの画像解析・透過の確認をスキップ。`all`＝全ての白／`background`＝背景に繋がった白だけ。要 ImageMagick）
+  - 引数の判別：`all`／`background` は透過モード、画像拡張子付きは図版パス、残りが対象指定
+  - draft ページは glob・条件からの展開では除外する（単一スラッグで明示指定したときだけ生成）
+  - テンプレートのリデザイン後の一括再生成はスキル不要（`node ogimage/regenerate.mjs`）
+
 ### 設計・仕様・保守
 
 - **spec-sparring** — 新機能の仕様を対話で壁打ちし `spec/` へ書き出す

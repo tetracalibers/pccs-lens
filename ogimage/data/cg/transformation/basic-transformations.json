@@ -1,0 +1,11 @@
+{
+  "route": "cg/transformation/basic-transformations",
+  "title": "基本的な変換と同次座標",
+  "titleLines": [
+    "基本的な変換と同次座標"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "座標や図形の変換"
+  ]
+}

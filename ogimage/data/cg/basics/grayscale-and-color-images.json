@@ -1,0 +1,11 @@
+{
+  "route": "cg/basics/grayscale-and-color-images",
+  "title": "カラー画像とデータ量",
+  "titleLines": [
+    "カラー画像とデータ量"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "デジタル画像の基本"
+  ]
+}

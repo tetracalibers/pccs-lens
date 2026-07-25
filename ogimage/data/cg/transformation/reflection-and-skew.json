@@ -1,0 +1,11 @@
+{
+  "route": "cg/transformation/reflection-and-skew",
+  "title": "鏡映とスキュー",
+  "titleLines": [
+    "鏡映とスキュー"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "座標や図形の変換"
+  ]
+}

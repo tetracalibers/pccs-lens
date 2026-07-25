@@ -1,0 +1,10 @@
+{
+  "route": "cg/camera",
+  "title": "画像の撮影とカメラモデル",
+  "titleLines": [
+    "画像の撮影とカメラモデル"
+  ],
+  "crumbs": [
+    "CGと画像処理"
+  ]
+}

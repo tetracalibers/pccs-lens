@@ -1,0 +1,11 @@
+{
+  "route": "patterns/casual",
+  "title": "カジュアル",
+  "titleLines": [
+    "カジュアル"
+  ],
+  "crumbs": [
+    "配色シミュレータ"
+  ],
+  "figure": "assets/patterns/casual/figure.png"
+}

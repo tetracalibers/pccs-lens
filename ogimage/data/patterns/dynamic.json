@@ -1,0 +1,11 @@
+{
+  "route": "patterns/dynamic",
+  "title": "ダイナミック",
+  "titleLines": [
+    "ダイナミック"
+  ],
+  "crumbs": [
+    "配色シミュレータ"
+  ],
+  "figure": "assets/patterns/dynamic/figure.png"
+}
