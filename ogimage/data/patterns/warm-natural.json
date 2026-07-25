@@ -1,0 +1,12 @@
+{
+  "route": "patterns/warm-natural",
+  "title": "ウォームナチュラル",
+  "titleLines": [
+    "ウォーム",
+    "ナチュラル"
+  ],
+  "crumbs": [
+    "配色シミュレータ"
+  ],
+  "figure": "assets/patterns/warm-natural/figure.png"
+}

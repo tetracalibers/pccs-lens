@@ -1,0 +1,11 @@
+{
+  "route": "cg/basics/image-sampling",
+  "title": "画像の標本化",
+  "titleLines": [
+    "画像の標本化"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "デジタル画像の基本"
+  ]
+}

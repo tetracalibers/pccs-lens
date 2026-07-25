@@ -1,0 +1,12 @@
+{
+  "route": "jis-color-map/brown",
+  "title": "茶系の慣用色名マップ",
+  "titleLines": [
+    "茶系の",
+    "慣用色名マップ"
+  ],
+  "crumbs": [
+    "慣用色名マップ"
+  ],
+  "figure": "assets/jis-color-map/brown/figure.png"
+}

@@ -1,0 +1,11 @@
+{
+  "route": "patterns/classic",
+  "title": "クラシック",
+  "titleLines": [
+    "クラシック"
+  ],
+  "crumbs": [
+    "配色シミュレータ"
+  ],
+  "figure": "assets/patterns/classic/figure.png"
+}

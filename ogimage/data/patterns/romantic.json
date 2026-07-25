@@ -1,0 +1,11 @@
+{
+  "route": "patterns/romantic",
+  "title": "ロマンチック",
+  "titleLines": [
+    "ロマンチック"
+  ],
+  "crumbs": [
+    "配色シミュレータ"
+  ],
+  "figure": "assets/patterns/romantic/figure.png"
+}

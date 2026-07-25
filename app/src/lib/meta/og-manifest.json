@@ -1,0 +1,391 @@
+{
+  "routes": {
+    "analyze": {
+      "title": "PCCSによる配色の分析"
+    },
+    "approximate": {
+      "title": "色のPCCS近似"
+    },
+    "cg": {
+      "title": "CGと画像処理"
+    },
+    "cg/3d-reconstruction": {
+      "title": "画像からの3次元復元"
+    },
+    "cg/animation": {
+      "title": "アニメーション"
+    },
+    "cg/basics": {
+      "title": "デジタル画像の基本"
+    },
+    "cg/basics/anti-aliasing": {
+      "title": "画像生成時のアンチエイリアシング"
+    },
+    "cg/basics/area-filling": {
+      "title": "塗りつぶし処理"
+    },
+    "cg/basics/camera-capture-and-cg": {
+      "title": "カメラでの撮影とCG"
+    },
+    "cg/basics/cg-and-image-processing": {
+      "title": "CGと画像処理"
+    },
+    "cg/basics/gradient-generation": {
+      "title": "グラデーション生成"
+    },
+    "cg/basics/grayscale-and-color-images": {
+      "title": "カラー画像とデータ量"
+    },
+    "cg/basics/image-digitization": {
+      "title": "画像のデジタル化"
+    },
+    "cg/basics/image-quantization": {
+      "title": "画像の量子化"
+    },
+    "cg/basics/image-sampling": {
+      "title": "画像の標本化"
+    },
+    "cg/basics/shape-rasterization": {
+      "title": "ラスタ化による図形の描画"
+    },
+    "cg/basics/vector-and-raster": {
+      "title": "ベクタ表現とラスタ表現"
+    },
+    "cg/binary-image": {
+      "title": "2値画像処理"
+    },
+    "cg/camera": {
+      "title": "画像の撮影とカメラモデル"
+    },
+    "cg/camera/digital-camera-structure": {
+      "title": "デジタルカメラの構成"
+    },
+    "cg/deep-learning": {
+      "title": "深層学習による認識と生成"
+    },
+    "cg/editing": {
+      "title": "画像の編集と合成"
+    },
+    "cg/feature-detection": {
+      "title": "パターン・特徴の検出とマッチング"
+    },
+    "cg/frequency": {
+      "title": "周波数領域における処理"
+    },
+    "cg/history": {
+      "title": "歴史"
+    },
+    "cg/image-coding": {
+      "title": "画像符号化"
+    },
+    "cg/image-properties": {
+      "title": "画像の性質と色"
+    },
+    "cg/image-properties/dynamic-range-and-gradation": {
+      "title": "画像のダイナミックレンジと階調"
+    },
+    "cg/ip-rights": {
+      "title": "知的財産権"
+    },
+    "cg/modeling": {
+      "title": "モデリング"
+    },
+    "cg/npr": {
+      "title": "NPRと可視化"
+    },
+    "cg/optical-analysis": {
+      "title": "光学的解析とシーンの復元"
+    },
+    "cg/pattern-recognition": {
+      "title": "パターン認識と機械学習"
+    },
+    "cg/perception": {
+      "title": "知覚"
+    },
+    "cg/rendering": {
+      "title": "レンダリング"
+    },
+    "cg/restoration": {
+      "title": "画像の復元と生成"
+    },
+    "cg/segmentation": {
+      "title": "領域分割"
+    },
+    "cg/spatial-filtering": {
+      "title": "空間フィルタリング"
+    },
+    "cg/systems": {
+      "title": "CGシステムとデバイス"
+    },
+    "cg/tone-conversion": {
+      "title": "画素ごとの濃淡・色変換"
+    },
+    "cg/transformation": {
+      "title": "座標や図形の変換"
+    },
+    "cg/transformation/affine-and-projective-transformation": {
+      "title": "アフィン変換と射影変換"
+    },
+    "cg/transformation/basic-transformations": {
+      "title": "基本的な変換と同次座標"
+    },
+    "cg/transformation/coordinate-systems": {
+      "title": "座標系"
+    },
+    "cg/transformation/reflection-and-skew": {
+      "title": "鏡映とスキュー"
+    },
+    "cg/transformation/transformation-composition": {
+      "title": "変換の合成と順序"
+    },
+    "cg/video": {
+      "title": "動画像処理"
+    },
+    "color-fields": {
+      "title": "色の活用分野"
+    },
+    "color-fields/fashion-color": {
+      "title": "ファッションカラー"
+    },
+    "color-fields/fashion-color-concepts": {
+      "title": "ファッション色彩の考え方"
+    },
+    "color-fields/housing-color-design-process": {
+      "title": "住宅の色彩設計プロセス"
+    },
+    "color-fields/landscape-color-approach": {
+      "title": "景観色彩の考え方"
+    },
+    "color-fields/visual-design-and-color": {
+      "title": "ビジュアルデザインの分野"
+    },
+    "color-theory": {
+      "title": "色の理論"
+    },
+    "color-theory/additive-color-mixing-types": {
+      "title": "さまざまな加法混色"
+    },
+    "color-theory/adjacent-color-influence": {
+      "title": "近接した色の影響"
+    },
+    "color-theory/ancient-european-colors": {
+      "title": "古代ヨーロッパの色彩"
+    },
+    "color-theory/basic-color-terms": {
+      "title": "基本色彩語"
+    },
+    "color-theory/bicolor-and-tricolor": {
+      "title": "ビコロールとトリコロール"
+    },
+    "color-theory/brightness-sensitivity-and-adaptation": {
+      "title": "明るさに対する感度と順応"
+    },
+    "color-theory/camaieu-and-faux-camaieu": {
+      "title": "カマイユとフォカマイユ"
+    },
+    "color-theory/color-area-proportion": {
+      "title": "色の面積比による配色"
+    },
+    "color-theory/color-association-symbolism": {
+      "title": "色の連想と象徴性"
+    },
+    "color-theory/color-contrast": {
+      "title": "色の対比と三属性"
+    },
+    "color-theory/color-matching-and-grassmanns-law": {
+      "title": "等色実験とグラスマンの法則"
+    },
+    "color-theory/color-mixing-basics": {
+      "title": "加法混色と減法混色"
+    },
+    "color-theory/color-name-types": {
+      "title": "色名の種類"
+    },
+    "color-theory/color-roles": {
+      "title": "色のはたらき"
+    },
+    "color-theory/color-sensations": {
+      "title": "色と感覚"
+    },
+    "color-theory/color-system-types": {
+      "title": "色彩体系と表色系"
+    },
+    "color-theory/color-three-attributes": {
+      "title": "色の三属性"
+    },
+    "color-theory/color-vision-characteristics": {
+      "title": "色覚の特性"
+    },
+    "color-theory/color-vision-theories": {
+      "title": "色覚説"
+    },
+    "color-theory/color-wheel-and-color-solid": {
+      "title": "色相環と色立体"
+    },
+    "color-theory/color-wheel-based-color-schemes": {
+      "title": "色相環を分割した配色"
+    },
+    "color-theory/contrast-phenomena": {
+      "title": "さまざまな対比現象"
+    },
+    "color-theory/dominant-and-tone-on-tone": {
+      "title": "ドミナントとトーンオントーン"
+    },
+    "color-theory/electromagnetic-waves": {
+      "title": "光とは何か"
+    },
+    "color-theory/eye-structure": {
+      "title": "眼の構造"
+    },
+    "color-theory/gradient-color-scheme": {
+      "title": "グラデーション"
+    },
+    "color-theory/how-color-works": {
+      "title": "色と光の関係"
+    },
+    "color-theory/how-to-draw-pccs-color-wheel": {
+      "title": "PCCS色相環の描き方"
+    },
+    "color-theory/hue-tone-difference": {
+      "title": "色相差とトーン差による配色"
+    },
+    "color-theory/illuminance-and-lighting-design": {
+      "title": "照度と照明設計"
+    },
+    "color-theory/lamp-types": {
+      "title": "ランプの種類"
+    },
+    "color-theory/light-components-and-reflectance": {
+      "title": "光の成分と反射率"
+    },
+    "color-theory/light-path-through-the-retina": {
+      "title": "網膜内の光の経路"
+    },
+    "color-theory/medieval-european-colors": {
+      "title": "中近世ヨーロッパの色彩"
+    },
+    "color-theory/modern-european-colors": {
+      "title": "近代ヨーロッパの色彩"
+    },
+    "color-theory/munsell-color-system": {
+      "title": "マンセル表色系"
+    },
+    "color-theory/natural-harmony": {
+      "title": "ナチュラルハーモニー"
+    },
+    "color-theory/opponent-color-response": {
+      "title": "反対色応答と色の識別"
+    },
+    "color-theory/pccs-basics": {
+      "title": "PCCSと色の分類"
+    },
+    "color-theory/pccs-color-system": {
+      "title": "PCCSによる色表示"
+    },
+    "color-theory/photometric-and-radiometric-quantities": {
+      "title": "光のエネルギーと明るさ"
+    },
+    "color-theory/photoreceptor-types-and-distribution": {
+      "title": "視細胞の種類と分布"
+    },
+    "color-theory/psychological-scaling-method": {
+      "title": "心理学的尺度構成法の基本"
+    },
+    "color-theory/real-world-color-mixing": {
+      "title": "実世界でみられる混色"
+    },
+    "color-theory/rgb-color-system": {
+      "title": "RGB表色系"
+    },
+    "color-theory/subjective-color": {
+      "title": "主観色"
+    },
+    "color-theory/tonal-color-scheme": {
+      "title": "トーナル配色"
+    },
+    "color-theory/unity-and-variety": {
+      "title": "統一と変化の調和"
+    },
+    "color-theory/visual-clarity-and-visibility": {
+      "title": "見やすさの性質"
+    },
+    "color-theory/what-is-lighting": {
+      "title": "照明と照明光"
+    },
+    "color-theory/xyz-color-system": {
+      "title": "XYZ表色系"
+    },
+    "concept": {
+      "title": "このサイトの歩き方"
+    },
+    "games/lightness-match": {
+      "title": "明度を見分ける"
+    },
+    "games/tone-hunt": {
+      "title": "PCCSの清色・濁色を見分ける"
+    },
+    "games/tone-match": {
+      "title": "PCCSのトーンを見分ける"
+    },
+    "jis-color-map": {
+      "title": "慣用色名マップ"
+    },
+    "jis-color-map/all": {
+      "title": "すべての慣用色名一覧"
+    },
+    "jis-color-map/blue": {
+      "title": "青系の慣用色名マップ"
+    },
+    "jis-color-map/brown": {
+      "title": "茶系の慣用色名マップ"
+    },
+    "jis-color-map/green": {
+      "title": "緑系の慣用色名マップ"
+    },
+    "jis-color-map/neutral": {
+      "title": "無彩色系の慣用色名マップ"
+    },
+    "jis-color-map/purple": {
+      "title": "紫系の慣用色名マップ"
+    },
+    "jis-color-map/red": {
+      "title": "赤系の慣用色名マップ"
+    },
+    "jis-color-map/yellow": {
+      "title": "黄系の慣用色名マップ"
+    },
+    "patterns": {
+      "title": "配色シミュレータ"
+    },
+    "patterns/casual": {
+      "title": "カジュアル"
+    },
+    "patterns/chic": {
+      "title": "シック"
+    },
+    "patterns/classic": {
+      "title": "クラシック"
+    },
+    "patterns/clear": {
+      "title": "クリア"
+    },
+    "patterns/dynamic": {
+      "title": "ダイナミック"
+    },
+    "patterns/elegant": {
+      "title": "エレガント"
+    },
+    "patterns/fresh-natural": {
+      "title": "フレッシュナチュラル"
+    },
+    "patterns/modern": {
+      "title": "モダン"
+    },
+    "patterns/romantic": {
+      "title": "ロマンチック"
+    },
+    "patterns/warm-natural": {
+      "title": "ウォームナチュラル"
+    }
+  }
+}

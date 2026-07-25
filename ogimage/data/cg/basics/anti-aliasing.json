@@ -1,0 +1,12 @@
+{
+  "route": "cg/basics/anti-aliasing",
+  "title": "画像生成時のアンチエイリアシング",
+  "titleLines": [
+    "画像生成時の",
+    "アンチエイリアシング"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "デジタル画像の基本"
+  ]
+}

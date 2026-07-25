@@ -1,0 +1,11 @@
+{
+  "route": "cg/basics/gradient-generation",
+  "title": "グラデーション生成",
+  "titleLines": [
+    "グラデーション生成"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "デジタル画像の基本"
+  ]
+}

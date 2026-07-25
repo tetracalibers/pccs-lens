@@ -1,0 +1,10 @@
+{
+  "route": "cg/frequency",
+  "title": "周波数領域における処理",
+  "titleLines": [
+    "周波数領域における処理"
+  ],
+  "crumbs": [
+    "CGと画像処理"
+  ]
+}

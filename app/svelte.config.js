@@ -10,8 +10,6 @@ import remarkMermaid from "./src/lib/remark/mermaid.js"
 import remarkHeadingTitle from "./src/lib/remark/heading-title.js"
 import remarkCodeTitle from "./src/lib/remark/code-title.js"
 
-const isGithubPages = process.env.GITHUB_PAGES === "true"
-
 const shikiThemes = { light: "ayu-light", dark: "dracula-soft" }
 
 /** @type {ReturnType<typeof createHighlighter> | undefined} */
@@ -54,8 +52,7 @@ const directives = {
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   kit: {
-    adapter: adapter({ fallback: "404.html" }),
-    paths: { base: isGithubPages ? "/pccs-lens" : "" }
+    adapter: adapter({ fallback: "404.html" })
   },
   preprocess: [
     mdsvex({

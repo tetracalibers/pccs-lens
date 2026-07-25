@@ -1,0 +1,11 @@
+{
+  "route": "cg/basics/vector-and-raster",
+  "title": "ベクタ表現とラスタ表現",
+  "titleLines": [
+    "ベクタ表現とラスタ表現"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "デジタル画像の基本"
+  ]
+}

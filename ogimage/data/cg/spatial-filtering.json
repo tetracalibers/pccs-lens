@@ -1,0 +1,10 @@
+{
+  "route": "cg/spatial-filtering",
+  "title": "空間フィルタリング",
+  "titleLines": [
+    "空間フィルタリング"
+  ],
+  "crumbs": [
+    "CGと画像処理"
+  ]
+}

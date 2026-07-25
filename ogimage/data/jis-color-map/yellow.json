@@ -1,0 +1,12 @@
+{
+  "route": "jis-color-map/yellow",
+  "title": "黄系の慣用色名マップ",
+  "titleLines": [
+    "黄系の",
+    "慣用色名マップ"
+  ],
+  "crumbs": [
+    "慣用色名マップ"
+  ],
+  "figure": "assets/jis-color-map/yellow/figure.png"
+}

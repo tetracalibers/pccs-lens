@@ -46,6 +46,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Marmelad&display=swap" rel="stylesheet" />
 </svelte:head>
 
+<!-- OGP / Twitter Card タグはビルド後注入スクリプト（scripts/inject-og-meta.mjs）が
+     build/**/index.html の <head> へ静的に焼き込む（SNS クローラ向け。JS 非実行でも見える）。 -->
+
 <!-- display: contents なので描画ボックスは作らず（レイアウト不変）、--main-width-current だけを
      子孫（main / SiteFooter）へ継承させる。 -->
 <div class="page-shell" style="--main-width-current: {mainMaxWidth}">

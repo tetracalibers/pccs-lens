@@ -1,0 +1,12 @@
+{
+  "route": "color-theory/lamp-types",
+  "title": "ランプの種類",
+  "titleLines": [
+    "ランプの種類"
+  ],
+  "crumbs": [
+    "色の理論",
+    "照明"
+  ],
+  "figure": "assets/color-theory/lamp-types/figure.png"
+}

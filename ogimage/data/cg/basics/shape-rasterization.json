@@ -1,0 +1,11 @@
+{
+  "route": "cg/basics/shape-rasterization",
+  "title": "ラスタ化による図形の描画",
+  "titleLines": [
+    "ラスタ化による図形の描画"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "デジタル画像の基本"
+  ]
+}

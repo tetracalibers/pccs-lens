@@ -1,0 +1,12 @@
+{
+  "route": "patterns/fresh-natural",
+  "title": "フレッシュナチュラル",
+  "titleLines": [
+    "フレッシュ",
+    "ナチュラル"
+  ],
+  "crumbs": [
+    "配色シミュレータ"
+  ],
+  "figure": "assets/patterns/fresh-natural/figure.png"
+}

@@ -1,0 +1,11 @@
+{
+  "route": "cg/feature-detection",
+  "title": "パターン・特徴の検出とマッチング",
+  "titleLines": [
+    "パターン・特徴の",
+    "検出とマッチング"
+  ],
+  "crumbs": [
+    "CGと画像処理"
+  ]
+}

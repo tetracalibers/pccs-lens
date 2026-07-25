@@ -1,0 +1,10 @@
+{
+  "route": "cg/binary-image",
+  "title": "2値画像処理",
+  "titleLines": [
+    "2値画像処理"
+  ],
+  "crumbs": [
+    "CGと画像処理"
+  ]
+}

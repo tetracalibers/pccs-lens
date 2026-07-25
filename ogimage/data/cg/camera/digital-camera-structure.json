@@ -1,0 +1,11 @@
+{
+  "route": "cg/camera/digital-camera-structure",
+  "title": "デジタルカメラの構成",
+  "titleLines": [
+    "デジタルカメラの構成"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "画像の撮影とカメラモデル"
+  ]
+}
