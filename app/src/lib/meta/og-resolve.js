@@ -37,16 +37,11 @@ export const DEFAULT_IMAGE_KEY = "default"
 const stripSlashes = (s) => s.replace(/^\/+/, "").replace(/\/+$/, "")
 
 /**
- * pathname を base を除いたルートキー（先頭/末尾スラッシュ無し）に変換する。トップは ""。
+ * pathname をルートキー（先頭/末尾スラッシュ無し）に変換する。トップは ""。
  * @param {string} pathname 例: "/color-theory/pccs-basics/"
- * @param {string} [base] $app/paths の base（本番は ""、GitHub Pages は "/pccs-lens"）
  * @returns {string}
  */
-export const routeKeyFromPathname = (pathname, base = "") => {
-  let p = pathname
-  if (base && p.startsWith(base)) p = p.slice(base.length)
-  return stripSlashes(p)
-}
+export const routeKeyFromPathname = (pathname) => stripSlashes(pathname)
 
 /**
  * ルートキーから当該ページの OGP メタを解決する。
@@ -70,8 +65,7 @@ export const resolveOgMetaForKey = (key, routes) => {
  * pathname から当該ページの OGP メタを解決する。
  * @param {string} pathname
  * @param {OgManifestRoutes} routes マニフェストの routes オブジェクト。
- * @param {string} [base]
  * @returns {ResolvedOgMeta}
  */
-export const resolveOgMeta = (pathname, routes, base = "") =>
-  resolveOgMetaForKey(routeKeyFromPathname(pathname, base), routes)
+export const resolveOgMeta = (pathname, routes) =>
+  resolveOgMetaForKey(routeKeyFromPathname(pathname), routes)
