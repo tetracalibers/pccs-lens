@@ -1,7 +1,7 @@
 # OGP画像 生成タスクリスト
 
 各ページの OGP 画像（1200×630 PNG）を生成するためのチェックリスト。
-生成は `/generate-ogp-image <スラッグ>`（glob 可）で行う。詳細はスキル `generate-ogp-image` を参照。
+生成は `/generate-ogp-image <スラッグ>`（glob 可。「図版のないページ」などの自然言語指定も可）で行う。詳細はスキル `generate-ogp-image` を参照。
 
 - チェック済み `[x]` … 生成済み（`ogimage/data/<route>.json` に記録あり）
 - 未チェック `[ ]` … 未生成
