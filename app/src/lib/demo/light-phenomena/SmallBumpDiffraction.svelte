@@ -5,8 +5,9 @@
 
   // ===== 面と凸部 =====
   const BUMP_R = 7 // 凸部の半径。波長（30）より小さい＝「小さな凸部」
-  const SURFACE_H = 10 // 面の厚み
+  const SURFACE_H = 10 // 面の厚み（スリットの図の障壁の厚みと同じ）
   const SURFACE_MARGIN = 26 // 最外の回折波面より外へ面を伸ばす量
+  const SURFACE_R = 3 // 面の角丸（スリットの図の障壁と同じ）
 
   // ===== 進行方向を示す矢印 =====
   const IN_ARROW_LEAD = 24 // 入射矢印の始点が最外の回折波面より外にある量
@@ -44,17 +45,6 @@
 
   // 面は最外の回折波面より外側まで伸ばし、波が凸部だけから広がっていることを示す
   const SURFACE_HALF_W = R_MAX + SURFACE_MARGIN
-
-  // 面（y = 0 が表面）の中央に、半円状の小さな凸部を持つ輪郭
-  const surfacePath = [
-    `M ${-SURFACE_HALF_W} 0`,
-    `L ${-BUMP_R} 0`,
-    `A ${BUMP_R} ${BUMP_R} 0 0 1 ${BUMP_R} 0`,
-    `L ${SURFACE_HALF_W} 0`,
-    `L ${SURFACE_HALF_W} ${SURFACE_H}`,
-    `L ${-SURFACE_HALF_W} ${SURFACE_H}`,
-    "Z"
-  ].join(" ")
 
   // 回折前の光。凸部の真上から下りてきて、凸部の手前で止める
   const inArrow = {
@@ -157,6 +147,15 @@
     />
   {/each}
 
-  <!-- 面（中央に小さな凸部がある） -->
-  <path d={surfacePath} fill={COL_SURFACE} />
+  <!-- 面（y = 0 が表面。端はスリットの図の障壁と同じ角丸にする） -->
+  <rect
+    x={-SURFACE_HALF_W}
+    y={0}
+    width={SURFACE_HALF_W * 2}
+    height={SURFACE_H}
+    rx={SURFACE_R}
+    fill={COL_SURFACE}
+  />
+  <!-- 小さな凸部。下半分は面に隠れ、丸みのある膨らみだけが面から出る -->
+  <circle cx={0} cy={0} r={BUMP_R} fill={COL_SURFACE} />
 </svg>
