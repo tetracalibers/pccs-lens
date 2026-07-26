@@ -53,8 +53,8 @@
     background: var(--_color);
     color: #ffffff;
     font-size: 0.8rem;
-    line-height: 0.95;
-    padding: 4px 6px;
+    line-height: 1.1;
+    padding: 3px 6px;
   }
 
   .grade-tag[data-grade="3"] {
