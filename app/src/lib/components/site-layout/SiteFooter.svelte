@@ -1,166 +1,38 @@
 <script lang="ts">
   import { page } from "$app/state"
-  import { resolve } from "$app/paths"
   import Icon from "@iconify/svelte"
-  import { colorTheoryPageNav } from "$lib/content-pages/color-theory-nav"
-  import { colorFieldsPageNav } from "$lib/content-pages/color-fields-nav"
-  import { cgPages, cgGroupIdByRoute } from "$lib/content-pages/cg"
-  import { cgArticlePageNav } from "$lib/content-pages/cg-article-nav"
-  import { JIS_COLOR_FAMILIES } from "$lib/data/jis-colors"
-  import { THEMES } from "$lib/patterns/themes"
-  import { FOOTER_NAV_ITEMS } from "$lib/meta/site-nav"
+  import { footerPageNavFor, footerSoloLinkFor, SITE_GUIDE_LABEL } from "$lib/meta/footer-page-nav"
 
-  // 中央ラベル・主リンクで共有する「このサイトの歩き方」。描画時にこの値かどうかで <wbr /> 挿入を判定する。
-  const SITE_GUIDE_LABEL = "このサイトの歩き方"
-
-  const isConceptPage = $derived(page.route.id === "/concept")
-  const isCgIndexPage = $derived(page.route.id === "/cg")
-
-  const pageNavInfo = $derived.by(() => {
-    const id = page.route.id
-    if (!id) return null
-
-    // CG ユニットページ（動的ルート /cg/[slug]）は cgGroups のカリキュラム順で前後に送る
-    const cgIndex =
-      id === "/cg/[slug]" ? cgPages.findIndex((cgPage) => cgPage.route === page.params.slug) : -1
-    if (cgIndex !== -1) {
-      const current = cgPages[cgIndex]
-      const prev = cgPages[cgIndex - 1]
-      const next = cgPages[cgIndex + 1]
-      const groupId = cgGroupIdByRoute.get(current.route)
-      return {
-        prev: prev ? { title: prev.title } : undefined,
-        next: next ? { title: next.title } : undefined,
-        prevHref: prev?.href,
-        nextHref: next?.href,
-        listHref: groupId ? `${resolve("/cg")}#${groupId}` : resolve("/cg"),
-        listLabel: "一覧へ戻る"
-      }
-    }
-
-    // CG 記事ページ（静的ネストルート /cg/<unit>/<article>）は記事の読み順で前後に送る
-    if (id.startsWith("/cg/") && id !== "/cg/[slug]") {
-      const nav = cgArticlePageNav.get(id.slice(1))
-      if (!nav) return null
-      return {
-        prev: nav.prev ? { title: nav.prev.title } : undefined,
-        next: nav.next ? { title: nav.next.title } : undefined,
-        prevHref: nav.prev?.href,
-        nextHref: nav.next?.href,
-        listHref: nav.listHref,
-        listLabel: "一覧へ戻る"
-      }
-    }
-
-    // 色系統ごとの慣用色名マップ（/jis-color-map/[family]）は色系統の並び順で循環的に前後へ送る
-    if (id === "/jis-color-map/[family]") {
-      const index = JIS_COLOR_FAMILIES.findIndex((f) => f.id === page.params.family)
-      if (index === -1) return null
-      const count = JIS_COLOR_FAMILIES.length
-      const prev = JIS_COLOR_FAMILIES[(index - 1 + count) % count]
-      const next = JIS_COLOR_FAMILIES[(index + 1) % count]
-      return {
-        prev: { title: prev.name },
-        next: { title: next.name },
-        prevHref: resolve("/jis-color-map/[family]", { family: prev.id }),
-        nextHref: resolve("/jis-color-map/[family]", { family: next.id }),
-        listHref: resolve("/jis-color-map"),
-        listLabel: "一覧へ戻る"
-      }
-    }
-
-    // イメージ別の配色シミュレータ（/patterns/[theme]）はテーマの並び順で循環的に前後へ送る
-    if (id === "/patterns/[theme]") {
-      const index = THEMES.findIndex((t) => t.id === page.params.theme)
-      if (index === -1) return null
-      const count = THEMES.length
-      const prev = THEMES[(index - 1 + count) % count]
-      const next = THEMES[(index + 1) % count]
-      return {
-        prev: { title: prev.labelJa },
-        next: { title: next.labelJa },
-        prevHref: resolve("/patterns/[theme]", { theme: prev.id }),
-        nextHref: resolve("/patterns/[theme]", { theme: next.id }),
-        listHref: resolve("/patterns"),
-        listLabel: "一覧へ戻る"
-      }
-    }
-
-    // ヘッダーナビのインデックスページ（CG は除外）は、ヘッダーと同じ順で循環的に前後へ送る。
-    // 中央リンクは footer-inner と同じ「このサイトの歩き方」(/concept) のまま。
-    const navIndex = FOOTER_NAV_ITEMS.findIndex((item) => item.path === id)
-    if (navIndex !== -1) {
-      const count = FOOTER_NAV_ITEMS.length
-      const prev = FOOTER_NAV_ITEMS[(navIndex - 1 + count) % count]
-      const next = FOOTER_NAV_ITEMS[(navIndex + 1) % count]
-      return {
-        prev: { title: prev.label },
-        next: { title: next.label },
-        prevHref: prev.href,
-        nextHref: next.href,
-        listHref: resolve("/concept"),
-        listLabel: SITE_GUIDE_LABEL
-      }
-    }
-
-    for (const base of ["color-theory", "color-fields"] as const) {
-      const prefix = `/${base}/`
-      if (!id.startsWith(prefix)) continue
-      const slug = id.slice(prefix.length)
-      if (!slug || slug.includes("/")) continue
-      const nav =
-        base === "color-theory" ? colorTheoryPageNav.get(slug) : colorFieldsPageNav.get(slug)
-      if (!nav) return null
-      // @ts-expect-error dynamic route path
-      const prevHref = nav.prev ? resolve(`/${base}/${nav.prev.slug}`) : undefined
-      // @ts-expect-error dynamic route path
-      const nextHref = nav.next ? resolve(`/${base}/${nav.next.slug}`) : undefined
-      const listHref = `${resolve(`/${base}`)}#${nav.categoryId}`
-      return {
-        prev: nav.prev,
-        next: nav.next,
-        prevHref,
-        nextHref,
-        listHref,
-        listLabel: "一覧へ戻る"
-      }
-    }
-    return null
-  })
+  const pageNav = $derived(footerPageNavFor(page.route.id, page.params))
+  const soloLink = $derived(footerSoloLinkFor(page.route.id))
 </script>
 
+<!-- 「このサイトの歩き方」だけは折り返し位置を <wbr /> で指定する。 -->
+<!-- prettier-ignore -->
+{#snippet linkLabel(label: string)}{#if label === SITE_GUIDE_LABEL}このサイトの<wbr />歩き方{:else}{label}{/if}{/snippet}
+
 <footer class="site-footer">
-  {#if pageNavInfo}
+  {#if pageNav}
     <nav class="footer-page-nav" aria-label="ページ送り">
-      {#if pageNavInfo.prev && pageNavInfo.prevHref}
-        <a class="footer-page-nav-link footer-page-nav-prev" href={pageNavInfo.prevHref}>
+      {#if pageNav.prev}
+        <a class="footer-page-nav-link footer-page-nav-prev" href={pageNav.prev.href}>
           <Icon icon="uil:arrow-left" width="16" aria-hidden="true" />
-          <span class="footer-page-nav-title">{pageNavInfo.prev.title}</span>
+          <span class="footer-page-nav-title">{pageNav.prev.title}</span>
         </a>
       {/if}
-      {#if pageNavInfo.listHref}
-        <!-- prettier-ignore -->
-        <a class="footer-link footer-page-nav-list" href={pageNavInfo.listHref}>
-          {#if pageNavInfo.listLabel === SITE_GUIDE_LABEL}このサイトの<wbr />歩き方{:else}{pageNavInfo.listLabel}{/if}
-        </a>
-      {/if}
-      {#if pageNavInfo.next && pageNavInfo.nextHref}
-        <a class="footer-page-nav-link footer-page-nav-next" href={pageNavInfo.nextHref}>
-          <span class="footer-page-nav-title">{pageNavInfo.next.title}</span>
+      <a class="footer-link footer-page-nav-list" href={pageNav.list.href}>
+        {@render linkLabel(pageNav.list.label)}
+      </a>
+      {#if pageNav.next}
+        <a class="footer-page-nav-link footer-page-nav-next" href={pageNav.next.href}>
+          <span class="footer-page-nav-title">{pageNav.next.title}</span>
           <Icon icon="uil:arrow-right" width="16" aria-hidden="true" />
         </a>
       {/if}
     </nav>
   {:else}
     <div class="footer-inner">
-      {#if isCgIndexPage}
-        <a href={resolve("/")} class="footer-link">トップへ戻る</a>
-      {:else}
-        <!-- prettier-ignore -->
-        <a href={isConceptPage ? resolve("/") : resolve("/concept")} class="footer-link">
-          {#if isConceptPage}トップページへ{:else}このサイトの<wbr />歩き方{/if}
-        </a>
-      {/if}
+      <a class="footer-link" href={soloLink.href}>{@render linkLabel(soloLink.title)}</a>
     </div>
   {/if}
 </footer>
