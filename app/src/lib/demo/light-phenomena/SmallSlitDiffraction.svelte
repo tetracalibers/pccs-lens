@@ -17,7 +17,7 @@
   const OUT_ARROW_OVERSHOOT = 24 // 放射矢印が最外の回折波面より外へ突き抜ける量
 
   // ===== 線幅 =====
-  const STROKE_WIDTH_WAVE = 2.5
+  const STROKE_WIDTH_WAVE = 1.4
   const STROKE_WIDTH_ARROW = 2.5
 
   // ===== 矢の形状（タイプA） =====
