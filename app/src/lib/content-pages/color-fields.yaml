@@ -61,8 +61,7 @@
   sections:
     - title: 色とコミュニケーション
       links:
-        - title: 色彩効果とビジネス
-          grades: ["1"]
+        - slug: color-effects-and-business
         - title: カラーコミュニケーションツール
           grades: ["1"]
     - title: 商品のビジネスプロセス
