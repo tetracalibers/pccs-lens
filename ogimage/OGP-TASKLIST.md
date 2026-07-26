@@ -112,7 +112,7 @@
 - [x] `/color-theory/subjective-color`
 - [draft] `/color-theory/optical-illusions`
 - [x] `/color-theory/what-is-lighting`
-- [draft] `/color-theory/color-temperature-and-light-color`
+- [x] `/color-theory/color-temperature-and-light-color`
 - [x] `/color-theory/illuminance-and-lighting-design`
 - [draft] `/color-theory/photometric-quantities`
 - [draft] `/color-theory/color-rendering`

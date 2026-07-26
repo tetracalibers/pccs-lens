@@ -210,6 +210,9 @@
     "color-theory/color-system-types": {
       "title": "色彩体系と表色系"
     },
+    "color-theory/color-temperature-and-light-color": {
+      "title": "色温度と光色"
+    },
     "color-theory/color-three-attributes": {
       "title": "色の三属性"
     },

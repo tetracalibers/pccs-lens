@@ -123,6 +123,8 @@
 
 ドキュメントとして扱われる（アプリの実行に関わらない）Markdownファイルのみの変更や、スキルの変更は、`[skip ci]` をつけてコミットする。
 
+`generate-ogp-image` スキルによる OGP 画像の生成結果のみのコミットも、`[skip ci]` をつけてコミットする。生成物（`app/static/ogp/**`・`ogimage/data/**`）・マニフェスト（`app/src/lib/meta/og-manifest.json`）・タスクリスト（`ogimage/OGP-TASKLIST.md`）は `app/src/lib/meta/og-manifest.json` を含むが、いずれもアプリのロジックではなくメタデータ・静的アセットのため CI を回す必要がない。
+
 **ただし、未 push のコミットにアプリの実行やビルドに関わる変更が含まれている場合は、絶対に `[skip ci]` をつけない。** 今回のコミットが Markdown・スキルのみの変更であっても例外ではない。先頭コミットの `[skip ci]` は push 全体の CI をスキップしうるため、`[skip ci]` を付けると未 push のアプリ変更に対して CI が回らなくなる。この場合は必ず `[skip ci]` を外すこと。
 
 ## 品質チェック
