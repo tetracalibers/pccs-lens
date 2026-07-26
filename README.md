@@ -21,6 +21,15 @@
 > - その後、人手で調整したものは`<title>：調整内容`でコミットする（`[ai-draft]` は付けない）
 > - 後方互換のため、従来の`<title>：草稿を書かせた`も引き続きAI草稿として有効
 
+### 記事の公開（draft を外したとき）
+
+frontmatter から `draft: true`（と直前の空行）を削除して記事を公開状態にしたら、次の4つを**人手で**行う。自動化されていないため、公開のたびに確認する。
+
+1. **`visual` フラグの追加**：`$lib/demo/` の図解コンポーネントを使っているページは、frontmatter の `grades:` の次の行に `visual: true` を足す。一覧のリンクに「図解」タグが付く。Mermaid 図だけのページには付けない運用。
+2. **OGP画像の生成**：`/generate-ogp-image <スラッグ>` で生成する。draft ページは glob・自然言語指定の展開から除外されるため、**公開してから**生成する。生成物（`app/static/ogp/**`・`ogimage/data/**`）・マニフェスト（`app/src/lib/meta/og-manifest.json`）・`ogimage/OGP-TASKLIST.md` はコミットに含める（コミットメッセージ規約は `CLAUDE.md` の「Git規約」を参照）。
+3. **文体スタイルガイドの更新**：`/author-style-analyzer <slug>` を実行し、その記事の「AI草稿 → 人手編集」の差分を `writing-guides/` の各ガイドへ反映する。人手修正のコミットを済ませてから実行する（Git履歴が根拠になるため）。複数記事を公開したときはカンマ区切りでまとめて1回実行できる（`/author-style-analyzer <slug1>,<slug2>`）。推奨 effort は `high`（後述「文体分析・執筆（author-style スキル）」節）。
+4. **PR説明文の更新**：ここまでを push したうえで `/update-pr-description` を実行する。公開した記事がカテゴリ別に列挙され、**記事ごとに 1〜3 の実施状況がチェックリストとして載る**（判定できた分は自動でチェック済みになる）。未チェックの項目が残っていれば、それが公開後にやり残した作業。
+
 ### SVG図版の作成
 
 - `/svg-diagram-component`スキルに図の内容を渡して作成する
@@ -129,6 +138,7 @@ npm run data:jis-update
   - `/update-pr-description <PRのURL>` — 指定したPRを対象にする
   - `/update-pr-description` — 引数なし。現在チェックアウト中のブランチに紐づくPRが対象（PRが無ければ促す）
   - svxの差分から `draft: true` を外して公開された記事を検出し、カテゴリ別に説明文へリストアップする
+  - 公開した記事ごとに、公開後の人手作業（`visual` フラグ・OGP画像・文体ガイドの更新）のチェックリストを付ける（`visual: true` の有無・`ogimage/data/<route>.json` の有無・`writing-guides/` の根拠への記載から判定してチェック済みにする）
 
 ## ドキュメント構成
 
