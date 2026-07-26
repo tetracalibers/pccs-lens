@@ -13,6 +13,7 @@ draft: true
   import SpecularReflection from "$lib/demo/light-phenomena/SpecularReflection.svelte"
   import DiffuseReflection from "$lib/demo/light-phenomena/DiffuseReflection.svelte"
   import SmallSlitDiffraction from "$lib/demo/light-phenomena/SmallSlitDiffraction.svelte"
+  import SmallBumpDiffraction from "$lib/demo/light-phenomena/SmallBumpDiffraction.svelte"
 </script>
 
 ## :WithGradeTag[光の反射]{grades="3"}
@@ -67,7 +68,9 @@ TODO：拡散透過の図
   <SmallSlitDiffraction />
 </SVGWrapper>
 
-TODO：小さな凸部で起こる回折の図
+<SVGWrapper maxW="560">
+  <SmallBumpDiffraction />
+</SVGWrapper>
 
 ## :WithGradeTag[光の散乱]{grades="3"}
 
