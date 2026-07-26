@@ -7,6 +7,7 @@
   import { cgPages, cgGroupIdByRoute } from "$lib/content-pages/cg"
   import { cgArticlePageNav } from "$lib/content-pages/cg-article-nav"
   import { JIS_COLOR_FAMILIES } from "$lib/data/jis-colors"
+  import { THEMES } from "$lib/patterns/themes"
   import { FOOTER_NAV_ITEMS } from "$lib/meta/site-nav"
 
   // 中央ラベル・主リンクで共有する「このサイトの歩き方」。描画時にこの値かどうかで <wbr /> 挿入を判定する。
@@ -64,6 +65,23 @@
         prevHref: resolve("/jis-color-map/[family]", { family: prev.id }),
         nextHref: resolve("/jis-color-map/[family]", { family: next.id }),
         listHref: resolve("/jis-color-map"),
+        listLabel: "一覧へ戻る"
+      }
+    }
+
+    // イメージ別の配色シミュレータ（/patterns/[theme]）はテーマの並び順で循環的に前後へ送る
+    if (id === "/patterns/[theme]") {
+      const index = THEMES.findIndex((t) => t.id === page.params.theme)
+      if (index === -1) return null
+      const count = THEMES.length
+      const prev = THEMES[(index - 1 + count) % count]
+      const next = THEMES[(index + 1) % count]
+      return {
+        prev: { title: prev.labelJa },
+        next: { title: next.labelJa },
+        prevHref: resolve("/patterns/[theme]", { theme: prev.id }),
+        nextHref: resolve("/patterns/[theme]", { theme: next.id }),
+        listHref: resolve("/patterns"),
         listLabel: "一覧へ戻る"
       }
     }
