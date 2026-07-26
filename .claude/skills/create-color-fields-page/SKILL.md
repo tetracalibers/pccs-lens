@@ -1,6 +1,8 @@
 ---
 name: create-color-fields-page
 description: `app/src/routes/color-fields` 配下に新しい色の活用分野ページの雛形を作成するスキル。引数で受け取ったタイトルから slug を考え、ディレクトリと `+page.svx` を作成し、`app/src/lib/content-pages/color-fields.yaml` の該当する `DraftLink` エントリを `PageLink` に置き換える。色の活用分野一覧から下書きページを「実装に着手する」段階で使用する。
+model: sonnet
+effort: high
 ---
 
 # 色の活用分野ページ作成スキル
