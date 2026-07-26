@@ -28,7 +28,8 @@
 
   // ===== 色 =====
   const COL_WAVE = "var(--canvas-pen-water)" // 回折後の波面
-  const COL_ARROW = "var(--canvas-pen-orange)" // 光の進行方向
+  const COL_ARROW_IN = "var(--canvas-pen-orange)" // 回折前の光
+  const COL_ARROW_OUT = "var(--canvas-pen-yellow)" // 回折後の光
   const COL_BARRIER = "var(--color-body)" // 障壁
 
   // ===== 余白 =====
@@ -88,9 +89,9 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" {viewBox}>
   <defs>
-    <!-- 進行方向の矢じり -->
+    <!-- 回折前の光の矢じり（オレンジ） -->
     <marker
-      id="slit-diffraction-arrow"
+      id="slit-diffraction-arrow-in"
       viewBox="0 0 {ARROW_HEAD_VIEWBOX} {ARROW_HEAD_VIEWBOX}"
       refX={ARROW_HEAD_VIEWBOX / 2}
       refY={ARROW_HEAD_VIEWBOX / 2}
@@ -102,7 +103,28 @@
       <polyline
         points="0,3.5 3.5,1.75 0,0"
         fill="none"
-        stroke={COL_ARROW}
+        stroke={COL_ARROW_IN}
+        stroke-width={ARROW_HEAD_STROKE}
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        transform="translate(1.1667 1.75)"
+      />
+    </marker>
+    <!-- 回折後の光の矢じり（イエロー） -->
+    <marker
+      id="slit-diffraction-arrow-out"
+      viewBox="0 0 {ARROW_HEAD_VIEWBOX} {ARROW_HEAD_VIEWBOX}"
+      refX={ARROW_HEAD_VIEWBOX / 2}
+      refY={ARROW_HEAD_VIEWBOX / 2}
+      markerWidth={ARROW_HEAD_SIZE}
+      markerHeight={ARROW_HEAD_SIZE}
+      markerUnits="userSpaceOnUse"
+      orient="auto-start-reverse"
+    >
+      <polyline
+        points="0,3.5 3.5,1.75 0,0"
+        fill="none"
+        stroke={COL_ARROW_OUT}
         stroke-width={ARROW_HEAD_STROKE}
         stroke-linecap="round"
         stroke-linejoin="round"
@@ -117,10 +139,10 @@
     y1={inArrow.y}
     x2={inArrow.x2}
     y2={inArrow.y}
-    stroke={COL_ARROW}
+    stroke={COL_ARROW_IN}
     stroke-width={STROKE_WIDTH_ARROW}
     stroke-linecap="round"
-    marker-end="url(#slit-diffraction-arrow)"
+    marker-end="url(#slit-diffraction-arrow-in)"
   />
 
   <!-- 回折波の波面（スリットを中心に半円状に広がる） -->
@@ -141,10 +163,10 @@
       y1={a.from.y}
       x2={a.to.x}
       y2={a.to.y}
-      stroke={COL_ARROW}
+      stroke={COL_ARROW_OUT}
       stroke-width={STROKE_WIDTH_ARROW}
       stroke-linecap="round"
-      marker-end="url(#slit-diffraction-arrow)"
+      marker-end="url(#slit-diffraction-arrow-out)"
     />
   {/each}
 
