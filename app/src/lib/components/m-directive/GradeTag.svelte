@@ -53,7 +53,7 @@
     background: var(--_color);
     color: #ffffff;
     font-size: 0.8rem;
-    line-height: 1.1;
+    line-height: 1.2;
     padding: 3px 6px;
   }
 
