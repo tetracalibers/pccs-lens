@@ -136,7 +136,7 @@
 ## 色の理論（nested） — 記事：色の見え方の多様性（`color-theory.yaml` #color-vision-diversity）
 
 - [x] `/color-theory/color-vision-characteristics`
-- [draft] `/color-theory/color-vision-types`
+- [x] `/color-theory/color-vision-types`
 - [ページ未作成] 混同しやすい色
 - [ページ未作成] 色の誤認
 - [draft] `/color-theory/age-related-vision-changes`

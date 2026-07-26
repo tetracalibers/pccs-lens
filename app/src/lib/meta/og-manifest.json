@@ -222,6 +222,9 @@
     "color-theory/color-vision-theories": {
       "title": "色覚説"
     },
+    "color-theory/color-vision-types": {
+      "title": "色覚タイプの分類"
+    },
     "color-theory/color-wheel-and-color-solid": {
       "title": "色相環と色立体"
     },
