@@ -169,8 +169,7 @@
         - slug: landscape-color-approach
         - slug: housing-color-design-process
         - slug: landscape-act
-        - title: 景観計画
-          grades: ["1"]
+        - slug: landscape-plan
         - title: 景観計画における色彩基準
           grades: ["1"]
         - title: 色の三属性と景観形成
