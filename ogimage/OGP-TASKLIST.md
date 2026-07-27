@@ -230,7 +230,7 @@
 ## 色の活用分野（nested） — 記事：インテリア（`color-fields.yaml` #interior）
 
 - [x] `/color-fields/interior-design-basics`
-- [draft] `/color-fields/interior-concept-history`
+- [x] `/color-fields/interior-concept-history`
 - [ページ未作成] インテリアと心理効果・視覚効果
 - [draft] `/color-fields/interior-elements-classification`
 - [ページ未作成] インテリアエレメントの配色
