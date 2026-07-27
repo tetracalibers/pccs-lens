@@ -3,9 +3,15 @@ layout: guide-content
 title: 加齢による見え方の変化
 
 grades: ["uc"]
+visual: true
 
 draft: true
 ---
+
+<script>
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import LensSpectralTransmittance from "$lib/demo/aging-vision/LensSpectralTransmittance.svelte"
+</script>
 
 人間の生理機能のうち、特に:Mark[視覚]・:Mark[聴覚]などの感覚機能と:Mark[平衡]機能は、:Mark[50]歳代後半になると著しく低下します。
 
@@ -28,9 +34,9 @@ draft: true
 加齢とともに:Mark[水晶体]が混濁し、さまざまな波長の光に対する:Mark[透過率]が低下します。
 網膜に届く光の量が減少することで、網膜で結ばれる:Mark[像]の質が低下し、視力が落ちていきます。
 
-:::Todo
-水晶体分光透過率のグラフ
-:::
+<SVGWrapper maxW="500">
+  <LensSpectralTransmittance />
+</SVGWrapper>
 
 水晶体は[黄変](/color-theory/color-vision-characteristics/)するため、特に:Mark[短]波長の光に対する透過率が大きく下がり、:Mark[青]色が:Mark[暗く]見えるようになります。
 
