@@ -168,8 +168,7 @@
       links:
         - slug: landscape-color-approach
         - slug: housing-color-design-process
-        - title: 景観法
-          grades: ["1"]
+        - slug: landscape-act
         - title: 景観計画
           grades: ["1"]
         - title: 景観計画における色彩基準
