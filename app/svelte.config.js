@@ -29,6 +29,7 @@ const directives = {
   container: [
     { name: "Tips", replaceTo: "svelte-component" },
     { name: "Note", replaceTo: "svelte-component" },
+    { name: "Warning", replaceTo: "svelte-component" },
     { name: "Example", replaceTo: "svelte-component" },
     { name: "Action", replaceTo: "svelte-component" },
     { name: "CardGrid", replaceTo: "svelte-component" },

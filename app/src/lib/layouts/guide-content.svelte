@@ -14,6 +14,7 @@
   import WithGroupTag from "$lib/components/m-directive/WithGroupTag.svelte"
   import Info from "$lib/components/m-directive/Info.svelte"
   import Note from "$lib/components/m-directive/Note.svelte"
+  import Warning from "$lib/components/m-directive/Warning.svelte"
   import Example from "$lib/components/m-directive/Example.svelte"
   import Action from "$lib/components/m-directive/Action.svelte"
   import CardGrid from "$lib/components/m-directive/CardGrid.svelte"
@@ -36,6 +37,7 @@
     WithGroupTag,
     Info,
     Note,
+    Warning,
     Example,
     Action,
     CardGrid,
