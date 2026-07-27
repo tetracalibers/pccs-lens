@@ -110,7 +110,7 @@
 - [draft] `/color-theory/color-assimilation`
 - [draft] `/color-theory/color-area-effect`
 - [x] `/color-theory/subjective-color`
-- [draft] `/color-theory/optical-illusions`
+- [x] `/color-theory/optical-illusions`
 - [x] `/color-theory/what-is-lighting`
 - [x] `/color-theory/color-temperature-and-light-color`
 - [x] `/color-theory/illuminance-and-lighting-design`
