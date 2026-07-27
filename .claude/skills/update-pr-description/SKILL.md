@@ -53,11 +53,11 @@ effort: high
 | --- | --- | --- |
 | `visual` フラグ | 図解のあるページは frontmatter の `grades:` の次の行に `visual: true` を足す（一覧に「図解」タグが付く） | 現在の `+page.svx` に `visual: true` 行があるか。図解の有無は `$lib/demo/` の import があるか |
 | OGP画像 | `/generate-ogp-image /<route>` で 1200×630 の PNG を生成する（draft のままでは glob 展開の対象外なので公開後に行う） | 記録 `ogimage/data/<route>.json` が存在するか |
-| 文体スタイルガイド | `/author-style-analyzer <slug>` でその記事の「AI草稿 → 人手編集」の差分を `writing-guides/` へ反映する | `writing-guides/**/*.md` に**記事タイトル**（frontmatter の `title`）が現れるか（根拠欄に記事タイトルで書かれるため）。あくまで手がかりで、確証ではない |
+| 文体スタイルガイド | `/author-style-analyzer <slug>` でその記事の「AI草稿 → 人手編集」の差分を `writing-guides/` へ反映する | 文体解析タスクリスト `writing-guides/STYLE-ANALYSIS-TASKLIST.md` に `- [x] \`/<route>\`` の行があるか（analyzer が分析後に更新する記録なので、これが一次情報源）。無い場合の補助として、`writing-guides/**/*.md` に**記事タイトル**（frontmatter の `title`）が現れるかも見る |
 
 - `<route>` は `app/src/routes/` を除いたパス（例: `color-theory/pccs-basics`）。`<slug>` はその末尾（例: `pccs-basics`）。
 - ここでいう図解は `$lib/demo/` 配下のコンポーネントを指す。Mermaid 図だけのページに `visual: true` は付けない運用なので、Mermaid の有無は判定に使わない。
-- **文体ガイドの判定は弱い**：分析しても新しいルールの根拠にならなければタイトルは載らない。記載が無い＝未分析とは限らないので、未チェックにする場合も「未分析と断定」せず、実施の要否をユーザーに確認できる形で報告する。
+- **文体ガイドの判定は、タスクリストに行があれば強く、無ければ弱い**：タスクリストの `[x]` は analyzer が分析後に付ける記録なので確度が高い。一方、ガイド本文への記事タイトルの記載は手がかりに過ぎない（分析しても新しいルールの根拠にならなければタイトルは載らない）。タスクリストに該当行が無い記事（リスト追加前の記事・掲載漏れ）で未チェックにする場合は、「未分析と断定」せず、実施の要否をユーザーに確認できる形で報告する。
 - PR説明文の更新（このスキル）自体は公開後作業の4つめだが、実行そのものが完了を意味するのでチェックリストには載せない。
 
 ## 手順
@@ -127,7 +127,13 @@ while IFS=$'\t' read -r _ category title file; do
   grep -qE '^visual: *true' "$file" && visual=set || visual=unset
   grep -q '\$lib/demo/' "$file" && figure=yes || figure=no
   [ -f "ogimage/data/$route.json" ] && ogp=done || ogp=todo
-  grep -rqF "$title" writing-guides --include='*.md' && style=cited || style=uncited
+  if grep -qF "- [x] \`/$route\`" writing-guides/STYLE-ANALYSIS-TASKLIST.md 2>/dev/null; then
+    style=done
+  elif grep -rqF "$title" writing-guides --include='*.md'; then
+    style=cited
+  else
+    style=uncited
+  fi
   printf '%s\tvisual=%s\tfigure=%s\togp=%s\tstyle=%s\n' "$route" "$visual" "$figure" "$ogp" "$style"
 done < "$PUBLISHED_TSV"
 ```
@@ -193,7 +199,8 @@ figure=no                 →  - [x] `visual` フラグ不要（図解なし）
 ogp=done                  →  - [x] OGP画像を生成済み
 ogp=todo                  →  - [ ] OGP画像を生成 — `/generate-ogp-image /<route>`
 
-style=cited               →  - [x] 文体スタイルガイドへ反映済み
+style=done                →  - [x] 文体スタイルガイドへ反映済み
+style=cited               →  - [x] 文体スタイルガイドへ反映済み（行は done と同じ。食い違いは手順8で報告する）
 style=uncited             →  - [ ] 文体スタイルガイドを更新 — `/author-style-analyzer <slug>`
 
 UNKNOWN                   →  3項目とも「- [ ] …（未確認）」にし、報告で理由を伝える
@@ -226,7 +233,7 @@ gh pr edit $PR --title "<新しいタイトル>" --body-file <一時ファイル
 - 変更前後の PR タイトル。
 - 説明文に記載した「その他の主な変更」の要点。
 - **未チェックのまま残った公開後タスク**（どの記事の `visual` フラグ／OGP画像／文体ガイドが未対応か）。1件でもあれば、対応するコマンド（`/generate-ogp-image /<route>`・`/author-style-analyzer <slug>` など）を添えて促す。判定不能（`UNKNOWN`）があればその理由も伝える。
-- 文体ガイドの項目は判定が弱い（前提知識参照）ため、未チェックにしたものは「`writing-guides/` に記事タイトルの記載が無かった」という事実として伝え、すでに分析済みかどうかをユーザーに確認する。
+- 文体ガイドの項目で `style=uncited`（タスクリストにも `[x]` が無く、ガイド本文にも記事タイトルが無い）だったものは、「未分析と断定」せずその事実として伝え、すでに分析済みかどうかをユーザーに確認する。`style=cited`（ガイドに記載はあるがタスクリストが未チェック）だったものは、**タスクリストの更新漏れの可能性**として記事名を挙げて報告する。
 - タイトルは要約であり、意図に合わせて調整可能である旨を添える。
 
 ## 注意事項

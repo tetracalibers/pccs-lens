@@ -27,7 +27,7 @@ frontmatter から `draft: true`（と直前の空行）を削除して記事を
 
 1. **`visual` フラグの追加**：`$lib/demo/` の図解コンポーネントを使っているページは、frontmatter の `grades:` の次の行に `visual: true` を足す。一覧のリンクに「図解」タグが付く。Mermaid 図だけのページには付けない運用。
 2. **OGP画像の生成**：`/generate-ogp-image <スラッグ>` で生成する。draft ページは glob・自然言語指定の展開から除外されるため、**公開してから**生成する。生成物（`app/static/ogp/**`・`ogimage/data/**`）・マニフェスト（`app/src/lib/meta/og-manifest.json`）・`ogimage/OGP-TASKLIST.md` はコミットに含める（コミットメッセージ規約は `CLAUDE.md` の「Git規約」を参照）。
-3. **文体スタイルガイドの更新**：`/author-style-analyzer <slug>` を実行し、その記事の「AI草稿 → 人手編集」の差分を `writing-guides/` の各ガイドへ反映する。人手修正のコミットを済ませてから実行する（Git履歴が根拠になるため）。複数記事を公開したときはカンマ区切りでまとめて1回実行できる（`/author-style-analyzer <slug1>,<slug2>`）。推奨 effort は `high`（後述「文体分析・執筆（author-style スキル）」節）。
+3. **文体スタイルガイドの更新**：`/author-style-analyzer <slug>` を実行し、その記事の「AI草稿 → 人手編集」の差分を `writing-guides/` の各ガイドへ反映する。人手修正のコミットを済ませてから実行する（Git履歴が根拠になるため）。複数記事を公開したときはカンマ区切りでまとめて1回実行できる（`/author-style-analyzer <slug1>,<slug2>`）。推奨 effort は `high`（後述「文体分析・執筆（author-style スキル）」節）。どの記事を分析済みかは `writing-guides/STYLE-ANALYSIS-TASKLIST.md` に記録され、スキルが実行のたびに更新する（更新後のリストはコミットに含める）。
 4. **PR説明文の更新**：ここまでを push したうえで `/update-pr-description` を実行する。公開した記事がカテゴリ別に列挙され、**記事ごとに 1〜3 の実施状況がチェックリストとして載る**（判定できた分は自動でチェック済みになる）。未チェックの項目が残っていれば、それが公開後にやり残した作業。
 
 > [!TIP]
@@ -54,6 +54,7 @@ frontmatter から `draft: true`（と直前の空行）を削除して記事を
 - **推奨 effort は Opus の `high`**（`xhigh` にする必要はない）。分析の質を左右する重い思考（独立分析・反証・境界・統合）は Workflow 内の各エージェントに `effort` が固定されており、**セッションの effort を継承しない**。そのためセッションを `xhigh` へ上げても成果物は良くならず、スコープ解決や報告などメインループ側の処理が重く・遅くなるだけ。`high` で実行するのが費用対効果の面で最適。
 - 制御フローが JS のため**ハングしない**。各エージェントは構造化出力を返して終了し、待機プロセス（idle teammate）が残らない。
 - **引数なしの全記事一括分析は行わない**。分析対象はスキル引数（`#id`／slug をカンマ区切りで複数・混在指定できる）で必ず絞る。全記事を対象にしたい場合はカテゴリ／セクション単位のチャンクに分割して順に実行する。
+- **進捗は文体解析タスクリスト `writing-guides/STYLE-ANALYSIS-TASKLIST.md` で追う**（`ogimage/OGP-TASKLIST.md` と同じ運用）。記事ごとの `[x]`／`[ ]`／`[draft]`／`[ページ未作成]` を、スキルへ渡せるスコープ（`#<id>`）の見出しごとにまとめてある。スキルは実行前にここで未分析かどうかを確認し、実行後に分析した記事の行を `[x]` へ更新する。
 - Workflow を使えない環境では、サブエージェント（`Agent` ツール）を同じ3ステージ構成で順に呼ぶか、単一エージェントの役割切り替えで代替できる。
 
 #### author-style-writer の推奨 effort（モード別）
@@ -108,6 +109,7 @@ npm run data:jis-update
   - `/author-style-analyzer <slug1>,<slug2>,…` — 指定 slug の記事を分析
   - `/author-style-analyzer #<id1>,<slug1>,#<id2>,…` — `#id` と slug を混在させて複数指定（各要素を解決して統合・重複排除）
   - `/author-style-analyzer` — 引数なし。範囲指定を促す（`#id`／slug の指定を求める）
+  - 分析済みの記録は `writing-guides/STYLE-ANALYSIS-TASKLIST.md`。実行後にスキルが該当行を `[x]` に更新する
 
 ### 図版・コンポーネント
 
