@@ -18,7 +18,7 @@
   // ===== SVG dimensions =====
   const PLOT_WIDTH = 720
   const PLOT_HEIGHT = 360
-  const PLOT_LEFT = 110
+  const PLOT_LEFT = 130
   const PLOT_TOP = 30
   const MARGIN_RIGHT = 30
   const MARGIN_BOTTOM = 100
@@ -49,7 +49,21 @@
   const X_TICK_LABEL_OFFSET = 26 // PLOT_BOTTOM から数値ラベル中心まで
   const X_AXIS_LABEL_OFFSET = 70 // PLOT_BOTTOM から軸ラベル中心まで
   const Y_TICK_LABEL_OFFSET = 16 // PLOT_LEFT から数値ラベル右端まで
-  const Y_AXIS_LABEL_OFFSET = 80 // PLOT_LEFT から軸ラベル中心まで
+
+  // 数値ラベルと軸ラベルの間隔。縦軸を横軸と同じ間隔に揃えるため、
+  // 横軸側の間隔（両ラベルの外縁どうしの距離）を求めて縦軸の位置を逆算する
+  const AXIS_LABEL_GAP =
+    X_AXIS_LABEL_OFFSET - X_TICK_LABEL_OFFSET - FONT_SIZE_TICK_LABEL / 2 - FONT_SIZE_AXIS_LABEL / 2
+  const Y_TICK_LABEL_WIDTH = FONT_SIZE_TICK_LABEL * 1.5 // 「0.0」(数字2 + ピリオド1) のおおよその幅
+  // 縦書きの軸ラベルは横並びの数値と隣り合うぶん、横軸と同じ間隔では詰まって見えるため上乗せする
+  const Y_AXIS_LABEL_EXTRA_GAP = 16
+  // PLOT_LEFT から軸ラベル中心まで
+  const Y_AXIS_LABEL_OFFSET =
+    Y_TICK_LABEL_OFFSET +
+    Y_TICK_LABEL_WIDTH +
+    AXIS_LABEL_GAP +
+    Y_AXIS_LABEL_EXTRA_GAP +
+    FONT_SIZE_AXIS_LABEL / 2
 
   // ===== Stroke widths =====
   const STROKE_WIDTH_AXIS = 2
