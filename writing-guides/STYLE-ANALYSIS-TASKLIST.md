@@ -90,7 +90,7 @@
 - [draft] `/color-theory/color-assimilation`
 - [draft] `/color-theory/color-area-effect`
 - [x] `/color-theory/subjective-color`
-- [ ] `/color-theory/optical-illusions`
+- [x] `/color-theory/optical-illusions`
 - [x] `/color-theory/what-is-lighting`
 - [x] `/color-theory/color-temperature-and-light-color`
 - [draft] `/color-theory/blackbody-radiation`
@@ -132,7 +132,7 @@
 - [ページ未作成] 視感測色
 - [ページ未作成] 物理測色
 - [ページ未作成] 測り方による色の分類
-- [ ] `/color-theory/psychological-scaling-method`
+- [x] `/color-theory/psychological-scaling-method`
 - [draft] `/color-theory/psychological-scale-types`
 - [ページ未作成] 一対比較法
 - [ページ未作成] SD法
@@ -152,11 +152,11 @@
 
 ## 色の活用分野 — デザイン（`color-fields.yaml` #design）
 
-- [ ] `/color-fields/visual-design-and-color`
+- [x] `/color-fields/visual-design-and-color`
 - [draft] `/color-fields/media-design-concepts`
 - [ページ未作成] カラーマネジメント
 - [draft] `/color-fields/digital-image-basics`
-- [ ] `/color-fields/color-universal-design`
+- [x] `/color-fields/color-universal-design`
 - [draft] `/color-fields/color-vision-accessibility`
 - [draft] `/color-fields/color-universal-design-process`
 - [draft] `/color-fields/color-design-tips`
@@ -191,10 +191,10 @@
 
 ## 色の活用分野 — ファッション（`color-fields.yaml` #fashion）
 
-- [ ] `/color-fields/fashion-color-concepts`
+- [x] `/color-fields/fashion-color-concepts`
 - [ページ未作成] PCCSで見るカラーコーディネート
 - [ページ未作成] ファッションの配色用語
-- [ ] `/color-fields/fashion-color`
+- [x] `/color-fields/fashion-color`
 - [draft] `/color-fields/fashion-trend`
 - [draft] `/color-fields/fashion-style-categories`
 - [draft] `/color-fields/fashion-image`
@@ -347,7 +347,7 @@
 
 ## CGと画像処理 — 画像の撮影とカメラモデル／カメラを表す幾何モデル（`cg/camera.yaml` #camera-geometry）
 
-- [ ] `/cg/camera/digital-camera-structure`
+- [x] `/cg/camera/digital-camera-structure`
 - [draft] `/cg/camera/pinhole-camera`
 - [ページ未作成] 透視投影モデル
 
@@ -472,7 +472,7 @@
 
 ## CGと画像処理 — 画像の性質と色／画像の性質（`cg/image-properties.yaml` #properties）
 
-- [ ] `/cg/image-properties/dynamic-range-and-gradation`
+- [x] `/cg/image-properties/dynamic-range-and-gradation`
 - [ページ未作成] 画像の統計量
 - [ページ未作成] 画像のノイズ
 - [ページ未作成] コントラストとシャープネス
