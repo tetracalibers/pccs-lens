@@ -175,7 +175,7 @@
 - [draft] `/color-fields/media-design-concepts`
 - [ページ未作成] カラーマネジメント
 - [draft] `/color-fields/digital-image-basics`
-- [draft] `/color-fields/color-universal-design`
+- [x] `/color-fields/color-universal-design`
 - [draft] `/color-fields/color-vision-accessibility`
 - [draft] `/color-fields/color-universal-design-process`
 - [draft] `/color-fields/color-design-tips`
