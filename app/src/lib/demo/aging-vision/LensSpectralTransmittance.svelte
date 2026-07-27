@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { line, curveBasis } from "d3-shape"
+
   interface DensityPoint {
     nm: number
     density: number
@@ -166,14 +168,16 @@
   )
 
   // ===== 曲線のパス生成 =====
-  // 5nm 間隔で解析的に求めた点を直線でつなぐ（十分に細かいため見た目は滑らかになる）
-  const buildPath = (points: TransmittancePoint[]): string =>
-    points.map((p, i) => `${i === 0 ? "M" : "L"} ${xAt(p.nm)} ${yAt(p.value)}`).join(" ")
+  // curveBasis（B-spline）で C² 連続のなめらかな曲線を描画
+  const lineGen = line<TransmittancePoint>()
+    .x((d) => xAt(d.nm))
+    .y((d) => yAt(d.value))
+    .curve(curveBasis)
 
   const curves: AgeCurve[] = AGES.map(({ age, color }) => ({
     age,
     color,
-    path: buildPath(sampleWavelengths.map((nm) => ({ nm, value: transmittanceAt(nm, age) })))
+    path: lineGen(sampleWavelengths.map((nm) => ({ nm, value: transmittanceAt(nm, age) }))) ?? ""
   }))
 
   // 年長の曲線から先に描き、若年の曲線を手前に重ねる
