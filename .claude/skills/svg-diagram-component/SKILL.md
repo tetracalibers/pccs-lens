@@ -167,6 +167,7 @@ import EmergencyExitSign from "$lib/demo/color-visibility/EmergencyExitSign.svel
 
 - 原則としてSVGはSvelteのテンプレート構文で組み立てる
 - ただし、グラフや軸・スケールなど、d3を使用したほうが書きやすくなる場合は d3 を使用してもよい
+- グラフの曲線は例外で、**必ず `d3-shape` を使う**（→「グラフの曲線」）
 
 ### 定数の宣言
 
@@ -299,6 +300,34 @@ const ARROW_HEAD_H = 10   // markerHeight（縦幅）
 ### グラフの軸スタイル
 
 グラフ（横軸・縦軸を持つ図）を描画する場合、ユーザーからの指定が特になければ、横軸・縦軸・軸ラベルのスタイル（線の太さ、目盛り、フォントサイズ、ラベル位置など）は `app/src/lib/demo/spectral-reflectance/SpectralReflectanceGraph.svelte` と統一する。
+
+### グラフの曲線
+
+グラフのデータ点をつなぐ曲線は、**`d3-shape` の `line()` でパスを生成する。** `M`/`L` を並べた折れ線パスを自前で組み立てない（サンプリングを細かくして滑らかに見せる方法も採らない）。
+
+- 補間方法は**原則 `curveBasis`**（B-spline・C² 連続）。既存の分光グラフ群（`visual-system/`・`xyz-color-system/`・`aging-vision/` 配下）がこれで統一されている。
+- 実装は次の形にする。`line()` の戻り値は `string | null` なので `?? ""` でフォールバックする。
+
+```ts
+import { line, curveBasis } from "d3-shape"
+
+const lineGen = line<Point>()
+  .x((d) => xAt(d.nm))
+  .y((d) => yAt(d.value))
+  .curve(curveBasis)
+
+const path = lineGen(points) ?? ""
+```
+
+#### 他の補間方法が推奨される場合
+
+データの性質から `curveBasis` 以外が適切だと判断した場合は、**勝手に差し替えず、理由と候補をユーザーに提示して確認する。** `curveBasis` は制御点を通らないため、次のようなケースが典型的な検討対象になる。
+
+- **各データ点を必ず通す必要がある**（実測値のプロットで、点とのズレが図の意味を損なう）→ `curveCatmullRom`・`curveNatural`
+- **単調性を保ちオーバーシュートを避けたい**（単調増加・単調減少のデータ）→ `curveMonotoneX`
+- **点と点の間を補間してはいけない**（離散データ・階段状の変化）→ `curveLinear`・`curveStep`
+
+提示するときは、`curveBasis` でのズレの程度（線幅に対して何 px か、どの区間で最大になるか）まで見積もって添えると判断しやすい。確認の結果 `curveBasis` を維持する判断になることもあるため、**確認前に実装を差し替えてしまわないこと。**
 
 ### 縦書きテキスト
 
