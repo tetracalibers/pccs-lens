@@ -21,13 +21,13 @@
     border-image: linear-gradient(180deg, light-dark(#e8112d, #ff3131), #ff623d) 1;
     position: relative;
     font-size: 0.88rem;
-    line-height: 1.7;
+    line-height: 1.8;
   }
 
   .warning::before {
     content: "Warning";
     display: block;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -39,6 +39,6 @@
     margin: 0;
     font-size: inherit;
     line-height: inherit;
-    color: var(--color-body);
+    color: var(--color-heading);
   }
 </style>
