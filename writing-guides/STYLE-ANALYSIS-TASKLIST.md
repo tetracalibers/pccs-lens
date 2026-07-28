@@ -96,7 +96,7 @@
 - [draft] `/color-theory/blackbody-radiation`
 - [x] `/color-theory/illuminance-and-lighting-design`
 - [draft] `/color-theory/photometric-quantities`
-- [draft] `/color-theory/color-rendering`
+- [x] `/color-theory/color-rendering`
 - [x] `/color-theory/lamp-types`
 - [x] `/color-theory/photometric-and-radiometric-quantities`
 - [ページ未作成] 物体表面の質感と光
@@ -120,7 +120,7 @@
 - [x] `/color-theory/color-vision-types`
 - [ページ未作成] 混同しやすい色
 - [ページ未作成] 色の誤認
-- [draft] `/color-theory/age-related-vision-changes`
+- [x] `/color-theory/age-related-vision-changes`
 - [draft] `/color-theory/elderly-vision-characteristics`
 - [draft] `/color-theory/age-related-eye-diseases`
 - [ページ未作成] 色覚の遺伝
