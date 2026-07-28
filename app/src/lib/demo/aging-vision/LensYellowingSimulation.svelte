@@ -24,7 +24,7 @@
   // 透過率の低下をそのまま適用すると青がほぼ消えてしまうが、実際の観察者は
   // 黄変した水晶体越しの光に色順応するため、そこまで極端な黄色さは知覚しない。
   // von Kries 型の部分順応として、各チャンネルの利得を T^(1 - ADAPTATION) に緩める。
-  const ADAPTATION = 0.5
+  const ADAPTATION = 0.7
 
   // ===== 水晶体の分光透過率モデル =====
   // Pokorny, Smith & Lutze (1987) の加齢モデル。32歳の水晶体の分光光学濃度 D32(λ) に
@@ -121,7 +121,10 @@
   ].join("\n")
 </script>
 
-<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute; width:0; height:0; overflow:hidden">
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  style="position:absolute; width:0; height:0; overflow:hidden"
+>
   <filter id="lens-yellowing">
     <feColorMatrix type="matrix" values={COLOR_MATRIX} />
   </filter>
