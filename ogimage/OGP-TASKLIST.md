@@ -115,7 +115,7 @@
 - [x] `/color-theory/color-temperature-and-light-color`
 - [x] `/color-theory/illuminance-and-lighting-design`
 - [draft] `/color-theory/photometric-quantities`
-- [draft] `/color-theory/color-rendering`
+- [x] `/color-theory/color-rendering`
 - [x] `/color-theory/lamp-types`
 - [x] `/color-theory/photometric-and-radiometric-quantities`
 - [ページ未作成] 物体表面の質感と光
