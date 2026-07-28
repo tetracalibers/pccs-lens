@@ -3,9 +3,15 @@ layout: guide-content
 title: 照明の演色性
 
 grades: ["2"]
+visual: true
 
 draft: true
 ---
+
+<script>
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import HighColorRenderingColorChecker from "$lib/demo/light-source/HighColorRenderingColorChecker.svelte"
+</script>
 
 照明の種類によって、空間の明るさだけでなく、そこに置かれた物体の色の見え方も変わります。
 
@@ -24,9 +30,9 @@ draft: true
 
 ランプの演色性は、8色のテストカラーの演色評価数を平均化した、:Mark[平均演色評価数]（単位は:Mark[Ra]）で表されます。
 
-:::Todo
-ColorCheckerの図（演色性が高い場合）
-:::
+<SVGWrapper>
+  <HighColorRenderingColorChecker />
+</SVGWrapper>
 
 :::Todo
 ColorCheckerの図（演色性が低い場合）
