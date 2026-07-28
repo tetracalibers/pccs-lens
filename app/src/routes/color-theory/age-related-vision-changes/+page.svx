@@ -11,6 +11,7 @@ draft: true
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
   import LensSpectralTransmittance from "$lib/demo/aging-vision/LensSpectralTransmittance.svelte"
+  import LensYellowingSimulation from "$lib/demo/aging-vision/LensYellowingSimulation.svelte"
   import AccommodationByAge from "$lib/demo/aging-vision/AccommodationByAge.svelte"
   import PupilDiameterByAge from "$lib/demo/aging-vision/PupilDiameterByAge.svelte"
 </script>
@@ -42,9 +43,7 @@ draft: true
 
 水晶体は[黄変](/color-theory/color-vision-characteristics/)するため、特に:Mark[短]波長の光に対する透過率が大きく下がり、:Mark[青]色が:Mark[暗く]見えるようになります。
 
-:::Todo
-水晶体の黄変による色の見え方を近似再現した画像フィルタ
-:::
+<LensYellowingSimulation />
 
 ## :WithGradeTag[焦点調節力の低下]{grades="uc"}
 
