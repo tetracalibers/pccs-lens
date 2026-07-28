@@ -4,8 +4,6 @@ title: 照明の演色性
 
 grades: ["2"]
 visual: true
-
-draft: true
 ---
 
 <script>
@@ -21,27 +19,28 @@ draft: true
 光で照明された物体の見え方を:Mark[演色]といい、物体の色の見え方に影響を与える照明光の特性を:Mark[演色性]といいます。
 光源によって演色性は異なるため、同じ物体であっても、異なる照明で照らせば、色の見え方は変わります。一般的に、演色性が低い照明光では、色の:Mark[鮮やかさ]が低下して見えます。
 
-<!-- 見え方が変わるのは、物体から眼に届く光が、光源の[分光分布](/color-theory/light-components-and-reflectance/)と物体の分光反射率を掛け合わせたものだからです。
-光源の分光分布にほとんど含まれていない波長は、物体がその波長をよく反射する性質をもっていても、反射光として返ってきません。
-その結果、本来なら見えるはずの色みが弱まったり、別の色に近づいて見えたりします。 -->
-
 ## :WithGradeTag[演色評価数]{grades="2"}
 
 演色性の良し悪しは、基準光で照明したときと比べて、色の見え方がどれだけずれているか？で考えます。基準光で照らされたときの演色を:Mark[100]とし、そこから色の見え方の誤差を引いて数値化します。この数値が:Mark[演色評価数]です。
 
 ランプの演色性は、8色のテストカラーの演色評価数を平均化した、:Mark[平均演色評価数]（単位は:Mark[Ra]）で表されます。
 
+::::CardGrid
+:::TermCard{title="演色性が高い"}
 <SVGWrapper>
   <HighColorRenderingColorChecker />
 </SVGWrapper>
-
+:::
+:::TermCard{title="演色性が低い"}
 <SVGWrapper>
   <LowColorRenderingColorChecker />
 </SVGWrapper>
+:::
+::::
 
 ### 比較対象とする基準光
 
-基準光として使われるのは、評価したい光源と同じ[色温度](/color-theory/color-temperature-and-light-color/)をもつ光です。光色そのものの違いではなく、色の見え方の差だけを取り出して比べるためです。
+基準光として使われるのは、評価したい光源と同じ[色温度](/color-theory/color-temperature-and-light-color/)をもつ光です。:Mark[光色]そのものの違いではなく、色の見え方の差だけを取り出して比べるためです。
 
 ### 演色性のよさの基準
 
