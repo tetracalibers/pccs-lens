@@ -28,10 +28,10 @@
   // ===== 変視症 =====
   // 黄斑の網膜がむくみ・はがれで凹凸になると、そこに映る像がうねって見える。
   // ゆるやかなノイズで像を変位させて再現する。
-  const WARP_OUTER_DEG = 20 // この半径より外では歪まない（画像の上下端の内側に収める）
+  const WARP_OUTER_DEG = 22 // この半径より外では歪まない（画像の上下端の内側に収める）
   const WARP_FLATNESS = 3 // 大きいほど中心付近の歪みが平坦に広がる
   const WARP_FALLOFF_GAMMA = 4 // 大きいほど周辺で急に弱まる
-  const WARP_STRENGTH_DEG = 4 // 歪みの強さ。変位マップの振れ幅にあたる
+  const WARP_STRENGTH_DEG = 6 // 歪みの強さ。変位マップの振れ幅にあたる
   const WARP_CYCLES = 13 // 画像の横幅あたりのうねりの周期数
   const WARP_OCTAVES = 2
   const WARP_SEED = 7
