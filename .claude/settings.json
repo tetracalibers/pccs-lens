@@ -1,6 +1,5 @@
 {
   "permissions": {
-    "defaultMode": "auto",
     "allow": [
       "WebFetch(domain:qiita.com)",
       "WebFetch(domain:github.com)",
