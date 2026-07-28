@@ -119,24 +119,34 @@ gh pr diff $PR | awk '
 ```sh
 PUBLISHED_TSV=<手順3の出力を保存した一時ファイルのパス>
 
-while IFS=$'\t' read -r _ category title file; do
+while IFS= read -r line; do
+  [ -z "$line" ] && continue
+  title=$(printf '%s' "$line" | cut -f3)
+  file=$(printf '%s' "$line" | cut -f4)
   route="${file#app/src/routes/}"; route="${route%/+page.svx}"
   if [ ! -f "$file" ]; then
-    printf '%s\tUNKNOWN（ローカルに該当ファイルなし）\n' "$route"; continue
+    printf 'UNKNOWN（ローカルに該当ファイルなし）\t%s\n' "$line"; continue
   fi
+  # 手順3の diff に title 行が現れず空になることがあるので、実ファイルから補う
+  [ -z "$title" ] && title=$(grep -m1 '^title: ' "$file" | sed 's/^title: //')
   grep -qE '^visual: *true' "$file" && visual=set || visual=unset
   grep -q '\$lib/demo/' "$file" && figure=yes || figure=no
   [ -f "ogimage/data/$route.json" ] && ogp=done || ogp=todo
-  if grep -qF "- [x] \`/$route\`" writing-guides/STYLE-ANALYSIS-TASKLIST.md 2>/dev/null; then
+  if grep -qF -- "- [x] \`/$route\`" writing-guides/STYLE-ANALYSIS-TASKLIST.md 2>/dev/null; then
     style=done
-  elif grep -rqF "$title" writing-guides --include='*.md'; then
+  elif grep -rqF --include='*.md' -- "$title" writing-guides; then
     style=cited
   else
     style=uncited
   fi
-  printf '%s\tvisual=%s\tfigure=%s\togp=%s\tstyle=%s\n' "$route" "$visual" "$figure" "$ogp" "$style"
+  printf '%s\t%s\tvisual=%s\tfigure=%s\togp=%s\tstyle=%s\n' "$route" "$title" "$visual" "$figure" "$ogp" "$style"
 done < "$PUBLISHED_TSV"
 ```
+
+このスクリプトを書き換えるときは、次の2点を壊さないこと（いずれも実際に誤判定を起こした）。
+
+- **パターンが `-` で始まる `grep` には必ず `--` を置く。** タスクリストの判定パターンは `- [x] ...` で始まるため、`--` が無いと環境の `grep`（ugrep 等）がオプションと解釈して失敗する。失敗しても `elif` の `style=cited` へ黙って落ちるため、**エラーに気づかないまま全記事がタイトル一致で判定される**。`--include` は `--` より前に置く（`--` の後ろはすべて非オプション扱いになり、ファイルパスと見なされる）。
+- **TSV を `IFS=$'\t' read` で分割しない。** タブは空白扱いなので連続タブが1つに詰まり、`title` が空の行（手順3の diff に `title:` 行が現れなかった記事）でフィールドが1つずれて `file` が空になる。`cut -f<n>` で位置指定して取り出す。
 
 判定はローカルの作業ツリーを見るため、**対象PRのブランチをチェックアウトしていること**が前提。別ブランチのPRをURLで指定していて手元の内容が一致しない場合（`gh pr view $PR --json headRefName` と `git branch --show-current` を比べる）は、確認できない項目を `[ ]` のままにし、判定できなかった旨をユーザーに報告する（推測でチェックを付けない）。
 
