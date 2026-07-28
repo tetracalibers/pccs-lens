@@ -79,7 +79,7 @@
       gradient: "linear-gradient(135deg, #6bcb77, #4d96ff)",
       glow: "#6bcb77",
       title: "清色・濁色の見極め",
-      desc: "PCCSの明清色・暗清色・中間色を見分けるカードゲーム",
+      desc: "PCCSの明清色・暗清色・濁色を見分けるカードゲーム",
       grades: ["3"]
     },
     {
@@ -97,8 +97,8 @@
       href: resolve("/cg"),
       gradient: "linear-gradient(135deg, #4d96ff, #c77dff)",
       glow: "#4d96ff",
-      title: "色と画像（CGと画像処理）",
-      desc: "光や色を計算して生み出す、CGと画像処理の世界",
+      title: "CGと画像処理",
+      desc: "光と色を計算してつくり出す画像の世界",
       tags: [
         { label: "CG", color: "var(--color-cg)" },
         { label: "画像処理", color: "var(--color-image-processing)" }
@@ -216,7 +216,7 @@
     <!-- CG / Image processing -->
     <section id="cg" class="contents-section">
       <div class="tools-header">
-        <span class="tools-label">色と関わる</span>
+        <span class="tools-label">色を発展させる</span>
         <div class="tools-divider"></div>
       </div>
       <div class="contents-grid">

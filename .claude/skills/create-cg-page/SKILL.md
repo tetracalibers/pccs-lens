@@ -1,6 +1,8 @@
 ---
 name: create-cg-page
 description: `app/src/lib/content-pages/cg/` 配下の全YAML（`basics.yaml` など）から引数のタイトルを検索し、対応するルート配下に新しいCGページの雛形（`+page.svx`）を作成するスキル。該当する `CgDraftLink` エントリを `PageLink` に置き換える。CG一覧から下書きページを「実装に着手する」段階で使用する。
+model: sonnet
+effort: high
 ---
 
 # CGページ作成スキル

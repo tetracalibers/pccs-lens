@@ -1,6 +1,8 @@
 ---
 name: create-color-theory-page
 description: `app/src/routes/color-theory` 配下に新しい色の理論ページの雛形を作成するスキル。引数で受け取ったタイトルから slug を考え、ディレクトリと `+page.svx` を作成し、`app/src/lib/content-pages/color-theory.yaml` の該当する `DraftLink` エントリを `PageLink` に置き換える。色の理論一覧から下書きページを「実装に着手する」段階で使用する。
+model: sonnet
+effort: high
 ---
 
 # 色の理論ページ作成スキル
@@ -32,31 +34,22 @@ slug を決定したら、`app/src/routes/color-theory/` 配下に同名のデ�
 
 `app/src/lib/content-pages/color-theory.yaml` を読み込み、引数で受け取ったタイトルと完全に一致する `title` を持つエントリを探します。
 
-`DraftLink` エントリの形（slug を持たず、`title` と `grades`、任意で `basic: true` を持つ）:
+`DraftLink` エントリの形（slug を持たず、`title` と `grades` を持つ）:
 
 ```yaml
         - title: マンセル表色系
           grades: ["2"]
 ```
 
-`basic: true` 付きの例:
-
-```yaml
-        - title: 色の面積比による配色
-          grades: ["3"]
-          basic: true
-```
-
 該当する `DraftLink` エントリが見つからない場合は、その旨をユーザーに伝えて処理を中止する。
 
-### 3. `grades` と `basic` を取得する
+### 3. `grades` を取得する
 
-手順 2 で見つけたエントリの `grades` 配列と、`basic: true` が付いているかを記憶する。
+手順 2 で見つけたエントリの `grades` 配列を記憶する。
 
 例:
 
-- `grades: ["2"]`、`basic` 行なし → `grades` = `["2"]`、`basic` なし
-- `grades: ["3"]`、`basic: true` → `grades` = `["3"]`、`basic` あり
+- `grades: ["2"]` → `grades` = `["2"]`
 - `grades: ["3", "2"]` → `grades` = `["3", "2"]`
 - `grades: ["2", "uc"]` → `grades` = `["2", "uc"]`
 
@@ -68,26 +61,7 @@ slug を決定したら、`app/src/routes/color-theory/` 配下に同名のデ�
 
 `app/src/routes/color-theory/<slug>/` ディレクトリを作成し、その直下に `+page.svx` を作成する。
 
-ファイルの内容は次のフォーマットに従う。`grades` には手順 3 で取得した配列をそのまま書く。`basic` が付いていた場合は frontmatter に `basic: true` を `grades:` の直下（空行を挟まずに）追加する。付いていない場合は `basic:` の行は記述しない。`:WithGradeTag` の `grades` 属性には CSV 表記を渡す。
-
-`basic` あり:
-
-```
----
-layout: guide-content
-title: <引数で受け取ったタイトル>
-
-grades: [<grades 配列をそのまま記述>]
-basic: true
-
-draft: true
----
-
-## :WithGradeTag[TODO]{grades="<grades の CSV 表記>"}
-
-```
-
-`basic` なし:
+ファイルの内容は次のフォーマットに従う。`grades` には手順 3 で取得した配列をそのまま書く。`:WithGradeTag` の `grades` 属性には CSV 表記を渡す。
 
 ```
 ---
@@ -105,7 +79,7 @@ draft: true
 
 #### 具体例
 
-引数のタイトルが `マンセル表色系`、YAML エントリが `title: マンセル表色系 / grades: ["2"]`（`basic` なし）の場合:
+引数のタイトルが `マンセル表色系`、YAML エントリが `title: マンセル表色系 / grades: ["2"]` の場合:
 
 ```
 ---
@@ -121,36 +95,17 @@ draft: true
 
 ```
 
-引数のタイトルが `色の面積比による配色`、YAML エントリが `title: 色の面積比による配色 / grades: ["3"] / basic: true` の場合:
-
-```
----
-layout: guide-content
-title: 色の面積比による配色
-
-grades: ["3"]
-basic: true
-
-draft: true
----
-
-## :WithGradeTag[TODO]{grades="3"}
-
-```
-
 `grades: ["2", "uc"]` の場合は frontmatter も `grades: ["2", "uc"]`、`:WithGradeTag` は `grades="2,uc"` となる。`grades: ["3", "2"]` の場合は frontmatter も `grades: ["3", "2"]`、`:WithGradeTag` は `grades="3,2"` となる。
 
 ### 5. YAML の `DraftLink` エントリを `PageLink` に置き換える
 
-`app/src/lib/content-pages/color-theory.yaml` 内の手順 2 で見つけた `DraftLink` エントリ（`title` / `grades` / 必要に応じて `basic` の 2〜3 行）を、次の形式の `PageLink`（1 行）に置き換える。インデント（リスト先頭の `-` の位置）は元のエントリに合わせる。
+`app/src/lib/content-pages/color-theory.yaml` 内の手順 2 で見つけた `DraftLink` エントリ（`title` / `grades` の 2 行）を、次の形式の `PageLink`（1 行）に置き換える。インデント（リスト先頭の `-` の位置）は元のエントリに合わせる。
 
 ```yaml
         - slug: <手順 1 で決めた slug>
 ```
 
 #### 置き換えの例
-
-`basic` なしの場合:
 
 ```yaml
 # Before
@@ -159,18 +114,6 @@ draft: true
 
 # After
         - slug: munsell-color-system
-```
-
-`basic` ありの場合（2 行ではなく 3 行を 1 行に置換する）:
-
-```yaml
-# Before
-        - title: 色の面積比による配色
-          grades: ["3"]
-          basic: true
-
-# After
-        - slug: color-area-proportion
 ```
 
 ## 注意事項
@@ -184,4 +127,4 @@ draft: true
   ```
 
   たとえば slug が `munsell-color-system` なら `/author-style-writer munsell-color-system` と案内する。
-- 置き換え後、`color-theory.yaml` の同セクション内で `DraftLink` から `PageLink` への置き換えが正しく反映されていることを確認する（前後のエントリの位置がずれていないこと、`basic` 行の取り残しがないこと）。
+- 置き換え後、`color-theory.yaml` の同セクション内で `DraftLink` から `PageLink` への置き換えが正しく反映されていることを確認する（前後のエントリの位置がずれていないこと）。

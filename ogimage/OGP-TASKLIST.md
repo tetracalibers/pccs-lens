@@ -110,12 +110,12 @@
 - [draft] `/color-theory/color-assimilation`
 - [draft] `/color-theory/color-area-effect`
 - [x] `/color-theory/subjective-color`
-- [draft] `/color-theory/optical-illusions`
+- [x] `/color-theory/optical-illusions`
 - [x] `/color-theory/what-is-lighting`
-- [draft] `/color-theory/color-temperature-and-light-color`
+- [x] `/color-theory/color-temperature-and-light-color`
 - [x] `/color-theory/illuminance-and-lighting-design`
 - [draft] `/color-theory/photometric-quantities`
-- [draft] `/color-theory/color-rendering`
+- [x] `/color-theory/color-rendering`
 - [x] `/color-theory/lamp-types`
 - [x] `/color-theory/photometric-and-radiometric-quantities`
 - [ページ未作成] 物体表面の質感と光
@@ -136,10 +136,10 @@
 ## 色の理論（nested） — 記事：色の見え方の多様性（`color-theory.yaml` #color-vision-diversity）
 
 - [x] `/color-theory/color-vision-characteristics`
-- [draft] `/color-theory/color-vision-types`
+- [x] `/color-theory/color-vision-types`
 - [ページ未作成] 混同しやすい色
 - [ページ未作成] 色の誤認
-- [draft] `/color-theory/age-related-vision-changes`
+- [x] `/color-theory/age-related-vision-changes`
 - [draft] `/color-theory/elderly-vision-characteristics`
 - [draft] `/color-theory/age-related-eye-diseases`
 - [ページ未作成] 色覚の遺伝
@@ -175,7 +175,7 @@
 - [draft] `/color-fields/media-design-concepts`
 - [ページ未作成] カラーマネジメント
 - [draft] `/color-fields/digital-image-basics`
-- [draft] `/color-fields/color-universal-design`
+- [x] `/color-fields/color-universal-design`
 - [draft] `/color-fields/color-vision-accessibility`
 - [draft] `/color-fields/color-universal-design-process`
 - [draft] `/color-fields/color-design-tips`
@@ -229,8 +229,8 @@
 
 ## 色の活用分野（nested） — 記事：インテリア（`color-fields.yaml` #interior）
 
-- [draft] `/color-fields/interior-design-basics`
-- [draft] `/color-fields/interior-concept-history`
+- [x] `/color-fields/interior-design-basics`
+- [x] `/color-fields/interior-concept-history`
 - [ページ未作成] インテリアと心理効果・視覚効果
 - [draft] `/color-fields/interior-elements-classification`
 - [ページ未作成] インテリアエレメントの配色

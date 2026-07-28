@@ -1,0 +1,12 @@
+{
+  "route": "color-theory/color-rendering",
+  "title": "照明の演色性",
+  "titleLines": [
+    "照明の演色性"
+  ],
+  "crumbs": [
+    "色の理論",
+    "照明"
+  ],
+  "figure": "assets/color-theory/color-rendering/figure.png"
+}

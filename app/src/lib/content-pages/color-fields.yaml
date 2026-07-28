@@ -61,8 +61,7 @@
   sections:
     - title: 色とコミュニケーション
       links:
-        - title: 色彩効果とビジネス
-          grades: ["1"]
+        - slug: color-effects-and-business
         - title: カラーコミュニケーションツール
           grades: ["1"]
     - title: 商品のビジネスプロセス
@@ -169,10 +168,8 @@
       links:
         - slug: landscape-color-approach
         - slug: housing-color-design-process
-        - title: 景観法
-          grades: ["1"]
-        - title: 景観計画
-          grades: ["1"]
+        - slug: landscape-act
+        - slug: landscape-plan
         - title: 景観計画における色彩基準
           grades: ["1"]
         - title: 色の三属性と景観形成

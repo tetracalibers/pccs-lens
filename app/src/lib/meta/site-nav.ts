@@ -52,7 +52,7 @@ export const NAV_SECTIONS: NavSection[] = [
     ]
   },
   {
-    label: "色と関わる",
+    label: "色を発展させる",
     accent: "#4dabf7",
     gradient: "linear-gradient(135deg,#4dabf7,#1971c2)",
     items: [{ href: resolve("/cg"), path: "/cg", label: "CGと画像処理" }]

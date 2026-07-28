@@ -133,6 +133,7 @@
       links:
         - slug: what-is-lighting
         - slug: color-temperature-and-light-color
+        - slug: blackbody-radiation
         - slug: illuminance-and-lighting-design
         - slug: photometric-quantities
         - slug: color-rendering

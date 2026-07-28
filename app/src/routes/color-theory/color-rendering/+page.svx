@@ -3,14 +3,53 @@ layout: guide-content
 title: 照明の演色性
 
 grades: ["2"]
-
-draft: true
+visual: true
 ---
 
-## :WithGradeTag[照明の色再現性]{grades="2"}
+<script>
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import HighColorRenderingColorChecker from "$lib/demo/light-source/HighColorRenderingColorChecker.svelte"
+  import LowColorRenderingColorChecker from "$lib/demo/light-source/LowColorRenderingColorChecker.svelte"
+</script>
 
-- 光で照明された物体の見え方を:Mark[演色]といい、物体の色の見え方に影響を与える照明光の特性を:Mark[演色性]という
-- 演色性の良し悪しは:Mark[演色評価数]で表し、単位には:Mark[Ra]を使う
-- 演色性は、基準光と比較して色の見え方の差が少ないほどよい。:Mark[演色評価数]は、基準光で照らされた時の演色を:Mark[100]とし、比較したときの色の見え方の誤差を引いた値である
-- 演色評価数が100に近ければ近いほど、色の見え方を再現できていることになる。一般的には、演色評価数が:Mark[80]を超えると、演色性がよいとされる
-- 光で照らされた場所の明るさは:Mark[照度]によって決まるが、明るさの感じ方や物体を見た時の明るさの感覚はそれだけでは決まらない。一般的に、:Mark[彩度]が高い色ほど明るく感じられ、:Mark[演色性]の高い光で照明した物体の方が明るく感じられる
+照明の種類によって、空間の明るさだけでなく、そこに置かれた物体の色の見え方も変わります。
+
+## :WithGradeTag[演色と演色性]{grades="2"}
+
+光で照明された物体の見え方を:Mark[演色]といい、物体の色の見え方に影響を与える照明光の特性を:Mark[演色性]といいます。
+光源によって演色性は異なるため、同じ物体であっても、異なる照明で照らせば、色の見え方は変わります。一般的に、演色性が低い照明光では、色の:Mark[鮮やかさ]が低下して見えます。
+
+## :WithGradeTag[演色評価数]{grades="2"}
+
+演色性の良し悪しは、基準光で照明したときと比べて、色の見え方がどれだけずれているか？で考えます。基準光で照らされたときの演色を:Mark[100]とし、そこから色の見え方の誤差を引いて数値化します。この数値が:Mark[演色評価数]です。
+
+ランプの演色性は、8色のテストカラーの演色評価数を平均化した、:Mark[平均演色評価数]（単位は:Mark[Ra]）で表されます。
+
+::::CardGrid
+:::TermCard{title="演色性が高い"}
+<SVGWrapper>
+  <HighColorRenderingColorChecker />
+</SVGWrapper>
+:::
+:::TermCard{title="演色性が低い"}
+<SVGWrapper>
+  <LowColorRenderingColorChecker />
+</SVGWrapper>
+:::
+::::
+
+### 比較対象とする基準光
+
+基準光として使われるのは、評価したい光源と同じ[色温度](/color-theory/color-temperature-and-light-color/)をもつ光です。:Mark[光色]そのものの違いではなく、色の見え方の差だけを取り出して比べるためです。
+
+### 演色性のよさの基準
+
+基準光との差が小さいほど、引かれる誤差も小さくなるため、演色評価数が:Mark[100]に近いほど、基準光の下での色の見え方を再現できていることになります。
+一般的には、演色評価数が:Mark[80]を超えると、演色性がよいとされています。
+
+## :WithGradeTag[明るさと演色性]{grades="2"}
+
+光で照らされた場所の明るさは[照度](/color-theory/illuminance-and-lighting-design/)によって決まりますが、人間の感じ方としては、一般的に:Mark[彩度]が高いほど明るく感じられます。
+そのため、:Mark[照度]が同じであっても、:Mark[演色性]の高い光で照明した物体の方が明るく感じられます。
+
+美術館の展示や衣料品の売り場のような、色を正確に見せたい場所では、演色性の高い光源が選ばれます。色が忠実に再現されるうえに、同じ照度でも明るく感じられるからです。
