@@ -28,7 +28,8 @@
   // ===== 変視症 =====
   // 黄斑の網膜がむくみ・はがれで凹凸になると、そこに映る像がうねって見える。
   // ゆるやかなノイズで像を変位させて再現する。
-  const WARP_RADIUS_DEG = 18 // 歪みが半分に弱まる半径（この外はなだらかに歪まなくなる）
+  const WARP_OUTER_DEG = 20 // この半径より外では歪まない（画像の上下端の内側に収める）
+  const WARP_FLATNESS = 3 // 大きいほど中心付近の歪みが平坦に広がる
   const WARP_FALLOFF_GAMMA = 4 // 大きいほど周辺で急に弱まる
   const WARP_STRENGTH_DEG = 4 // 歪みの強さ。変位マップの振れ幅にあたる
   const WARP_CYCLES = 13 // 画像の横幅あたりのうねりの周期数
@@ -53,12 +54,24 @@
 
   // 平坦な面を点光源で照らすと、中心からの距離 r における明るさが
   //   (Z / sqrt(r^2 + Z^2)) ^ GAMMA
-  // の放射状の勾配になる。これが 0.5 になる距離が指定した半径と一致するよう Z を決め、
-  // 症状を中心付近だけに効かせる重みとして使う。
+  // の放射状の勾配になる。これを症状を中心付近だけに効かせる重みとして使う。
+  const falloffAt = (radius: number, z: number, gamma: number): number =>
+    (z / Math.hypot(radius, z)) ** gamma
+
+  // 勾配が 0.5 になる距離が指定した半径と一致するよう Z を決める
   const lightZ = (radius: number, gamma: number): number =>
     radius / Math.sqrt(2 ** (2 / gamma) - 1)
 
-  const WARP_LIGHT_Z = lightZ(WARP_RADIUS_DEG * UNIT_PER_DEG, WARP_FALLOFF_GAMMA)
+  // 歪みの重みは、この勾配の裾を切り落として使う。勾配自体は 0 に達しないため、
+  // そのままでは画像の端まで弱く歪んでしまう。Z を半径より十分大きく取って
+  // 中心付近を平坦にしたうえで、WARP_OUTER でちょうど 0 になるよう
+  // feFuncR の amplitude / offset で線形に引き伸ばす（0 未満は 0 に丸められる）。
+  const WARP_OUTER = WARP_OUTER_DEG * UNIT_PER_DEG
+  const WARP_LIGHT_Z = WARP_FLATNESS * WARP_OUTER
+  const WARP_CUTOFF = falloffAt(WARP_OUTER, WARP_LIGHT_Z, WARP_FALLOFF_GAMMA)
+  const WARP_AMPLITUDE = 1 / (1 - WARP_CUTOFF)
+  const WARP_OFFSET = -WARP_CUTOFF / (1 - WARP_CUTOFF)
+
   const SCOTOMA_LIGHT_Z = lightZ(SCOTOMA_RADIUS_DEG * UNIT_PER_DEG, SCOTOMA_FALLOFF_GAMMA)
 
   const DARKEN_MATRIX = [
@@ -110,9 +123,24 @@
         <fePointLight x={FIXATION_X} y={FIXATION_Y} z={WARP_LIGHT_Z} />
       </feDiffuseLighting>
       <feComponentTransfer in="warpFalloff" result="warpWeight">
-        <feFuncR type="gamma" exponent={WARP_FALLOFF_GAMMA} />
-        <feFuncG type="gamma" exponent={WARP_FALLOFF_GAMMA} />
-        <feFuncB type="gamma" exponent={WARP_FALLOFF_GAMMA} />
+        <feFuncR
+          type="gamma"
+          exponent={WARP_FALLOFF_GAMMA}
+          amplitude={WARP_AMPLITUDE}
+          offset={WARP_OFFSET}
+        />
+        <feFuncG
+          type="gamma"
+          exponent={WARP_FALLOFF_GAMMA}
+          amplitude={WARP_AMPLITUDE}
+          offset={WARP_OFFSET}
+        />
+        <feFuncB
+          type="gamma"
+          exponent={WARP_FALLOFF_GAMMA}
+          amplitude={WARP_AMPLITUDE}
+          offset={WARP_OFFSET}
+        />
       </feComponentTransfer>
 
       <!-- 重み w でノイズを中間値へ寄せた変位マップ： 0.5 + w × (noise - 0.5)。
