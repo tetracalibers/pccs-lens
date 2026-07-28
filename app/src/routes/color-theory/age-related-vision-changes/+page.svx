@@ -12,6 +12,7 @@ draft: true
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
   import LensSpectralTransmittance from "$lib/demo/aging-vision/LensSpectralTransmittance.svelte"
   import AccommodationByAge from "$lib/demo/aging-vision/AccommodationByAge.svelte"
+  import PupilDiameterByAge from "$lib/demo/aging-vision/PupilDiameterByAge.svelte"
 </script>
 
 人間の生理機能のうち、特に:Mark[視覚]・:Mark[聴覚]などの感覚機能と:Mark[平衡]機能は、:Mark[50]歳代後半になると著しく低下します。
@@ -77,9 +78,9 @@ draft: true
 
 若年者は:Mark[瞳孔径]（瞳孔の大きさ）を拡大・縮小できる幅が大きいため、:Mark[明暗]の変化に適応しやすくなっています。一方、高齢者はその幅が小さく、特に:Mark[暗所]に適応しにくくなります。つまり、[暗順応](/color-theory/brightness-sensitivity-and-adaptation/)に支障が出てきます。
 
-:::Todo
-明暗状態での瞳孔径の年齢変化のグラフ
-:::
+<SVGWrapper maxW="500">
+  <PupilDiameterByAge />
+</SVGWrapper>
 
 :Mark[明順応]時の瞳孔径は、若年者でも高齢者でもあまり変わりません。
 年齢とともに小さくなっていくのは、:Mark[暗順応]時の瞳孔径です。
