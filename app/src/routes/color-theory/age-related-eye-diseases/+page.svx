@@ -3,9 +3,14 @@ layout: guide-content
 title: 加齢に伴う眼疾病
 
 grades: ["uc"]
+visual: true
 
 draft: true
 ---
+
+<script lang="ts">
+  import GlaucomaFieldLossSimulation from "$lib/demo/aging-vision/GlaucomaFieldLossSimulation.svelte"
+</script>
 
 ## :WithGradeTag[白内障]{grades="uc"}
 
@@ -28,9 +33,7 @@ draft: true
 視野欠損は、視野の中心から:Mark[30]度以内に生じることが多い
 :::
 
-:::Todo
-緑内障の視野欠損の見え方をSVGフィルタで再現した比較画像
-:::
+<GlaucomaFieldLossSimulation maxW="300" />
 
 ## :WithGradeTag[加齢黄斑変性]{grades="uc"}
 
