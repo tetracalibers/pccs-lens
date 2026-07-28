@@ -37,9 +37,14 @@
   const WARP_SEED = 7
 
   // ===== 中心暗点 =====
-  const SCOTOMA_RADIUS_DEG = 9 // 暗点の濃さが半分になる半径
-  const SCOTOMA_FALLOFF_GAMMA = 8 // 大きいほど輪郭がはっきりする
-  const SCOTOMA_GAIN = 0.3 // 暗点内の明るさ（1 なら元のまま）
+  // 中心は像が完全に欠けて黒く見え、その外側で見え方が戻っていく
+  const SCOTOMA_CORE_DEG = 5 // 完全に欠ける半径（ここまでは一様に黒い）
+  const SCOTOMA_OUTER_DEG = 12 // 暗点が消える半径
+  const SCOTOMA_FLATNESS = 2 // 大きいほど核から外周への落ち込みがなだらかになる
+  const SCOTOMA_FALLOFF_GAMMA = 6 // 大きいほど輪郭がはっきりする
+  // 暗点内の明るさ（1 なら元のまま）。黒を α で重ねるのと同じことなので、
+  // この値が 1 - α にあたる。0 にすると完全な黒になる
+  const SCOTOMA_GAIN = 0.25
   const SCOTOMA_BLUR = 0.025 * IMAGE_HEIGHT // 暗点内のぼけ
   const SCOTOMA_EDGE_WARP = 0.08 * IMAGE_HEIGHT // 輪郭を崩す量
   const SCOTOMA_EDGE_BLUR = 0.01 * IMAGE_HEIGHT // 輪郭のぼかし
@@ -58,21 +63,28 @@
   const falloffAt = (radius: number, z: number, gamma: number): number =>
     (z / Math.hypot(radius, z)) ** gamma
 
-  // 勾配が 0.5 になる距離が指定した半径と一致するよう Z を決める
-  const lightZ = (radius: number, gamma: number): number =>
-    radius / Math.sqrt(2 ** (2 / gamma) - 1)
+  // ただしこの勾配は中心の1点でしか 1 にならず、0 にも達しない。そのままだと
+  // 症状が中心のうっすらとした影になり、周辺にも弱く残ってしまう。そこで
+  // feFuncR の amplitude / offset で「core までは 1 以上・outer で 0」に線形変換し、
+  // 範囲外はフィルタ側の 0〜1 への丸めに任せて、平らな核と歪まない周辺を作る。
+  const stretchFalloff = (core: number, outer: number, z: number, gamma: number) => {
+    const amplitude = 1 / (falloffAt(core, z, gamma) - falloffAt(outer, z, gamma))
+    return { amplitude, offset: -falloffAt(outer, z, gamma) * amplitude }
+  }
 
-  // 歪みの重みは、この勾配の裾を切り落として使う。勾配自体は 0 に達しないため、
-  // そのままでは画像の端まで弱く歪んでしまう。Z を半径より十分大きく取って
-  // 中心付近を平坦にしたうえで、WARP_OUTER でちょうど 0 になるよう
-  // feFuncR の amplitude / offset で線形に引き伸ばす（0 未満は 0 に丸められる）。
+  // 歪みは核を持たず、中心から outer にかけてなだらかに弱まる
   const WARP_OUTER = WARP_OUTER_DEG * UNIT_PER_DEG
   const WARP_LIGHT_Z = WARP_FLATNESS * WARP_OUTER
-  const WARP_CUTOFF = falloffAt(WARP_OUTER, WARP_LIGHT_Z, WARP_FALLOFF_GAMMA)
-  const WARP_AMPLITUDE = 1 / (1 - WARP_CUTOFF)
-  const WARP_OFFSET = -WARP_CUTOFF / (1 - WARP_CUTOFF)
+  const WARP_STRETCH = stretchFalloff(0, WARP_OUTER, WARP_LIGHT_Z, WARP_FALLOFF_GAMMA)
 
-  const SCOTOMA_LIGHT_Z = lightZ(SCOTOMA_RADIUS_DEG * UNIT_PER_DEG, SCOTOMA_FALLOFF_GAMMA)
+  const SCOTOMA_OUTER = SCOTOMA_OUTER_DEG * UNIT_PER_DEG
+  const SCOTOMA_LIGHT_Z = SCOTOMA_FLATNESS * SCOTOMA_OUTER
+  const SCOTOMA_STRETCH = stretchFalloff(
+    SCOTOMA_CORE_DEG * UNIT_PER_DEG,
+    SCOTOMA_OUTER,
+    SCOTOMA_LIGHT_Z,
+    SCOTOMA_FALLOFF_GAMMA
+  )
 
   const DARKEN_MATRIX = [
     `${SCOTOMA_GAIN} 0 0 0 0`,
@@ -82,12 +94,7 @@
   ].join("\n")
 
   // 赤チャンネルの値を α に移し、重みの勾配をマスクとして使えるようにする
-  const RED_TO_ALPHA_MATRIX = [
-    `0 0 0 0 0`,
-    `0 0 0 0 0`,
-    `0 0 0 0 0`,
-    `1 0 0 0 0`
-  ].join("\n")
+  const RED_TO_ALPHA_MATRIX = [`0 0 0 0 0`, `0 0 0 0 0`, `0 0 0 0 0`, `1 0 0 0 0`].join("\n")
 </script>
 
 <svg
@@ -126,20 +133,20 @@
         <feFuncR
           type="gamma"
           exponent={WARP_FALLOFF_GAMMA}
-          amplitude={WARP_AMPLITUDE}
-          offset={WARP_OFFSET}
+          amplitude={WARP_STRETCH.amplitude}
+          offset={WARP_STRETCH.offset}
         />
         <feFuncG
           type="gamma"
           exponent={WARP_FALLOFF_GAMMA}
-          amplitude={WARP_AMPLITUDE}
-          offset={WARP_OFFSET}
+          amplitude={WARP_STRETCH.amplitude}
+          offset={WARP_STRETCH.offset}
         />
         <feFuncB
           type="gamma"
           exponent={WARP_FALLOFF_GAMMA}
-          amplitude={WARP_AMPLITUDE}
-          offset={WARP_OFFSET}
+          amplitude={WARP_STRETCH.amplitude}
+          offset={WARP_STRETCH.offset}
         />
       </feComponentTransfer>
 
@@ -177,9 +184,24 @@
         <fePointLight x={FIXATION_X} y={FIXATION_Y} z={SCOTOMA_LIGHT_Z} />
       </feDiffuseLighting>
       <feComponentTransfer in="scotomaFalloff" result="scotomaWeight">
-        <feFuncR type="gamma" exponent={SCOTOMA_FALLOFF_GAMMA} />
-        <feFuncG type="gamma" exponent={SCOTOMA_FALLOFF_GAMMA} />
-        <feFuncB type="gamma" exponent={SCOTOMA_FALLOFF_GAMMA} />
+        <feFuncR
+          type="gamma"
+          exponent={SCOTOMA_FALLOFF_GAMMA}
+          amplitude={SCOTOMA_STRETCH.amplitude}
+          offset={SCOTOMA_STRETCH.offset}
+        />
+        <feFuncG
+          type="gamma"
+          exponent={SCOTOMA_FALLOFF_GAMMA}
+          amplitude={SCOTOMA_STRETCH.amplitude}
+          offset={SCOTOMA_STRETCH.offset}
+        />
+        <feFuncB
+          type="gamma"
+          exponent={SCOTOMA_FALLOFF_GAMMA}
+          amplitude={SCOTOMA_STRETCH.amplitude}
+          offset={SCOTOMA_STRETCH.offset}
+        />
       </feComponentTransfer>
       <feDisplacementMap
         in="scotomaWeight"
@@ -203,12 +225,7 @@
 
       <!-- 暗点内の見え方：像がぼやけ、暗くなる -->
       <feGaussianBlur in="warped" stdDeviation={SCOTOMA_BLUR} result="scotomaBlur" />
-      <feColorMatrix
-        in="scotomaBlur"
-        type="matrix"
-        values={DARKEN_MATRIX}
-        result="scotomaImage"
-      />
+      <feColorMatrix in="scotomaBlur" type="matrix" values={DARKEN_MATRIX} result="scotomaImage" />
 
       <!-- 歪んだ像に暗点を重ねる -->
       <feComposite in="scotomaImage" in2="scotomaMask" operator="in" result="scotomaPatch" />
