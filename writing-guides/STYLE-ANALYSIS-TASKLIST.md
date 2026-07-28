@@ -121,7 +121,7 @@
 - [ページ未作成] 混同しやすい色
 - [ページ未作成] 色の誤認
 - [x] `/color-theory/age-related-vision-changes`
-- [draft] `/color-theory/elderly-vision-characteristics`
+- [ ] `/color-theory/elderly-vision-characteristics`
 - [ ] `/color-theory/age-related-eye-diseases`
 - [ページ未作成] 色覚の遺伝
 - [ページ未作成] 色覚検査法
