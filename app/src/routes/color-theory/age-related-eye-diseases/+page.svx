@@ -10,6 +10,7 @@ draft: true
 
 <script lang="ts">
   import GlaucomaFieldLossSimulation from "$lib/demo/aging-vision/GlaucomaFieldLossSimulation.svelte"
+  import MacularDegenerationSimulation from "$lib/demo/aging-vision/MacularDegenerationSimulation.svelte"
 </script>
 
 ## :WithGradeTag[白内障]{grades="uc"}
@@ -42,6 +43,4 @@ draft: true
 - 欧米では成人の:Mark[失明]原因の第1位
 - 日本でも患者数が急増している
 
-:::Todo
-加齢黄斑変性の中心暗点と変視症が同時に起こっている見え方をSVGフィルタで再現した比較画像
-:::
+<MacularDegenerationSimulation maxW="480" />
