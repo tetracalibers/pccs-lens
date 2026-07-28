@@ -4,8 +4,6 @@ title: 加齢による見え方の変化
 
 grades: ["uc"]
 visual: true
-
-draft: true
 ---
 
 <script>
@@ -44,6 +42,11 @@ draft: true
 水晶体は[黄変](/color-theory/color-vision-characteristics/)するため、特に:Mark[短]波長の光に対する透過率が大きく下がり、:Mark[青]色が:Mark[暗く]見えるようになります。
 
 <LensYellowingSimulation />
+
+:::Note
+水晶体が黄変していても、実際には[色の恒常性](/color-theory/perceptual-constancy/)によって補正されるため、このような色の見え方になっているとは限りません。
+また、黄変の程度にも個人差があります。
+:::
 
 ## :WithGradeTag[焦点調節力の低下]{grades="uc"}
 
