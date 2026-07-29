@@ -3,9 +3,15 @@ layout: guide-content
 title: 色差と均等色空間
 
 grades: ["1"]
+visual: true
 
 draft: true
 ---
+
+<script>
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import MacAdamEllipses from "$lib/demo/xyz-color-system/MacAdamEllipses.svelte"
+</script>
 
 - [xy色度図](/color-theory/xy-chromaticity-diagram/)上の:Mark[色度]の差と、:Mark[知覚]的な色の差は、必ずしも一致しているとは限らない
 - つまり、xy色度図では、見た目の色の違いを判断できない
@@ -15,9 +21,9 @@ draft: true
 - xy色度図上での距離と知覚的な色の不一致性を[等色実験](/color-theory/color-matching-and-grassmanns-law/)で明らかにしたのが:Mark[マックアダム]
 - xy色度図上では同じ距離であっても、見た目の差は色の領域によって異なることを:Mark[マックアダム楕円]（:Mark[マックアダム偏差長円]とも呼ばれる）で示した
 
-:::Todo
-xy色度図上にマックアダム楕円を描いた図（各楕円内には楕円の長軸と短軸を描く）
-:::
+<SVGWrapper maxW="480">
+  <MacAdamEllipses />
+</SVGWrapper>
 
 :::Note
 実際のマックアダム楕円は小さすぎて見えないため、図では10倍に拡大して描いている
