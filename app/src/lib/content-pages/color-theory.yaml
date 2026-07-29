@@ -101,8 +101,7 @@
         - slug: rgb-color-system
         - slug: xyz-color-system
         - slug: xy-chromaticity-diagram
-        - title: 色差と均等色空間
-          grades: ["1"]
+        - slug: color-difference-and-uniform-color-space
         - title: L*a*b*色空間
           grades: ["1"]
         - title: オストワルト表色系
