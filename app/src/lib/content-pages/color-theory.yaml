@@ -102,8 +102,7 @@
         - slug: xyz-color-system
         - slug: xy-chromaticity-diagram
         - slug: color-difference-and-uniform-color-space
-        - title: L*a*b*色空間
-          grades: ["1"]
+        - slug: lab-color-space
         - title: オストワルト表色系
           grades: ["1"]
     - title: デジタル空間の色

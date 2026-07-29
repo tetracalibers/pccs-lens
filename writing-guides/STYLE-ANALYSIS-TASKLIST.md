@@ -77,7 +77,7 @@
 - [x] `/color-theory/xyz-color-system`
 - [x] `/color-theory/xy-chromaticity-diagram`
 - [draft] `/color-theory/color-difference-and-uniform-color-space`
-- [ページ未作成] L*a*b*色空間
+- [draft] `/color-theory/lab-color-space`
 - [ページ未作成] オストワルト表色系
 - [draft] `/color-theory/digital-color-generation`
 - [draft] `/color-theory/color-gamut`
