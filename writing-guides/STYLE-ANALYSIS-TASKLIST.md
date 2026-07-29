@@ -227,8 +227,8 @@
 
 - [x] `/color-fields/landscape-color-approach`
 - [x] `/color-fields/housing-color-design-process`
-- [ページ未作成] 景観法
-- [ページ未作成] 景観計画
+- [draft] `/color-fields/landscape-act`
+- [draft] `/color-fields/landscape-plan`
 - [ページ未作成] 景観計画における色彩基準
 - [ページ未作成] 色の三属性と景観形成
 - [ページ未作成] 遠景・中景・近景の景観色彩
