@@ -71,16 +71,15 @@
 - [x] `/color-theory/color-mixing-basics`
 - [x] `/color-theory/additive-color-mixing-types`
 - [x] `/color-theory/real-world-color-mixing`
-- [draft] `/color-theory/digital-color-generation`
-- [draft] `/color-theory/color-gamut`
 - [x] `/color-theory/color-matching-and-grassmanns-law`
 - [x] `/color-theory/rgb-color-system`
 - [x] `/color-theory/xyz-color-system`
 - [x] `/color-theory/xy-chromaticity-diagram`
-- [draft] `/color-theory/colorimetric-illuminants`
-- [ページ未作成] 色差の表示
+- [ページ未作成] 色差と均等色空間
 - [ページ未作成] L*a*b*色空間
 - [ページ未作成] オストワルト表色系
+- [draft] `/color-theory/digital-color-generation`
+- [draft] `/color-theory/color-gamut`
 
 ## 色の理論 — 色の見え方（`color-theory.yaml` #color-appearance）
 
@@ -131,6 +130,7 @@
 - [ページ未作成] 測色の基本
 - [ページ未作成] 視感測色
 - [ページ未作成] 物理測色
+- [draft] `/color-theory/colorimetric-illuminants`
 - [ページ未作成] 測り方による色の分類
 - [x] `/color-theory/psychological-scaling-method`
 - [draft] `/color-theory/psychological-scale-types`

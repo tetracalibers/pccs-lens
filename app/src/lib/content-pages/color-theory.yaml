@@ -101,8 +101,7 @@
         - slug: rgb-color-system
         - slug: xyz-color-system
         - slug: xy-chromaticity-diagram
-        - slug: colorimetric-illuminants
-        - title: 色差の表示
+        - title: 色差と均等色空間
           grades: ["1"]
         - title: L*a*b*色空間
           grades: ["1"]
@@ -213,6 +212,7 @@
           grades: ["1"]
         - title: 物理測色
           grades: ["1"]
+        - slug: colorimetric-illuminants
         - title: 測り方による色の分類
           grades: ["1"]
     - title: 色の印象の評価

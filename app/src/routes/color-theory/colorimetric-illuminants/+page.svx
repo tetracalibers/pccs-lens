@@ -1,6 +1,6 @@
 ---
 layout: guide-content
-title: XYZ表色系と測色の照明
+title: XYZ表色系と測色条件
 
 grades: ["1"]
 
