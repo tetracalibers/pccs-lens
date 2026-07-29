@@ -76,7 +76,7 @@
 - [x] `/color-theory/color-matching-and-grassmanns-law`
 - [x] `/color-theory/rgb-color-system`
 - [x] `/color-theory/xyz-color-system`
-- [draft] `/color-theory/xy-chromaticity-diagram`
+- [ ] `/color-theory/xy-chromaticity-diagram`
 - [draft] `/color-theory/colorimetric-illuminants`
 - [ページ未作成] 色差の表示
 - [ページ未作成] L*a*b*色空間
