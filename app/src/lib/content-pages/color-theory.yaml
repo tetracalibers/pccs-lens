@@ -95,10 +95,6 @@
         - slug: color-mixing-basics
         - slug: additive-color-mixing-types
         - slug: real-world-color-mixing
-    - title: デジタル空間の色
-      links:
-        - slug: digital-color-generation
-        - slug: color-gamut
     - title: 混色の原理による色表示
       links:
         - slug: color-matching-and-grassmanns-law
@@ -112,6 +108,10 @@
           grades: ["1"]
         - title: オストワルト表色系
           grades: ["1"]
+    - title: デジタル空間の色
+      links:
+        - slug: digital-color-generation
+        - slug: color-gamut
 
 - title: 色の見え方
   id: color-appearance
