@@ -48,15 +48,19 @@
 
   // ===== 色定数 =====
   // 主役は楕円なので、楕円は本文色、座標軸はグレーで控えめに描く。
+  // 楕円はライトモードの本文色に固定し、テーマによって色が変わらないようにする。
   const COL_AXIS = "var(--canvas-pen-gray)"
   const COL_LABEL = "var(--canvas-pen-gray)"
-  const COL_ELLIPSE = "var(--color-body)"
+  const COL_ELLIPSE = "var(--color-body--light)"
 
   // ===== カラーフィル =====
   const STEP = 0.01 // 色域内を細かなセルで塗り分ける際の刻み幅（色度座標の単位）
   const CELL_OVERLAP = 1.5 // セル同士の継ぎ目（白スジ）を防ぐ重なり(px)
   // 色域の塗りを薄くして、上に重なる細い楕円の線を読み取れるようにする。
   const GAMUT_FILL_OPACITY = 0.45
+  // 薄い塗りの下に敷く不透明な地色。ページ背景を透かすとダークモードで
+  // 色域が暗く沈むため、ライトモードの背景色で固定して見え方を揃える。
+  const COL_GAMUT_BASE = "var(--color-bg--light)"
 
   // ===== マックアダム楕円の拡大率 =====
   // 実寸では小さすぎて見えないため、慣例どおり 10 倍に拡大して描く。
@@ -413,16 +417,26 @@
   </defs>
 
   <!-- 色域の塗りつぶし（楕円の線を読み取れるよう薄く重ねる） -->
-  <g clip-path="url(#gamut-clip-{ID})" shape-rendering="crispEdges" opacity={GAMUT_FILL_OPACITY}>
-    {#each cells as cell, i (i)}
-      <rect
-        x={xAt(cell.cx) - cellW / 2}
-        y={yAt(cell.cy) - cellH / 2}
-        width={cellW}
-        height={cellH}
-        fill={cell.color}
-      />
-    {/each}
+  <g clip-path="url(#gamut-clip-{ID})">
+    <!-- 不透明な地色。薄い塗りをこの上に重ねることで、テーマによらず同じ色になる -->
+    <rect
+      x={PLOT_LEFT}
+      y={PLOT_TOP}
+      width={PLOT_WIDTH}
+      height={PLOT_HEIGHT}
+      fill={COL_GAMUT_BASE}
+    />
+    <g shape-rendering="crispEdges" opacity={GAMUT_FILL_OPACITY}>
+      {#each cells as cell, i (i)}
+        <rect
+          x={xAt(cell.cx) - cellW / 2}
+          y={yAt(cell.cy) - cellH / 2}
+          width={cellW}
+          height={cellH}
+          fill={cell.color}
+        />
+      {/each}
+    </g>
   </g>
 
   <!-- 横軸 -->
