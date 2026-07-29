@@ -33,6 +33,21 @@ frontmatter から `draft: true`（と直前の空行）を削除して記事を
 > [!TIP]
 > 公開のコミットを `/commit-this` で作る場合、差分から `draft: true` の削除を検出して **1（`visual` フラグ）と 2（OGP画像）はスキルが自動実行する**（1 は記事コミットに含め、2 は生成後に別コミット）。あわせて `writing-guides/STYLE-ANALYSIS-TASKLIST.md` の該当行を `[draft]` から空チェックボックス（未分析）へ書き換え、記事コミットに含める。3・4 は自動実行しないので、コミット後に手動で行う。
 
+### コンテンツ一覧（YAML）を編集したとき
+
+`app/src/lib/content-pages/**/*.yaml`（`color-theory.yaml`・`color-fields.yaml`・`cg/*.yaml`）は、記事の掲載順と掲載先を決める一覧データ。**この並びは2つのタスクリストにそのまま写されている**ため、並べ替え・改名・`DraftLink` → `PageLink` の置き換えをしたら追随させる。
+
+```sh
+npm --prefix scripts install              # 初回のみ（YAML パーサを入れる）
+node scripts/sync-tasklists.mjs --check   # 差分を報告するだけ（差分があれば exit 1）
+node scripts/sync-tasklists.mjs --write   # 差分を書き込む
+```
+
+- 対象は `ogimage/OGP-TASKLIST.md` と `writing-guides/STYLE-ANALYSIS-TASKLIST.md`。見出しに `` （`<yaml>` #<id>）`` の参照を持つセクションだけを YAML 順に組み直す。トップ・ゲーム・慣用色名マップなど手書きのセクションには触れない。
+- **`[x]`（生成済み・分析済み）は作りも消しもしない。** 直すのは並び順・行の過不足・`[ページ未作成]` ↔ ``[draft] `/route` `` の変換まで。`draft: true` なのに `[x]` のような矛盾は警告として出るだけ。
+- YAML に想定外の記述があるとエラーで停止し、**1行も書き込まない**。
+- `/create-color-theory-page`・`/create-color-fields-page`・`/create-cg-page` は雛形作成の最後にこれを実行する。`/commit-this` も、コミット対象に YAML や `+page.svx` の frontmatter 変更が含まれていれば `--check` して差分を提示する。
+
 ### SVG図版の作成
 
 - `/svg-diagram-component`スキルに図の内容を渡して作成する
