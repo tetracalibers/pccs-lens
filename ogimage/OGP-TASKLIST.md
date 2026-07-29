@@ -96,7 +96,7 @@
 - [x] `/color-theory/rgb-color-system`
 - [x] `/color-theory/xyz-color-system`
 - [x] `/color-theory/xy-chromaticity-diagram`
-- [draft] `/color-theory/color-difference-and-uniform-color-space`
+- [ ] `/color-theory/color-difference-and-uniform-color-space`
 - [draft] `/color-theory/lab-color-space`
 - [ページ未作成] オストワルト表色系
 - [draft] `/color-theory/digital-color-generation`
