@@ -342,6 +342,9 @@
     "color-theory/what-is-lighting": {
       "title": "照明と照明光"
     },
+    "color-theory/xy-chromaticity-diagram": {
+      "title": "色度座標とxy色度図"
+    },
     "color-theory/xyz-color-system": {
       "title": "XYZ表色系"
     },
