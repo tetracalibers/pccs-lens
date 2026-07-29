@@ -207,6 +207,9 @@
     "color-theory/color-contrast": {
       "title": "色の対比と三属性"
     },
+    "color-theory/color-difference-and-uniform-color-space": {
+      "title": "色差と均等色空間"
+    },
     "color-theory/color-matching-and-grassmanns-law": {
       "title": "等色実験とグラスマンの法則"
     },
