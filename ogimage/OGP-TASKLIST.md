@@ -197,7 +197,7 @@
 
 ## 色の活用分野（nested） — 記事：ビジネス（`color-fields.yaml` #business）
 
-- [ページ未作成] 色彩効果とビジネス
+- [draft] `/color-fields/color-effects-and-business`
 - [ページ未作成] カラーコミュニケーションツール
 - [ページ未作成] コンシューマプロダクツ
 - [ページ未作成] 企業アイデンティティ戦略
