@@ -95,23 +95,20 @@
         - slug: color-mixing-basics
         - slug: additive-color-mixing-types
         - slug: real-world-color-mixing
-    - title: デジタル空間の色
-      links:
-        - slug: digital-color-generation
-        - slug: color-gamut
     - title: 混色の原理による色表示
       links:
         - slug: color-matching-and-grassmanns-law
         - slug: rgb-color-system
         - slug: xyz-color-system
         - slug: xy-chromaticity-diagram
-        - slug: colorimetric-illuminants
-        - title: 色差の表示
-          grades: ["1"]
-        - title: L*a*b*色空間
-          grades: ["1"]
+        - slug: color-difference-and-uniform-color-space
+        - slug: lab-color-space
         - title: オストワルト表色系
           grades: ["1"]
+    - title: デジタル空間の色
+      links:
+        - slug: digital-color-generation
+        - slug: color-gamut
 
 - title: 色の見え方
   id: color-appearance
@@ -207,12 +204,14 @@
   sections:
     - title: 測色と色管理
       links:
-        - title: 測色の基本
+        - slug: colorimetry-basics
+        - title: 測色の照明
           grades: ["1"]
         - title: 視感測色
           grades: ["1"]
         - title: 物理測色
           grades: ["1"]
+        - slug: colorimetric-illuminants
         - title: 測り方による色の分類
           grades: ["1"]
     - title: 色の印象の評価

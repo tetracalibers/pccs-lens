@@ -7,4 +7,33 @@ grades: ["1"]
 draft: true
 ---
 
-## :WithGradeTag[TODO]{grades="1"}
+- [色のはたらき](/color-theory/color-roles/)で学んだ色彩の効果は、:Mark[科学]的なもの
+- ビジネスでは、色が目的に沿った役割を果たすことが重要であって、必ずしも科学的である必要はない
+
+:::Note
+:Mark[科学]的とは、ある特定の条件下では、同じ結果になるということ
+:::
+
+## :WithGradeTag[機能的役割とわかりやすさ]{grades="1"}
+
+- [色の機能的効果](/color-theory/color-roles/)をビジネス活用の視点で整理
+
+### アピール効果
+
+- 色には「目立たせる」という機能的役割があり、これを:Mark[アピール効果]という
+
+::ComingSoon
+
+### 可読効果
+
+::ComingSoon
+
+### 識別効果
+
+::ComingSoon
+
+## :WithGradeTag[情緒的役割と演出効果]{grades="1"}
+
+- [色の情緒的効果](/color-theory/color-roles/)をビジネス活用の視点で整理
+
+::ComingSoon

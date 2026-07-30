@@ -1,0 +1,12 @@
+{
+  "route": "color-theory/xy-chromaticity-diagram",
+  "title": "色度座標とxy色度図",
+  "titleLines": [
+    "色度座標とxy色度図"
+  ],
+  "crumbs": [
+    "色の理論",
+    "色の作り方と色再現"
+  ],
+  "figure": "assets/color-theory/xy-chromaticity-diagram/figure.png"
+}

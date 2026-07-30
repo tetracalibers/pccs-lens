@@ -1,0 +1,12 @@
+{
+  "route": "color-theory/color-difference-and-uniform-color-space",
+  "title": "色差と均等色空間",
+  "titleLines": [
+    "色差と均等色空間"
+  ],
+  "crumbs": [
+    "色の理論",
+    "色の作り方と色再現"
+  ],
+  "figure": "assets/color-theory/color-difference-and-uniform-color-space/figure.png"
+}

@@ -11,6 +11,7 @@
 - 対象は解説記事（`layout: guide-content` の `+page.svx`）のみ。トップ・一覧ページ、ゲーム、慣用色名マップ、配色シミュレータなど記事以外のページは分析対象ではないので載せない。
 - セクション見出しの `#<id>` が、そのままスキルへ渡せるスコープ指定。色の理論・色の活用分野は YAML のトップレベル大分類（カテゴリ）単位、CGと画像処理は YAML の `sections[].id`（セクション）単位。
 - 各セクション内の並びはコンテンツ YAML の並び順に忠実に従う。
+- **並び順や行の過不足は手で直さない。** `node scripts/sync-tasklists.mjs --write` で YAML に追随させる。`[x]` は書き換えられないので分析済みの記録は失われない。
 - CG のセクション id はユニットをまたいで重複することがある（`#basics`＝画像符号化／パターン認識、`#special-effects`＝空間フィルタリング／画素ごとの濃淡・色変換）。指定するときはユニット名も添える。
 
 ---
@@ -71,16 +72,15 @@
 - [x] `/color-theory/color-mixing-basics`
 - [x] `/color-theory/additive-color-mixing-types`
 - [x] `/color-theory/real-world-color-mixing`
-- [draft] `/color-theory/digital-color-generation`
-- [draft] `/color-theory/color-gamut`
 - [x] `/color-theory/color-matching-and-grassmanns-law`
 - [x] `/color-theory/rgb-color-system`
 - [x] `/color-theory/xyz-color-system`
-- [draft] `/color-theory/xy-chromaticity-diagram`
-- [draft] `/color-theory/colorimetric-illuminants`
-- [ページ未作成] 色差の表示
-- [ページ未作成] L*a*b*色空間
+- [x] `/color-theory/xy-chromaticity-diagram`
+- [ ] `/color-theory/color-difference-and-uniform-color-space`
+- [draft] `/color-theory/lab-color-space`
 - [ページ未作成] オストワルト表色系
+- [draft] `/color-theory/digital-color-generation`
+- [draft] `/color-theory/color-gamut`
 
 ## 色の理論 — 色の見え方（`color-theory.yaml` #color-appearance）
 
@@ -121,16 +121,18 @@
 - [ページ未作成] 混同しやすい色
 - [ページ未作成] 色の誤認
 - [x] `/color-theory/age-related-vision-changes`
-- [draft] `/color-theory/elderly-vision-characteristics`
-- [draft] `/color-theory/age-related-eye-diseases`
+- [x] `/color-theory/elderly-vision-characteristics`
+- [x] `/color-theory/age-related-eye-diseases`
 - [ページ未作成] 色覚の遺伝
 - [ページ未作成] 色覚検査法
 
 ## 色の理論 — 色の測り方（`color-theory.yaml` #color-measurement）
 
-- [ページ未作成] 測色の基本
+- [draft] `/color-theory/colorimetry-basics`
+- [ページ未作成] 測色の照明
 - [ページ未作成] 視感測色
 - [ページ未作成] 物理測色
+- [draft] `/color-theory/colorimetric-illuminants`
 - [ページ未作成] 測り方による色の分類
 - [x] `/color-theory/psychological-scaling-method`
 - [draft] `/color-theory/psychological-scale-types`
@@ -226,8 +228,8 @@
 
 - [x] `/color-fields/landscape-color-approach`
 - [x] `/color-fields/housing-color-design-process`
-- [ページ未作成] 景観法
-- [ページ未作成] 景観計画
+- [draft] `/color-fields/landscape-act`
+- [draft] `/color-fields/landscape-plan`
 - [ページ未作成] 景観計画における色彩基準
 - [ページ未作成] 色の三属性と景観形成
 - [ページ未作成] 遠景・中景・近景の景観色彩

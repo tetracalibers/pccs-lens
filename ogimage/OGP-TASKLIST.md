@@ -10,6 +10,7 @@
 - draft・未作成のものも YAML 上の並び順を保つため一覧に混ぜて掲載する（チェックボックスは付けない）。
 - 各記事セクションはコンテンツ YAML の並び順に忠実に並べる。color-theory・color-fields は YAML のトップレベル大分類ごとにセクションを分ける。
 - 動的ルートの CG ユニットは全ユニットの一覧ページ `/cg/<unit>` を対象に含む。
+- **YAML 由来のセクション（見出しに `` `<yaml>` `` の参照があるもの）は手で並べ替えない。** `node scripts/sync-tasklists.mjs --write` で YAML に追随させる。`[x]` は書き換えられないので記録は失われない。
 
 ---
 
@@ -91,16 +92,15 @@
 - [x] `/color-theory/color-mixing-basics`
 - [x] `/color-theory/additive-color-mixing-types`
 - [x] `/color-theory/real-world-color-mixing`
-- [draft] `/color-theory/digital-color-generation`
-- [draft] `/color-theory/color-gamut`
 - [x] `/color-theory/color-matching-and-grassmanns-law`
 - [x] `/color-theory/rgb-color-system`
 - [x] `/color-theory/xyz-color-system`
-- [draft] `/color-theory/xy-chromaticity-diagram`
-- [draft] `/color-theory/colorimetric-illuminants`
-- [ページ未作成] 色差の表示
-- [ページ未作成] L*a*b*色空間
+- [x] `/color-theory/xy-chromaticity-diagram`
+- [x] `/color-theory/color-difference-and-uniform-color-space`
+- [draft] `/color-theory/lab-color-space`
 - [ページ未作成] オストワルト表色系
+- [draft] `/color-theory/digital-color-generation`
+- [draft] `/color-theory/color-gamut`
 
 ## 色の理論（nested） — 記事：色の見え方（`color-theory.yaml` #color-appearance）
 
@@ -113,6 +113,7 @@
 - [x] `/color-theory/optical-illusions`
 - [x] `/color-theory/what-is-lighting`
 - [x] `/color-theory/color-temperature-and-light-color`
+- [draft] `/color-theory/blackbody-radiation`
 - [x] `/color-theory/illuminance-and-lighting-design`
 - [draft] `/color-theory/photometric-quantities`
 - [x] `/color-theory/color-rendering`
@@ -140,16 +141,18 @@
 - [ページ未作成] 混同しやすい色
 - [ページ未作成] 色の誤認
 - [x] `/color-theory/age-related-vision-changes`
-- [draft] `/color-theory/elderly-vision-characteristics`
-- [draft] `/color-theory/age-related-eye-diseases`
+- [x] `/color-theory/elderly-vision-characteristics`
+- [x] `/color-theory/age-related-eye-diseases`
 - [ページ未作成] 色覚の遺伝
 - [ページ未作成] 色覚検査法
 
 ## 色の理論（nested） — 記事：色の測り方（`color-theory.yaml` #color-measurement）
 
-- [ページ未作成] 測色の基本
+- [draft] `/color-theory/colorimetry-basics`
+- [ページ未作成] 測色の照明
 - [ページ未作成] 視感測色
 - [ページ未作成] 物理測色
+- [draft] `/color-theory/colorimetric-illuminants`
 - [ページ未作成] 測り方による色の分類
 - [x] `/color-theory/psychological-scaling-method`
 - [draft] `/color-theory/psychological-scale-types`
@@ -196,7 +199,7 @@
 
 ## 色の活用分野（nested） — 記事：ビジネス（`color-fields.yaml` #business）
 
-- [ページ未作成] 色彩効果とビジネス
+- [draft] `/color-fields/color-effects-and-business`
 - [ページ未作成] カラーコミュニケーションツール
 - [ページ未作成] コンシューマプロダクツ
 - [ページ未作成] 企業アイデンティティ戦略
@@ -245,8 +248,8 @@
 
 - [x] `/color-fields/landscape-color-approach`
 - [x] `/color-fields/housing-color-design-process`
-- [ページ未作成] 景観法
-- [ページ未作成] 景観計画
+- [draft] `/color-fields/landscape-act`
+- [draft] `/color-fields/landscape-plan`
 - [ページ未作成] 景観計画における色彩基準
 - [ページ未作成] 色の三属性と景観形成
 - [ページ未作成] 遠景・中景・近景の景観色彩

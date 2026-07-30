@@ -116,6 +116,20 @@ draft: true
         - slug: munsell-color-system
 ```
 
+### 6. タスクリストを YAML に追随させる
+
+`DraftLink` を `PageLink` に置き換えると、OGP・文体解析の 2 つのタスクリストに残った `- [ページ未作成] <タイトル>` の行が実態とずれる。照合スクリプトで揃える（リポジトリルートで実行）。
+
+```sh
+node scripts/sync-tasklists.mjs --write
+```
+
+> `Cannot find package 'yaml'` で落ちたら依存が未インストール。`npm --prefix scripts install` を実行してからやり直す。
+
+- 更新されるのは `ogimage/OGP-TASKLIST.md` と `writing-guides/STYLE-ANALYSIS-TASKLIST.md`。今回作ったページの行が `- [ページ未作成] <タイトル>` から ``- [draft] `/color-theory/<slug>` `` に変わる。
+- 出力に**今回のページ以外の変更**が並んだ場合は、それ以前から溜まっていたズレ。揃えてしまってよいが、ユーザーへの報告で触れる。
+- **エラーで終了した場合は 1 行も書き込まれない。** メッセージ（多くは YAML の想定外の記述）をそのまま報告し、**タスクリストを手で書き換えて取り繕わない**。
+
 ## 注意事項
 
 - slug は一度決めたら、`+page.svx` のファイル内容、ディレクトリ名、YAML の `slug` フィールドですべて同一の値を使うこと。

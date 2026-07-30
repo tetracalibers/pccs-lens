@@ -2,7 +2,7 @@
 layout: guide-content
 title: 色再現領域
 
-grades: ["2"]
+grades: ["2", "1"]
 
 draft: true
 ---

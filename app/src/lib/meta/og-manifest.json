@@ -177,6 +177,9 @@
     "color-theory/adjacent-color-influence": {
       "title": "近接した色の影響"
     },
+    "color-theory/age-related-eye-diseases": {
+      "title": "加齢に伴う眼疾病"
+    },
     "color-theory/age-related-vision-changes": {
       "title": "加齢による見え方の変化"
     },
@@ -203,6 +206,9 @@
     },
     "color-theory/color-contrast": {
       "title": "色の対比と三属性"
+    },
+    "color-theory/color-difference-and-uniform-color-space": {
+      "title": "色差と均等色空間"
     },
     "color-theory/color-matching-and-grassmanns-law": {
       "title": "等色実験とグラスマンの法則"
@@ -251,6 +257,9 @@
     },
     "color-theory/dominant-and-tone-on-tone": {
       "title": "ドミナントとトーンオントーン"
+    },
+    "color-theory/elderly-vision-characteristics": {
+      "title": "高齢者の見え方の特徴"
     },
     "color-theory/electromagnetic-waves": {
       "title": "光とは何か"
@@ -335,6 +344,9 @@
     },
     "color-theory/what-is-lighting": {
       "title": "照明と照明光"
+    },
+    "color-theory/xy-chromaticity-diagram": {
+      "title": "色度座標とxy色度図"
     },
     "color-theory/xyz-color-system": {
       "title": "XYZ表色系"

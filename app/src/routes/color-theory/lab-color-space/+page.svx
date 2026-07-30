@@ -1,6 +1,6 @@
 ---
 layout: guide-content
-title: XYZ表色系と測色条件
+title: L*a*b*色空間
 
 grades: ["1"]
 
