@@ -204,8 +204,7 @@
   sections:
     - title: 測色と色管理
       links:
-        - title: 測色の基本
-          grades: ["1"]
+        - slug: colorimetry-basics
         - title: 測色の照明
           grades: ["1"]
         - title: 視感測色
