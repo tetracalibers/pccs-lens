@@ -206,6 +206,8 @@
       links:
         - title: 測色の基本
           grades: ["1"]
+        - title: 測色の照明
+          grades: ["1"]
         - title: 視感測色
           grades: ["1"]
         - title: 物理測色

@@ -149,6 +149,7 @@
 ## 色の理論（nested） — 記事：色の測り方（`color-theory.yaml` #color-measurement）
 
 - [ページ未作成] 測色の基本
+- [ページ未作成] 測色の照明
 - [ページ未作成] 視感測色
 - [ページ未作成] 物理測色
 - [draft] `/color-theory/colorimetric-illuminants`
