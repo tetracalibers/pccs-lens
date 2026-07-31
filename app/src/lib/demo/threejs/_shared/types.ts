@@ -1,11 +1,11 @@
-import type { PerspectiveCamera, Scene } from "three"
+import type { PerspectiveCamera, Scene, WebGLRenderer } from "three"
 
 /**
  * `scene.ts` の `createXxxScene` に渡すコンテキスト。
  *
- * `scene.ts` は記事にそのまま抜粋されるコードなので、**この型を import しない**。
+ * `scene.ts` は記事に載せるコードなので、**この型を import しない**。
  * 同じ形の型を `scene.ts` 側でローカルに宣言する（TypeScript は構造的部分型なので、
- * import なしでも `ThreeSceneFactory` に代入できる）。
+ * import なしでも `ThreeSceneFactory` に代入できる）。使うものだけ宣言すればよい。
  *
  * ```ts
  * // scene.ts — three にのみ依存する
@@ -26,6 +26,12 @@ export type ThreeSceneContext<P> = {
    * カメラ自体が記事の主題（投影・視錐台など）の場合は `scene.ts` 側で上書きしてよい。
    */
   camera: PerspectiveCamera
+  /**
+   * renderer。**そのデモに固有で、かつ必須の設定**（クリッピングの有効化など）は
+   * `scene.ts` 側で行い、記事に載るコードに含める。それが無いと読者の手元で
+   * 同じ絵にならないため。全デモに共通の定型設定は `_shared` の担当。
+   */
+  renderer: WebGLRenderer
   /** Tweakpane と共有するパラメータ。`update()` の中で読んでシーンに反映する */
   params: P
 }

@@ -3,9 +3,17 @@ layout: guide-content
 title: さまざまな形状モデル # CG 3-1
 
 group: ["CG"]
+visual: true
 
 draft: true
 ---
+
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import WireframeModelDemo from '$lib/demo/threejs/modeling/shape-model-overview/wireframe-model/WireframeModelDemo.svelte'
+  import SurfaceModelDemo from '$lib/demo/threejs/modeling/shape-model-overview/surface-model/SurfaceModelDemo.svelte'
+  import SolidModelDemo from '$lib/demo/threejs/modeling/shape-model-overview/solid-model/SolidModelDemo.svelte'
+</script>
 
 [カメラでの撮影とCG](/cg/basics/camera-capture-and-cg/)では、CGの被写体の形を表すデータを形状モデルと呼びました。ひとくちに`3`次元の形といっても、データとしての表し方には何通りもあり、どれを選ぶかによって、そのデータから計算できることが変わります。
 ここでは、代表的な`3`つの形状モデルを、持っている情報が少ないものから順に見ていきます。
@@ -23,6 +31,32 @@ draft: true
 ## :WithGroupTag[ワイヤフレームモデル]{group="{['CG']}"}
 
 ワイヤフレームモデルは、立体を頂点と、頂点どうしを結ぶ:Mark[稜線]だけで表す形状モデルです。針金（ワイヤ）を組んだ骨組みのように見えることから、この名前がついています。
+
+<CanvasWrapper>
+  <WireframeModelDemo />
+</CanvasWrapper>
+
+```ts
+/** 頂点と稜線だけを持つジオメトリ。面のデータは持たない */
+const createWireframeGeometry = (vertices: [number, number, number][], edges: number[]) => {
+  // 頂点は 1 つの配列にまとめ、稜線はその頂点番号の対として持つ
+  const position = new Float32BufferAttribute(vertices.flat(), 3)
+  return {
+    edgeGeometry: new BufferGeometry().setAttribute("position", position).setIndex(edges),
+    vertexGeometry: new BufferGeometry().setAttribute("position", position)
+  }
+}
+
+const { edgeGeometry, vertexGeometry } = createWireframeGeometry(VERTICES, EDGES)
+
+// 稜線を線分として、頂点を点としてシーンに置く
+const edgeMaterial = new LineBasicMaterial({ color: EDGE_COLOR })
+scene.add(new LineSegments(edgeGeometry, edgeMaterial))
+
+const vertexMaterial = new PointsMaterial({ color: VERTEX_COLOR, size: 0.08 })
+const vertexPoints = new Points(vertexGeometry, vertexMaterial)
+scene.add(vertexPoints)
+```
 
 面のデータを持たないぶん、データ量は小さく、回転させたり動かしたりしたときの再描画も高速です。大まかな形の確認や、対話的に操作しながら形を検討する場面に向いています。
 
@@ -42,6 +76,38 @@ draft: true
 
 サーフェスモデルは、稜線に加えて:Mark[面]の情報をもち、物体の表面を表す形状モデルです。
 
+<CanvasWrapper>
+  <SurfaceModelDemo />
+</CanvasWrapper>
+
+```ts
+/** 面のデータから、面ごとに独立した頂点を持つジオメトリを作る */
+const createSurfaceGeometry = (vertices: [number, number, number][], faces: number[][]) => {
+  const positions = createFacePositions(vertices, faces)
+  const geometry = new BufferGeometry()
+  geometry.setAttribute("position", new Float32BufferAttribute(positions, 3))
+  // 頂点を面ごとに分けているので、法線は面ごとに平らに求まる
+  geometry.computeVertexNormals()
+  return geometry
+}
+
+// 面を外したときに内側が見えるよう、裏側も描く
+const material = new MeshStandardMaterial({
+  color: SURFACE_COLOR,
+  roughness: 0.6,
+  side: DoubleSide
+})
+// 上の面（FACES の最後）を外した状態。面が 1 枚欠けていてもデータとしては成り立つ
+const mesh = new Mesh(createSurfaceGeometry(VERTICES, FACES.slice(0, -1)), material)
+scene.add(mesh)
+
+// 面があるので、光の当たり方から陰影が決まる
+const light = new DirectionalLight(LIGHT_COLOR, 2.5)
+light.position.set(4, 5, 3)
+scene.add(light)
+scene.add(new AmbientLight(LIGHT_COLOR, 0.4))
+```
+
 面がどこにあるかが決まると、視点から見てどの面が手前にあるのかを判定できます。これによって隠れる部分を消せるようになり、面に光がどう当たるかも計算できるため、[レンダリング](/cg/basics/camera-capture-and-cg/)によって陰影のついた画像を作れます。なめらかな曲面をそのまま表せることから、自動車のボディや航空機の機体のように、外形の見え方が問われる設計にも使われます。
 
 ただし、サーフェスモデルが表しているのはあくまで表面であり、中身は空洞です。体積や重さのように立体の内部にかかわる量は、このモデルからは求められません。面と面のあいだに隙間が空いていても、データとしては成立してしまいます。
@@ -49,6 +115,34 @@ draft: true
 ## :WithGroupTag[ソリッドモデル]{group="{['CG']}"}
 
 ソリッドモデルは、中身の詰まった立体として形を表す形状モデルです。サーフェスモデルとの違いは、面の内側と外側、つまり立体の内部と外部を区別している点にあります。
+
+<CanvasWrapper>
+  <SolidModelDemo />
+</CanvasWrapper>
+
+```ts
+// クリッピング（面より上を描かない）を有効にする
+renderer.localClippingEnabled = true
+
+// 水平面で切る。法線が下向きなので、この面より下だけが残る。
+// 切り口と同じ高さに殻の面が残るとちらつくので、殻だけごくわずかに下で切る
+const plane = new Plane(new Vector3(0, -1, 0), 1 - 0.001)
+
+// 殻。切り口から内側の面が見えるよう、裏側も描く
+const shellMaterial = new MeshStandardMaterial({
+  color: SURFACE_COLOR,
+  roughness: 0.6,
+  side: DoubleSide,
+  clippingPlanes: [plane]
+})
+scene.add(new Mesh(createSurfaceGeometry(VERTICES, FACES), shellMaterial))
+
+// 切り口を塞ぐ面。これがあると、中身の詰まった立体として見える
+const capMaterial = new MeshStandardMaterial({ color: CAP_COLOR, roughness: 0.6 })
+const cap = new Mesh(createCapGeometry(SECTION_IN_NOTCH), capMaterial)
+cap.position.y = 1
+scene.add(cap)
+```
 
 内部と外部が区別されているため、空間のある点が立体の中にあるのか外にあるのかを判定できます。面のつながりに隙間や矛盾がないことも、データが満たすべき条件として保証されます。
 

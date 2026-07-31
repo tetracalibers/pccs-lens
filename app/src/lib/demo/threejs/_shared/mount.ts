@@ -88,7 +88,7 @@ export const mountThreeDemo = <P>(options: MountThreeDemoOptions<P>): ThreeDemo 
 
   // シーン構築はカメラの初期値を入れたあとに行う。カメラそのものが主題のデモでは
   // scene.ts 側でカメラを上書きでき、その状態で OrbitControls が初期化される。
-  const handle: ThreeSceneHandle = createScene({ scene, camera, params })
+  const handle: ThreeSceneHandle = createScene({ scene, camera, renderer, params })
 
   let frame = 0
   let visible = true
