@@ -136,6 +136,12 @@ npm run data:jis-update
   - `/svg-diagram-component [配置先ディレクトリ] <図の名前> <図の内容>` — パターンC（該当ページを検索し、ページへの反映まで行う。`<図の内容>` は省略可で、省略時は図の名前自体を図の仕様として使う）
   - **このスキルに限り、配置先ディレクトリの角括弧はリテラル**（省略可を表す記法ではなく、`[munsell] マンセル色立体の水平断面図` のように実際に囲んで渡す）。囲みの無い `munsell 〜` はディレクトリ指定として扱わない
   - `<図の名前>` は `:::Todo` プレースホルダの中身をそのまま渡す（`TODO：` 接頭辞は付けない）。この文字列で `app/src/routes` 配下を検索し、**ヒットすればパターンC**（コンポーネント作成＋ページ反映）、**ヒットしなければパターンA／B**（コンポーネント作成のみ）に分岐する
+- **add-threejs-demo** — CG記事に素のThree.jsのデモと、そのデモで実際に動いているコードを掲載（引数の有無で2パターン）
+  - `/add-threejs-demo <記事slug>` — パターンA（記事を解析してデモ案を表で提案し、採否と挿入位置の合意を得てから1案ずつ実装）
+  - `/add-threejs-demo <記事slug> <デモの内容>` — パターンB（提案フェーズを飛ばし、指定された内容のデモを実装）
+  - `<記事slug>` は `app/src/routes/cg/` を検索して実体を解決する（0件・複数ヒットは確認して止める。slugが重複する場合のみ `transformation/basic-transformations` のようにユニット込みで渡す）
+  - 実装先は `app/src/lib/demo/threejs/<ユニット>/<記事slug>/<デモ名>/`（`scene.ts` ＋ `<デモ名>Demo.svelte`）。renderer・描画ループ・リサイズ・Tweakpaneといった記事に載らない定型処理は `threejs/_shared/` が担う
+  - 記事に加えるのは import・`<CanvasWrapper>` での使用箇所・`scene.ts` からの**逐語抜粋**の ts コードブロック・`visual: true` だけ。**本文は書かない**（説明文・`:::Action` は author-style-writer の担当）
 - **svelte-component-guideline** — Svelteコンポーネント実装時に参照するガイドライン（引数なし）
 - **css-styling-guideline** — CSS記述時に参照するガイドライン（引数なし）
 
