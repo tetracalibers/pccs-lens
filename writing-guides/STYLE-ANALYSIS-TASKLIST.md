@@ -76,7 +76,7 @@
 - [x] `/color-theory/rgb-color-system`
 - [x] `/color-theory/xyz-color-system`
 - [x] `/color-theory/xy-chromaticity-diagram`
-- [ ] `/color-theory/color-difference-and-uniform-color-space`
+- [x] `/color-theory/color-difference-and-uniform-color-space`
 - [draft] `/color-theory/lab-color-space`
 - [ページ未作成] オストワルト表色系
 - [draft] `/color-theory/digital-color-generation`
@@ -475,7 +475,7 @@
 ## CGと画像処理 — 画像の性質と色／画像の性質（`cg/image-properties.yaml` #properties）
 
 - [x] `/cg/image-properties/dynamic-range-and-gradation`
-- [ページ未作成] 画像の統計量
+- [draft] `/cg/image-properties/image-statistics`
 - [ページ未作成] 画像のノイズ
 - [ページ未作成] コントラストとシャープネス
 
