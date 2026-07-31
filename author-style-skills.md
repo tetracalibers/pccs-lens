@@ -62,7 +62,7 @@ analyzer が生成し、writer が参照する中心的な成果物です。い�
 | 執筆側 | 4ガイド本体 | writer | 実行可能なルール・適用条件・確度ラベル3語 | **ルール数に比例**（記事数に比例させない） |
 | 分析側 | `evidence/`・`pending/` | analyzer のみ | 根拠・確度の判定理由・記事単位の記録 | 記事数に比例してよい |
 
-かつては根拠と確度の判定理由をルール欄に散文で書いていたため、分析ラウンドごとに追記される台帳になり、4ガイドが計 313,714字（242ルール）まで膨らんでコンテキストを圧迫しました。実行可能な指示は全体の16%で、分析メタデータが66%を占める状態でした。根拠を `evidence/` へ、判定理由を確度ラベルへ畳んだ結果、4ガイド計は 146,559字（−52%）になっています（経緯は `spec/writing-guides-compaction.md`、作業記録は `writing-guides/COMPACTION-TASKLIST.md`）。
+かつては根拠と確度の判定理由をルール欄に散文で書いていたため、分析ラウンドごとに追記される台帳になり、4ガイドが計 313,714字（242ルール）まで膨らんでコンテキストを圧迫しました。実行可能な指示は全体の16%で、分析メタデータが66%を占める状態でした。根拠を `evidence/` へ、判定理由を確度ラベルへ畳んだ結果、4ガイド計は 146,559字（−52%）になっています（経緯は `spec/writing-guides-compaction.md`、作業記録は `spec/COMPACTION-TASKLIST.md`）。
 
 ### 根拠インデックス（`writing-guides/evidence/`）
 
@@ -315,10 +315,8 @@ writing-guides/
   │    ├─ writing-style.md
   │    ├─ stylistic-quirks.md
   │    └─ refine-style.md
-  ├─ STYLE-ANALYSIS-TASKLIST.md
-  │                         … 記事ごとの分析済みチェックリスト（analyzer が読み書き / writer は読まない）
-  └─ COMPACTION-TASKLIST.md
-                            … ガイド圧縮作業の記録（どちらのスキルも読まない）
+  └─ STYLE-ANALYSIS-TASKLIST.md
+                            … 記事ごとの分析済みチェックリスト（analyzer が読み書き / writer は読まない）
 ```
 
 ## 品質を担保する仕組み（output-contract）
@@ -340,6 +338,6 @@ writing-guides/
 
 - `writing-guides/` の4ガイド本体・`evidence/` 根拠インデックス・`pending/` 保留プールは、これまでの analyzer 実行で生成・更新されている（本体＝主要ルール、evidence＝採用済みルールの根拠、pending＝保留観察）
 - `evidence/` は既存ガイドの根拠欄からの移行で作られたため、**初期値は不完全**である。「配色技法シリーズ10本すべて」のように記事を特定しない集約表現は展開しておらず、個別に名指しされた記事だけを登録している。`分析時点` の SHA も git 履歴から復元した値で、「その SHA の本文を読んで分析した」ことの保証ではない（ラウンド直前の一括修正コミットを指している記事がある）。各記事を再分析した時点で、その記事のブロックを正しい内容へ置き換える
-- 4ガイド計は 146,559字（移行前 303,714字に対し −52%）。仕様の受け入れ条件（132,231字以下）はまだ満たしておらず、ルール統合・補助項目の圧縮・上限値の見直しのいずれを採るかは判断待ち（`writing-guides/COMPACTION-TASKLIST.md` フェーズ7）
+- 4ガイド計は 146,559字（移行前 303,714字に対し −52%）。仕様の受け入れ条件（132,231字以下）はまだ満たしておらず、ルール統合・補助項目の圧縮・上限値の見直しのいずれを採るかは判断待ち（`spec/COMPACTION-TASKLIST.md` フェーズ7）
 - `writing-guides/STYLE-ANALYSIS-TASKLIST.md` の初期状態は、これまでの analyzer 実行コミット（`writing-guides/` を触ったコミット）のスコープと、その時点で公開済み（非 draft）だった記事を突き合わせて復元したもの。以降は analyzer 実行のたびに更新する
 - `writing-guides/syntax-guide.md` が記法・書式の必須ルールの正典。かつて存在した `write-content-draft` / `edit-content-draft` スキルとその `style-guide.md` は author-style-writer へ統合済みで、記事の草稿執筆・編集は author-style-writer が担う
