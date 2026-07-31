@@ -4,7 +4,7 @@ export const meta = {
   phases: [
     { title: '独立分析', detail: '4観点を独立したエージェントで並行分析し、構造化された特徴を返す' },
     { title: '反証・境界レビュー', detail: '各分析を反証的に検証し、4ファイル間の責務境界を横断確認する' },
-    { title: '統合', detail: '各観点ごとにガイド本体と pending 保留ファイルを読み、昇格・追記・削除を差分Editで反映する' },
+    { title: '統合', detail: '各観点ごとにガイド本体・evidence 根拠インデックス・pending 保留ファイルを読み、ルールの更新と根拠の登録を差分Editで反映する' },
   ],
 }
 
@@ -19,13 +19,21 @@ export const meta = {
 // args = {
 //   isUpdate: boolean,                       // 既存ガイドの差分更新か新規作成か
 //   guidesDir: string,                       // 例: 'writing-guides'
-//   targets: [{ path, title, type }],        // 分析対象記事（絶対パス・タイトル・記事タイプ）
+//   targets: [{ path, slug, title, type, commit, reanalysis }],
+//                                            // 分析対象記事。slug は evidence インデックスのキー（例 '/color-theory/xxx'）、
+//                                            // commit は分析時点の記事コミット短縮SHA（git log -1 --format=%h -- <path>）、
+//                                            // reanalysis: true なら既に evidence にブロックがある記事（ブロックを消して書き直す）
 //   excluded: [string],                      // 除外した記事（任意）
 //   gitAnalyzable: [{ title, draftCommit, editCommits: [string] }], // refine-style 用
 //   existingGuides: { thinkingFlow, writingStyle, stylisticQuirks, refineStyle }, // ガイド本体の出力先パス
 //   pendingGuides: { thinkingFlow, writingStyle, stylisticQuirks, refineStyle }, // 保留プールのパス（任意。省略時は guidesDir/pending/ から導出）
+//   evidenceIndexes: { thinkingFlow, writingStyle, stylisticQuirks, refineStyle }, // 根拠インデックスのパス（任意。省略時は guidesDir/evidence/ から導出）
 //   refs: { thinkingFlow, writingStyle, stylisticQuirks, refineStyle, outputContract }, // 参照プロンプトのパス
 // }
+//
+// 成果物は2層に分かれる。ガイド本体（writer が読む）には実行可能なルール・適用条件・確度ラベル
+// 3語だけを置き、根拠・確度の判定理由・記事単位の記録は evidence/<観点>.md へ登録する。
+// 執筆側の量をルール数に比例させ、記事数に比例させないための分離（根拠欄を復活させない）。
 // ---------------------------------------------------------------------------
 
 const m = typeof args === 'string' ? JSON.parse(args) : args
@@ -46,7 +54,24 @@ const FEATURE_SCHEMA = {
           category: { type: 'string' },
           evidenceArticles: { type: 'array', items: { type: 'string' } },
           evidenceLocations: { type: 'string' },
+          // 根拠インデックス（evidence/<観点>.md）へ登録するための、記事単位に正規化した根拠。
+          // slug は manifest の targets[].slug をそのまま使う（記事名ではない）。
+          evidenceBySlug: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                slug: { type: 'string' },
+                location: { type: 'string' }, // 本文中の該当箇所を短く。refine-style は 修正前→修正後 のコミット対
+                note: { type: 'string' }, // その記事での反例・除外があれば書く
+              },
+              required: ['slug'],
+            },
+          },
           counterexamples: { type: 'string' },
+          // ルールを実行するために必要な操作的制約（頻度・分量の上限、適用範囲の線引き、
+          // 記事タイプによる出入り）。根拠の散文に埋めず、ここへ分けて出す。
+          operationalConstraints: { type: 'array', items: { type: 'string' } },
           appliesTypes: { type: 'array', items: { type: 'string' } },
           notAppliesConditions: { type: 'string' },
           confidence: { type: 'string', enum: ['強い傾向', '条件付きの傾向', '弱い傾向'] },
@@ -144,6 +169,9 @@ const FILE_REPORT_SCHEMA = {
     promoted: { type: 'array', items: { type: 'string' } }, // pending → 本体へ昇格した項目
     pendingPath: { type: 'string' }, // 更新した保留プールのパス
     pendingAction: { type: 'string', enum: ['created', 'updated', 'unchanged'] }, // 保留プールの更新結果
+    evidencePath: { type: 'string' }, // 更新した根拠インデックスのパス
+    evidenceAction: { type: 'string', enum: ['created', 'updated', 'unchanged'] },
+    evidenceBlocks: { type: 'array', items: { type: 'string' } }, // 追加/書き直した記事ブロック（'/slug (sha)' 形式）
     notes: { type: 'string' },
   },
   required: ['path', 'action'],
@@ -160,10 +188,16 @@ const ANALYSIS_CRITERIA = [
   '- 事実と推測：本文から直接読み取れる事実か、リバースエンジニアリングした推測かを区別する。推測は推測と明記し、断定しない。',
   '- 反例と適用条件：反例を隠さず記録し、適用しない記事タイプ・条件を必ず添える。記事タイプによる差を一律に一般化しない。',
   '- 用例：本文の転載は最小限にし、特徴が確認できる範囲に切り詰める。',
+  '- 根拠の正規化：根拠は記事単位に分けて evidenceBySlug へ出す（slug は下記の分析対象一覧の値をそのまま使う）。「シリーズ10本すべて」のような集約表現にせず、1記事1エントリにする。',
+  '- 操作的制約の分離：頻度・分量の上限（「1段落に2回以上重ねない」等）、適用範囲の線引き、記事タイプによる出入りは、根拠の説明文に混ぜず operationalConstraints へ出す。これは執筆側ガイドのルール欄・適用条件欄へ入る情報で、根拠側へ埋めると失われる。',
 ].join('\n')
 
 // 全アナリスト共通の分析対象コンテキスト
-const targetLines = m.targets.map((t) => `- ${t.title} [${t.type || '種別不明'}] : ${t.path}`)
+const targetLines = m.targets.map(
+  (t) =>
+    `- ${t.title} [${t.type || '種別不明'}] : ${t.path}` +
+    `\n  slug=${t.slug || '(未指定)'} / 分析時点=${t.commit || '(未指定)'}${t.reanalysis ? ' / 再分析（既存ブロックを書き直す）' : ''}`,
+)
 const excludedBlock = (m.excluded && m.excluded.length)
   ? `\n## 除外記事（分析対象外）\n${m.excluded.map((e) => `- ${e}`).join('\n')}`
   : ''
@@ -214,14 +248,19 @@ const CAMEL = { 'thinking-flow': 'thinkingFlow', 'writing-style': 'writingStyle'
 const pendingOf = (guidePath, key) =>
   (m.pendingGuides && m.pendingGuides[CAMEL[key]]) || guidePath.replace(/([^/]+)$/, 'pending/$1')
 
-// 統合ステージの出力ファイル（分析キー → ガイド本体パス／保留プールパス）。4成果物は責務が
-// 独立するため、ファイル単位に分割して並列に差分更新する。各エージェントは自分の観点の
-// 「本体＋pending」の2ファイルだけを編集する（他観点のファイルには触れない）。
+// 各ガイドに対応する根拠インデックス（writing-guides/evidence/<同名>.md）。ガイド本体のルール欄に
+// 根拠を書かず、記事 slug をキーにこちらへ登録する。writer は読まない（analyzer 専用）。
+const evidenceOf = (guidePath, key) =>
+  (m.evidenceIndexes && m.evidenceIndexes[CAMEL[key]]) || guidePath.replace(/([^/]+)$/, 'evidence/$1')
+
+// 統合ステージの出力ファイル（分析キー → ガイド本体／根拠インデックス／保留プールのパス）。
+// 4成果物は責務が独立するため、ファイル単位に分割して並列に差分更新する。各エージェントは自分の
+// 観点の「本体＋evidence＋pending」の3ファイルだけを編集する（他観点のファイルには触れない）。
 const OUTPUT_FILES = [
-  { key: 'thinking-flow', path: m.existingGuides.thinkingFlow, pendingPath: pendingOf(m.existingGuides.thinkingFlow, 'thinking-flow') },
-  { key: 'writing-style', path: m.existingGuides.writingStyle, pendingPath: pendingOf(m.existingGuides.writingStyle, 'writing-style') },
-  { key: 'stylistic-quirks', path: m.existingGuides.stylisticQuirks, pendingPath: pendingOf(m.existingGuides.stylisticQuirks, 'stylistic-quirks') },
-  { key: 'refine-style', path: m.existingGuides.refineStyle, pendingPath: pendingOf(m.existingGuides.refineStyle, 'refine-style') },
+  { key: 'thinking-flow', path: m.existingGuides.thinkingFlow, pendingPath: pendingOf(m.existingGuides.thinkingFlow, 'thinking-flow'), evidencePath: evidenceOf(m.existingGuides.thinkingFlow, 'thinking-flow') },
+  { key: 'writing-style', path: m.existingGuides.writingStyle, pendingPath: pendingOf(m.existingGuides.writingStyle, 'writing-style'), evidencePath: evidenceOf(m.existingGuides.writingStyle, 'writing-style') },
+  { key: 'stylistic-quirks', path: m.existingGuides.stylisticQuirks, pendingPath: pendingOf(m.existingGuides.stylisticQuirks, 'stylistic-quirks'), evidencePath: evidenceOf(m.existingGuides.stylisticQuirks, 'stylistic-quirks') },
+  { key: 'refine-style', path: m.existingGuides.refineStyle, pendingPath: pendingOf(m.existingGuides.refineStyle, 'refine-style'), evidencePath: evidenceOf(m.existingGuides.refineStyle, 'refine-style') },
 ]
 
 // ---- Stage 1: 独立分析（barrier — 境界レビューが4分析すべてを必要とする）----
@@ -242,6 +281,7 @@ const rawAnalyses = await parallel(
         targetBlock,
         '対象記事ファイルを Read で読み、著者固有の特徴を抽出します。一般的な文章術・記事テーマ固有の専門用語・単一記事だけの一般化・AI草稿由来の表現は、著者の特徴として採用しません。記事タイプによる違いを無視して一律に一般化しません。',
         '各特徴には 根拠記事（複数） / 確度（強い傾向・条件付きの傾向・弱い傾向） / 事実か推測か / 反例 / 適用しない条件 を付けます。担当外の特徴を見つけた場合は features に入れず handoffFeatures に記録します。確信が持てない特徴は heldFeatures に回します。',
+        '根拠は evidenceBySlug に記事単位で分けて出します（slug は上記一覧の値をそのまま使い、location に該当箇所を短く、その記事で反例・除外があれば note に書く）。また、ルールを実行するために必要な操作的制約（頻度・分量の上限、適用範囲の線引き、記事タイプによる出入り）は operationalConstraints に分けて出します。この2つは統合段階で別のファイルへ振り分けられるため、混ぜて1つの散文にしないでください。',
         'あなたの最終出力は StructuredOutput のスキーマに従う JSON です。人間向けメッセージではありません。',
       ]
         .filter(Boolean)
@@ -306,12 +346,12 @@ const evidence = rawEvidence
   .filter(Boolean)
 log('反証・境界レビュー完了')
 
-// ---- Stage 3: 統合（4観点を並列に、本体＋pending を差分 Edit で書き込む）----
+// ---- Stage 3: 統合（4観点を並列に、本体＋evidence＋pending を差分 Edit で書き込む）----
 // 4成果物は責務が独立し、Boundary が横断的な重複・配置を解決済みなので、観点単位に
-// 分割して並列化する。各エージェントは自分の観点の「ガイド本体＋pending 保留ファイル」の
-// 2ファイルだけを編集し、更新時は全文 Write ではなく差分 Edit を使う（巨大ガイドの
-// 全書き換えを避け、出力トークンと壁時計を大幅に削減）。保留（held）は本体ではなく pending
-// に置き、根拠が増えた保留は pending から本体へ昇格させる。
+// 分割して並列化する。各エージェントは自分の観点の「ガイド本体＋根拠インデックス＋pending
+// 保留ファイル」の3ファイルだけを編集し、更新時は全文 Write ではなく差分 Edit を使う（巨大
+// ガイドの全書き換えを避け、出力トークンと壁時計を大幅に削減）。根拠は本体ではなく evidence
+// に、保留（held）は本体ではなく pending に置き、根拠が増えた保留は pending から本体へ昇格させる。
 phase('統合')
 
 // 4分析の特徴（保留含む）。各エージェントは自ファイル分＋Boundaryで移送指定された分だけを反映する。
@@ -321,22 +361,36 @@ const allFeatures = analyses.map((a) => ({
   held: a.heldFeatures || [],
 }))
 
+// 根拠インデックスへ書く記事ブロックの一覧（slug と分析時点 SHA）。4観点で同じ値を使うため、
+// manifest 由来の値をそのまま渡す（エージェントに SHA を推測させない）。
+const evidenceTargets = m.targets.map((t) => ({
+  slug: t.slug,
+  commit: t.commit,
+  reanalysis: !!t.reanalysis,
+  title: t.title,
+}))
+
 const perFile = await parallel(
   OUTPUT_FILES.map((f) => () =>
     agent(
       [
-        `あなたは Synthesis Editor（担当観点：${f.key}）です。この観点の2ファイル、ガイド本体 ${f.path} と保留プール ${f.pendingPath} だけを${m.isUpdate ? '差分更新' : '作成/更新'}します。他観点のファイルには絶対に触れません。`,
+        `あなたは Synthesis Editor（担当観点：${f.key}）です。この観点の3ファイル、ガイド本体 ${f.path}・根拠インデックス ${f.evidencePath}・保留プール ${f.pendingPath} だけを${m.isUpdate ? '差分更新' : '作成/更新'}します。他観点のファイルには絶対に触れません。`,
         m.isUpdate
-          ? `まず ${f.path}（本体）と ${f.pendingPath}（保留プール）を両方 Read し、有効な既存記述を保持します。変わる箇所だけを Edit で差分更新してください（全文を Write で書き直さない／既存内容の破棄・全面的な書き直しは禁止）。本体への反映は、加筆・適用条件の追加・例外の追加・確度の変更・新規ルールの追加・根拠不足ルールの削除として行います。`
-          : `${m.guidesDir}/ ディレクトリが無ければ作成して ${f.path} を新規に Write します。保留プール ${f.pendingPath} は、既にあれば Read して差分更新し、無ければ「このファイルの位置づけ」節（writer は読まず analyzer が昇格判断で読む旨）を先頭に付けて Write します。`,
-        `本体 ${f.path} には、生成時に適用する主要ルール（強い傾向・条件付きの傾向）だけを置きます。保留プール ${f.pendingPath} には、根拠不足・単一記事偏り・一般技法との切り分け困難などで主要ルールに満たない観察（保留）だけを置きます。両者を混在させません。保留プール先頭の「このファイルの位置づけ」注記（writer は読まない／analyzer が昇格・追記・棄却の対象として読む）は必ず残します。`,
-        `保留の扱いは次のとおり。① 昇格：${f.pendingPath} の既存保留のうち、今回の分析で根拠が増え Evidence反証も通ったものは、本体 ${f.path} の主要ルールへ移し、pending 側の当該項目は削除します（report.promoted に記録）。② 追記：今回 heldFeatures に入った、または Evidence反証で「根拠不足／反例が多い／著者固有とは判断できない」とされた特徴は、本体ではなく ${f.pendingPath} に追記・更新します。③ 棄却：根拠の誤読が判明した等で不要になった保留は pending から削除します。`,
-        `Markdown の記述形式・ルールの基本形式（対象／ルール／適用する状況／目的／適用しない状況／確度／根拠／反例・例外）・${f.key} の必須要素・「廃止と保留の扱い」は ${refs.outputContract} を Read して従います。固定テンプレートではなく条件付きの判断として記述し、頻出表現の機械的な挿入指示にはしません。Agent間の議論ログや分析の生ログは成果物に含めません。`,
-        `本体に反映するのは ${f.key} に属する特徴だけです。Boundary が ${f.key} へ移すべきとした特徴は、対応する分析の features から内容を取り込みます。逆に ${f.key} から他ファイルへ移す／重複削除とされた特徴は削除します。同じ文を他ファイルと重複させません。観点をまたぐ関連ルール参照で保留項目を指すときは \`pending/<観点>.md\` を指す形にします。`,
+          ? `まず ${f.path}（本体）・${f.evidencePath}（根拠インデックス）・${f.pendingPath}（保留プール）を Read し、有効な既存記述を保持します。変わる箇所だけを Edit で差分更新してください（全文を Write で書き直さない／既存内容の破棄・全面的な書き直しは禁止）。本体への反映は、加筆・適用条件の追加・例外の追加・確度ラベルの変更・新規ルールの追加・根拠不足ルールの削除として行います。`
+          : `${m.guidesDir}/ ディレクトリが無ければ作成して ${f.path} を新規に Write します。根拠インデックス ${f.evidencePath} と保留プール ${f.pendingPath} は、既にあれば Read して差分更新し、無ければ位置づけの注記（analyzer 専用／writer は読まない旨）を先頭に付けて Write します。`,
+        `【成果物の2層分離：この契約が最優先です】ガイド本体 ${f.path} は writer が執筆時に読むファイルで、量をルール数に比例させ、記事数に比例させません。本体に置くのは実行可能なルール・適用条件・確度ラベルだけです。次を本体に書いてはいけません：根拠（記事名・シリーズ名・出現件数・本文の引用・コミット）、\`根拠\` 欄、\`反例・例外\` 欄、確度の判定理由（「〜記事で確認」「一般的技法とも重なる」「単一シリーズに偏る」等）、分析経緯。\`確度\` 欄は \`強い傾向\` / \`条件付きの傾向\` / \`弱い傾向\` のラベル1語のみとし、ルール定義の先頭に置きます。`,
+        `根拠は ${f.evidencePath} へ、記事 slug をキーとして登録します。形式：\`## /<slug>\` 見出し → 直下に \`分析時点: \\\`<短縮SHA>\\\`\` 行 → その記事から採れた支持ルール名の箇条書き（括弧内に本文中の該当箇所を短く。${f.key === 'refine-style' ? '修正前後のコミット対を書く' : '該当箇所を書く'}）→ 反例・除外は \`※\` で注記。\`##\` の階層は slug の予約なので注記に使いません。ルール名は本体の \`###\` 見出しと一字一句一致させます（揺れると追跡できません）。分析の生ログ・長い転載は書きません。`,
+        `今回の記事ブロック（slug と分析時点 SHA は下記の値をそのまま使い、自分で git を叩いて推測しません）。\`reanalysis: true\` の記事は既存ブロックがあるので、**そのブロックを丸ごと消して書き直し**、\`分析時点\` を新しい SHA へ更新します（他の記事のエントリには触りません）。書き直しで支持記事が減ったルールは、残りの記事数・記事タイプの幅を数え直して確度ラベルを再評価し、支持記事が0になったルールは廃止候補として扱います:\n\n${JSON.stringify(evidenceTargets, null, 2)}`,
+        `各特徴の operationalConstraints（頻度・分量の上限、適用範囲の線引き、記事タイプによる出入り）は、根拠側ではなく**本体のルール欄・適用条件欄**へ入れます。受け皿は \`ルール\` / \`適用する状況\` / \`適用しない状況\` に加え、\`使用量\`（頻度・分量）／\`変種\`（条件による現れ方の違い）／\`注意\`（運用上の注意）です。これらを根拠の散文として ${f.evidencePath} 側へ流すと、執筆側から判断材料が失われます。逆に \`使用目的\` / \`使用されやすい文脈\` / \`構成上の効果\` / \`前後の要素\` は、ルール欄の言い換えになるなら書きません。`,
+        `本体 ${f.path} には主要ルール（強い傾向・条件付きの傾向・弱い傾向）だけを置きます。保留プール ${f.pendingPath} には、根拠不足・単一記事偏り・一般技法との切り分け困難などで主要ルールに満たない観察（保留）だけを置きます。3ファイルの役割を混在させません（本体＝ルール、evidence＝採用済みルールの根拠、pending＝未採用の観察とその根拠）。保留の根拠は pending の項目内に書き、${f.evidencePath} へは登録しません（インデックスのルール名は本体に存在するものだけを指します）。保留プール先頭の「このファイルの位置づけ」注記は必ず残します。`,
+        `保留の扱いは次のとおり。① 昇格：${f.pendingPath} の既存保留のうち、今回の分析で根拠が増え Evidence反証も通ったものは、本体 ${f.path} の主要ルールへ移し、pending 側の当該項目は削除します（report.promoted に記録）。あわせて ${f.evidencePath} の該当記事ブロックへ、そのルール名を登録します。② 追記：今回 heldFeatures に入った、または Evidence反証で「根拠不足／反例が多い／著者固有とは判断できない」とされた特徴は、本体ではなく ${f.pendingPath} に追記・更新します。③ 棄却：根拠の誤読が判明した等で不要になった保留は pending から削除します。本体からルールを削除した場合は、${f.evidencePath} の全記事ブロックからもそのルール名を外します。`,
+        `Markdown の記述形式・ルールの基本形式（確度／対象／ルール／適用する状況／適用しない状況／使用量／変種／注意／関連ルール）・${f.key} の必須要素・「根拠の記載方法」・「記事単位の再分析（撤回）」・「廃止と保留の扱い」・「禁止事項」は ${refs.outputContract} を Read して従います。固定テンプレートではなく条件付きの判断として記述し、頻出表現の機械的な挿入指示にはしません。Agent間の議論ログや分析の生ログは成果物に含めません。`,
+        `本体に反映するのは ${f.key} に属する特徴だけです。Boundary が ${f.key} へ移すべきとした特徴は、対応する分析の features から内容を取り込みます。逆に ${f.key} から他ファイルへ移す／重複削除とされた特徴は削除します。同じ文を他ファイルと重複させません。関連ルール参照は裸の参照（\`→ writing-style.md「◯◯」\`）だけを書き、保留項目（\`pending/<観点>.md\`）への参照は本体に書きません（writer はたどれないためノイズになります）。`,
         `4分析の採用候補（held＝保留候補を含む。反映するのは ${f.key} 分＋Boundaryで移送指定された分のみ）:\n\n${JSON.stringify(allFeatures, null, 2)}`,
         `Evidence反証の判定（全分析）:\n\n${JSON.stringify(evidence, null, 2)}`,
         `Boundary境界の判定:\n\n${JSON.stringify(boundary || {}, null, 2)}`,
-        `本体 ${f.path} と保留プール ${f.pendingPath} を実際に書き込み、path・action（本体）／pendingPath・pendingAction（保留プール）／主な変更点（changes）／昇格した項目（promoted）／新たに保留にした項目（heldItems）を報告します。`,
+        `書き込み後、本体に \`根拠\` 欄・\`反例・例外\` 欄が無いこと、\`確度\` 欄がラベル1語のみであること、記事名・シリーズ名・件数が本体に残っていないことを自分で grep して確認します。`,
+        `本体 ${f.path}・根拠インデックス ${f.evidencePath}・保留プール ${f.pendingPath} を実際に書き込み、path・action（本体）／evidencePath・evidenceAction・evidenceBlocks（'/slug (sha)' 形式で追加・書き直したブロック）／pendingPath・pendingAction（保留プール）／主な変更点（changes）／昇格した項目（promoted）／新たに保留にした項目（heldItems）を報告します。`,
       ].join('\n\n'),
       { label: `synthesize:${f.key}`, phase: '統合', agentType: AGENT, effort: 'high', schema: FILE_REPORT_SCHEMA },
     ),
@@ -352,6 +406,9 @@ if (doneFiles.length < OUTPUT_FILES.length) {
 
 return {
   files: doneFiles.map((r) => ({ path: r.path, action: r.action, changes: r.changes || [] })),
+  evidenceFiles: doneFiles
+    .filter((r) => r.evidencePath)
+    .map((r) => ({ path: r.evidencePath, action: r.evidenceAction || 'unchanged', blocks: r.evidenceBlocks || [] })),
   pendingFiles: doneFiles
     .filter((r) => r.pendingPath)
     .map((r) => ({ path: r.pendingPath, action: r.pendingAction || 'unchanged' })),
