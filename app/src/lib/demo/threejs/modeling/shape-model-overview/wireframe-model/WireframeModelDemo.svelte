@@ -12,6 +12,7 @@
   {params}
   aspectRatio="4 / 3"
   camera={{ position: [2.8, 2.2, 3.6] }}
+  orbit={{ enableZoom: false }}
   buildPane={(pane, p) => {
     pane.addBinding(p, "showVertices", { label: "頂点を表示" })
   }}

@@ -12,6 +12,7 @@
   {params}
   aspectRatio="4 / 3"
   camera={{ position: [2.8, 2.8, 3.6] }}
+  orbit={{ enableZoom: false }}
   buildPane={(pane, p) => {
     pane.addBinding(p, "openFace", { label: "上の面を外す" })
   }}
