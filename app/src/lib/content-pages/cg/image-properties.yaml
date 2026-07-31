@@ -5,8 +5,7 @@ sections:
     id: properties
     links:
       - slug: dynamic-range-and-gradation
-      - title: 画像の統計量 # ImgP 3-1-1
-        group: ["ImgP"]
+      - slug: image-statistics
       - title: 画像のノイズ # ImgP 3-1-2
         group: ["ImgP"]
       - title: コントラストとシャープネス # ImgP 3-1-3

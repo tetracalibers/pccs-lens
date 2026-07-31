@@ -1,0 +1,10 @@
+---
+layout: guide-content
+title: 画像の統計量 # ImgP 3-1-1
+
+group: ["ImgP"]
+
+draft: true
+---
+
+## TODO

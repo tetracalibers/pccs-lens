@@ -300,7 +300,7 @@
 ## CGと画像処理（nested） — 記事：画像の性質と色（`cg/image-properties.yaml`）
 
 - [x] `/cg/image-properties/dynamic-range-and-gradation`
-- [ページ未作成] 画像の統計量
+- [draft] `/cg/image-properties/image-statistics`
 - [ページ未作成] 画像のノイズ
 - [ページ未作成] コントラストとシャープネス
 - [ページ未作成] CIE-RGB表色系
