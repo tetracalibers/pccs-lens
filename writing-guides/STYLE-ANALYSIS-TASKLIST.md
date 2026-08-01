@@ -347,11 +347,9 @@
 - [ページ未作成] 細線化
 - [ページ未作成] 細線の特徴点抽出とベクトル化
 
-## CGと画像処理 — 画像の撮影とレンズ／カメラを表す幾何モデル（`cg/camera.yaml` #camera-geometry）
+## CGと画像処理 — 画像の撮影とレンズ／カメラの仕組み（`cg/camera.yaml` #camera-structure）
 
 - [x] `/cg/camera/digital-camera-structure`
-- [draft] `/cg/camera/pinhole-camera`
-- [ページ未作成] 透視投影モデル
 
 ## CGと画像処理 — 画像の撮影とレンズ／レンズモデル（`cg/camera.yaml` #lens-model）
 
@@ -822,7 +820,7 @@
 
 ## CGと画像処理 — 変換と投影／投影（`cg/transformation.yaml` #projection）
 
-- [ページ未作成] カメラと投影
+- [draft] `/cg/transformation/pinhole-camera`
 - [ページ未作成] 透視投影と平行投影
 - [ページ未作成] 投影の手順
 - [ページ未作成] 投影の計算法

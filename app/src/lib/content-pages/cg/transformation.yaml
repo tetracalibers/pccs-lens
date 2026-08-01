@@ -12,10 +12,9 @@ sections:
   - heading: 投影
     id: projection
     links:
-      - title: カメラと投影 # CG 2-3-1
-        group: ["CG"]
-      - title: 透視投影と平行投影 # CG 2-3-2
-        group: ["CG"]
+      - slug: pinhole-camera
+      - title: 透視投影と平行投影 # CG 2-3-2, ImgP 2-2-2
+        group: ["CG", "ImgP"]
       - title: 投影の手順 # CG 2-3-1
         group: ["CG"]
       - title: 投影の計算法 # CG 2-3

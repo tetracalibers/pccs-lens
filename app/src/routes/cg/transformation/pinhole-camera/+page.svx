@@ -10,12 +10,12 @@ draft: true
 
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
-  import ProjectionPlaneDemo from '$lib/demo/threejs/camera/pinhole-camera/projection-plane/ProjectionPlaneDemo.svelte'
-  import AngleOfViewDemo from '$lib/demo/threejs/camera/pinhole-camera/angle-of-view/AngleOfViewDemo.svelte'
-  import PerspectiveDemo from '$lib/demo/threejs/camera/pinhole-camera/perspective/PerspectiveDemo.svelte'
+  import ProjectionPlaneDemo from '$lib/demo/threejs/transformation/pinhole-camera/projection-plane/ProjectionPlaneDemo.svelte'
+  import AngleOfViewDemo from '$lib/demo/threejs/transformation/pinhole-camera/angle-of-view/AngleOfViewDemo.svelte'
+  import PerspectiveDemo from '$lib/demo/threejs/transformation/pinhole-camera/perspective/PerspectiveDemo.svelte'
 </script>
 
-[デジタルカメラの構成](/cg/camera/digital-camera-structure/)では、レンズや撮像素子といった部品が光を受け取り、像として記録するまでの流れを見ました。
+[デジタルカメラの光の流れ](/cg/camera/digital-camera-structure/)では、レンズや撮像素子といった部品が光を受け取り、像として記録するまでの流れを見ました。
 ここからは、`3`次元の世界のどの点が画像のどこに写るのか、という像の成り立ちを幾何的に捉えていきます。
 その出発点になるのが、カメラをもっとも単純にした装置、ピンホールカメラです。
 

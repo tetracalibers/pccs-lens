@@ -304,7 +304,7 @@
 - [x] `/cg/transformation/transformation-composition`
 - [x] `/cg/transformation/reflection-and-skew`
 - [x] `/cg/transformation/affine-and-projective-transformation`
-- [ページ未作成] カメラと投影
+- [draft] `/cg/transformation/pinhole-camera`
 - [ページ未作成] 透視投影と平行投影
 - [ページ未作成] 投影の手順
 - [ページ未作成] 投影の計算法
@@ -339,8 +339,6 @@
 ## CGと画像処理（nested） — 記事：画像の撮影とレンズ（`cg/camera.yaml`）
 
 - [x] `/cg/camera/digital-camera-structure`
-- [draft] `/cg/camera/pinhole-camera`
-- [ページ未作成] 透視投影モデル
 - [ページ未作成] 薄肉レンズ
 - [ページ未作成] 厚肉レンズ
 - [ページ未作成] 歪曲収差
