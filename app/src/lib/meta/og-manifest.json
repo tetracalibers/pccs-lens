@@ -55,7 +55,7 @@
       "title": "2値画像処理"
     },
     "cg/camera": {
-      "title": "画像の撮影とカメラモデル"
+      "title": "画像の撮影とレンズ"
     },
     "cg/camera/digital-camera-structure": {
       "title": "デジタルカメラの構成"
@@ -121,7 +121,7 @@
       "title": "画素ごとの濃淡・色変換"
     },
     "cg/transformation": {
-      "title": "座標や図形の変換"
+      "title": "変換と投影"
     },
     "cg/transformation/affine-and-projective-transformation": {
       "title": "アフィン変換と射影変換"
