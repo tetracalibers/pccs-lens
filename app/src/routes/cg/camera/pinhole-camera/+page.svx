@@ -3,9 +3,16 @@ layout: guide-content
 title: ピンホールカメラ # CG 2-3-1 / ImgP 2-2-1
 
 group: ["CG", "ImgP"]
+visual: true
 
 draft: true
 ---
+
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import ProjectionPlaneDemo from '$lib/demo/threejs/camera/pinhole-camera/projection-plane/ProjectionPlaneDemo.svelte'
+  import AngleOfViewDemo from '$lib/demo/threejs/camera/pinhole-camera/angle-of-view/AngleOfViewDemo.svelte'
+</script>
 
 [デジタルカメラの構成](/cg/camera/digital-camera-structure/)では、レンズや撮像素子といった部品が光を受け取り、像として記録するまでの流れを見ました。
 ここからは、`3`次元の世界のどの点が画像のどこに写るのか、という像の成り立ちを幾何的に捉えていきます。
@@ -40,6 +47,75 @@ draft: true
 
 先に見たとおり、ピンホールカメラでは投影面が光学中心の後ろにあり、像は反転します。ただしモデルとして扱うときは、投影面を光学中心の前側、被写体と同じ側に、同じ距離だけ離して置くのが一般的です。こうすると像の向きが被写体とそろい、位置関係を考えやすくなります。
 
+<CanvasWrapper>
+  <ProjectionPlaneDemo />
+</CanvasWrapper>
+
+```ts:Three.js
+// 被写体。輪郭を閉じた折れ線として、光学中心から SUBJECT_Z だけ離して置く
+const subjectGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute(
+    SUBJECT_OUTLINE.flatMap(([x, y]) => [x, y, SUBJECT_Z]),
+    3
+  )
+)
+scene.add(new LineLoop(subjectGeometry, new LineBasicMaterial({ color: SUBJECT_COLOR })))
+
+// 光学中心。大きさをもたない 1 つの点として原点に置く
+const centerGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, 0], 3)
+)
+scene.add(new Points(centerGeometry, new PointsMaterial({ color: CENTER_COLOR, size: 0.14 })))
+
+// 投影面。光軸に垂直な正方形の面を、光学中心の後ろ（z の負の向き）に置く
+const planeZ = -PLANE_DISTANCE
+const planeGeometry = new PlaneGeometry(PLANE_SIZE, PLANE_SIZE)
+const plane = new Mesh(
+  planeGeometry,
+  new MeshBasicMaterial({ color: PLANE_COLOR, side: DoubleSide, transparent: true, opacity: 0.12 })
+)
+plane.position.z = planeZ
+scene.add(plane)
+
+const border = new LineSegments(
+  new EdgesGeometry(planeGeometry),
+  new LineBasicMaterial({ color: PLANE_COLOR })
+)
+border.position.z = planeZ
+scene.add(border)
+
+// 投影面に結ばれる像。頂点は被写体の輪郭と同じ数だけ確保して、投影の計算結果で埋める
+const imagePosition = new Float32BufferAttribute(new Float32Array(SUBJECT_OUTLINE.length * 3), 3)
+const imageGeometry = new BufferGeometry().setAttribute("position", imagePosition)
+scene.add(new LineLoop(imageGeometry, new LineBasicMaterial({ color: IMAGE_COLOR })))
+
+// 被写体の各点から光学中心へ向かう光線。1 本につき 2 頂点
+const rayPosition = new Float32BufferAttribute(new Float32Array(SUBJECT_OUTLINE.length * 6), 3)
+const rayGeometry = new BufferGeometry().setAttribute("position", rayPosition)
+scene.add(new LineSegments(rayGeometry, new LineBasicMaterial({ color: RAY_COLOR })))
+
+/** 被写体上の点 (x, y, SUBJECT_Z) と光学中心を結ぶ直線が、z = targetZ の面と交わる位置 */
+const intersectAt = (x: number, y: number, targetZ: number): [number, number, number] => [
+  (targetZ * x) / SUBJECT_Z,
+  (targetZ * y) / SUBJECT_Z,
+  targetZ
+]
+
+SUBJECT_OUTLINE.forEach(([x, y], i) => {
+  // 投影面が後ろ（planeZ < 0）にあるとき、像の位置は被写体と符号が逆になる＝反転する
+  const [imageX, imageY] = intersectAt(x, y, planeZ)
+  imagePosition.setXYZ(i, imageX, imageY, planeZ)
+
+  // 光線は被写体の点から光学中心へ向かい、投影面が後ろにあるときは
+  // 光学中心を通り抜けて投影面まで伸びる
+  const rayEnd = intersectAt(x, y, Math.min(planeZ, 0))
+  rayPosition.setXYZ(i * 2, x, y, SUBJECT_Z)
+  rayPosition.setXYZ(i * 2 + 1, ...rayEnd)
+})
+```
+
 ## :WithGroupTag[光軸と焦点距離]{group="{['CG', 'ImgP']}"}
 
 ピンホールカメラモデルの幾何は、いくつかの基準となる線と点で整理できます。
@@ -67,6 +143,76 @@ draft: true
 画角は、焦点距離と投影面の大きさで決まります。投影面の大きさ（現実のカメラでは撮像素子の大きさ）が同じなら、焦点距離が長いほど画角は狭くなり、遠くのものが大きく写ります。逆に焦点距離が短いほど画角は広くなり、広い範囲が画面に収まります。
 
 この関係から、レンズを備えたカメラでは、焦点距離の短いレンズを:Mark[広角レンズ]、焦点距離の長いレンズを:Mark[望遠レンズ]と呼びます。広角レンズは広い風景を写すのに、望遠レンズは遠くの被写体を大きく写すのに向いています。
+
+<CanvasWrapper>
+  <AngleOfViewDemo />
+</CanvasWrapper>
+
+```ts:Three.js
+// 光学中心。大きさをもたない 1 つの点として原点に置く
+const centerGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, 0], 3)
+)
+scene.add(new Points(centerGeometry, new PointsMaterial({ color: CENTER_COLOR, size: 0.14 })))
+
+// 光軸。光学中心から投影面に垂直な向き（z の正の向き）へ伸びる直線
+const axisGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, 0, 0, 0, MAX_DEPTH], 3)
+)
+scene.add(new LineSegments(axisGeometry, new LineBasicMaterial({ color: AXIS_COLOR })))
+
+// 投影面。1 辺 1 の正方形を、投影面の大きさに合わせて広げ、焦点距離だけ光学中心から離して置く
+const planeGeometry = new PlaneGeometry(1, 1)
+const plane = new Mesh(
+  planeGeometry,
+  new MeshBasicMaterial({ color: PLANE_COLOR, side: DoubleSide, transparent: true, opacity: 0.12 })
+)
+plane.scale.set(PLANE_SIZE, PLANE_SIZE, 1)
+plane.position.z = FOCAL_LENGTH
+scene.add(plane)
+
+const border = new LineSegments(
+  new EdgesGeometry(planeGeometry),
+  new LineBasicMaterial({ color: PLANE_COLOR })
+)
+border.scale.copy(plane.scale)
+border.position.z = FOCAL_LENGTH
+scene.add(border)
+
+// 画角は、光学中心から投影面の端を見込む角の 2 倍。投影面の大きさと焦点距離だけで決まる
+const spread = PLANE_SIZE / 2 / FOCAL_LENGTH // 奥行き 1 あたりの広がり
+const angleOfView = (2 * Math.atan(spread) * 180) / Math.PI // 度
+
+// 視錐台。光学中心から投影面の 4 隅を通って奥へ伸びる 4 本の稜線と、その先を閉じる四角形
+const depth = Math.min(MAX_DEPTH, MAX_HALF_SIZE / spread)
+const half = spread * depth
+const frustumPosition = new Float32BufferAttribute(new Float32Array(16 * 3), 3)
+CORNERS.forEach(([cornerX, cornerY], i) => {
+  frustumPosition.setXYZ(i * 2, 0, 0, 0)
+  frustumPosition.setXYZ(i * 2 + 1, cornerX * half, cornerY * half, depth)
+
+  const [nextX, nextY] = CORNERS[(i + 1) % CORNERS.length]
+  frustumPosition.setXYZ(8 + i * 2, cornerX * half, cornerY * half, depth)
+  frustumPosition.setXYZ(8 + i * 2 + 1, nextX * half, nextY * half, depth)
+})
+const frustumGeometry = new BufferGeometry().setAttribute("position", frustumPosition)
+scene.add(new LineSegments(frustumGeometry, new LineBasicMaterial({ color: FRUSTUM_COLOR })))
+
+// 光学中心から見た点が画角の内側にあるか。spread は奥行き 1 あたりの広がり
+const isInsideAngleOfView = ([x, y, z]: [number, number, number], spread: number) =>
+  Math.abs(x) <= spread * z && Math.abs(y) <= spread * z
+
+// 空間に置いた立方体のうち、画角の内側に入っているものだけが投影面に写る
+const cubeGeometry = new EdgesGeometry(new BoxGeometry(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE))
+CUBE_POSITIONS.forEach((position) => {
+  const color = isInsideAngleOfView(position, spread) ? INSIDE_COLOR : OUTSIDE_COLOR
+  const cube = new LineSegments(cubeGeometry, new LineBasicMaterial({ color }))
+  cube.position.set(...position)
+  scene.add(cube)
+})
+```
 
 光学中心という`1`点にすべての光を集めるという投影のしかたは、像の見え方にも特徴を与えます。同じ大きさの物体でも、光学中心に近いものは投影面に大きく、遠いものは小さく写ります。この、近くのものほど大きく、遠くのものほど小さく写る性質が、画像に:Mark[遠近感]を生み出します。
 
