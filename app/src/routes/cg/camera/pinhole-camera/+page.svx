@@ -12,6 +12,7 @@ draft: true
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import ProjectionPlaneDemo from '$lib/demo/threejs/camera/pinhole-camera/projection-plane/ProjectionPlaneDemo.svelte'
   import AngleOfViewDemo from '$lib/demo/threejs/camera/pinhole-camera/angle-of-view/AngleOfViewDemo.svelte'
+  import PerspectiveDemo from '$lib/demo/threejs/camera/pinhole-camera/perspective/PerspectiveDemo.svelte'
 </script>
 
 [デジタルカメラの構成](/cg/camera/digital-camera-structure/)では、レンズや撮像素子といった部品が光を受け取り、像として記録するまでの流れを見ました。
@@ -215,6 +216,78 @@ CUBE_POSITIONS.forEach((position) => {
 ```
 
 光学中心という`1`点にすべての光を集めるという投影のしかたは、像の見え方にも特徴を与えます。同じ大きさの物体でも、光学中心に近いものは投影面に大きく、遠いものは小さく写ります。この、近くのものほど大きく、遠くのものほど小さく写る性質が、画像に:Mark[遠近感]を生み出します。
+
+<CanvasWrapper>
+  <PerspectiveDemo />
+</CanvasWrapper>
+
+```ts:Three.js
+// 光学中心。大きさをもたない 1 つの点として原点に置く
+const centerGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, 0], 3)
+)
+scene.add(new Points(centerGeometry, new PointsMaterial({ color: CENTER_COLOR, size: 0.14 })))
+
+// 投影面。光学中心の前（被写体と同じ側）に、焦点距離だけ離して置く
+const planeGeometry = new PlaneGeometry(PLANE_SIZE, PLANE_SIZE)
+const plane = new Mesh(
+  planeGeometry,
+  new MeshBasicMaterial({ color: PLANE_COLOR, side: DoubleSide, transparent: true, opacity: 0.12 })
+)
+plane.position.z = FOCAL_LENGTH
+scene.add(plane)
+
+const border = new LineSegments(
+  new EdgesGeometry(planeGeometry),
+  new LineBasicMaterial({ color: PLANE_COLOR })
+)
+border.position.z = FOCAL_LENGTH
+scene.add(border)
+
+// 同じ大きさの立方体。1 つのジオメトリを 4 つで共有する
+const cubeGeometry = new BufferGeometry()
+  .setAttribute(
+    "position",
+    new Float32BufferAttribute(
+      CUBE_VERTICES.flatMap(([x, y, z]) => [x * CUBE_SIZE, y * CUBE_SIZE, z * CUBE_SIZE]),
+      3
+    )
+  )
+  .setIndex(CUBE_EDGES)
+
+// 光線。立方体の中心から光学中心へ向かい、その途中で投影面を通る
+const rayPosition = new Float32BufferAttribute(new Float32Array(CUBE_OFFSETS.length * 6), 3)
+
+CUBE_OFFSETS.forEach(([offsetX, offsetY], i) => {
+  // 奥へ行くほど光学中心から遠ざかる。大きさは 4 つとも同じまま
+  const centerZ = DISTANCE + i * CUBE_SPACING
+  const cube = new LineSegments(cubeGeometry, new LineBasicMaterial({ color: CUBE_COLOR }))
+  cube.position.set(offsetX, offsetY, centerZ)
+  scene.add(cube)
+
+  // 立方体の 8 頂点を投影面へ写す。稜線のつなぎ方（インデックス）は立方体と同じ
+  const imagePosition = new Float32BufferAttribute(new Float32Array(CUBE_VERTICES.length * 3), 3)
+  CUBE_VERTICES.forEach(([vertexX, vertexY, vertexZ], v) => {
+    const x = offsetX + vertexX * CUBE_SIZE
+    const y = offsetY + vertexY * CUBE_SIZE
+    const z = centerZ + vertexZ * CUBE_SIZE
+    // 光学中心（原点）とこの頂点を結ぶ直線が、投影面と交わる位置。
+    // 焦点距離が同じでも、遠い頂点ほど FOCAL_LENGTH / z が小さくなり、像は小さくなる
+    imagePosition.setXYZ(v, (FOCAL_LENGTH * x) / z, (FOCAL_LENGTH * y) / z, FOCAL_LENGTH)
+  })
+  const imageGeometry = new BufferGeometry()
+    .setAttribute("position", imagePosition)
+    .setIndex(CUBE_EDGES)
+  scene.add(new LineSegments(imageGeometry, new LineBasicMaterial({ color: IMAGE_COLOR })))
+
+  rayPosition.setXYZ(i * 2, offsetX, offsetY, centerZ)
+  rayPosition.setXYZ(i * 2 + 1, 0, 0, 0)
+})
+
+const rayGeometry = new BufferGeometry().setAttribute("position", rayPosition)
+scene.add(new LineSegments(rayGeometry, new LineBasicMaterial({ color: RAY_COLOR })))
+```
 
 このように、ピンホールカメラモデルは、光学中心を通る光の直進だけで、写る範囲や遠近感までを説明できる、カメラのもっとも基本的な幾何モデルなのです。
 
