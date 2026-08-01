@@ -115,7 +115,7 @@
 - [x] `/color-theory/color-temperature-and-light-color`
 - [draft] `/color-theory/blackbody-radiation`
 - [x] `/color-theory/illuminance-and-lighting-design`
-- [ ] `/color-theory/photometric-quantities`
+- [x] `/color-theory/photometric-quantities`
 - [x] `/color-theory/color-rendering`
 - [x] `/color-theory/lamp-types`
 - [x] `/color-theory/photometric-and-radiometric-quantities`

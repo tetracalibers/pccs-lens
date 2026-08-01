@@ -318,6 +318,9 @@
     "color-theory/photometric-and-radiometric-quantities": {
       "title": "光のエネルギーと明るさ"
     },
+    "color-theory/photometric-quantities": {
+      "title": "照明の明るさを表す指標"
+    },
     "color-theory/photoreceptor-types-and-distribution": {
       "title": "視細胞の種類と分布"
     },
