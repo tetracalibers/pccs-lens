@@ -1,7 +1,11 @@
 <script lang="ts" generics="P extends object">
   import { browser } from "$app/environment"
   import { Pane } from "tweakpane"
-  import { WEBGL_CONTEXT_LOST_MESSAGE, WEBGL_UNSUPPORTED_MESSAGE } from "./constants"
+  import {
+    DEMO_BACKGROUND,
+    WEBGL_CONTEXT_LOST_MESSAGE,
+    WEBGL_UNSUPPORTED_MESSAGE
+  } from "./constants"
   import { mountThreeDemo, type CameraOptions, type OrbitOptions, type ThreeDemo } from "./mount"
   import type { ThreeSceneFactory } from "./types"
 
@@ -77,6 +81,17 @@
 </script>
 
 {#if browser}
+  <!-- Tweakpane は canvas の外（上）に置く。図より先に目に入るので操作できることに気づきやすく、
+       canvas に重ねないので狭い画面で図が隠れず、touch-action の領域も混ざらない -->
+  {#if buildPane}
+    <!-- パネルの面色は canvas の背景と同じ色にする（CSS からは定数を参照できないので inline で渡す） -->
+    <div
+      class="three-demo-pane"
+      style:--pane-surface={background ?? DEMO_BACKGROUND}
+      bind:this={paneEl}
+    ></div>
+  {/if}
+
   <!-- 枠・アスペクト比はページ側の見た目なので、シーンではなく CSS で持つ。
        描画できなかったときも canvas は DOM に残す（{#if} で外すと bind:this が切れる） -->
   <div
@@ -92,17 +107,11 @@
   {#if errorMessage}
     <p class="three-demo-fallback">{errorMessage}</p>
   {/if}
-
-  <!-- Tweakpane は canvas の外（下）に置く。狭い画面で図が隠れず、touch-action の領域も混ざらない -->
-  {#if buildPane}
-    <div class="three-demo-pane" bind:this={paneEl}></div>
-  {/if}
 {/if}
 
 <style>
   .three-demo-frame {
     width: 100%;
-    border: 1px solid light-dark(var(--color-body--dark), var(--color-body--light));
     /* OrbitControls のドラッグ中にページがスクロールしないようにする */
     touch-action: none;
     cursor: grab;
@@ -120,6 +129,7 @@
     display: block;
     width: 100%;
     height: 100%;
+    border-radius: 0 0 4px 4px;
     /* ドラッグの起点は canvas なので、枠側の指定に頼らず canvas 自体にも効かせる */
     touch-action: none;
   }
@@ -132,53 +142,88 @@
   }
 
   .three-demo-pane {
-    margin-block-start: 0.75rem;
+    /* Tweakpane はルート要素の内側余白を変数で公開していない（--tp-container-*-padding は
+       各行の余白）。面色がラッパと同じなので、外周の余白はこちら側で持たせて 1 枚に見せる */
+    padding: 0.2rem;
+    background: var(--pane-surface);
+    /* 下辺は canvas と地続きなので角を立てたまま、上部の 2 つの角だけ丸める */
+    border-radius: 4px 4px 0 0;
 
-    /* Tweakpane の配色をサイトのライト／ダークに追従させる。
-       文字色はグローバルの色トークンを直接参照し、面の色はそこから color-mix で作る。 */
-    --tp-base-background-color: color-mix(in oklab, var(--color-body) 8%, var(--color-bg));
-    --tp-base-shadow-color: light-dark(rgb(0 0 0 / 8%), rgb(0 0 0 / 40%));
-    --tp-base-border-radius: 4px;
+    /* Tweakpane の面色（--pane-surface）は canvas の背景と同じ色をインラインで受け取る。
+       既定は DEMO_BACKGROUND で、これはライト／ダーク共通の固定色。パネルと図が地続きに見え、
+       ライトモードではページの地色と明暗が逆になるので操作パネルとして見分けやすい。
+       面がモードに追従しない以上、文字（--pane-ink）も固定の明色にする必要がある。
+       サイトの配色から外れないよう、ダークモード用のトークンを直接参照する。 */
+    --pane-ink: var(--color-heading--dark);
 
-    --tp-label-foreground-color: color-mix(in oklab, var(--color-body) 80%, transparent);
-    --tp-container-foreground-color: var(--color-body);
-    --tp-input-foreground-color: var(--color-body);
-    --tp-monitor-foreground-color: var(--color-body);
+    /* 面はデモの背景と完全に一致させる。段差はこの上に重なるコンテナ・入力欄側だけで付ける */
+    --tp-base-background-color: var(--pane-surface);
+    /* 影はパネルの外周（ラッパ）に付いていてほしい。Tweakpane 側に残すと、
+       余白の内側に影が落ちて同色の面に切れ目が見えてしまうので消す */
+    --tp-base-shadow-color: transparent;
+    /* 角丸は落とす。パネル外周（base）と各ブレード（blade）で変数が分かれているので両方指定する */
+    --tp-base-border-radius: 0;
+    --tp-blade-border-radius: 0;
 
-    --tp-container-background-color: color-mix(in oklab, var(--color-body) 12%, var(--color-bg));
+    --tp-label-foreground-color: color-mix(in oklab, var(--pane-ink) 80%, transparent);
+    --tp-container-foreground-color: var(--pane-ink);
+    --tp-input-foreground-color: var(--pane-ink);
+    --tp-monitor-foreground-color: var(--pane-ink);
+
+    --tp-container-background-color: color-mix(in oklab, var(--pane-ink) 12%, var(--pane-surface));
     --tp-container-background-color-hover: color-mix(
       in oklab,
-      var(--color-body) 18%,
-      var(--color-bg)
+      var(--pane-ink) 18%,
+      var(--pane-surface)
     );
     --tp-container-background-color-focus: color-mix(
       in oklab,
-      var(--color-body) 22%,
-      var(--color-bg)
+      var(--pane-ink) 22%,
+      var(--pane-surface)
     );
     --tp-container-background-color-active: color-mix(
       in oklab,
-      var(--color-body) 26%,
-      var(--color-bg)
+      var(--pane-ink) 26%,
+      var(--pane-surface)
     );
 
-    --tp-input-background-color: color-mix(in oklab, var(--color-body) 12%, var(--color-bg));
-    --tp-input-background-color-hover: color-mix(in oklab, var(--color-body) 18%, var(--color-bg));
-    --tp-input-background-color-focus: color-mix(in oklab, var(--color-body) 22%, var(--color-bg));
-    --tp-input-background-color-active: color-mix(in oklab, var(--color-body) 26%, var(--color-bg));
+    --tp-input-background-color: color-mix(in oklab, var(--pane-ink) 12%, var(--pane-surface));
+    --tp-input-background-color-hover: color-mix(
+      in oklab,
+      var(--pane-ink) 18%,
+      var(--pane-surface)
+    );
+    --tp-input-background-color-focus: color-mix(
+      in oklab,
+      var(--pane-ink) 22%,
+      var(--pane-surface)
+    );
+    --tp-input-background-color-active: color-mix(
+      in oklab,
+      var(--pane-ink) 26%,
+      var(--pane-surface)
+    );
 
-    --tp-monitor-background-color: color-mix(in oklab, var(--color-body) 10%, var(--color-bg));
-    --tp-groove-foreground-color: color-mix(in oklab, var(--color-body) 20%, var(--color-bg));
+    --tp-monitor-background-color: color-mix(in oklab, var(--pane-ink) 10%, var(--pane-surface));
+    --tp-groove-foreground-color: color-mix(in oklab, var(--pane-ink) 20%, var(--pane-surface));
 
     /* つまみ・ボタンは前景色をそのまま使い、面との明暗差を確保する */
-    --tp-button-background-color: color-mix(in oklab, var(--color-body) 55%, var(--color-bg));
-    --tp-button-background-color-hover: color-mix(in oklab, var(--color-body) 65%, var(--color-bg));
-    --tp-button-background-color-focus: color-mix(in oklab, var(--color-body) 70%, var(--color-bg));
+    --tp-button-background-color: color-mix(in oklab, var(--pane-ink) 55%, var(--pane-surface));
+    --tp-button-background-color-hover: color-mix(
+      in oklab,
+      var(--pane-ink) 65%,
+      var(--pane-surface)
+    );
+    --tp-button-background-color-focus: color-mix(
+      in oklab,
+      var(--pane-ink) 70%,
+      var(--pane-surface)
+    );
     --tp-button-background-color-active: color-mix(
       in oklab,
-      var(--color-body) 80%,
-      var(--color-bg)
+      var(--pane-ink) 80%,
+      var(--pane-surface)
     );
-    --tp-button-foreground-color: var(--color-bg);
+    --tp-button-foreground-color: var(--pane-surface);
   }
 </style>
