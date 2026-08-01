@@ -236,9 +236,9 @@ export const createTranslationScene = ({ scene, params }: SceneContext) => {
    </CanvasWrapper>
    ```
 
-3. **その直後に ` ```ts ` のコードブロック**で掲載コードを置く
+3. **その直後に ` ```ts:Three.js ` のコードブロック**で掲載コードを置く
 
-   **タイトル付き（` ```ts:タイトル `）にはしない。** `app/src/lib/remark/code-title.js` が remark 段階で `html` ノードに差し替えるため、後段の shiki のハイライトが効かなくなる。
+   タイトルは `Three.js` 固定。`app/src/lib/remark/code-title.js` がコードブロックの右下にタブとしてラベルを描画し、shiki のハイライトも掛かる。ラベルに補足（「デモの実装」など）は足さない。
 
 4. フロントマターに `visual: true` が無ければ追加する
 

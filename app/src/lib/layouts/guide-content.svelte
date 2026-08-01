@@ -199,7 +199,8 @@
     font-family: var(--font-math-base), var(--font-ja-base);
   }
 
-  main :global(figure.code-with-title) {
+  /* 数式など、ハイライトのないタイトル付きブロック：キャプションは中央下 */
+  main :global(figure.code-with-title:not(.is-code)) {
     width: fit-content;
     margin-inline: auto;
     margin-block: 1rem;
@@ -220,8 +221,35 @@
     padding: 0.35rem;
   }
 
-  main :global(figure.code-with-title pre) {
+  main :global(figure.code-with-title:not(.is-code) pre) {
     margin-block: 0.5rem 0;
+  }
+
+  /* コードのタイトル付きブロック：ラベルを右下にタブとしてぶら下げる */
+  main :global(figure.code-with-title.is-code) {
+    margin-block: 1rem;
+    margin-inline: 0;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-end;
+  }
+
+  main :global(figure.code-with-title.is-code pre) {
+    align-self: stretch;
+    margin-block: 0;
+    /* 右下はタブと接するので角を落とす */
+    border-radius: 4px 4px 0 4px;
+  }
+
+  main :global(figure.code-with-title.is-code figcaption) {
+    /* shiki のテーマ（ayu-light / dracula-soft）の背景色に揃える */
+    background: light-dark(#f8f9fa, #282a36);
+    border-radius: 0 0 4px 4px;
+    padding: 0.15rem 0.6rem 0.25rem;
+    font-family: var(--font-mono-base), var(--font-ja-base);
+    font-size: 0.75rem;
+    line-height: 1.4;
+    opacity: 1;
   }
 
   main :global(figure.math-display) {
