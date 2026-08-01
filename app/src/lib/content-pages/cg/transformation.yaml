@@ -26,9 +26,7 @@ sections:
     links:
       - title: ビューイングパイプラインでの変換 # CG 2-4-1
         group: ["CG"]
-      - title: ビューイングと視野変換 # CG 2-4-2
-        group: ["CG"]
-      - title: クリッピング # CG 2-4-3
+      - title: クリッピングのアルゴリズム # CG 2-4-3
         group: ["CG"]
       - title: 階層モデリング # CG 2-4-4
         group: ["CG"]
