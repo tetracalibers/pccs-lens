@@ -11,6 +11,7 @@ draft: true
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import ProjectionCenterDemo from '$lib/demo/threejs/transformation/perspective-and-parallel-projection/projection-center/ProjectionCenterDemo.svelte'
+  import ProjectionCameraDemo from '$lib/demo/threejs/transformation/perspective-and-parallel-projection/projection-camera/ProjectionCameraDemo.svelte'
 </script>
 
 [ピンホールカメラ](/cg/transformation/pinhole-camera/)では、光学中心を通る光の直進だけで、`3`次元の世界が`2`次元の像になるしくみを見ました。
@@ -136,3 +137,105 @@ VERTICES.forEach(([x, y, z], i) => {
 そのかわり、平行投影の像に遠近感はありません。奥行きの違いが像の大きさに現れないぶん、どちらが手前にあるのかは、形の重なりや陰影といった別の手がかりから判断することになります。
 
 このように、透視投影と平行投影は、写実的な見え方を取るか、形の読み取りやすさを取るかで選び分けます。
+
+<CanvasWrapper>
+  <ProjectionCameraDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 透視投影の枠は画角と近接面までの距離で決まる。平行投影には画角にあたるものがないので、
+// 奥行きによらず一定の枠の大きさを直に決める
+const PERSPECTIVE_HALF_SIZE = NEAR * Math.tan(((FOV / 2) * Math.PI) / 180)
+
+// 写す側のカメラ。どちらも原点に置き、three.js の既定の向き（-z）のまま使う。
+// アスペクト比は 1（正方形の枠）にして、2 つのカメラを同じ条件で比べる
+const perspectiveCamera = new PerspectiveCamera(FOV, 1, NEAR, FAR)
+const orthographicCamera = new OrthographicCamera(
+  -ORTHOGRAPHIC_HALF_SIZE,
+  ORTHOGRAPHIC_HALF_SIZE,
+  ORTHOGRAPHIC_HALF_SIZE,
+  -ORTHOGRAPHIC_HALF_SIZE,
+  NEAR,
+  FAR
+)
+
+// 投影の計算はカメラの位置・向きも使うので、行列を作っておく（どちらも原点から動かさない）
+perspectiveCamera.updateMatrixWorld()
+orthographicCamera.updateMatrixWorld()
+
+const isOrthographic = PROJECTION === "orthographic"
+const camera: Camera = isOrthographic ? orthographicCamera : perspectiveCamera
+const half = isOrthographic ? ORTHOGRAPHIC_HALF_SIZE : PERSPECTIVE_HALF_SIZE
+
+// 近接面。1 辺 1 の正方形を、選んだカメラの枠の大きさに合わせて広げる
+const planeGeometry = new PlaneGeometry(1, 1)
+const plane = new Mesh(
+  planeGeometry,
+  new MeshBasicMaterial({
+    color: PLANE_COLOR,
+    side: DoubleSide,
+    transparent: true,
+    opacity: 0.12
+  })
+)
+plane.position.z = -NEAR
+plane.scale.set(half * 2, half * 2, 1)
+scene.add(plane)
+
+// 写される立方体。1 つのジオメトリを 3 つで共有する
+const cubeGeometry = new BufferGeometry()
+  .setAttribute(
+    "position",
+    new Float32BufferAttribute(
+      CUBE_VERTICES.flatMap(([x, y, z]) => [x * CUBE_SIZE, y * CUBE_SIZE, z * CUBE_SIZE]),
+      3
+    )
+  )
+  .setIndex(BOX_EDGES)
+const cubeMaterial = new LineBasicMaterial({ color: CUBE_COLOR })
+CUBE_POSITIONS.forEach((position) => {
+  const cube = new LineSegments(cubeGeometry, cubeMaterial)
+  cube.position.set(...position)
+  scene.add(cube)
+})
+
+// 視錐台。正規化デバイス座標の 8 隅を逆投影すると、そのカメラの視錐台の 8 隅になる。
+// 透視投影では奥ほど広がる角錐台、平行投影では奥まで太さの変わらない直方体
+const point = new Vector3()
+const frustumPosition = new Float32BufferAttribute(new Float32Array(NDC_CORNERS.length * 3), 3)
+NDC_CORNERS.forEach(([x, y, z], i) => {
+  point.set(x, y, z).unproject(camera)
+  frustumPosition.setXYZ(i, point.x, point.y, point.z)
+})
+const frustumGeometry = new BufferGeometry()
+  .setAttribute("position", frustumPosition)
+  .setIndex(BOX_EDGES)
+scene.add(new LineSegments(frustumGeometry, new LineBasicMaterial({ color: FRUSTUM_COLOR })))
+
+// 近接面に写る像。稜線のつなぎ方（インデックス）は立方体と同じ
+const imageMaterial = new LineBasicMaterial({ color: IMAGE_COLOR })
+CUBE_POSITIONS.forEach(([centerX, centerY, centerZ]) => {
+  const imagePosition = new Float32BufferAttribute(new Float32Array(CUBE_VERTICES.length * 3), 3)
+  CUBE_VERTICES.forEach(([vertexX, vertexY, vertexZ], v) => {
+    // 頂点をカメラで投影すると、-1〜1 の正規化デバイス座標が返る。
+    // それを近接面の枠に合わせて広げた位置が、この面に写る像になる。
+    // 透視投影では奥の頂点ほど中心へ寄り、平行投影では奥行きによらず同じ位置に写る
+    point
+      .set(
+        centerX + vertexX * CUBE_SIZE,
+        centerY + vertexY * CUBE_SIZE,
+        centerZ + vertexZ * CUBE_SIZE
+      )
+      .project(camera)
+    imagePosition.setXYZ(v, point.x * half, point.y * half, -NEAR)
+  })
+  const imageGeometry = new BufferGeometry()
+    .setAttribute("position", imagePosition)
+    .setIndex(BOX_EDGES)
+  scene.add(new LineSegments(imageGeometry, imageMaterial))
+})
+```
+
+:::
