@@ -1,11 +1,11 @@
 {
   "route": "cg/camera/digital-camera-structure",
-  "title": "デジタルカメラの構成",
+  "title": "デジタルカメラの光の流れ",
   "titleLines": [
-    "デジタルカメラの構成"
+    "デジタルカメラの光の流れ"
   ],
   "crumbs": [
     "CGと画像処理",
-    "画像の撮影とカメラモデル"
+    "撮影とレンズ"
   ]
 }

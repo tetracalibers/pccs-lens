@@ -1,8 +1,8 @@
 {
   "route": "cg/transformation",
-  "title": "座標や図形の変換",
+  "title": "変換と投影",
   "titleLines": [
-    "座標や図形の変換"
+    "変換と投影"
   ],
   "crumbs": [
     "CGと画像処理"

@@ -1,6 +1,6 @@
 ---
 layout: guide-content
-title: デジタルカメラの構成 # CG 1-1-1 / ImgP 2-1
+title: デジタルカメラの光の流れ # CG 1-1-1 / ImgP 2-1
 
 group: ["CG", "ImgP"]
 ---

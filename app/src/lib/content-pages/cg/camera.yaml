@@ -1,13 +1,10 @@
-title: 画像の撮影とカメラモデル
-summary: カメラの幾何モデルと撮影パラメータ
+title: 撮影とレンズ
+summary: レンズモデルと撮影パラメータ
 sections:
-  - heading: カメラを表す幾何モデル
-    id: camera-geometry
+  - heading: カメラの仕組み
+    id: camera-structure
     links:
       - slug: digital-camera-structure
-      - slug: pinhole-camera
-      - title: 透視投影モデル # ImgP 2-2-2
-        group: ["ImgP"]
   - heading: レンズモデル
     id: lens-model
     links:
