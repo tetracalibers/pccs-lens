@@ -347,27 +347,27 @@
 - [ページ未作成] 細線化
 - [ページ未作成] 細線の特徴点抽出とベクトル化
 
-## CGと画像処理 — 画像の撮影とカメラモデル／カメラを表す幾何モデル（`cg/camera.yaml` #camera-geometry）
+## CGと画像処理 — 画像の撮影とレンズ／カメラを表す幾何モデル（`cg/camera.yaml` #camera-geometry）
 
 - [x] `/cg/camera/digital-camera-structure`
 - [draft] `/cg/camera/pinhole-camera`
 - [ページ未作成] 透視投影モデル
 
-## CGと画像処理 — 画像の撮影とカメラモデル／レンズモデル（`cg/camera.yaml` #lens-model）
+## CGと画像処理 — 画像の撮影とレンズ／レンズモデル（`cg/camera.yaml` #lens-model）
 
 - [ページ未作成] 薄肉レンズ
 - [ページ未作成] 厚肉レンズ
 - [ページ未作成] 歪曲収差
 - [ページ未作成] 周辺光量の低下
 
-## CGと画像処理 — 画像の撮影とカメラモデル／撮影パラメータ（`cg/camera.yaml` #shooting-parameters）
+## CGと画像処理 — 画像の撮影とレンズ／撮影パラメータ（`cg/camera.yaml` #shooting-parameters）
 
 - [ページ未作成] 撮影画角
 - [ページ未作成] 画像の明るさ（露出）
 - [ページ未作成] 被写界深度（フォーカス）
 - [ページ未作成] フレームレート
 
-## CGと画像処理 — 画像の撮影とカメラモデル／撮影と信号（`cg/camera.yaml` #capture-signal）
+## CGと画像処理 — 画像の撮影とレンズ／撮影と信号（`cg/camera.yaml` #capture-signal）
 
 - [ページ未作成] カメラ応答関数
 - [ページ未作成] 時系列画像
@@ -812,7 +812,7 @@
 - [ページ未作成] 色補正
 - [ページ未作成] 色変換
 
-## CGと画像処理 — 座標や図形の変換／図形の変換（`cg/transformation.yaml` #coordinate-transform）
+## CGと画像処理 — 変換と投影／図形の変換（`cg/transformation.yaml` #coordinate-transform）
 
 - [x] `/cg/transformation/coordinate-systems`
 - [x] `/cg/transformation/basic-transformations`
@@ -820,7 +820,7 @@
 - [x] `/cg/transformation/reflection-and-skew`
 - [x] `/cg/transformation/affine-and-projective-transformation`
 
-## CGと画像処理 — 座標や図形の変換／投影（`cg/transformation.yaml` #projection）
+## CGと画像処理 — 変換と投影／投影（`cg/transformation.yaml` #projection）
 
 - [ページ未作成] カメラと投影
 - [ページ未作成] 透視投影と平行投影
@@ -829,14 +829,14 @@
 - [ページ未作成] 消点とn点透視
 - [ページ未作成] さまざまな平行投影
 
-## CGと画像処理 — 座標や図形の変換／ビューイングパイプライン（`cg/transformation.yaml` #viewing-pipeline）
+## CGと画像処理 — 変換と投影／ビューイングパイプライン（`cg/transformation.yaml` #viewing-pipeline）
 
 - [ページ未作成] ビューイングパイプラインでの変換
 - [ページ未作成] ビューイングと視野変換
 - [ページ未作成] クリッピング
 - [ページ未作成] 階層モデリング
 
-## CGと画像処理 — 座標や図形の変換／画像の幾何学的変換（`cg/transformation.yaml` #image-geometric-transform）
+## CGと画像処理 — 変換と投影／画像の幾何学的変換（`cg/transformation.yaml` #image-geometric-transform）
 
 - [ページ未作成] 画像の幾何学的変換
 - [ページ未作成] 画像の再標本化と補間

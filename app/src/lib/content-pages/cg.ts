@@ -1,9 +1,9 @@
 import { resolve } from "$app/paths"
 import type { ResolvedPathname } from "$app/types"
 import cgBasicsData from "./cg/basics.yaml"
+import cgTransformationData from "./cg/transformation.yaml"
 import cgImagePropertiesData from "./cg/image-properties.yaml"
 import cgCameraData from "./cg/camera.yaml"
-import cgTransformationData from "./cg/transformation.yaml"
 import cgModelingData from "./cg/modeling.yaml"
 import cgRenderingData from "./cg/rendering.yaml"
 import cgAnimationData from "./cg/animation.yaml"
@@ -81,9 +81,9 @@ export const cgGroups: CgGroupDef[] = [
     label: "基礎",
     pages: [
       makePage("basics", cgBasicsData),
+      makePage("transformation", cgTransformationData),
       makePage("image-properties", cgImagePropertiesData),
-      makePage("camera", cgCameraData),
-      makePage("transformation", cgTransformationData)
+      makePage("camera", cgCameraData)
     ]
   },
   {

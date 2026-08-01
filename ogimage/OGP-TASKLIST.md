@@ -297,38 +297,7 @@
 - [x] `/cg/basics/area-filling`
 - [x] `/cg/basics/gradient-generation`
 
-## CGと画像処理（nested） — 記事：画像の性質と色（`cg/image-properties.yaml`）
-
-- [x] `/cg/image-properties/dynamic-range-and-gradation`
-- [draft] `/cg/image-properties/image-statistics`
-- [ページ未作成] 画像のノイズ
-- [ページ未作成] コントラストとシャープネス
-- [ページ未作成] CIE-RGB表色系
-- [ページ未作成] CIE-XYZ表色系
-- [ページ未作成] CIE-L*a*b*色空間
-- [ページ未作成] YIQ表色系
-- [ページ未作成] sRGB色空間
-- [ページ未作成] 輝度信号と色差信号
-- [ページ未作成] HSI変換と逆変換
-
-## CGと画像処理（nested） — 記事：画像の撮影とカメラモデル（`cg/camera.yaml`）
-
-- [x] `/cg/camera/digital-camera-structure`
-- [draft] `/cg/camera/pinhole-camera`
-- [ページ未作成] 透視投影モデル
-- [ページ未作成] 薄肉レンズ
-- [ページ未作成] 厚肉レンズ
-- [ページ未作成] 歪曲収差
-- [ページ未作成] 周辺光量の低下
-- [ページ未作成] 撮影画角
-- [ページ未作成] 画像の明るさ（露出）
-- [ページ未作成] 被写界深度（フォーカス）
-- [ページ未作成] フレームレート
-- [ページ未作成] カメラ応答関数
-- [ページ未作成] 時系列画像
-- [ページ未作成] カラー画像の撮影
-
-## CGと画像処理（nested） — 記事：座標や図形の変換（`cg/transformation.yaml`）
+## CGと画像処理（nested） — 記事：変換と投影（`cg/transformation.yaml`）
 
 - [x] `/cg/transformation/coordinate-systems`
 - [x] `/cg/transformation/basic-transformations`
@@ -352,6 +321,37 @@
 - [ページ未作成] 再標本化時のアンチエイリアシング
 - [ページ未作成] イメージモザイキング
 - [ページ未作成] パノラマ画像の生成
+
+## CGと画像処理（nested） — 記事：画像の性質と色（`cg/image-properties.yaml`）
+
+- [x] `/cg/image-properties/dynamic-range-and-gradation`
+- [draft] `/cg/image-properties/image-statistics`
+- [ページ未作成] 画像のノイズ
+- [ページ未作成] コントラストとシャープネス
+- [ページ未作成] CIE-RGB表色系
+- [ページ未作成] CIE-XYZ表色系
+- [ページ未作成] CIE-L*a*b*色空間
+- [ページ未作成] YIQ表色系
+- [ページ未作成] sRGB色空間
+- [ページ未作成] 輝度信号と色差信号
+- [ページ未作成] HSI変換と逆変換
+
+## CGと画像処理（nested） — 記事：画像の撮影とレンズ（`cg/camera.yaml`）
+
+- [x] `/cg/camera/digital-camera-structure`
+- [draft] `/cg/camera/pinhole-camera`
+- [ページ未作成] 透視投影モデル
+- [ページ未作成] 薄肉レンズ
+- [ページ未作成] 厚肉レンズ
+- [ページ未作成] 歪曲収差
+- [ページ未作成] 周辺光量の低下
+- [ページ未作成] 撮影画角
+- [ページ未作成] 画像の明るさ（露出）
+- [ページ未作成] 被写界深度（フォーカス）
+- [ページ未作成] フレームレート
+- [ページ未作成] カメラ応答関数
+- [ページ未作成] 時系列画像
+- [ページ未作成] カラー画像の撮影
 
 ## CGと画像処理（nested） — 記事：モデリング（`cg/modeling.yaml`）
 
