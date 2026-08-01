@@ -24,6 +24,24 @@ const getHighlighter = () => {
   return highlighterPromise
 }
 
+/**
+ * @param {string} code
+ * @param {string} lang
+ */
+const highlightToHtml = async (code, lang) => {
+  const highlighter = await getHighlighter()
+  return highlighter.codeToHtml(code, { lang, themes: shikiThemes })
+}
+
+/**
+ * タイトル付きコードブロック用のハイライタ。
+ * shiki が知らない言語（`math` など）は null を返し、素の `<pre>` にフォールバックさせる。
+ * @param {string} code
+ * @param {string} lang
+ */
+const highlightIfSupported = async (code, lang) =>
+  lang in bundledLanguages ? await highlightToHtml(code, lang) : null
+
 /** @type {import('./src/lib/remark/custom-directives.js').DirectiveConfigMap} */
 const directives = {
   container: [
@@ -34,7 +52,8 @@ const directives = {
     { name: "Action", replaceTo: "svelte-component" },
     { name: "Todo", replaceTo: "svelte-component" },
     { name: "CardGrid", replaceTo: "svelte-component" },
-    { name: "TermCard", replaceTo: "svelte-component" }
+    { name: "TermCard", replaceTo: "svelte-component" },
+    { name: "Foldable", replaceTo: "svelte-component" }
   ],
   leaf: [
     { name: "ComingSoon", replaceTo: "svelte-component" },
@@ -72,14 +91,10 @@ const config = {
         [remarkCustomDirectives, directives],
         remarkHeadingTitle,
         remarkMermaid,
-        remarkCodeTitle
+        [remarkCodeTitle, { highlight: highlightIfSupported }]
       ],
       highlight: {
-        highlighter: async (code, lang) => {
-          const highlighter = await getHighlighter()
-          const html = highlighter.codeToHtml(code, { lang, themes: shikiThemes })
-          return `{@html \`${html}\` }`
-        }
+        highlighter: async (code, lang) => `{@html \`${await highlightToHtml(code, lang)}\` }`
       }
     })
   ],

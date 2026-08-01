@@ -1,0 +1,344 @@
+---
+name: add-threejs-demo
+description: 引数で受け取ったCG記事（`app/src/routes/cg/**`）に、素のThree.jsで実装したデモと、そのデモで実際に動いているコードを掲載するスキル。記事を解析してデモ案を表で提案し、採否と挿入位置の合意を得てから1案ずつ実装して記事へ差し込む（import・コンポーネント使用箇所・掲載コードのtsコードブロック・フロントマターの `visual` フラグ）。掲載コードは実際に動いている `scene.ts` から作る（読者が書き下せる形に整えてよく、逐語一致は求めない）。CG記事にThree.jsのデモを載せたい・追加したい場合に使用する。
+---
+
+# CG記事へのThree.jsデモ掲載スキル
+
+CG記事に、**素の Three.js で実装したデモ**と、**そのデモで実際に動いているコード**を掲載する。
+
+デモの狙いは 2 つある。
+
+- **内容の理解を助ける** — 静的な図解では伝わりにくい空間・変換・投影などを、操作しながら確かめられるようにする
+- **応用例を示し、読者の創作への橋渡しになる** — 記事の理論が実際のコードでどう書かれるかを見せる
+
+後者のため、デモとあわせて**そのデモで実際に動いているコード**を記事に載せる。**掲載コードが「一度も実行されていないコード」になることを避けるのが、このスキルで最も重視する点。**
+
+仕様は `spec/add-threejs-demo.md` に固めてある。判断に迷ったらそちらを参照する。
+
+## 適用範囲
+
+- CG記事（`app/src/routes/cg/**/+page.svx`）に Three.js のデモを載せるとき
+- `app/src/lib/demo/threejs/` 配下に Three.js のデモを新規作成・編集するとき
+
+対象外:
+
+- **色彩記事（`color-theory`・`color-fields`）** — 既存の 3D デモ（`PCCSColorSolid3D.svelte`・`MunsellColorSolid3D.svelte`）は Threlte 実装のまま据え置く。今後も色彩記事の 3D は Threlte、CG記事は素の Three.js という 2 系統で運用する
+- **静的な SVG 図解** — `svg-diagram-component` の担当
+- **記事本文の執筆** — `author-style-writer` の担当（→「本文には手を入れない」）
+
+## 引数
+
+```
+/add-threejs-demo <記事slug> [<デモの内容>]
+```
+
+- **`<記事slug>`（必須）** — CG記事の slug（例: `basic-transformations`）
+- **`<デモの内容>`（省略可）** — 作りたいデモの内容。指定の有無で動作パターンが分かれる
+
+### 記事slugの解決
+
+CG記事の実体は `cg/<ユニット>/<記事slug>` で、slug 単体ではパスが確定しない。`app/src/routes/cg/` を検索して実体を解決する。
+
+```bash
+find app/src/routes/cg -maxdepth 2 -type d -name "<記事slug>"
+```
+
+- **0 件・複数ヒットの場合は、確認して止める。** 推測でどれかに決めない
+- slug が重複する場合は、ユニット込みで `transformation/basic-transformations` のように渡してもらう
+- **`draft: true` の記事も対象とする**（このスキルは執筆直後に呼ばれる想定）
+
+### 動作パターン
+
+- **パターンA（`<デモの内容>` なし）** — 記事を解析してデモ案を提案し、ユーザーの採否を待ってから実装する
+- **パターンB（`<デモの内容>` あり）** — 提案フェーズを飛ばし、指定された内容のデモを実装する
+
+## パターンA：デモ案の提案
+
+対象記事の `+page.svx` を通読したうえで、会話上に**表**で案を列挙し、**番号で採否をもらう**。
+
+- **`AskUserQuestion` は使わない。** 選択肢が 2〜4 個に固定されるため、案の件数が記事ごとに変わるこの用途に合わない
+- ユーザーは `1と3` のように番号で返す（実装順の指定を含むこともある）
+
+表の列は次のとおり。
+
+| 列 | 内容 |
+| --- | --- |
+| `#` | 案番号 |
+| 視点 | 理解 / 応用 |
+| 何を見せるか | デモで見えるもの |
+| 操作 | Tweakpane で操作するパラメータ（操作なしも可） |
+| 記事に載るコード | `scene.ts` から載せる部分の見込み |
+| 挿入位置 | どの節の直後に入れるか |
+| この案の弱み | 不採用の理由になりうる限界 |
+
+守ること:
+
+- **件数は記事次第。** 「1 つの視点に 1 デモ」に縛らない。片方の視点が 0 案でもよい
+- **提示は 5 案程度を上限とする**
+- **各案に必ず「弱み」を書く。** 自分の案を売り込むだけの提案にしない
+- **挿入位置まで案に含める**（採否の合意と同時に挿入位置も合意される）
+- **「この記事に Three.js デモは向かない」と申告して止まってよい**（例: 知的財産権・CGの歴史のような、空間や変換を扱わない記事）。無理に案を作らない
+
+## 実装の粒度
+
+**採用された案を 1 つずつ実装して都度報告する。** 複数案が採用されても、一度にまとめて実装しない。
+
+## ファイル構成
+
+```
+app/src/lib/demo/threejs/
+  _shared/                              記事に載らない定型処理（既に整備済み。→「_shared の API」）
+  <ユニット>/<記事slug>/<デモ名>/
+    scene.ts                            記事に載せる本体。three にのみ依存
+    <デモ名>Demo.svelte                 薄い殻（ThreeDemoCanvas への配線）
+```
+
+- **ディレクトリはユニット込み**（`threejs/transformation/basic-transformations/`）。CG記事は今後大量に増えるため、slug の将来的な衝突を避け、記事の在り処と対応が取れるようにする
+- **デモごとにサブディレクトリを作る**（1 デモが 2 ファイル以上になる）
+- `<デモ名>` のディレクトリ名は kebab-case、Svelte コンポーネントは `<デモ名>Demo.svelte`（PascalCase）、`scene.ts` の公開関数は `create<デモ名>Scene`
+
+例: `threejs/transformation/basic-transformations/translation-matrix/` に `scene.ts` と `TranslationMatrixDemo.svelte`、公開関数は `createTranslationMatrixScene`。
+
+## 責務分担
+
+| | 記事に載るか | 担当 |
+| --- | --- | --- |
+| `_shared/` | 載らない | renderer 生成・描画ループ・リサイズ・破棄・画面外での停止・OrbitControls・Tweakpane パネルの生成とテーマ・WebGL 非対応／コンテキストロストの案内 |
+| `scene.ts` | **載る** | その記事固有のシーン構築・行列計算・ジオメトリ生成・パラメータ適用 |
+| `<デモ名>Demo.svelte` | 載らない | `ThreeDemoCanvas` への配線（パラメータの初期値と Tweakpane のバインディング） |
+
+**`scene.ts` は `_shared` を import しない。`three` にのみ依存させる。** 記事に載せたコードがそのまま読者の手元で動く条件なので、型の import であっても例外にしない。
+
+## `scene.ts` の書き方
+
+```ts
+import { BoxGeometry, EdgesGeometry, LineBasicMaterial, LineSegments, Matrix4, PerspectiveCamera, Scene } from "three"
+
+/** Tweakpane で操作するパラメータ */
+export type TranslationParams = { tx: number; ty: number }
+
+// _shared の ThreeSceneContext と同じ形をローカルに宣言する（_shared を import しないため）。
+// TypeScript は構造的部分型なので、import なしでも ThreeDemoCanvas に渡せる。
+type SceneContext = {
+  scene: Scene
+  camera: PerspectiveCamera
+  params: TranslationParams
+}
+
+export const createTranslationScene = ({ scene, params }: SceneContext) => {
+  const geometry = new EdgesGeometry(new BoxGeometry(1, 1, 1))
+  const material = new LineBasicMaterial({ color: "#e8e8ee" })
+  const box = new LineSegments(geometry, material)
+  box.matrixAutoUpdate = false
+  scene.add(box)
+
+  const translation = new Matrix4()
+
+  return {
+    // 描画の直前に毎フレーム呼ばれる。params の現在値をシーンへ反映する
+    update: () => {
+      box.matrix.copy(translation.makeTranslation(params.tx, params.ty, 0))
+    },
+    // 自分が作った geometry・material・texture は自分で破棄する
+    dispose: () => {
+      geometry.dispose()
+      material.dispose()
+    }
+  }
+}
+```
+
+規約:
+
+- **公開 API は `export const create<デモ名>Scene = (ctx) => ({ update?, dispose? })` の 1 関数**（パラメータの型は別途 export してよい）
+- `params` は `update()` の中で読む。`scene.ts` 側で値を保持しない
+- 描画は**操作された直後だけ**走る。`update()` に経過時間依存のアニメーションを書かない（→「アニメーション」）
+- `ctx.camera` は位置・fov・near・far が適用済み。**カメラ自体が記事の主題（投影・視錐台など）の場合は `scene.ts` 側で上書きしてよい**（`ThreeDemoCanvas` に `orbit={false}` を渡してカメラ操作を切る）
+- `ctx.renderer` は、**そのデモに固有で、かつ必須の renderer 設定**（`localClippingEnabled` など）を `scene.ts` 側で書くために渡している。それが無いと読者の手元で同じ絵にならないため、記事に載るコードに含める。全デモに共通の定型設定は `_shared` の担当
+- **`scene.ts` を「記事に載せやすい単位」で設計する責任は実装側にある**（→「掲載コードの規約」）
+
+## `<デモ名>Demo.svelte` の書き方
+
+```svelte
+<script lang="ts">
+  import ThreeDemoCanvas from "$lib/demo/threejs/_shared/ThreeDemoCanvas.svelte"
+  import { createTranslationScene, type TranslationParams } from "./scene"
+
+  // Tweakpane が直接書き換え、scene.ts が毎フレーム読む。$state ではなくプレーンオブジェクトにする
+  const params: TranslationParams = { tx: 0, ty: 0 }
+</script>
+
+<ThreeDemoCanvas
+  ariaLabel="平行移動した立方体の3次元表示（ドラッグで回転）"
+  createScene={createTranslationScene}
+  {params}
+  aspectRatio="16 / 10"
+  camera={{ position: [3, 2, 4] }}
+  buildPane={(pane, p) => {
+    pane.addBinding(p, "tx", { min: -2, max: 2, step: 0.01, label: "tx" })
+    pane.addBinding(p, "ty", { min: -2, max: 2, step: 0.01, label: "ty" })
+  }}
+/>
+```
+
+- **`params` は `$state` にしない。** Three.js が毎フレーム直接読み、Tweakpane が直接書き換えるので、Svelte のリアクティビティは要らない
+- 操作のないデモでは `buildPane` を省略する（パネル自体が作られない）
+- `{#if browser}` ガードや canvas のマウントは `ThreeDemoCanvas` の中で済んでいる。**ここで書かない**
+
+## `_shared` の API
+
+`app/src/lib/demo/threejs/_shared/` は整備済みで、**通常は触らない**。デモから使うのは `ThreeDemoCanvas.svelte` だけ。
+
+### `ThreeDemoCanvas.svelte` の props
+
+| prop | 必須 | 既定 | 内容 |
+| --- | --- | --- | --- |
+| `ariaLabel` | ✓ | — | ラッパに付ける説明（何が描かれ、どう操作するか） |
+| `createScene` | ✓ | — | `scene.ts` の `create<デモ名>Scene` |
+| `params` | ✓ | — | Tweakpane と `scene.ts` が共有するプレーンオブジェクト |
+| `aspectRatio` | | `"1 / 1"` | canvas の `aspect-ratio`。**デモごとに変更可**（変換・投影は横長のほうが見やすいことがある） |
+| `background` | | `DEMO_BACKGROUND` | 背景色。ライト／ダーク共通の固定色 |
+| `camera` | | fov 45 / near 0.1 / far 100 / position `[3, 3, 5]` | `{ fov, near, far, position }` |
+| `orbit` | | 減衰つき回転・ズーム有効／パン無効 | `{ target, enablePan, enableZoom, enableRotate, minDistance, maxDistance, minPolarAngle, maxPolarAngle }`、または `false` で OrbitControls を付けない |
+| `buildPane` | | なし | `(pane, params) => void`。Tweakpane のバインディングを組み立てる |
+
+### `_shared` が引き受けていること
+
+- renderer の生成（DPR 上限は `min(devicePixelRatio, 2)`）
+- **要求されたときだけ描く描画ループ** — `invalidate()` が呼ばれた次のフレームで 1 回描画する。Tweakpane の `change` と OrbitControls の `change` が自動で繋がっているため、デモ側で描画を要求する必要はない
+- `ResizeObserver` によるリサイズ（canvas の実寸から `camera.aspect` を更新）
+- **画面外でのループ停止**（`IntersectionObserver`）。1 記事に複数デモが並んでも、見えているものだけが描画される
+- `dispose`（renderer・OrbitControls・`scene.ts` の `dispose()`）
+- **WebGL 非対応・コンテキストロスト時のメッセージ表示**（どういう環境なら動くかを明記した文面が `constants.ts` にある）
+- Tweakpane パネルの生成と、サイトのライト／ダークに追従する `--tp-*` テーマ変数
+
+`_shared` を変更する必要が出た場合は、**それが「記事に載らない定型処理」かどうかを判断してから**手を入れる。記事固有のロジックは `scene.ts` に置く。
+
+## 記事への反映
+
+デモ 1 本ごとに、対象記事（`+page.svx`）へ次を行う。
+
+1. `<script>` ブロックにデモコンポーネントの import を追加する（`CanvasWrapper` が未 import であればあわせて追加する）
+
+   ```svelte
+   <script>
+     import CanvasWrapper from "$lib/demo/CanvasWrapper.svelte"
+     import TranslationMatrixDemo from "$lib/demo/threejs/transformation/basic-transformations/translation-matrix/TranslationMatrixDemo.svelte"
+   </script>
+   ```
+
+2. 合意した挿入位置に `<CanvasWrapper>` で包んで差し込む
+
+   ```svelte
+   <CanvasWrapper>
+     <TranslationMatrixDemo />
+   </CanvasWrapper>
+   ```
+
+3. **その直後に `:::Foldable` で包んだ ` ```ts ` のコードブロック**で掲載コードを置く
+
+   ````markdown
+   :::Foldable{title="Three.jsによる実装概要"}
+
+   ```ts
+   const scene = new Scene()
+   ```
+
+   :::
+   ````
+
+   タイトルは `Three.jsによる実装概要` 固定。補足（「デモの実装」など）は足さない。既定で折りたたまれた状態になり、読者がタイトル行を押したときだけ開く。中身のコードブロックには shiki のハイライトが掛かる。`Foldable` は `guide-content.svelte` が export しているので、記事側の `import` は不要。
+
+4. フロントマターに `visual: true` が無ければ追加する
+
+   ```yaml
+   ---
+   layout: guide-content
+   title: 基本的な変換と同次座標
+   group: ["CG", "ImgP"]
+   visual: true
+   ---
+   ```
+
+   `lib/meta/guide-pages.ts` が `import.meta.glob` でビルド時にフロントマターを集約し、`lib/components/m-directive/PageLink.svelte` が一覧リンクに `図解` タグを描画する。**追加の登録作業は不要。** 「Web」タグは新設しない（`図解` タグで代替する）
+
+5. **説明文は書かない**
+
+### 本文には手を入れない
+
+**地の文を 1 文字も変更しない。** このスキルが記事に加えるのは、import・コンポーネント使用箇所・コードブロック・フロントマターの `visual: true` だけ。
+
+- デモの説明文、デモへの言及、`:::Action`（操作を促す一文）も**書かない**。いずれも本文であり `author-style-writer` の担当
+- ただし「何を操作でき、何が読み取れるか」は完了報告に添える。著者が `:::Action` や言及を書き足すときの材料になる
+
+## 掲載コードの規約
+
+- **記事に載せるコードは、実際に動いている `scene.ts` から作る。** 記事用に書き下ろしたり、他の API から翻訳したりしてはならない
+- **`scene.ts` と逐語一致させる必要はない。** 記事側は「読者がそのまま書き下せる形」を優先し、デモの都合で入っている構造は外してよい
+  - 関数の殻を外し、中身をトップレベルのコードとして並べる
+  - 引数を実データに置き換える（`createWireframeGeometry(vertices, edges)` → `createWireframeGeometry(VERTICES, EDGES)`）
+  - `update()`・`dispose()` に渡すためだけの戻り値を落とす
+  - 関数の doc コメント（`/** */`）を、ブロックの見出しになる `//` コメントに変える
+- **定数・パラメータはデモの初期値に合わせる。** 掲載コードが描く絵と、デモの初期表示を一致させる（「面を外す」トグルの既定がオンなら、掲載コードも面を外した状態にする）
+- **やってはいけない改変** — 処理を `// 省略` で削る、実装には無い API・値に書き換える、そのままでは動かないコードにする
+- **行数の上限は設けない。** 短さのために、デモと同じ絵を出すのに要るコードを落とさない
+- 載せるのは、**その記事の主題が現れている部分**（行列の組み立て、投影の計算など）と、**そのコードだけで初期表示と同じ絵になるのに要る部分**（面の枠線、基準となる点や線など）。renderer の生成やリサイズは `_shared` にあるので混ざらない
+- 既定では**載せない**もの（長いだけで主題が薄れる） — 頂点座標・インデックスなどのデータ定義、色などの定数、`update()`・`dispose()` の後処理。マテリアルの生成と `scene.add()` は載せる
+- **`three` の API を使わない処理も載せない。** 多角形を三角形へ分割するような純粋な配列操作は、`scene.ts` に置いたまま掲載コードから外す（記事に載せるのは three の API が現れている部分）
+- **どこまで載せるかは最終的に著者が決める。** 完了報告で何を載せ何を外したかを伝え、指示があればその形に直す
+
+## 見た目
+
+`ThreeDemoCanvas` が既に満たしているので、デモ側で CSS を書く必要はない。
+
+- canvas のラッパ: `width: 100%` ＋ `aspect-ratio` ＋ 枠線 ＋ `touch-action: none` ＋ `cursor: grab`
+- 枠線は `light-dark()` でライト／ダークに追従（枠はシーンではなくページ側の要素）
+- ラッパに `role="img"` ＋ `aria-label`、Tweakpane パネルはその外（兄弟要素）
+- アクセシビリティへの特別な配慮は要件としない（Tweakpane を素直に使う）
+
+### 背景色
+
+**ライト／ダーク共通の固定色**（`_shared/constants.ts` の `DEMO_BACKGROUND`）。理由は 2 つ。
+
+- 軸ラベルや線の色を、両モードで可読な 1 色に決められる
+- `scene.ts` にテーマの分岐が入らないため、**掲載コードの見え方が読者の手元と一致する**
+
+`scene.ts` の中で色は**リテラルで書く**（CSS 変数を読まない）。この背景の上で両モードとも可読な色を選ぶ。
+
+### 軸・グリッド
+
+`AxesHelper`・`GridHelper` の色・スケール・ラベルの見せ方は**まだ規約化していない**。デモごとに判断し、**採用した値を完了報告に書く。** 最初の数本で実態が固まってから規約化する。
+
+## Tweakpane
+
+- **操作を用意するのは、記事の主題に関わるパラメータだけ。** 主題から外れるもの（形状モデルの記事における光の向きなど）は固定値にし、パネルに出さない
+- `tweakpane` と `@tweakpane/core`（型定義用）は `devDependencies` に入っている
+- **ロードは SvelteKit のコード分割任せ。** 明示的な動的 import はしない（デモを載せた記事のチャンクにだけ入る）
+- 素の `<input type="range">` による代替は設けない
+- パネルは **canvas の外（下）**。狭い画面でオーバーレイすると図が隠れ、`touch-action: none` の領域と操作が混ざる
+- テーマ変数（`--tp-*`）は `ThreeDemoCanvas` で設定済み。デモ側で上書きしない
+
+## アニメーション
+
+**自動アニメーションは作らない。操作したときだけ動くようにする。** `_shared` の描画ループも、操作・リサイズがあったときだけフレームを積む設計になっている。
+
+## 品質チェック
+
+- **`npm run check` はユーザー側で実行する。作業中に勝手に実行しない**（`svg-diagram-component` と同じ）
+- ユーザーがエラーや警告を報告したら、その内容に従って修正する
+- **デモの目視確認はユーザーが行う。** ブラウザを立ち上げて確認しようとしない
+
+## 完了報告
+
+デモ 1 本の実装が終わるたびに、次を報告する。
+
+- 挿入した記事と位置（どの節の直後か）
+- 作成したファイル
+- 記事に載せたコード（元になった `scene.ts` の関数名と、外した部分）
+- `visual: true` を付与したかどうか
+- **このデモで何を操作でき、何が読み取れるか**（記事には書かないが、著者が `:::Action` や言及を書き足すときの材料になる）
+- 軸・グリッドを使った場合は、採用した色・スケール
+- `node_modules` に `tweakpane` が無い環境（クローン直後・worktree など）では `npm install` が必要である旨
+
+複数案が採用されている場合は、ここで次の案に進んでよいかを確認する。

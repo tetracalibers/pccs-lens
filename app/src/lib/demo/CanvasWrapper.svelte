@@ -15,7 +15,6 @@
 
 <style>
   .canvas-wrapper {
-    margin-inline: 0.25rem;
     margin-block: 1.25rem;
   }
 </style>

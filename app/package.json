@@ -31,6 +31,7 @@
     "@svgdotjs/svg.js": "^3.2.5",
     "@threlte/core": "^8.5.16",
     "@threlte/extras": "^9.21.0",
+    "@tweakpane/core": "^2.0.5",
     "@types/chroma-js": "^3.1.2",
     "@types/d3-hierarchy": "^3.1.7",
     "@types/d3-shape": "^3.1.8",
@@ -58,9 +59,11 @@
     "prettier-plugin-svelte": "^3.4.1",
     "randomcolor": "^0.6.2",
     "remark-breaks": "^4.0.0",
+    "shiki": "^4.2.0",
     "svelte": "^5.51.0",
     "svelte-check": "^4.4.2",
     "three": "^0.184.0",
+    "tweakpane": "^4.0.5",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.54.0",
     "unified": "^11.0.5",
@@ -69,8 +72,7 @@
     "vitest": "^4.0.18",
     "vitest-browser-svelte": "^2.0.2",
     "wrangler": "^4.63.0",
-    "zx": "^8.8.5",
-    "shiki": "^4.2.0"
+    "zx": "^8.8.5"
   },
   "overrides": {
     "vite": {

@@ -4,8 +4,7 @@ sections:
   - heading: 形状モデル
     id: shape-models
     links:
-      - title: さまざまな形状モデル # CG 3-1
-        group: ["CG"]
+      - slug: shape-model-overview
       - title: CSG表現 # CG 3-2-1
         group: ["CG"]
       - title: 境界表現 # CG 3-2-2
