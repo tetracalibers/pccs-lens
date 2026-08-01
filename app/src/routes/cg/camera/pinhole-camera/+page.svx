@@ -52,7 +52,9 @@ draft: true
   <ProjectionPlaneDemo />
 </CanvasWrapper>
 
-```ts:Three.js
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
 // 被写体。輪郭を閉じた折れ線として、光学中心から SUBJECT_Z だけ離して置く
 const subjectGeometry = new BufferGeometry().setAttribute(
   "position",
@@ -117,6 +119,8 @@ SUBJECT_OUTLINE.forEach(([x, y], i) => {
 })
 ```
 
+:::
+
 ## :WithGroupTag[光軸と焦点距離]{group="{['CG', 'ImgP']}"}
 
 ピンホールカメラモデルの幾何は、いくつかの基準となる線と点で整理できます。
@@ -149,7 +153,9 @@ SUBJECT_OUTLINE.forEach(([x, y], i) => {
   <AngleOfViewDemo />
 </CanvasWrapper>
 
-```ts:Three.js
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
 // 光学中心。大きさをもたない 1 つの点として原点に置く
 const centerGeometry = new BufferGeometry().setAttribute(
   "position",
@@ -215,13 +221,17 @@ CUBE_POSITIONS.forEach((position) => {
 })
 ```
 
+:::
+
 光学中心という`1`点にすべての光を集めるという投影のしかたは、像の見え方にも特徴を与えます。同じ大きさの物体でも、光学中心に近いものは投影面に大きく、遠いものは小さく写ります。この、近くのものほど大きく、遠くのものほど小さく写る性質が、画像に:Mark[遠近感]を生み出します。
 
 <CanvasWrapper>
   <PerspectiveDemo />
 </CanvasWrapper>
 
-```ts:Three.js
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
 // 光学中心。大きさをもたない 1 つの点として原点に置く
 const centerGeometry = new BufferGeometry().setAttribute(
   "position",
@@ -288,6 +298,8 @@ CUBE_OFFSETS.forEach(([offsetX, offsetY], i) => {
 const rayGeometry = new BufferGeometry().setAttribute("position", rayPosition)
 scene.add(new LineSegments(rayGeometry, new LineBasicMaterial({ color: RAY_COLOR })))
 ```
+
+:::
 
 このように、ピンホールカメラモデルは、光学中心を通る光の直進だけで、写る範囲や遠近感までを説明できる、カメラのもっとも基本的な幾何モデルなのです。
 

@@ -36,7 +36,9 @@ draft: true
   <WireframeModelDemo />
 </CanvasWrapper>
 
-```ts:Three.js
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
 /** 頂点と稜線だけを持つジオメトリ。面のデータは持たない */
 const createWireframeGeometry = (vertices: [number, number, number][], edges: number[]) => {
   // 頂点は 1 つの配列にまとめ、稜線はその頂点番号の対として持つ
@@ -57,6 +59,8 @@ const vertexMaterial = new PointsMaterial({ color: VERTEX_COLOR, size: 0.08 })
 const vertexPoints = new Points(vertexGeometry, vertexMaterial)
 scene.add(vertexPoints)
 ```
+
+:::
 
 面のデータを持たないぶん、データ量は小さく、回転させたり動かしたりしたときの再描画も高速です。大まかな形の確認や、対話的に操作しながら形を検討する場面に向いています。
 
@@ -80,7 +84,9 @@ scene.add(vertexPoints)
   <SurfaceModelDemo />
 </CanvasWrapper>
 
-```ts:Three.js
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
 /** 面のデータから、面ごとに独立した頂点を持つジオメトリを作る */
 const createSurfaceGeometry = (vertices: [number, number, number][], faces: number[][]) => {
   const positions = createFacePositions(vertices, faces)
@@ -108,6 +114,8 @@ scene.add(light)
 scene.add(new AmbientLight(LIGHT_COLOR, 0.4))
 ```
 
+:::
+
 面がどこにあるかが決まると、視点から見てどの面が手前にあるのかを判定できます。これによって隠れる部分を消せるようになり、面に光がどう当たるかも計算できるため、[レンダリング](/cg/basics/camera-capture-and-cg/)によって陰影のついた画像を作れます。なめらかな曲面をそのまま表せることから、自動車のボディや航空機の機体のように、外形の見え方が問われる設計にも使われます。
 
 ただし、サーフェスモデルが表しているのはあくまで表面であり、中身は空洞です。体積や重さのように立体の内部にかかわる量は、このモデルからは求められません。面と面のあいだに隙間が空いていても、データとしては成立してしまいます。
@@ -120,7 +128,9 @@ scene.add(new AmbientLight(LIGHT_COLOR, 0.4))
   <SolidModelDemo />
 </CanvasWrapper>
 
-```ts:Three.js
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
 // クリッピング（面より上を描かない）を有効にする
 renderer.localClippingEnabled = true
 
@@ -143,6 +153,8 @@ const cap = new Mesh(createCapGeometry(SECTION_IN_NOTCH), capMaterial)
 cap.position.y = 1
 scene.add(cap)
 ```
+
+:::
 
 内部と外部が区別されているため、空間のある点が立体の中にあるのか外にあるのかを判定できます。面のつながりに隙間や矛盾がないことも、データが満たすべき条件として保証されます。
 

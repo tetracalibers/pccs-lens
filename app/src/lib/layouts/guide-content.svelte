@@ -20,6 +20,7 @@
   import Todo from "$lib/components/m-directive/Todo.svelte"
   import CardGrid from "$lib/components/m-directive/CardGrid.svelte"
   import TermCard from "$lib/components/m-directive/TermCard.svelte"
+  import Foldable from "$lib/components/m-directive/Foldable.svelte"
   import ComingSoon from "$lib/components/m-directive/ComingSoon.svelte"
   import EnhancedImage from "$lib/components/m-directive/EnhancedImage.svelte"
 
@@ -44,6 +45,7 @@
     Todo,
     CardGrid,
     TermCard,
+    Foldable,
     ComingSoon,
     EnhancedImage as EImage
   }

@@ -236,9 +236,19 @@ export const createTranslationScene = ({ scene, params }: SceneContext) => {
    </CanvasWrapper>
    ```
 
-3. **その直後に ` ```ts:Three.js ` のコードブロック**で掲載コードを置く
+3. **その直後に `:::Foldable` で包んだ ` ```ts ` のコードブロック**で掲載コードを置く
 
-   タイトルは `Three.js` 固定。`app/src/lib/remark/code-title.js` がコードブロックの右下にタブとしてラベルを描画し、shiki のハイライトも掛かる。ラベルに補足（「デモの実装」など）は足さない。
+   ````markdown
+   :::Foldable{title="Three.jsによる実装概要"}
+
+   ```ts
+   const scene = new Scene()
+   ```
+
+   :::
+   ````
+
+   タイトルは `Three.jsによる実装概要` 固定。補足（「デモの実装」など）は足さない。既定で折りたたまれた状態になり、読者がタイトル行を押したときだけ開く。中身のコードブロックには shiki のハイライトが掛かる。`Foldable` は `guide-content.svelte` が export しているので、記事側の `import` は不要。
 
 4. フロントマターに `visual: true` が無ければ追加する
 
