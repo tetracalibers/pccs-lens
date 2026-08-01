@@ -3,9 +3,15 @@ layout: guide-content
 title: 透視投影と平行投影 # CG 2-3-2
 
 group: ["CG", "ImgP"]
+visual: true
 
 draft: true
 ---
+
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import ProjectionCenterDemo from '$lib/demo/threejs/transformation/perspective-and-parallel-projection/projection-center/ProjectionCenterDemo.svelte'
+</script>
 
 [ピンホールカメラ](/cg/transformation/pinhole-camera/)では、光学中心を通る光の直進だけで、`3`次元の世界が`2`次元の像になるしくみを見ました。
 ただし、`3`次元の形状を平面へ写す方法は、これだけではありません。
@@ -44,6 +50,76 @@ draft: true
 寸法を読み取れないことは、図の用途によっては見過ごせない欠点になります。機械の部品や建物の設計図に求められるのは、見た目の自然さよりも、描かれた図から長さや角度を正しくたどれることです。
 
 そこで、投影中心を投影面から遠ざけていくとどうなるかを考えてみます。投影中心が遠いほど、そこから伸びる投影線どうしの開きは小さくなっていき、無限に遠ざけた先では、投影線は互いに平行になります。このように、平行な投影線で形状を写す投影を:Mark[平行投影]といいます。
+
+<CanvasWrapper>
+  <ProjectionCenterDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 投影面。z = 0 に置いた正方形の面
+const planeGeometry = new PlaneGeometry(PLANE_SIZE, PLANE_SIZE)
+scene.add(
+  new Mesh(
+    planeGeometry,
+    new MeshBasicMaterial({
+      color: PLANE_COLOR,
+      side: DoubleSide,
+      transparent: true,
+      opacity: 0.12
+    })
+  )
+)
+scene.add(
+  new LineSegments(new EdgesGeometry(planeGeometry), new LineBasicMaterial({ color: PLANE_COLOR }))
+)
+
+// 投影する形状。投影面の手前（z の正の側）に立方体を 1 つ置く
+const shapeGeometry = new BufferGeometry()
+  .setAttribute("position", new Float32BufferAttribute(VERTICES.flat(), 3))
+  .setIndex(CUBE_EDGES)
+scene.add(new LineSegments(shapeGeometry, new LineBasicMaterial({ color: SHAPE_COLOR })))
+
+// 投影中心。投影面の向こう側（z の負の側）に、大きさをもたない 1 つの点として置く。
+// 無限に遠ざけた投影中心は空間のどこにも置けないので、点としては描かない
+const centerGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, 0], 3)
+)
+const center = new Points(centerGeometry, new PointsMaterial({ color: CENTER_COLOR, size: 0.14 }))
+center.position.z = -DISTANCE
+center.visible = !AT_INFINITY
+scene.add(center)
+
+// 投影面に写る像。稜線のつなぎ方（インデックス）は形状と同じ
+const imagePosition = new Float32BufferAttribute(new Float32Array(VERTICES.length * 3), 3)
+const imageGeometry = new BufferGeometry()
+  .setAttribute("position", imagePosition)
+  .setIndex(CUBE_EDGES)
+scene.add(new LineSegments(imageGeometry, new LineBasicMaterial({ color: IMAGE_COLOR })))
+
+// 投影線。形状の頂点 1 つにつき 1 本（2 頂点）
+const rayPosition = new Float32BufferAttribute(new Float32Array(VERTICES.length * 6), 3)
+const rayGeometry = new BufferGeometry().setAttribute("position", rayPosition)
+scene.add(new LineSegments(rayGeometry, new LineBasicMaterial({ color: RAY_COLOR })))
+
+VERTICES.forEach(([x, y, z], i) => {
+  // 投影中心 (0, 0, -DISTANCE) と頂点を結ぶ直線が投影面 z = 0 と交わる位置は、
+  // 投影面に平行な向きの座標を DISTANCE / (DISTANCE + z) 倍したもの。
+  // 投影中心を遠ざけるほどこの倍率は 1 に近づき、無限遠では縮まなくなる
+  const scale = AT_INFINITY ? 1 : DISTANCE / (DISTANCE + z)
+  imagePosition.setXYZ(i, x * scale, y * scale, 0)
+
+  // 投影線は頂点から投影中心へ向かう。無限遠では 1 点に集まらず、
+  // 投影面に垂直なまま向こう側へ抜けていく
+  rayPosition.setXYZ(i * 2, x, y, z)
+  if (AT_INFINITY) rayPosition.setXYZ(i * 2 + 1, x, y, -RAY_TAIL)
+  else rayPosition.setXYZ(i * 2 + 1, 0, 0, -DISTANCE)
+})
+```
+
+:::
 
 平行投影の写り方を決めるのは、投影中心の位置ではなく投影線の向きです。その向きをどう取るかによって、平行投影はさらにいくつかの種類に分かれます。
 
