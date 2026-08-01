@@ -55,7 +55,7 @@
       "title": "2値画像処理"
     },
     "cg/camera": {
-      "title": "画像の撮影とレンズ"
+      "title": "撮影とレンズ"
     },
     "cg/camera/digital-camera-structure": {
       "title": "デジタルカメラの光の流れ"
