@@ -1,0 +1,10 @@
+---
+layout: guide-content
+title: 透視投影と平行投影 # CG 2-3-2
+
+group: ["CG", "ImgP"]
+
+draft: true
+---
+
+## TODO

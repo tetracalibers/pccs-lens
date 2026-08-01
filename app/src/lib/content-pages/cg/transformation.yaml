@@ -13,8 +13,7 @@ sections:
     id: projection
     links:
       - slug: pinhole-camera
-      - title: 透視投影と平行投影 # CG 2-3-2
-        group: ["CG", "ImgP"]
+      - slug: perspective-and-parallel-projection
       - title: 投影の手順 # CG 2-3-1
         group: ["CG"]
       - title: 投影の計算法 # CG 2-3
