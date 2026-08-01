@@ -36,7 +36,7 @@ draft: true
   <WireframeModelDemo />
 </CanvasWrapper>
 
-```ts
+```ts:Three.js
 /** 頂点と稜線だけを持つジオメトリ。面のデータは持たない */
 const createWireframeGeometry = (vertices: [number, number, number][], edges: number[]) => {
   // 頂点は 1 つの配列にまとめ、稜線はその頂点番号の対として持つ
@@ -80,7 +80,7 @@ scene.add(vertexPoints)
   <SurfaceModelDemo />
 </CanvasWrapper>
 
-```ts
+```ts:Three.js
 /** 面のデータから、面ごとに独立した頂点を持つジオメトリを作る */
 const createSurfaceGeometry = (vertices: [number, number, number][], faces: number[][]) => {
   const positions = createFacePositions(vertices, faces)
@@ -120,7 +120,7 @@ scene.add(new AmbientLight(LIGHT_COLOR, 0.4))
   <SolidModelDemo />
 </CanvasWrapper>
 
-```ts
+```ts:Three.js
 // クリッピング（面より上を描かない）を有効にする
 renderer.localClippingEnabled = true
 
