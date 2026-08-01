@@ -347,25 +347,25 @@
 - [ページ未作成] 細線化
 - [ページ未作成] 細線の特徴点抽出とベクトル化
 
-## CGと画像処理 — 画像の撮影とレンズ／カメラの仕組み（`cg/camera.yaml` #camera-structure）
+## CGと画像処理 — 撮影とレンズ／カメラの仕組み（`cg/camera.yaml` #camera-structure）
 
 - [x] `/cg/camera/digital-camera-structure`
 
-## CGと画像処理 — 画像の撮影とレンズ／レンズモデル（`cg/camera.yaml` #lens-model）
+## CGと画像処理 — 撮影とレンズ／レンズモデル（`cg/camera.yaml` #lens-model）
 
 - [ページ未作成] 薄肉レンズ
 - [ページ未作成] 厚肉レンズ
 - [ページ未作成] 歪曲収差
 - [ページ未作成] 周辺光量の低下
 
-## CGと画像処理 — 画像の撮影とレンズ／撮影パラメータ（`cg/camera.yaml` #shooting-parameters）
+## CGと画像処理 — 撮影とレンズ／撮影パラメータ（`cg/camera.yaml` #shooting-parameters）
 
 - [ページ未作成] 撮影画角
 - [ページ未作成] 画像の明るさ（露出）
 - [ページ未作成] 被写界深度（フォーカス）
 - [ページ未作成] フレームレート
 
-## CGと画像処理 — 画像の撮影とレンズ／撮影と信号（`cg/camera.yaml` #capture-signal）
+## CGと画像処理 — 撮影とレンズ／撮影と信号（`cg/camera.yaml` #capture-signal）
 
 - [ページ未作成] カメラ応答関数
 - [ページ未作成] 時系列画像

@@ -336,7 +336,7 @@
 - [ページ未作成] 輝度信号と色差信号
 - [ページ未作成] HSI変換と逆変換
 
-## CGと画像処理（nested） — 記事：画像の撮影とレンズ（`cg/camera.yaml`）
+## CGと画像処理（nested） — 記事：撮影とレンズ（`cg/camera.yaml`）
 
 - [x] `/cg/camera/digital-camera-structure`
 - [ページ未作成] 薄肉レンズ
