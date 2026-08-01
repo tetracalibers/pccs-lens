@@ -822,7 +822,7 @@
 
 - [draft] `/cg/transformation/pinhole-camera`
 - [draft] `/cg/transformation/perspective-and-parallel-projection`
-- [ページ未作成] 投影の手順
+- [draft] `/cg/transformation/projection-steps`
 - [ページ未作成] 投影の計算法
 - [ページ未作成] 消失点とn点透視
 - [ページ未作成] さまざまな平行投影

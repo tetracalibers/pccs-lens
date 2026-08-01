@@ -1,0 +1,10 @@
+---
+layout: guide-content
+title: 投影の手順 # CG 2-3-1
+
+group: ["CG"]
+
+draft: true
+---
+
+## TODO

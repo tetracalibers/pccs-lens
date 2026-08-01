@@ -14,8 +14,7 @@ sections:
     links:
       - slug: pinhole-camera
       - slug: perspective-and-parallel-projection
-      - title: 投影の手順 # CG 2-3-1
-        group: ["CG"]
+      - slug: projection-steps
       - title: 投影の計算法 # CG 2-3
         group: ["CG"]
       - title: 消失点とn点透視 # CG 2-3-3, ImgP 2-2-2
