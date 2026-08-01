@@ -132,6 +132,7 @@
     border-radius: 0 0 4px 4px;
     /* ドラッグの起点は canvas なので、枠側の指定に頼らず canvas 自体にも効かせる */
     touch-action: none;
+    user-select: none;
   }
 
   .three-demo-fallback {
