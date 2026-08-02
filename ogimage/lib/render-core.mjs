@@ -9,10 +9,10 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs"
 import { dirname, join, resolve, isAbsolute, extname } from "node:path"
 import { fileURLToPath } from "node:url"
 import { Resvg } from "@resvg/resvg-js"
-import { fillTemplate } from "./build-svg.mjs"
+import { fillTemplate, resolvePalette, THEMES } from "./build-svg.mjs"
 import { isValidMagickFuzz, knockoutWhiteAll, knockoutWhiteBackground } from "./knockout.mjs"
 import { copyFigureIntoData, writeRecord } from "./record.mjs"
-import { routeKey } from "../config.mjs"
+import { resolveTheme, routeKey } from "../config.mjs"
 
 // knockoutWhite の magickFuzz 省略時の既定値（モード別）。all は画像全体の near-white に一律で
 // 効くため、淡色を巻き込みにくいよう background より控えめにする。明示指定があればそれが優先。
@@ -32,6 +32,7 @@ export const DEFAULT_MANIFEST = join(REPO_ROOT, "app/src/lib/meta/og-manifest.js
 export const DEFAULT_OUT_DIR = join(REPO_ROOT, "app/static/ogp")
 
 export const VARIATIONS = new Set(["default", "title-only", "nested", "nested-fig"])
+export const THEME_NAMES = new Set(Object.keys(THEMES))
 
 /** 相対パスはリポジトリのルートではなく実行時 cwd 基準で解決する（ユーザーが渡すパス向け）。 */
 export const resolveFromCwd = (p) => (isAbsolute(p) ? p : resolve(process.cwd(), p))
@@ -40,7 +41,7 @@ export const resolveFromCwd = (p) => (isAbsolute(p) ? p : resolve(process.cwd(),
  * 1 件の確定値を検証し、描画に必要な値へ整形する。不正なら例外を投げる（呼び出し側で握る）。
  * figure は絶対パス or cwd 基準の相対パスで受け取る（regenerate は data 基準の相対を絶対に解決してから渡す）。
  * @param {object} item
- * @returns {{ variation: string, key: string, out: string, title: string, titleLines: string[], crumbs: string[], figure: string | undefined, knockoutWhite: boolean, knockoutMode: "background" | "all", magickFuzz: string }}
+ * @returns {{ variation: string, theme: string, key: string, out: string, title: string, titleLines: string[], crumbs: string[], figure: string | undefined, knockoutWhite: boolean, knockoutMode: "background" | "all", magickFuzz: string }}
  */
 export const prepareItem = (item) => {
   const variation = item.variation
@@ -51,6 +52,15 @@ export const prepareItem = (item) => {
   }
 
   const key = item.route != null ? routeKey(item.route) : ""
+
+  // テーマは route から config.mjs で引く（variation と同じく「ルートの属性」）。
+  // item.theme が明示されていればそれを優先する（実験・単発の上書き用）。
+  const theme = item.theme ?? (item.route != null ? resolveTheme(item.route) : "light")
+  if (!THEME_NAMES.has(theme)) {
+    throw new Error(
+      `theme が不正です: ${JSON.stringify(theme)}（${[...THEME_NAMES].join("|")}, route=${item.route ?? "?"}）`
+    )
+  }
 
   // 出力先
   let out
@@ -135,6 +145,7 @@ export const prepareItem = (item) => {
 
   return {
     variation,
+    theme,
     key,
     out,
     title,
@@ -171,16 +182,21 @@ export const renderPrepared = (prepared, ctx) => {
   try {
     const templatePath = join(TEMPLATE_DIR, `${prepared.variation}.svg`)
     const template = readFileSync(templatePath, "utf8")
-    const svg = fillTemplate(template, prepared.variation, {
-      titleLines: prepared.titleLines,
-      crumbs: prepared.crumbs,
-      figure
-    })
+    const svg = fillTemplate(
+      template,
+      prepared.variation,
+      {
+        titleLines: prepared.titleLines,
+        crumbs: prepared.crumbs,
+        figure
+      },
+      prepared.theme
+    )
 
     const resvg = new Resvg(svg, {
       fitTo: { mode: "width", value: 1200 },
       font: ctx.fontOptions,
-      background: "#ffffff"
+      background: resolvePalette(prepared.theme).background
     })
     const png = resvg.render().asPng()
 

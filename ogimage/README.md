@@ -83,9 +83,23 @@ node ogimage/regenerate.mjs '/color-theory/*'
 | `knockoutWhite` | 省略可                 | `true` で nested-fig の **PNG** 図版の白を透過してから埋め込む（装飾背景に馴染ませる）。**生成時に ImageMagick が必要**。省略時 `false` |
 | `knockoutMode`  | 省略可                 | 透過範囲。`"background"`＝背景に繋がった白だけ（既定）/ `"all"`＝全ての白を一律透過。`knockoutWhite: true` のときだけ有効               |
 | `magickFuzz`    | 省略可                 | `knockoutWhite` 時の `-fuzz` 値（例 `"5%"`）。縁の抜け具合を調整。省略時はモード別（background=`"5%"` / all=`"2%"`）                    |
+| `theme`         | 省略可                 | `light` / `dark`。**通常は指定しない**（route から `config.mjs` で引く）。単発の上書き用                                                |
 | `out`           | 省略可                 | 出力先。省略時は `app/static/ogp/<route>.png`                                                                                           |
 
 配列 or `{ "items": [ ... ] }` を渡すと一括生成。`variation` が `default` 以外なら、生成のたびに記録 `data/<route>.json` が書かれる（title-only も書く。書かないと一括再生成のスイープから漏れるため）。
+
+#### テーマ（配色）
+
+`variation` と同じく**ルートの属性**で、`config.mjs` の `OG_RULES` の `theme` が決める（省略時は `light`）。JSON に書く必要はない。
+
+- `light`（既定）… 白地。
+- `dark` … 暗地。現在は **CG 配下（`/cg`・`/cg/**`）**に適用。地色 `#26282d` は Three.js デモの背景（`app/src/lib/demo/threejs/_shared/constants.ts` の `DEMO_BACKGROUND`）と同値で、デモのスクリーンショットを図版にしても継ぎ目が出ない。
+
+実際の配色（地色・タイトル・crumb・ロゴ・装飾のぼかし円の不透明度）は `lib/build-svg.mjs` の `THEMES` に集約する。テンプレート SVG 側は配色を直書きせず、`{{BG}}` / `{{LOGO_FILL}}` / `{{TAGLINE_FILL}}` / `{{BLOB_ALPHA}}` のプレースホルダで受ける。テーマを増やすときは `THEMES` にパレットを足し、`OG_RULES` の該当ルートに `theme` を付ける（テンプレートは触らない）。
+
+ぼかし円はバリエーション別に上書きできる（`blobAlphaByVariation`）。`0` を指定するとグループごと描画しない。**dark の nested-fig は `0`**：図版が地色と同じ暗地でぼかし円が乗らないため、周囲だけが光ると図版の矩形の輪郭が浮いてしまう。装飾を消して地色を一様にすると継ぎ目が完全に消える。
+
+> **図版との相性**: `dark` のルートで**白背景の図版**を使うと暗地に白い箱が浮く。`knockoutWhite` は白を抜くので、線画が暗色だと今度は図版が読めなくなる。dark では**図版側も暗地（できれば同じ `#26282d`）**で用意する。
 
 #### 白背景のノックアウト（透過）
 
@@ -116,19 +130,19 @@ node ogimage/regenerate.mjs '/color-theory/*'
 
 ```
 ogimage/
-  config.mjs              正典設定（ルート → バリエーション/図版可否）。スキルも参照する単一の情報源
+  config.mjs              正典設定（ルート → バリエーション/図版可否/テーマ）。スキルも参照する単一の情報源
   render.mjs              描画スクリプト（CLI エントリ。単発/部分・fail-fast）
   regenerate.mjs         一括再生成スクリプト（CLI エントリ。記録のある全ページ・robust）
   lib/
     text.mjs             XML エスケープ・概算幅測定・複数行レイアウト（再センタリング＋自動縮小）
-    build-svg.mjs        テンプレートのプレースホルダ埋め（LAYOUT にバリエーション別座標を集約）
+    build-svg.mjs        テンプレートのプレースホルダ埋め（LAYOUT にバリエーション別座標、THEMES に配色を集約）
     render-core.mjs      描画＋簿記コア（render.mjs / regenerate.mjs が共有する prepareItem / renderPrepared）
     record.mjs           記録（data/<route>.json）の読み書き・図版の永続コピー・記録の列挙
     knockout.mjs         figure PNG の白を透過（ImageMagick・生成時のみ。background=flood-fill / all=一律）
     fonts.mjs            fonts/ のフォント収集
     manifest.mjs         マニフェストの読み書き（upsert / rebuild・冪等・キー昇順）
     rename-font.mjs      TTF の name テーブルのファミリー名を正規化（フォント取得時に使用）
-  template/*.svg         4 バリエーションのテンプレート（<!--TITLE--> / <!--CRUMBS--> / <!--FIGURE-->）
+  template/*.svg         4 バリエーションのテンプレート（<!--TITLE--> / <!--CRUMBS--> / <!--FIGURE--> と配色トークン {{BG}} など）
   scripts/download-fonts.mjs   フォント取得（npm run fonts）
   data/                  記録（正）。<route>.json と assets/<route>/figure.<ext>（コミット対象）
   fonts/                 フォント実体（コミット対象）
@@ -150,7 +164,7 @@ ogimage/
 | `app/src/lib/meta/og-manifest.json`        | 派生（記録から導出）   | コミット |
 | `app/static/ogp/<route>.png`               | 生成物（出力画像）     | コミット |
 
-- 記録の `figure` は `ogimage/data/` 基準の相対パス。バリエーションは記録に持たず、route から `config.mjs` の `resolveVariation` で引き直す（`figure` の有無で `optional → nested-fig` を昇格）。
+- 記録の `figure` は `ogimage/data/` 基準の相対パス。バリエーション・テーマは記録に持たず、route から `config.mjs` の `resolveVariation` / `resolveTheme` で引き直す（`figure` の有無で `optional → nested-fig` を昇格）。規則を変えれば一括再生成でそのまま全体に効く。
 
 ## 制約
 

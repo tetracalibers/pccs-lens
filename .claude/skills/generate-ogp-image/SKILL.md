@@ -85,9 +85,10 @@ cd ogimage && npm install && npm run fonts && cd ..
 
 ### 2. バリエーションを判定する（正典設定）
 
-- **`ogimage/config.mjs` が唯一の情報源**。ルート → バリエーション種別・図版の可否をここで定義している。
+- **`ogimage/config.mjs` が唯一の情報源**。ルート → バリエーション種別・図版の可否・テーマをここで定義している。
 - 各対象ルートについて、`config.mjs` の `OG_RULES`（上から最初にマッチした規則を採用）で
   `variation`（`default` / `title-only` / `nested` / `nested-fig`）と `figure`（`none` / `optional` / `required`）を得る。
+- `theme`（`light` / `dark`・省略時 `light`）も規則が持つ。描画スクリプトが route から自動で引くので、**JSON に書かない**。CG 配下（`/cg`・`/cg/**`）は `dark`（地色 `#26282d`）。
 - 規則に該当しないルートは**明確なエラーで停止**し、勝手に生成しない。
 
 ### 3. タイトル・パンくずを解決する
@@ -121,6 +122,8 @@ cd ogimage && npm install && npm run fonts && cd ..
   - **図版候補が無い場合（`<script>` が無い／`$lib/demo/**` の import が無い svx）は、要否を確認せず図版なし（`nested`）で生成する。** 手渡しの図版パスが無ければ入れようがないため、この場合は対話を省く。ユーザーが明示的に図版を求めたときだけ、手渡し PNG のパスを受け取って `nested-fig` にする。
 - `figure: "required"`（`/jis-color-map/<family>`, `/patterns/<theme>`）: 定型プレビュー。当面は**ユーザーが用意した手渡し PNG のパスを受け取る**。
 - 一括処理中でも、図版の要否は**ページごとに確認**する（改行案の一括承認とは別）。
+
+> **ダーク（`theme: "dark"`）のルートの図版**: CG 配下は地色 `#26282d` のダークなので、**白背景の図版は暗地に白い箱として浮く**。`knockoutWhite` で白を抜いても線画が暗色だと今度は読めなくなるため、透過では解決しない。ダークのルートでは**図版側も暗地（できれば同じ `#26282d`）**で用意してもらう。Three.js デモのスクリーンショットはそのまま条件を満たす。
 
 #### 白背景の透過（knockoutWhite）の要否も確認する
 
@@ -205,6 +208,7 @@ JSON フィールド:
 | `knockoutWhite` | 省略可 | `true` で nested-fig の **PNG** 図版の白を透過してから埋め込む（要 ImageMagick）。白背景の PNG のときだけ付ける。省略時 `false` |
 | `knockoutMode` | 省略可 | 透過範囲。`"background"`＝背景に繋がった白だけ（既定）/ `"all"`＝全ての白を一律。`knockoutWhite: true` のときだけ有効 |
 | `magickFuzz` | 省略可 | `knockoutWhite` 時の `-fuzz` 値（数値＋任意の `%`。例 `"5%"`）。縁の抜け具合を調整。省略時はモード別（background=`"5%"` / all=`"2%"`） |
+| `theme` | **書かない** | `light` / `dark`。route から `config.mjs` が自動で引く。ユーザーから明示の上書き指示があったときだけ載せる |
 | `out` | 省略可 | 出力先。省略時は `app/static/ogp/<route>.png` |
 
 - default 画像（サイト全体の既定 og:image）は既に `app/static/ogp/default.png` にある。再生成する場合のみ:
