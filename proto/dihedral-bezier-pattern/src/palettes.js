@@ -1,16 +1,26 @@
+/** 背景は白で固定。パレットの色は模様にだけ使い、背景には使わない */
+export const BACKGROUND = '#FFFFFF'
+
 /**
- * 既定パレット。
- * インデックスが小さいほど使用面積が大きくなる順に並べる（[0] は背景色）。
+ * 既定パレットの元になる色。
+ * インデックスが小さいほど使用面積が大きくなる順に並べる。
+ * 色数 k のパレットは先頭 k 色を取り出したものなので、
+ * 色数を増やすと色が入れ替わらずに積み上がり、色数どうしを比較しやすい。
  */
-export const DEFAULT_PALETTES = {
-  2: ['#F2EDE4', '#233B57'],
-  3: ['#F4EFE6', '#1F4E5F', '#D96B4A'],
-  4: ['#F5F0E6', '#2C4A63', '#D8763E', '#8FB0A3'],
-  5: ['#F6F1E7', '#27414F', '#C9563C', '#E2A93B', '#7FA396'],
-  6: ['#F7F2E8', '#2B3F55', '#B94E3D', '#E0A63C', '#6E9B86', '#8C6E9B'],
-}
+const MASTER = [
+  '#E2C48A', // 淡い黄土
+  '#2B4257', // 濃紺
+  '#D2694A', // テラコッタ
+  '#7FA08F', // セージ
+  '#8A6A99', // 藤紫
+  '#4E8FA6', // 青緑
+]
 
 export const COLOR_COUNTS = [2, 3, 4, 5, 6]
+
+export const DEFAULT_PALETTES = Object.fromEntries(
+  COLOR_COUNTS.map((k) => [k, MASTER.slice(0, k)]),
+)
 
 const HEX = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/
 

@@ -67,7 +67,7 @@ function assignBandColors(rng, bandCount, colorCount) {
   }
 
   // 一度も出てこない色があれば、隣と重複しない帯に割り当てる
-  for (let i = 1; i < colorCount; i++) {
+  for (let i = 0; i < colorCount; i++) {
     if (assigned.includes(i)) continue
     const slots = assigned
       .map((_, idx) => idx)
@@ -84,9 +84,7 @@ function assignBandColors(rng, bandCount, colorCount) {
  * その要素が跨ぐ帯の色（= 下地）と同色になって埋没するのを避ける。
  */
 function accentColor(rng, colorCount, crossed) {
-  const weights = Array.from({ length: colorCount }, (_, i) =>
-    i === 0 ? 0.3 : i,
-  )
+  const weights = Array.from({ length: colorCount }, (_, i) => i + 0.5)
   const candidates = weights.map((w, i) => (crossed.includes(i) ? 0 : w))
   if (candidates.some((w) => w > 0)) return rng.weightedIndex(candidates)
 
@@ -244,7 +242,7 @@ export function buildMotif({ domain, colorCount, rng }) {
   // --- パレットの色をすべて使い切る ---
   const used = new Set(elements.map((e) => e.colorIndex))
   if (center) used.add(center.colorIndex)
-  for (let i = 1; i < colorCount; i++) {
+  for (let i = 0; i < colorCount; i++) {
     if (used.has(i)) continue
     const level = rng.float(0.2, 0.95)
     elements.push({

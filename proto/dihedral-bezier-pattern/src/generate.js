@@ -13,7 +13,12 @@ import { fileURLToPath } from 'node:url'
 import { createDomain } from './geometry.js'
 import { buildMotif } from './motif.js'
 import { createRandom, randomSeed, hashSeed } from './random.js'
-import { DEFAULT_PALETTES, COLOR_COUNTS, parsePalette } from './palettes.js'
+import {
+  BACKGROUND,
+  DEFAULT_PALETTES,
+  COLOR_COUNTS,
+  parsePalette,
+} from './palettes.js'
 
 const PACKAGE_ROOT = fileURLToPath(new URL('..', import.meta.url))
 const N_CANDIDATES = [5, 6, 7, 8, 9, 10, 12]
@@ -61,7 +66,7 @@ function renderSVG({ domain, motif, colors, size, seed }) {
 
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
   <!-- dihedral group D${domain.n} / colors: ${colors.join(' ')} / seed: ${seed} -->
-  <rect width="${size}" height="${size}" fill="${colors[0]}"/>
+  <rect width="${size}" height="${size}" fill="${BACKGROUND}"/>
   <defs>
     <g id="motif">
 ${motifBody}
