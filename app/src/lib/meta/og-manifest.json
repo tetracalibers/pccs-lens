@@ -132,6 +132,9 @@
     "cg/transformation/coordinate-systems": {
       "title": "座標系"
     },
+    "cg/transformation/pinhole-camera": {
+      "title": "ピンホールカメラ"
+    },
     "cg/transformation/reflection-and-skew": {
       "title": "鏡映とスキュー"
     },

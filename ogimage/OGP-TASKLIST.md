@@ -304,7 +304,7 @@
 - [x] `/cg/transformation/transformation-composition`
 - [x] `/cg/transformation/reflection-and-skew`
 - [x] `/cg/transformation/affine-and-projective-transformation`
-- [ ] `/cg/transformation/pinhole-camera`
+- [x] `/cg/transformation/pinhole-camera`
 - [draft] `/cg/transformation/perspective-and-parallel-projection`
 - [draft] `/cg/transformation/projection-steps`
 - [ページ未作成] 投影の計算法
