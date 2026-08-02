@@ -88,7 +88,7 @@ export function renderIndexHTML(title, entries) {
     .join('\n')
 
   // 枚数が多いときはサムネイルを小さくして一覧性を優先する
-  const thumb = entries.length > 12 ? 200 : 320
+  const thumb = entries.length > 12 ? 250 : 320
 
   return `<!doctype html>
 <html lang="ja">
