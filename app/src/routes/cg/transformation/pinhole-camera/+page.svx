@@ -11,6 +11,7 @@ draft: true
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import ProjectionPlaneDemo from '$lib/demo/threejs/transformation/pinhole-camera/projection-plane/ProjectionPlaneDemo.svelte'
+  import FocalLengthDemo from '$lib/demo/threejs/transformation/pinhole-camera/focal-length/FocalLengthDemo.svelte'
   import AngleOfViewDemo from '$lib/demo/threejs/transformation/pinhole-camera/angle-of-view/AngleOfViewDemo.svelte'
   import PerspectiveDemo from '$lib/demo/threejs/transformation/pinhole-camera/perspective/PerspectiveDemo.svelte'
 </script>
@@ -137,6 +138,96 @@ SUBJECT_OUTLINE.forEach(([x, y], i) => {
 
 :::Todo
 光学中心・投影面・光軸・画像中心・焦点距離の位置関係を示すピンホールカメラモデルの図解
+:::
+
+<CanvasWrapper>
+  <FocalLengthDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 光学中心。大きさをもたない 1 つの点として原点に置く
+const centerGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, 0], 3)
+)
+scene.add(new Points(centerGeometry, new PointsMaterial({ color: CENTER_COLOR, size: 0.14 })))
+
+// 光軸。光学中心を通り、投影面に垂直な向き（z の正の向き）へ伸びる直線。
+// 光学中心から画像中心までの区間が焦点距離にあたるので、そこだけ色を分けて描く
+const focalGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, 0, 0, 0, FOCAL_LENGTH], 3)
+)
+scene.add(new LineSegments(focalGeometry, new LineBasicMaterial({ color: FOCAL_COLOR })))
+
+const axisGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, FOCAL_LENGTH, 0, 0, AXIS_END], 3)
+)
+scene.add(new LineSegments(axisGeometry, new LineBasicMaterial({ color: AXIS_COLOR })))
+
+// 投影面。光軸に垂直な正方形の面を、焦点距離だけ光学中心から離して置く
+const planeGeometry = new PlaneGeometry(PLANE_SIZE, PLANE_SIZE)
+const plane = new Mesh(
+  planeGeometry,
+  new MeshBasicMaterial({ color: PLANE_COLOR, side: DoubleSide, transparent: true, opacity: 0.12 })
+)
+plane.position.z = FOCAL_LENGTH
+scene.add(plane)
+
+const border = new LineSegments(
+  new EdgesGeometry(planeGeometry),
+  new LineBasicMaterial({ color: PLANE_COLOR })
+)
+border.position.z = FOCAL_LENGTH
+scene.add(border)
+
+// 画像中心。光軸が投影面と交わる点なので、投影面と同じ位置に置く
+const imageCenterGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, 0], 3)
+)
+const imageCenter = new Points(
+  imageCenterGeometry,
+  new PointsMaterial({ color: CENTER_COLOR, size: 0.14 })
+)
+imageCenter.position.z = FOCAL_LENGTH
+scene.add(imageCenter)
+
+// 被写体。輪郭を閉じた折れ線として、光学中心から SUBJECT_Z だけ離して置く
+const subjectGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute(
+    SUBJECT_OUTLINE.flatMap(([x, y]) => [x, y, SUBJECT_Z]),
+    3
+  )
+)
+scene.add(new LineLoop(subjectGeometry, new LineBasicMaterial({ color: SUBJECT_COLOR })))
+
+// 被写体の各点から光学中心へ向かう光線。1 本につき 2 頂点。
+// 焦点距離を変えても、この光線の束は変わらない
+const rayGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute(
+    SUBJECT_OUTLINE.flatMap(([x, y]) => [x, y, SUBJECT_Z, 0, 0, 0]),
+    3
+  )
+)
+scene.add(new LineSegments(rayGeometry, new LineBasicMaterial({ color: RAY_COLOR })))
+
+// 光線が投影面と交わる位置が像。被写体までの距離が同じなら、
+// 像は焦点距離に比例して、画像中心を中心に相似に拡大縮小する
+const magnification = FOCAL_LENGTH / SUBJECT_Z
+const imagePosition = new Float32BufferAttribute(new Float32Array(SUBJECT_OUTLINE.length * 3), 3)
+SUBJECT_OUTLINE.forEach(([x, y], i) => {
+  imagePosition.setXYZ(i, x * magnification, y * magnification, FOCAL_LENGTH)
+})
+const imageGeometry = new BufferGeometry().setAttribute("position", imagePosition)
+scene.add(new LineLoop(imageGeometry, new LineBasicMaterial({ color: IMAGE_COLOR })))
+```
+
 :::
 
 ## :WithGroupTag[画角と遠近感]{group="{['CG', 'ImgP']}"}
