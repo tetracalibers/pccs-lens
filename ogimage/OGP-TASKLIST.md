@@ -176,7 +176,7 @@
 
 - [x] `/color-fields/visual-design-and-color`
 - [draft] `/color-fields/media-design-concepts`
-- [ページ未作成] カラーマネジメント
+- [draft] `/color-fields/color-management`
 - [draft] `/color-fields/digital-image-basics`
 - [x] `/color-fields/color-universal-design`
 - [draft] `/color-fields/color-vision-accessibility`

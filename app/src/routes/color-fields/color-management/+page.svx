@@ -1,0 +1,10 @@
+---
+layout: guide-content
+title: カラーマネジメント
+
+grades: ["2"]
+
+draft: true
+---
+
+## :WithGradeTag[TODO]{grades="2"}
