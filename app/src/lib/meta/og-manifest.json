@@ -165,6 +165,9 @@
     "color-fields/landscape-color-approach": {
       "title": "景観色彩の考え方"
     },
+    "color-fields/media-design-concepts": {
+      "title": "メディアデザインの概念"
+    },
     "color-fields/visual-design-and-color": {
       "title": "ビジュアルデザインの分野"
     },
@@ -317,6 +320,9 @@
     },
     "color-theory/photometric-and-radiometric-quantities": {
       "title": "光のエネルギーと明るさ"
+    },
+    "color-theory/photometric-quantities": {
+      "title": "照明の明るさを表す指標"
     },
     "color-theory/photoreceptor-types-and-distribution": {
       "title": "視細胞の種類と分布"

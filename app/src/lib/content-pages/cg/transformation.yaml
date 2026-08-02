@@ -13,24 +13,19 @@ sections:
     id: projection
     links:
       - slug: pinhole-camera
-      - title: 透視投影と平行投影 # CG 2-3-2, ImgP 2-2-2
-        group: ["CG", "ImgP"]
-      - title: 投影の手順 # CG 2-3-1
-        group: ["CG"]
+      - slug: perspective-and-parallel-projection
+      - slug: projection-steps
       - title: 投影の計算法 # CG 2-3
         group: ["CG"]
-      - title: 消点とn点透視 # CG 2-3-3
-        group: ["CG"]
+      - title: 消失点とn点透視 # CG 2-3-3, ImgP 2-2-2
+        group: ["CG", "ImgP"]
       - title: さまざまな平行投影 # CG 2-3-3
         group: ["CG"]
   - heading: ビューイングパイプライン
     id: viewing-pipeline
     links:
-      - title: ビューイングパイプラインでの変換 # CG 2-4-1
-        group: ["CG"]
-      - title: ビューイングと視野変換 # CG 2-4-2
-        group: ["CG"]
-      - title: クリッピング # CG 2-4-3
+      - slug: viewing-pipeline-transformations
+      - title: クリッピングのアルゴリズム # CG 2-4-3
         group: ["CG"]
       - title: 階層モデリング # CG 2-4-4
         group: ["CG"]

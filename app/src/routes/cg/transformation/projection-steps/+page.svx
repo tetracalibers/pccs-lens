@@ -1,0 +1,220 @@
+---
+layout: guide-content
+title: 投影の手順 # CG 2-3-1
+
+group: ["CG"]
+visual: true
+
+draft: true
+---
+
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import ViewVolumeDemo from '$lib/demo/threejs/transformation/projection-steps/view-volume/ViewVolumeDemo.svelte'
+</script>
+
+投影中心と投影面が決まれば、空間の点が投影面のどこへ写るかは定まります。ただし、それだけでは`1`枚の画像にはなりません。
+投影面のどの範囲を画像とし、空間のどこまでを写す対象にするのかも、あわせて決める必要があります。
+ここでは、[透視投影と平行投影](/cg/transformation/perspective-and-parallel-projection/)のどちらにも共通する、投影の進め方を見ていきます。
+
+## :WithGroupTag[投影座標系]{group="{['CG']}"}
+
+投影の計算は、視点を基準にして座標を測ると単純になります。形状に与えられている座標は空間全体を測るために決められたもので、視点がどこにあってどちらを向いているかとは関係なく決まっているためです。
+
+投影中心を原点に置き、視線の向きをz軸にとり、投影面をz軸に垂直に置いた座標系を:Mark[投影座標系]といいます。この座標系では、x座標とy座標が投影面に平行な向きの位置を、z座標が視点からの奥行きを表します。透視投影で像が縮む割合も、この奥行きから決まります。
+
+z軸の向きには、[右手系と左手系](/cg/transformation/coordinate-systems/)という`2`通りの取り方があります。視線の向きをz軸の正の向きにそろえると左手系になり、奥行きがそのまま正の値として扱えます。右手系のまま、視線をz軸の負の向きにとる環境もあります。
+
+## :WithGroupTag[ウィンドウ]{group="{['CG']}"}
+
+投影座標系が決まれば、形状の各点が投影面のどこへ写るかは計算できます。しかし、投影面そのものはどこまでも広がる平面なので、このままでは画像にする範囲が決まりません。
+
+そこで、投影面の上に長方形の枠を置き、その内側に写ったものだけを画像として取り出します。この枠を:Mark[ウィンドウ]といいます。
+
+ウィンドウの端を投影中心から見込んだ角度は、ピンホールカメラモデルで見た[画角](/cg/transformation/pinhole-camera/)にあたり、:Mark[視野角]とも呼ばれます。ウィンドウを大きくとるほど、また投影面を投影中心へ近づけるほど画角は広がり、一度に写せる範囲が広くなります。焦点距離の短い広角レンズ、長い望遠レンズという区別は、CGではウィンドウの大きさと投影面までの距離の取り方に置き換わります。
+
+平行投影では投影中心が無限遠にあるため、見込む角度としての画角はありません。写る範囲を決めるのはウィンドウの大きさだけで、投影面をどこに置いても変わりません。
+
+## :WithGroupTag[ビューボリューム]{group="{['CG']}"}
+
+ウィンドウを決めても、写す対象はまだ絞りきれていません。ウィンドウを通る投影線は、視点のすぐ手前から無限遠まで途切れずに伸びていて、その線上にあるものはどれも画像の同じ位置へ重なるためです。
+
+奥行き方向の範囲は、視線に垂直な`2`枚の面で区切ります。手前側の面を:Mark[前方クリッピング面]、奥側の面を:Mark[後方クリッピング面]といいます。
+
+前方クリッピング面は、視点に近すぎるものを対象から外します。透視投影では視点に近づくほど像が際限なく大きくなり、視点より後ろにある点でさえ、視点と結んだ直線が投影面と交わるために像を持ってしまいます。手前に`1`枚の面を立てておけば、こうした点は最初から計算に入りません。
+
+後方クリッピング面は、遠すぎて像にほとんど現れないものを対象から外します。奥行きの範囲がここで有限に定まるため、この先の処理では、奥行きを決まった幅の中の値として扱えます。
+
+ウィンドウを通る投影線が作る立体を、この`2`枚のクリッピング面で切り取ったものが:Mark[ビューボリューム]です。画像に写るのは、この内側にある部分だけです。
+
+ビューボリュームの形は、投影の種類によって変わります。透視投影では投影線が投影中心から放射状に広がるため、奥へ行くほど断面の大きくなる四角錐台になり、この立体を:Mark[視錐台]といいます。平行投影では投影線が平行なので、どこで切っても断面の変わらない直方体になります。
+
+:::Todo
+透視投影と平行投影のビューボリュームを対比した図解。投影座標系の軸・投影面上のウィンドウ・前方クリッピング面・後方クリッピング面を示し、透視投影では投影中心を頂点とする四角錐台に、平行投影では断面の変わらない直方体になるようすを並べて示す
+:::
+
+<CanvasWrapper>
+  <ViewVolumeDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// マテリアルごとのクリッピング（ビューボリュームの外を描かない）を有効にする
+renderer.localClippingEnabled = true
+
+const isOrthographic = PROJECTION === "orthographic"
+const halfWindow = WINDOW_SIZE / 2
+
+// 奥行き depth での断面の半分の大きさ。透視投影では投影線が投影中心から放射状に
+// 広がるので奥行きに比例し、平行投影では投影線が平行なのでどこでも変わらない
+const halfAt = (depth: number) =>
+  isOrthographic ? halfWindow : (halfWindow * depth) / PLANE_DISTANCE
+
+// 1 辺 1 の正方形。投影面・ウィンドウ・2 枚のクリッピング面で共有し、大きさは scale で決める
+const squareGeometry = new PlaneGeometry(1, 1)
+
+// 投影面。視線に垂直な平面で、本来はどこまでも広がっている
+const projectionPlane = new Mesh(
+  squareGeometry,
+  new MeshBasicMaterial({
+    color: PLANE_COLOR,
+    side: DoubleSide,
+    transparent: true,
+    opacity: 0.1
+  })
+)
+projectionPlane.scale.set(PLANE_SIZE, PLANE_SIZE, 1)
+projectionPlane.position.z = PLANE_DISTANCE
+scene.add(projectionPlane)
+
+// ウィンドウ。投影面の上に置いた長方形の枠で、この内側に写ったものだけを画像にする
+const windowFrame = new LineSegments(
+  new EdgesGeometry(squareGeometry),
+  new LineBasicMaterial({ color: WINDOW_COLOR })
+)
+windowFrame.position.z = PLANE_DISTANCE
+windowFrame.scale.set(WINDOW_SIZE, WINDOW_SIZE, 1)
+scene.add(windowFrame)
+
+// 視線。投影座標系の z 軸で、投影中心から奥へ伸びる
+const axisGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, -RAY_TAIL, 0, 0, MAX_DEPTH], 3)
+)
+scene.add(new LineSegments(axisGeometry, new LineBasicMaterial({ color: AXIS_COLOR })))
+
+// 投影中心。大きさをもたない 1 つの点として原点に置く。
+// 無限に遠ざけた投影中心は空間のどこにも置けないので、平行投影では描かない
+const centerGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, 0], 3)
+)
+const center = new Points(centerGeometry, new PointsMaterial({ color: CENTER_COLOR, size: 0.14 }))
+center.visible = !isOrthographic
+scene.add(center)
+
+// ビューボリュームの 8 隅は、2 枚のクリッピング面それぞれの奥行きでの断面の 4 隅
+const nearHalf = halfAt(NEAR)
+const farHalf = halfAt(FAR)
+const corners = [
+  ...CORNERS.map(([x, y]) => new Vector3(x * nearHalf, y * nearHalf, NEAR)),
+  ...CORNERS.map(([x, y]) => new Vector3(x * farHalf, y * farHalf, FAR))
+]
+const volumeGeometry = new BufferGeometry()
+  .setAttribute(
+    "position",
+    new Float32BufferAttribute(
+      corners.flatMap(({ x, y, z }) => [x, y, z]),
+      3
+    )
+  )
+  .setIndex(VOLUME_EDGES)
+scene.add(new LineSegments(volumeGeometry, new LineBasicMaterial({ color: VOLUME_COLOR })))
+
+// ウィンドウの 4 隅を通る投影線のうち、2 枚のクリッピング面の外側に出る部分。
+// 内側に残る部分はビューボリュームの稜線そのものなので、ここでは描かない
+const tailHalf = halfAt(MAX_DEPTH)
+const rayPosition = new Float32BufferAttribute(new Float32Array(CORNERS.length * 12), 3)
+CORNERS.forEach(([cornerX, cornerY], i) => {
+  // 手前側。透視投影では投影中心から、平行投影では視線に平行に伸びてくる
+  if (isOrthographic) {
+    rayPosition.setXYZ(i * 4, cornerX * halfWindow, cornerY * halfWindow, -RAY_TAIL)
+  } else {
+    rayPosition.setXYZ(i * 4, 0, 0, 0)
+  }
+  rayPosition.setXYZ(i * 4 + 1, cornerX * nearHalf, cornerY * nearHalf, NEAR)
+
+  // 奥側。切り取られなければどこまでも伸びていく
+  rayPosition.setXYZ(i * 4 + 2, cornerX * farHalf, cornerY * farHalf, FAR)
+  rayPosition.setXYZ(i * 4 + 3, cornerX * tailHalf, cornerY * tailHalf, MAX_DEPTH)
+})
+const rayGeometry = new BufferGeometry().setAttribute("position", rayPosition)
+scene.add(new LineSegments(rayGeometry, new LineBasicMaterial({ color: RAY_COLOR })))
+
+// 前方・後方クリッピング面。ビューボリュームを奥行き方向で区切る 2 枚
+const capMaterial = new MeshBasicMaterial({
+  color: VOLUME_COLOR,
+  side: DoubleSide,
+  transparent: true,
+  opacity: 0.1
+})
+const nearCap = new Mesh(squareGeometry, capMaterial)
+nearCap.position.z = NEAR
+nearCap.scale.set(nearHalf * 2, nearHalf * 2, 1)
+const farCap = new Mesh(squareGeometry, capMaterial)
+farCap.position.z = FAR
+farCap.scale.set(farHalf * 2, farHalf * 2, 1)
+scene.add(nearCap, farCap)
+
+// 形状を切り取る 6 面を 8 隅から作る。3 隅から作った面は表裏が定まらないので、
+// ビューボリュームの重心が正の側（残す側）に来るように向きをそろえる
+const centroid = new Vector3()
+corners.forEach((corner) => centroid.add(corner))
+centroid.multiplyScalar(1 / corners.length)
+const clippingPlanes = VOLUME_FACES.map(([a, b, c]) => {
+  const plane = new Plane().setFromCoplanarPoints(corners[a], corners[b], corners[c])
+  if (plane.distanceToPoint(centroid) < 0) plane.negate()
+  return plane
+})
+
+// 空間に置く立方体。同じ位置に 2 つ重ね、クリッピングで残る部分と取り除かれる部分を描き分ける
+const cubeGeometry = new EdgesGeometry(new BoxGeometry(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE))
+const removedMaterial = new LineBasicMaterial({ color: REMOVED_COLOR })
+const keptMaterial = new LineBasicMaterial({ color: KEPT_COLOR, clippingPlanes })
+CUBE_POSITIONS.forEach((position) => {
+  const removed = new LineSegments(cubeGeometry, removedMaterial)
+  removed.position.set(...position)
+  scene.add(removed)
+
+  const kept = new LineSegments(cubeGeometry, keptMaterial)
+  kept.position.set(...position)
+  // 取り除かれる部分と線が重なるので、そのあとに描いて上書きする
+  kept.renderOrder = 1
+  scene.add(kept)
+})
+```
+
+:::
+
+ビューボリュームの外にある部分を取り除き、内側に残った部分だけを先の処理へ渡す操作を:Mark[クリッピング]といいます。
+
+<!-- TODO: クリッピングの処理そのものを扱う「クリッピング（CG 2-4-3）」ページへのリンク（ページ未作成） -->
+
+## :WithGroupTag[正規化ビューボリューム]{group="{['CG']}"}
+
+ビューボリュームの形と大きさは、ウィンドウの取り方とクリッピング面の位置によって毎回変わります。透視投影では側面の`4`枚がどれも斜めに傾いているので、ある点が内側にあるかどうかを調べるには、`6`枚の面それぞれとの位置関係を計算することになります。
+
+そこで、クリッピングに入る前に、ビューボリュームをあらかじめ決めた大きさの直方体へ変換します。この変換後のビューボリュームを:Mark[正規化ビューボリューム]といいます。たとえば、どの座標も`-1`から`1`に収まる立方体を使います（範囲の取り方は環境によって異なります）。
+
+正規化ビューボリュームの境界は座標軸に垂直な面だけになるため、点が内側にあるかどうかは、`3`つの座標がそれぞれ範囲に収まっているかを見れば判定できます。もとのビューボリュームがどんな形でも、クリッピングの処理は同じ`1`つで済みます。
+
+透視投影では、この変換が像の縮みも引き受けます。四角錐台が直方体へ引き伸ばされる過程で、奥にあるものほど中心へ寄せられるためです。変換を終えたあとは、平行投影と同じように奥行きを落とすだけで、投影面上の位置が得られます。
+
+:::Todo
+透視投影のビューボリューム（四角錐台）が正規化ビューボリューム（直方体）へ変換されるようすの図解。変換の前後を並べ、奥に置いた同じ大きさの立方体が、変換後には中心へ寄って小さくなることがわかるように示す
+:::
+
+透視投影と平行投影の違いは、こうして正規化ビューボリュームへの変換の中に畳み込まれます。その変換をどのような式で表すのかが、投影の計算の中身になります。
+
+<!-- TODO: 「投影の計算法（CG 2-3）」ページへのリンク（ページ未作成） -->

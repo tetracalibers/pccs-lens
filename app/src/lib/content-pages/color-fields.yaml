@@ -10,8 +10,7 @@
         - slug: media-design-concepts
     - title: コンピュータによる色彩設計
       links:
-        - title: カラーマネジメント
-          grades: ["2"]
+        - slug: color-management
         - slug: digital-image-basics
     - title: 色のユニバーサルデザイン
       links:
