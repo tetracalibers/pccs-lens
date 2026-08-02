@@ -24,8 +24,7 @@ sections:
   - heading: ビューイングパイプライン
     id: viewing-pipeline
     links:
-      - title: ビューイングパイプラインでの変換 # CG 2-4-1
-        group: ["CG"]
+      - slug: viewing-pipeline-transformations
       - title: クリッピングのアルゴリズム # CG 2-4-3
         group: ["CG"]
       - title: 階層モデリング # CG 2-4-4
