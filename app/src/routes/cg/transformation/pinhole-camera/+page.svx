@@ -10,6 +10,7 @@ draft: true
 
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import PinholeSelectionDemo from '$lib/demo/threejs/transformation/pinhole-camera/pinhole-selection/PinholeSelectionDemo.svelte'
   import ProjectionPlaneDemo from '$lib/demo/threejs/transformation/pinhole-camera/projection-plane/ProjectionPlaneDemo.svelte'
   import FocalLengthDemo from '$lib/demo/threejs/transformation/pinhole-camera/focal-length/FocalLengthDemo.svelte'
   import AngleOfViewDemo from '$lib/demo/threejs/transformation/pinhole-camera/angle-of-view/AngleOfViewDemo.svelte'
@@ -28,6 +29,162 @@ draft: true
 
 いま、内側を黒く塗った箱を用意し、その面に、針の先ほどの小さな穴（:Mark[ピンホール]）を開けます。
 被写体の表面の各点からは、光があらゆる方向へ散らばって出ていきますが、ピンホールを通り抜けられるのは、穴へまっすぐ向かった光だけです。穴を通った光はそのまま直進し、箱の反対側の面に届いて、そこに`1`つの明るい点を作ります。
+
+<CanvasWrapper>
+  <PinholeSelectionDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 穴のある面。正方形の面に、半径 HOLE_RADIUS の穴を 1 つ開ける
+const wallShape = new Shape()
+wallShape.moveTo(-HALF_WALL, -HALF_WALL)
+wallShape.lineTo(HALF_WALL, -HALF_WALL)
+wallShape.lineTo(HALF_WALL, HALF_WALL)
+wallShape.lineTo(-HALF_WALL, HALF_WALL)
+const holePath = new Path()
+holePath.absarc(0, 0, HOLE_RADIUS, 0, Math.PI * 2, true)
+wallShape.holes.push(holePath)
+
+const wallMaterial = new MeshBasicMaterial({
+  color: WALL_COLOR,
+  side: DoubleSide,
+  transparent: true,
+  opacity: 0.12
+})
+scene.add(new Mesh(new ShapeGeometry(wallShape, HOLE_SEGMENTS), wallMaterial))
+
+// 像ができる面。穴のある面と向かい合わせに、箱の奥行きだけ離して置く
+const backWallGeometry = new PlaneGeometry(WALL_SIZE, WALL_SIZE)
+const backWall = new Mesh(backWallGeometry, wallMaterial)
+backWall.position.z = -BOX_DEPTH
+scene.add(backWall)
+
+const borderGeometry = new EdgesGeometry(backWallGeometry)
+const borderMaterial = new LineBasicMaterial({ color: WALL_COLOR })
+scene.add(new LineSegments(borderGeometry, borderMaterial))
+const backBorder = new LineSegments(borderGeometry, borderMaterial)
+backBorder.position.z = -BOX_DEPTH
+scene.add(backBorder)
+
+// 箱の稜線。2 つの面の隅どうしを結ぶ
+const boxGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute(
+    CORNERS.flatMap(([x, y]) => [
+      x * HALF_WALL,
+      y * HALF_WALL,
+      0,
+      x * HALF_WALL,
+      y * HALF_WALL,
+      -BOX_DEPTH
+    ]),
+    3
+  )
+)
+scene.add(new LineSegments(boxGeometry, new LineBasicMaterial({ color: BOX_COLOR })))
+
+// ピンホール。穴の縁を円で描く
+const holeGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute(
+    Array.from({ length: HOLE_SEGMENTS }, (_, i) => {
+      const angle = (i / HOLE_SEGMENTS) * Math.PI * 2
+      return [Math.cos(angle) * HOLE_RADIUS, Math.sin(angle) * HOLE_RADIUS, 0]
+    }).flat(),
+    3
+  )
+)
+scene.add(new LineLoop(holeGeometry, new LineBasicMaterial({ color: HOLE_COLOR })))
+
+// 被写体。輪郭を閉じた折れ線として、穴のある面から SUBJECT_Z だけ離して置く
+const subjectGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute(
+    SUBJECT_OUTLINE.flatMap(([x, y]) => [x, y, SUBJECT_Z]),
+    3
+  )
+)
+scene.add(new LineLoop(subjectGeometry, new LineBasicMaterial({ color: SUBJECT_COLOR })))
+
+// 奥の面に浮かび上がる像。被写体のすべての点で同じことが起こった結果にあたる。
+// 穴を通るので、上下も左右も反転する
+const imageGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute(
+    SUBJECT_OUTLINE.flatMap(([x, y]) => [
+      (-x * BOX_DEPTH) / SUBJECT_Z,
+      (-y * BOX_DEPTH) / SUBJECT_Z,
+      -BOX_DEPTH
+    ]),
+    3
+  )
+)
+scene.add(new LineLoop(imageGeometry, new LineBasicMaterial({ color: IMAGE_COLOR })))
+
+// 光を出す点。被写体の表面の 1 点
+const pointGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([POINT_X, POINT_Y, SUBJECT_Z], 3)
+)
+scene.add(new Points(pointGeometry, new PointsMaterial({ color: POINT_COLOR, size: 0.14 })))
+
+/**
+ * 点から出た光が、穴のある面のどこに当たるか。
+ * 面の上に渦巻き状に散らして、四方八方へ出た光のうち箱に向かうぶんを均して並べる。
+ * 最初の 1 本（index が 0）だけは、穴へまっすぐ向かった光になる。
+ */
+const wallTarget = (index: number, count: number): [number, number] => {
+  const radius = HALF_WALL * Math.sqrt(index / (count - 1))
+  const angle = GOLDEN_ANGLE * index
+  return [radius * Math.cos(angle), radius * Math.sin(angle)]
+}
+
+// 点から出た光を、穴を通り抜けたものと通れなかったものに振り分ける
+const passing: number[] = []
+const blocked: number[] = []
+
+for (let i = 0; i < RAY_COUNT; i++) {
+  const [wallX, wallY] = wallTarget(i, RAY_COUNT)
+
+  // 穴を通り抜けられるのは、穴へまっすぐ向かった光だけ。
+  // 通った光はそのまま直進して奥の面（z = -BOX_DEPTH）まで届き、
+  // 穴を外れた光は黒く塗られた面に当たってそこで止まる
+  const passes = Math.hypot(wallX, wallY) <= HOLE_RADIUS
+  const distance = passes ? 1 + BOX_DEPTH / SUBJECT_Z : 1
+  const endX = POINT_X + (wallX - POINT_X) * distance
+  const endY = POINT_Y + (wallY - POINT_Y) * distance
+  const endZ = SUBJECT_Z * (1 - distance)
+
+  const vertices = passes ? passing : blocked
+  vertices.push(POINT_X, POINT_Y, SUBJECT_Z, endX, endY, endZ)
+}
+
+const passingGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute(passing, 3)
+)
+scene.add(new LineSegments(passingGeometry, new LineBasicMaterial({ color: PASS_COLOR })))
+
+const blockedGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute(blocked, 3)
+)
+scene.add(new LineSegments(blockedGeometry, new LineBasicMaterial({ color: RAY_COLOR })))
+
+// その点の光が奥の面に作る、1 つの明るい点。穴を通るので、被写体の点と上下左右が逆になる
+const spotGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute(
+    [(-POINT_X * BOX_DEPTH) / SUBJECT_Z, (-POINT_Y * BOX_DEPTH) / SUBJECT_Z, -BOX_DEPTH],
+    3
+  )
+)
+scene.add(new Points(spotGeometry, new PointsMaterial({ color: PASS_COLOR, size: 0.14 })))
+```
+
+:::
 
 被写体のすべての点について同じことが起こるため、反対側の面には被写体の像が浮かび上がります。このように、ピンホールを通る光だけで像を作る装置を:Mark[ピンホールカメラ]といいます。
 
