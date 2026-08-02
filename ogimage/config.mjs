@@ -52,10 +52,10 @@ export const OG_RULES = [
   { glob: "/color-fields/*", variation: "nested", figure: "optional" },
 
   // --- CG コンテンツ（nested）---
-  //   /cg/<unit>            … ユニット一覧ページ（動的ルート /cg/[slug]）
-  //   /cg/<unit>/<article>  … 記事ページ（+page.svx）
+  //   /cg/<unit>            … ユニット一覧ページ（動的ルート /cg/[slug]）。図版なし
+  //   /cg/<unit>/<article>  … 記事ページ（+page.svx）。図版は任意
   { glob: "/cg/*", variation: "nested", figure: "none" },
-  { glob: "/cg/**", variation: "nested", figure: "none" },
+  { glob: "/cg/**", variation: "nested", figure: "optional" },
 
   // --- 定型プレビュー（nested-fig。当面は手渡し PNG）---
   { glob: "/jis-color-map/*", variation: "nested-fig", figure: "required" }, // 色系統ごとの慣用色名マップ

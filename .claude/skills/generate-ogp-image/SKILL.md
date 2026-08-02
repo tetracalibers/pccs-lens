@@ -114,7 +114,7 @@ cd ogimage && npm install && npm run fonts && cd ..
 2. **既存記録に図版があれば流用する**（手順 0）。保存済みアセット `ogimage/data/assets/<route>/figure.<ext>` が実在すれば、その永続パスを `figure` に指定して再利用する。
 3. **どちらも無ければ、以下に従って対話で要否・図版を確認する。**
 
-- `figure: "optional"`（`/color-theory/*`, `/color-fields/*`）: **図版を入れるか都度ユーザーに確認**する。
+- `figure: "optional"`（`/color-theory/*`, `/color-fields/*`, `/cg/<unit>/<article>`）: **図版を入れるか都度ユーザーに確認**する。
   - 入れる場合は `nested-fig`、入れない場合は `nested` として扱う。
   - **svx ページなら、`<script>` 内で import している図版候補（`$lib/demo/**` のコンポーネント）を一覧提示**し、どれを入れたいか尋ねる。
     Svelte デモの自動 SVG 化は行わない方針のため、**ユーザーが用意した図版 PNG のパスを受け取る**（自己完結した手渡し画像）。
@@ -258,7 +258,7 @@ render.mjs は nested-fig の図版を `ogimage/data/assets/<route>/figure.<ext>
 | `/color-theory/<slug>` | nested / nested-fig | `+page.svx` フロントマターの `title` | `["色の理論", <category>]`。category は `app/src/lib/content-pages/color-theory.yaml` の該当カテゴリ `title`（`colorTheoryCategoryBySlug` と同じ対応）。該当なしなら `["色の理論"]` |
 | `/color-fields/<slug>` | nested / nested-fig | `+page.svx` フロントマターの `title` | `["色の活用分野", <category>]`（`color-fields.yaml` / `colorFieldsCategoryBySlug`）。該当なしなら `["色の活用分野"]` |
 | `/cg/<unit>` | nested | `app/src/lib/content-pages/cg/<unit>.yaml` の先頭 `title` | `["CGと画像処理"]` |
-| `/cg/<unit>/<article>` | nested | `+page.svx` フロントマターの `title` | `["CGと画像処理", <unit title>]`（unit title は `cg/<unit>.yaml` の先頭 `title`） |
+| `/cg/<unit>/<article>` | nested / nested-fig | `+page.svx` フロントマターの `title` | `["CGと画像処理", <unit title>]`（unit title は `cg/<unit>.yaml` の先頭 `title`） |
 | `/jis-color-map/<family>` | nested-fig | `app/src/lib/data/jis-colors` の `JIS_COLOR_FAMILIES` から id 一致の `name`（例:「<name>の慣用色名マップ」） | `["慣用色名マップ"]` |
 | `/patterns/<theme>` | nested-fig | patterns のテーマ定義（`/patterns/[theme]/+page.ts` が読む labelJa） | `["配色シミュレータ"]` |
 
