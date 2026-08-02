@@ -14,9 +14,10 @@ A prototype for generating SVG rosette patterns with dihedral group (D_n) symmet
 ## Running
 
 ```bash
-node src/generate.js            # 曲線版・色数 2〜6 を一括生成
-node src/generate-angular.js    # 直線版・色数 2〜6 を一括生成
-node src/generate.js --help     # オプション一覧（2 つのスクリプトで共通）
+node src/generate.js               # 曲線版・色数 2〜6 を一括生成
+node src/generate-angular.js       # 直線版・色数 2〜6 を一括生成
+node src/generate.js --n=4,24      # n = 4〜24 も範囲で一括生成（1 ディレクトリ・1 HTML）
+node src/generate.js --help        # オプション一覧（2 つのスクリプトで共通）
 ```
 
 Output goes to `.generated/{curved|angular}/{YYYYMMDD-THHMMSSZ}/` (SVG + `index.html` の一覧ページ).
@@ -43,3 +44,4 @@ Output goes to `.generated/{curved|angular}/{YYYYMMDD-THHMMSSZ}/` (SVG + `index.
 - **鏡映線に重なる幅ゼロの図形を作らない。** 塗りには現れないのに、継ぎ目埋めのヘアラインだけが線として模様の外に見えてしまう
 - **背景は白固定で、パレットの色は背景に使わない。** パレットの色はすべて模様の側で使い切る
 - **色はインデックスが小さいほど使用面積が大きい。** `colors[0]` が最も広い
+- **seed に n を混ぜない。** n を範囲で生成したとき、同じ色数どうしで帯の構成と配色がそろわないと見比べられない

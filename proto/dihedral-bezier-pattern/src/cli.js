@@ -22,6 +22,36 @@ function parseArgs(argv) {
   return opts
 }
 
+/**
+ * --n の解釈。
+ * `8` なら単一、`4,24` または `4-24` なら 4〜24 の全ての n（範囲）。
+ */
+function parseNOption(value) {
+  if (value === undefined) return null
+
+  const parts = value
+    .split(/[,-]/)
+    .map((s) => s.trim())
+    .filter(Boolean)
+  const numbers = parts.map(Number)
+
+  if (numbers.some((x) => !Number.isInteger(x) || x < 3 || x > 24)) {
+    throw new Error(`--n は 3〜24 の整数で指定してください（指定: ${value}）`)
+  }
+  if (numbers.length === 1) return numbers
+  if (numbers.length !== 2) {
+    throw new Error(
+      `--n は 8（単一）か 4,24（範囲）の形式で指定してください（指定: ${value}）`,
+    )
+  }
+
+  const [from, to] = numbers
+  if (from > to) {
+    throw new Error(`--n の範囲は小さいほうを先に書いてください（指定: ${value}）`)
+  }
+  return Array.from({ length: to - from + 1 }, (_, i) => from + i)
+}
+
 function resolveSeed(value) {
   if (value === undefined) return randomSeed()
   return /^\d+$/.test(value) ? Number(value) >>> 0 : hashSeed(value)
@@ -42,6 +72,7 @@ function helpText(scriptName, title) {
   node src/${scriptName} [options]
 
   --n=<3-24>            正 n 角形の対称性（既定: 実行ごとにランダム）
+                        --n=4,24 のように書くと 4〜24 を範囲で一括生成する
   --size=<px>           出力サイズ（既定: 480）
   --seed=<数値|文字列>   乱数シード（既定: ランダム）
   --count=<数>          色数ごとの生成数（既定: 1）
@@ -79,13 +110,7 @@ export function run({ patternName, scriptName, title, buildMotif }) {
       throw new Error(`--count は 1 以上の整数で指定してください（指定: ${opts.count}）`)
     }
 
-    let fixedN = null
-    if (opts.n !== undefined) {
-      fixedN = Number(opts.n)
-      if (!Number.isInteger(fixedN) || fixedN < 3 || fixedN > 24) {
-        throw new Error(`--n は 3〜24 の整数で指定してください（指定: ${opts.n}）`)
-      }
-    }
+    const fixedNs = parseNOption(opts.n)
 
     const palettes = opts.colors
       ? [parsePalette(opts.colors)]
@@ -102,21 +127,26 @@ export function run({ patternName, scriptName, title, buildMotif }) {
     const entries = []
 
     for (let variant = 0; variant < count; variant++) {
-      // n はバリアント単位で決める（同じバリアント内では色数によらず同じ n）
+      // n を指定しなかったときは、バリアント単位でランダムに 1 つ選ぶ
       const variantRng = createRandom((baseSeed + variant * 7919) >>> 0)
-      const n = fixedN ?? variantRng.pick(N_CANDIDATES)
-      const domain = createDomain({ n, radius: size * 0.44, shape })
+      const ns = fixedNs ?? [variantRng.pick(N_CANDIDATES)]
 
-      for (const colors of palettes) {
-        const seed = (baseSeed + variant * 7919 + colors.length * 104729) >>> 0
-        const rng = createRandom(seed)
-        const motif = buildMotif({ domain, colorCount: colors.length, rng })
-        const svg = renderSVG({ domain, motif, colors, size, seed })
+      for (const n of ns) {
+        const domain = createDomain({ n, radius: size * 0.44, shape })
 
-        const suffix = count > 1 ? `-v${variant + 1}` : ''
-        const filename = `d${n}-${colors.length}colors${suffix}.svg`
-        fs.writeFileSync(path.join(outDir, filename), svg, 'utf-8')
-        entries.push({ filename, n, seed, colors })
+        for (const colors of palettes) {
+          // seed に n を混ぜない。n を変えても帯の構成と配色がそろい、
+          // 対称性の次数だけを比べられるようにするため。
+          const seed = (baseSeed + variant * 7919 + colors.length * 104729) >>> 0
+          const rng = createRandom(seed)
+          const motif = buildMotif({ domain, colorCount: colors.length, rng })
+          const svg = renderSVG({ domain, motif, colors, size, seed })
+
+          const suffix = count > 1 ? `-v${variant + 1}` : ''
+          const filename = `d${n}-${colors.length}colors${suffix}.svg`
+          fs.writeFileSync(path.join(outDir, filename), svg, 'utf-8')
+          entries.push({ filename, n, seed, colors })
+        }
       }
     }
 
@@ -129,7 +159,12 @@ export function run({ patternName, scriptName, title, buildMotif }) {
     const elapsed = (performance.now() - started).toFixed(1)
     const shown = (name) => path.relative(process.cwd(), path.join(outDir, name))
     console.log(`Seed: ${baseSeed}`)
-    for (const e of entries) console.log(`Generated: ${shown(e.filename)}`)
+    // 枚数が多いときは 1 枚ずつ並べても読めないので、まとめて件数で示す
+    if (entries.length > 12) {
+      console.log(`Generated: ${entries.length} files in ${path.relative(process.cwd(), outDir)}`)
+    } else {
+      for (const e of entries) console.log(`Generated: ${shown(e.filename)}`)
+    }
     console.log(`Index: ${shown('index.html')}`)
     console.log(`Time: ${elapsed}ms`)
   } catch (error) {

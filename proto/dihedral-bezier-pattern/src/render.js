@@ -59,20 +59,36 @@ ${copies}${centerElement}
 `
 }
 
+function renderCard(entry) {
+  const swatches = entry.colors
+    .map((c) => `<i style="background:${c}"></i>`)
+    .join('')
+  return `      <figure>
+        <img src="./${entry.filename}" alt="${entry.filename}" loading="lazy">
+        <figcaption>
+          <strong>${entry.colors.length}色</strong> / D${entry.n} / seed ${entry.seed}
+          <span class="swatches">${swatches}</span>
+        </figcaption>
+      </figure>`
+}
+
 export function renderIndexHTML(title, entries) {
-  const cards = entries
-    .map(
-      (e) => `    <figure>
-      <img src="./${e.filename}" width="320" height="320" alt="${e.filename}">
-      <figcaption>
-        <strong>${e.colors.length}色</strong> / D${e.n} / seed ${e.seed}
-        <span class="swatches">${e.colors
-          .map((c) => `<i style="background:${c}"></i>`)
-          .join('')}</span>
-      </figcaption>
-    </figure>`,
-    )
+  // n ごとに節を分ける（n を範囲で一括生成したときに見比べやすくするため）
+  const byN = new Map()
+  for (const e of entries) {
+    if (!byN.has(e.n)) byN.set(e.n, [])
+    byN.get(e.n).push(e)
+  }
+
+  const sections = [...byN.entries()]
+    .map(([n, group]) => {
+      const heading = byN.size > 1 ? `    <h2>D${n}</h2>\n` : ''
+      return `${heading}    <div class="grid">\n${group.map(renderCard).join('\n')}\n    </div>`
+    })
     .join('\n')
+
+  // 枚数が多いときはサムネイルを小さくして一覧性を優先する
+  const thumb = entries.length > 12 ? 200 : 320
 
   return `<!doctype html>
 <html lang="ja">
@@ -82,18 +98,23 @@ export function renderIndexHTML(title, entries) {
 <style>
   body { margin: 0; padding: 24px; background: #2a2a2a; color: #eee;
          font-family: system-ui, sans-serif; }
-  main { display: flex; flex-wrap: wrap; gap: 24px; }
+  h1 { font-size: 16px; font-weight: 600; margin: 0 0 20px; }
+  h1 span { color: #999; font-weight: 400; margin-left: 8px; }
+  h2 { font-size: 14px; font-weight: 600; margin: 28px 0 12px;
+       padding-bottom: 6px; border-bottom: 1px solid #444; }
+  .grid { display: flex; flex-wrap: wrap; gap: 20px; }
   figure { margin: 0; }
-  img { display: block; width: 320px; height: auto; background: #fff; }
-  figcaption { margin-top: 8px; font-size: 13px; display: flex;
-               align-items: center; gap: 8px; }
+  img { display: block; width: ${thumb}px; height: auto; background: #fff; }
+  figcaption { margin-top: 6px; font-size: 12px; display: flex;
+               flex-wrap: wrap; align-items: center; gap: 6px; }
   .swatches { display: inline-flex; gap: 2px; }
-  .swatches i { width: 12px; height: 12px; display: block; }
+  .swatches i { width: 11px; height: 11px; display: block; }
 </style>
 </head>
 <body>
 <main>
-${cards}
+    <h1>${title}<span>${entries.length} 枚</span></h1>
+${sections}
 </main>
 </body>
 </html>
