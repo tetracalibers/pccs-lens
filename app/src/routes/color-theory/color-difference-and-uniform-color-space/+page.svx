@@ -8,7 +8,7 @@ visual: true
 
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
-  import MacAdamEllipses from "$lib/demo/xyz-color-system/MacAdamEllipses.svelte"
+  import MacAdamEllipses from "$lib/demo/color/xyz-color-system/MacAdamEllipses.svelte"
 </script>
 
 色の違いの大きさは、色空間上で`2`色がどれだけ離れているかという:Mark[距離]として測ることができます。

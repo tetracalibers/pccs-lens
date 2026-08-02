@@ -8,15 +8,15 @@ visual: true
 
 <script lang="ts">
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
-  import SpectrumGradient from "$lib/demo/spectrum/SpectrumGradient.svelte"
-  import ReflectRGB from "$lib/demo/color-mixing/ReflectRGB.svelte"
-  import ReflectCMY from "$lib/demo/color-mixing/ReflectCMY.svelte"
-  import PrimaryColorsCMY from "$lib/demo/color-mixing/PrimaryColorsCMY.svelte"
-  import PrimaryColorsRGB from "$lib/demo/color-mixing/PrimaryColorsRGB.svelte"
-  import PrimaryColorsWheel from "$lib/demo/color-mixing/PrimaryColorsWheel.svelte"
-  import AddColorMixVenn from "$lib/demo/color-mixing/AddColorMixVenn.svelte"
-  import SubColorMixVenn from "$lib/demo/color-mixing/SubColorMixVenn.svelte"
-  import MixingComplementary from "$lib/demo/color-mixing/MixingComplementary.svelte"
+  import SpectrumGradient from "$lib/demo/color/spectrum/SpectrumGradient.svelte"
+  import ReflectRGB from "$lib/demo/color/color-mixing/ReflectRGB.svelte"
+  import ReflectCMY from "$lib/demo/color/color-mixing/ReflectCMY.svelte"
+  import PrimaryColorsCMY from "$lib/demo/color/color-mixing/PrimaryColorsCMY.svelte"
+  import PrimaryColorsRGB from "$lib/demo/color/color-mixing/PrimaryColorsRGB.svelte"
+  import PrimaryColorsWheel from "$lib/demo/color/color-mixing/PrimaryColorsWheel.svelte"
+  import AddColorMixVenn from "$lib/demo/color/color-mixing/AddColorMixVenn.svelte"
+  import SubColorMixVenn from "$lib/demo/color/color-mixing/SubColorMixVenn.svelte"
+  import MixingComplementary from "$lib/demo/color/color-mixing/MixingComplementary.svelte"
 </script>
 
 ## :WithGradeTag[混色と原色]{grades="3"}

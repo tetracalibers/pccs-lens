@@ -8,10 +8,10 @@ visual: true
 
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
-  import LensSpectralTransmittance from "$lib/demo/aging-vision/LensSpectralTransmittance.svelte"
-  import LensYellowingSimulation from "$lib/demo/aging-vision/LensYellowingSimulation.svelte"
-  import AccommodationByAge from "$lib/demo/aging-vision/AccommodationByAge.svelte"
-  import PupilDiameterByAge from "$lib/demo/aging-vision/PupilDiameterByAge.svelte"
+  import LensSpectralTransmittance from "$lib/demo/color/aging-vision/LensSpectralTransmittance.svelte"
+  import LensYellowingSimulation from "$lib/demo/color/aging-vision/LensYellowingSimulation.svelte"
+  import AccommodationByAge from "$lib/demo/color/aging-vision/AccommodationByAge.svelte"
+  import PupilDiameterByAge from "$lib/demo/color/aging-vision/PupilDiameterByAge.svelte"
 </script>
 
 人間の生理機能のうち、特に:Mark[視覚]・:Mark[聴覚]などの感覚機能と:Mark[平衡]機能は、:Mark[50]歳代後半になると著しく低下します。

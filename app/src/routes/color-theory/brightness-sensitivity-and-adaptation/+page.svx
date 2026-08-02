@@ -8,9 +8,9 @@ visual: true
 
 <script>
   import SVGWrapper from '$lib/demo/SVGWrapper.svelte'
-  import SpectralLuminousEfficiency from "$lib/demo/visual-system/SpectralLuminousEfficiency.svelte"
-  import PhotopicScotopicLuminousEfficiency from "$lib/demo/visual-system/PhotopicScotopicLuminousEfficiency.svelte"
-  import PurkinjeEffect from "$lib/demo/visual-system/PurkinjeEffect.svelte"
+  import SpectralLuminousEfficiency from "$lib/demo/color/visual-system/SpectralLuminousEfficiency.svelte"
+  import PhotopicScotopicLuminousEfficiency from "$lib/demo/color/visual-system/PhotopicScotopicLuminousEfficiency.svelte"
+  import PurkinjeEffect from "$lib/demo/color/visual-system/PurkinjeEffect.svelte"
 </script>
 
 [視細胞の種類と分布](/color-theory/photoreceptor-types-and-distribution/)では、各錐体の色に対する感度について学びました。

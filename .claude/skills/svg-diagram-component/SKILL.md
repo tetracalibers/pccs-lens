@@ -31,7 +31,9 @@ description: SVGで描画するSvelte製の図解コンポーネントを実装�
 /svg-diagram-component 水晶体分光透過率のグラフ
 ```
 
-- **`[配置先ディレクトリ]`（省略可・先頭）** … `app/src/lib/demo/` 配下のディレクトリ名（英字の kebab-case。例: `[munsell]`, `[color-wheel]`）。指定する場合は引数の**先頭**に、角括弧で囲んで置く。角括弧で囲まれていないものは配置先ディレクトリとして扱わない。
+- **`[配置先ディレクトリ]`（省略可・先頭）** … カテゴリディレクトリ（`app/src/lib/demo/color/` または `app/src/lib/demo/cg/`）配下のディレクトリ名（英字の kebab-case。例: `[munsell]`, `[color-wheel]`）。指定する場合は引数の**先頭**に、角括弧で囲んで置く。角括弧で囲まれていないものは配置先ディレクトリとして扱わない。
+
+  カテゴリ（`color/`・`cg/`）は引数に含めず、後述の「配置先のカテゴリ」で決めるのが基本。`[cg/lighting]` のようにカテゴリを含めて渡された場合はその指定に従う。
 
 - **`<図の指定>`（必須）** … 作りたい図の名前・内容。
 
@@ -44,6 +46,20 @@ description: SVGで描画するSvelte製の図解コンポーネントを実装�
   ```
 
   上のプレースホルダに対する引数は `水晶体分光透過率のグラフ` になる。**`TODO：` のような接頭辞も付かない。** 図版のTODOは `:::Todo` ディレクティブで書き、図の名前はその本文に書くのが現行の規約（`writing-guides/syntax-guide.md` ルール4）。図の名前に続けて、描き方の補足が書き足されることもある。
+
+### 配置先のカテゴリ
+
+`app/src/lib/demo/` の直下はページのカテゴリで分かれている。図解コンポーネントは必ずどちらかのカテゴリの下に作り、**`app/src/lib/demo/` の直下には作らない。**
+
+| 対象ページ | 配置先 |
+| --- | --- |
+| 色彩ページ（`app/src/routes/color-theory/**`・`app/src/routes/color-fields/**`） | `app/src/lib/demo/color/<配置先ディレクトリ>/` |
+| CGページ（`app/src/routes/cg/**`） | `app/src/lib/demo/cg/<配置先ディレクトリ>/` |
+
+- パターンC（プレースホルダが見つかった場合）は、**ヒットしたページのパスでカテゴリを決める。**
+- パターンA・B（対象ページが特定できない場合）は図の主題で判断する。色彩（色の理論・配色・視覚のしくみなど）の図なら `color/`、CG（3DCG・座標変換・モデリング・レンダリングなど）の図なら `cg/`。判断がつかない場合はユーザーに確認する。
+- `app/src/lib/demo/threejs/` は `add-threejs-demo` スキルが扱う Three.js デモの置き場所。SVG図解コンポーネントはここには作らない。
+- `app/src/lib/demo/` 直下の `SVGWrapper.svelte`・`CanvasWrapper.svelte`・`PlaybackStage.svelte` はカテゴリ共通のコンポーネントで、これらは例外。
 
 ### パターンの判定
 
@@ -75,15 +91,17 @@ grep -rn "水晶体分光透過率のグラフ" app/src/routes
 
 `<配置先ディレクトリ>` の指定がない場合（パターンA、および配置先ディレクトリを省略したパターンC）は、**カテゴリ名を勝手に決めない。** コンポーネントファイルの作成に着手する前に、次の手順でユーザーに選ばせる。
 
-1. `ls app/src/lib/demo/` で既存ディレクトリの一覧を確認する。
+1. 「配置先のカテゴリ」に従って `color/` か `cg/` かを決め、そのカテゴリ配下の既存ディレクトリ一覧を確認する（`ls app/src/lib/demo/color/` または `ls app/src/lib/demo/cg/`）。他方のカテゴリのディレクトリは候補に挙げない。
 2. 図の内容に照らして妥当な配置先の候補を**4種類**挙げる。次の両方を必ず混ぜる。
-   - **既存ディレクトリ**（図の主題に近いもの。最低1つは含める）
+   - **既存ディレクトリ**（同じカテゴリ配下で図の主題に近いもの。最低1つは含める）
    - **新規ディレクトリ名の案**（英字の kebab-case。最低1つは含める）
+
+   カテゴリ配下に既存ディレクトリが1つも無い場合は、新規ディレクトリ名の案だけで4案を挙げる。
 3. `AskUserQuestion` で4案を提示する（`header` は「配置先」など。`multiSelect` は `false`）。各選択肢の `label` にはディレクトリ名を、`description` には「既存／新規」の別と、そこに置く理由（何をまとめるディレクトリか）を書く。
 4. **ユーザーの選択を待つ。** 回答が返るまでコンポーネントファイルは作成しない。
 5. 選ばれたディレクトリに作成する。「Other」で4案にない名前を指定された場合はそれに従う。既存ディレクトリならそこに追加し、新規名ならディレクトリを新規作成する。
 
-提示の例（「水晶体分光透過率のグラフ」の場合）:
+提示の例（色彩ページの「水晶体分光透過率のグラフ」の場合。いずれも `app/src/lib/demo/color/` 配下）:
 
 | label | description |
 | --- | --- |
@@ -94,14 +112,15 @@ grep -rn "水晶体分光透過率のグラフ" app/src/routes
 
 ### パターンA：`/svg-diagram-component <図の内容>`
 
-- 配置先は「配置先ディレクトリの決定（省略時）」に従い、4案を提示してユーザーに選ばせる
-- 選ばれた `app/src/lib/demo/[カテゴリ名]/` 配下にコンポーネントファイルを作成する
+- 配置先は「配置先のカテゴリ」でカテゴリを決めたうえで、「配置先ディレクトリの決定（省略時）」に従い、4案を提示してユーザーに選ばせる
+- 選ばれた `app/src/lib/demo/color/[ディレクトリ名]/`（CGの図なら `app/src/lib/demo/cg/[ディレクトリ名]/`）配下にコンポーネントファイルを作成する
 - 作成後、「完了報告」に従って import 文を提示する
 
 ### パターンB：`/svg-diagram-component [配置先ディレクトリ] <図の内容>`
 
-- `<配置先ディレクトリ>` は `app/src/lib/demo` 配下のパス
-  - 例：`/svg-diagram-component [munsell] <図の内容>` であれば `app/src/lib/demo/munsell/` にコンポーネントを作成する
+- `<配置先ディレクトリ>` は「配置先のカテゴリ」で決めたカテゴリディレクトリ配下のパス
+  - 例：色彩の図で `/svg-diagram-component [munsell] <図の内容>` であれば `app/src/lib/demo/color/munsell/` にコンポーネントを作成する
+  - 例：CGの図で `/svg-diagram-component [lighting] <図の内容>` であれば `app/src/lib/demo/cg/lighting/` にコンポーネントを作成する
 - ディレクトリが存在しなければ新規作成する
 - 作成後、「完了報告」に従って import 文を提示する
 
@@ -119,7 +138,8 @@ grep -rn "水晶体分光透過率のグラフ" app/src/routes
 手順:
 
 1. コンポーネントを作成する。
-   - `<配置先ディレクトリ>` が指定されていれば `app/src/lib/demo/<配置先ディレクトリ>/` 配下に作成する（パターンBと同じ）。省略されている場合はパターンAと同様に「配置先ディレクトリの決定（省略時）」に従い、4案を提示してユーザーに選ばせてから作成する。
+   - カテゴリはプレースホルダがヒットしたページのパスで決める（色彩ページなら `color/`、CGページなら `cg/`）。
+   - `<配置先ディレクトリ>` が指定されていれば `app/src/lib/demo/<カテゴリ>/<配置先ディレクトリ>/` 配下に作成する（パターンBと同じ）。省略されている場合はパターンAと同様に「配置先ディレクトリの決定（省略時）」に従い、4案を提示してユーザーに選ばせてから作成する。
    - `<図の内容>` が指定されていればそれを図の仕様とする。省略されている場合は `<図の名前>`（＝プレースホルダの本文）自体を図の仕様として用いる。
 2. コンポーネントを作成したら、対象ページに対して次を行う。
    1. `<script>` ブロックに、作成したコンポーネントの import 文を追加する（`SVGWrapper` が未 import であればあわせて追加する）
@@ -135,7 +155,7 @@ grep -rn "水晶体分光透過率のグラフ" app/src/routes
 ```
 ページで使う場合は以下のようにimportしてください。
 
-import EmergencyExitSign from "$lib/demo/color-visibility/EmergencyExitSign.svelte"
+import EmergencyExitSign from "$lib/demo/color/color-visibility/EmergencyExitSign.svelte"
 
 あわせて、そのページのフロントマターに visual: true が無ければ追加してください。
 ```
@@ -188,7 +208,7 @@ import EmergencyExitSign from "$lib/demo/color-visibility/EmergencyExitSign.svel
 
 矢印を含む図の場合、図の内容で指定がない限り**タイプA**を採用する。
 
-#### タイプA（デフォルト）— `app/src/lib/demo/visual-effect-contrast/ContrastToneRelation.svelte` と同様
+#### タイプA（デフォルト）— `app/src/lib/demo/color/visual-effect-contrast/ContrastToneRelation.svelte` と同様
 
 矢じりがマーカー枠の半分ほどの大きさに収まる、コンパクトで細身の「＞」形。線に対して控えめで洗練された印象になる。
 
@@ -240,7 +260,7 @@ const ARROW_HEAD_STROKE = (ARROW_STROKE_WIDTH * ARROW_HEAD_VIEWBOX) / ARROW_HEAD
 - `ARROW_HEAD_STROKE` を `ARROW_STROKE_WIDTH` から逆算することで、線本体と矢先の太さを視覚的に揃える
 - 同じ図の中で複数の色の矢印を使う場合は、IDサフィックスで区別する（例: `arrow-k`, `arrow-b`, `arrow-r`）
 
-#### タイプB — `app/src/lib/demo/color-solid/ColorSolidSphere.svelte` の明度変化矢印と同様
+#### タイプB — `app/src/lib/demo/color/color-solid/ColorSolidSphere.svelte` の明度変化矢印と同様
 
 矢じりがマーカー枠いっぱいに広がる、大きく開いた「＞」形。タイプAよりも矢じりが目立ち、存在感がある。
 
@@ -295,11 +315,11 @@ const ARROW_HEAD_H = 10   // markerHeight（縦幅）
 
 ### スペクトルのグラデーション
 
-スペクトル（可視光の波長分布）を表すグラデーションの描画を指示された場合は、`app/src/lib/demo/spectrum/SpectrumGradient.svelte` と同様のグラデーション（`gradientStops` の波長と色の対応）を採用する。
+スペクトル（可視光の波長分布）を表すグラデーションの描画を指示された場合は、`app/src/lib/demo/color/spectrum/SpectrumGradient.svelte` と同様のグラデーション（`gradientStops` の波長と色の対応）を採用する。
 
 ### グラフの軸スタイル
 
-グラフ（横軸・縦軸を持つ図）を描画する場合、ユーザーからの指定が特になければ、横軸・縦軸・軸ラベルのスタイル（線の太さ、目盛り、フォントサイズ、ラベル位置など）は `app/src/lib/demo/spectral-reflectance/SpectralReflectanceGraph.svelte` と統一する。
+グラフ（横軸・縦軸を持つ図）を描画する場合、ユーザーからの指定が特になければ、横軸・縦軸・軸ラベルのスタイル（線の太さ、目盛り、フォントサイズ、ラベル位置など）は `app/src/lib/demo/color/spectral-reflectance/SpectralReflectanceGraph.svelte` と統一する。
 
 ### グラフの曲線
 
@@ -400,15 +420,15 @@ Good:
 
 実装の参考として以下のファイルを確認すること。
 
-- `app/src/lib/demo/visual-effect-contrast/ContrastToneRelation.svelte`
+- `app/src/lib/demo/color/visual-effect-contrast/ContrastToneRelation.svelte`
   - 定数の命名・グルーピング方法
   - タイプAの `marker` 要素の定義
   - TypeScriptの型定義の書き方
 
-- `app/src/lib/demo/color-solid/ColorSolidSphere.svelte`
+- `app/src/lib/demo/color/color-solid/ColorSolidSphere.svelte`
   - タイプBの `marker` 要素の定義
   - 動的な `viewBox` の算出方法
 
-- `app/src/lib/demo/spectral-reflectance/SpectralReflectanceGraph.svelte`
+- `app/src/lib/demo/color/spectral-reflectance/SpectralReflectanceGraph.svelte`
   - グラフ（横軸・縦軸あり）のデフォルトスタイル
   - 軸・目盛り・軸ラベルの定数定義と配置方法

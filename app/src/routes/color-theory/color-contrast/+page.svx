@@ -8,14 +8,14 @@ visual: true
 
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
-  import ToneContrast from "$lib/demo/visual-effect-contrast/LightnessSaturationContrastDiagram.svelte"
-  import HueContrast from "$lib/demo/visual-effect-contrast/HueContrastDiagram.svelte"
-  import ContrastPreview from "$lib/demo/visual-effect-contrast/ContrastColorPreview.svelte"
-  import TextBrightnessContrast from "$lib/demo/visual-effect-contrast/LightnessContrastTextBrightness.svelte"
-  import EqualBrightnessContrast from "$lib/demo/visual-effect-contrast/LightnessContrastEqualBrightness.svelte"
-  import ComplementaryContrast from "$lib/demo/visual-effect-contrast/ComplementaryContrastDiagram.svelte"
-  import Halation from "$lib/demo/visual-effect-contrast/HalationDiagram.svelte"
-  import SaturationContrastDifference from "$lib/demo/visual-effect-contrast/SaturationContrastDifferenceDiagram.svelte"
+  import ToneContrast from "$lib/demo/color/visual-effect-contrast/LightnessSaturationContrastDiagram.svelte"
+  import HueContrast from "$lib/demo/color/visual-effect-contrast/HueContrastDiagram.svelte"
+  import ContrastPreview from "$lib/demo/color/visual-effect-contrast/ContrastColorPreview.svelte"
+  import TextBrightnessContrast from "$lib/demo/color/visual-effect-contrast/LightnessContrastTextBrightness.svelte"
+  import EqualBrightnessContrast from "$lib/demo/color/visual-effect-contrast/LightnessContrastEqualBrightness.svelte"
+  import ComplementaryContrast from "$lib/demo/color/visual-effect-contrast/ComplementaryContrastDiagram.svelte"
+  import Halation from "$lib/demo/color/visual-effect-contrast/HalationDiagram.svelte"
+  import SaturationContrastDifference from "$lib/demo/color/visual-effect-contrast/SaturationContrastDifferenceDiagram.svelte"
 </script>
 
 ## :WithGradeTag[色の対比とは]{grades="3"}

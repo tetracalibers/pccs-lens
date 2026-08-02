@@ -8,8 +8,8 @@ visual: true
 
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
-  import IlluminanceAmbianceScale from "$lib/demo/light-source/IlluminanceAmbianceScale.svelte"
-  import ColorTemperatureIlluminanceAmbiance from "$lib/demo/light-source/ColorTemperatureIlluminanceAmbiance.svelte"
+  import IlluminanceAmbianceScale from "$lib/demo/color/light-source/IlluminanceAmbianceScale.svelte"
+  import ColorTemperatureIlluminanceAmbiance from "$lib/demo/color/light-source/ColorTemperatureIlluminanceAmbiance.svelte"
 </script>
 
 ランプの詳細よりも、「その場所は十分明るいか？」を知りたい場合があります。

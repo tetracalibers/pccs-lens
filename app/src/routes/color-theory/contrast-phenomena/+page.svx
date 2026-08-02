@@ -7,13 +7,13 @@ visual: true
 ---
 
 <script>
-  import ComplementaryAfterimage from "$lib/demo/visual-effect/ComplementaryAfterimage.svelte"
-  import ColorShadowHueComparison from "$lib/demo/visual-effect-contrast/ColorShadowHueComparison.svelte"
-  import AchromaticEdgeContrast from "$lib/demo/visual-effect-contrast/AchromaticEdgeContrast.svelte"
-  import ChromaticEdgeContrast from "$lib/demo/visual-effect-contrast/ChromaticEdgeContrast.svelte"
-  import SaturationEdgeContrast from "$lib/demo/visual-effect-contrast/SaturationEdgeContrast.svelte"
-  import VasarelyIllusion from "$lib/demo/visual-effect-contrast/VasarelyIllusion.svelte"
-  import VasarelyIllusionInverted from "$lib/demo/visual-effect-contrast/VasarelyIllusionInverted.svelte"
+  import ComplementaryAfterimage from "$lib/demo/color/visual-effect/ComplementaryAfterimage.svelte"
+  import ColorShadowHueComparison from "$lib/demo/color/visual-effect-contrast/ColorShadowHueComparison.svelte"
+  import AchromaticEdgeContrast from "$lib/demo/color/visual-effect-contrast/AchromaticEdgeContrast.svelte"
+  import ChromaticEdgeContrast from "$lib/demo/color/visual-effect-contrast/ChromaticEdgeContrast.svelte"
+  import SaturationEdgeContrast from "$lib/demo/color/visual-effect-contrast/SaturationEdgeContrast.svelte"
+  import VasarelyIllusion from "$lib/demo/color/visual-effect-contrast/VasarelyIllusion.svelte"
+  import VasarelyIllusionInverted from "$lib/demo/color/visual-effect-contrast/VasarelyIllusionInverted.svelte"
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
 </script>
 

@@ -7,7 +7,7 @@ visual: true
 ---
 
 <script>
-  import AnalyzedPalette from '$lib/demo/color-palette/AnalyzedPalette.svelte'
+  import AnalyzedPalette from '$lib/demo/color/color-palette/AnalyzedPalette.svelte'
 </script>
 
 色相環を等分割した配色は、西洋の古典的な配色技法であり、色相を選ぶ際の参考になります。

@@ -8,8 +8,8 @@ visual: true
 
 <script>
   import SVGWrapper from '$lib/demo/SVGWrapper.svelte'
-  import PartitiveMixing from "$lib/demo/color-mixing/PartitiveMixing.svelte"
-  import SuccessiveMixing from "$lib/demo/color-mixing/SuccessiveMixing.svelte"
+  import PartitiveMixing from "$lib/demo/color/color-mixing/PartitiveMixing.svelte"
+  import SuccessiveMixing from "$lib/demo/color/color-mixing/SuccessiveMixing.svelte"
 </script>
 
 ## :WithGradeTag[加法混色の種類]{grades="3"}

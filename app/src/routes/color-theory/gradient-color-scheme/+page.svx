@@ -7,7 +7,7 @@ visual: true
 ---
 
 <script>
-  import AnalyzedPalette from '$lib/demo/color-palette/AnalyzedPalette.svelte'
+  import AnalyzedPalette from '$lib/demo/color/color-palette/AnalyzedPalette.svelte'
 </script>
 
 ## :WithGradeTag[グラデーションの効果]{grades="3"}

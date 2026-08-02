@@ -7,7 +7,7 @@ visual: true
 ---
 
 <script lang="ts">
-  import BasicColors from "$lib/demo/fashion-color/BasicColors.svelte"
+  import BasicColors from "$lib/demo/color/fashion-color/BasicColors.svelte"
 </script>
 
 ## :WithGradeTag[ベーシックカラー]{grades="2"}

@@ -8,8 +8,8 @@ visual: true
 
 <script>
   import SVGWrapper from '$lib/demo/SVGWrapper.svelte';
-  import SpectralSensitivityCurves from "$lib/demo/visual-system/SpectralSensitivityCurves.svelte"
-  import SpectralLuminousEfficiency from "$lib/demo/visual-system/SpectralLuminousEfficiency.svelte"
+  import SpectralSensitivityCurves from "$lib/demo/color/visual-system/SpectralSensitivityCurves.svelte"
+  import SpectralLuminousEfficiency from "$lib/demo/color/visual-system/SpectralLuminousEfficiency.svelte"
 </script>
 
 LMS錐体からの出力信号が脳の後頭葉に届く過程で、次のような:Mark[反対色応答]が出力されます。

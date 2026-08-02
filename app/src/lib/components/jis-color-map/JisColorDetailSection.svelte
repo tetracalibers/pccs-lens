@@ -6,7 +6,7 @@
   import { PCCS_ALL_MAP } from "$lib/data/pccs"
   import type { PCCSColor } from "$lib/data/types"
   import JisExamLevelBadge from "./JisExamLevelBadge.svelte"
-  import PCCSColorSwatch from "$lib/demo/PCCSColor.svelte"
+  import PCCSColorSwatch from "$lib/demo/color/PCCSColor.svelte"
 
   interface Props {
     entries: { jisColor: JISColor; family: JISColorFamily }[]
