@@ -175,7 +175,7 @@
 ## 色の活用分野（nested） — 記事：デザイン（`color-fields.yaml` #design）
 
 - [x] `/color-fields/visual-design-and-color`
-- [draft] `/color-fields/media-design-concepts`
+- [ ] `/color-fields/media-design-concepts`
 - [draft] `/color-fields/color-management`
 - [draft] `/color-fields/digital-image-basics`
 - [x] `/color-fields/color-universal-design`
