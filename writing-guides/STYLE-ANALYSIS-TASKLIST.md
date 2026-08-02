@@ -95,7 +95,7 @@
 - [x] `/color-theory/color-temperature-and-light-color`
 - [draft] `/color-theory/blackbody-radiation`
 - [x] `/color-theory/illuminance-and-lighting-design`
-- [ ] `/color-theory/photometric-quantities`
+- [x] `/color-theory/photometric-quantities`
 - [x] `/color-theory/color-rendering`
 - [x] `/color-theory/lamp-types`
 - [x] `/color-theory/photometric-and-radiometric-quantities`
@@ -155,7 +155,7 @@
 ## 色の活用分野 — デザイン（`color-fields.yaml` #design）
 
 - [x] `/color-fields/visual-design-and-color`
-- [ ] `/color-fields/media-design-concepts`
+- [x] `/color-fields/media-design-concepts`
 - [draft] `/color-fields/color-management`
 - [draft] `/color-fields/digital-image-basics`
 - [x] `/color-fields/color-universal-design`
