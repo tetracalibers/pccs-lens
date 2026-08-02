@@ -8,10 +8,10 @@ visual: true
 
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
-  import AreaProportionWithCornerAccent from "$lib/demo/color-palette/AreaProportionWithCornerAccent.svelte"
-  import AreaProportionWithBoundaryAccent from "$lib/demo/color-palette/AreaProportionWithBoundaryAccent.svelte"
-  import AreaProportionWithSeparation from "$lib/demo/color-palette/AreaProportionWithSeparation.svelte"
-  import OutlinedText from "$lib/demo/color-palette/OutlinedText.svelte"
+  import AreaProportionWithCornerAccent from "$lib/demo/color/color-palette/AreaProportionWithCornerAccent.svelte"
+  import AreaProportionWithBoundaryAccent from "$lib/demo/color/color-palette/AreaProportionWithBoundaryAccent.svelte"
+  import AreaProportionWithSeparation from "$lib/demo/color/color-palette/AreaProportionWithSeparation.svelte"
+  import OutlinedText from "$lib/demo/color/color-palette/OutlinedText.svelte"
 </script>
 
 ## :WithGradeTag[配色の面積構成]{grades="3"}

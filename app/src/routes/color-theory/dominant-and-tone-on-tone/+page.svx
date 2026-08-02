@@ -7,7 +7,7 @@ visual: true
 ---
 
 <script>
-  import AnalyzedPalette from '$lib/demo/color-palette/AnalyzedPalette.svelte'
+  import AnalyzedPalette from '$lib/demo/color/color-palette/AnalyzedPalette.svelte'
 </script>
 
 ここでは、色相で全体をまとめる:Mark[ドミナントカラー]配色、その変化球である:Mark[トーンオントーン]配色、そしてトーンで全体をまとめる:Mark[ドミナントトーン]配色（別名は:Mark[トーンイントーン]配色）の3つの配色技法について学びます。

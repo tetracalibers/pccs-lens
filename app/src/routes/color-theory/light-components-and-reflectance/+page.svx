@@ -8,21 +8,21 @@ visual: true
 
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
-  import PrismExperiment from "$lib/demo/spectrum/PrismExperiment.svelte"
+  import PrismExperiment from "$lib/demo/color/spectrum/PrismExperiment.svelte"
   
   // 分光分布
-  import Sunlight from "$lib/demo/spectral-distribution/SunlightSpectralDistribution.svelte"
-  import IncandescentBulb from "$lib/demo/spectral-distribution/IncandescentBulbSpectralDistribution.svelte"
+  import Sunlight from "$lib/demo/color/spectral-distribution/SunlightSpectralDistribution.svelte"
+  import IncandescentBulb from "$lib/demo/color/spectral-distribution/IncandescentBulbSpectralDistribution.svelte"
   
   // 分光反射率曲線
-  import RedRef from "$lib/demo/spectral-reflectance/RedReflectance.svelte"
-  import GreenRef from "$lib/demo/spectral-reflectance/GreenReflectance.svelte"
-  import BlueRef from "$lib/demo/spectral-reflectance/BlueReflectance.svelte"
-  import YellowRef from "$lib/demo/spectral-reflectance/YellowReflectance.svelte"
-  import WhiteRef from "$lib/demo/spectral-reflectance/WhiteReflectance.svelte"
-  import BlackRef from "$lib/demo/spectral-reflectance/BlackReflectance.svelte"
-  import GrayRef from "$lib/demo/spectral-reflectance/GrayReflectance.svelte"
-  import BluishGrayRef from "$lib/demo/spectral-reflectance/BluishGrayReflectance.svelte"
+  import RedRef from "$lib/demo/color/spectral-reflectance/RedReflectance.svelte"
+  import GreenRef from "$lib/demo/color/spectral-reflectance/GreenReflectance.svelte"
+  import BlueRef from "$lib/demo/color/spectral-reflectance/BlueReflectance.svelte"
+  import YellowRef from "$lib/demo/color/spectral-reflectance/YellowReflectance.svelte"
+  import WhiteRef from "$lib/demo/color/spectral-reflectance/WhiteReflectance.svelte"
+  import BlackRef from "$lib/demo/color/spectral-reflectance/BlackReflectance.svelte"
+  import GrayRef from "$lib/demo/color/spectral-reflectance/GrayReflectance.svelte"
+  import BluishGrayRef from "$lib/demo/color/spectral-reflectance/BluishGrayReflectance.svelte"
 </script>
 
 ## :WithGradeTag[ニュートンのプリズム実験]{grades="3"}

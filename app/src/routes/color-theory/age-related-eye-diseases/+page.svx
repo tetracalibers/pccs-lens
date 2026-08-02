@@ -7,8 +7,8 @@ visual: true
 ---
 
 <script lang="ts">
-  import GlaucomaFieldLossSimulation from "$lib/demo/aging-vision/GlaucomaFieldLossSimulation.svelte"
-  import MacularDegenerationSimulation from "$lib/demo/aging-vision/MacularDegenerationSimulation.svelte"
+  import GlaucomaFieldLossSimulation from "$lib/demo/color/aging-vision/GlaucomaFieldLossSimulation.svelte"
+  import MacularDegenerationSimulation from "$lib/demo/color/aging-vision/MacularDegenerationSimulation.svelte"
 </script>
 
 加齢とともに増えていく眼の病気は、見え方にさまざまな影響を及ぼします。

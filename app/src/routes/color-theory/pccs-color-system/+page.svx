@@ -9,14 +9,14 @@ visual: true
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
   import CanvasWrapper from "$lib/demo/CanvasWrapper.svelte"
-  import PCCSHueWheel from "$lib/demo/pccs/PCCSHueWheel.svelte"
-  import PCCSPrimaryHueWheel from "$lib/demo/pccs/PCCSPrimaryHueWheel.svelte"
-  import PCCSPrimaryComplementHueWheel from "$lib/demo/pccs/PCCSPrimaryComplementHueWheel.svelte"
-  import PCCSEvenHueWheel from "$lib/demo/pccs/PCCSEvenHueWheel.svelte"
-  import PCCSHueNotationWheel from "$lib/demo/pccs/PCCSHueNotationWheel.svelte"
-  import PCCSColorSolid3D from "$lib/demo/pccs/PCCSColorSolid3D.svelte"
-  import PCCSEqualHuePlane from "$lib/demo/pccs/PCCSEqualHuePlane.svelte"
-  import ToneAreaDiagram from "$lib/demo/pccs/ToneAreaDiagram.svelte"
+  import PCCSHueWheel from "$lib/demo/color/pccs/PCCSHueWheel.svelte"
+  import PCCSPrimaryHueWheel from "$lib/demo/color/pccs/PCCSPrimaryHueWheel.svelte"
+  import PCCSPrimaryComplementHueWheel from "$lib/demo/color/pccs/PCCSPrimaryComplementHueWheel.svelte"
+  import PCCSEvenHueWheel from "$lib/demo/color/pccs/PCCSEvenHueWheel.svelte"
+  import PCCSHueNotationWheel from "$lib/demo/color/pccs/PCCSHueNotationWheel.svelte"
+  import PCCSColorSolid3D from "$lib/demo/color/pccs/PCCSColorSolid3D.svelte"
+  import PCCSEqualHuePlane from "$lib/demo/color/pccs/PCCSEqualHuePlane.svelte"
+  import ToneAreaDiagram from "$lib/demo/color/pccs/ToneAreaDiagram.svelte"
 </script>
 
 [PCCSと色の分類](/color-theory/pccs-basics/)で基本的な使い方を学んだPCCSは、[色彩調和](/color-theory/unity-and-variety/)を目的とした[表色系](/color-theory/color-system-types/)で、配色を考えるのに適しています。

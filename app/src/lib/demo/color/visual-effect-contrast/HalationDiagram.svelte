@@ -1,5 +1,5 @@
 <script lang="ts">
-  import SVGWrapper from "../SVGWrapper.svelte"
+  import SVGWrapper from "../../SVGWrapper.svelte"
   import ContrastColorPreview from "./ContrastColorPreview.svelte"
 
   let {

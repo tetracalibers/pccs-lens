@@ -9,12 +9,12 @@ visual: true
 <script>
   import SVGWrapper from '$lib/demo/SVGWrapper.svelte'
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
-  import MunsellPrimaryHueWheel from '$lib/demo/munsell/MunsellPrimaryHueWheel.svelte'
-  import MunsellTenHueWheel from '$lib/demo/munsell/MunsellTenHueWheel.svelte'
-  import MunsellHueWheel from '$lib/demo/munsell/MunsellHueWheel.svelte'
-  import MunsellHueWithPCCSHue from '$lib/demo/munsell/MunsellHueWithPCCSHue.svelte'
-  import MunsellValue5Plane from '$lib/demo/munsell/MunsellValue5Plane.svelte'
-  import MunsellColorSolid3D from '$lib/demo/munsell/MunsellColorSolid3D.svelte'
+  import MunsellPrimaryHueWheel from '$lib/demo/color/munsell/MunsellPrimaryHueWheel.svelte'
+  import MunsellTenHueWheel from '$lib/demo/color/munsell/MunsellTenHueWheel.svelte'
+  import MunsellHueWheel from '$lib/demo/color/munsell/MunsellHueWheel.svelte'
+  import MunsellHueWithPCCSHue from '$lib/demo/color/munsell/MunsellHueWithPCCSHue.svelte'
+  import MunsellValue5Plane from '$lib/demo/color/munsell/MunsellValue5Plane.svelte'
+  import MunsellColorSolid3D from '$lib/demo/color/munsell/MunsellColorSolid3D.svelte'
 </script>
 
 マンセル表色系は、国際的に使われている表色系の一つで、日本でも産業界や学術研究などの分野で使われています。

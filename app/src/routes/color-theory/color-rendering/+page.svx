@@ -8,8 +8,8 @@ visual: true
 
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
-  import HighColorRenderingColorChecker from "$lib/demo/light-source/HighColorRenderingColorChecker.svelte"
-  import LowColorRenderingColorChecker from "$lib/demo/light-source/LowColorRenderingColorChecker.svelte"
+  import HighColorRenderingColorChecker from "$lib/demo/color/light-source/HighColorRenderingColorChecker.svelte"
+  import LowColorRenderingColorChecker from "$lib/demo/color/light-source/LowColorRenderingColorChecker.svelte"
 </script>
 
 照明の種類によって、空間の明るさだけでなく、そこに置かれた物体の色の見え方も変わります。

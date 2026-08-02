@@ -8,16 +8,16 @@ visual: true
 
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
-  import ColorTemperatureScaleWithMarkers from "$lib/demo/light-source/ColorTemperatureScaleWithMarkers.svelte"
-  import IncandescentBulbSpectralDistribution from "$lib/demo/spectral-distribution/IncandescentBulbSpectralDistribution.svelte"
-  import HalogenBulbSpectralDistribution from "$lib/demo/spectral-distribution/HalogenBulbSpectralDistribution.svelte"
-  import StandardFluorescentLampSpectralDistribution from "$lib/demo/spectral-distribution/StandardFluorescentLampSpectralDistribution.svelte"
-  import ThreeBandFluorescentLampSpectralDistribution from "$lib/demo/spectral-distribution/ThreeBandFluorescentLampSpectralDistribution.svelte"
-  import HighColorRenderingFluorescentLampSpectralDistribution from "$lib/demo/spectral-distribution/HighColorRenderingFluorescentLampSpectralDistribution.svelte"
-  import WarmWhiteLEDSpectralDistribution from "$lib/demo/spectral-distribution/WarmWhiteLEDSpectralDistribution.svelte"
-  import NeutralWhiteLEDSpectralDistribution from "$lib/demo/spectral-distribution/NeutralWhiteLEDSpectralDistribution.svelte"
-  import DaylightWhiteLEDSpectralDistribution from "$lib/demo/spectral-distribution/DaylightWhiteLEDSpectralDistribution.svelte"
-  import LowPressureSodiumLampSpectralDistribution from "$lib/demo/spectral-distribution/LowPressureSodiumLampSpectralDistribution.svelte"
+  import ColorTemperatureScaleWithMarkers from "$lib/demo/color/light-source/ColorTemperatureScaleWithMarkers.svelte"
+  import IncandescentBulbSpectralDistribution from "$lib/demo/color/spectral-distribution/IncandescentBulbSpectralDistribution.svelte"
+  import HalogenBulbSpectralDistribution from "$lib/demo/color/spectral-distribution/HalogenBulbSpectralDistribution.svelte"
+  import StandardFluorescentLampSpectralDistribution from "$lib/demo/color/spectral-distribution/StandardFluorescentLampSpectralDistribution.svelte"
+  import ThreeBandFluorescentLampSpectralDistribution from "$lib/demo/color/spectral-distribution/ThreeBandFluorescentLampSpectralDistribution.svelte"
+  import HighColorRenderingFluorescentLampSpectralDistribution from "$lib/demo/color/spectral-distribution/HighColorRenderingFluorescentLampSpectralDistribution.svelte"
+  import WarmWhiteLEDSpectralDistribution from "$lib/demo/color/spectral-distribution/WarmWhiteLEDSpectralDistribution.svelte"
+  import NeutralWhiteLEDSpectralDistribution from "$lib/demo/color/spectral-distribution/NeutralWhiteLEDSpectralDistribution.svelte"
+  import DaylightWhiteLEDSpectralDistribution from "$lib/demo/color/spectral-distribution/DaylightWhiteLEDSpectralDistribution.svelte"
+  import LowPressureSodiumLampSpectralDistribution from "$lib/demo/color/spectral-distribution/LowPressureSodiumLampSpectralDistribution.svelte"
 </script>
 
 照明に使用される光源のことを:Mark[ランプ]といいます。

@@ -10,10 +10,10 @@ draft: true
 
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
-  import SpecularReflection from "$lib/demo/light-phenomena/SpecularReflection.svelte"
-  import DiffuseReflection from "$lib/demo/light-phenomena/DiffuseReflection.svelte"
-  import SmallSlitDiffraction from "$lib/demo/light-phenomena/SmallSlitDiffraction.svelte"
-  import SmallBumpDiffraction from "$lib/demo/light-phenomena/SmallBumpDiffraction.svelte"
+  import SpecularReflection from "$lib/demo/color/light-phenomena/SpecularReflection.svelte"
+  import DiffuseReflection from "$lib/demo/color/light-phenomena/DiffuseReflection.svelte"
+  import SmallSlitDiffraction from "$lib/demo/color/light-phenomena/SmallSlitDiffraction.svelte"
+  import SmallBumpDiffraction from "$lib/demo/color/light-phenomena/SmallBumpDiffraction.svelte"
 </script>
 
 ## :WithGradeTag[光の反射]{grades="3"}

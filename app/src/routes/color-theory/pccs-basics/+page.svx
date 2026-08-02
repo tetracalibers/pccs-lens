@@ -7,8 +7,8 @@ visual: true
 ---
 
 <script lang="ts">
-  import ToneImageDiagram from "$lib/demo/pccs/ToneImageDiagram.svelte"
-  import ToneAreaDiagram from "$lib/demo/pccs/ToneAreaDiagram.svelte"
+  import ToneImageDiagram from "$lib/demo/color/pccs/ToneImageDiagram.svelte"
+  import ToneAreaDiagram from "$lib/demo/color/pccs/ToneAreaDiagram.svelte"
 </script>
 
 ## :WithGradeTag[トーンと色のイメージ]{grades="3,uc"}

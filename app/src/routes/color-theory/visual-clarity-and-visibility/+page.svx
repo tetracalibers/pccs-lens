@@ -8,9 +8,9 @@ visual: true
 
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
-  import InducibilityByBackground from "$lib/demo/color-visibility/InducibilityByBackground.svelte"
-  import OutlinedText from "$lib/demo/color-palette/OutlinedText.svelte"
-  import EmergencyExitSign from "$lib/demo/color-visibility/EmergencyExitSign.svelte"
+  import InducibilityByBackground from "$lib/demo/color/color-visibility/InducibilityByBackground.svelte"
+  import OutlinedText from "$lib/demo/color/color-palette/OutlinedText.svelte"
+  import EmergencyExitSign from "$lib/demo/color/color-visibility/EmergencyExitSign.svelte"
 </script>
 
 [色の機能的効果](/color-theory/color-roles/)は、状況や意味を色でわかりやすく伝える効果です。

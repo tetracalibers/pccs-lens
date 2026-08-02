@@ -8,9 +8,9 @@ visual: true
 
 <script>
   import SVGWrapper from '$lib/demo/SVGWrapper.svelte'
-  import CIE1931RGBColorMatchingGraph from '$lib/demo/xyz-color-system/CIE1931RGBColorMatchingGraph.svelte'
-  import CIE1931XYZColorMatchingGraph from '$lib/demo/xyz-color-system/CIE1931XYZColorMatchingGraph.svelte'
-  import ConeLuminousEfficiencyGraph from '$lib/demo/xyz-color-system/ConeLuminousEfficiencyGraph.svelte'
+  import CIE1931RGBColorMatchingGraph from '$lib/demo/color/xyz-color-system/CIE1931RGBColorMatchingGraph.svelte'
+  import CIE1931XYZColorMatchingGraph from '$lib/demo/color/xyz-color-system/CIE1931XYZColorMatchingGraph.svelte'
+  import ConeLuminousEfficiencyGraph from '$lib/demo/color/xyz-color-system/ConeLuminousEfficiencyGraph.svelte'
 </script>
 
 実際の色光を基準としている[RGB表色系](/color-theory/rgb-color-system/)は、マイナスの混色量を使わなければ表せない色があり、当時の計算機では扱いづらいものでした。

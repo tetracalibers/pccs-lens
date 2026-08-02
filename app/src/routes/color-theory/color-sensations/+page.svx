@@ -9,12 +9,12 @@ visual: true
 <script>
   import Icon from "@iconify/svelte"
   import SVGWrapper from '$lib/demo/SVGWrapper.svelte';
-  import WarmCoolHueWheel from "$lib/demo/color-sensations/WarmCoolHueWheel.svelte"
-  import AdvancingColor from "$lib/demo/color-sensations/AdvancingColor.svelte"
-  import RecedingColor from "$lib/demo/color-sensations/RecedingColor.svelte"
-  import ExpansionContractionGoStones from "$lib/demo/color-sensations/ExpansionContractionGoStones.svelte"
-  import ToneAreaDiagram from "$lib/demo/pccs/ToneAreaDiagram.svelte"
-  import WeightBalanceStack from "$lib/demo/color-sensations/WeightBalanceStack.svelte"
+  import WarmCoolHueWheel from "$lib/demo/color/color-sensations/WarmCoolHueWheel.svelte"
+  import AdvancingColor from "$lib/demo/color/color-sensations/AdvancingColor.svelte"
+  import RecedingColor from "$lib/demo/color/color-sensations/RecedingColor.svelte"
+  import ExpansionContractionGoStones from "$lib/demo/color/color-sensations/ExpansionContractionGoStones.svelte"
+  import ToneAreaDiagram from "$lib/demo/color/pccs/ToneAreaDiagram.svelte"
+  import WeightBalanceStack from "$lib/demo/color/color-sensations/WeightBalanceStack.svelte"
 </script>
 
 私たちは色に対してさまざまなイメージを抱きますが、その中でも多くの人が共通して感じるとされる色のイメージもあります。

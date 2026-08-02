@@ -8,7 +8,7 @@ visual: true
 
 <script>
   import SVGWrapper from '$lib/demo/SVGWrapper.svelte'
-  import CMYKHalftone from '$lib/demo/color-mixing/CMYKHalftone.svelte'
+  import CMYKHalftone from '$lib/demo/color/color-mixing/CMYKHalftone.svelte'
 </script>
 
 [加法混色と減法混色](/color-theory/color-mixing-basics/)や[さまざまな加法混色](/color-theory/additive-color-mixing-types/)で学んだ混色原理の組み合わせによって、実世界で見られるさまざまな色がつくり出されています。

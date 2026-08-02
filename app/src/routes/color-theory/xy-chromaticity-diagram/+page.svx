@@ -8,10 +8,10 @@ visual: true
 
 <script>
   import SVGWrapper from '$lib/demo/SVGWrapper.svelte'
-  import XYChromaticityDiagram from '$lib/demo/xyz-color-system/XYChromaticityDiagram.svelte'
-  import XYChromaticityDiagramAnnotated from '$lib/demo/xyz-color-system/XYChromaticityDiagramAnnotated.svelte'
-  import XYChromaticityDiagramHueSaturation from '$lib/demo/xyz-color-system/XYChromaticityDiagramHueSaturation.svelte'
-  import XYChromaticityDiagramLightnessStack from '$lib/demo/xyz-color-system/XYChromaticityDiagramLightnessStack.svelte'
+  import XYChromaticityDiagram from '$lib/demo/color/xyz-color-system/XYChromaticityDiagram.svelte'
+  import XYChromaticityDiagramAnnotated from '$lib/demo/color/xyz-color-system/XYChromaticityDiagramAnnotated.svelte'
+  import XYChromaticityDiagramHueSaturation from '$lib/demo/color/xyz-color-system/XYChromaticityDiagramHueSaturation.svelte'
+  import XYChromaticityDiagramLightnessStack from '$lib/demo/color/xyz-color-system/XYChromaticityDiagramLightnessStack.svelte'
 </script>
 
 ## :WithGradeTag[色度座標]{grades="1"}

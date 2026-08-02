@@ -1,7 +1,7 @@
 <script lang="ts">
-  import SVGWrapper from "../SVGWrapper.svelte"
-  import HueContrastPreview from "./ContrastColorPreview.svelte"
-  import HueContrastRelation from "./ContrastHueRelation.svelte"
+  import SVGWrapper from "../../SVGWrapper.svelte"
+  import LightnessSaturationContrastPreview from "./ContrastColorPreview.svelte"
+  import LightnessSaturationContrastToneRelation from "./ContrastToneRelation.svelte"
 
   let {
     figure,
@@ -17,12 +17,12 @@
 <div class="contrast-diagram">
   <div class="preview">
     <SVGWrapper>
-      <HueContrastPreview {figure} {ground} {iconId} />
+      <LightnessSaturationContrastPreview {figure} {ground} {iconId} />
     </SVGWrapper>
   </div>
-  <div class="hue-relation">
+  <div class="tone-relation">
     <SVGWrapper>
-      <HueContrastRelation {figure} {ground} {iconId} />
+      <LightnessSaturationContrastToneRelation {figure} {ground} {iconId} />
     </SVGWrapper>
   </div>
 </div>
@@ -38,8 +38,7 @@
     max-width: 200px;
   }
 
-  .hue-relation {
-    max-width: 250px;
-    margin-block-end: -1rem;
+  .tone-relation {
+    max-width: 200px;
   }
 </style>

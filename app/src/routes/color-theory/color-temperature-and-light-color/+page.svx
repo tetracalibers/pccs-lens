@@ -8,7 +8,7 @@ visual: true
 
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
-  import ColorTemperatureScale from "$lib/demo/light-source/ColorTemperatureScale.svelte"
+  import ColorTemperatureScale from "$lib/demo/color/light-source/ColorTemperatureScale.svelte"
 </script>
 
 ## :WithGradeTag[光色]{grades="2"}

@@ -9,16 +9,16 @@ visual: true
 <script>
   import imgMidoriDiaryTemplate from "$lib/assets/midori-diary-template.png?enhanced"
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
-  import Step1 from "$lib/demo/drawing-pccs-color-wheel/Step1.svelte"
-  import Step2 from "$lib/demo/drawing-pccs-color-wheel/Step2.svelte"
-  import Step3 from "$lib/demo/drawing-pccs-color-wheel/Step3.svelte"
-  import Step4 from "$lib/demo/drawing-pccs-color-wheel/Step4.svelte"
-  import Step5 from "$lib/demo/drawing-pccs-color-wheel/Step5.svelte"
-  import Step6 from "$lib/demo/drawing-pccs-color-wheel/Step6.svelte"
-  import Step7 from "$lib/demo/drawing-pccs-color-wheel/Step7.svelte"
-  import Step8 from "$lib/demo/drawing-pccs-color-wheel/Step8.svelte"
-  import Step9 from "$lib/demo/drawing-pccs-color-wheel/Step9.svelte"
-  import Step10 from "$lib/demo/drawing-pccs-color-wheel/Step10.svelte"
+  import Step1 from "$lib/demo/color/drawing-pccs-color-wheel/Step1.svelte"
+  import Step2 from "$lib/demo/color/drawing-pccs-color-wheel/Step2.svelte"
+  import Step3 from "$lib/demo/color/drawing-pccs-color-wheel/Step3.svelte"
+  import Step4 from "$lib/demo/color/drawing-pccs-color-wheel/Step4.svelte"
+  import Step5 from "$lib/demo/color/drawing-pccs-color-wheel/Step5.svelte"
+  import Step6 from "$lib/demo/color/drawing-pccs-color-wheel/Step6.svelte"
+  import Step7 from "$lib/demo/color/drawing-pccs-color-wheel/Step7.svelte"
+  import Step8 from "$lib/demo/color/drawing-pccs-color-wheel/Step8.svelte"
+  import Step9 from "$lib/demo/color/drawing-pccs-color-wheel/Step9.svelte"
+  import Step10 from "$lib/demo/color/drawing-pccs-color-wheel/Step10.svelte"
 </script>
 
 色彩検定では、PCCS色相環を描けるようになっておく必要があります。

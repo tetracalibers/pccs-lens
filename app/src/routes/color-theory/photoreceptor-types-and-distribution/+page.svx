@@ -8,8 +8,8 @@ visual: true
 
 <script>
   import SVGWrapper from '$lib/demo/SVGWrapper.svelte';
-  import PhotoreceptorDistribution from "$lib/demo/visual-system/PhotoreceptorDistribution.svelte"
-  import SpectralSensitivityCurves from "$lib/demo/visual-system/SpectralSensitivityCurves.svelte"
+  import PhotoreceptorDistribution from "$lib/demo/color/visual-system/PhotoreceptorDistribution.svelte"
+  import SpectralSensitivityCurves from "$lib/demo/color/visual-system/SpectralSensitivityCurves.svelte"
 </script>
 
 ## :WithGradeTag[視細胞の種類]{grades="3,uc"}
