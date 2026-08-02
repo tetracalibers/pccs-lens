@@ -95,7 +95,7 @@
 - [x] `/color-theory/color-temperature-and-light-color`
 - [draft] `/color-theory/blackbody-radiation`
 - [x] `/color-theory/illuminance-and-lighting-design`
-- [ ] `/color-theory/photometric-quantities`
+- [x] `/color-theory/photometric-quantities`
 - [x] `/color-theory/color-rendering`
 - [x] `/color-theory/lamp-types`
 - [x] `/color-theory/photometric-and-radiometric-quantities`
@@ -155,7 +155,7 @@
 ## 色の活用分野 — デザイン（`color-fields.yaml` #design）
 
 - [x] `/color-fields/visual-design-and-color`
-- [ ] `/color-fields/media-design-concepts`
+- [x] `/color-fields/media-design-concepts`
 - [draft] `/color-fields/color-management`
 - [draft] `/color-fields/digital-image-basics`
 - [x] `/color-fields/color-universal-design`
@@ -820,12 +820,12 @@
 
 ## CGと画像処理 — 変換と投影／投影（`cg/transformation.yaml` #projection）
 
-- [draft] `/cg/transformation/pinhole-camera`
+- [ ] `/cg/transformation/pinhole-camera`
 - [draft] `/cg/transformation/perspective-and-parallel-projection`
 - [draft] `/cg/transformation/projection-steps`
 - [ページ未作成] 投影の計算法
 - [ページ未作成] 消失点とn点透視
-- [ページ未作成] さまざまな平行投影
+- [draft] `/cg/transformation/parallel-projection-types`
 
 ## CGと画像処理 — 変換と投影／ビューイングパイプライン（`cg/transformation.yaml` #viewing-pipeline）
 

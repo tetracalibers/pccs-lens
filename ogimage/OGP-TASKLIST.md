@@ -304,12 +304,12 @@
 - [x] `/cg/transformation/transformation-composition`
 - [x] `/cg/transformation/reflection-and-skew`
 - [x] `/cg/transformation/affine-and-projective-transformation`
-- [draft] `/cg/transformation/pinhole-camera`
+- [x] `/cg/transformation/pinhole-camera`
 - [draft] `/cg/transformation/perspective-and-parallel-projection`
 - [draft] `/cg/transformation/projection-steps`
 - [ページ未作成] 投影の計算法
 - [ページ未作成] 消失点とn点透視
-- [ページ未作成] さまざまな平行投影
+- [draft] `/cg/transformation/parallel-projection-types`
 - [draft] `/cg/transformation/viewing-pipeline-transformations`
 - [ページ未作成] クリッピングのアルゴリズム
 - [ページ未作成] 階層モデリング

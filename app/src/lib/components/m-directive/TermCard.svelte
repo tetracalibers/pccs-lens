@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
+  import ALink from "../m-html/ALink.svelte"
   import Heading3 from "../m-html/Heading3.svelte"
   import { Mark } from "$lib/layouts/concept.svelte"
 
@@ -22,6 +23,7 @@
     title: string
     ankiTitle?: "hide" | "mark" | "show"
     icon?: keyof typeof iconMap
+    link?: string
   }
 
   let {
@@ -30,7 +32,8 @@
     textCentering = false,
     title,
     ankiTitle = "hide",
-    icon
+    icon,
+    link
   }: Props = $props()
 
   const resolvedIcon = $derived(() => {
@@ -40,15 +43,24 @@
   })
 </script>
 
+{#snippet titleText()}
+  {#if ankiTitle === "mark"}
+    <Mark>{title}</Mark>
+  {:else}
+    {title}
+  {/if}
+{/snippet}
+
 <section class="term-card" class:centering class:text-centering={textCentering}>
   {#if title}
-    {#if ankiTitle === "show"}
-      <Heading3 icon={resolvedIcon()}>{title}</Heading3>
-    {:else if ankiTitle === "mark"}
-      <Heading3 icon={resolvedIcon()}><Mark>{title}</Mark></Heading3>
-    {:else}
-      <Heading3 {title} icon={resolvedIcon()}>{title}</Heading3>
-    {/if}
+    <!-- link指定時はリンクを描画するため、Anki用の伏せ字（title）は渡さない -->
+    <Heading3 title={ankiTitle === "hide" && !link ? title : undefined} icon={resolvedIcon()}>
+      {#if link}
+        <ALink href={link}>{@render titleText()}</ALink>
+      {:else}
+        {@render titleText()}
+      {/if}
+    </Heading3>
   {/if}
   {@render children?.()}
 </section>

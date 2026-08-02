@@ -12,6 +12,8 @@
   import ComingSoon from "$lib/components/m-directive/ComingSoon.svelte"
   import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
   import Mark from "$lib/components/m-directive/Mark.svelte"
+  import CardGrid from "$lib/components/m-directive/CardGrid.svelte"
+  import TermCard from "$lib/components/m-directive/TermCard.svelte"
 
   /* eslint-disable no-import-assign */
   export {
@@ -26,7 +28,9 @@
     Example,
     ComingSoon,
     GradeTag,
-    Mark
+    Mark,
+    CardGrid,
+    TermCard
   }
   /* eslint-enable no-import-assign */
 </script>

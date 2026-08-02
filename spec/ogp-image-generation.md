@@ -67,7 +67,8 @@
   - トップ `/` → default
   - `/concept`、各一覧ページ（`/color-theory`, `/color-fields`, `/jis-color-map`, `/cg`, `/patterns`）、`/jis-color-map/all`、`/games/*`、`/approximate`, `/analyze` → title-only
   - `/color-theory/*`, `/color-fields/*` → nested / nested-fig（図は optional）
-  - `/cg/*`, `/cg/**/*` → nested
+  - `/cg/*`（ユニット一覧）→ nested
+  - `/cg/**`（記事ページ）→ nested / nested-fig（図は optional）
   - `/jis-color-map/<color>/` → nested-fig（慣用色名マップのプレビュー）
   - `/patterns/*` → nested-fig（バウハウス風のプレビュー）
 
