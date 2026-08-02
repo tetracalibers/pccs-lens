@@ -825,7 +825,7 @@
 - [draft] `/cg/transformation/projection-steps`
 - [ページ未作成] 投影の計算法
 - [ページ未作成] 消失点とn点透視
-- [ページ未作成] さまざまな平行投影
+- [draft] `/cg/transformation/parallel-projection-types`
 
 ## CGと画像処理 — 変換と投影／ビューイングパイプライン（`cg/transformation.yaml` #viewing-pipeline）
 
