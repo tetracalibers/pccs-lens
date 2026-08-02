@@ -4,8 +4,6 @@ title: ピンホールカメラ # CG 2-3-1 / ImgP 2-2-1
 
 group: ["CG", "ImgP"]
 visual: true
-
-draft: true
 ---
 
 <script>
