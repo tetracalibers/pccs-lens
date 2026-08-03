@@ -24,6 +24,8 @@
     ankiTitle?: "hide" | "mark" | "show"
     icon?: keyof typeof iconMap
     link?: string
+    /** カード内の本文（p・li）のfont-size。CSSの長さとして解釈できる文字列を渡す */
+    fontSize?: string
   }
 
   let {
@@ -33,7 +35,8 @@
     title,
     ankiTitle = "hide",
     icon,
-    link
+    link,
+    fontSize
   }: Props = $props()
 
   const resolvedIcon = $derived(() => {
@@ -51,7 +54,12 @@
   {/if}
 {/snippet}
 
-<section class="term-card" class:centering class:text-centering={textCentering}>
+<section
+  class="term-card"
+  class:centering
+  class:text-centering={textCentering}
+  style={fontSize ? `--tc-font-size: ${fontSize}` : undefined}
+>
   {#if title}
     <!-- link指定時はリンクを描画するため、Anki用の伏せ字（title）は渡さない -->
     <Heading3 title={ankiTitle === "hide" && !link ? title : undefined} icon={resolvedIcon()}>
@@ -91,7 +99,7 @@
   }
 
   .term-card :global(:is(p, li)) {
-    font-size: 0.85rem;
+    font-size: var(--tc-font-size, 0.85rem);
     color: var(--color-text, #111);
   }
 
