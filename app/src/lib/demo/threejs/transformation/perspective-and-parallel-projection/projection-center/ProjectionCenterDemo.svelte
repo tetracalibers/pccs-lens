@@ -16,8 +16,8 @@
   buildPane={(pane, p) => {
     pane.addBinding(p, "distance", {
       min: 1.5,
-      max: 12,
-      step: 0.01,
+      max: 20,
+      step: 0.1,
       label: "投影中心までの距離"
     })
     pane.addBinding(p, "atInfinity", { label: "投影中心を無限遠に置く（平行投影）" })
