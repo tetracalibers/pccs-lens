@@ -20,6 +20,6 @@
       step: 0.01,
       label: "投影中心までの距離"
     })
-    pane.addBinding(p, "atInfinity", { label: "無限遠に置く（平行投影）" })
+    pane.addBinding(p, "atInfinity", { label: "投影中心を無限遠に置く（平行投影）" })
   }}
 />
