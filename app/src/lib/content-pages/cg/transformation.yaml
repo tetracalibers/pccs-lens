@@ -17,8 +17,7 @@ sections:
       - slug: projection-steps
       - title: 投影の計算法 # CG 2-3
         group: ["CG"]
-      - title: 消失点とn点透視 # CG 2-3-3, ImgP 2-2-2
-        group: ["CG", "ImgP"]
+      - slug: vanishing-points-and-n-point-perspective
       - slug: parallel-projection-types
   - heading: ビューイングパイプライン
     id: viewing-pipeline
