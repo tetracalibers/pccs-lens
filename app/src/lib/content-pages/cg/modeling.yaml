@@ -18,8 +18,7 @@ sections:
   - heading: 曲線と曲面
     id: curves-surfaces
     links:
-      - title: 曲線・曲面の数式表現 # CG 3-4-1
-        group: ["CG"]
+      - slug: curve-surface-equations
       - title: 2次曲線 # CG 3-4-2
         group: ["CG"]
       - title: パラメトリック曲線・曲面 # CG 3-4-3, 3-4-4

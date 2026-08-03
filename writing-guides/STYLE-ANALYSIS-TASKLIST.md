@@ -506,7 +506,7 @@
 
 ## CGと画像処理 — モデリング／曲線と曲面（`cg/modeling.yaml` #curves-surfaces）
 
-- [ページ未作成] 曲線・曲面の数式表現
+- [draft] `/cg/modeling/curve-surface-equations`
 - [ページ未作成] 2次曲線
 - [ページ未作成] パラメトリック曲線・曲面
 - [ページ未作成] ベジェ曲線・曲面

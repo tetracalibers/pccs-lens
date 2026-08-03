@@ -1,0 +1,10 @@
+---
+layout: guide-content
+title: 曲線・曲面の数式表現 # CG 3-4-1
+
+group: ["CG"]
+
+draft: true
+---
+
+## TODO
