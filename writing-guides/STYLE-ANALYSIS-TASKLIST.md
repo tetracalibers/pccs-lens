@@ -509,7 +509,7 @@
 - [draft] `/cg/modeling/curve-surface-equations`
 - [ページ未作成] 2次曲線
 - [ページ未作成] パラメトリック曲線・曲面
-- [ページ未作成] ベジェ曲線・曲面
+- [draft] `/cg/modeling/bezier-curve-surface`
 - [ページ未作成] ファーガソン曲線
 - [ページ未作成] 双3次クーンズ曲面
 - [ページ未作成] Bスプライン曲線・曲面

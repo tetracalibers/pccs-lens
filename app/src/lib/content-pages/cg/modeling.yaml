@@ -23,8 +23,7 @@ sections:
         group: ["CG"]
       - title: パラメトリック曲線・曲面 # CG 3-4-3, 3-4-4
         group: ["CG"]
-      - title: ベジェ曲線・曲面 # CG 3-4-3
-        group: ["CG"]
+      - slug: bezier-curve-surface
       - title: ファーガソン曲線 # CG 3-4-3
         group: ["CG"]
       - title: 双3次クーンズ曲面 # CG 3-4-4
