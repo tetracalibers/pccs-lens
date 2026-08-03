@@ -821,7 +821,7 @@
 ## CGと画像処理 — 変換と投影／投影（`cg/transformation.yaml` #projection）
 
 - [ ] `/cg/transformation/pinhole-camera`
-- [draft] `/cg/transformation/perspective-and-parallel-projection`
+- [ ] `/cg/transformation/perspective-and-parallel-projection`
 - [draft] `/cg/transformation/projection-steps`
 - [ページ未作成] 投影の計算法
 - [ページ未作成] 消失点とn点透視
