@@ -69,4 +69,12 @@
   .foldable-body > :global(:last-child) {
     margin-block-end: 0;
   }
+
+  /** 折り畳み表示のコードは文字を小さく */
+  .foldable-body :global(pre) {
+    font-size: 0.75rem;
+  }
+  .foldable-body :global(pre > code) {
+    line-height: 1.6;
+  }
 </style>
