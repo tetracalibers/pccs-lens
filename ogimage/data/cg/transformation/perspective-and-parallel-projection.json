@@ -1,0 +1,12 @@
+{
+  "route": "cg/transformation/perspective-and-parallel-projection",
+  "title": "透視投影と平行投影",
+  "titleLines": [
+    "透視投影と平行投影"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "変換と投影"
+  ],
+  "figure": "assets/cg/transformation/perspective-and-parallel-projection/figure.png"
+}

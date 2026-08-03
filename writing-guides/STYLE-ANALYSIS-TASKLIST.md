@@ -506,10 +506,10 @@
 
 ## CGと画像処理 — モデリング／曲線と曲面（`cg/modeling.yaml` #curves-surfaces）
 
-- [ページ未作成] 曲線・曲面の数式表現
+- [draft] `/cg/modeling/curve-surface-equations`
 - [ページ未作成] 2次曲線
 - [ページ未作成] パラメトリック曲線・曲面
-- [ページ未作成] ベジェ曲線・曲面
+- [draft] `/cg/modeling/bezier-curve-surface`
 - [ページ未作成] ファーガソン曲線
 - [ページ未作成] 双3次クーンズ曲面
 - [ページ未作成] Bスプライン曲線・曲面
@@ -821,7 +821,7 @@
 ## CGと画像処理 — 変換と投影／投影（`cg/transformation.yaml` #projection）
 
 - [ ] `/cg/transformation/pinhole-camera`
-- [draft] `/cg/transformation/perspective-and-parallel-projection`
+- [ ] `/cg/transformation/perspective-and-parallel-projection`
 - [draft] `/cg/transformation/projection-steps`
 - [ページ未作成] 投影の計算法
 - [ページ未作成] 消失点とn点透視
