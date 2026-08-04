@@ -2,7 +2,7 @@
   import LinkCard, {
     type CardTag,
     type LinkCardItem
-  } from "$lib/components/site-top/LinkCard.svelte"
+  } from "$lib/components/cg-top/LinkCard.svelte"
   import { cgPages, cgGroups, type CgPage, type CgLink } from "$lib/content-pages/cg"
   import { isPageLink } from "$lib/content-pages/types"
   import { guidePages } from "$lib/meta/guide-pages"
@@ -13,14 +13,7 @@
   const imgpTag: CardTag = { label: "画像処理", color: "var(--color-image-processing)" }
 
   // カードの配色パレット（cgPages の並び順で循環）
-  const palette: { gradient: string; glow: string }[] = [
-    { gradient: "linear-gradient(135deg, #4d96ff, #c77dff)", glow: "#4d96ff" },
-    { gradient: "linear-gradient(135deg, #6bcb77, #4d96ff)", glow: "#6bcb77" },
-    { gradient: "linear-gradient(135deg, #c77dff, #4d96ff)", glow: "#c77dff" },
-    { gradient: "linear-gradient(135deg, #ff6b6b, #ffd93d)", glow: "#ff6b6b" },
-    { gradient: "linear-gradient(135deg, #f59f00, #ffd93d)", glow: "#f59f00" },
-    { gradient: "linear-gradient(135deg, #4dd0e1, #4d96ff)", glow: "#4dd0e1" }
-  ]
+  const palette: string[] = ["#4d96ff", "#6bcb77", "#c77dff", "#ff6b6b", "#f59f00", "#4dd0e1"]
 
   const hasGroup = (link: CgLink): link is Extract<CgLink, { group: CgGroup[] }> => "group" in link
 
@@ -63,7 +56,7 @@
       page.route,
       {
         href: page.href,
-        ...palette[i % palette.length],
+        glow: palette[i % palette.length],
         title: page.title,
         desc: page.summary,
         tags: tagsOf(page),
