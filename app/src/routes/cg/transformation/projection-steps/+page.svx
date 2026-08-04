@@ -11,6 +11,7 @@ draft: true
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import ViewVolumeDemo from '$lib/demo/threejs/transformation/projection-steps/view-volume/ViewVolumeDemo.svelte'
+  import WindowAndAngleOfViewDemo from '$lib/demo/threejs/transformation/projection-steps/window-and-angle-of-view/WindowAndAngleOfViewDemo.svelte'
 </script>
 
 [投影中心](/cg/transformation/perspective-and-parallel-projection/)と投影面が決まれば、空間の点が投影面のどこへ写るかは定まります。
@@ -30,8 +31,120 @@ draft: true
 
 ウィンドウを通して見える空間は、視点を頂点とし、ウィンドウの枠を断面とする:Mark[四角錐]の内側です。
 
-:::Todo
-ウィンドウと視野の関係、ウィンドウを通して見える四角錐の空間を可視化したデモ
+<CanvasWrapper>
+  <WindowAndAngleOfViewDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+const halfWindow = WINDOW_SIZE / 2
+
+// 画角は、視点からウィンドウの端を見込む角の 2 倍。ウィンドウの大きさと投影面までの
+// 距離の比だけで決まるので、比が同じなら見える空間も同じ
+const spread = halfWindow / PLANE_DISTANCE // 奥行き 1 あたりの広がり
+const halfAngle = Math.atan(spread)
+const angleOfView = (2 * halfAngle * 180) / Math.PI
+
+// 1 辺 1 の正方形。投影面とウィンドウで共有し、大きさは scale で決める
+const squareGeometry = new PlaneGeometry(1, 1)
+
+// 投影面。視線に垂直な平面で、本来はどこまでも広がっている
+const projectionPlane = new Mesh(
+  squareGeometry,
+  new MeshBasicMaterial({
+    color: PLANE_COLOR,
+    side: DoubleSide,
+    transparent: true,
+    opacity: 0.1
+  })
+)
+projectionPlane.scale.set(PLANE_SIZE, PLANE_SIZE, 1)
+projectionPlane.position.z = PLANE_DISTANCE
+scene.add(projectionPlane)
+
+// ウィンドウ。投影面の上に置いた長方形の枠で、この内側に写ったものだけを画像にする
+const windowFrame = new LineSegments(
+  new EdgesGeometry(squareGeometry),
+  new LineBasicMaterial({ color: WINDOW_COLOR })
+)
+windowFrame.position.z = PLANE_DISTANCE
+windowFrame.scale.set(WINDOW_SIZE, WINDOW_SIZE, 1)
+scene.add(windowFrame)
+
+// 視点（投影中心）。大きさをもたない 1 つの点として原点に置く
+const centerGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, 0], 3)
+)
+scene.add(new Points(centerGeometry, new PointsMaterial({ color: CENTER_COLOR, size: 0.14 })))
+
+// 四角錐は、奥行きか広がりのどちらかが上限に届くところまで描く。
+// 奥の端は閉じない（クリッピング面はまだ無いので、この空間は途切れずに続く）
+const depth = Math.min(MAX_DEPTH, MAX_HALF_SIZE / spread)
+const half = spread * depth
+
+// 視線。視点から投影面に垂直な向き（z の正の向き）へ伸びる
+const axisGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, 0, 0, 0, depth], 3)
+)
+scene.add(new LineSegments(axisGeometry, new LineBasicMaterial({ color: AXIS_COLOR })))
+
+// ウィンドウを通して見える空間。視点を頂点とし、ウィンドウの枠を断面とする四角錐で、
+// その稜線は視点からウィンドウの 4 隅を通ってまっすぐ奥へ伸びる
+const edgePosition = new Float32BufferAttribute(new Float32Array(CORNERS.length * 6), 3)
+CORNERS.forEach(([cornerX, cornerY], i) => {
+  edgePosition.setXYZ(i * 2, 0, 0, 0)
+  edgePosition.setXYZ(i * 2 + 1, cornerX * half, cornerY * half, depth)
+})
+const edgeGeometry = new BufferGeometry().setAttribute("position", edgePosition)
+scene.add(new LineSegments(edgeGeometry, new LineBasicMaterial({ color: PYRAMID_COLOR })))
+
+// 画角をつくる 2 本の線。視点からウィンドウの左右の辺の中央へ引く
+const angleMaterial = new LineBasicMaterial({ color: ANGLE_COLOR })
+const angleGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute(
+    [0, 0, 0, -halfWindow, 0, PLANE_DISTANCE, 0, 0, 0, halfWindow, 0, PLANE_DISTANCE],
+    3
+  )
+)
+scene.add(new LineSegments(angleGeometry, angleMaterial))
+
+// 画角の開き。視点を中心とする扇形として塗る。頂点は 0 番が視点で、1 番以降が円弧を
+// 分割した点。2 本の線の間を埋めるので、半径は投影面までの距離より短くとる
+const radius = Math.min(ARC_RADIUS, PLANE_DISTANCE * 0.6)
+const sectorPosition = new Float32BufferAttribute(new Float32Array((ARC_SEGMENTS + 2) * 3), 3)
+sectorPosition.setXYZ(0, 0, 0, 0)
+for (let i = 0; i <= ARC_SEGMENTS; i += 1) {
+  const angle = -halfAngle + (2 * halfAngle * i) / ARC_SEGMENTS
+  sectorPosition.setXYZ(i + 1, radius * Math.sin(angle), 0, radius * Math.cos(angle))
+}
+
+// 四角錐の稜線を隠さないよう、薄く塗って深度は書き込まない
+const sectorGeometry = new BufferGeometry()
+  .setAttribute("position", sectorPosition)
+  .setIndex(SECTOR_FACES)
+scene.add(
+  new Mesh(
+    sectorGeometry,
+    new MeshBasicMaterial({
+      color: ANGLE_COLOR,
+      side: DoubleSide,
+      transparent: true,
+      opacity: 0.26,
+      depthWrite: false
+    })
+  )
+)
+
+// 扇形の外周の円弧。同じ頂点をたどるので、視点（0 番）だけ描画から外す
+const arcGeometry = new BufferGeometry().setAttribute("position", sectorPosition)
+arcGeometry.setDrawRange(1, ARC_SEGMENTS + 1)
+scene.add(new Line(arcGeometry, angleMaterial))
+```
+
 :::
 
 :Mark[ウィンドウ]を大きくとるほど、または投影面を:Mark[投影中心]へ近づけるほど、:Mark[画角]は広がり、一度に写せる範囲が広くなります。
