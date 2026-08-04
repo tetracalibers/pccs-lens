@@ -45,7 +45,7 @@ grades: ["2", "3", "uc"]
 色のはたらきは、大きく2つに分けることができます。
 
 ::::CardGrid
-:::TermCard{title="色の情緒的効果" ankiTitle="mark"}
+:::TermCard{title="色の情緒的効果" ankiTitle="anki"}
 色が印象を生み出すはたらきを、色の:Anki[情緒]的効果といいます。
 
 - 心地よさを感じさせる
@@ -55,7 +55,7 @@ grades: ["2", "3", "uc"]
 - 象徴する
 :::
 
-:::TermCard{title="色の機能的効果" ankiTitle="mark"}
+:::TermCard{title="色の機能的効果" ankiTitle="anki"}
 色がわかりやすさをもたらすはたらきを、色の:Anki[機能]的効果といいます。
 
 - 区別しやすくする

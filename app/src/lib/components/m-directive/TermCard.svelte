@@ -21,7 +21,7 @@
     centering?: boolean
     textCentering?: boolean
     title: string
-    ankiTitle?: "hide" | "mark" | "show"
+    ankiTitle?: "hide" | "anki" | "show"
     icon?: keyof typeof iconMap
     link?: string
     /** カード内の本文（p・li）のfont-size。CSSの長さとして解釈できる文字列を渡す */
@@ -47,7 +47,7 @@
 </script>
 
 {#snippet titleText()}
-  {#if ankiTitle === "mark"}
+  {#if ankiTitle === "anki"}
     <Anki>{title}</Anki>
   {:else}
     {title}

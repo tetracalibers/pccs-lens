@@ -188,10 +188,10 @@ PCCSのトーン区分と各トーンの名称は、日本色研事業『新配�
 
 ```
 ::::CardGrid{lastWide}
-:::TermCard{title="ジョルジュ・スーラ" ankiTitle="mark" icon="person"}
+:::TermCard{title="ジョルジュ・スーラ" ankiTitle="anki" icon="person"}
 （カードの中身）
 :::
-:::TermCard{title="ポール・シニャック" ankiTitle="mark" icon="person"}
+:::TermCard{title="ポール・シニャック" ankiTitle="anki" icon="person"}
 （カードの中身）
 :::
 ::::
@@ -205,7 +205,7 @@ PCCSのトーン区分と各トーンの名称は、日本色研事業『新配�
 `TermCard` の属性:
 
 - `title="..."` … カードの見出し。
-- `ankiTitle="hide"`（既定）/ `"mark"` / `"show"` … 暗記モードでのタイトルの扱い。`hide` はタイトルを伏せ字にし、`mark` は `:Anki[]` と同じ扱い（通常表示でも強調され、暗記モードで隠れる）、`show` は隠しません。カード自体が「用語を当てる問題」になるときは `hide` か `mark`、単なる見出しなら `show` にします。
+- `ankiTitle="hide"`（既定）/ `"anki"` / `"show"` … 暗記モードでのタイトルの扱い。`hide` はタイトルを伏せ字にし、`anki` は `:Anki[]` と同じ扱い（通常表示でも強調され、暗記モードで隠れる）、`show` は隠しません。カード自体が「用語を当てる問題」になるときは `hide` か `anki`、単なる見出しなら `show` にします。
 - `icon="1"` … 見出しの先頭にアイコンを出す。用意されているキーは `1`〜`4`（番号）・`person`・`book`・`art`・`color`・`country` で、Iconifyのアイコン名を直接書くこともできます。
 - `link="/patterns/"` … タイトルをリンクにする。
 - `centering` / `textCentering` … カード全体／テキストを中央寄せにする。

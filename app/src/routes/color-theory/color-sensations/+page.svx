@@ -135,14 +135,14 @@ PCCSのトーンでは、硬い色の代表として:Anki[dk]トーン、:Anki[d
 色の軽重感を利用すると、色の配置によって:Anki[バランス]（安定感）や:Anki[アンバランス]（躍動感）を演出することができます。
 
 ::::CardGrid
-:::TermCard{title="バランス" ankiTitle="mark" centering textCentering}
+:::TermCard{title="バランス" ankiTitle="anki" centering textCentering}
 <SVGWrapper maxW={150}>
   <WeightBalanceStack topPCCS="p24" bottomPCCS="dk24" />
 </SVGWrapper>
 
 :Anki[低明度]色を下にすると:Anki[安定]して見える
 :::
-:::TermCard{title="アンバランス" ankiTitle="mark" centering textCentering}
+:::TermCard{title="アンバランス" ankiTitle="anki" centering textCentering}
 <SVGWrapper maxW={150} style="rotate: 180deg;">
   <WeightBalanceStack topPCCS="p24" bottomPCCS="dk24" />
 </SVGWrapper>

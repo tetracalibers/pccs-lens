@@ -70,10 +70,10 @@ visual: true
 [眼の構造](/color-theory/eye-structure/)で学んだように、網膜に届く光の量は、:Anki[虹彩]が瞳孔の大きさを変えることでコントロールされています。
 
 ::::CardGrid
-:::TermCard{title="散瞳" ankiTitle="mark"}
+:::TermCard{title="散瞳" ankiTitle="anki"}
 暗い環境では、瞳孔径を拡大させて多くの光を眼に取り込もうとする
 :::
-:::TermCard{title="縮瞳" ankiTitle="mark"}
+:::TermCard{title="縮瞳" ankiTitle="anki"}
 明るい環境では、瞳孔径を縮小させて眩しさを抑える
 :::
 ::::
@@ -88,7 +88,7 @@ visual: true
 年齢とともに小さくなっていくのは、:Anki[暗順応]時の瞳孔径です。
 
 ::::CardGrid
-:::TermCard{title="老人性縮瞳" ankiTitle="mark"}
+:::TermCard{title="老人性縮瞳" ankiTitle="anki"}
 加齢により、暗い場所でも瞳孔径があまり広がらなくなり、常に縮瞳している状態
 :Anki[暗順応]に支障をきたし、暗い場所ではものが見えづらくなる
 :::

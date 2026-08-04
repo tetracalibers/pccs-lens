@@ -24,16 +24,16 @@ grades: ["1"]
 この段階に応じて、どんな指標が光源による「明るさ」を表すのかが変わってきます。
 
 ::::CardGrid
-:::TermCard{title="光束" ankiTitle="mark" icon="1"}
+:::TermCard{title="光束" ankiTitle="anki" icon="1"}
 光源が光を発したときは、光源が出す光の:Anki[総量]がそのまま光源の明るさといえる
 :::
-:::TermCard{title="光度" ankiTitle="mark" icon="2"}
+:::TermCard{title="光度" ankiTitle="anki" icon="2"}
 光が空間を進むときは、特定:Anki[方向]にどれだけ強く光が出ているか？が光源の明るさといえる
 :::
-:::TermCard{title="照度" ankiTitle="mark" icon="3"}
+:::TermCard{title="照度" ankiTitle="anki" icon="3"}
 光が物体の面に当たったときは、その面にどれだけの光が:Anki[届いた]か？が光源の明るさといえる
 :::
-:::TermCard{title="輝度" ankiTitle="mark" icon="4"}
+:::TermCard{title="輝度" ankiTitle="anki" icon="4"}
 面からの反射光を見たときは、その光がどれくらい眩しく:Anki[見える]か？が光源の明るさといえる
 :::
 ::::
@@ -150,13 +150,13 @@ grades: ["1"]
 輝度が高すぎると眩しさが不快に感じられ、さらに輝度が高くなると、眩しさで物体が見えづらくなります。
 
 ::::CardGrid{lastWide}
-:::TermCard{title="グレア" ankiTitle="mark"}
+:::TermCard{title="グレア" ankiTitle="anki"}
 眩しさが感じられる状態
 :::
-:::TermCard{title="不快グレア" ankiTitle="mark"}
+:::TermCard{title="不快グレア" ankiTitle="anki"}
 眩しさが不快に感じられる状態
 :::
-:::TermCard{title="減能グレア" ankiTitle="mark"}
+:::TermCard{title="減能グレア" ankiTitle="anki"}
 不快グレアが生じるような高い輝度が視点の近くに存在することで引き起こされる視機能の低下（眩しさで対象物が見えづらくなる状態）
 :::
 ::::

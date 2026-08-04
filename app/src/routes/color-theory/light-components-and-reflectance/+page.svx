@@ -57,14 +57,14 @@ visual: true
 波長が同じであれば、比エネルギーが:Anki[大きい]ほど、明るく感じます。
 
 ::::CardGrid
-:::TermCard{title="太陽光" ankiTitle="mark"}
+:::TermCard{title="太陽光" ankiTitle="anki"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <Sunlight />
 </SVGWrapper>
 
 可視範囲のすべての波長をほぼ均等に含んでいることから、:Anki[白色光]（光なので実際は無色）であることがわかります。
 :::
-:::TermCard{title="白熱電球" ankiTitle="mark"}
+:::TermCard{title="白熱電球" ankiTitle="anki"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <IncandescentBulb />
 </SVGWrapper>
@@ -82,28 +82,28 @@ visual: true
 [色と光の関係](/color-theory/how-color-works/)で学んだように、私たちは物体の表面で:Anki[反射]されて目に届いた光だけを目にしているので、反射率の分布を見ることで、その物体の色を知ることができます。
 
 ::::CardGrid
-:::TermCard{title="赤" ankiTitle="mark"}
+:::TermCard{title="赤" ankiTitle="anki"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <RedRef />
 </SVGWrapper>
 
 赤く見える物体は、:Anki[長波長]の光を多く反射していることがわかります。
 :::
-:::TermCard{title="緑" ankiTitle="mark"}
+:::TermCard{title="緑" ankiTitle="anki"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <GreenRef />
 </SVGWrapper>
 
 緑に見える物体は、:Anki[中波長]の光を多く反射していることがわかります。
 :::
-:::TermCard{title="青" ankiTitle="mark"}
+:::TermCard{title="青" ankiTitle="anki"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <BlueRef />
 </SVGWrapper>
 
 青く見える物体は、:Anki[短波長]の光を多く反射していることがわかります。
 :::
-:::TermCard{title="黄" ankiTitle="mark"}
+:::TermCard{title="黄" ankiTitle="anki"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <YellowRef />
 </SVGWrapper>
@@ -111,14 +111,14 @@ visual: true
 黄に見える物体は、:Anki[中波長]と:Anki[長波長]の光を多く反射していることがわかります。
 これは、黄が:Anki[緑]と:Anki[赤]の[加法混色](/color-theory/color-mixing-basics/)で得られる色であるからです。
 :::
-:::TermCard{title="白" ankiTitle="mark"}
+:::TermCard{title="白" ankiTitle="anki"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <WhiteRef />
 </SVGWrapper>
 
 白く見える物体は、可視範囲のすべての波長の光をほぼ均等に反射していることがわかります。
 :::
-:::TermCard{title="黒" ankiTitle="mark"}
+:::TermCard{title="黒" ankiTitle="anki"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <BlackRef />
 </SVGWrapper>
@@ -143,12 +143,12 @@ visual: true
 特に、:Anki[無彩色]は分光反射率曲線が水平に近いため、その高さで明度を判断できます。
 
 ::::CardGrid
-:::TermCard{title="白" ankiTitle="mark"}
+:::TermCard{title="白" ankiTitle="anki"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <WhiteRef />
 </SVGWrapper>
 :::
-:::TermCard{title="灰" ankiTitle="mark"}
+:::TermCard{title="灰" ankiTitle="anki"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <GrayRef />
 </SVGWrapper>
@@ -167,12 +167,12 @@ visual: true
 ある波長だけ強く反射し、他の波長はあまり反射しない場合、反射している波長の色みだけが強く感じられ、他の色みはあまり混ざらないからです。
 
 ::::CardGrid
-:::TermCard{title="青" ankiTitle="mark"}
+:::TermCard{title="青" ankiTitle="anki"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <BlueRef />
 </SVGWrapper>
 :::
-:::TermCard{title="青みがかった灰" ankiTitle="mark"}
+:::TermCard{title="青みがかった灰" ankiTitle="anki"}
 <SVGWrapper style="margin-block-end: -0.5rem;">
   <BluishGrayRef />
 </SVGWrapper>

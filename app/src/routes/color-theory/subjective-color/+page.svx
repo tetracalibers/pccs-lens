@@ -22,7 +22,7 @@ visual: true
 静止画による主観色は、図を見る際の微細な:Anki[眼球運動]が要因の一つと考えられています。
 
 ::::CardGrid
-:::TermCard{title="ラッキーシュ＆モス図形" ankiTitle="mark"}
+:::TermCard{title="ラッキーシュ＆モス図形" ankiTitle="anki"}
 斜めの縞模様に対して:Anki[直角]方向に、薄いパステル調の:Anki[オレンジ]や:Anki[青緑]の色の:Anki[流れ]が感じられます。
 
 <SVGWrapper noPadding>
@@ -30,7 +30,7 @@ visual: true
 </SVGWrapper>
 :::
 
-:::TermCard{title="スキナー図形" ankiTitle="mark"}
+:::TermCard{title="スキナー図形" ankiTitle="anki"}
 黒い円の中に配置された小さな白い円それぞれに、薄い:Anki[赤]・:Anki[黄]・:Anki[緑]・:Anki[青]などの色が感じられます。
 
 <SVGWrapper noPadding>
@@ -43,7 +43,7 @@ visual: true
 
 運動を伴う図における主観色は、[3種類の錐体](/color-theory/photoreceptor-types-and-distribution/)の:Anki[反応速度]の差などが関与していると考えられていますが、それだけでは説明できないとする見解もあります。
 
-:::TermCard{title="ベンハムトップ" ankiTitle="mark"}
+:::TermCard{title="ベンハムトップ" ankiTitle="anki"}
 :Anki[ベンハムこま]とも呼ばれ、駒のように回すと主観色を見ることができます。
 時計回りに回すと、中心の縞から順に:Anki[赤]、:Anki[黄]、:Anki[緑]、:Anki[青]に色づいて見え、反時計回りに回すと、色の順序が逆になります。
 :::

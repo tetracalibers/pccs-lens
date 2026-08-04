@@ -84,13 +84,13 @@ CGでは消失点の数を直接指定することはなく、カメラをどこ
 :::
 
 ::::CardGrid{lastWide}
-:::TermCard{title="1点透視" ankiTitle="mark" icon="1"}
+:::TermCard{title="1点透視" ankiTitle="anki" icon="1"}
 稜線の`3`方向のうち`2`方向が投影面に平行になる向き。正面を向いた面は形をそのまま保ち、奥行き方向の稜線だけが`1`つの消失点へ収束する。
 :::
-:::TermCard{title="2点透視" ankiTitle="mark" icon="2"}
+:::TermCard{title="2点透視" ankiTitle="anki" icon="2"}
 投影面に平行なのは`1`方向だけ。多くは鉛直方向を平行に保ち、水平な`2`方向の稜線がそれぞれの消失点へ収束する。建物を斜め前から見た構図。
 :::
-:::TermCard{title="3点透視" ankiTitle="mark" icon="3"}
+:::TermCard{title="3点透視" ankiTitle="anki" icon="3"}
 どの向きも投影面に平行でない置き方。見上げや見下ろしの構図がこれにあたり、鉛直の稜線も収束して消失点が`3`つ現れる。
 :::
 ::::

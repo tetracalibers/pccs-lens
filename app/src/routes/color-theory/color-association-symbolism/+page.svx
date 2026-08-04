@@ -28,7 +28,7 @@ grades: ["3"]
 色の連想は、企業活動や商品戦略にも関わっており、広く社会で活用されています。
 
 ::::CardGrid{cols=1}
-:::TermCard{title="コーポレートカラー" ankiTitle="mark"}
+:::TermCard{title="コーポレートカラー" ankiTitle="anki"}
 企業の理念や姿勢などを内外に印象づける色
 色の連想により、自社に合ったイメージを表現している
 

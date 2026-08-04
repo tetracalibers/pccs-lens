@@ -17,14 +17,14 @@ grades: ["3"]
 - :Anki[スタイリング]：「関係性」の設計
 
 ::::CardGrid{cols=1}
-:::TermCard{title="デザイン" ankiTitle="mark"}
+:::TermCard{title="デザイン" ankiTitle="anki"}
 :Anki[シルエット]や:Anki[装飾]によって、身体をどのように見せるかが決まります。
 :::
-:::TermCard{title="マテリアル" ankiTitle="mark"}
+:::TermCard{title="マテリアル" ankiTitle="anki"}
 :Anki[素材]や:Anki[材質]は、光沢・重さ・柔らかさ・温度感・動きなどを演出します。
 これは見た目だけでなく、着ている人の感覚にも関わる要素です。
 :::
-:::TermCard{title="スタイリング" ankiTitle="mark"}
+:::TermCard{title="スタイリング" ankiTitle="anki"}
 服同士をどう馴染ませるか、どうズラすかを考えることで、統一感・リズム・抜け感などを演出します。
 服の特徴は、:Anki[デザイン]と:Anki[マテリアル]の2つの側面で捉えられます。服の組み合わせというよりも、デザインとマテリアルの絡み合いが全体のイメージを作り出すことになります。
 :::
@@ -60,13 +60,13 @@ grades: ["3"]
 ファッションのカラーコーディネートは、:Anki[ベースカラー]・:Anki[アソートカラー]・:Anki[アクセントカラー]という、[面積にメリハリをつけた配色構成](/color-theory/color-area-proportion/)で考えるのが基本となります。
 
 ::::CardGrid{lastWide}
-:::TermCard{title="ベースカラー" ankiTitle="mark"}
+:::TermCard{title="ベースカラー" ankiTitle="anki"}
 コーディネートの中で占める面積が最も大きく、全体の:Anki[支配色]となります。面積は:Anki[着こなし]によって変化させることもできます。
 :::
-:::TermCard{title="アソートカラー" ankiTitle="mark"}
+:::TermCard{title="アソートカラー" ankiTitle="anki"}
 ベースカラーに組み合わせる色で、ベースカラーに次ぎ2番目に大きい面積を占めます。
 :::
-:::TermCard{title="アクセントカラー" ankiTitle="mark"}
+:::TermCard{title="アクセントカラー" ankiTitle="anki"}
 コーディネート全体の:Anki[演出効果]を上げる色です。使用面積は小さくとどめ、目立つ色や対照的な色で:Anki[コントラスト]をつけます。ファッションでは複数の場所で使われていたり、1色だけとは限りません。
 :::
 ::::
@@ -81,7 +81,7 @@ grades: ["3"]
 :::TermCard{title="面積による強弱"}
 トップとボトムの:Anki[面積]の配分を変えることで、:Anki[支配色]が明確になり強弱がつきます。
 :::
-:::TermCard{title="セパレーション" ankiTitle="mark"}
+:::TermCard{title="セパレーション" ankiTitle="anki"}
 トップとボトムのバランスが悪いときは、色と色の境目に別な色を入れると効果的です。
 トップの:Anki[ヘム]（裾）に別な色を入れたり、ウエスト部分に:Anki[ベルト]などのアイテムを使うといった方法があり、色としては:Anki[無彩色]や:Anki[メタリックカラー]がよく使われます。
 :::

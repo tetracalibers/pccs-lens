@@ -30,13 +30,13 @@ visual: true
 - :Anki[減法混色]：色を絵の具などの:Anki[色料]として、紙や布などの生地の上で使うときの混色
 
 ::::CardGrid
-:::TermCard{title="加法混色" centering ankiTitle="mark"}
+:::TermCard{title="加法混色" centering ankiTitle="anki"}
 <SVGWrapper maxW="300">
   <AddColorMixVenn />
 </SVGWrapper>
 :::
 
-:::TermCard{title="減法混色" centering ankiTitle="mark"}
+:::TermCard{title="減法混色" centering ankiTitle="anki"}
 <SVGWrapper maxW="300">
   <SubColorMixVenn />
 </SVGWrapper>
@@ -175,11 +175,11 @@ Rの部分とGの部分は互いに打ち消してしまいますが、Bの部�
 <PrimaryColorsWheel />
 
 ::::CardGrid
-:::TermCard{title="色光の三原色" centering ankiTitle="mark"}
+:::TermCard{title="色光の三原色" centering ankiTitle="anki"}
 <PrimaryColorsRGB />
 :::
 
-:::TermCard{title="色料の三原色" centering ankiTitle="mark"}
+:::TermCard{title="色料の三原色" centering ankiTitle="anki"}
 <PrimaryColorsCMY />
 :::
 ::::

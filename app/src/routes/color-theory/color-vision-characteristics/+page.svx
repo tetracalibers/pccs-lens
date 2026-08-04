@@ -21,19 +21,19 @@ grades: ["2", "uc"]
 色覚特性は、:Anki[加齢]によっても変化が見られます。
 
 ::::CardGrid{cols=1}
-:::TermCard{title="老眼" ankiTitle="mark"}
+:::TermCard{title="老眼" ankiTitle="anki"}
 近くの対象物にピントが合わなくなる
 :::
-:::TermCard{title="視細胞の感度の低下" ankiTitle="mark"}
+:::TermCard{title="視細胞の感度の低下" ankiTitle="anki"}
 暗いところで物が見えづらくなる
 :::
-:::TermCard{title="水晶体の黄変" ankiTitle="mark"}
+:::TermCard{title="水晶体の黄変" ankiTitle="anki"}
 [水晶体](/color-theory/eye-structure/)は年を取るにつれて少しずつ:Anki[黄]みを増し、より高齢になると:Anki[茶褐色]の濁った色になる。
 黄色い水晶体は:Anki[短波長]の光を多く[吸収](/color-theory/color-mixing-basics/)するため、網膜に:Anki[青]色の光が届きづらくなる。
 その結果、青系の色が:Anki[暗く]見えるようになるため、:Anki[青]と:Anki[黒]の区別が難しくなり、たとえばガスの青い炎が見えづらくなったりする。
 見え方を回復させるため、水晶体を:Anki[人工レンズ]と交換する手術を受ける人もいる。
 :::
-:::TermCard{title="白内障" ankiTitle="mark"}
+:::TermCard{title="白内障" ankiTitle="anki"}
 水晶体が白く濁る病気。
 :Anki[視力]が低下し、:Anki[眩しさ]を強く感じるようになり、:Anki[彩度]に対する感度も低下する。
 70代では:Anki[9割]、80代ではほぼ:Anki[10割]が罹るといわれている。
@@ -58,18 +58,18 @@ grades: ["2", "uc"]
 ロービジョンの原因となる病気には、さまざまなものがあります。
 
 ::::CardGrid{cols=1}
-:::TermCard{title="緑内障" ankiTitle="mark"}
+:::TermCard{title="緑内障" ankiTitle="anki"}
 :Anki[視神経]の障害によって、:Anki[視野]の周辺部から徐々に見えなくなっていく病気。
 :::
-:::TermCard{title="糖尿病網膜症" ankiTitle="mark"}
+:::TermCard{title="糖尿病網膜症" ankiTitle="anki"}
 :Anki[糖尿病]によって:Anki[網膜]の血管が詰まったり、出血したりすることで、網膜が:Anki[剥離]することがある。
 自覚症状がなくゆっくりと進行し、:Anki[失明]原因の上位となっている。
 :::
-:::TermCard{title="網膜色素変性症" ankiTitle="mark"}
+:::TermCard{title="網膜色素変性症" ankiTitle="anki"}
 :Anki[暗い]ところや夜に眼が見えづらくなり、周辺から中心に向かって見えなくなっていく:Anki[遺伝性]の障害。
 網膜の:Anki[桿体]細胞から障害が始まり、ゆっくりと:Anki[錐体]細胞にも障害が及んでいく。
 :::
-:::TermCard{title="黄斑変性" ankiTitle="mark"}
+:::TermCard{title="黄斑変性" ankiTitle="anki"}
 :Anki[加齢]により、:Anki[視野]の中心が歪んだり、見えなくなったりする。
 :::
 ::::

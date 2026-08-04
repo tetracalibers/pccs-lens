@@ -49,10 +49,10 @@ visual: true
 ガラス球の内側に塗料を塗るかどうかによっても光のバリエーションが変わります。
 
 ::::CardGrid
-:::TermCard{title="ホワイトランプ" ankiTitle="mark"}
+:::TermCard{title="ホワイトランプ" ankiTitle="anki"}
 ガラス球の内側に白色塗料を塗った白熱電球。:Anki[眩しさ]が少なくソフトな光で、光の拡散性に優れている
 :::
-:::TermCard{title="クリアランプ" ankiTitle="mark"}
+:::TermCard{title="クリアランプ" ankiTitle="anki"}
 ガラス球が透明な白熱電球。きらめきのある:Anki[装飾]的な光を発する
 :::
 ::::
@@ -97,16 +97,16 @@ visual: true
 </SVGWrapper>
 
 ::::CardGrid
-:::TermCard{title="電球色" ankiTitle="mark"}
+:::TermCard{title="電球色" ankiTitle="anki"}
 色温度約:Anki[3000]K。:Anki[白熱電球]に近いあたたかみのある光色で、:Anki[くつろいだ]雰囲気
 :::
-:::TermCard{title="白色" ankiTitle="mark"}
+:::TermCard{title="白色" ankiTitle="anki"}
 色温度約:Anki[4000]Kのやや:Anki[黄]みを帯びた光色で、:Anki[柔らかな]雰囲気
 :::
-:::TermCard{title="昼白色" ankiTitle="mark"}
+:::TermCard{title="昼白色" ankiTitle="anki"}
 色温度約:Anki[5000]Kの自然でナチュラルな光色。:Anki[物体]の色が自然に美しく見える
 :::
-:::TermCard{title="昼光色" ankiTitle="mark"}
+:::TermCard{title="昼光色" ankiTitle="anki"}
 色温度約:Anki[6500]Kのやや:Anki[青]みがかった光色。空間の:Anki[白さ]が際立つ
 :::
 ::::
@@ -121,7 +121,7 @@ JISでは、蛍光ランプを:Anki[演色性]によって分類しています�
 - :Anki[普通型]：他の二つと比べると演色性は劣るが、価格が安い
 
 ::::CardGrid{cols=1}
-:::TermCard{title="普通型" ankiTitle="mark"}
+:::TermCard{title="普通型" ankiTitle="anki"}
 長波長域のエネルギー量が激減しており、他の短波長域・中波長域には突出したピークがある。
 波長のバランスが良くないため、見える色が少し変わってしまう（演色性がよくない）
 
@@ -129,14 +129,14 @@ JISでは、蛍光ランプを:Anki[演色性]によって分類しています�
   <StandardFluorescentLampSpectralDistribution />
 </SVGWrapper>
 :::
-:::TermCard{title="高演色型" ankiTitle="mark"}
+:::TermCard{title="高演色型" ankiTitle="anki"}
 普通形と似ているものの、長波長域のエネルギーが増強されており、演色性が改善されている
 
 <SVGWrapper maxW={320} style="margin-block: -0.5rem;">
   <HighColorRenderingFluorescentLampSpectralDistribution />
 </SVGWrapper>
 :::
-:::TermCard{title="3波長域発光型" ankiTitle="mark"}
+:::TermCard{title="3波長域発光型" ankiTitle="anki"}
 :Anki[錐体]の感度がよい波長付近の光を強く発光させることで、:Anki[演色性]を高めている
 逆にそれ以外の部分のエネルギー量は抑えめにすることで、:Anki[省エネルギー]を実現している
 
@@ -151,16 +151,16 @@ JISでは、蛍光ランプを:Anki[演色性]によって分類しています�
 :Anki[HID]はHigh Intensity Discharge Lampの略で、日本語では:Anki[高輝度放射灯]と呼ばれます。
 
 ::::CardGrid{cols=1}
-:::TermCard{title="メタルハライドランプ" ankiTitle="mark"}
+:::TermCard{title="メタルハライドランプ" ankiTitle="anki"}
 高効率で演色性がよく、:Anki[大光量]が得られるため、スタジアムや体育館などの:Anki[スポーツ施設]で使われる。:Anki[高演色]タイプはスーパーやデパートなどの:Anki[商業施設]でも使われる。
 :::
-:::TermCard{title="水銀ランプ" ankiTitle="mark"}
+:::TermCard{title="水銀ランプ" ankiTitle="anki"}
 白熱電球の約:Anki[3]倍の発光効率をもち、長寿命で経済性に優れている。しかし:Anki[演色性]が悪いため、利用範囲は限られる。:Anki[道路]や:Anki[公園]の夜間照明、:Anki[工場]や:Anki[倉庫]の照明に使われるが、演色性や効率性の優れたメタルハライドランプなどに置き換えられつつある。
 :::
-:::TermCard{title="高圧ナトリウムランプ" ankiTitle="mark"}
+:::TermCard{title="高圧ナトリウムランプ" ankiTitle="anki"}
 高効率で大光量が得られるため、:Anki[スポーツ施設]、:Anki[道路]や:Anki[景観]のライトアップに使われてきた。明るさは白熱電球の:Anki[3]〜:Anki[4]倍、寿命は白熱電球の:Anki[4]〜:Anki[9]倍と経済性にも優れ、白熱電球に似た温かみのある光色のものはホテルのロビーなどで使われることもあった。
 :::
-:::TermCard{title="低圧ナトリウムランプ" ankiTitle="mark"}
+:::TermCard{title="低圧ナトリウムランプ" ankiTitle="anki"}
 :Anki[オレンジ]色の光色をもつ単色光のランプ。:Anki[道路]照明や:Anki[トンネル]照明として広く使われたが、:Anki[演色性]が悪いため、高圧ナトリウムランプや蛍光ランプなどに置き換えられている。
 
 <SVGWrapper maxW={320} style="margin-block: -0.5rem;">
@@ -197,17 +197,17 @@ JISでは、蛍光ランプを:Anki[演色性]によって分類しています�
 この2つの山の大きさのバランスによって、白色LEDの光色が変わります。
 
 ::::CardGrid{firstWide}
-:::TermCard{title="電球色" ankiTitle="mark"}
+:::TermCard{title="電球色" ankiTitle="anki"}
 <SVGWrapper maxW={320} style="margin-block: -0.5rem;">
   <WarmWhiteLEDSpectralDistribution />
 </SVGWrapper>
 :::
-:::TermCard{title="昼白色" ankiTitle="mark"}
+:::TermCard{title="昼白色" ankiTitle="anki"}
 <SVGWrapper maxW={320} style="margin-block: -0.5rem;">
   <NeutralWhiteLEDSpectralDistribution />
 </SVGWrapper>
 :::
-:::TermCard{title="昼光色" ankiTitle="mark"}
+:::TermCard{title="昼光色" ankiTitle="anki"}
 <SVGWrapper maxW={320} style="margin-block: -0.5rem;">
   <DaylightWhiteLEDSpectralDistribution />
 </SVGWrapper>
