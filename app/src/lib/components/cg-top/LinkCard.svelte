@@ -38,13 +38,33 @@
 
 <style>
   .tool-glass {
+    position: relative;
     display: flex;
     flex-direction: column;
     background: light-dark(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.04));
-    border: 1px solid;
-    overflow: hidden;
+    /* 枠線の領域だけ確保し、線そのものは擬似要素で描く */
+    border: 1px solid transparent;
     text-decoration: none;
     color: inherit;
+  }
+
+  /*
+   * border-image は補間できず transition が効かないので、枠線に重ねた 2 枚の
+   * 擬似要素（グラデーション／一様）を不透明度でクロスフェードさせる。
+   * 位置の基準は padding box なので、inset: -1px で枠線の上にちょうど重なる。
+   */
+  .tool-glass::before,
+  .tool-glass::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    pointer-events: none;
+    border: 1px solid;
+    transition: opacity 0.2s;
+  }
+
+  /* 既定：グラデーションの枠線 */
+  .tool-glass::before {
     border-image: linear-gradient(
         180deg,
         light-dark(#79889b87, #dee6ea82) 0%,
@@ -55,6 +75,20 @@
         light-dark(#3641523b, #8090a1a8) 100%
       )
       1;
+  }
+
+  /* hover：グラデーションの端の色による一様な枠線 */
+  .tool-glass::after {
+    border-color: light-dark(#3641523b, #dee6ea82);
+    opacity: 0;
+  }
+
+  .tool-glass:hover::before {
+    opacity: 0;
+  }
+
+  .tool-glass:hover::after {
+    opacity: 1;
   }
 
   .tool-glass-body {
