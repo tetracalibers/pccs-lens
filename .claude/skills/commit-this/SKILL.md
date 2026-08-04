@@ -303,6 +303,15 @@ git log -5 --format='%b' | grep -i 'co-authored-by' | sort -u
 
 - **公開時タスクの実行結果**: `visual` フラグ（追加した／図解が無いので不要／すでにあった）、文体解析タスクリスト（`[draft]` を外した／該当行が無く未更新）、OGP 画像（生成したルートと PNG のパス／未実施ならその理由）。
 - **残っている公開後タスク**: 文体スタイルガイドの更新（`/author-style-analyzer <slug>`。複数記事はカンマ区切りでまとめて実行できる）と、**push したうえで**の PR 説明文の更新（`/update-pr-description`）。この2つは自動実行しないので、コマンドを添えて促す。
+- **未分析記事の残件**: 手順 1.5 b で `writing-guides/STYLE-ANALYSIS-TASKLIST.md` を書き換えたら、更新後のファイルを数え直し、未分析記事の**件数とスラッグの全列挙**を示す。今回公開した記事が加わって残件が増えるので、次にどこまで `/author-style-analyzer` にかけるかの判断材料になる。
+
+  ```sh
+  grep -c '^- \[ \]' writing-guides/STYLE-ANALYSIS-TASKLIST.md   # 未分析の件数
+  grep -n '^- \[ \]' writing-guides/STYLE-ANALYSIS-TASKLIST.md   # 未分析のスラッグ
+  ```
+
+  - 数えるのは `- [ ]` の行だけ。`[draft]`・`[ページ未作成]` は分析対象外なので、件数にもスラッグ一覧にも含めない。
+  - **件数だけで済ませない。スラッグは「ほか N 件」と省略せず全件を列挙する。**
 
 ## 注意事項
 
