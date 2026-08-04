@@ -10,6 +10,7 @@ draft: true
 
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import PerspectiveNormalizationDemo from '$lib/demo/threejs/transformation/projection-steps/perspective-normalization/PerspectiveNormalizationDemo.svelte'
   import ViewVolumeDemo from '$lib/demo/threejs/transformation/projection-steps/view-volume/ViewVolumeDemo.svelte'
   import WindowAndAngleOfViewDemo from '$lib/demo/threejs/transformation/projection-steps/window-and-angle-of-view/WindowAndAngleOfViewDemo.svelte'
 </script>
@@ -372,8 +373,125 @@ $$
 
 透視投影では、この変換が像の縮みも引き受けます。四角錐台が直方体へ引き伸ばされる過程で、奥にあるものほど中心へ寄せられるためです。変換を終えたあとは、平行投影と同じように奥行きを落とすだけで、投影面上の位置が得られます。
 
-:::Todo
-透視投影のビューボリューム（四角錐台）が正規化ビューボリューム（直方体）へ変換されるようすの図解。変換の前後を並べ、奥に置いた同じ大きさの立方体が、変換後には中心へ寄って小さくなることがわかるように示す
+<CanvasWrapper>
+  <PerspectiveNormalizationDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+const halfWindow = WINDOW_SIZE / 2
+
+// 奥行き depth での四角錐台の断面の半分の大きさ。投射線が投影中心から放射状に広がるので、
+// 奥行きに比例して大きくなる
+const halfAt = (depth: number) => (halfWindow * depth) / PLANE_DISTANCE
+
+// 四角錐台を -1 ≤ x ≤ 1, -1 ≤ y ≤ 1, 0 ≤ z ≤ 1 の直方体へ移す変換。
+// x と y は、その奥行きでの断面の大きさ halfWindow × z / PLANE_DISTANCE で割れば ±1 に収まる。
+// 奥行きで割る操作は最下行に z を置き、同次座標の正規化に任せる（この割り算が像の縮み）。
+// z は前方クリッピング面が 0、後方クリッピング面が 1 になるように写す
+const normalization = new Matrix4().set(
+  PLANE_DISTANCE / halfWindow, 0, 0, 0,
+  0, PLANE_DISTANCE / halfWindow, 0, 0,
+  0, 0, FAR / (FAR - NEAR), (-FAR * NEAR) / (FAR - NEAR),
+  0, 0, 1, 0
+)
+
+// 変換前のビューボリューム（四角錐台）の 8 隅。
+// 前方・後方クリッピング面それぞれの奥行きでの断面の 4 隅
+const volumeBefore = BOX_CORNERS.map(([signX, signY, signZ]) => {
+  const depth = signZ < 0 ? NEAR : FAR
+  const half = halfAt(depth)
+  return new Vector3(signX * half, signY * half, depth)
+})
+
+// 変換後の 8 隅。四角錐台の 8 隅が、そのまま直方体の 8 隅へ移る
+const volumeAfter = volumeBefore.map((corner) => corner.clone().applyMatrix4(normalization))
+
+// 空間に置いた同じ大きさの立方体。8 隅それぞれの変換前後の位置を求める。
+// 奥行きで割る変換なので、奥にある隅ほど強く中心へ寄せられる
+const cubesBefore = CUBE_POSITIONS.flatMap(([centerX, centerY, centerZ]) =>
+  BOX_CORNERS.map(
+    ([signX, signY, signZ]) =>
+      new Vector3(
+        centerX + (signX * CUBE_SIZE) / 2,
+        centerY + (signY * CUBE_SIZE) / 2,
+        centerZ + (signZ * CUBE_SIZE) / 2
+      )
+  )
+)
+const cubesAfter = cubesBefore.map((corner) => corner.clone().applyMatrix4(normalization))
+
+// 頂点と稜線から線分のジオメトリを作る
+const wireframe = (corners: Vector3[], edges: number[]) =>
+  new BufferGeometry()
+    .setAttribute(
+      "position",
+      new Float32BufferAttribute(
+        corners.flatMap(({ x, y, z }) => [x, y, z]),
+        3
+      )
+    )
+    .setIndex(edges)
+
+// 立方体の稜線。1 つのジオメトリにまとめて描くので、隅の番号を立方体ごとに 8 ずつずらす
+const cubeEdges = CUBE_POSITIONS.flatMap((_, i) => BOX_EDGES.map((corner) => corner + i * 8))
+
+// 変換前の位置に残す線。変換後と見比べられるように動かさない
+const beforeMaterial = new LineBasicMaterial({ color: BEFORE_COLOR })
+scene.add(new LineSegments(wireframe(volumeBefore, BOX_EDGES), beforeMaterial))
+scene.add(new LineSegments(wireframe(cubesBefore, cubeEdges), beforeMaterial))
+
+// 変換前の位置と変換後の位置を、変換の進み具合で混ぜる
+const morph = (before: Vector3[], after: Vector3[], progress: number) =>
+  before.map((corner, i) => corner.clone().lerp(after[i], progress))
+
+// ビューボリュームの前面は、変換が進むにつれて手前へ寄り、±1 の大きさへ広がる
+const frontZ = MathUtils.lerp(NEAR, 0, PROGRESS)
+const frontHalf = MathUtils.lerp(halfAt(NEAR), 1, PROGRESS)
+
+// 変換の途中のビューボリューム。
+// 変換前（進み具合 0）では変換前の線と重なるので、そのあとに描いて上書きする
+const volume = new LineSegments(
+  wireframe(morph(volumeBefore, volumeAfter, PROGRESS), BOX_EDGES),
+  new LineBasicMaterial({ color: VOLUME_COLOR })
+)
+volume.renderOrder = 1
+scene.add(volume)
+
+// 変換の途中の立方体。奥行きを落とすと、x と y をそのままに前面へ潰れて、投影面上の像になる
+const cubeCorners = morph(cubesBefore, cubesAfter, PROGRESS).map(
+  (corner) => new Vector3(corner.x, corner.y, MathUtils.lerp(corner.z, frontZ, FLATTEN))
+)
+const cubes = new LineSegments(
+  wireframe(cubeCorners, cubeEdges),
+  new LineBasicMaterial({ color: CUBE_COLOR })
+)
+cubes.renderOrder = 1
+scene.add(cubes)
+
+// ビューボリュームの前面。奥行きを落とすと、この面の上に像ができる
+const frontFace = new Mesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({
+    color: VOLUME_COLOR,
+    side: DoubleSide,
+    transparent: true,
+    opacity: 0.1
+  })
+)
+frontFace.position.z = frontZ
+frontFace.scale.set(frontHalf * 2, frontHalf * 2, 1)
+scene.add(frontFace)
+
+// 視線（投影座標系の z 軸）。立方体が寄っていく先を示す
+const axisGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, 0, 0, 0, FAR], 3)
+)
+scene.add(new LineSegments(axisGeometry, new LineBasicMaterial({ color: AXIS_COLOR })))
+```
+
 :::
 
 透視投影と平行投影の違いは、こうして正規化ビューボリュームへの変換の中に畳み込まれます。
