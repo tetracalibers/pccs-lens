@@ -15,17 +15,14 @@ sections:
       - slug: pinhole-camera
       - slug: perspective-and-parallel-projection
       - slug: projection-steps
-      - title: 投影の計算法 # CG 2-3
-        group: ["CG"]
-      - title: 消失点とn点透視 # CG 2-3-3, ImgP 2-2-2
-        group: ["CG", "ImgP"]
+      - slug: projection-calculation
+      - slug: vanishing-points-and-n-point-perspective
       - slug: parallel-projection-types
   - heading: ビューイングパイプライン
     id: viewing-pipeline
     links:
       - slug: viewing-pipeline-transformations
-      - title: クリッピングのアルゴリズム # CG 2-4-3
-        group: ["CG"]
+      - slug: clipping-algorithms
       - title: 階層モデリング # CG 2-4-4
         group: ["CG"]
   - heading: 画像の幾何学的変換

@@ -822,15 +822,15 @@
 
 - [ ] `/cg/transformation/pinhole-camera`
 - [ ] `/cg/transformation/perspective-and-parallel-projection`
-- [draft] `/cg/transformation/projection-steps`
-- [ページ未作成] 投影の計算法
-- [ページ未作成] 消失点とn点透視
+- [ ] `/cg/transformation/projection-steps`
+- [draft] `/cg/transformation/projection-calculation`
+- [draft] `/cg/transformation/vanishing-points-and-n-point-perspective`
 - [draft] `/cg/transformation/parallel-projection-types`
 
 ## CGと画像処理 — 変換と投影／ビューイングパイプライン（`cg/transformation.yaml` #viewing-pipeline）
 
 - [draft] `/cg/transformation/viewing-pipeline-transformations`
-- [ページ未作成] クリッピングのアルゴリズム
+- [draft] `/cg/transformation/clipping-algorithms`
 - [ページ未作成] 階層モデリング
 
 ## CGと画像処理 — 変換と投影／画像の幾何学的変換（`cg/transformation.yaml` #image-geometric-transform）

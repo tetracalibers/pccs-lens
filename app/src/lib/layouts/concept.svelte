@@ -5,6 +5,7 @@
   import Ulist from "$lib/components/m-html/Ulist.svelte"
   import Olist from "$lib/components/m-html/Olist.svelte"
   import ALink from "$lib/components/m-html/ALink.svelte"
+  import Hr from "$lib/components/m-html/Hr.svelte"
 
   import Action from "$lib/components/m-directive/Action.svelte"
   import Note from "$lib/components/m-directive/Note.svelte"
@@ -23,6 +24,7 @@
     Ulist as ul,
     Olist as ol,
     ALink as a,
+    Hr as hr,
     Action,
     Note,
     Example,
@@ -30,7 +32,8 @@
     GradeTag,
     Mark,
     CardGrid,
-    TermCard
+    TermCard,
+    Heading2
   }
   /* eslint-enable no-import-assign */
 </script>

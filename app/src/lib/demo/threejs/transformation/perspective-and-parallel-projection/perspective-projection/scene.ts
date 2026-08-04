@@ -35,7 +35,7 @@ type SceneContext = {
 const PLANE_SIZE = 2.2
 
 // 背景（暗めのグレー）の上で、形状は白に近い色、像はそれと見分けのつく暖色にする。
-// 投影線と投影面は一段落とした色にして、形状と像を前に出す
+// 投射線と投影面は一段落とした色にして、形状と像を前に出す
 const SHAPE_COLOR = "#e8e8ee"
 const IMAGE_COLOR = "#ffc857"
 const RAY_COLOR = "#7d8794"
@@ -43,7 +43,7 @@ const CENTER_COLOR = "#5ec8f2"
 const PLANE_COLOR = "#8fa3bf"
 
 export const createPerspectiveProjectionScene = ({ scene, params }: SceneContext) => {
-  // 投影中心。投影線が集まる 1 点で、大きさをもたない点として原点に置く
+  // 投影中心。投射線が集まる 1 点で、大きさをもたない点として原点に置く
   const centerGeometry = new BufferGeometry().setAttribute(
     "position",
     new Float32BufferAttribute([0, 0, 0], 3)
@@ -102,7 +102,7 @@ export const createPerspectiveProjectionScene = ({ scene, params }: SceneContext
     shape.updateMatrixWorld()
     scene.add(shape)
 
-    // 稜線の頂点を世界座標に直したもの。投影線と像はこの位置から求める
+    // 稜線の頂点を世界座標に直したもの。投射線と像はこの位置から求める
     const localPosition = edgesGeometry.getAttribute("position")
     const vertices = Array.from({ length: localPosition.count }, (_, i) =>
       new Vector3().fromBufferAttribute(localPosition, i).applyMatrix4(shape.matrixWorld)
@@ -111,8 +111,8 @@ export const createPerspectiveProjectionScene = ({ scene, params }: SceneContext
     return { edgesGeometry, vertices }
   })
 
-  // 投影線。稜線の頂点 1 つにつき 1 本（2 頂点）、頂点から投影中心へ引く。
-  // どの頂点も同じ 1 点へ向かうので、投影面をどこに置いても投影線は変わらない
+  // 投射線。稜線の頂点 1 つにつき 1 本（2 頂点）、頂点から投影中心へ引く。
+  // どの頂点も同じ 1 点へ向かうので、投影面をどこに置いても投射線は変わらない
   const rayVertices = shapes.flatMap(({ vertices }) => vertices)
   const rayPosition = new Float32BufferAttribute(new Float32Array(rayVertices.length * 6), 3)
   rayVertices.forEach(({ x, y, z }, i) => {
