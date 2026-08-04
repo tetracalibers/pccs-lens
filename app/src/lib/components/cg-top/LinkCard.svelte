@@ -41,12 +41,10 @@
     display: flex;
     flex-direction: column;
     background: light-dark(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.04));
-    box-shadow: 0 1px 8px light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0));
     border: 1px solid;
     overflow: hidden;
     text-decoration: none;
     color: inherit;
-    transition: box-shadow 0.2s;
     border-image: linear-gradient(
         180deg,
         light-dark(#79889b87, #dee6ea82) 0%,
@@ -57,10 +55,6 @@
         light-dark(#3641523b, #8090a1a8) 100%
       )
       1;
-  }
-
-  .tool-glass:hover {
-    box-shadow: 0 4px 12px light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.2));
   }
 
   .tool-glass-body {
@@ -89,7 +83,6 @@
     white-space: nowrap;
     border: 1px solid var(--_tag-color);
     color: oklch(from var(--_tag-color) calc(l * 0.9) c h);
-    background-color: oklch(from var(--_tag-color) l c h / 10%);
   }
 
   /* 色指定のあるタグ（CG / 画像処理）: 角丸を抑え、淡いパステルでも読めるようコントラストを上げる */
@@ -103,10 +96,6 @@
     color: light-dark(
       oklch(from var(--_tag-color) 0.65 calc(c * 1.5) h),
       oklch(from var(--_tag-color) 0.8 c h)
-    );
-    background-color: light-dark(
-      oklch(from var(--_tag-color) l calc(c * 1.2) h / 28%),
-      oklch(from var(--_tag-color) l c h / 14%)
     );
   }
 
