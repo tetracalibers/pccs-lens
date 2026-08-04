@@ -7,6 +7,7 @@
   import ALink from "$lib/components/m-html/ALink.svelte"
   import Blockquote from "$lib/components/m-html/Blockquote.svelte"
 
+  import Anki from "$lib/components/m-directive/Anki.svelte"
   import Mark from "$lib/components/m-directive/Mark.svelte"
   import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
   import GroupTag from "$lib/components/m-directive/GroupTag.svelte"
@@ -33,6 +34,7 @@
     Olist as ol,
     ALink as a,
     Blockquote as blockquote,
+    Anki,
     Mark,
     GradeTag,
     WithGradeTag,

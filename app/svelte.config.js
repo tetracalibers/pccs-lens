@@ -62,6 +62,7 @@ const directives = {
     { name: "Heading2", replaceTo: "svelte-component" }
   ],
   text: [
+    { name: "Anki", replaceTo: "svelte-component" },
     { name: "Mark", replaceTo: "svelte-component" },
     { name: "GradeTag", replaceTo: "svelte-component" },
     { name: "PageLink", replaceTo: "svelte-component" },

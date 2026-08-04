@@ -12,6 +12,7 @@
   import Example from "$lib/components/m-directive/Example.svelte"
   import ComingSoon from "$lib/components/m-directive/ComingSoon.svelte"
   import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
+  import Anki from "$lib/components/m-directive/Anki.svelte"
   import Mark from "$lib/components/m-directive/Mark.svelte"
   import CardGrid from "$lib/components/m-directive/CardGrid.svelte"
   import TermCard from "$lib/components/m-directive/TermCard.svelte"
@@ -30,6 +31,7 @@
     Example,
     ComingSoon,
     GradeTag,
+    Anki,
     Mark,
     CardGrid,
     TermCard,

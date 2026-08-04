@@ -2,7 +2,7 @@
   import type { Snippet } from "svelte"
   import ALink from "../m-html/ALink.svelte"
   import Heading3 from "../m-html/Heading3.svelte"
-  import { Mark } from "$lib/layouts/concept.svelte"
+  import { Anki } from "$lib/layouts/concept.svelte"
 
   const iconMap = {
     person: "fa6-solid:user-tie",
@@ -21,7 +21,7 @@
     centering?: boolean
     textCentering?: boolean
     title: string
-    ankiTitle?: "hide" | "mark" | "show"
+    ankiTitle?: "hide" | "anki" | "show"
     icon?: keyof typeof iconMap
     link?: string
     /** カード内の本文（p・li）のfont-size。CSSの長さとして解釈できる文字列を渡す */
@@ -47,8 +47,8 @@
 </script>
 
 {#snippet titleText()}
-  {#if ankiTitle === "mark"}
-    <Mark>{title}</Mark>
+  {#if ankiTitle === "anki"}
+    <Anki>{title}</Anki>
   {:else}
     {title}
   {/if}
