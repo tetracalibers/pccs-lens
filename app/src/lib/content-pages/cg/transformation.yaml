@@ -23,8 +23,7 @@ sections:
     id: viewing-pipeline
     links:
       - slug: viewing-pipeline-transformations
-      - title: クリッピングのアルゴリズム # CG 2-4-3
-        group: ["CG"]
+      - slug: clipping-algorithms
       - title: 階層モデリング # CG 2-4-4
         group: ["CG"]
   - heading: 画像の幾何学的変換

@@ -311,7 +311,7 @@
 - [draft] `/cg/transformation/vanishing-points-and-n-point-perspective`
 - [draft] `/cg/transformation/parallel-projection-types`
 - [draft] `/cg/transformation/viewing-pipeline-transformations`
-- [ページ未作成] クリッピングのアルゴリズム
+- [draft] `/cg/transformation/clipping-algorithms`
 - [ページ未作成] 階層モデリング
 - [ページ未作成] 画像の幾何学的変換
 - [ページ未作成] 画像の再標本化と補間

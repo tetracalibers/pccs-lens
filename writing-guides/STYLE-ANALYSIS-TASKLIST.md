@@ -830,7 +830,7 @@
 ## CGと画像処理 — 変換と投影／ビューイングパイプライン（`cg/transformation.yaml` #viewing-pipeline）
 
 - [draft] `/cg/transformation/viewing-pipeline-transformations`
-- [ページ未作成] クリッピングのアルゴリズム
+- [draft] `/cg/transformation/clipping-algorithms`
 - [ページ未作成] 階層モデリング
 
 ## CGと画像処理 — 変換と投影／画像の幾何学的変換（`cg/transformation.yaml` #image-geometric-transform）
