@@ -822,7 +822,7 @@
 
 - [ ] `/cg/transformation/pinhole-camera`
 - [ ] `/cg/transformation/perspective-and-parallel-projection`
-- [draft] `/cg/transformation/projection-steps`
+- [ ] `/cg/transformation/projection-steps`
 - [draft] `/cg/transformation/projection-calculation`
 - [draft] `/cg/transformation/vanishing-points-and-n-point-perspective`
 - [draft] `/cg/transformation/parallel-projection-types`
