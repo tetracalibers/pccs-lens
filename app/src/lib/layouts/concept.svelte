@@ -32,7 +32,8 @@
     GradeTag,
     Mark,
     CardGrid,
-    TermCard
+    TermCard,
+    Heading2
   }
   /* eslint-enable no-import-assign */
 </script>

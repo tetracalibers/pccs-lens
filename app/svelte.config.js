@@ -58,7 +58,8 @@ const directives = {
   ],
   leaf: [
     { name: "ComingSoon", replaceTo: "svelte-component" },
-    { name: "EImage", replaceTo: "svelte-component" }
+    { name: "EImage", replaceTo: "svelte-component" },
+    { name: "Heading2", replaceTo: "svelte-component" }
   ],
   text: [
     { name: "Mark", replaceTo: "svelte-component" },
