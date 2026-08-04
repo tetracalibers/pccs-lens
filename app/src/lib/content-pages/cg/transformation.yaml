@@ -15,8 +15,7 @@ sections:
       - slug: pinhole-camera
       - slug: perspective-and-parallel-projection
       - slug: projection-steps
-      - title: 投影の計算法 # CG 2-3
-        group: ["CG"]
+      - slug: projection-calculation
       - slug: vanishing-points-and-n-point-perspective
       - slug: parallel-projection-types
   - heading: ビューイングパイプライン
