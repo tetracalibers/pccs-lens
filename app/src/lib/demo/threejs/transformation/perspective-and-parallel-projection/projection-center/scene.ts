@@ -60,7 +60,7 @@ const VERTICES: [number, number, number][] = CUBE_VERTICES.map(([x, y, z]) => [
 /** 投影面の 1 辺の長さ */
 const PLANE_SIZE = 2.4
 
-/** 平行投影のとき、投影線を投影面の向こう側へ伸ばす長さ */
+/** 平行投影のとき、投射線を投影面の向こう側へ伸ばす長さ */
 const RAY_TAIL = 1.5
 
 // 背景（暗めのグレー）の上で、形状は白に近い色、像はそれと見分けのつく暖色にする
@@ -109,7 +109,7 @@ export const createProjectionCenterScene = ({ scene, params }: SceneContext) => 
   const imageMaterial = new LineBasicMaterial({ color: IMAGE_COLOR })
   scene.add(new LineSegments(imageGeometry, imageMaterial))
 
-  // 投影線。形状の頂点 1 つにつき 1 本（2 頂点）
+  // 投射線。形状の頂点 1 つにつき 1 本（2 頂点）
   const rayPosition = new Float32BufferAttribute(new Float32Array(VERTICES.length * 6), 3)
   const rayGeometry = new BufferGeometry().setAttribute("position", rayPosition)
   const rayMaterial = new LineBasicMaterial({ color: RAY_COLOR })
@@ -130,7 +130,7 @@ export const createProjectionCenterScene = ({ scene, params }: SceneContext) => 
         const scale = atInfinity ? 1 : distance / (distance + z)
         imagePosition.setXYZ(i, x * scale, y * scale, 0)
 
-        // 投影線は頂点から投影中心へ向かう。無限遠では 1 点に集まらず、
+        // 投射線は頂点から投影中心へ向かう。無限遠では 1 点に集まらず、
         // 投影面に垂直なまま向こう側へ抜けていく
         rayPosition.setXYZ(i * 2, x, y, z)
         if (atInfinity) rayPosition.setXYZ(i * 2 + 1, x, y, -RAY_TAIL)
