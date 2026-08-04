@@ -138,6 +138,9 @@
     "cg/transformation/pinhole-camera": {
       "title": "ピンホールカメラ"
     },
+    "cg/transformation/projection-steps": {
+      "title": "投影の手順"
+    },
     "cg/transformation/reflection-and-skew": {
       "title": "鏡映とスキュー"
     },

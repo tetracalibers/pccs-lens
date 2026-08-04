@@ -306,7 +306,7 @@
 - [x] `/cg/transformation/affine-and-projective-transformation`
 - [x] `/cg/transformation/pinhole-camera`
 - [x] `/cg/transformation/perspective-and-parallel-projection`
-- [draft] `/cg/transformation/projection-steps`
+- [x] `/cg/transformation/projection-steps`
 - [draft] `/cg/transformation/projection-calculation`
 - [draft] `/cg/transformation/vanishing-points-and-n-point-perspective`
 - [draft] `/cg/transformation/parallel-projection-types`

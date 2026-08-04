@@ -1,0 +1,12 @@
+{
+  "route": "cg/transformation/projection-steps",
+  "title": "投影の手順",
+  "titleLines": [
+    "投影の手順"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "変換と投影"
+  ],
+  "figure": "assets/cg/transformation/projection-steps/figure.png"
+}
