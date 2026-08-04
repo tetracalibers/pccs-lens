@@ -8,7 +8,6 @@
   import { guidePages } from "$lib/meta/guide-pages"
   import type { CgGroup } from "$lib/meta/group"
   import { SvelteSet, SvelteMap } from "svelte/reactivity"
-  import ALink from "$lib/components/m-html/ALink.svelte"
 
   const cgTag: CardTag = { label: "CG", color: "var(--color-cg)" }
   const imgpTag: CardTag = { label: "画像処理", color: "var(--color-image-processing)" }
@@ -94,14 +93,6 @@
     <p>架空の景色を映すCGと、画像を扱う広い世界</p>
   </header>
 
-  <p class="cg-lead">
-    <ALink href="https://www.cgarts.or.jp/kentei/">
-      CG-ARTS
-    </ALink>の「CGエンジニア検定」「画像処理エンジニア検定」エキスパートの内容に対応しています。
-    <br />
-    サクっと読めて、公式教科書の深い内容に飛び込めるようになる…そんな解説を目指しています。
-  </p>
-
   {#each cgGroupCards as group (group.id)}
     <section id={group.id} class="cg-group">
       <div class="cg-group-header">
@@ -138,11 +129,22 @@
   }
 
   .cg-hero h1 {
-    font-size: 2.1rem;
+    font-size: 2.25rem;
     font-weight: 900;
     letter-spacing: -0.02em;
     margin: 0 0 0.75rem;
-    color: var(--color-heading);
+    /* メタリックな階調は保ったまま、ライトでは白地に沈まない明度帯に落とす */
+    background: linear-gradient(
+      180deg,
+      light-dark(#79889b, #dee6ea) 0%,
+      light-dark(#6b7a8d, #cbd2df) 20%,
+      light-dark(#5d6b7e, #b8bfce) 40%,
+      light-dark(#4f5d70, #a5aebc) 60%,
+      light-dark(#424f61, #929eab) 80%,
+      light-dark(#364152, #8090a1) 100%
+    );
+    background-clip: text;
+    color: transparent;
   }
 
   .cg-hero p {
@@ -152,23 +154,13 @@
     margin: 0;
   }
 
-  .cg-lead {
-    font-size: 0.8rem;
-    line-height: 1.8;
-    color: var(--color-body);
-    margin: 0 0 3rem;
-    text-align: center;
-  }
-
-  @media (min-width: 430px) {
-    .cg-lead {
-      word-break: auto-phrase;
-    }
-  }
-
   .cg-group {
     margin-bottom: 2.75rem;
     scroll-margin-top: var(--scroll-offset);
+  }
+
+  .cg-group:last-child {
+    margin-bottom: 1rem;
   }
 
   .cg-group-header {
