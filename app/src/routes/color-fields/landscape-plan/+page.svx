@@ -7,7 +7,7 @@ grades: ["1"]
 draft: true
 ---
 
-- :Mark[景観計画]は、[景観法](/color-fields/landscape-act/)の規定に基づいて、:Mark[自治体]が地域ごとの良好な景観形成を進める上での基本的な考え方を定めた計画
+- :Anki[景観計画]は、[景観法](/color-fields/landscape-act/)の規定に基づいて、:Anki[自治体]が地域ごとの良好な景観形成を進める上での基本的な考え方を定めた計画
 
 ## :WithGradeTag[TODO]{grades="1"}
 

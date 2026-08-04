@@ -2,7 +2,7 @@
   import type { Snippet } from "svelte"
   import ALink from "../m-html/ALink.svelte"
   import Heading3 from "../m-html/Heading3.svelte"
-  import { Mark } from "$lib/layouts/concept.svelte"
+  import { Anki } from "$lib/layouts/concept.svelte"
 
   const iconMap = {
     person: "fa6-solid:user-tie",
@@ -48,7 +48,7 @@
 
 {#snippet titleText()}
   {#if ankiTitle === "mark"}
-    <Mark>{title}</Mark>
+    <Anki>{title}</Anki>
   {:else}
     {title}
   {/if}

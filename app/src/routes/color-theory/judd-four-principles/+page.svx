@@ -9,7 +9,7 @@ draft: true
 
 ## :WithGradeTag[TODO]{grades="2"}
 
-- アメリカの色彩学者である:Mark[ジャッド]は、さまざまな色彩調和論を研究・分析し、4つの原理にまとめた
+- アメリカの色彩学者である:Anki[ジャッド]は、さまざまな色彩調和論を研究・分析し、4つの原理にまとめた
 
 ::::CardGrid
 :::TermCard{title="秩序の原理" ankiTitle="mark"}
