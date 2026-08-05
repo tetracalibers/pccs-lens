@@ -1,4 +1,4 @@
-import { Color, PerspectiveCamera, Scene, WebGLRenderer } from "three"
+import { Color, PerspectiveCamera, Scene, Vector3, WebGLRenderer } from "three"
 import { OrbitControls } from "three/addons/controls/OrbitControls.js"
 import { DEMO_BACKGROUND, MAX_PIXEL_RATIO } from "./constants"
 import type { ThreeSceneFactory, ThreeSceneHandle } from "./types"
@@ -20,6 +20,15 @@ export type OrbitOptions = {
   maxDistance?: number
   minPolarAngle?: number
   maxPolarAngle?: number
+  /**
+   * ズームの寄り先を返す関数。寄るほど視野の中心が注視点からこの点へ移り、
+   * `minDistance` まで寄ると完全にこの点が中心になる（引き切ると注視点に戻る）。
+   * **カメラと注視点を同じだけ動かすので、視線の向きも距離も変わらない。**
+   *
+   * 「図の一部を大きく見せたい」場合に使う（`minDistance` の指定が前提）。
+   * 毎フレーム呼ばれるため、`params` の現在値から寄り先を決めてよい。
+   */
+  zoomFocus?: () => [number, number, number]
 }
 
 export type MountThreeDemoOptions<P> = {
@@ -108,6 +117,8 @@ export const mountThreeDemo = <P>(options: MountThreeDemoOptions<P>): ThreeDemo 
     if (disposed) return
     controls?.update()
     handle.update?.()
+    // 寄り先は scene.ts が params を書き戻した後に読む（params から寄り先を決めるデモがあるため）
+    applyZoomFocus?.()
     renderer.render(scene, camera)
   }
 
@@ -117,6 +128,8 @@ export const mountThreeDemo = <P>(options: MountThreeDemoOptions<P>): ThreeDemo 
   }
 
   let controls: OrbitControls | null = null
+  /** ズームの寄り先を視野に反映する。`zoomFocus` を渡したデモでだけ組み立てられる */
+  let applyZoomFocus: (() => void) | null = null
   if (orbit !== false) {
     const orbitOptions = orbit ?? {}
     controls = new OrbitControls(camera, canvas)
@@ -133,6 +146,33 @@ export const mountThreeDemo = <P>(options: MountThreeDemoOptions<P>): ThreeDemo 
       controls.maxPolarAngle = orbitOptions.maxPolarAngle
     controls.update()
     controls.addEventListener("change", invalidate)
+
+    const focus = orbitOptions.zoomFocus
+    if (focus) {
+      // 寄り先へ移る割合は「初期の距離から minDistance までのどこまで寄ったか」で決める。
+      // 引き切れば 0 に戻るので、注視点を中心にした初期の構図へ必ず戻ってこられる
+      const base = controls.target.clone()
+      const baseDistance = camera.position.distanceTo(base)
+      const span = baseDistance - controls.minDistance
+      const center = new Vector3()
+      const shift = new Vector3()
+
+      applyZoomFocus = () => {
+        if (!controls || span <= 0) return
+        const distance = camera.position.distanceTo(controls.target)
+        const progress = Math.min(Math.max((baseDistance - distance) / span, 0), 1)
+        center
+          .set(...focus())
+          .sub(base)
+          .multiplyScalar(progress)
+          .add(base)
+        // カメラと注視点を同じだけ動かす。両者の相対位置が変わらないので、
+        // OrbitControls の状態（距離・向き）には手を入れずに視野の中心だけをずらせる
+        shift.copy(center).sub(controls.target)
+        controls.target.add(shift)
+        camera.position.add(shift)
+      }
+    }
   }
 
   const resize = () => {
