@@ -137,26 +137,6 @@ const plane = new Mesh(
 plane.position.z = 1
 scene.add(plane)
 
-// 平面の目盛り。正規化した点が平面のどこに乗っているかを読めるようにする
-const gridPoints: Vector3[] = []
-const gridLineCount = (PLANE_HALF * 2) / PLANE_GRID_STEP
-for (let i = 0; i <= gridLineCount; i++) {
-  const offset = -PLANE_HALF + i * PLANE_GRID_STEP
-  gridPoints.push(new Vector3(offset, -PLANE_HALF, 1), new Vector3(offset, PLANE_HALF, 1))
-  gridPoints.push(new Vector3(-PLANE_HALF, offset, 1), new Vector3(PLANE_HALF, offset, 1))
-}
-scene.add(
-  new LineSegments(
-    new BufferGeometry().setFromPoints(gridPoints),
-    new LineBasicMaterial({
-      color: PLANE_COLOR,
-      transparent: true,
-      opacity: GRID_OPACITY,
-      depthWrite: false
-    })
-  )
-)
-
 const planeLabel = createLabel("w = 1", PLANE_COLOR, VALUE_LABEL_HEIGHT)
 planeLabel.position.set(PLANE_HALF - 0.5, PLANE_HALF + 0.28, 1)
 scene.add(planeLabel)
@@ -294,26 +274,6 @@ const plane = new Mesh(
 )
 plane.position.z = 1
 scene.add(plane)
-
-// 平面の目盛り。四辺形の隅が平面のどこに乗っているかを読めるようにする
-const gridPoints: Vector3[] = []
-const gridLineCount = (PLANE_HALF * 2) / PLANE_GRID_STEP
-for (let i = 0; i <= gridLineCount; i++) {
-  const offset = -PLANE_HALF + i * PLANE_GRID_STEP
-  gridPoints.push(new Vector3(offset, -PLANE_HALF, 1), new Vector3(offset, PLANE_HALF, 1))
-  gridPoints.push(new Vector3(-PLANE_HALF, offset, 1), new Vector3(PLANE_HALF, offset, 1))
-}
-scene.add(
-  new LineSegments(
-    new BufferGeometry().setFromPoints(gridPoints),
-    new LineBasicMaterial({
-      color: PLANE_COLOR,
-      transparent: true,
-      opacity: GRID_OPACITY,
-      depthWrite: false
-    })
-  )
-)
 
 // 位置を示す球。同じ大きさ・色の球はジオメトリとマテリアルを共有する
 const createPoints = (positions: Vector3[], color: ColorRepresentation, radius: number) => {

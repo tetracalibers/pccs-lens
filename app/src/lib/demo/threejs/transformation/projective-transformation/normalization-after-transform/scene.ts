@@ -52,12 +52,8 @@ const ARROW_HEIGHT = 0.22
 /** w = 1 の平面の 1 辺の半分の長さ */
 const PLANE_HALF = 2
 
-/** 平面に引く目盛りの間隔 */
-const PLANE_GRID_STEP = 0.5
-
-/** 平面の塗りと目盛りの不透明度。奥の直線や点が透けて見える程度に抑える */
+/** 平面の塗りの不透明度。奥の直線や点が透けて見える程度に抑える */
 const PLANE_OPACITY = 0.12
-const GRID_OPACITY = 0.45
 
 /**
  * 変換前の正方形の 1 辺の半分の長さ。
@@ -297,23 +293,6 @@ export const createNormalizationAfterTransformScene = ({ scene, params }: SceneC
   plane.position.z = 1
   scene.add(plane)
 
-  // 平面の目盛り。四辺形の隅が平面のどこに乗っているかを読めるようにする
-  const gridPoints: Vector3[] = []
-  const gridLineCount = (PLANE_HALF * 2) / PLANE_GRID_STEP
-  for (let i = 0; i <= gridLineCount; i++) {
-    const offset = -PLANE_HALF + i * PLANE_GRID_STEP
-    gridPoints.push(new Vector3(offset, -PLANE_HALF, 1), new Vector3(offset, PLANE_HALF, 1))
-    gridPoints.push(new Vector3(-PLANE_HALF, offset, 1), new Vector3(PLANE_HALF, offset, 1))
-  }
-  const gridGeometry = new BufferGeometry().setFromPoints(gridPoints)
-  const gridMaterial = new LineBasicMaterial({
-    color: PLANE_COLOR,
-    transparent: true,
-    opacity: GRID_OPACITY,
-    depthWrite: false
-  })
-  scene.add(new LineSegments(gridGeometry, gridMaterial))
-
   const planeLabel = createLabel("w = 1", PLANE_COLOR, VALUE_LABEL_HEIGHT)
   planeLabel.sprite.position.set(PLANE_HALF - 0.5, PLANE_HALF + 0.28, 1)
   scene.add(planeLabel.sprite)
@@ -451,8 +430,6 @@ export const createNormalizationAfterTransformScene = ({ scene, params }: SceneC
       const disposables = [
         planeGeometry,
         planeMaterial,
-        gridGeometry,
-        gridMaterial,
         planeLabel.texture,
         planeLabel.material,
         sourceLabel.texture,
