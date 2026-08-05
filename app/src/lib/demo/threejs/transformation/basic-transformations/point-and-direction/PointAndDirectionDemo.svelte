@@ -16,12 +16,13 @@
   }
 </script>
 
+<!-- camera.position は、初期表示で y 軸のラベル（原点から 2.72 の位置）が上端で見切れない距離にする -->
 <ThreeDemoCanvas
   ariaLabel="同次座標(x, y, w)のwを3本目の軸にとった3次元表示。位置を表す2点P・Qはw=1の平面に乗り、その差として得られる方向ベクトルQ−Pはwが0なのでw=0の平面に寝ている。tx・tyを動かすと、同じ平行移動の行列を掛けているにもかかわらず、点だけがw=1の平面内を動き、方向ベクトルはまったく動かない（ドラッグで回転、ホイールで拡大縮小）"
   createScene={createPointAndDirectionScene}
   {params}
   aspectRatio="3 / 2"
-  camera={{ position: [4.2, 3, 5.2] }}
+  camera={{ position: [5, 3.6, 6.1] }}
   orbit={{
     // w = 0 の平面と w = 1 の平面の両方が視野に入るよう、注視点を両者の中間に置く
     target: [0, 0, 0.5],
