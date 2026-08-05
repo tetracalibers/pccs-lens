@@ -3,7 +3,13 @@ layout: guide-content
 title: 射影変換 # ImgP 8-2-4
 
 group: ["ImgP"]
+visual: true
 ---
+
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import HomogeneousLineDemo from '$lib/demo/threejs/transformation/projective-transformation/homogeneous-line/HomogeneousLineDemo.svelte'
+</script>
 
 [アフィン変換](/cg/transformation/affine-transformation/)は、同次座標行列の最下行が`(0 0 1)`に固定された変換でした。
 この固定を外し、最下行を一般の値まで広げると、遠近感を表せる:Anki[射影変換]が得られます。
@@ -28,6 +34,182 @@ $$
 つまり、同次座標を定数倍しても、それが表す通常の座標は変わらないのです。
 
 <!-- TODO: 1本の直線上に並ぶ定数倍違いの同次座標が、w で割ると同じ通常座標に戻る様子の図 -->
+
+<CanvasWrapper>
+  <HomogeneousLineDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+/**
+ * 文字を描いた canvas をテクスチャにして、常にカメラを向く板（Sprite）にする。
+ * (x/w, y/w, 1) のような長いラベルもあるので、文字の幅を測って板の横幅を決める
+ */
+const createLabel = (text: string, color: string, height: number) => {
+  const canvas = document.createElement("canvas")
+  const context = canvas.getContext("2d")
+
+  let textWidth = LABEL_TEXTURE_HEIGHT
+  if (context) {
+    context.font = LABEL_FONT
+    textWidth = context.measureText(text).width
+  }
+
+  canvas.width = Math.ceil(textWidth + LABEL_TEXTURE_PADDING * 2)
+  canvas.height = LABEL_TEXTURE_HEIGHT
+
+  if (context) {
+    // canvas の大きさを変えると描画状態が初期化されるので、書体はここで指定し直す
+    context.font = LABEL_FONT
+    context.textAlign = "center"
+    context.textBaseline = "middle"
+    context.fillStyle = color
+    context.fillText(text, canvas.width / 2, canvas.height / 2)
+  }
+
+  const texture = new CanvasTexture(canvas)
+  texture.colorSpace = SRGBColorSpace
+  const sprite = new Sprite(new SpriteMaterial({ map: texture, transparent: true }))
+  // 高さを指定の値に揃え、幅は canvas の縦横比から決める
+  sprite.scale.set((height * canvas.width) / canvas.height, height, 1)
+
+  return sprite
+}
+
+// 1 本の軸を、原点をまたぐ直線・正の向きを指す矢印・軸名のラベルの 3 点セットで作る
+const createAxis = (name: string, color: string, direction: Vector3) => {
+  const group = new Group()
+
+  const lineGeometry = new BufferGeometry().setFromPoints([
+    direction.clone().multiplyScalar(-AXIS_LENGTH),
+    direction.clone().multiplyScalar(AXIS_LENGTH)
+  ])
+  group.add(new LineSegments(lineGeometry, new LineBasicMaterial({ color })))
+
+  // ConeGeometry は +y を向いているので、軸の正の向きへ回してから先端に置く
+  const arrow = new Mesh(
+    new ConeGeometry(ARROW_RADIUS, ARROW_HEIGHT, 16),
+    new MeshBasicMaterial({ color })
+  )
+  arrow.position.copy(direction).multiplyScalar(AXIS_LENGTH)
+  arrow.quaternion.setFromUnitVectors(CONE_UP, direction)
+  group.add(arrow)
+
+  const label = createLabel(name, color, AXIS_LABEL_HEIGHT)
+  label.position.copy(direction).multiplyScalar(AXIS_LENGTH + LABEL_OFFSET)
+  group.add(label)
+
+  return group
+}
+
+// 同次座標が指す位置を表す球
+const createPoint = (position: Vector3, color: string, radius: number) => {
+  const point = new Mesh(new SphereGeometry(radius, 16, 12), new MeshBasicMaterial({ color }))
+  point.position.copy(position)
+  return point
+}
+
+// 同次座標 (x, y, w) の w を 3 本目の軸として立てる。
+// Three.js の x・y をそのまま平面の x・y にあて、z を w にあてると、
+// w = 1 の平面は x が右・y が上のまま読める板になる
+scene.add(
+  createAxis("x", X_COLOR, X_DIRECTION),
+  createAxis("y", Y_COLOR, Y_DIRECTION),
+  createAxis("w", W_COLOR, W_DIRECTION)
+)
+
+// 正規化した同次座標が並ぶ w = 1 の平面。
+// 奥の直線や点を隠さないよう、薄く塗って深度は書かない
+const plane = new Mesh(
+  new PlaneGeometry(PLANE_HALF * 2, PLANE_HALF * 2),
+  new MeshBasicMaterial({
+    color: PLANE_COLOR,
+    side: DoubleSide,
+    transparent: true,
+    opacity: PLANE_OPACITY,
+    depthWrite: false
+  })
+)
+plane.position.z = 1
+scene.add(plane)
+
+// 平面の目盛り。正規化した点が平面のどこに乗っているかを読めるようにする
+const gridPoints: Vector3[] = []
+const gridLineCount = (PLANE_HALF * 2) / PLANE_GRID_STEP
+for (let i = 0; i <= gridLineCount; i++) {
+  const offset = -PLANE_HALF + i * PLANE_GRID_STEP
+  gridPoints.push(new Vector3(offset, -PLANE_HALF, 1), new Vector3(offset, PLANE_HALF, 1))
+  gridPoints.push(new Vector3(-PLANE_HALF, offset, 1), new Vector3(PLANE_HALF, offset, 1))
+}
+scene.add(
+  new LineSegments(
+    new BufferGeometry().setFromPoints(gridPoints),
+    new LineBasicMaterial({
+      color: PLANE_COLOR,
+      transparent: true,
+      opacity: GRID_OPACITY,
+      depthWrite: false
+    })
+  )
+)
+
+const planeLabel = createLabel("w = 1", PLANE_COLOR, VALUE_LABEL_HEIGHT)
+planeLabel.position.set(PLANE_HALF - 0.5, PLANE_HALF + 0.28, 1)
+scene.add(planeLabel)
+
+// 同次座標 (x, y, w) と、それを k 倍した (kx, ky, kw)
+const x = 0.9
+const y = 0.6
+const w = 1.5
+const k = 1.6
+
+const base = new Vector3(x, y, w)
+const scaled = new Vector3(k * x, k * y, k * w)
+
+// x と y を w で割ると、w = 1 の平面上の点になる
+const normalized = new Vector3(x / w, y / w, 1)
+
+// 定数倍でたどれる点をすべて集めると、原点を通る 1 本の直線になる。
+// (x, y, w) も (kx, ky, kw) も、正規化した (x/w, y/w, 1) も、この直線の上に並ぶ
+const direction = base.clone().normalize()
+scene.add(
+  new LineSegments(
+    new BufferGeometry().setFromPoints([
+      direction.clone().multiplyScalar(-LINE_HALF),
+      direction.clone().multiplyScalar(LINE_HALF)
+    ]),
+    new LineBasicMaterial({ color: LINE_COLOR })
+  )
+)
+
+// 直線が通る原点と、同じ 1 点を指す 3 つの座標
+scene.add(
+  createPoint(new Vector3(0, 0, 0), ORIGIN_COLOR, ORIGIN_RADIUS),
+  createPoint(base, BASE_COLOR, POINT_RADIUS),
+  createPoint(scaled, SCALED_COLOR, POINT_RADIUS),
+  createPoint(normalized, NORMALIZED_COLOR, POINT_RADIUS)
+)
+
+// ラベルは、それが指す点の真上に置く。正規化した点だけは、
+// 直線やほかのラベルとぶつからないよう平面の手前（真下）へ置く
+const baseLabel = createLabel("(x, y, w)", BASE_COLOR, VALUE_LABEL_HEIGHT)
+baseLabel.position.set(base.x, base.y + LABEL_GAP + baseLabel.scale.y / 2, base.z)
+
+const scaledLabel = createLabel("k(x, y, w)", SCALED_COLOR, VALUE_LABEL_HEIGHT)
+scaledLabel.position.set(scaled.x, scaled.y + LABEL_GAP + scaledLabel.scale.y / 2, scaled.z)
+
+const normalizedLabel = createLabel("(x/w, y/w, 1)", NORMALIZED_COLOR, VALUE_LABEL_HEIGHT)
+normalizedLabel.position.set(
+  normalized.x,
+  normalized.y - (LABEL_GAP + normalizedLabel.scale.y / 2),
+  1
+)
+
+scene.add(baseLabel, scaledLabel, normalizedLabel)
+```
+
+:::
 
 ### 同次座標の同値関係
 
