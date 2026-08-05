@@ -9,6 +9,7 @@ visual: true
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import HomogeneousLineDemo from '$lib/demo/threejs/transformation/projective-transformation/homogeneous-line/HomogeneousLineDemo.svelte'
+  import NormalizationAfterTransformDemo from '$lib/demo/threejs/transformation/projective-transformation/normalization-after-transform/NormalizationAfterTransformDemo.svelte'
 </script>
 
 [アフィン変換](/cg/transformation/affine-transformation/)は、同次座標行列の最下行が`(0 0 1)`に固定された変換でした。
@@ -263,6 +264,140 @@ $$
 こうして得られた`(x'/w', y'/w')`が、射影変換後の実際の座標となります。
 
 <!-- TODO: 同次座標の w 成分が変化したときの「正規化」を視覚化したインタラクティブデモ -->
+
+<CanvasWrapper>
+  <NormalizationAfterTransformDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// Tweakpane で動かす値。射影変換行列の最下行 (p q r) の p・q と、正規化の進み具合 t。
+// ここでは初期表示の値をそのまま定数として置く
+const p = 0.4
+const q = 0.15
+const t = 0
+
+// 正規化した同次座標が並ぶ w = 1 の平面。
+// 奥の直線や点を隠さないよう、薄く塗って深度は書かない
+const plane = new Mesh(
+  new PlaneGeometry(PLANE_HALF * 2, PLANE_HALF * 2),
+  new MeshBasicMaterial({
+    color: PLANE_COLOR,
+    side: DoubleSide,
+    transparent: true,
+    opacity: PLANE_OPACITY,
+    depthWrite: false
+  })
+)
+plane.position.z = 1
+scene.add(plane)
+
+// 平面の目盛り。四辺形の隅が平面のどこに乗っているかを読めるようにする
+const gridPoints: Vector3[] = []
+const gridLineCount = (PLANE_HALF * 2) / PLANE_GRID_STEP
+for (let i = 0; i <= gridLineCount; i++) {
+  const offset = -PLANE_HALF + i * PLANE_GRID_STEP
+  gridPoints.push(new Vector3(offset, -PLANE_HALF, 1), new Vector3(offset, PLANE_HALF, 1))
+  gridPoints.push(new Vector3(-PLANE_HALF, offset, 1), new Vector3(PLANE_HALF, offset, 1))
+}
+scene.add(
+  new LineSegments(
+    new BufferGeometry().setFromPoints(gridPoints),
+    new LineBasicMaterial({
+      color: PLANE_COLOR,
+      transparent: true,
+      opacity: GRID_OPACITY,
+      depthWrite: false
+    })
+  )
+)
+
+// 位置を示す球。同じ大きさ・色の球はジオメトリとマテリアルを共有する
+const createPoints = (positions: Vector3[], color: ColorRepresentation, radius: number) => {
+  const geometry = new SphereGeometry(radius, 16, 12)
+  const material = new MeshBasicMaterial({ color })
+  return positions.map((position) => {
+    const point = new Mesh(geometry, material)
+    point.position.copy(position)
+    return point
+  })
+}
+
+// 4 隅を順に結ぶ閉じた四辺形。
+// LineLoop は最後の頂点と最初の頂点も結ぶので、4 頂点だけで四辺形になる
+const createQuad = (corners: Vector3[], color: ColorRepresentation, opacity = 1) =>
+  new LineLoop(
+    new BufferGeometry().setFromPoints(corners),
+    new LineBasicMaterial({ color, transparent: opacity < 1, opacity })
+  )
+
+// 変換前の正方形の 4 隅。w = 1 の平面上の点なので、同次座標では (x, y, 1) と書ける。
+// 閉じた線で四辺形として結ぶため、外周をたどる順に並べる
+const SQUARE_CORNERS = [
+  new Vector3(-0.6, 0.6, 1),
+  new Vector3(0.6, 0.6, 1),
+  new Vector3(0.6, -0.6, 1),
+  new Vector3(-0.6, -0.6, 1)
+]
+scene.add(createQuad(SQUARE_CORNERS, SOURCE_COLOR))
+
+// 射影変換の行列。上の 2 行は単位行列のままにして、
+// 最下行 (p q r) がもたらす w' の変化だけが見えるようにする
+const matrix = new Matrix3().set(
+  1, 0, 0,
+  0, 1, 0,
+  p, q, 1
+)
+
+// 同次座標 (x, y, 1) に行列を掛けると (x', y', w') が得られる。
+// w' = p x + q y + r なので、隅の位置によって値が変わる
+const transformedCorners = SQUARE_CORNERS.map((corner) => corner.clone().applyMatrix3(matrix))
+
+// x' と y' を w' で割ると、w = 1 の平面上の点に戻る
+const normalizedCorners = transformedCorners.map(
+  (corner) => new Vector3(corner.x / corner.z, corner.y / corner.z, 1)
+)
+
+// 同次座標は定数倍しても同じ点を指す。縮尺を 1 から 1/w' へ動かすと、
+// 隅は原点を通る直線の上を滑って w = 1 の平面へ降りる
+const movingCorners = transformedCorners.map((corner) =>
+  corner.clone().multiplyScalar(1 - t + t / corner.z)
+)
+
+// 各隅が正規化で滑っていく、原点を通る直線。
+// 変換後の点と正規化後の点のうち原点から遠いほうより先まで伸ばす
+const rayPoints = transformedCorners.flatMap((corner) => [
+  new Vector3(0, 0, 0),
+  corner.clone().multiplyScalar(Math.max(1, 1 / corner.z) * RAY_MARGIN)
+])
+scene.add(
+  new LineSegments(
+    new BufferGeometry().setFromPoints(rayPoints),
+    new LineBasicMaterial({ color: GUIDE_COLOR })
+  )
+)
+
+// 変換後の隅と正規化後の隅は、必ずこの原点を通る 1 本の直線の上に並ぶ
+scene.add(...createPoints([new Vector3(0, 0, 0)], GUIDE_COLOR, ORIGIN_RADIUS))
+
+// 正規化後の四辺形は、動く四辺形が着く先として薄く残しておく
+scene.add(createQuad(normalizedCorners, NORMALIZED_COLOR, STATION_OPACITY))
+
+// 正規化の途中の四辺形と、その 4 隅。
+// 正規化が進むほど、変換直後の色から正規化後の色へ近づける
+const movingColor = new Color().lerpColors(
+  new Color(TRANSFORMED_COLOR),
+  new Color(NORMALIZED_COLOR),
+  t
+)
+scene.add(
+  createQuad(movingCorners, movingColor),
+  ...createPoints(movingCorners, movingColor, POINT_RADIUS)
+)
+```
+
+:::
 
 ### 射影変換で保たれる性質
 
