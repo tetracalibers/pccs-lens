@@ -264,8 +264,8 @@ $$
 ```ts
 // Tweakpane で動かす値。射影変換行列の最下行 (p q r) の p・q。
 // ここでは初期表示の値をそのまま定数として置く
-const p = 0.4
-const q = 0.15
+const p = 0.35
+const q = 0.3
 
 // 射影変換の行列。上の 2 行は単位行列のままにして、
 // 最下行 (p q r) がもたらす w' の変化だけが見えるようにする
@@ -290,16 +290,18 @@ const sampleLine = (fromX: number, fromY: number, toX: number, toY: number) =>
   })
 
 // 変換前の格子を、線 1 本ずつ「細かく分割した点の列」として組み立てる。
-// 上下の端の 2 辺（変換前は平行）は、延長線を引くので別に持つ
-const grid: Vector3[][] = []
+// 横線の束と縦線の束はそれぞれ別の消点へ集まるので、束ごとに分けて持つ。
+// 上下の端の 2 辺（本文で注目する「平行だった 2 直線」）は色を変えるので、さらに分ける
+const innerHorizontals: Vector3[][] = []
 const parallelEdges: Vector3[][] = []
+const verticals: Vector3[][] = []
 const lineCount = (SQUARE_HALF * 2) / GRID_STEP
 for (let i = 0; i <= lineCount; i++) {
   const offset = -SQUARE_HALF + i * GRID_STEP
-  grid.push(sampleLine(offset, -SQUARE_HALF, offset, SQUARE_HALF))
+  verticals.push(sampleLine(offset, -SQUARE_HALF, offset, SQUARE_HALF))
   const horizontal = sampleLine(-SQUARE_HALF, offset, SQUARE_HALF, offset)
   if (i === 0 || i === lineCount) parallelEdges.push(horizontal)
-  else grid.push(horizontal)
+  else innerHorizontals.push(horizontal)
 }
 
 // 折れ線をまとめて 1 つの LineSegments で描く。隣り合う点を 2 つずつ線分として並べる
@@ -316,31 +318,73 @@ const createPolylines = (lines: Vector3[][], color: ColorRepresentation, opacity
 // 分割した点をすべて個別に変換する。
 // 射影変換は直線を直線のまま写すので、どれだけ細かく分割しても折れ線は折れない。
 // 一方で点の間隔は w' で割った分だけ変わるので、等間隔だった格子が片側へ詰まる
-const projectedGrid = grid.map((points) => points.map(project))
-const projectedEdges = parallelEdges.map((points) => points.map(project))
+const projectLines = (lines: Vector3[][]) => lines.map((points) => points.map(project))
+const projectedInner = projectLines(innerHorizontals)
+const projectedEdges = projectLines(parallelEdges)
+const projectedVerticals = projectLines(verticals)
 scene.add(
-  createPolylines(projectedGrid, GRID_COLOR),
+  createPolylines([...projectedInner, ...projectedVerticals], GRID_COLOR),
   createPolylines(projectedEdges, EDGE_COLOR)
 )
 
-// 変換前は平行だった 2 辺を、像の直線に沿ってそのまま伸ばす。
-// 伸ばす向きは、変換前の x が大きい側にある端の 2 点が向いている向き
-const extensions = projectedEdges.map((points) => {
-  const end = points[points.length - 1]
-  const direction = end.clone().sub(points[points.length - 2]).normalize()
-  return [end, direction.multiplyScalar(EXTENSION_LENGTH).add(end)]
-})
-scene.add(createPolylines(extensions, EDGE_COLOR, EXTENSION_OPACITY))
+// 消点。x 方向の無限遠点（同次座標では w が 0 の点 (1, 0, 0)）と、
+// y 方向の無限遠点 (0, 1, 0) を、それぞれ変換して正規化した点。
+// 最下行のはたらきで w' が p・q になるので、(1/p, 0) と (0, 1/q) に現れる
+// （p や q が 0 なら w' も 0 のままで、その束は平行なまま交わらない）
+const horizontalVanishing = project(new Vector3(1, 0, 0))
+const verticalVanishing = project(new Vector3(0, 1, 0))
 
-// 延長した 2 直線が交わる点は、x 方向の無限遠点（同次座標では w が 0 の点 (1, 0, 0)）を
-// 変換して正規化した点。最下行のはたらきで w' が p になるので、
-// p が 0 でなければ有限の位置に現れる
-const intersection = new Mesh(
-  new SphereGeometry(POINT_RADIUS, 16, 12),
-  new MeshBasicMaterial({ color: VANISHING_COLOR })
+// 変換前は平行だった線を、像の直線に沿ってそのまま伸ばす。
+// 像の直線は消点を通るので、消点に近いほうの端から消点まで結べば延長線になる
+const extendToVanishing = (lines: Vector3[][], vanishing: Vector3) =>
+  lines.map((points) => {
+    const start = points[0]
+    const end = points[points.length - 1]
+    const near =
+      start.distanceToSquared(vanishing) < end.distanceToSquared(vanishing) ? start : end
+    return [near, vanishing]
+  })
+
+scene.add(
+  createPolylines(
+    [
+      ...extendToVanishing(projectedInner, horizontalVanishing),
+      ...extendToVanishing(projectedVerticals, verticalVanishing)
+    ],
+    GRID_COLOR,
+    EXTENSION_OPACITY
+  ),
+  createPolylines(
+    extendToVanishing(projectedEdges, horizontalVanishing),
+    EDGE_COLOR,
+    EXTENSION_OPACITY
+  )
 )
-intersection.position.copy(project(new Vector3(1, 0, 0)))
-scene.add(intersection)
+
+// 無限遠点をすべて集めた直線（無限遠直線）の像は、p x + q y = 1 という直線になる。
+// どの向きの平行線の束も、その消点はこの直線の上に乗る。遠近法でいう地平線にあたる。
+// 原点にいちばん近い点を通り、(p, q) に垂直な向きへ伸びる直線として引く
+const norm = Math.hypot(p, q)
+const horizonCenter = new Vector3(p, q, 0).multiplyScalar(1 / (norm * norm))
+const horizonDirection = new Vector3(-q, p, 0).multiplyScalar(HORIZON_HALF / norm)
+scene.add(
+  createPolylines(
+    [[horizonCenter.clone().sub(horizonDirection), horizonCenter.clone().add(horizonDirection)]],
+    VANISHING_COLOR,
+    HORIZON_OPACITY
+  )
+)
+
+// 2 つの消点
+const createPoint = (position: Vector3) => {
+  const point = new Mesh(
+    new SphereGeometry(POINT_RADIUS, 16, 12),
+    new MeshBasicMaterial({ color: VANISHING_COLOR })
+  )
+  point.position.copy(position)
+  return point
+}
+scene.add(createPoint(horizontalVanishing), createPoint(verticalVanishing))
 ```
 
 :::
