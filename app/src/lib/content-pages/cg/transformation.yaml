@@ -8,23 +8,24 @@ sections:
       - slug: basic-transformations
       - slug: transformation-composition
       - slug: reflection-and-skew
-      - slug: affine-and-projective-transformation
-  - heading: 投影
-    id: projection
+      - slug: affine-transformation
+      - slug: projective-transformation
+  - heading: ビューイングパイプライン
+    id: viewing-pipeline
+    links:
+      - slug: viewing-pipeline-transformations
+      - title: 階層モデリング # CG 2-4-4
+        group: ["CG"]
+  - heading: 投影とクリッピング
+    id: projection-and-clipping
     links:
       - slug: pinhole-camera
       - slug: perspective-and-parallel-projection
       - slug: projection-steps
       - slug: projection-calculation
+      - slug: clipping-algorithms
       - slug: vanishing-points-and-n-point-perspective
       - slug: parallel-projection-types
-  - heading: ビューイングパイプライン
-    id: viewing-pipeline
-    links:
-      - slug: viewing-pipeline-transformations
-      - slug: clipping-algorithms
-      - title: 階層モデリング # CG 2-4-4
-        group: ["CG"]
   - heading: 画像の幾何学的変換
     id: image-geometric-transform
     links:

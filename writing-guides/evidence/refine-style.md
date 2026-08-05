@@ -142,7 +142,7 @@
 - 未マークのキー概念語への :Anki 付与（編集判断）（398dc97f：ダイナミックレンジ／階調／ハーフトーニング／配列密度／トーンマッピング）
   ※ 草稿が自前で補った仕組み説明を…差し替える は反例（草稿になかった「なぜ比で表現の幅がわかるのか」の説明を人手で書き足しており、仕組みの説明が常に削られるわけではない）
 
-## /cg/transformation/affine-and-projective-transformation
+## /cg/transformation/affine-transformation
 分析時点: `e3599f0d`
 
 - 理由・背景の補足（3efe69f・40bdec1：2枚の鏡による平行移動2d・定数倍同値・無限遠点の導出）

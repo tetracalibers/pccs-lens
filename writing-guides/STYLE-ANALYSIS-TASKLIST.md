@@ -816,22 +816,23 @@
 - [x] `/cg/transformation/basic-transformations`
 - [x] `/cg/transformation/transformation-composition`
 - [x] `/cg/transformation/reflection-and-skew`
-- [x] `/cg/transformation/affine-and-projective-transformation`
+- [x] `/cg/transformation/affine-transformation`
+- [ ] `/cg/transformation/projective-transformation`
 
-## CGと画像処理 — 変換と投影／投影（`cg/transformation.yaml` #projection）
+## CGと画像処理 — 変換と投影／ビューイングパイプライン（`cg/transformation.yaml` #viewing-pipeline）
+
+- [draft] `/cg/transformation/viewing-pipeline-transformations`
+- [ページ未作成] 階層モデリング
+
+## CGと画像処理 — 変換と投影／投影とクリッピング（`cg/transformation.yaml` #projection-and-clipping）
 
 - [ ] `/cg/transformation/pinhole-camera`
 - [ ] `/cg/transformation/perspective-and-parallel-projection`
 - [ ] `/cg/transformation/projection-steps`
 - [draft] `/cg/transformation/projection-calculation`
+- [draft] `/cg/transformation/clipping-algorithms`
 - [draft] `/cg/transformation/vanishing-points-and-n-point-perspective`
 - [draft] `/cg/transformation/parallel-projection-types`
-
-## CGと画像処理 — 変換と投影／ビューイングパイプライン（`cg/transformation.yaml` #viewing-pipeline）
-
-- [draft] `/cg/transformation/viewing-pipeline-transformations`
-- [draft] `/cg/transformation/clipping-algorithms`
-- [ページ未作成] 階層モデリング
 
 ## CGと画像処理 — 変換と投影／画像の幾何学的変換（`cg/transformation.yaml` #image-geometric-transform）
 
