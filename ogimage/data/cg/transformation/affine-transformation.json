@@ -1,0 +1,11 @@
+{
+  "route": "cg/transformation/affine-transformation",
+  "title": "アフィン変換",
+  "titleLines": [
+    "アフィン変換"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "変換と投影"
+  ]
+}

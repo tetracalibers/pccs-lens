@@ -303,7 +303,8 @@
 - [x] `/cg/transformation/basic-transformations`
 - [x] `/cg/transformation/transformation-composition`
 - [x] `/cg/transformation/reflection-and-skew`
-- [x] `/cg/transformation/affine-and-projective-transformation`
+- [x] `/cg/transformation/affine-transformation`
+- [x] `/cg/transformation/projective-transformation`
 - [draft] `/cg/transformation/viewing-pipeline-transformations`
 - [ページ未作成] 階層モデリング
 - [x] `/cg/transformation/pinhole-camera`

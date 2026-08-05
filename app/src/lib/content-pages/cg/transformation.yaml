@@ -8,7 +8,8 @@ sections:
       - slug: basic-transformations
       - slug: transformation-composition
       - slug: reflection-and-skew
-      - slug: affine-and-projective-transformation
+      - slug: affine-transformation
+      - slug: projective-transformation
   - heading: ビューイングパイプライン
     id: viewing-pipeline
     links:

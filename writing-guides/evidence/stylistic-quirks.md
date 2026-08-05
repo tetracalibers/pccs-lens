@@ -190,7 +190,7 @@
 - 誤解の否定は同一文内の連用形「〜ではなく／〜のではなく」で畳む
 - 知覚の主体を「私たち」で語り読者を巻き込む（「私たちが目にする実世界には、〜」「私たちが普段使うディスプレイの多くは、〜」）
 
-## /cg/transformation/affine-and-projective-transformation
+## /cg/transformation/affine-transformation
 分析時点: `e3599f0d`
 
 - 命名構文の語末選択（同じ「線形変換」を「と呼ばれます」。「消点と呼ばれます」も受動）

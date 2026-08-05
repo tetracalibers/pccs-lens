@@ -816,7 +816,8 @@
 - [x] `/cg/transformation/basic-transformations`
 - [x] `/cg/transformation/transformation-composition`
 - [x] `/cg/transformation/reflection-and-skew`
-- [x] `/cg/transformation/affine-and-projective-transformation`
+- [x] `/cg/transformation/affine-transformation`
+- [ ] `/cg/transformation/projective-transformation`
 
 ## CGと画像処理 — 変換と投影／ビューイングパイプライン（`cg/transformation.yaml` #viewing-pipeline）
 
