@@ -13,9 +13,8 @@ import {
   MeshBasicMaterial,
   PerspectiveCamera,
   PlaneGeometry,
-  Points,
-  PointsMaterial,
   Scene,
+  SphereGeometry,
   Sprite,
   SpriteMaterial,
   SRGBColorSpace,
@@ -45,6 +44,9 @@ const AXIS_LENGTH = 2
 /** 軸の正の向きを指す矢印の大きさ */
 const ARROW_RADIUS = 0.06
 const ARROW_HEIGHT = 0.22
+
+/** 座標が指す点を表す球の半径 */
+const POINT_RADIUS = 0.05
 
 /** 軸名のラベルの一辺（ワールド座標での大きさ） */
 const AXIS_LABEL_SIZE = 0.34
@@ -239,12 +241,9 @@ export const createCylindricalCoordinatesScene = ({ scene, params }: SceneContex
   world.add(xAxis.object, yAxis.object, zAxis.object)
 
   // 円柱座標が指す点
-  const pointGeometry = new BufferGeometry().setAttribute(
-    "position",
-    new Float32BufferAttribute([0, 0, 0], 3)
-  )
-  const pointMaterial = new PointsMaterial({ color: RADIUS_COLOR, size: 0.16 })
-  const point = new Points(pointGeometry, pointMaterial)
+  const pointGeometry = new SphereGeometry(POINT_RADIUS, 16, 12)
+  const pointMaterial = new MeshBasicMaterial({ color: RADIUS_COLOR })
+  const point = new Mesh(pointGeometry, pointMaterial)
   world.add(point)
 
   // xy 平面上で原点から伸びる線分。長さが r になる

@@ -187,11 +187,12 @@ const x = r * Math.cos(theta)
 const y = r * Math.sin(theta)
 
 // 極座標と直交座標が同じ 1 点を指していることを見せるための点
-const pointGeometry = new BufferGeometry().setAttribute(
-  "position",
-  new Float32BufferAttribute([x, y, 0], 3)
+const point = new Mesh(
+  new SphereGeometry(POINT_RADIUS, 16, 12),
+  new MeshBasicMaterial({ color: RADIUS_COLOR })
 )
-scene.add(new Points(pointGeometry, new PointsMaterial({ color: RADIUS_COLOR, size: 0.16 })))
+point.position.set(x, y, 0)
+scene.add(point)
 
 // 原点から点までの線分（斜辺）と、直角三角形の 2 辺。
 // 隣辺は x 軸に重なるので、LEG_Z だけ前に出して軸の線に負けないようにする
@@ -557,11 +558,12 @@ const y = r * Math.sin(theta) * Math.sin(phi)
 const z = r * Math.cos(theta)
 
 // 球面座標が指す点
-const pointGeometry = new BufferGeometry().setAttribute(
-  "position",
-  new Float32BufferAttribute([x, y, z], 3)
+const point = new Mesh(
+  new SphereGeometry(POINT_RADIUS, 16, 12),
+  new MeshBasicMaterial({ color: RADIUS_COLOR })
 )
-world.add(new Points(pointGeometry, new PointsMaterial({ color: RADIUS_COLOR, size: 0.16 })))
+point.position.set(x, y, z)
+world.add(point)
 
 // 原点から点までの線分。長さが r になる
 const radiusGeometry = new BufferGeometry().setAttribute(
@@ -714,11 +716,12 @@ const x = r * Math.cos(theta)
 const y = r * Math.sin(theta)
 
 // 円柱座標が指す点
-const pointGeometry = new BufferGeometry().setAttribute(
-  "position",
-  new Float32BufferAttribute([x, y, z], 3)
+const point = new Mesh(
+  new SphereGeometry(POINT_RADIUS, 16, 12),
+  new MeshBasicMaterial({ color: RADIUS_COLOR })
 )
-world.add(new Points(pointGeometry, new PointsMaterial({ color: RADIUS_COLOR, size: 0.16 })))
+point.position.set(x, y, z)
+world.add(point)
 
 // xy 平面上で原点から伸びる線分。長さが r になる
 const radiusGeometry = new BufferGeometry().setAttribute(

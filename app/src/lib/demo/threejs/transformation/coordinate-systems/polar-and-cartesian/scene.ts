@@ -12,9 +12,8 @@ import {
   Mesh,
   MeshBasicMaterial,
   PerspectiveCamera,
-  Points,
-  PointsMaterial,
   Scene,
+  SphereGeometry,
   Sprite,
   SpriteMaterial,
   SRGBColorSpace,
@@ -45,6 +44,9 @@ const AXIS_LENGTH = 2
 /** 軸の正の向きを指す矢印の大きさ */
 const ARROW_RADIUS = 0.06
 const ARROW_HEIGHT = 0.22
+
+/** 座標が指す点を表す球の半径 */
+const POINT_RADIUS = 0.05
 
 /** 軸名のラベルの高さ（ワールド座標での大きさ）。幅は文字数に応じて決まる */
 const AXIS_LABEL_HEIGHT = 0.34
@@ -246,12 +248,9 @@ export const createPolarAndCartesianScene = ({ scene, params }: SceneContext) =>
   scene.add(xAxis.object, yAxis.object)
 
   // 極座標と直交座標が同じ 1 点を指していることを見せるための点
-  const pointGeometry = new BufferGeometry().setAttribute(
-    "position",
-    new Float32BufferAttribute([0, 0, 0], 3)
-  )
-  const pointMaterial = new PointsMaterial({ color: RADIUS_COLOR, size: 0.16 })
-  const point = new Points(pointGeometry, pointMaterial)
+  const pointGeometry = new SphereGeometry(POINT_RADIUS, 16, 12)
+  const pointMaterial = new MeshBasicMaterial({ color: RADIUS_COLOR })
+  const point = new Mesh(pointGeometry, pointMaterial)
   scene.add(point)
 
   // 原点から点までの線分。長さが r で、直角三角形の斜辺になる
