@@ -255,7 +255,7 @@ export const createTranslationScene = ({ scene, params }: SceneContext) => {
    ```yaml
    ---
    layout: guide-content
-   title: 基本的な変換と同次座標
+   title: 基本的な変換
    group: ["CG", "ImgP"]
    visual: true
    ---

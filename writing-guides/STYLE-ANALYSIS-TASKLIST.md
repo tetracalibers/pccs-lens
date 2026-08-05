@@ -810,7 +810,7 @@
 - [ページ未作成] 色補正
 - [ページ未作成] 色変換
 
-## CGと画像処理 — 変換と投影／図形の変換（`cg/transformation.yaml` #coordinate-transform）
+## CGと画像処理 — 変換と投影／図形の幾何学的変換（`cg/transformation.yaml` #coordinate-transform）
 
 - [x] `/cg/transformation/coordinate-systems`
 - [x] `/cg/transformation/basic-transformations`
