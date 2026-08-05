@@ -10,7 +10,6 @@ visual: true
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import HomogeneousLineDemo from '$lib/demo/threejs/transformation/projective-transformation/homogeneous-line/HomogeneousLineDemo.svelte'
   import ParallelLinesMeetDemo from '$lib/demo/threejs/transformation/projective-transformation/parallel-lines-meet/ParallelLinesMeetDemo.svelte'
-  import PointAtInfinityDemo from '$lib/demo/threejs/transformation/projective-transformation/point-at-infinity/PointAtInfinityDemo.svelte'
 </script>
 
 [アフィン変換](/cg/transformation/affine-transformation/)は、同次座標行列の最下行が`(0 0 1)`に固定された変換でした。
@@ -402,103 +401,6 @@ scene.add(createPoint(horizontalVanishing), createPoint(verticalVanishing))
 
 ところが射影変換では、最下行`(p q r)`のはたらきで`w`が変化するため、`w`が`0`だった無限遠点が、`w`が`0`でない有限の点へと写ることがあります。
 たとえば、3次元世界の光景を写真に写しとる操作を射影変換で行うと、決して到達できないはずの無限遠点が、変換後は画像内の座標として表せる位置（有限の点）に現れます。
-
-<CanvasWrapper>
-  <PointAtInfinityDemo />
-</CanvasWrapper>
-
-:::Foldable{title="Three.jsによる実装概要"}
-
-```ts
-// Tweakpane で動かす値。射影変換行列の最下行 (p q r) の p・q と、無限遠点の向き（度）。
-// ここでは初期表示の値をそのまま定数として置く
-const p = 0.7
-const q = 0.3
-const angle = 25
-
-// 射影変換の行列。上の 2 行は単位行列のままにして、
-// 最下行 (p q r) がもたらす w' の変化だけが見えるようにする
-const matrix = new Matrix3().set(
-  1, 0, 0,
-  0, 1, 0,
-  p, q, 1
-)
-
-// 同次座標 (x, y, w) を w で割って、w = 1 の平面上の点に戻す
-const normalize = (homogeneous: Vector3) =>
-  new Vector3(homogeneous.x / homogeneous.z, homogeneous.y / homogeneous.z, 1)
-
-// 同次座標に行列を掛けて (x', y', w') を得たあと、w' で割って w = 1 の平面へ戻す
-const project = (homogeneous: Vector3) => normalize(homogeneous.clone().applyMatrix3(matrix))
-
-// 同次座標の定数倍が並ぶ、原点を通る 1 本の直線
-const createLineThroughOrigin = (direction: Vector3, color: ColorRepresentation) => {
-  const end = direction.clone().normalize().multiplyScalar(RAY_HALF)
-  return new LineSegments(
-    new BufferGeometry().setFromPoints([end.clone().negate(), end]),
-    new LineBasicMaterial({ color })
-  )
-}
-
-// 無限遠点は位置ではなく向きで決まる点。向き (dx, dy) の無限遠点は、
-// w を 0 にした (dx, dy, 0) と書ける。
-// この点の定数倍が並ぶ直線は w = 0 の平面に寝ているので、
-// w = 1 の平面と平行で、どこまで伸ばしても交わらない
-const radians = (angle * Math.PI) / 180
-const direction = new Vector3(Math.cos(radians), Math.sin(radians), 0)
-scene.add(createLineThroughOrigin(direction, SOURCE_COLOR))
-
-// 行列を掛けた (x', y', w')。w' = p dx + q dy なので、
-// 最下行が (0 0 1) のアフィン変換では w' が 0 のままだが、
-// 射影変換では 0 でない値になり、直線が傾いて w = 1 の平面へ届く
-const transformed = direction.clone().applyMatrix3(matrix)
-scene.add(createLineThroughOrigin(transformed, TRANSFORMED_COLOR))
-
-// w' が 0 でなければ、w' で割った点が平面上に現れる（無限遠点が写った先の有限の点）
-if (Math.abs(transformed.z) > ZERO_W) {
-  const intersection = new Mesh(
-    new SphereGeometry(POINT_RADIUS, 16, 12),
-    new MeshBasicMaterial({ color: VANISHING_COLOR })
-  )
-  intersection.position.copy(normalize(transformed))
-  scene.add(intersection)
-}
-
-// w = 1 の平面に収まっているか
-const isOnPlane = (point: Vector3) =>
-  Math.abs(point.x) <= PLANE_HALF && Math.abs(point.y) <= PLANE_HALF
-
-// 変換前は平行な 2 直線を、向きに垂直な方向へ ±RAIL_GAP ずらして作る。
-// 像も直線なので、その直線を刻んで平面の内側にある区間だけを結ぶ。
-// 変換前は平行でも、像はどちらも上の交点を通る
-const perpendicular = new Vector3(-direction.y, direction.x, 0)
-const railPoints: Vector3[] = []
-
-for (const offset of [-RAIL_GAP, RAIL_GAP]) {
-  // 直線が通る点。w = 1 の平面上にあるので、同次座標では (x, y, 1)
-  const source = perpendicular.clone().multiplyScalar(offset).setZ(1)
-  const center = project(source)
-  // 少しだけ進めた点の像との差から、像の直線の向きを得る
-  const probe = project(source.addScaledVector(direction, RAIL_PROBE))
-  const step = probe.sub(center).normalize()
-
-  let previous: Vector3 | null = null
-  for (let i = 0; i <= RAIL_SAMPLES; i++) {
-    const distance = -RAIL_REACH + (2 * RAIL_REACH * i) / RAIL_SAMPLES
-    const point = step.clone().multiplyScalar(distance).add(center)
-    if (previous && isOnPlane(previous) && isOnPlane(point)) railPoints.push(previous, point)
-    previous = point
-  }
-}
-scene.add(
-  new LineSegments(
-    new BufferGeometry().setFromPoints(railPoints),
-    new LineBasicMaterial({ color: RAIL_COLOR })
-  )
-)
-```
-
-:::
 
 :::Note
 このような、射影変換によって無限遠点が写った先の有限の点は:Anki[消点]と呼ばれます。消点は、平行な線が交わるように見える点として、遠近法の表現で重要な役割を果たします。
