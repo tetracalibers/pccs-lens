@@ -3,7 +3,13 @@ layout: guide-content
 title: 基本的な変換と同次座標 # CG 2-1-2, 2-1-3 / ImgP 8-1-1, 8-1-2, 8-1-3, 8-2-1, 8-2-2, 8-2-3
 
 group: ["CG", "ImgP"]
+visual: true
 ---
+
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import PointAndDirectionDemo from '$lib/demo/threejs/transformation/basic-transformations/point-and-direction/PointAndDirectionDemo.svelte'
+</script>
 
 ここからは、[座標](/cg/transformation/coordinate-systems/)の位置に置かれた点や図形を「動かす・変える」操作に話を進めます。
 平行移動・拡大縮小・回転といった基本的な変換を、すべて行列の掛け算ひとつで扱えるようにするのが、この記事のゴールです。
@@ -278,6 +284,214 @@ $$
 
 :::Note
 `w`が`1`でも`0`でもない一般の値をとる場合の扱いは、遠近感を表す[射影変換](/cg/transformation/projective-transformation/)と深く関わります。
+:::
+
+<CanvasWrapper>
+  <PointAndDirectionDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+/**
+ * 文字を描いた canvas をテクスチャにして、常にカメラを向く板（Sprite）にする。
+ * Q − P のような幅の異なるラベルがあるので、文字の幅を測って板の横幅を決める
+ */
+const createLabel = (text: string, color: string, height: number) => {
+  const canvas = document.createElement("canvas")
+  const context = canvas.getContext("2d")
+
+  let textWidth = LABEL_TEXTURE_HEIGHT
+  if (context) {
+    context.font = LABEL_FONT
+    textWidth = context.measureText(text).width
+  }
+
+  canvas.width = Math.ceil(textWidth + LABEL_TEXTURE_PADDING * 2)
+  canvas.height = LABEL_TEXTURE_HEIGHT
+
+  if (context) {
+    // canvas の大きさを変えると描画状態が初期化されるので、書体はここで指定し直す
+    context.font = LABEL_FONT
+    context.textAlign = "center"
+    context.textBaseline = "middle"
+    context.fillStyle = color
+    context.fillText(text, canvas.width / 2, canvas.height / 2)
+  }
+
+  const texture = new CanvasTexture(canvas)
+  texture.colorSpace = SRGBColorSpace
+  const sprite = new Sprite(new SpriteMaterial({ map: texture, transparent: true }))
+  // 高さを指定の値に揃え、幅は canvas の縦横比から決める
+  sprite.scale.set((height * canvas.width) / canvas.height, height, 1)
+
+  return sprite
+}
+
+// 1 本の軸を、原点をまたぐ直線・正の向きを指す矢印・軸名のラベルの 3 点セットで作る
+const createAxis = (name: string, color: string, direction: Vector3) => {
+  const group = new Group()
+
+  const lineGeometry = new BufferGeometry().setFromPoints([
+    direction.clone().multiplyScalar(-AXIS_LENGTH),
+    direction.clone().multiplyScalar(AXIS_LENGTH)
+  ])
+  group.add(new LineSegments(lineGeometry, new LineBasicMaterial({ color })))
+
+  // ConeGeometry は +y を向いているので、軸の正の向きへ回してから先端に置く
+  const arrow = new Mesh(
+    new ConeGeometry(ARROW_RADIUS, ARROW_HEIGHT, 16),
+    new MeshBasicMaterial({ color })
+  )
+  arrow.position.copy(direction).multiplyScalar(AXIS_LENGTH)
+  arrow.quaternion.setFromUnitVectors(CONE_UP, direction)
+  group.add(arrow)
+
+  const label = createLabel(name, color, AXIS_LABEL_HEIGHT)
+  label.position.copy(direction).multiplyScalar(AXIS_LENGTH + LABEL_OFFSET)
+  group.add(label)
+
+  return group
+}
+
+// 同次座標が指す位置を表す球
+const createPoint = (position: Vector3, color: string, radius: number) => {
+  const point = new Mesh(new SphereGeometry(radius, 16, 12), new MeshBasicMaterial({ color }))
+  point.position.copy(position)
+  return point
+}
+
+// 始点から終点へ向かう矢印。線の先に円錐を載せて作る
+const createArrow = (from: Vector3, to: Vector3, color: string, opacity = 1) => {
+  const group = new Group()
+  const transparent = opacity < 1
+  const direction = to.clone().sub(from).normalize()
+
+  // 円錐の底面が線の先端に来るよう、矢印の高さのぶん手前で線を止める
+  const shaftEnd = to.clone().addScaledVector(direction, -ARROW_HEIGHT)
+  group.add(
+    new LineSegments(
+      new BufferGeometry().setFromPoints([from, shaftEnd]),
+      new LineBasicMaterial({ color, transparent, opacity })
+    )
+  )
+
+  // ConeGeometry の原点は円錐の中心なので、高さの半分ぶん戻した位置に置く
+  const head = new Mesh(
+    new ConeGeometry(ARROW_RADIUS, ARROW_HEIGHT, 16),
+    new MeshBasicMaterial({ color, transparent, opacity })
+  )
+  head.position.copy(to).addScaledVector(direction, -ARROW_HEIGHT / 2)
+  head.quaternion.setFromUnitVectors(CONE_UP, direction)
+  group.add(head)
+
+  return group
+}
+
+// w の値を書いたラベル付きの平面。
+// 奥の点や矢印を隠さないよう、薄く塗って深度は書かない
+const createPlane = (w: number, name: string) => {
+  const group = new Group()
+
+  const plane = new Mesh(
+    new PlaneGeometry(PLANE_HALF * 2, PLANE_HALF * 2),
+    new MeshBasicMaterial({
+      color: PLANE_COLOR,
+      side: DoubleSide,
+      transparent: true,
+      opacity: PLANE_OPACITY,
+      depthWrite: false
+    })
+  )
+  plane.position.z = w
+  group.add(plane)
+
+  const label = createLabel(name, PLANE_COLOR, VALUE_LABEL_HEIGHT)
+  label.position.set(PLANE_HALF - 0.5, PLANE_HALF + 0.28, w)
+  group.add(label)
+
+  return group
+}
+
+// 同次座標 (x, y, w) の w を 3 本目の軸として立てる。
+// Three.js の x・y をそのまま平面の x・y にあて、z を w にあてると、
+// w = 1 の平面は x が右・y が上のまま読める板になる
+scene.add(
+  createAxis("x", X_COLOR, X_DIRECTION),
+  createAxis("y", Y_COLOR, Y_DIRECTION),
+  createAxis("w", W_COLOR, W_DIRECTION)
+)
+
+// 位置を表す点が乗る w = 1 の平面と、向きを表す方向ベクトルが寝ている w = 0 の平面
+scene.add(createPlane(1, "w = 1"), createPlane(0, "w = 0"))
+
+// Tweakpane で動かす値。平行移動の移動量と、点 Q の向き・距離。
+// ここでは初期表示の値をそのまま定数として置く
+const tx = 0.85
+const ty = 0.65
+const angle = 35
+const length = 1.1
+
+// 平行移動の行列。移動量は最後の列に置かれ、掛け算のときに w と掛け合わされる
+// prettier-ignore
+const matrix = new Matrix3().set(
+  1, 0, tx,
+  0, 1, ty,
+  0, 0, 1
+)
+
+// 平行移動する前の 2 点。どちらも w = 1 の平面上の点
+const radians = MathUtils.degToRad(angle)
+const sourceP = new Vector3(P_X, P_Y, 1)
+const sourceQ = new Vector3(
+  P_X + length * Math.cos(radians),
+  P_Y + length * Math.sin(radians),
+  1
+)
+
+// 2 点の差を取ると、w は 1 どうしで打ち消し合って 0 になる。これが方向ベクトル
+const difference = sourceQ.clone().sub(sourceP)
+
+// 点にも方向ベクトルにも、まったく同じ行列を掛ける
+const p = sourceP.clone().applyMatrix3(matrix)
+const q = sourceQ.clone().applyMatrix3(matrix)
+// w = 0 の方向ベクトルでは tx・ty に 0 が掛かって消えるので、差はそのまま残る
+const movedDifference = difference.clone().applyMatrix3(matrix)
+
+// 平行移動したあとの 2 点と、P から Q へ向かう矢印。
+// 矢印は方向ベクトルと同じ色を薄く塗り、同じ矢印を w = 1 の平面に置いたものだと読めるようにする
+scene.add(
+  createPoint(p, POINT_COLOR, POINT_RADIUS),
+  createPoint(q, POINT_COLOR, POINT_RADIUS),
+  createArrow(p, q, DIRECTION_COLOR, ARROW_OPACITY)
+)
+
+// 方向ベクトルは、原点から生えて w = 0 の平面に寝た矢印として描く。
+// 先端は矢じりが示すので、点は置かない
+const origin = new Vector3(0, 0, 0)
+scene.add(
+  createPoint(origin, GUIDE_COLOR, ORIGIN_RADIUS),
+  createArrow(origin, movedDifference, DIRECTION_COLOR)
+)
+
+// ラベルは、それが指す点の上か下に置く。
+// P だけ下に置いて、矢印とぶつからないようにする
+const pLabel = createLabel("P", POINT_COLOR, VALUE_LABEL_HEIGHT)
+pLabel.position.set(p.x, p.y - (LABEL_GAP + pLabel.scale.y / 2), 1)
+
+const qLabel = createLabel("Q", POINT_COLOR, VALUE_LABEL_HEIGHT)
+qLabel.position.set(q.x, q.y + LABEL_GAP + qLabel.scale.y / 2, 1)
+
+const differenceLabel = createLabel("Q − P", DIRECTION_COLOR, VALUE_LABEL_HEIGHT)
+differenceLabel.position.set(
+  movedDifference.x,
+  movedDifference.y + LABEL_GAP + differenceLabel.scale.y / 2,
+  0
+)
+
+scene.add(pLabel, qLabel, differenceLabel)
+```
+
 :::
 
 <!-- TODO: 平行移動量・拡大率・回転角をスライダーで変えて、変換後の図形を確認できるインタラクティブデモ -->
