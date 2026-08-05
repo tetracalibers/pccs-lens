@@ -12,6 +12,7 @@ visual: true
   import NormalizationAfterTransformDemo from '$lib/demo/threejs/transformation/projective-transformation/normalization-after-transform/NormalizationAfterTransformDemo.svelte'
   import ParallelLinesMeetDemo from '$lib/demo/threejs/transformation/projective-transformation/parallel-lines-meet/ParallelLinesMeetDemo.svelte'
   import PointAtInfinityDemo from '$lib/demo/threejs/transformation/projective-transformation/point-at-infinity/PointAtInfinityDemo.svelte'
+  import WVariesByPointDemo from '$lib/demo/threejs/transformation/projective-transformation/w-varies-by-point/WVariesByPointDemo.svelte'
 </script>
 
 [アフィン変換](/cg/transformation/affine-transformation/)は、同次座標行列の最下行が`(0 0 1)`に固定された変換でした。
@@ -233,6 +234,120 @@ $$
 一方、射影変換では、`p`や`q`が`0`でないため、`w'`は入力の座標`x, y`に応じて変化します。
 
 点ごとに異なる値で座標を割るため、同じ大きさの移動でも、ある場所では大きく、別の場所では小さく縮められます。この「点ごとに異なる縮め方」が、遠くのものほど小さく見える:Anki[遠近感]を表現することにつながります。
+
+<CanvasWrapper>
+  <WVariesByPointDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// Tweakpane で動かす値。射影変換行列の最下行 (p q r) の p・q と、注目する入力点の x・y。
+// ここでは初期表示の値をそのまま定数として置く
+const p = 0.4
+const q = 0.15
+const x = 0.55
+const y = -0.55
+
+// 射影変換の行列。上の 2 行は単位行列のままにして、
+// 最下行 (p q r) がもたらす w' の変化だけが見えるようにする
+const matrix = new Matrix3().set(
+  1, 0, 0,
+  0, 1, 0,
+  p, q, 1
+)
+
+// 入力の点 (x, y, 1) が並ぶ w = 1 の平面。アフィン変換なら w' はどこでも 1 なので、
+// この平面は「変化しない w'」の目印にもなる。
+// 奥の柱や点を隠さないよう、薄く塗って深度は書かない
+const plane = new Mesh(
+  new PlaneGeometry(PLANE_HALF * 2, PLANE_HALF * 2),
+  new MeshBasicMaterial({
+    color: PLANE_COLOR,
+    side: DoubleSide,
+    transparent: true,
+    opacity: PLANE_OPACITY,
+    depthWrite: false
+  })
+)
+plane.position.z = 1
+scene.add(plane)
+
+// w' を測る入力点。正方形を等間隔に区切った格子で、
+// w = 1 の平面上にあるので同次座標では (x, y, 1) と書ける
+const LATTICE_POINTS = Array.from({ length: (LATTICE_DIVISIONS + 1) ** 2 }, (_, index) => {
+  const column = index % (LATTICE_DIVISIONS + 1)
+  const row = Math.floor(index / (LATTICE_DIVISIONS + 1))
+  return new Vector3(-LATTICE_HALF + column * LATTICE_STEP, -LATTICE_HALF + row * LATTICE_STEP, 1)
+})
+
+// 同次座標 (x, y, 1) に行列を掛けると (x', y', w') が得られる。
+// 上の 2 行が単位行列なので x'・y' は入力のままで、
+// w' だけが w' = p x + q y + r として入力の位置ごとに変わる
+const tops = LATTICE_POINTS.map((point) => point.clone().applyMatrix3(matrix))
+
+// 各入力点の真上に、w = 0 から (x', y', w') まで柱を立てる。
+// 柱の高さがそのまま w' の値になる
+scene.add(
+  new LineSegments(
+    new BufferGeometry().setFromPoints(tops.flatMap((top) => [new Vector3(top.x, top.y, 0), top])),
+    new LineBasicMaterial({ color: TRANSFORMED_COLOR, transparent: true, opacity: PILLAR_OPACITY })
+  )
+)
+
+// 位置を示す球。同じ大きさ・色の球はジオメトリとマテリアルを共有する
+const createPoints = (positions: Vector3[], color: ColorRepresentation, radius: number) => {
+  const geometry = new SphereGeometry(radius, 16, 12)
+  const material = new MeshBasicMaterial({ color })
+  return positions.map((position) => {
+    const point = new Mesh(geometry, material)
+    point.position.copy(position)
+    return point
+  })
+}
+
+// 柱の先端は、変換後の点 (x', y', w') そのもの
+scene.add(...createPoints(tops, TRANSFORMED_COLOR, LATTICE_POINT_RADIUS))
+
+// 変換後の点が並ぶ面。入力の正方形と同じ大きさで作り、
+// 4 隅の高さ（w'）だけを書き換えて傾ける
+const surfaceGeometry = new PlaneGeometry(LATTICE_HALF * 2, LATTICE_HALF * 2, 1, 1)
+const surfacePosition = surfaceGeometry.getAttribute("position")
+const corner = new Vector3()
+for (let index = 0; index < surfacePosition.count; index++) {
+  corner.set(surfacePosition.getX(index), surfacePosition.getY(index), 1).applyMatrix3(matrix)
+  surfacePosition.setZ(index, corner.z)
+}
+// 頂点を動かしたので、視錐台カリングに使う範囲も計算し直す
+surfaceGeometry.computeBoundingSphere()
+scene.add(
+  new Mesh(
+    surfaceGeometry,
+    new MeshBasicMaterial({
+      color: TRANSFORMED_COLOR,
+      side: DoubleSide,
+      transparent: true,
+      opacity: SURFACE_OPACITY,
+      depthWrite: false
+    })
+  )
+)
+
+// 注目する 1 点。入力の (x, y, 1) と、それを変換した (x', y', w')。
+// この柱も w = 0 から立てるので、長さがそのまま w' の値になる
+const source = new Vector3(x, y, 1)
+const transformed = source.clone().applyMatrix3(matrix)
+scene.add(
+  new LineSegments(
+    new BufferGeometry().setFromPoints([new Vector3(x, y, 0), transformed]),
+    new LineBasicMaterial({ color: PROBE_COLOR })
+  ),
+  ...createPoints([source], SOURCE_COLOR, POINT_RADIUS),
+  ...createPoints([transformed], PROBE_COLOR, POINT_RADIUS)
+)
+```
+
+:::
 
 ### 通常の座標への戻し方
 
