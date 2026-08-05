@@ -6,7 +6,7 @@
   // k は 1 だと (x, y, w) と点が重なってしまうので、初期値は定数倍が見える値にする。
   // scaled・normalized は scene.ts が計算して書き戻す表示用の値なので、初期値は使われない
   const params: HomogeneousLineParams = {
-    x: 0.9,
+    x: -0.57,
     y: 0.6,
     w: 1.5,
     k: 1.6,

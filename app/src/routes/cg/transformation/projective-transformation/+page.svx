@@ -139,7 +139,7 @@ planeLabel.position.set(PLANE_HALF - 0.5, PLANE_HALF + 0.28, 1)
 scene.add(planeLabel)
 
 // 同次座標 (x, y, w) と、それを k 倍した (kx, ky, kw)
-const x = 0.9
+const x = -0.57
 const y = 0.6
 const w = 1.5
 const k = 1.6
