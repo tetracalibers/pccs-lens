@@ -6,8 +6,6 @@
   // k は 1 だと (x, y, w) と点が重なってしまうので、初期値は定数倍が見える値にする。
   // scaled・normalized は scene.ts が計算して書き戻す表示用の値なので、初期値は使われない
   const params: HomogeneousLineParams = {
-    x: -0.57,
-    y: 0.6,
     w: 1.5,
     k: 1.6,
     scaled: "",
@@ -33,8 +31,6 @@
     maxDistance: 14
   }}
   buildPane={(pane, p) => {
-    pane.addBinding(p, "x", { min: -1.2, max: 1.2, step: 0.01, label: "x" })
-    pane.addBinding(p, "y", { min: -1.2, max: 1.2, step: 0.01, label: "y" })
     // w を 0 に近づけると正規化後の点が平面の外へ飛ぶので、平面に収まる範囲までにする
     pane.addBinding(p, "w", { min: 0.6, max: 1.8, step: 0.01, label: "w" })
     pane.addBinding(p, "k", { min: 0.3, max: 2, step: 0.01, label: "k（定数倍）" })

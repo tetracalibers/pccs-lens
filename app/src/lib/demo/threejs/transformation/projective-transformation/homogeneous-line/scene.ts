@@ -22,10 +22,6 @@ import {
 
 /** Tweakpane で操作するパラメータ */
 export type HomogeneousLineParams = {
-  /** 同次座標の x 成分 */
-  x: number
-  /** 同次座標の y 成分 */
-  y: number
   /** 同次座標の w 成分。0 でない値をとる */
   w: number
   /** 同次座標に掛ける定数倍 */
@@ -64,6 +60,13 @@ const FRAME_OPACITY = 0.7
 
 /** w 軸が平面を貫く位置に打つ目盛りの、軸から各向きへ伸ばす長さ */
 const TICK_HALF = 0.11
+
+/**
+ * 同次座標 (x, y, w) の x・y 成分。
+ * この図で見せたいのは w と定数倍のはたらきなので、x・y は操作させず固定する
+ */
+const BASE_X = -0.57
+const BASE_Y = 0.6
 
 /**
  * 定数倍でたどれる点が並ぶ直線を、原点から正負どちらへも伸ばす長さ。
@@ -366,18 +369,18 @@ export const createHomogeneousLineScene = ({ scene, params }: SceneContext) => {
 
   return {
     update: () => {
-      const { x, y, w, k } = params
+      const { w, k } = params
 
       // 同次座標 (x, y, w) が指す点
-      basePoint.mesh.position.set(x, y, w)
-      baseLabel.sprite.position.set(x, y + LABEL_GAP + baseLabel.sprite.scale.y / 2, w)
+      basePoint.mesh.position.set(BASE_X, BASE_Y, w)
+      baseLabel.sprite.position.set(BASE_X, BASE_Y + LABEL_GAP + baseLabel.sprite.scale.y / 2, w)
 
       // k 倍した (kx, ky, kw)。同じ点を指す別の書き方で、直線上を移動する。
       // k が 1 のときは (x, y, w) にぴったり重なるので描かない
       const overlapped = Math.abs(k - 1) < SAME_POINT_RANGE
       scaledPoint.mesh.visible = !overlapped
       scaledLabel.sprite.visible = !overlapped
-      scaledPosition.set(k * x, k * y, k * w)
+      scaledPosition.set(k * BASE_X, k * BASE_Y, k * w)
       scaledPoint.mesh.position.copy(scaledPosition)
       scaledLabel.sprite.position.set(
         scaledPosition.x,
@@ -386,7 +389,7 @@ export const createHomogeneousLineScene = ({ scene, params }: SceneContext) => {
       )
 
       // 定数倍でたどれる点をすべて集めると、原点を通る 1 本の直線になる
-      direction.set(x, y, w).normalize()
+      direction.set(BASE_X, BASE_Y, w).normalize()
       line.setEnds(
         lineStart.copy(direction).multiplyScalar(-LINE_HALF),
         lineEnd.copy(direction).multiplyScalar(LINE_HALF)
@@ -394,16 +397,16 @@ export const createHomogeneousLineScene = ({ scene, params }: SceneContext) => {
 
       // x と y を w で割ると、直線が w = 1 の平面と交わる点になる。
       // k を掛けても分子と分母で約分されて消えるので、この点は k を動かしても動かない
-      normalizedPoint.mesh.position.set(x / w, y / w, 1)
+      normalizedPoint.mesh.position.set(BASE_X / w, BASE_Y / w, 1)
       normalizedLabel.sprite.position.set(
-        x / w,
-        y / w - (LABEL_GAP + normalizedLabel.sprite.scale.y / 2),
+        BASE_X / w,
+        BASE_Y / w - (LABEL_GAP + normalizedLabel.sprite.scale.y / 2),
         1
       )
 
       // Tweakpane 側に読み取り専用で出す値。k を動かすと上だけが変わり、下は変わらない
       params.scaled = formatPoint(scaledPosition.x, scaledPosition.y, scaledPosition.z)
-      params.normalized = formatPoint(x / w, y / w)
+      params.normalized = formatPoint(BASE_X / w, BASE_Y / w)
     },
     dispose: () => {
       xAxis.dispose()
