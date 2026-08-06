@@ -818,7 +818,7 @@
 - [x] `/cg/transformation/transformation-composition`
 - [x] `/cg/transformation/reflection-and-skew`
 - [x] `/cg/transformation/affine-transformation`
-- [ ] `/cg/transformation/projective-transformation`
+- [x] `/cg/transformation/projective-transformation`
 
 ## CGと画像処理 — 変換と投影／ビューイングパイプライン（`cg/transformation.yaml` #viewing-pipeline）
 
@@ -829,7 +829,7 @@
 
 - [x] `/cg/transformation/pinhole-camera`
 - [x] `/cg/transformation/perspective-and-parallel-projection`
-- [ ] `/cg/transformation/projection-steps`
+- [x] `/cg/transformation/projection-steps`
 - [draft] `/cg/transformation/projection-calculation`
 - [draft] `/cg/transformation/clipping-algorithms`
 - [draft] `/cg/transformation/vanishing-points-and-n-point-perspective`

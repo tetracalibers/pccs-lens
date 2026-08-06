@@ -45,13 +45,13 @@
 - RS-P026｜時制の変更（「意識されてきました」→「意識されています」）：1箇所のみで文体傾向と切り分けられない｜支持: /color-fields/interior-concept-history
 - RS-P027｜リンクテキストをページタイトルから外し、文の流れに合わせて言い換える・位置を移す：同じ差分の他のリンクはページ名のまま温存され、各例が別々の理由（初出への移動・語句の自然化・文の縮約に伴う移動）で説明できる。リンク先ページ名との一致を崩す方向で、一般化すると害がある｜支持: /color-fields/interior-design-basics, /color-fields/color-universal-design, /color-theory/optical-illusions, /color-theory/elderly-vision-characteristics, /color-theory/color-difference-and-uniform-color-space
 - RS-P028｜並列の読点を中黒へ変える：1箇所のみで、リード全体の書き換えに伴う副産物とも読める｜支持: /color-fields/interior-concept-history
-- RS-P029｜「〜のです」の増減：同一記事内で削除と追加が同居し方向が逆｜支持: /color-fields/interior-design-basics
+- RS-P029｜「〜のです」の増減：同一記事内で削除と追加が同居し方向が逆。近接して2回出た「〜のです」を節の締めの1回に絞る例もあるが、コミットメッセージにのみ明示され差分上の該当は1箇所｜支持: /color-fields/interior-design-basics, /cg/transformation/projective-transformation
 - RS-P030｜節冒頭の橋渡し文を「〜こともあります」と可能性の提示へ緩める：1記事のみで、他記事では逆に冒頭が断定へ書き換えられる。条件次第で起きたり起きなかったりする現象を扱う記事テーマ固有の事情で説明できる（断定緩和一般は RS-015）｜支持: /color-theory/optical-illusions
 - RS-P031｜実況調・語りかけの前置きを削る：「こんどは、」だけを落とす1例で、同じ記事内の他の実況調はそのまま残る｜支持: /color-theory/optical-illusions
 - RS-P032｜説明の主体を器官名へ寄せる（「私たちの視覚が」→「私たちの脳は」）：1例のみで、どの説明を器官名の主語へ寄せるかの条件を特定できない｜支持: /color-theory/optical-illusions
 - RS-P033｜図版の直前に注記（`:::Note`／`:::Warning`）を置き「次の図はイメージです。」と断る：3記事で同じ向きの並べ替えを確認できるが、どちらも1記事1〜2箇所で、CardGrid 内の小さな図や TermCard の図には注記が付かず、断りを付けない図との線引きを特定できない（図の直後の留保付加は RS-015 が担当）｜支持: /color-theory/age-related-eye-diseases, /color-theory/optical-illusions, /color-theory/color-difference-and-uniform-color-space
 - RS-P034｜`:::Note` に切り出された補足を本文へ戻す：1記事1箇所のみで、他記事では `:::Note` が維持され、図の注記としてはむしろ積極的に使われる。本体 RS-013 とは逆方向｜支持: /color-theory/elderly-vision-characteristics
-- RS-P035｜接続表現の置き換え（「そのため、」→「この場合、」「すると、」）：近接する同じ接続語の重複回避とも読めるが、各記事1例ずつで規則化できない。完成本文の接続表現は `stylistic-quirks.md` の担当｜支持: /color-theory/age-related-eye-diseases, /color-theory/elderly-vision-characteristics
+- RS-P035｜接続表現の置き換え（「そのため、」→「この場合、」「すると、」、口語の「だから」→「そのため、」）：近接する同じ接続語の重複回避とも読めるが、各記事1例ずつで規則化できない。完成本文の接続表現は `stylistic-quirks.md` の担当｜支持: /color-theory/age-related-eye-diseases, /color-theory/elderly-vision-characteristics, /cg/transformation/projective-transformation
 - RS-P036｜既出記事への参照を節の冒頭へ移す並べ替え：1記事1例で、統計→機序→症状という別の並べ替え意図とも解釈できる｜支持: /color-theory/age-related-eye-diseases
 - RS-P037｜検定で問われる用語・結論を `:::Note` から本文の主役へ格上げする：明確なのは1記事1事例で、もう1記事の根拠は同一節内という程度の対応でしかない。同記事の別コミットでは逆に留保を `:::Note` へ置いており一方向の格上げにならない｜支持: /color-theory/color-rendering
 - RS-P038｜対になる2図を CardGrid + TermCard の横並びへ組み替える：1記事1回のみで、もう1記事の図はいずれも単独配置。図が3つ以上の場合の挙動も未検証（RS-007 は数式限定の別根拠）｜支持: /color-theory/color-rendering
@@ -69,9 +69,9 @@
 - RS-P050｜「近年では、」で書き出す：導入文に新規追加された1例のみで、時期を示す副詞句で書き起こす癖かは判断できない｜支持: /color-fields/media-design-concepts
 - RS-P051｜「〜していきます」を避けて要件の言い方へ変える：1例で、同記事に「必要があります」がそのまま残る箇所もあり、進行形の忌避か単なる言い換えか切り分けられない（完成本文の「〜ていく」は SQ-042 が扱う）｜支持: /color-fields/media-design-concepts
 - RS-P052｜フロー図のコードブロックの廃止：廃止判断が一度リバートされたのち著者自身が同じ廃止を実施しているが、リバートは記事全体のまとめ直しに対するもので、コードブロック単体への評価を差分から確定できない｜支持: /color-theory/photometric-quantities
-- RS-P053｜AI草稿がデモを差し込んだだけの箇所へ、人手で :::Action を後付けして「何を動かして何を観察するか」を明示する：完成本文側の型は TF-057／WS-065 が扱う。2記事で後付けを確認できるが、付与のタイミングが揃わず（一方は公開コミットまで遅れる）、同じ記事内でも状態が切り替わらないデモには付かないため、付ける対象の線引きを差分から特定できない。`:::Action` 自体はサイト共通の記法で、固有性を主張できるのは付与の順序と選別だけ｜支持: /cg/transformation/pinhole-camera, /cg/transformation/perspective-and-parallel-projection
+- RS-P053｜AI草稿がデモを差し込んだだけの箇所へ、人手で :::Action を後付けして「何を動かして何を観察するか」を明示する：完成本文側の型は TF-057／WS-065 が扱う。後付け自体は複数記事で確認できるが、付与のタイミングが揃わず（一方は公開コミットまで遅れる）、同じ記事内でも状態が切り替わらないデモには付かないため、付ける対象の線引きを差分から特定できない。`:::Action` 自体はサイト共通の記法で、固有性を主張できるのは付与の順序と選別だけ。説明直後への分割配置と着眼点の絞り込みは RS-038 へ昇格済みで、ここに残るのは付与対象の線引きと付与のタイミング｜支持: /cg/transformation/pinhole-camera, /cg/transformation/perspective-and-parallel-projection, /cg/transformation/projective-transformation, /cg/transformation/projection-steps
 - RS-P054｜並列する定義・条件が散文で続く箇所を「:Mark[ラベル]：説明」形式の箇条書きへ組み替える：本体 RS-003（箇条書き→散文）と逆向きの操作で、同一記事・同一コミット内の3例しかなく、どちらの向きを選ぶかの条件を差分から特定できない｜支持: /cg/transformation/pinhole-camera
-- RS-P055｜:::Todo を図版プレースホルダ以外にも使い、本文の語句・デモのラベル・まだ書けていない補足への申し送りをその場に残す：本体 RS-032 は図版の場所確保に限定した用法。2記事で拡張的な用法を確認できるが、着地の仕方が食い違い（一方は解消と同時に削除、他方は推敲を跨いで持ち越したのち公開コミットで `:::Note` の完成文へ書き下し）、どちらへ着地するかの条件を差分から特定できない｜支持: /cg/transformation/pinhole-camera, /cg/transformation/perspective-and-parallel-projection
+- RS-P055｜:::Todo を図版プレースホルダ以外にも使い、本文の語句・デモのラベル・まだ書けていない補足への申し送りをその場に残す：本体 RS-032 は図版の場所確保に限定した用法。拡張的な用法は複数記事で確認できるが、着地の仕方が食い違い（一方は解消と同時に削除、他方は推敲を跨いで持ち越したのち公開コミットで `:::Note` の完成文へ書き下し）、どちらへ着地するかの条件を差分から特定できない。言い回しを決めきれない箇所に候補を複数並べ、後で1本の本文へ書き下す使い方も1記事で確認できるが、著者の推敲手順として一般化するには用例が不足｜支持: /cg/transformation/pinhole-camera, /cg/transformation/perspective-and-parallel-projection, /cg/transformation/projection-steps
 - RS-P056｜主役の術語1語だけを本文・掲載コードのコメント・デモ実体の scene.ts・ariaLabel・他記事のデモまで波及させて全置換する：1記事のみ。同じ推敲で近義語のゆれ（形状／物体）は見出しを含む複数箇所に残されており、「主役の術語だから全置換する／近義語だから残す」という線引きを差分から確定できない。拾い漏れか意図的な使い分けかも判別できない（本文とデモ側のラベルをそろえる向き自体は RS-014 が担当）｜支持: /cg/transformation/perspective-and-parallel-projection
 - RS-P057｜対比する2概念それぞれに、評価軸（強み／弱点・特徴とユースケース）をそろえた `###` 小見出しを対称に立てる：1記事のみで、実際には一方が2本・他方が1本と軸が対称になっておらず、橋渡し節はコロン形式でもない。「対称に立てる」という向き自体が実態と食い違う（小見出しへの分割と見出しの具体化は RS-004・RS-021 が担当）｜支持: /cg/transformation/perspective-and-parallel-projection
 - RS-P058｜節冒頭を「たとえば＋具体場面 → 既存手法の不適合 → そこで〜という〇〇があります」の型へ組み替える：1記事のみで、同じ著者が直前の推敲で自ら足した問いかけ文を次の推敲で撤回しており、一方向の型として読めない（前置きの削除は RS-027、定義文の後置は RS-022 が担当）｜支持: /cg/transformation/perspective-and-parallel-projection
@@ -80,3 +80,12 @@
 - RS-P061｜直前の推敲で自分が足した誘導文・言い換えを、次の推敲で撤回する（多段推敲の揺り戻し）：1記事のみ。差分としては確認できるが、推敲の回数に依存する現象で、執筆側で適用できるルールの形にならない｜支持: /cg/transformation/perspective-and-parallel-projection
 - RS-P062｜思考実験を促す動詞を「考える」から「試す」へ寄せる：1例のみで、その文自体が次の推敲で丸ごと削除されており、傾向として残ったのか一時的な書き換えだったのか判断できない｜支持: /cg/transformation/perspective-and-parallel-projection
 - RS-P063｜草稿がリンクにしていた語を `:Mark` の強調へ差し替える：1箇所のみで、冒頭で同じページへ既にリンク済みという事情でも説明でき、リンクを外した理由を差分から断定できない（RS-033 には逆方向の記述がある）｜支持: /cg/transformation/perspective-and-parallel-projection
+- RS-P064｜節の並べ替え・分割で未出になった語を、その位置で使わない表現へ書き換える（「投影座標系の軸」→「視線の軸」、未出の「消線」を使わず「2点を通って引かれた1本の直線」）：2記事で確認できるが、前方参照を避ける整合性の確保は技術文書一般の執筆規範で、著者固有の癖と切り分けられない。同じ推敲で逆に、既存記事へのリンクを足して定義を委譲する箇所も同居する｜支持: /cg/transformation/projection-steps, /cg/transformation/projective-transformation
+- RS-P065｜否定の言い切りを、先に何が起こるかを述べる肯定文へ振り替えてから理由を対比で示す：強調語の削除・断定緩和は RS-015 が担当。同一記事で逆に限定の足場（「アフィン変換が保っていた性質のうち」）を足す操作が同居し、限定・強調の増減が両方向に起きるため、この振り替えだけを型として切り出せない｜支持: /cg/transformation/projective-transformation, /cg/transformation/projection-steps
+- RS-P066｜地の文の対比2文を TermCard の並置へ整理し、同じ位置に確保していた図解の `:::Todo` を図を作らずに解消する：1記事1箇所のみで、同記事の他の図解 `:::Todo` は Three.js デモへ置き換えられており、カードが `:::Todo` 解消の標準ルートとは言えない（対になる2図のカード化は RS-P038、並列数式のカード化は RS-007）｜支持: /cg/transformation/projection-steps
+- RS-P067｜読み取れない図・デモは作り替えを重ねた末に削除し、地の文は変えない：1記事に集中した観測で、同シリーズのもう1記事では3本のデモがいずれも削除されず残る。読みづらさの原因が描画側の不具合の場合は削除ではなく修正しており、削除する条件を差分から特定できない｜支持: /cg/transformation/projective-transformation
+- RS-P068｜デモ直後に、デモに描かれているのに本文が説明していない要素の読み取り文（意味とそう見える理由）を足す：1記事1箇所のみで、同シリーズのもう1記事では同じ位置に処理順序の理由を述べる `:::Note` が置かれ、読み取り文ではない｜支持: /cg/transformation/projective-transformation
+- RS-P069｜別ページへ委譲する言及を、地の文のリンクから独立した `:::Info` ブロックへ切り出し、本文には定義だけを残す：1記事1箇所のみで、同記事の他の委譲（広角・望遠レンズ）は `:::Note` にリンクを含めたまま残る。リポジトリ全体でも `:::Info` の使用は5ファイルにとどまり、確立した規約とは言えない｜支持: /cg/transformation/projection-steps
+- RS-P070｜数式で示した導出を、最終形で数式を使わない言葉の説明へ差し戻す（範囲・定義を示す数式ブロックは残す）：1記事1往復のみで、追加側が「数式も載せてほしい」という明示の依頼だったため、差し戻しが著者の好みか記事の到達点の再判断かを切り分けられない｜支持: /cg/transformation/projection-steps
+- RS-P071｜記事末の橋渡し文を、節の並べ替えに合わせて最後に残る節の末尾へ移す：1例のみで、移した先の節自体が公開コミットで削除されており、移動が定着した判断か確認できない｜支持: /cg/transformation/projection-steps
+- RS-P072｜箇条書きのラベル説明に機能の理由を後付けする（「〜外す」→「〜外すために用意」）：1例のみで、理由づけの追加一般は RS-023 と切り分けられない｜支持: /cg/transformation/projection-steps
