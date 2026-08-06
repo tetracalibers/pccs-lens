@@ -11,6 +11,7 @@
     "style-rule-ids:write": "node style-rule-ids.mjs --write",
     "style-tally": "node style-evidence-tally.mjs",
     "style-pending": "node style-pending-promote.mjs",
+    "style-size": "node style-guide-size.mjs",
     "format": "prettier --write ."
   },
   "dependencies": {

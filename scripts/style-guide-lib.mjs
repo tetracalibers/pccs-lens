@@ -58,11 +58,11 @@ const HEADING_RE = /^### (?:\[([A-Z]{2}-\d{3})\]\s*)?(.+?)\s*$/
 // ---------------------------------------------------------------------------
 
 /**
- * ガイド本体のルール見出しを文書順に読む。
+ * ガイド本体のテキストからルール見出しを文書順に拾う。
+ * 過去のコミットの本文（`git show` の出力）も数えられるよう、ファイル読み込みと分けてある。
  * @returns {{ id: string|null, name: string, line: number, section: string }[]}
  */
-export const readRules = (key) => {
-  const text = readFileSync(guidePath(key), "utf8")
+export const parseRuleHeadings = (text) => {
   const rules = []
   let section = ""
   text.split("\n").forEach((raw, i) => {
@@ -72,6 +72,12 @@ export const readRules = (key) => {
   })
   return rules
 }
+
+/**
+ * ガイド本体のルール見出しを文書順に読む。
+ * @returns {{ id: string|null, name: string, line: number, section: string }[]}
+ */
+export const readRules = (key) => parseRuleHeadings(readFileSync(guidePath(key), "utf8"))
 
 export const CONFIDENCE_LABELS = ["強い傾向", "条件付きの傾向", "弱い傾向"]
 
