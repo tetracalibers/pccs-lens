@@ -81,7 +81,10 @@ const createLabel = (text: string, color: string, height: number) => {
 
   const texture = new CanvasTexture(canvas)
   texture.colorSpace = SRGBColorSpace
-  const sprite = new Sprite(new SpriteMaterial({ map: texture, transparent: true }))
+  // 透明な余白まで深度を書くと、あとから描く半透明の面や線がラベルの矩形の形に欠けてしまう
+  const sprite = new Sprite(
+    new SpriteMaterial({ map: texture, transparent: true, depthWrite: false })
+  )
   // 高さを指定の値に揃え、幅は canvas の縦横比から決める
   sprite.scale.set((height * canvas.width) / canvas.height, height, 1)
 
@@ -445,7 +448,10 @@ const createLabel = (text: string, color: string, size: number) => {
 
   const texture = new CanvasTexture(canvas)
   texture.colorSpace = SRGBColorSpace
-  const sprite = new Sprite(new SpriteMaterial({ map: texture, transparent: true }))
+  // 透明な余白まで深度を書くと、あとから描く半透明の面や線がラベルの矩形の形に欠けてしまう
+  const sprite = new Sprite(
+    new SpriteMaterial({ map: texture, transparent: true, depthWrite: false })
+  )
   sprite.scale.setScalar(size)
 
   return sprite
