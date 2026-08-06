@@ -6,6 +6,7 @@ import {
   Float32BufferAttribute,
   Group,
   LineBasicMaterial,
+  LineLoop,
   LineSegments,
   Mesh,
   MeshBasicMaterial,
@@ -53,6 +54,16 @@ const PLANE_HALF = 2
 
 /** 平面の塗りの不透明度。奥の直線や点が透けて見える程度に抑える */
 const PLANE_OPACITY = 0.12
+
+/** w = 1 の平面に敷く格子の間隔 */
+const GRID_STEP = 0.5
+
+/** 格子線と外周の枠線の不透明度。塗りより濃くして、面の広がりと傾きを読めるようにする */
+const GRID_OPACITY = 0.3
+const FRAME_OPACITY = 0.7
+
+/** w 軸が平面を貫く位置に打つ目盛りの、軸から各向きへ伸ばす長さ */
+const TICK_HALF = 0.11
 
 /**
  * 定数倍でたどれる点が並ぶ直線を、原点から正負どちらへも伸ばす長さ。
@@ -183,6 +194,78 @@ const createAxis = (name: string, color: string, direction: Vector3) => {
   }
 }
 
+/**
+ * w = 1 の平面に敷く格子と、その外周の枠線。
+ * 一様な塗りだけでは面の傾きが読めず、点が面の上にあるのか手前に浮いているのか分からないので、
+ * 遠近で収束する線を引いて、面を見える床にする
+ */
+const createPlaneGrid = () => {
+  const group = new Group()
+
+  // 外周は枠線として別に引くので、格子は内側の線だけを並べる
+  const gridPoints: Vector3[] = []
+  const lineCount = (PLANE_HALF * 2) / GRID_STEP
+  for (let i = 1; i < lineCount; i++) {
+    const offset = -PLANE_HALF + i * GRID_STEP
+    gridPoints.push(
+      new Vector3(offset, -PLANE_HALF, 1),
+      new Vector3(offset, PLANE_HALF, 1),
+      new Vector3(-PLANE_HALF, offset, 1),
+      new Vector3(PLANE_HALF, offset, 1)
+    )
+  }
+  const gridGeometry = new BufferGeometry().setFromPoints(gridPoints)
+  const gridMaterial = new LineBasicMaterial({
+    color: PLANE_COLOR,
+    transparent: true,
+    opacity: GRID_OPACITY,
+    depthWrite: false
+  })
+  group.add(new LineSegments(gridGeometry, gridMaterial))
+
+  // 面がどこまで広がっているかを確定させる外周。格子より濃くする
+  const frameGeometry = new BufferGeometry().setFromPoints([
+    new Vector3(-PLANE_HALF, -PLANE_HALF, 1),
+    new Vector3(PLANE_HALF, -PLANE_HALF, 1),
+    new Vector3(PLANE_HALF, PLANE_HALF, 1),
+    new Vector3(-PLANE_HALF, PLANE_HALF, 1)
+  ])
+  const frameMaterial = new LineBasicMaterial({
+    color: PLANE_COLOR,
+    transparent: true,
+    opacity: FRAME_OPACITY,
+    depthWrite: false
+  })
+  group.add(new LineLoop(frameGeometry, frameMaterial))
+
+  return {
+    object: group,
+    dispose: () => {
+      const disposables = [gridGeometry, gridMaterial, frameGeometry, frameMaterial]
+      disposables.forEach((disposable) => disposable.dispose())
+    }
+  }
+}
+
+/** w 軸が平面を貫く位置に打つ目盛り。どの向きから見ても読めるよう、面内の十字にする */
+const createPlaneTick = () => {
+  const geometry = new BufferGeometry().setFromPoints([
+    new Vector3(-TICK_HALF, 0, 1),
+    new Vector3(TICK_HALF, 0, 1),
+    new Vector3(0, -TICK_HALF, 1),
+    new Vector3(0, TICK_HALF, 1)
+  ])
+  const material = new LineBasicMaterial({ color: W_COLOR })
+
+  return {
+    object: new LineSegments(geometry, material),
+    dispose: () => {
+      geometry.dispose()
+      material.dispose()
+    }
+  }
+}
+
 /** 同次座標が指す位置を表す球 */
 const createPoint = (color: string, radius: number) => {
   const geometry = new SphereGeometry(radius, 16, 12)
@@ -244,9 +327,20 @@ export const createHomogeneousLineScene = ({ scene, params }: SceneContext) => {
   plane.position.z = 1
   scene.add(plane)
 
+  const planeGrid = createPlaneGrid()
+  scene.add(planeGrid.object)
+
   const planeLabel = createLabel("w = 1", PLANE_COLOR, VALUE_LABEL_HEIGHT)
   planeLabel.sprite.position.set(PLANE_HALF - 0.5, PLANE_HALF + 0.28, 1)
   scene.add(planeLabel.sprite)
+
+  // 平面が w 軸のどの高さにあるのかを、軸の目盛りと数字で結びつける
+  const planeTick = createPlaneTick()
+  scene.add(planeTick.object)
+
+  const tickLabel = createLabel("1", W_COLOR, VALUE_LABEL_HEIGHT)
+  tickLabel.sprite.position.set(0, -(TICK_HALF + LABEL_GAP + tickLabel.sprite.scale.y / 2), 1)
+  scene.add(tickLabel.sprite)
 
   // 定数倍でたどれる点が並ぶ直線は、必ずこの原点を通る
   const origin = createPoint(ORIGIN_COLOR, ORIGIN_RADIUS)
@@ -315,6 +409,8 @@ export const createHomogeneousLineScene = ({ scene, params }: SceneContext) => {
       xAxis.dispose()
       yAxis.dispose()
       wAxis.dispose()
+      planeGrid.dispose()
+      planeTick.dispose()
       origin.dispose()
       line.dispose()
       basePoint.dispose()
@@ -325,6 +421,8 @@ export const createHomogeneousLineScene = ({ scene, params }: SceneContext) => {
         planeMaterial,
         planeLabel.texture,
         planeLabel.material,
+        tickLabel.texture,
+        tickLabel.material,
         baseLabel.texture,
         baseLabel.material,
         scaledLabel.texture,
