@@ -127,7 +127,7 @@
       "title": "アフィン変換"
     },
     "cg/transformation/basic-transformations": {
-      "title": "基本的な変換と同次座標"
+      "title": "基本的な変換"
     },
     "cg/transformation/coordinate-systems": {
       "title": "座標系"
@@ -142,7 +142,7 @@
       "title": "投影の手順"
     },
     "cg/transformation/projective-transformation": {
-      "title": "射影変換"
+      "title": "射影変換と同次座標"
     },
     "cg/transformation/reflection-and-skew": {
       "title": "鏡映とスキュー"

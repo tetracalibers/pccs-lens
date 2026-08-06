@@ -5,8 +5,7 @@ sections:
     id: shape-models
     links:
       - slug: shape-model-overview
-      - title: CSG表現 # CG 3-2-1
-        group: ["CG"]
+      - slug: csg-representation
       - title: 境界表現 # CG 3-2-2
         group: ["CG"]
       - title: スイープ表現 # CG 3-2-3

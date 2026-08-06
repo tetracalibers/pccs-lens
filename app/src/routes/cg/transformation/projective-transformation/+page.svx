@@ -1,9 +1,16 @@
 ---
 layout: guide-content
-title: 射影変換 # ImgP 8-2-4
+title: 射影変換と同次座標 # ImgP 8-2-4
 
 group: ["ImgP"]
+visual: true
 ---
+
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import HomogeneousLineDemo from '$lib/demo/threejs/transformation/projective-transformation/homogeneous-line/HomogeneousLineDemo.svelte'
+  import ParallelLinesMeetDemo from '$lib/demo/threejs/transformation/projective-transformation/parallel-lines-meet/ParallelLinesMeetDemo.svelte'
+</script>
 
 [アフィン変換](/cg/transformation/affine-transformation/)は、同次座標行列の最下行が`(0 0 1)`に固定された変換でした。
 この固定を外し、最下行を一般の値まで広げると、遠近感を表せる:Anki[射影変換]が得られます。
@@ -25,9 +32,256 @@ $$
 $$
 
 分子と分母から`k`が約分されて消えるため、結果はもとの`(x/w, y/w, 1)`とまったく一致します。
-つまり、同次座標を定数倍しても、それが表す通常の座標は変わらないのです。
+つまり、同次座標を:Anki[定数倍]しても、それが表す通常の座標は変わらないのです。
 
-<!-- TODO: 1本の直線上に並ぶ定数倍違いの同次座標が、w で割ると同じ通常座標に戻る様子の図 -->
+この関係は、`w`を`3`本目の軸にとった空間で見ると、直線と平面の関係として捉えられます。
+
+:::Action
+デモまで下にスクロールしてね！
+:::
+
+`(x, y, w)`を定数倍した点`(kx, ky, kw)`をすべて集めると、原点を通る`1`本の直線になります。
+`k`を動かすと点`(kx, ky, kw)`はこの直線の上を移動しますが、直線そのものは変わりません。
+
+:::Action
+デモで:Mark[k（定数倍）]を動かすと、点`k(x, y, w)`が直線の上を動くだけ
+逆にいえば、定数倍した点の集まりが直線を作っていることになる
+:::
+
+この直線が`w = 1`の平面と交わるのは、`w`成分の`kw`がちょうど`1`になる点です。
+`kw`が`1`になるのは`k`が`1/w`のときなので、交わる点の座標は`(x/w, y/w, 1)`となります。`k`をどう動かしても直線は変わらないため、この交点も動きません。
+
+:::Action
+デモで:Mark[k（定数倍）]を動かしても、`w = 1`の平面との交点`(x/w, y/w, 1)`は動かない
+:Mark[wで割った座標]の値も変わらないことに注目しよう
+:::
+
+一方、`x`と`y`をそのままにして`w`だけを変えると、指す点そのものが変わります。
+定数倍では`x`と`y`も`w`と同じ倍率で変わるため、点は元の直線の上を動くだけでした。
+しかし、`w`だけを変えた場合は`x`と`y`が変わらないため、点は元の直線ではなく、原点を通る別の直線を描くようになります。
+
+直線が変わると、`w = 1`の平面と交わる場所も変わります。`w`を大きくするほど`x/w`と`y/w`は小さくなるので、交点は原点へ近づくことになります。
+
+:::Action
+デモで:Mark[w]を動かすと、直線ごと向きが変わり、`w = 1`平面との交点も動くことを観察しよう
+:::
+
+<CanvasWrapper>
+  <HomogeneousLineDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+/**
+ * 文字を描いた canvas をテクスチャにして、常にカメラを向く板（Sprite）にする。
+ * (x/w, y/w, 1) のような長いラベルもあるので、文字の幅を測って板の横幅を決める
+ */
+const createLabel = (text: string, color: string, height: number) => {
+  const canvas = document.createElement("canvas")
+  const context = canvas.getContext("2d")
+
+  let textWidth = LABEL_TEXTURE_HEIGHT
+  if (context) {
+    context.font = LABEL_FONT
+    textWidth = context.measureText(text).width
+  }
+
+  canvas.width = Math.ceil(textWidth + LABEL_TEXTURE_PADDING * 2)
+  canvas.height = LABEL_TEXTURE_HEIGHT
+
+  if (context) {
+    // canvas の大きさを変えると描画状態が初期化されるので、書体はここで指定し直す
+    context.font = LABEL_FONT
+    context.textAlign = "center"
+    context.textBaseline = "middle"
+    context.fillStyle = color
+    context.fillText(text, canvas.width / 2, canvas.height / 2)
+  }
+
+  const texture = new CanvasTexture(canvas)
+  texture.colorSpace = SRGBColorSpace
+  const sprite = new Sprite(new SpriteMaterial({ map: texture, transparent: true }))
+  // 高さを指定の値に揃え、幅は canvas の縦横比から決める
+  sprite.scale.set((height * canvas.width) / canvas.height, height, 1)
+
+  return sprite
+}
+
+// 1 本の軸を、原点をまたぐ直線・正の向きを指す矢印・軸名のラベルの 3 点セットで作る
+const createAxis = (name: string, color: string, direction: Vector3) => {
+  const group = new Group()
+
+  const lineGeometry = new BufferGeometry().setFromPoints([
+    direction.clone().multiplyScalar(-AXIS_LENGTH),
+    direction.clone().multiplyScalar(AXIS_LENGTH)
+  ])
+  group.add(new LineSegments(lineGeometry, new LineBasicMaterial({ color })))
+
+  // ConeGeometry は +y を向いているので、軸の正の向きへ回してから先端に置く
+  const arrow = new Mesh(
+    new ConeGeometry(ARROW_RADIUS, ARROW_HEIGHT, 16),
+    new MeshBasicMaterial({ color })
+  )
+  arrow.position.copy(direction).multiplyScalar(AXIS_LENGTH)
+  arrow.quaternion.setFromUnitVectors(CONE_UP, direction)
+  group.add(arrow)
+
+  const label = createLabel(name, color, AXIS_LABEL_HEIGHT)
+  label.position.copy(direction).multiplyScalar(AXIS_LENGTH + LABEL_OFFSET)
+  group.add(label)
+
+  return group
+}
+
+// 同次座標が指す位置を表す球
+const createPoint = (position: Vector3, color: string, radius: number) => {
+  const point = new Mesh(new SphereGeometry(radius, 16, 12), new MeshBasicMaterial({ color }))
+  point.position.copy(position)
+  return point
+}
+
+// 同次座標 (x, y, w) の w を 3 本目の軸として立てる。
+// Three.js の x・y をそのまま平面の x・y にあて、z を w にあてると、
+// w = 1 の平面は x が右・y が上のまま読める板になる
+scene.add(
+  createAxis("x", X_COLOR, X_DIRECTION),
+  createAxis("y", Y_COLOR, Y_DIRECTION),
+  createAxis("w", W_COLOR, W_DIRECTION)
+)
+
+// 正規化した同次座標が並ぶ w = 1 の平面。
+// 奥の直線や点を隠さないよう、薄く塗って深度は書かない
+const plane = new Mesh(
+  new PlaneGeometry(PLANE_HALF * 2, PLANE_HALF * 2),
+  new MeshBasicMaterial({
+    color: PLANE_COLOR,
+    side: DoubleSide,
+    transparent: true,
+    opacity: PLANE_OPACITY,
+    depthWrite: false
+  })
+)
+plane.position.z = 1
+scene.add(plane)
+
+// 一様な塗りだけでは面の傾きが読めず、点が面の上にあるのか手前に浮いているのか分からない。
+// 遠近で収束する格子を敷いて、面を見える床にする。外周は枠線として別に引くので、内側の線だけを並べる
+const gridPoints: Vector3[] = []
+const lineCount = (PLANE_HALF * 2) / GRID_STEP
+for (let i = 1; i < lineCount; i++) {
+  const offset = -PLANE_HALF + i * GRID_STEP
+  gridPoints.push(
+    new Vector3(offset, -PLANE_HALF, 1),
+    new Vector3(offset, PLANE_HALF, 1),
+    new Vector3(-PLANE_HALF, offset, 1),
+    new Vector3(PLANE_HALF, offset, 1)
+  )
+}
+scene.add(
+  new LineSegments(
+    new BufferGeometry().setFromPoints(gridPoints),
+    new LineBasicMaterial({
+      color: PLANE_COLOR,
+      transparent: true,
+      opacity: GRID_OPACITY,
+      depthWrite: false
+    })
+  )
+)
+
+// 面がどこまで広がっているかを確定させる外周。格子より濃くする
+scene.add(
+  new LineLoop(
+    new BufferGeometry().setFromPoints([
+      new Vector3(-PLANE_HALF, -PLANE_HALF, 1),
+      new Vector3(PLANE_HALF, -PLANE_HALF, 1),
+      new Vector3(PLANE_HALF, PLANE_HALF, 1),
+      new Vector3(-PLANE_HALF, PLANE_HALF, 1)
+    ]),
+    new LineBasicMaterial({
+      color: PLANE_COLOR,
+      transparent: true,
+      opacity: FRAME_OPACITY,
+      depthWrite: false
+    })
+  )
+)
+
+const planeLabel = createLabel("w = 1", PLANE_COLOR, VALUE_LABEL_HEIGHT)
+planeLabel.position.set(PLANE_HALF - 0.5, PLANE_HALF + 0.28, 1)
+scene.add(planeLabel)
+
+// 平面が w 軸のどの高さにあるのかを、軸の目盛りと数字で結びつける。
+// どの向きから見ても読めるよう、目盛りは面内の十字にする
+scene.add(
+  new LineSegments(
+    new BufferGeometry().setFromPoints([
+      new Vector3(-TICK_HALF, 0, 1),
+      new Vector3(TICK_HALF, 0, 1),
+      new Vector3(0, -TICK_HALF, 1),
+      new Vector3(0, TICK_HALF, 1)
+    ]),
+    new LineBasicMaterial({ color: W_COLOR })
+  )
+)
+
+const tickLabel = createLabel("1", W_COLOR, VALUE_LABEL_HEIGHT)
+tickLabel.position.set(0, -(TICK_HALF + LABEL_GAP + tickLabel.scale.y / 2), 1)
+scene.add(tickLabel)
+
+// 同次座標 (x, y, w) と、それを k 倍した (kx, ky, kw)
+const x = -0.57
+const y = 0.6
+const w = 1.5
+const k = 1.6
+
+const base = new Vector3(x, y, w)
+const scaled = new Vector3(k * x, k * y, k * w)
+
+// x と y を w で割ると、w = 1 の平面上の点になる
+const normalized = new Vector3(x / w, y / w, 1)
+
+// 定数倍でたどれる点をすべて集めると、原点を通る 1 本の直線になる。
+// (x, y, w) も (kx, ky, kw) も、正規化した (x/w, y/w, 1) も、この直線の上に並ぶ
+const direction = base.clone().normalize()
+scene.add(
+  new LineSegments(
+    new BufferGeometry().setFromPoints([
+      direction.clone().multiplyScalar(-LINE_HALF),
+      direction.clone().multiplyScalar(LINE_HALF)
+    ]),
+    new LineBasicMaterial({ color: LINE_COLOR })
+  )
+)
+
+// 直線が通る原点と、同じ 1 点を指す 3 つの座標
+scene.add(
+  createPoint(new Vector3(0, 0, 0), ORIGIN_COLOR, ORIGIN_RADIUS),
+  createPoint(base, BASE_COLOR, POINT_RADIUS),
+  createPoint(scaled, SCALED_COLOR, POINT_RADIUS),
+  createPoint(normalized, NORMALIZED_COLOR, POINT_RADIUS)
+)
+
+// ラベルは、それが指す点の真上に置く。正規化した点だけは、
+// 直線やほかのラベルとぶつからないよう平面の手前（真下）へ置く
+const baseLabel = createLabel("(x, y, w)", BASE_COLOR, VALUE_LABEL_HEIGHT)
+baseLabel.position.set(base.x, base.y + LABEL_GAP + baseLabel.scale.y / 2, base.z)
+
+const scaledLabel = createLabel("k(x, y, w)", SCALED_COLOR, VALUE_LABEL_HEIGHT)
+scaledLabel.position.set(scaled.x, scaled.y + LABEL_GAP + scaledLabel.scale.y / 2, scaled.z)
+
+const normalizedLabel = createLabel("(x/w, y/w, 1)", NORMALIZED_COLOR, VALUE_LABEL_HEIGHT)
+normalizedLabel.position.set(
+  normalized.x,
+  normalized.y - (LABEL_GAP + normalizedLabel.scale.y / 2),
+  1
+)
+
+scene.add(baseLabel, scaledLabel, normalizedLabel)
+```
+
+:::
 
 ### 同次座標の同値関係
 
@@ -80,16 +334,158 @@ $$
 
 こうして得られた`(x'/w', y'/w')`が、射影変換後の実際の座標となります。
 
-<!-- TODO: 同次座標の w 成分が変化したときの「正規化」を視覚化したインタラクティブデモ -->
-
 ### 射影変換で保たれる性質
 
-射影変換が保つのは:Anki[直線性]だけです。直線は変換後も直線のまま写りますが、:Anki[平行性]は保たれません。平行だった`2`直線が、射影変換によって交わることがあるのです。
+アフィン変換が保っていた性質のうち、射影変換に残るのは:Anki[直線性]だけです。直線は変換後も直線のまま写りますが、:Anki[平行性]は保たれません。平行だった`2`直線が、射影変換によって交わることがあります。
 
-平行だった`2`直線が交わる様子は、鉄道のレールや道路の両端が、遠くへ向かうほど近づいて一点に集まって見える様子を思い浮かべると分かりやすいでしょう。
-実際には平行なはずの`2`本の線も、遠くまで続く場合、一点で交わって見えます。平行性を失うことが、このような:Anki[遠近感]の表現につながるのです。
+平行だった`2`直線が交わる様子は、鉄道のレールや道路の両端が、遠くへ向かうほど近づいて`1`点に集まって見える様子を思い浮かべると分かりやすいでしょう。
+平行性を失うことが、このような:Anki[遠近感]の表現につながるのです。
 
-<!-- TODO: 射影変換で正方形が平行でない任意の四辺形に変形する様子（平行線が交わる）の図 -->
+:::Action
+`p`か`q`を`0`以外にすることで、:Anki[平行性]を失う射影変換になる
+`p`だけ`0`にすると縦線の束、`q`だけ`0`にすると横線の束が、遠くの点に集まる様子を見てみよう
+
+- `p`と`q`どちらも`0`なら、格子は変形しない（最下行が`(0 0 1)`の:Anki[アフィン変換]）
+- `p`と`q`を動かしても、どの線も曲がらずまっすぐなまま（射影変換でも:Anki[直線性]は保たれる）
+
+:::
+
+<CanvasWrapper>
+  <ParallelLinesMeetDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// Tweakpane で動かす値。射影変換行列の最下行 (p q r) の p・q。
+// ここでは初期表示の値をそのまま定数として置く
+const p = 0.35
+const q = 0.3
+
+// 射影変換の行列。上の 2 行は単位行列のままにして、
+// 最下行 (p q r) がもたらす w' の変化だけが見えるようにする
+const matrix = new Matrix3().set(
+  1, 0, 0,
+  0, 1, 0,
+  p, q, 1
+)
+
+// 同次座標 (x, y, 1) に行列を掛けて (x', y', w') を得たあと、w' で割って通常の座標へ戻す。
+// 図は平面なので、戻した座標を z = 0 の位置に置く
+const project = (homogeneous: Vector3) => {
+  const transformed = homogeneous.clone().applyMatrix3(matrix)
+  return new Vector3(transformed.x / transformed.z, transformed.y / transformed.z, 0)
+}
+
+// 直線を LINE_SAMPLES 個に分割して、同次座標 (x, y, 1) の列として返す
+const sampleLine = (fromX: number, fromY: number, toX: number, toY: number) =>
+  Array.from({ length: LINE_SAMPLES + 1 }, (_, index) => {
+    const ratio = index / LINE_SAMPLES
+    return new Vector3(fromX + (toX - fromX) * ratio, fromY + (toY - fromY) * ratio, 1)
+  })
+
+// 変換前の格子を、線 1 本ずつ「細かく分割した点の列」として組み立てる。
+// 横線の束と縦線の束はそれぞれ別の消点へ集まるので、束ごとに分けて持つ。
+// 上下の端の 2 辺（本文で注目する「平行だった 2 直線」）は色を変えるので、さらに分ける
+const innerHorizontals: Vector3[][] = []
+const parallelEdges: Vector3[][] = []
+const verticals: Vector3[][] = []
+const lineCount = (SQUARE_HALF * 2) / GRID_STEP
+for (let i = 0; i <= lineCount; i++) {
+  const offset = -SQUARE_HALF + i * GRID_STEP
+  verticals.push(sampleLine(offset, -SQUARE_HALF, offset, SQUARE_HALF))
+  const horizontal = sampleLine(-SQUARE_HALF, offset, SQUARE_HALF, offset)
+  if (i === 0 || i === lineCount) parallelEdges.push(horizontal)
+  else innerHorizontals.push(horizontal)
+}
+
+// 折れ線をまとめて 1 つの LineSegments で描く。隣り合う点を 2 つずつ線分として並べる
+const createPolylines = (lines: Vector3[][], color: ColorRepresentation, opacity = 1) => {
+  const points = lines.flatMap((line) =>
+    line.slice(0, -1).flatMap((point, index) => [point, line[index + 1]])
+  )
+  return new LineSegments(
+    new BufferGeometry().setFromPoints(points),
+    new LineBasicMaterial({ color, transparent: opacity < 1, opacity })
+  )
+}
+
+// 分割した点をすべて個別に変換する。
+// 射影変換は直線を直線のまま写すので、どれだけ細かく分割しても折れ線は折れない。
+// 一方で点の間隔は w' で割った分だけ変わるので、等間隔だった格子が片側へ詰まる
+const projectLines = (lines: Vector3[][]) => lines.map((points) => points.map(project))
+const projectedInner = projectLines(innerHorizontals)
+const projectedEdges = projectLines(parallelEdges)
+const projectedVerticals = projectLines(verticals)
+scene.add(
+  createPolylines([...projectedInner, ...projectedVerticals], GRID_COLOR),
+  createPolylines(projectedEdges, EDGE_COLOR)
+)
+
+// 消点。x 方向の無限遠点（同次座標では w が 0 の点 (1, 0, 0)）と、
+// y 方向の無限遠点 (0, 1, 0) を、それぞれ変換して正規化した点。
+// 最下行のはたらきで w' が p・q になるので、(1/p, 0) と (0, 1/q) に現れる
+// （p や q が 0 なら w' も 0 のままで、その束は平行なまま交わらない）
+const horizontalVanishing = project(new Vector3(1, 0, 0))
+const verticalVanishing = project(new Vector3(0, 1, 0))
+
+// 変換前は平行だった線を、像の直線に沿ってそのまま伸ばす。
+// 像の直線は消点を通るので、消点に近いほうの端から消点まで結べば延長線になる
+const extendToVanishing = (lines: Vector3[][], vanishing: Vector3) =>
+  lines.map((points) => {
+    const start = points[0]
+    const end = points[points.length - 1]
+    const near =
+      start.distanceToSquared(vanishing) < end.distanceToSquared(vanishing) ? start : end
+    return [near, vanishing]
+  })
+
+scene.add(
+  createPolylines(
+    [
+      ...extendToVanishing(projectedInner, horizontalVanishing),
+      ...extendToVanishing(projectedVerticals, verticalVanishing)
+    ],
+    GRID_COLOR,
+    EXTENSION_OPACITY
+  ),
+  createPolylines(
+    extendToVanishing(projectedEdges, horizontalVanishing),
+    EDGE_COLOR,
+    EXTENSION_OPACITY
+  )
+)
+
+// 無限遠点をすべて集めた直線（無限遠直線）の像は、p x + q y = 1 という直線になる。
+// どの向きの平行線の束も、その消点はこの直線の上に乗る。遠近法でいう地平線にあたる。
+// 原点にいちばん近い点を通り、(p, q) に垂直な向きへ伸びる直線として引く
+const norm = Math.hypot(p, q)
+const horizonCenter = new Vector3(p, q, 0).multiplyScalar(1 / (norm * norm))
+const horizonDirection = new Vector3(-q, p, 0).multiplyScalar(HORIZON_HALF / norm)
+scene.add(
+  createPolylines(
+    [[horizonCenter.clone().sub(horizonDirection), horizonCenter.clone().add(horizonDirection)]],
+    VANISHING_COLOR,
+    HORIZON_OPACITY
+  )
+)
+
+// 2 つの消点
+const createPoint = (position: Vector3) => {
+  const point = new Mesh(
+    new SphereGeometry(POINT_RADIUS, 16, 12),
+    new MeshBasicMaterial({ color: VANISHING_COLOR })
+  )
+  point.position.copy(position)
+  return point
+}
+scene.add(createPoint(horizontalVanishing), createPoint(verticalVanishing))
+```
+
+:::
+
+どの向きの平行線の束でも、集まる点はデモで`2`点を通って引かれた`1`本の直線の上に並びます。この直線が、遠近法でいう地平線に対応します。
+等間隔だった格子が集まる点の側へ詰まっていくのは、点ごとに異なる`w'`で割っているためです。
 
 :::Note
 射影変換は、`3`次元空間をカメラやスクリーンの`2`次元平面へ写す:Anki[透視投影]の基礎となります。

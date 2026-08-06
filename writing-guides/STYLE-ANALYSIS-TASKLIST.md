@@ -498,7 +498,7 @@
 ## CGと画像処理 — モデリング／形状モデル（`cg/modeling.yaml` #shape-models）
 
 - [draft] `/cg/modeling/shape-model-overview`
-- [ページ未作成] CSG表現
+- [draft] `/cg/modeling/csg-representation`
 - [ページ未作成] 境界表現
 - [ページ未作成] スイープ表現
 - [ページ未作成] 境界表現のデータ構造
@@ -810,7 +810,7 @@
 - [ページ未作成] 色補正
 - [ページ未作成] 色変換
 
-## CGと画像処理 — 変換と投影／図形の変換（`cg/transformation.yaml` #coordinate-transform）
+## CGと画像処理 — 変換と投影／図形の幾何学的変換（`cg/transformation.yaml` #coordinate-transform）
 
 - [x] `/cg/transformation/coordinate-systems`
 - [x] `/cg/transformation/basic-transformations`
