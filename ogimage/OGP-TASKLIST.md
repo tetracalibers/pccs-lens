@@ -306,7 +306,7 @@
 - [x] `/cg/transformation/affine-transformation`
 - [x] `/cg/transformation/projective-transformation`
 - [draft] `/cg/transformation/viewing-pipeline-transformations`
-- [ページ未作成] 階層モデリング
+- [draft] `/cg/transformation/hierarchical-modeling`
 - [x] `/cg/transformation/pinhole-camera`
 - [x] `/cg/transformation/perspective-and-parallel-projection`
 - [x] `/cg/transformation/projection-steps`

@@ -14,8 +14,7 @@ sections:
     id: viewing-pipeline
     links:
       - slug: viewing-pipeline-transformations
-      - title: 階層モデリング # CG 2-4-4
-        group: ["CG"]
+      - slug: hierarchical-modeling
   - heading: 投影とクリッピング
     id: projection-and-clipping
     links:
