@@ -20,8 +20,7 @@ sections:
       - slug: curve-surface-equations
       - title: 2次曲線 # CG 3-4-2
         group: ["CG"]
-      - title: パラメトリック曲線・曲面 # CG 3-4-3, 3-4-4
-        group: ["CG"]
+      - slug: parametric-curve-surface
       - slug: bezier-curve-surface
       - title: ファーガソン曲線 # CG 3-4-3
         group: ["CG"]
