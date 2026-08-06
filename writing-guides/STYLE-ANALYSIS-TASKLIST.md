@@ -827,7 +827,7 @@
 ## CGと画像処理 — 変換と投影／投影とクリッピング（`cg/transformation.yaml` #projection-and-clipping）
 
 - [x] `/cg/transformation/pinhole-camera`
-- [ ] `/cg/transformation/perspective-and-parallel-projection`
+- [x] `/cg/transformation/perspective-and-parallel-projection`
 - [ ] `/cg/transformation/projection-steps`
 - [draft] `/cg/transformation/projection-calculation`
 - [draft] `/cg/transformation/clipping-algorithms`

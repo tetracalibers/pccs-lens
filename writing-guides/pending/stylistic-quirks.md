@@ -20,14 +20,14 @@
 - SQ-P005｜範囲・含みを調整する副詞「おおまかに」「より広く」：各1件のみで、異なる副詞を1つの癖に束ねる根拠が薄い｜支持: /cg/basics/camera-capture-and-cg, /cg/basics/cg-and-image-processing
 - SQ-P006｜矢印・全角記号（↔ → ＝）で対応・変換・状態遷移を示す：記事間で不一致（同シリーズの別記事は全角コロンを使う）で偏在し、記法寄りでもある｜支持: /cg/basics/camera-capture-and-cg, /cg/basics/area-filling
 - SQ-P007｜既定ルール＋例外許可「〜が基本ですが、〜ても構いません／よいです」：確認できる3例がすべて1記事に集中し、他記事では別の許可表現が使われる｜支持: /color-theory/dominant-and-tone-on-tone
-- SQ-P008｜`:Anki[]` の強調対象の選び方・密度・付与範囲（初出のみ／節・カード単位／検定系は高密度・CG系は初出の専門語のみ）：`:Anki` 自体がプロジェクト共通のコンポーネント記法（`syntax-guide.md` が正）で、媒体強制の記法と著者の選定判断を切り分けられない。密度の系統差も意図的な方針か記事の長さ・用語密度の副産物か本文から確認できない｜支持: /color-theory/dominant-and-tone-on-tone, /color-theory/natural-harmony, /color-theory/light-components-and-reflectance, /color-theory/opponent-color-response, /color-fields/landscape-color-approach, /color-theory/color-vision-characteristics, /color-fields/visual-design-and-color, /color-fields/fashion-color-concepts, /cg/camera/digital-camera-structure, /cg/image-properties/dynamic-range-and-gradation
+- SQ-P008｜`:Anki[]` の強調対象の選び方・密度・付与範囲（初出のみ／節・カード単位／検定系は高密度・CG系は初出の専門語のみ）：`:Anki` 自体がプロジェクト共通のコンポーネント記法（`syntax-guide.md` が正）で、媒体強制の記法と著者の選定判断を切り分けられない。密度の系統差も意図的な方針か記事の長さ・用語密度の副産物か本文から確認できない。主要用語へ初出以降も繰り返し付ける記事（透視投影6回・平行投影5回）もあり、初出限定という運用でも一貫しない｜支持: /color-theory/dominant-and-tone-on-tone, /color-theory/natural-harmony, /color-theory/light-components-and-reflectance, /color-theory/opponent-color-response, /color-fields/landscape-color-approach, /color-theory/color-vision-characteristics, /color-fields/visual-design-and-color, /color-fields/fashion-color-concepts, /cg/camera/digital-camera-structure, /cg/image-properties/dynamic-range-and-gradation, /cg/transformation/perspective-and-parallel-projection
 - SQ-P009｜専門用語・送り仮名の表記揺れ（杆体／桿体、よばれます／呼ばれます、読みとる／読み取る）：誤字・不統一か意図的選択か判断できず、反復はするが方向が定まらない｜支持: /color-theory/photoreceptor-types-and-distribution, /color-theory/color-vision-types
 - SQ-P010｜番号付き手順の末尾に（？）を置いて不確かさを演出する：1例のみ｜支持: /color-theory/rgb-color-system
 - SQ-P011｜強い同一視の文末「〜にほかなりません」：1例のみ｜支持: /cg/basics/vector-and-raster
 - SQ-P012｜深掘り予告「もう一歩踏み込んで（見ていきます）」：1例のみで、シリーズ内の深掘り記事に共通するか要検証｜支持: /cg/basics/image-sampling
 - SQ-P013｜強調の因果「だからこそ」：単一例のみで、「強調の因果＝だからこそ」という機能的すみ分けは1例では一般化できない｜支持: /cg/basics/image-sampling
 - SQ-P014｜技術的な不変条件を「必ず」「つねに」で言い切る：実質1記事1トピックと1例のみで、癖として文書化するには薄い｜支持: /cg/basics/image-quantization, /cg/basics/vector-and-raster
-- SQ-P015｜「〜ことになります／ことになる」で論理的帰結を述べる文末：前提から必然的に導かれる結論を観察事実の記述と書き分ける用法だが、出現がいずれも数式による導出を含む記事に限られ、同時に分析した医学系2記事には0件で、導出記事特有か著者の癖か切り分けられない｜支持: /cg/basics/image-sampling, /cg/basics/image-quantization, /color-theory/color-rendering, /color-theory/xy-chromaticity-diagram
+- SQ-P015｜「〜ことになります／ことになる」で論理的帰結を述べる文末：前提から必然的に導かれる結論を観察事実の記述と書き分ける用法だが、出現が数式による導出を含む記事に偏り、同時に分析した医学系2記事には0件で、導出記事特有か著者の癖か切り分けられない。数式を含まないCG概念解説にも1例（「別の手がかりから判断することになります」）が出たが、同記事の他の帰結文は「〜になります」で書かれ、分布の偏りを覆すには足りない｜支持: /cg/basics/image-sampling, /cg/basics/image-quantization, /color-theory/color-rendering, /color-theory/xy-chromaticity-diagram, /cg/transformation/perspective-and-parallel-projection
 - SQ-P016｜自問自答「では、〜でしょうか」→「答えは単純で、〜」：「答えは単純で」を伴う完全形は1例のみ｜支持: /cg/transformation/basic-transformations
 - SQ-P017｜手法を「考え方」「アイデア」「とらえ方」と抽象名詞で呼ぶ：1記事に集中し記事間の偏りが大きい｜支持: /cg/basics/shape-rasterization
 - SQ-P018｜「素朴に考えれば／直感的には」で素朴案・直感を先に示す：各1例で語も異なり、共通の定型句とは言えない（説明の運び方自体は `thinking-flow.md` の判断層）｜支持: /cg/basics/shape-rasterization, /cg/basics/anti-aliasing
@@ -53,14 +53,14 @@
 - SQ-P038｜定義を連用中止「〜を:Anki[X]といい、〜」で一文にまとめる：2例のみで、同一記事内でも定義が2文に分かれる箇所があり一貫しない｜支持: /color-fields/interior-design-basics, /color-theory/color-temperature-and-light-color
 - SQ-P039｜外来語のカタカナ表記（長音符の有無・記事系統ごとの差）：長音の判断が実際に試される語が少なく、分野をまたぐ語では不統一（ユーザー／ユーザ）で規則化できない。実務上は新規記事の表記をその記事系統の既出表記に合わせる目安としてのみ用いる｜支持: /color-fields/interior-concept-history, /color-fields/fashion-color-concepts, /cg/camera/digital-camera-structure
 - SQ-P040｜程度の強調を漢語副詞＋「に」で行う（飛躍的に／明確に／大きく）：4例中3例が1記事に偏り、もう1記事は0件。「とても」「非常に」を避けること自体も落ち着いた解説文一般の規範｜支持: /color-fields/interior-concept-history
-- SQ-P041｜例示を「〜といった＋上位語」「〜など」の名詞句へ畳んで閉じる：「といった」は1記事に集中し他は0回と偏りが大きく、名詞句への例示の畳み込みは日本語の説明文で極めて一般的（`syntax-guide.md` も「たとえば」を標準の接続表現として認める）｜支持: /color-fields/interior-concept-history, /color-theory/elderly-vision-characteristics
+- SQ-P041｜例示を「〜といった＋上位語」「〜など」の名詞句へ畳んで閉じる：「といった」は1記事に集中し他は0回と偏りが大きく、名詞句への例示の畳み込みは日本語の説明文で極めて一般的（`syntax-guide.md` も「たとえば」を標準の接続表現として認める）｜支持: /color-fields/interior-concept-history, /color-theory/elderly-vision-characteristics, /cg/transformation/perspective-and-parallel-projection
 - SQ-P042｜具体例を先出しする「〜のような、〜」構文（場面を並べてから上位概念を置く）：各記事1例ずつの計2例と薄く、「たとえば」が両記事とも0件という消極的事実だけでは構文の著者性を裏づけられない｜支持: /color-theory/age-related-vision-changes, /color-theory/color-rendering
 - SQ-P043｜装置や処理の役割定義を「〜するものです」で締める：実質2記事3例で、同じ記事内でも「〜役割を担います」など別形をとり型として確立していない｜支持: /cg/camera/digital-camera-structure, /cg/image-properties/dynamic-range-and-gradation
 - SQ-P044｜三点リーダ「…」で余韻・早合点を演出する：図版キャプション2例と本文1例のみで、いずれも1記事に閉じる｜支持: /color-theory/optical-illusions, /color-theory/xy-chromaticity-diagram
 - SQ-P045｜箇条書きの最終項目を「...etc.」で閉じる：1例のみ｜支持: /color-fields/visual-design-and-color
 - SQ-P046｜可能表現の冗長形「〜ことができます」：日本語の解説文一般に共通し、同記事内に短縮形（表せる・行える）も混在して規則として切り出せない。可能性そのものが論点になる導出記事に偏る｜支持: /color-fields/visual-design-and-color, /color-theory/xy-chromaticity-diagram, /color-theory/photometric-quantities, /color-fields/media-design-concepts
 - SQ-P047｜AI草稿由来の表現が残った可能性（「のです」「すると、」「私たち」がAI草稿を経た記事に集中する）：本文のみでは草稿由来か著者本人の癖かを切り分けられず、`refine-style.md` 側の差分分析と突き合わせて再検討する｜支持: /color-theory/optical-illusions, /cg/camera/digital-camera-structure, /cg/image-properties/dynamic-range-and-gradation
-- SQ-P048｜理由・要因を後置の独立文（「〜ためです。」「〜からです。」）または分裂文（「Bなのは、Aからです」）で文末の焦点に置く：用例は各記事1〜2例で、同時に分析した記事は因果をすべて「〜ため、」の文中接続に畳む反例。分裂文は後置・先出しの両方向に現れる（語形は本体 SQ-026、配置は `writing-style.md` の守備範囲）｜支持: /color-theory/color-rendering, /color-theory/elderly-vision-characteristics, /color-theory/xy-chromaticity-diagram, /color-theory/photometric-quantities
+- SQ-P048｜理由・要因を後置の独立文（「〜ためです。」「〜からです。」）または分裂文（「Bなのは、Aからです」）で文末の焦点に置く：用例は各記事1〜2例で、同時に分析した記事は因果をすべて「〜ため、」の文中接続に畳む反例。分裂文は後置・先出しの両方向に現れ、結びも「〜からです」だけでなく「〜によります」（「使われるのは、この読み取りやすさによります」）をとる（語形は本体 SQ-026、配置は `writing-style.md` の守備範囲）｜支持: /color-theory/color-rendering, /color-theory/elderly-vision-characteristics, /color-theory/xy-chromaticity-diagram, /color-theory/photometric-quantities, /cg/transformation/perspective-and-parallel-projection
 - SQ-P049｜「見えづらい」と「〜にくい」の意味別の書き分け仮説（知覚は「づらい」／機能・動作は「にくい」）：1記事内の読み取りにとどまり、著者が意識しているかは本文から確認できない。対象外の既存記事には「見えにくい」「わかりにくい」が実在して反例が多く、加齢・見え方を扱う一連の記事に「づらい」が集中するという分布にとどめる｜支持: /color-theory/age-related-vision-changes, /color-theory/age-related-eye-diseases, /color-theory/elderly-vision-characteristics, /color-theory/xy-chromaticity-diagram
 - SQ-P050｜「〜ことで」による手段・契機の表現：1記事に4件集中し、もう1記事は0件。機構説明という主題に由来する可能性が高い｜支持: /color-theory/age-related-vision-changes
 - SQ-P051｜年齢を「〜代」ではなく「〜歳代」と書く表記：2例のみで、検定教材の定型表記を踏襲している可能性があり著者の表記選択と切り分けられない｜支持: /color-theory/age-related-vision-changes
@@ -75,4 +75,15 @@
 - SQ-P060｜「ただし、」による逆接的な限定の導入：1回のみで、かつAI草稿の同語を著者が残した箇所であるため著者固有の癖と断定できない｜支持: /color-fields/media-design-concepts
 - SQ-P061｜「〜の方が」による二者比較：1記事に3例集中し、もう1記事は0件。本体 SQ-063／SQ-064 に吸収すべきか独立させるべきか判断できない｜支持: /color-theory/photometric-quantities
 - SQ-P062｜同じ内容を「問いかけ形」と「名詞句形」の2通りで括弧に並置する：確認できるのは1記事の見取り図の箇条書き・カードだけで、もう1記事には同種の並置が一切ない。並列項目の見取り図という限られた位置に従属する部分現象｜支持: /color-theory/photometric-quantities
-- SQ-P063｜:::Action の誘導文を「〈操作対象〉を動かして、〈観察してほしい変化〉を、〜てみよう」の3部構成に揃える：語尾の誘い掛けは本体 SQ-072、本文とのレジスター差は SQ-003 が扱い、ここで保留にするのは語順まで含む文型テンプレート。確認できるのは1記事の5例のみで、デモを持つ他記事との比較ができていない｜支持: /cg/transformation/pinhole-camera
+- SQ-P063｜:::Action の誘導文を「〈操作〉て／ことで、〈観察対象〉を、〜てみよう」の3部構成に揃える：語尾の誘い掛けは本体 SQ-072、本文とのレジスター差は SQ-003 が扱い、ここで保留にするのは語順まで含む文型テンプレート。2記事7例で語順は一貫するが支持が同一シリーズの隣接2記事に閉じ、昇格の必要条件（3記事）に届かない。末尾の知覚動詞は固定されない（見る／見比べる／観察する／確認する／体感する）ため、テンプレート化できるのは語順と「〜てみよう」まで｜支持: /cg/transformation/pinhole-camera, /cg/transformation/perspective-and-parallel-projection
+- SQ-P064｜前提から必然を導く従属節に「〜する以上、」を選ぶ（「立体を平面の画像として表示する以上、〜必要です」）：単一記事の2例のみで、本体 SQ-026 の因果表現（〜ため／〜からです）の変種にとどまる可能性がある｜支持: /cg/transformation/perspective-and-parallel-projection
+- SQ-P065｜極限操作を追う1文の中で「〜ていく」を2回連ねる（「遠ざけていくと、〜小さくなっていき」）：本体 SQ-042 の使用量「1段落に2回以上重ねない」への単発の逸脱で、他記事の極限・連続変化を扱う節で反復が確認できていない｜支持: /cg/transformation/perspective-and-parallel-projection
+- SQ-P066｜小節見出しを「〈対象〉の〈観点〉：〈要約〉」と全角コロンで対にする（「透視投影の強み：写実的な描画」／「透視投影の弱点：形状の把握」）：対になる2見出しのみで、同記事の残り2見出しはコロンを使わない。本体 SQ-052 は箇条書きのラベル区切りを扱っており、見出しへの拡張は1記事の単発ペアでは支えられない｜支持: /cg/transformation/perspective-and-parallel-projection
+- SQ-P067｜欠点の発現を「〜にもなり得ます」で可能性に留める：1例のみで、直後の2文は「読み取ることはできません」「適していないのです」と断定へ強めており、弱点全般をヘッジする方針ではない｜支持: /cg/transformation/perspective-and-parallel-projection
+- SQ-P068｜理解の仕方を「〜と捉えると、〜がわかってきます」で提案する：完全形は1例のみ（本体 SQ-058 の「〜と考えることができます」とは別語形）。補足ブロックに偏る分布も単独記事の少数例からの推測｜支持: /cg/transformation/perspective-and-parallel-projection
+- SQ-P069｜手法を導入する節を「たとえば、」→「このような場合、」→「そこで、」の順で用途から解決へ運ぶ：1例のみで、本体 SQ-020（例は直前の抽象文の直後に1文で置く）に対する反例としても読める。他記事での再現を確認してから構造の見直しを検討する｜支持: /cg/transformation/perspective-and-parallel-projection
+- SQ-P070｜同一記事内で対概念を「大きく`2`種類」の並列としても、「〜の特別な場合と考えることができます」の特殊化としても位置づける併用：本体 SQ-034 の位置づけ構文は使われているが、並列と特殊化を使い分ける運用は1記事の内部不整合としてしか観察できていない｜支持: /cg/transformation/perspective-and-parallel-projection
+- SQ-P071｜:Anki を対比の要になる形容詞・状態語へ広げる（:Anki[遠い]／:Anki[無限]／:Anki[平行]）：明確に形容詞・状態語といえるのは2語で、「間隔」「向き」は通常の名詞への付与と区別できない。本体 SQ-054 の変種（対比が主題の理論記事に限る）を超える根拠にならない｜支持: /cg/transformation/perspective-and-parallel-projection
+- SQ-P072｜手法の活躍場面を「〜の出番です」と口語的に言う：1例のみで、本体 SQ-001 のやさしい語り口に吸収されるかも判断できない｜支持: /cg/transformation/perspective-and-parallel-projection
+- SQ-P073｜比例関係を「〜ものほど〜」で書く（「投影中心から:Anki[遠い]ものほど小さく写ります」）：本文は1例のみで、残りの用例はすべて掲載コードのコメント内｜支持: /cg/transformation/perspective-and-parallel-projection
+- SQ-P074｜`:::Foldable` 内の掲載コードのコメントを常体で書き、「なぜその値・その処理か」を添える：本文ではなく生成物寄りのテキストで、`add-threejs-demo` スキルの生成物である可能性を排除できない｜支持: /cg/transformation/perspective-and-parallel-projection
