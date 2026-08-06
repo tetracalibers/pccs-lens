@@ -7,6 +7,10 @@
   "scripts": {
     "sync-tasklists": "node sync-tasklists.mjs --check",
     "sync-tasklists:write": "node sync-tasklists.mjs --write",
+    "style-rule-ids": "node style-rule-ids.mjs --check",
+    "style-rule-ids:write": "node style-rule-ids.mjs --write",
+    "style-tally": "node style-evidence-tally.mjs",
+    "style-pending": "node style-pending-promote.mjs",
     "format": "prettier --write ."
   },
   "dependencies": {
