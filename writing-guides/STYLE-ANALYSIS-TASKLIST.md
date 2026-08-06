@@ -498,7 +498,7 @@
 ## CGと画像処理 — モデリング／形状モデル（`cg/modeling.yaml` #shape-models）
 
 - [draft] `/cg/modeling/shape-model-overview`
-- [ページ未作成] CSG表現
+- [draft] `/cg/modeling/csg-representation`
 - [ページ未作成] 境界表現
 - [ページ未作成] スイープ表現
 - [ページ未作成] 境界表現のデータ構造
