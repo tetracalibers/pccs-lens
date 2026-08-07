@@ -156,7 +156,6 @@ export const footerPageNavFor = (
 
 /** ページ送りを持たないページのフッターに1つだけ置くリンク。 */
 export const footerSoloLinkFor = (routeId: string | null): FooterNavLink => {
-  if (routeId === "/cg") return { title: "トップへ戻る", href: resolve("/") }
   if (routeId === "/concept") return { title: "トップページへ", href: resolve("/") }
   return { title: SITE_GUIDE_LABEL, href: resolve("/concept") }
 }

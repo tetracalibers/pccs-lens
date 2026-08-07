@@ -1,34 +1,31 @@
 title: 変換と投影
 summary: 座標変換・投影・画像の幾何学的変換
 sections:
-  - heading: 図形の変換
+  - heading: 図形の幾何学的変換
     id: coordinate-transform
     links:
       - slug: coordinate-systems
       - slug: basic-transformations
       - slug: transformation-composition
       - slug: reflection-and-skew
-      - slug: affine-and-projective-transformation
-  - heading: 投影
-    id: projection
-    links:
-      - slug: pinhole-camera
-      - slug: perspective-and-parallel-projection
-      - slug: projection-steps
-      - title: 投影の計算法 # CG 2-3
-        group: ["CG"]
-      - title: 消失点とn点透視 # CG 2-3-3, ImgP 2-2-2
-        group: ["CG", "ImgP"]
-      - title: さまざまな平行投影 # CG 2-3-3
-        group: ["CG"]
+      - slug: affine-transformation
+      - slug: projective-transformation
   - heading: ビューイングパイプライン
     id: viewing-pipeline
     links:
       - slug: viewing-pipeline-transformations
-      - title: クリッピングのアルゴリズム # CG 2-4-3
-        group: ["CG"]
       - title: 階層モデリング # CG 2-4-4
         group: ["CG"]
+  - heading: 投影とクリッピング
+    id: projection-and-clipping
+    links:
+      - slug: pinhole-camera
+      - slug: perspective-and-parallel-projection
+      - slug: projection-steps
+      - slug: projection-calculation
+      - slug: clipping-algorithms
+      - slug: vanishing-points-and-n-point-perspective
+      - slug: parallel-projection-types
   - heading: 画像の幾何学的変換
     id: image-geometric-transform
     links:

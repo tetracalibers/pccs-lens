@@ -1,0 +1,12 @@
+{
+  "route": "cg/transformation/pinhole-camera",
+  "title": "ピンホールカメラ",
+  "titleLines": [
+    "ピンホールカメラ"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "変換と投影"
+  ],
+  "figure": "assets/cg/transformation/pinhole-camera/figure.png"
+}

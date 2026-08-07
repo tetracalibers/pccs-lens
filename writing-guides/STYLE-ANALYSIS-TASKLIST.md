@@ -95,7 +95,7 @@
 - [x] `/color-theory/color-temperature-and-light-color`
 - [draft] `/color-theory/blackbody-radiation`
 - [x] `/color-theory/illuminance-and-lighting-design`
-- [ ] `/color-theory/photometric-quantities`
+- [x] `/color-theory/photometric-quantities`
 - [x] `/color-theory/color-rendering`
 - [x] `/color-theory/lamp-types`
 - [x] `/color-theory/photometric-and-radiometric-quantities`
@@ -155,7 +155,7 @@
 ## 色の活用分野 — デザイン（`color-fields.yaml` #design）
 
 - [x] `/color-fields/visual-design-and-color`
-- [ ] `/color-fields/media-design-concepts`
+- [x] `/color-fields/media-design-concepts`
 - [draft] `/color-fields/color-management`
 - [draft] `/color-fields/digital-image-basics`
 - [x] `/color-fields/color-universal-design`
@@ -498,7 +498,7 @@
 ## CGと画像処理 — モデリング／形状モデル（`cg/modeling.yaml` #shape-models）
 
 - [draft] `/cg/modeling/shape-model-overview`
-- [ページ未作成] CSG表現
+- [draft] `/cg/modeling/csg-representation`
 - [ページ未作成] 境界表現
 - [ページ未作成] スイープ表現
 - [ページ未作成] 境界表現のデータ構造
@@ -506,10 +506,10 @@
 
 ## CGと画像処理 — モデリング／曲線と曲面（`cg/modeling.yaml` #curves-surfaces）
 
-- [ページ未作成] 曲線・曲面の数式表現
+- [draft] `/cg/modeling/curve-surface-equations`
 - [ページ未作成] 2次曲線
 - [ページ未作成] パラメトリック曲線・曲面
-- [ページ未作成] ベジェ曲線・曲面
+- [draft] `/cg/modeling/bezier-curve-surface`
 - [ページ未作成] ファーガソン曲線
 - [ページ未作成] 双3次クーンズ曲面
 - [ページ未作成] Bスプライン曲線・曲面
@@ -810,28 +810,29 @@
 - [ページ未作成] 色補正
 - [ページ未作成] 色変換
 
-## CGと画像処理 — 変換と投影／図形の変換（`cg/transformation.yaml` #coordinate-transform）
+## CGと画像処理 — 変換と投影／図形の幾何学的変換（`cg/transformation.yaml` #coordinate-transform）
 
 - [x] `/cg/transformation/coordinate-systems`
 - [x] `/cg/transformation/basic-transformations`
 - [x] `/cg/transformation/transformation-composition`
 - [x] `/cg/transformation/reflection-and-skew`
-- [x] `/cg/transformation/affine-and-projective-transformation`
-
-## CGと画像処理 — 変換と投影／投影（`cg/transformation.yaml` #projection）
-
-- [draft] `/cg/transformation/pinhole-camera`
-- [draft] `/cg/transformation/perspective-and-parallel-projection`
-- [draft] `/cg/transformation/projection-steps`
-- [ページ未作成] 投影の計算法
-- [ページ未作成] 消失点とn点透視
-- [ページ未作成] さまざまな平行投影
+- [x] `/cg/transformation/affine-transformation`
+- [ ] `/cg/transformation/projective-transformation`
 
 ## CGと画像処理 — 変換と投影／ビューイングパイプライン（`cg/transformation.yaml` #viewing-pipeline）
 
 - [draft] `/cg/transformation/viewing-pipeline-transformations`
-- [ページ未作成] クリッピングのアルゴリズム
 - [ページ未作成] 階層モデリング
+
+## CGと画像処理 — 変換と投影／投影とクリッピング（`cg/transformation.yaml` #projection-and-clipping）
+
+- [x] `/cg/transformation/pinhole-camera`
+- [x] `/cg/transformation/perspective-and-parallel-projection`
+- [ ] `/cg/transformation/projection-steps`
+- [draft] `/cg/transformation/projection-calculation`
+- [draft] `/cg/transformation/clipping-algorithms`
+- [draft] `/cg/transformation/vanishing-points-and-n-point-perspective`
+- [draft] `/cg/transformation/parallel-projection-types`
 
 ## CGと画像処理 — 変換と投影／画像の幾何学的変換（`cg/transformation.yaml` #image-geometric-transform）
 

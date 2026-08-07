@@ -4,53 +4,200 @@ title: 投影の手順 # CG 2-3-1
 
 group: ["CG"]
 visual: true
-
-draft: true
 ---
 
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import PerspectiveNormalizationDemo from '$lib/demo/threejs/transformation/projection-steps/perspective-normalization/PerspectiveNormalizationDemo.svelte'
   import ViewVolumeDemo from '$lib/demo/threejs/transformation/projection-steps/view-volume/ViewVolumeDemo.svelte'
+  import WindowAndAngleOfViewDemo from '$lib/demo/threejs/transformation/projection-steps/window-and-angle-of-view/WindowAndAngleOfViewDemo.svelte'
 </script>
 
-投影中心と投影面が決まれば、空間の点が投影面のどこへ写るかは定まります。ただし、それだけでは`1`枚の画像にはなりません。
-投影面のどの範囲を画像とし、空間のどこまでを写す対象にするのかも、あわせて決める必要があります。
-ここでは、[透視投影と平行投影](/cg/transformation/perspective-and-parallel-projection/)のどちらにも共通する、投影の進め方を見ていきます。
-
-## :WithGroupTag[投影座標系]{group="{['CG']}"}
-
-投影の計算は、視点を基準にして座標を測ると単純になります。形状に与えられている座標は空間全体を測るために決められたもので、視点がどこにあってどちらを向いているかとは関係なく決まっているためです。
-
-投影中心を原点に置き、視線の向きをz軸にとり、投影面をz軸に垂直に置いた座標系を:Mark[投影座標系]といいます。この座標系では、x座標とy座標が投影面に平行な向きの位置を、z座標が視点からの奥行きを表します。透視投影で像が縮む割合も、この奥行きから決まります。
-
-z軸の向きには、[右手系と左手系](/cg/transformation/coordinate-systems/)という`2`通りの取り方があります。視線の向きをz軸の正の向きにそろえると左手系になり、奥行きがそのまま正の値として扱えます。右手系のまま、視線をz軸の負の向きにとる環境もあります。
+空間の点が投影面のどこへ写るかが分かっても、それだけでは`1`枚の画像にはなりません。投影面のどの範囲を画像とし、空間のどこまでを写す対象にするのかも、合わせて決める必要があります。
 
 ## :WithGroupTag[ウィンドウ]{group="{['CG']}"}
 
-投影座標系が決まれば、形状の各点が投影面のどこへ写るかは計算できます。しかし、投影面そのものはどこまでも広がる平面なので、このままでは画像にする範囲が決まりません。
+空間の点が:Anki[投影面]上のどこへ写るかが決まっても、画像として切り取る範囲は決まっていません。
+そこで、投影面の上に長方形の枠を置き、その内側に写ったものだけを画像として取り出します。この枠を:Anki[ウィンドウ]といいます。
 
-そこで、投影面の上に長方形の枠を置き、その内側に写ったものだけを画像として取り出します。この枠を:Mark[ウィンドウ]といいます。
+### 透視投影のウィンドウと画角
 
-ウィンドウの端を投影中心から見込んだ角度は、ピンホールカメラモデルで見た[画角](/cg/transformation/pinhole-camera/)にあたり、:Mark[視野角]とも呼ばれます。ウィンドウを大きくとるほど、また投影面を投影中心へ近づけるほど画角は広がり、一度に写せる範囲が広くなります。焦点距離の短い広角レンズ、長い望遠レンズという区別は、CGではウィンドウの大きさと投影面までの距離の取り方に置き換わります。
+[投影中心](/cg/transformation/perspective-and-parallel-projection/)は光が集まる点であり、眼やカメラの:Anki[視点]として捉えることができます。
 
-平行投影では投影中心が無限遠にあるため、見込む角度としての画角はありません。写る範囲を決めるのはウィンドウの大きさだけで、投影面をどこに置いても変わりません。
+この投影中心（視点）からウィンドウの左端から右端へ線を引くと、`2`本の線ができます。この`2`本の線がつくる角度が:Anki[画角]です。
+たとえば、画角が`75`度なら、視点から見渡せる世界も`75`度の範囲になります。このように、投影中心（視点）から見たときの:Anki[視野]を角度で表したものという意味で、画角は:Anki[視野角]とも呼ばれます。
+
+ウィンドウを通して見える空間は、視点を頂点とし、ウィンドウの枠を断面とする:Anki[四角錐]の内側です。
+:Anki[ウィンドウ]を大きくとるほど、または投影面を:Anki[投影中心]へ近づけるほど、:Anki[画角]は広がり、写せる範囲が広くなります。
+
+:::Action
+:Mark[ウィンドウの大きさ]や:Mark[投影面までの距離]を変えたときに、画角の広さがどう変わるかを観察してみよう
+:::
+
+<CanvasWrapper>
+  <WindowAndAngleOfViewDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+const halfWindow = WINDOW_SIZE / 2
+
+// 画角は、視点からウィンドウの端を見込む角の 2 倍。ウィンドウの大きさと投影面までの
+// 距離の比だけで決まるので、比が同じなら見える空間も同じ
+const spread = halfWindow / PLANE_DISTANCE // 奥行き 1 あたりの広がり
+const halfAngle = Math.atan(spread)
+const angleOfView = (2 * halfAngle * 180) / Math.PI
+
+// 1 辺 1 の正方形。投影面とウィンドウで共有し、大きさは scale で決める
+const squareGeometry = new PlaneGeometry(1, 1)
+
+// 投影面。視線に垂直な平面で、本来はどこまでも広がっている
+const projectionPlane = new Mesh(
+  squareGeometry,
+  new MeshBasicMaterial({
+    color: PLANE_COLOR,
+    side: DoubleSide,
+    transparent: true,
+    opacity: 0.1
+  })
+)
+projectionPlane.scale.set(PLANE_SIZE, PLANE_SIZE, 1)
+projectionPlane.position.z = PLANE_DISTANCE
+scene.add(projectionPlane)
+
+// ウィンドウ。投影面の上に置いた長方形の枠で、この内側に写ったものだけを画像にする
+const windowFrame = new LineSegments(
+  new EdgesGeometry(squareGeometry),
+  new LineBasicMaterial({ color: WINDOW_COLOR })
+)
+windowFrame.position.z = PLANE_DISTANCE
+windowFrame.scale.set(WINDOW_SIZE, WINDOW_SIZE, 1)
+scene.add(windowFrame)
+
+// 視点（投影中心）。大きさをもたない 1 つの点として原点に置く
+const centerGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, 0], 3)
+)
+scene.add(new Points(centerGeometry, new PointsMaterial({ color: CENTER_COLOR, size: 0.14 })))
+
+// 四角錐は、奥行きか広がりのどちらかが上限に届くところまで描く。
+// 奥の端は閉じない（クリッピング面はまだ無いので、この空間は途切れずに続く）
+const depth = Math.min(MAX_DEPTH, MAX_HALF_SIZE / spread)
+const half = spread * depth
+
+// 視線。視点から投影面に垂直な向き（z の正の向き）へ伸びる
+const axisGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, 0, 0, 0, depth], 3)
+)
+scene.add(new LineSegments(axisGeometry, new LineBasicMaterial({ color: AXIS_COLOR })))
+
+// ウィンドウを通して見える空間。視点を頂点とし、ウィンドウの枠を断面とする四角錐で、
+// その稜線は視点からウィンドウの 4 隅を通ってまっすぐ奥へ伸びる
+const edgePosition = new Float32BufferAttribute(new Float32Array(CORNERS.length * 6), 3)
+CORNERS.forEach(([cornerX, cornerY], i) => {
+  edgePosition.setXYZ(i * 2, 0, 0, 0)
+  edgePosition.setXYZ(i * 2 + 1, cornerX * half, cornerY * half, depth)
+})
+const edgeGeometry = new BufferGeometry().setAttribute("position", edgePosition)
+scene.add(new LineSegments(edgeGeometry, new LineBasicMaterial({ color: PYRAMID_COLOR })))
+
+// 画角をつくる 2 本の線。視点からウィンドウの左右の辺の中央へ引く
+const angleMaterial = new LineBasicMaterial({ color: ANGLE_COLOR })
+const angleGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute(
+    [0, 0, 0, -halfWindow, 0, PLANE_DISTANCE, 0, 0, 0, halfWindow, 0, PLANE_DISTANCE],
+    3
+  )
+)
+scene.add(new LineSegments(angleGeometry, angleMaterial))
+
+// 画角の開き。視点を中心とする扇形として塗る。頂点は 0 番が視点で、1 番以降が円弧を
+// 分割した点。2 本の線の間を埋めるので、半径は投影面までの距離より短くとる
+const radius = Math.min(ARC_RADIUS, PLANE_DISTANCE * 0.6)
+const sectorPosition = new Float32BufferAttribute(new Float32Array((ARC_SEGMENTS + 2) * 3), 3)
+sectorPosition.setXYZ(0, 0, 0, 0)
+for (let i = 0; i <= ARC_SEGMENTS; i += 1) {
+  const angle = -halfAngle + (2 * halfAngle * i) / ARC_SEGMENTS
+  sectorPosition.setXYZ(i + 1, radius * Math.sin(angle), 0, radius * Math.cos(angle))
+}
+
+// 四角錐の稜線を隠さないよう、薄く塗って深度は書き込まない
+const sectorGeometry = new BufferGeometry()
+  .setAttribute("position", sectorPosition)
+  .setIndex(SECTOR_FACES)
+scene.add(
+  new Mesh(
+    sectorGeometry,
+    new MeshBasicMaterial({
+      color: ANGLE_COLOR,
+      side: DoubleSide,
+      transparent: true,
+      opacity: 0.26,
+      depthWrite: false
+    })
+  )
+)
+
+// 扇形の外周の円弧。同じ頂点をたどるので、視点（0 番）だけ描画から外す
+const arcGeometry = new BufferGeometry().setAttribute("position", sectorPosition)
+arcGeometry.setDrawRange(1, ARC_SEGMENTS + 1)
+scene.add(new Line(arcGeometry, angleMaterial))
+```
+
+:::
+
+:::Note
+焦点距離の長さによる[広角レンズ](/cg/transformation/pinhole-camera/)・[望遠レンズ](/cg/transformation/pinhole-camera/)という区別は、CGでは:Anki[ウィンドウ]の大きさと:Anki[投影面]までの距離の取り方に置き換わります。
+:::
+
+### 平行投影のウィンドウと画角
+
+[平行投影](/cg/transformation/perspective-and-parallel-projection/)では、投影中心が無限遠にあるため、:Anki[画角]はありません。
+写る範囲を決めるのは:Anki[ウィンドウ]の大きさだけで、投影面をどこに置いても写り方は変わりません。
+
+## :WithGroupTag[クリッピング面]{group="{['CG']}"}
+
+:Anki[ウィンドウ]は、投影面の写った像のうち、どこを切り取るかを決めるものでした。
+次に決めるべきは、投影面に写す対象の絞り込みです。
+
+そもそも投影面にどれを映し、どれを映さないことにするか、その制約はまだ決めていません。近くにあっても重要でないものや、ほとんど見えない遠くのものまで、なんでもかんでも投影して描画していたら、CGではパフォーマンスが落ちてしまいます。
+
+そこで、ウィンドウの前後に面を用意し、その面に挟まれた範囲に収まる物体だけを描画することにします。視点から見て、ウィンドウより手前にある面を:Anki[前方クリッピング面]、ウィンドウより奥にある面を:Anki[後方クリッピング面]といいます。
+
+- :Anki[前方クリッピング面]：視点に近すぎるものを対象から外すために用意
+- :Anki[後方クリッピング面]：遠すぎて像にほとんど現れないものを対象から外すために用意
+
+:::Note
+:Anki[透視投影]では、視点より後ろにある点でさえ、視点と結んだ直線が投影面と交わるために像を持ってしまいます。手前に`1`枚の面を立てておけば、こうした点が計算対象に入ることはなくなります。
+:::
 
 ## :WithGroupTag[ビューボリューム]{group="{['CG']}"}
 
-ウィンドウを決めても、写す対象はまだ絞りきれていません。ウィンドウを通る投影線は、視点のすぐ手前から無限遠まで途切れずに伸びていて、その線上にあるものはどれも画像の同じ位置へ重なるためです。
+ウィンドウを通る投射線が作る立体を、この`2`枚のクリッピング面で切り取ったものが:Anki[ビューボリューム]です。この内側にある部分だけが、画像として写ることになります。
 
-奥行き方向の範囲は、視線に垂直な`2`枚の面で区切ります。手前側の面を:Mark[前方クリッピング面]、奥側の面を:Mark[後方クリッピング面]といいます。
+ビューボリュームの形は、投影の種類によって変わります。
 
-前方クリッピング面は、視点に近すぎるものを対象から外します。透視投影では視点に近づくほど像が際限なく大きくなり、視点より後ろにある点でさえ、視点と結んだ直線が投影面と交わるために像を持ってしまいます。手前に`1`枚の面を立てておけば、こうした点は最初から計算に入りません。
+::::CardGrid{cols=1}
+:::TermCard{title="透視投影のビューボリューム" ankiTitle="show"}
+投射線が投影中心から:Anki[放射状]に広がるため、奥へ行くほど断面の大きくなる:Anki[四角錐台]になる
+この立体を:Anki[視錐台]という
+:::
+:::TermCard{title="平行投影のビューボリューム" ankiTitle="show"}
+投射線が:Anki[平行]なので、どこで切っても断面の変わらない:Anki[直方体]になる
+:::
+::::
 
-後方クリッピング面は、遠すぎて像にほとんど現れないものを対象から外します。奥行きの範囲がここで有限に定まるため、この先の処理では、奥行きを決まった幅の中の値として扱えます。
+:::Action
+次の点に着目して、デモを観察してみよう
 
-ウィンドウを通る投影線が作る立体を、この`2`枚のクリッピング面で切り取ったものが:Mark[ビューボリューム]です。画像に写るのは、この内側にある部分だけです。
+- :Mark[投影面までの距離]を変えることで、ビューボリュームの大きさがどう変わるか
+- :Mark[クリッピング面]を動かすことで、ビューボリュームに収まる範囲がどう変わるか
+- :Mark[平行投影]に切り替えた場合はどうなるか
 
-ビューボリュームの形は、投影の種類によって変わります。透視投影では投影線が投影中心から放射状に広がるため、奥へ行くほど断面の大きくなる四角錐台になり、この立体を:Mark[視錐台]といいます。平行投影では投影線が平行なので、どこで切っても断面の変わらない直方体になります。
-
-:::Todo
-透視投影と平行投影のビューボリュームを対比した図解。投影座標系の軸・投影面上のウィンドウ・前方クリッピング面・後方クリッピング面を示し、透視投影では投影中心を頂点とする四角錐台に、平行投影では断面の変わらない直方体になるようすを並べて示す
 :::
 
 <CanvasWrapper>
@@ -66,8 +213,8 @@ renderer.localClippingEnabled = true
 const isOrthographic = PROJECTION === "orthographic"
 const halfWindow = WINDOW_SIZE / 2
 
-// 奥行き depth での断面の半分の大きさ。透視投影では投影線が投影中心から放射状に
-// 広がるので奥行きに比例し、平行投影では投影線が平行なのでどこでも変わらない
+// 奥行き depth での断面の半分の大きさ。透視投影では投射線が投影中心から放射状に
+// 広がるので奥行きに比例し、平行投影では投射線が平行なのでどこでも変わらない
 const halfAt = (depth: number) =>
   isOrthographic ? halfWindow : (halfWindow * depth) / PLANE_DISTANCE
 
@@ -132,7 +279,7 @@ const volumeGeometry = new BufferGeometry()
   .setIndex(VOLUME_EDGES)
 scene.add(new LineSegments(volumeGeometry, new LineBasicMaterial({ color: VOLUME_COLOR })))
 
-// ウィンドウの 4 隅を通る投影線のうち、2 枚のクリッピング面の外側に出る部分。
+// ウィンドウの 4 隅を通る投射線のうち、2 枚のクリッピング面の外側に出る部分。
 // 内側に残る部分はビューボリュームの稜線そのものなので、ここでは描かない
 const tailHalf = halfAt(MAX_DEPTH)
 const rayPosition = new Float32BufferAttribute(new Float32Array(CORNERS.length * 12), 3)
@@ -197,24 +344,179 @@ CUBE_POSITIONS.forEach((position) => {
 
 :::
 
-ビューボリュームの外にある部分を取り除き、内側に残った部分だけを先の処理へ渡す操作を:Mark[クリッピング]といいます。
+### クリッピング
 
-<!-- TODO: クリッピングの処理そのものを扱う「クリッピング（CG 2-4-3）」ページへのリンク（ページ未作成） -->
+ビューボリュームの:Anki[外]にある部分を取り除く処理は、:Anki[クリッピング]と呼ばれます。
+
+:::Info
+クリッピングの計算方法は、[クリッピングのアルゴリズム](/cg/transformation/clipping-algorithms/)ページで詳しく学びます。
+:::
 
 ## :WithGroupTag[正規化ビューボリューム]{group="{['CG']}"}
 
-ビューボリュームの形と大きさは、ウィンドウの取り方とクリッピング面の位置によって毎回変わります。透視投影では側面の`4`枚がどれも斜めに傾いているので、ある点が内側にあるかどうかを調べるには、`6`枚の面それぞれとの位置関係を計算することになります。
+ビューボリュームの形と大きさは、:Anki[ウィンドウ]の取り方と:Anki[クリッピング面]の位置によって毎回変わってしまうため、その度にクリッピングの再計算が必要です。
 
-そこで、クリッピングに入る前に、ビューボリュームをあらかじめ決めた大きさの直方体へ変換します。この変換後のビューボリュームを:Mark[正規化ビューボリューム]といいます。たとえば、どの座標も`-1`から`1`に収まる立方体を使います（範囲の取り方は環境によって異なります）。
+特に、:Anki[透視投影]の場合、ある点が視錐台の内側にあるかどうかを調べるには、複数の斜めの面との位置関係を繰り返し計算することになります。これはあまり軽い処理とはいえません。
 
-正規化ビューボリュームの境界は座標軸に垂直な面だけになるため、点が内側にあるかどうかは、`3`つの座標がそれぞれ範囲に収まっているかを見れば判定できます。もとのビューボリュームがどんな形でも、クリッピングの処理は同じ`1`つで済みます。
+そこで、クリッピングに入る前に、ビューボリュームをあらかじめ決めた大きさの:Anki[直方体]へ変換します。
+この変換後のビューボリュームを:Anki[正規化ビューボリューム]といいます。
 
-透視投影では、この変換が像の縮みも引き受けます。四角錐台が直方体へ引き伸ばされる過程で、奥にあるものほど中心へ寄せられるためです。変換を終えたあとは、平行投影と同じように奥行きを落とすだけで、投影面上の位置が得られます。
+正規化ビューボリュームの大きさの設定は環境によって異なりますが、たとえば、
 
-:::Todo
-透視投影のビューボリューム（四角錐台）が正規化ビューボリューム（直方体）へ変換されるようすの図解。変換の前後を並べ、奥に置いた同じ大きさの立方体が、変換後には中心へ寄って小さくなることがわかるように示す
+$$
+-1 \le x \le 1,\quad -1 \le y \le 1,\quad 0 \le z \le 1
+$$
+
+となるようにすると、
+
+- `x < -1`なら左にはみ出している
+- `x > 1` なら右にはみ出している
+
+といったように、:Anki[座標]値の単純な大小比較だけで、点が内側にあるかどうかを判定できるようになります。そして、元のビューボリュームがどんな形でも、この判定処理は変わりません。
+
+### 透視投影の正規化
+
+:Anki[透視投影]のビューボリュームは四角錐台で、断面は:Anki[奥]へ行くほど大きくなります。
+透視投影の場合、ビューボリュームの正規化は、どの奥行きでも断面が同じ大きさになるような:Anki[直方体]へ変換する処理です。
+
+奥に行くほど断面が大きくなり、その断面上の点を直方体に収まるようにするには、奥にある点ほど、:Anki[x]座標と:Anki[y]座標を大きく縮ませる必要があります。
+
+### 正規化ビューボリュームの透視投影
+
+正規化ビューボリュームは:Anki[立体]で、その内側の点は、正規化ビューボリュームの中で:Anki[奥行き]を持って並んでいます。
+
+しかし、画像は:Anki[平面]です。画像を得るには、この奥行きを落として、点が`x`座標と`y`座標だけで表される平面に写す必要があります。
+つまり、最後には正規化ビューボリュームを:Anki[透視投影]する処理が必要になるのです。どの点も、正規化ビューボリュームの手前の面へまっすぐ潰すだけで像になります。
+
+:::Action
+:Mark[正規化に変換]し終わった後に、:Mark[奥行きを落とす]と、正規化ビューボリュームの手前の平面に物体が写ることを確認しよう
 :::
 
-透視投影と平行投影の違いは、こうして正規化ビューボリュームへの変換の中に畳み込まれます。その変換をどのような式で表すのかが、投影の計算の中身になります。
+<CanvasWrapper>
+  <PerspectiveNormalizationDemo />
+</CanvasWrapper>
 
-<!-- TODO: 「投影の計算法（CG 2-3）」ページへのリンク（ページ未作成） -->
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+const halfWindow = WINDOW_SIZE / 2
+
+// 奥行き depth での四角錐台の断面の半分の大きさ。投射線が投影中心から放射状に広がるので、
+// 奥行きに比例して大きくなる
+const halfAt = (depth: number) => (halfWindow * depth) / PLANE_DISTANCE
+
+// 四角錐台を -1 ≤ x ≤ 1, -1 ≤ y ≤ 1, 0 ≤ z ≤ 1 の直方体へ移す変換。
+// x と y は、その奥行きでの断面の大きさ halfWindow × z / PLANE_DISTANCE で割れば ±1 に収まる。
+// 奥行きで割る操作は最下行に z を置き、同次座標の正規化に任せる（この割り算が像の縮み）。
+// z は前方クリッピング面が 0、後方クリッピング面が 1 になるように写す
+const normalization = new Matrix4().set(
+  PLANE_DISTANCE / halfWindow, 0, 0, 0,
+  0, PLANE_DISTANCE / halfWindow, 0, 0,
+  0, 0, FAR / (FAR - NEAR), (-FAR * NEAR) / (FAR - NEAR),
+  0, 0, 1, 0
+)
+
+// 変換前のビューボリューム（四角錐台）の 8 隅。
+// 前方・後方クリッピング面それぞれの奥行きでの断面の 4 隅
+const volumeBefore = BOX_CORNERS.map(([signX, signY, signZ]) => {
+  const depth = signZ < 0 ? NEAR : FAR
+  const half = halfAt(depth)
+  return new Vector3(signX * half, signY * half, depth)
+})
+
+// 変換後の 8 隅。四角錐台の 8 隅が、そのまま直方体の 8 隅へ移る
+const volumeAfter = volumeBefore.map((corner) => corner.clone().applyMatrix4(normalization))
+
+// 空間に置いた同じ大きさの立方体。8 隅それぞれの変換前後の位置を求める。
+// 奥行きで割る変換なので、奥にある隅ほど強く中心へ寄せられる
+const cubesBefore = CUBE_POSITIONS.flatMap(([centerX, centerY, centerZ]) =>
+  BOX_CORNERS.map(
+    ([signX, signY, signZ]) =>
+      new Vector3(
+        centerX + (signX * CUBE_SIZE) / 2,
+        centerY + (signY * CUBE_SIZE) / 2,
+        centerZ + (signZ * CUBE_SIZE) / 2
+      )
+  )
+)
+const cubesAfter = cubesBefore.map((corner) => corner.clone().applyMatrix4(normalization))
+
+// 頂点と稜線から線分のジオメトリを作る
+const wireframe = (corners: Vector3[], edges: number[]) =>
+  new BufferGeometry()
+    .setAttribute(
+      "position",
+      new Float32BufferAttribute(
+        corners.flatMap(({ x, y, z }) => [x, y, z]),
+        3
+      )
+    )
+    .setIndex(edges)
+
+// 立方体の稜線。1 つのジオメトリにまとめて描くので、隅の番号を立方体ごとに 8 ずつずらす
+const cubeEdges = CUBE_POSITIONS.flatMap((_, i) => BOX_EDGES.map((corner) => corner + i * 8))
+
+// 変換前の位置に残す線。変換後と見比べられるように動かさない
+const beforeMaterial = new LineBasicMaterial({ color: BEFORE_COLOR })
+scene.add(new LineSegments(wireframe(volumeBefore, BOX_EDGES), beforeMaterial))
+scene.add(new LineSegments(wireframe(cubesBefore, cubeEdges), beforeMaterial))
+
+// 変換前の位置と変換後の位置を、変換の進み具合で混ぜる
+const morph = (before: Vector3[], after: Vector3[], progress: number) =>
+  before.map((corner, i) => corner.clone().lerp(after[i], progress))
+
+// ビューボリュームの前面は、変換が進むにつれて手前へ寄り、±1 の大きさへ広がる
+const frontZ = MathUtils.lerp(NEAR, 0, PROGRESS)
+const frontHalf = MathUtils.lerp(halfAt(NEAR), 1, PROGRESS)
+
+// 変換の途中のビューボリューム。
+// 変換前（進み具合 0）では変換前の線と重なるので、そのあとに描いて上書きする
+const volume = new LineSegments(
+  wireframe(morph(volumeBefore, volumeAfter, PROGRESS), BOX_EDGES),
+  new LineBasicMaterial({ color: VOLUME_COLOR })
+)
+volume.renderOrder = 1
+scene.add(volume)
+
+// 変換の途中の立方体。奥行きを落とすと、x と y をそのままに前面へ潰れて、投影面上の像になる
+const cubeCorners = morph(cubesBefore, cubesAfter, PROGRESS).map(
+  (corner) => new Vector3(corner.x, corner.y, MathUtils.lerp(corner.z, frontZ, FLATTEN))
+)
+const cubes = new LineSegments(
+  wireframe(cubeCorners, cubeEdges),
+  new LineBasicMaterial({ color: CUBE_COLOR })
+)
+cubes.renderOrder = 1
+scene.add(cubes)
+
+// ビューボリュームの前面。奥行きを落とすと、この面の上に像ができる
+const frontFace = new Mesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({
+    color: VOLUME_COLOR,
+    side: DoubleSide,
+    transparent: true,
+    opacity: 0.1
+  })
+)
+frontFace.position.z = frontZ
+frontFace.scale.set(frontHalf * 2, frontHalf * 2, 1)
+scene.add(frontFace)
+
+// 視線（投影座標系の z 軸）。立方体が寄っていく先を示す
+const axisGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, 0, 0, 0, FAR], 3)
+)
+scene.add(new LineSegments(axisGeometry, new LineBasicMaterial({ color: AXIS_COLOR })))
+```
+
+:::
+
+
+:::Note
+奥行き（`z`座標）を落とす処理を最後に行うのは、`z`座標の大小比較で前後の範囲を判定するためです。先に奥行きを落としてしまうと、`2`枚のクリッピング面で挟まれた範囲の中に各点が収まっているかを判断できません。
+:::
+
+透視投影と平行投影によって処理が分かれるのは、:Anki[ビューボリュームの正規化]までです。
+:Anki[透視投影]では奥にあるものを:Anki[縮ませる]処理が必要ですが、正規化を終えた後の:Anki[クリッピング]と、奥行きを落として像を得る処理は、どちらの投影でも同じになります。

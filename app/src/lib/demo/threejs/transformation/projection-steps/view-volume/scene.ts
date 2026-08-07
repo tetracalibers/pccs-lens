@@ -69,10 +69,10 @@ const VOLUME_FACES: [number, number, number][] = [
 /** 投影面として描く正方形の 1 辺。ウィンドウより大きくとり、その外側にも面が続いていることを示す */
 const PLANE_SIZE = 5
 
-/** 投影線と視線を描く奥行きの上限。後方クリッピング面より先まで伸ばす */
+/** 投射線と視線を描く奥行きの上限。後方クリッピング面より先まで伸ばす */
 const MAX_DEPTH = 9
 
-/** 平行投影で、投影線を投影面の手前側へ伸ばす長さ */
+/** 平行投影で、投射線を投影面の手前側へ伸ばす長さ */
 const RAY_TAIL = 1.5
 
 /** 空間に置く立方体の 1 辺の長さ */
@@ -142,7 +142,7 @@ export const createViewVolumeScene = ({ scene, renderer, params }: SceneContext)
   const center = new Points(centerGeometry, centerMaterial)
   scene.add(center)
 
-  // ウィンドウの 4 隅を通る投影線のうち、切り取られる部分。
+  // ウィンドウの 4 隅を通る投射線のうち、切り取られる部分。
   // 隅 1 つにつき、前方クリッピング面より手前と後方クリッピング面より奥の 2 本を描く
   const rayPosition = new Float32BufferAttribute(new Float32Array(CORNERS.length * 12), 3)
   const rayGeometry = new BufferGeometry().setAttribute("position", rayPosition)
@@ -203,8 +203,8 @@ export const createViewVolumeScene = ({ scene, renderer, params }: SceneContext)
         ? "—"
         : `${((2 * Math.atan(halfWindow / planeDistance) * 180) / Math.PI).toFixed(1)}°`
 
-      // 奥行き depth での断面の半分の大きさ。透視投影では投影線が投影中心から放射状に
-      // 広がるので奥行きに比例し、平行投影では投影線が平行なのでどこでも変わらない
+      // 奥行き depth での断面の半分の大きさ。透視投影では投射線が投影中心から放射状に
+      // 広がるので奥行きに比例し、平行投影では投射線が平行なのでどこでも変わらない
       const halfAt = (depth: number) =>
         isOrthographic ? halfWindow : (halfWindow * depth) / planeDistance
 
@@ -226,7 +226,7 @@ export const createViewVolumeScene = ({ scene, renderer, params }: SceneContext)
       corners.forEach(({ x, y, z }, i) => volumePosition.setXYZ(i, x, y, z))
       volumePosition.needsUpdate = true
 
-      // 投影線のうち、2 枚のクリッピング面の外側に出る部分。
+      // 投射線のうち、2 枚のクリッピング面の外側に出る部分。
       // 内側に残る部分はビューボリュームの稜線そのものなので、ここでは描かない
       const tailHalf = halfAt(MAX_DEPTH)
       CORNERS.forEach(([cornerX, cornerY], i) => {

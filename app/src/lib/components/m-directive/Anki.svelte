@@ -1,0 +1,29 @@
+<script lang="ts">
+  import type { Snippet } from "svelte"
+  import { ankiMode } from "$lib/state/anki.svelte"
+
+  let { children }: { children?: Snippet } = $props()
+</script>
+
+<span class="mark" class:anki={ankiMode.isAnki}>
+  {@render children?.()}
+</span>
+
+<style>
+  .mark {
+    font-weight: 500;
+    font-family: var(--font-mark);
+    color: var(--color-anki);
+    display: inline-block;
+    margin-inline: 0.1rem;
+    line-height: 1.5;
+  }
+
+  .mark.anki {
+    color: transparent;
+    text-decoration: underline;
+    text-decoration-color: darkgray;
+    text-decoration-thickness: 2px;
+    text-decoration-skip-ink: none;
+  }
+</style>

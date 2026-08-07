@@ -1,0 +1,13 @@
+{
+  "route": "cg/transformation/projective-transformation",
+  "title": "射影変換と同次座標",
+  "titleLines": [
+    "射影変換と",
+    "同次座標"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "変換と投影"
+  ],
+  "figure": "assets/cg/transformation/projective-transformation/figure.png"
+}

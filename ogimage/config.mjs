@@ -14,13 +14,18 @@
 //   - "none"     … 図版なし
 //   - "optional" … 図版を入れるかはページ単位でユーザーに確認（入れると nested-fig 相当になる）
 //   - "required" … 図版前提（定型プレビュー。当面は手渡し PNG）
+//
+// theme（配色）:
+//   - "light"（省略時の既定） … 白地
+//   - "dark"                  … 暗地。実際の配色は lib/build-svg.mjs の THEMES に定義する
 
 import picomatch from "picomatch"
 
 /**
  * @typedef {"default" | "title-only" | "nested" | "nested-fig"} Variation
  * @typedef {"none" | "optional" | "required"} FigurePolicy
- * @typedef {{ glob: string, variation: Variation, figure: FigurePolicy }} OgRule
+ * @typedef {"light" | "dark"} Theme
+ * @typedef {{ glob: string, variation: Variation, figure: FigurePolicy, theme?: Theme }} OgRule
  */
 
 /**
@@ -40,7 +45,7 @@ export const OG_RULES = [
   { glob: "/color-theory", variation: "title-only", figure: "none" },
   { glob: "/color-fields", variation: "title-only", figure: "none" },
   { glob: "/jis-color-map", variation: "title-only", figure: "none" },
-  { glob: "/cg", variation: "title-only", figure: "none" },
+  { glob: "/cg", variation: "title-only", figure: "none", theme: "dark" },
   { glob: "/patterns", variation: "title-only", figure: "none" },
   { glob: "/jis-color-map/all", variation: "title-only", figure: "none" },
   { glob: "/games/*", variation: "title-only", figure: "none" },
@@ -51,11 +56,13 @@ export const OG_RULES = [
   { glob: "/color-theory/*", variation: "nested", figure: "optional" },
   { glob: "/color-fields/*", variation: "nested", figure: "optional" },
 
-  // --- CG コンテンツ（nested）---
-  //   /cg/<unit>            … ユニット一覧ページ（動的ルート /cg/[slug]）
-  //   /cg/<unit>/<article>  … 記事ページ（+page.svx）
-  { glob: "/cg/*", variation: "nested", figure: "none" },
-  { glob: "/cg/**", variation: "nested", figure: "none" },
+  // --- CG コンテンツ（nested・ダーク）---
+  //   /cg/<unit>            … ユニット一覧ページ（動的ルート /cg/[slug]）。図版なし
+  //   /cg/<unit>/<article>  … 記事ページ（+page.svx）。図版は任意
+  //   CG は図版が Three.js デモのスクリーンショット（地色 #26282d）なので、
+  //   OGP 側も同じ地色のダークにして図版を背景に溶け込ませる（/cg 一覧ページも揃える）。
+  { glob: "/cg/*", variation: "nested", figure: "none", theme: "dark" },
+  { glob: "/cg/**", variation: "nested", figure: "optional", theme: "dark" },
 
   // --- 定型プレビュー（nested-fig。当面は手渡し PNG）---
   { glob: "/jis-color-map/*", variation: "nested-fig", figure: "required" }, // 色系統ごとの慣用色名マップ
@@ -95,6 +102,13 @@ export const resolveRule = (route) => {
   }
   return null
 }
+
+/**
+ * ルートに対応するテーマを返す。規則に `theme` が無い／規則自体が無い場合は "light"。
+ * @param {string} route
+ * @returns {Theme}
+ */
+export const resolveTheme = (route) => resolveRule(route)?.theme ?? "light"
 
 /**
  * ルートに対応するバリエーションを返す（該当なしは null）。

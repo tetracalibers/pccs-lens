@@ -46,6 +46,7 @@ const highlightIfSupported = async (code, lang) =>
 const directives = {
   container: [
     { name: "Tips", replaceTo: "svelte-component" },
+    { name: "Info", replaceTo: "svelte-component" },
     { name: "Note", replaceTo: "svelte-component" },
     { name: "Warning", replaceTo: "svelte-component" },
     { name: "Example", replaceTo: "svelte-component" },
@@ -57,9 +58,11 @@ const directives = {
   ],
   leaf: [
     { name: "ComingSoon", replaceTo: "svelte-component" },
-    { name: "EImage", replaceTo: "svelte-component" }
+    { name: "EImage", replaceTo: "svelte-component" },
+    { name: "Heading2", replaceTo: "svelte-component" }
   ],
   text: [
+    { name: "Anki", replaceTo: "svelte-component" },
     { name: "Mark", replaceTo: "svelte-component" },
     { name: "GradeTag", replaceTo: "svelte-component" },
     { name: "PageLink", replaceTo: "svelte-component" },

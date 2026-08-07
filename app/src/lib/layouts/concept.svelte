@@ -5,13 +5,17 @@
   import Ulist from "$lib/components/m-html/Ulist.svelte"
   import Olist from "$lib/components/m-html/Olist.svelte"
   import ALink from "$lib/components/m-html/ALink.svelte"
+  import Hr from "$lib/components/m-html/Hr.svelte"
 
   import Action from "$lib/components/m-directive/Action.svelte"
   import Note from "$lib/components/m-directive/Note.svelte"
   import Example from "$lib/components/m-directive/Example.svelte"
   import ComingSoon from "$lib/components/m-directive/ComingSoon.svelte"
   import GradeTag from "$lib/components/m-directive/GradeTag.svelte"
+  import Anki from "$lib/components/m-directive/Anki.svelte"
   import Mark from "$lib/components/m-directive/Mark.svelte"
+  import CardGrid from "$lib/components/m-directive/CardGrid.svelte"
+  import TermCard from "$lib/components/m-directive/TermCard.svelte"
 
   /* eslint-disable no-import-assign */
   export {
@@ -21,12 +25,17 @@
     Ulist as ul,
     Olist as ol,
     ALink as a,
+    Hr as hr,
     Action,
     Note,
     Example,
     ComingSoon,
     GradeTag,
-    Mark
+    Anki,
+    Mark,
+    CardGrid,
+    TermCard,
+    Heading2
   }
   /* eslint-enable no-import-assign */
 </script>

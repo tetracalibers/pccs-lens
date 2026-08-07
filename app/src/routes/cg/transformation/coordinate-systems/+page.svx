@@ -3,9 +3,18 @@ layout: guide-content
 title: 座標系 # CG 2-1-1, 2-2-1 / ImgP 8-1
 
 group: ["CG", "ImgP"]
+visual: true
 ---
 
-:Mark[座標系]とは、空間内の点の位置を数値で一意に表すための枠組みです。
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import PolarAndCartesianDemo from '$lib/demo/threejs/transformation/coordinate-systems/polar-and-cartesian/PolarAndCartesianDemo.svelte'
+  import HandednessHelixDemo from '$lib/demo/threejs/transformation/coordinate-systems/handedness-helix/HandednessHelixDemo.svelte'
+  import SphericalCoordinatesDemo from '$lib/demo/threejs/transformation/coordinate-systems/spherical-coordinates/SphericalCoordinatesDemo.svelte'
+  import CylindricalCoordinatesDemo from '$lib/demo/threejs/transformation/coordinate-systems/cylindrical-coordinates/CylindricalCoordinatesDemo.svelte'
+</script>
+
+:Anki[座標系]とは、空間内の点の位置を数値で一意に表すための枠組みです。
 CGや画像処理では、物体や画素の位置を、すべてこの座標系という枠組みの上で扱います。
 
 ## :WithGroupTag[2次元の座標系]{group="{['CG', 'ImgP']}"}
@@ -15,14 +24,14 @@ CGや画像処理では、物体や画素の位置を、すべてこの座標系
 
 ### 2次元直交座標系
 
-互いに直交する2本の軸と、その交点である原点を基準にして、平面上の位置を表す枠組みを:Mark[直交座標系]といいます。
+互いに直交する2本の軸と、その交点である原点を基準にして、平面上の位置を表す枠組みを:Anki[直交座標系]といいます。
 
-2次元の場合、横方向の軸をx軸、縦方向の軸をy軸とし、点の位置を原点からx軸方向に進んだ量・y軸方向に進んだ量の組`(x, y)`で表します。このような位置を表す値の組を、その点の:Mark[座標]といいます。
+2次元の場合、横方向の軸をx軸、縦方向の軸をy軸とし、点の位置を原点からx軸方向に進んだ量・y軸方向に進んだ量の組`(x, y)`で表します。このような位置を表す値の組を、その点の:Anki[座標]といいます。
 
-x軸は:Mark[右]方向を正とするのが一般的ですが、y軸の方向の取り方は、分野によって慣習が異なります。
+x軸は:Anki[右]方向を正とするのが一般的ですが、y軸の方向の取り方は、分野によって慣習が異なります。
 
-- 数学やCGでは、y軸は:Mark[上]方向を正にとる
-- 画像処理では、y軸は:Mark[下]方向を正にとる（画像の:Mark[左上]を原点とする）
+- 数学やCGでは、y軸は:Anki[上]方向を正にとる
+- 画像処理では、y軸は:Anki[下]方向を正にとる（画像の:Anki[左上]を原点とする）
 
 同じ変換の式でも、y軸の向きが逆であれば、見た目の動きは上下が反転して現れます。
 
@@ -30,8 +39,181 @@ x軸は:Mark[右]方向を正とするのが一般的ですが、y軸の方向�
 
 ### 2次元極座標系
 
-平面上の位置は、原点からの距離と:Mark[角度]の組み合わせでも表すことができます。
-原点からの距離`r`と、基準となる軸（通常はx軸の正の向き）から測った角度`θ`の組`(r, θ)`で位置を表す枠組みを:Mark[極座標系]といいます。
+平面上の位置は、原点からの距離と:Anki[角度]の組み合わせでも表すことができます。
+原点からの距離`r`と、基準となる軸（通常はx軸の正の向き）から測った角度`θ`の組`(r, θ)`で位置を表す枠組みを:Anki[極座標系]といいます。
+
+:::Action
+$$r$$と$$\theta$$を変えることで、さまざまな位置を表せることを確認しよう
+:::
+
+<CanvasWrapper>
+  <PolarAndCartesianDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+/**
+ * 文字を描いた canvas をテクスチャにして、常にカメラを向く板（Sprite）にする。
+ * r cosθ のような複数文字のラベルもあるので、文字の幅を測って板の横幅を決める
+ */
+const createLabel = (text: string, color: string, height: number) => {
+  const canvas = document.createElement("canvas")
+  const context = canvas.getContext("2d")
+
+  let textWidth = LABEL_TEXTURE_HEIGHT
+  if (context) {
+    context.font = LABEL_FONT
+    textWidth = context.measureText(text).width
+  }
+
+  canvas.width = Math.ceil(textWidth + LABEL_TEXTURE_PADDING * 2)
+  canvas.height = LABEL_TEXTURE_HEIGHT
+
+  if (context) {
+    // canvas の大きさを変えると描画状態が初期化されるので、書体はここで指定し直す
+    context.font = LABEL_FONT
+    context.textAlign = "center"
+    context.textBaseline = "middle"
+    context.fillStyle = color
+    context.fillText(text, canvas.width / 2, canvas.height / 2)
+  }
+
+  const texture = new CanvasTexture(canvas)
+  texture.colorSpace = SRGBColorSpace
+  const sprite = new Sprite(new SpriteMaterial({ map: texture, transparent: true }))
+  // 高さを指定の値に揃え、幅は canvas の縦横比から決める
+  sprite.scale.set((height * canvas.width) / canvas.height, height, 1)
+
+  return sprite
+}
+
+// 1 本の軸を、原点をまたぐ直線・正の向きを指す矢印・軸名のラベルの 3 点セットで作る
+const createAxis = (name: string, color: string, direction: Vector3) => {
+  const group = new Group()
+
+  const lineGeometry = new BufferGeometry().setFromPoints([
+    direction.clone().multiplyScalar(-AXIS_LENGTH),
+    direction.clone().multiplyScalar(AXIS_LENGTH)
+  ])
+  group.add(new LineSegments(lineGeometry, new LineBasicMaterial({ color })))
+
+  // ConeGeometry は +y を向いているので、軸の正の向きへ回してから先端に置く
+  const arrowGeometry = new ConeGeometry(ARROW_RADIUS, ARROW_HEIGHT, 16)
+  const arrow = new Mesh(arrowGeometry, new MeshBasicMaterial({ color }))
+  arrow.position.copy(direction).multiplyScalar(AXIS_LENGTH)
+  arrow.quaternion.setFromUnitVectors(CONE_UP, direction)
+  group.add(arrow)
+
+  const label = createLabel(name, color, AXIS_LABEL_HEIGHT)
+  label.position.copy(direction).multiplyScalar(AXIS_LENGTH + LABEL_OFFSET)
+  group.add(label)
+
+  return group
+}
+
+// 角度を表す扇形。原点と弧の分割点で三角形を敷き詰めた塗りに、外周の弧の線を重ねる
+const createSector = (arcPoints: Vector3[], color: string) => {
+  // 三角形は「原点・隣り合う 2 つの分割点」の組。頂点 0 番が原点になる
+  const fillIndex: number[] = []
+  for (let i = 0; i < arcPoints.length - 1; i++) fillIndex.push(0, i + 1, i + 2)
+  const fillGeometry = new BufferGeometry()
+    .setFromPoints([new Vector3(0, 0, 0), ...arcPoints])
+    .setIndex(fillIndex)
+  const fill = new Mesh(
+    fillGeometry,
+    new MeshBasicMaterial({
+      color,
+      side: DoubleSide,
+      transparent: true,
+      opacity: SECTOR_OPACITY,
+      // 塗りが奥の線やラベルを隠さないよう深度は書かない
+      depthWrite: false
+    })
+  )
+
+  // 外周の弧。塗りの縁をはっきりさせる
+  const arcGeometry = new BufferGeometry().setFromPoints(arcPoints)
+  const arc = new Line(arcGeometry, new LineBasicMaterial({ color }))
+
+  return [fill, arc]
+}
+
+// 1 本の線分
+const createSegment = (from: Vector3, to: Vector3, color: string) => {
+  const geometry = new BufferGeometry().setFromPoints([from, to])
+  return new LineSegments(geometry, new LineBasicMaterial({ color }))
+}
+
+// 平面の図なので、Three.js の既定の向き（x が右・y が上）のまま xy 平面を正面から見る
+scene.add(createAxis("x", X_COLOR, X_DIRECTION), createAxis("y", Y_COLOR, Y_DIRECTION))
+
+// 極座標から直交座標への変換。斜辺 r と角度 θ の直角三角形で、
+// x 軸方向の辺（隣辺）が r cosθ、y 軸方向の辺（対辺）が r sinθ になる
+const r = 1.4
+const theta = MathUtils.degToRad(35)
+
+const x = r * Math.cos(theta)
+const y = r * Math.sin(theta)
+
+// 極座標と直交座標が同じ 1 点を指していることを見せるための点
+const point = new Mesh(
+  new SphereGeometry(POINT_RADIUS, 16, 12),
+  new MeshBasicMaterial({ color: RADIUS_COLOR })
+)
+point.position.set(x, y, 0)
+scene.add(point)
+
+// 原点から点までの線分（斜辺）と、直角三角形の 2 辺。
+// 隣辺は x 軸に重なるので、LEG_Z だけ前に出して軸の線に負けないようにする
+scene.add(
+  createSegment(new Vector3(0, 0, 0), new Vector3(x, y, 0), RADIUS_COLOR),
+  createSegment(new Vector3(0, 0, LEG_Z), new Vector3(x, 0, LEG_Z), ADJACENT_COLOR),
+  createSegment(new Vector3(x, 0, LEG_Z), new Vector3(x, y, LEG_Z), OPPOSITE_COLOR)
+)
+
+// x 軸から斜辺までの角度 θ。半径を SECTOR_RADIUS に固定した同じ変換式で描ける
+const arcPoints: Vector3[] = []
+for (let i = 0; i <= ARC_SEGMENTS; i++) {
+  const angle = theta * (i / ARC_SEGMENTS)
+  arcPoints.push(new Vector3(SECTOR_RADIUS * Math.cos(angle), SECTOR_RADIUS * Math.sin(angle), 0))
+}
+scene.add(...createSector(arcPoints, THETA_COLOR))
+
+// θ のラベルは扇形の中間の向きへ、扇形より少し外に置く
+const thetaLabel = createLabel("θ", THETA_COLOR, VALUE_LABEL_HEIGHT)
+thetaLabel.position
+  .set(Math.cos(theta / 2), Math.sin(theta / 2), 0)
+  .multiplyScalar(SECTOR_RADIUS + LABEL_GAP)
+scene.add(thetaLabel)
+
+// r のラベルは斜辺の外寄りに置き、直角三角形と反対側（θ が増える側）へ垂直にずらす。
+// 三角形の内側へ出すと 2 辺やそのラベルと重なる。
+// また r が小さいと斜辺ごと原点付近に収まって θ のラベルに寄るので、そのときは外へ押し出す
+const radiusLabel = createLabel("r", RADIUS_COLOR, VALUE_LABEL_HEIGHT)
+radiusLabel.position.set(
+  x * RADIUS_LABEL_ALONG - Math.sin(theta) * LABEL_GAP,
+  y * RADIUS_LABEL_ALONG + Math.cos(theta) * LABEL_GAP,
+  0
+)
+if (radiusLabel.position.length() < RADIUS_LABEL_MIN_DISTANCE) {
+  radiusLabel.position.setLength(RADIUS_LABEL_MIN_DISTANCE)
+}
+scene.add(radiusLabel)
+
+// 隣辺のラベルは x 軸の反対側（下）へ、対辺のラベルは原点から遠い側へ置く。
+// どちらも板の幅・高さの半分だけ足して、辺との間隔を文字の外側で測る
+const adjacentLabel = createLabel("r cosθ", ADJACENT_COLOR, VALUE_LABEL_HEIGHT)
+adjacentLabel.position.set(x / 2, -(LABEL_GAP + adjacentLabel.scale.y / 2), 0)
+scene.add(adjacentLabel)
+
+const oppositeLabel = createLabel("r sinθ", OPPOSITE_COLOR, VALUE_LABEL_HEIGHT)
+const oppositeSide = Math.sign(x) || 1
+oppositeLabel.position.set(x + oppositeSide * (LABEL_GAP + oppositeLabel.scale.x / 2), y / 2, 0)
+scene.add(oppositeLabel)
+```
+
+:::
 
 直交座標と極座標は、同じ点を別の見方で表しているだけなので、互いに変換できます。
 
@@ -55,7 +237,7 @@ $$
 :::TermCard{title="直交座標から極座標への変換" ankiTitle="show"}
 直交座標`(x, y)`から極座標`(r, θ)`へは、同じ直角三角形を逆向きにたどって求めます。
 
-- 斜辺の長さ`r`は、隣辺`x`と対辺`y`から:Mark[三平方の定理]で求められる
+- 斜辺の長さ`r`は、隣辺`x`と対辺`y`から:Anki[三平方の定理]で求められる
 - 角度`θ`は、隣辺`x`と対辺`y`の比`y / x`が`tanθ`に等しい関係を使って、その逆をたどる`arctan`で得られる
 
 $$
@@ -67,7 +249,7 @@ $$
 :::
 ::::
 
-極座標では「原点を中心にどれだけ回ったか」を素直に表現できるため、:Mark[回転]を扱う場面では直交座標系よりも見通しがよくなることがあります。
+極座標では「原点を中心にどれだけ回ったか」を素直に表現できるため、:Anki[回転]を扱う場面では直交座標系よりも見通しがよくなることがあります。
 
 ## :WithGroupTag[3次元の座標系]{group="{['CG']}"}
 
@@ -82,22 +264,367 @@ $$
 ここで問題になるのが、3本目の軸であるz軸をどちら向きにとるかです。
 x軸を右、y軸を上にとったとき、z軸の方向の取り方は次の2パターンが使い分けられます。
 
-- :Mark[右手系]：z軸が画面の手前（こちら側）を向く取り方
-- :Mark[左手系]：z軸が画面の奥を向く取り方
+- :Anki[右手系]：z軸が画面の手前（こちら側）を向く取り方
+- :Anki[左手系]：z軸が画面の奥を向く取り方
 
 どちらも直交する3軸であることに変わりはありませんが、z軸の正の向きが反対になります。
 
-<!-- TODO: 右手系と左手系を並べた3次元座標軸の図 -->
+:::Action
+右手系と左手系で、`xy`平面の手前にある点と奥にある点が入れ替わっていることを観察しよう
+:::
+
+<CanvasWrapper>
+  <HandednessHelixDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// createLabel・createAxis は、2次元の極座標のデモと同じものを使う
+
+// 座標値の組。どちらの座標系の値かは、この段階では決まっていない
+type Vertex = [number, number, number]
+
+// 座標系を「3 本の軸の向き」として持つ
+type Basis = { x: Vector3; y: Vector3; z: Vector3 }
+
+// 右手系と左手系。違いは z 軸の向きだけで、x 軸（右）と y 軸（上）は共通。
+// 右手系は z 軸が画面の手前を、左手系は z 軸が画面の奥を向く
+const RIGHT_HANDED: Basis = {
+  x: new Vector3(1, 0, 0),
+  y: new Vector3(0, 1, 0),
+  z: new Vector3(0, 0, 1)
+}
+const LEFT_HANDED: Basis = {
+  x: new Vector3(1, 0, 0),
+  y: new Vector3(0, 1, 0),
+  z: new Vector3(0, 0, -1)
+}
+
+// 座標値 (x, y, z) は「その系の x 軸方向へ x、y 軸方向へ y、z 軸方向へ z だけ進んだ位置」を指す。
+// 同じ 3 つの数を渡しても、z 軸の向きが逆なら置かれる場所が変わる
+const toWorld = (basis: Basis, [x, y, z]: Vertex) =>
+  new Vector3().addScaledVector(basis.x, x).addScaledVector(basis.y, y).addScaledVector(basis.z, z)
+
+// らせんの頂点データ。y 軸のまわりを回りながら y 方向へ進む点を並べる。
+// ここで作るのはただの数の並びで、どちらの系の座標値かはまだ決まっていない
+const turns = 2.5
+const height = 1.9
+
+const vertices: Vertex[] = []
+for (let i = 0; i <= HELIX_SEGMENTS; i++) {
+  const progress = i / HELIX_SEGMENTS
+  const angle = progress * turns * Math.PI * 2
+  vertices.push([
+    HELIX_RADIUS * Math.sin(angle),
+    height * (progress - 0.5),
+    HELIX_RADIUS * Math.cos(angle)
+  ])
+}
+
+// 頂点データの端に置く点。先頭（下端）と末尾（上端）を色で見分ける
+const createMarker = (color: string) =>
+  new Mesh(
+    new SphereGeometry(MARKER_RADIUS, 16, 12),
+    new MeshStandardMaterial({ color, roughness: 0.5 })
+  )
+
+// 1 つの座標系を、xy 平面・3 本の軸・系の名前・頂点データから作ったらせんの組で作る
+const createSystem = (name: string, basis: Basis, offsetX: number) => {
+  const group = new Group()
+  group.position.x = offsetX
+
+  // xy 平面。z 軸がこの面を垂直に貫くので、らせんや点が面の手前を通っているか奥を通っているかで
+  // z の符号が読み取れる（PlaneGeometry は既定で xy 平面にある）
+  const planeGeometry = new PlaneGeometry(PLANE_SIZE, PLANE_SIZE)
+  const planeMaterial = new MeshBasicMaterial({
+    color: PLANE_COLOR,
+    side: DoubleSide,
+    transparent: true,
+    opacity: PLANE_OPACITY,
+    // 面より奥にあるものを覆いたいだけなので、深度は比較するが書かない。
+    // 面より手前にあるものは深度の比較で弾かれ、覆われずに残る
+    depthWrite: false
+  })
+  group.add(new Mesh(planeGeometry, planeMaterial))
+
+  group.add(
+    createAxis("x", X_COLOR, basis.x),
+    createAxis("y", Y_COLOR, basis.y),
+    createAxis("z", Z_COLOR, basis.z)
+  )
+
+  const title = createLabel(name, TITLE_COLOR, TITLE_HEIGHT)
+  title.position.y = AXIS_LENGTH + TITLE_OFFSET
+  group.add(title)
+
+  // 頂点データを、この系の軸の向きに従ってワールドの位置へ置き換える
+  const points = vertices.map((vertex) => toWorld(basis, vertex))
+
+  // らせん。細い線だと交差したところで前後が読み取れないので、太さのあるチューブにして、
+  // 手前を通る部分が奥を隠すようにする。奥を通る部分や軸が透けるよう半透明にする
+  const helixGeometry = new TubeGeometry(
+    new CatmullRomCurve3(points),
+    HELIX_SEGMENTS,
+    TUBE_RADIUS,
+    TUBE_RADIAL_SEGMENTS,
+    false
+  )
+  const helixMaterial = new MeshStandardMaterial({
+    color: HELIX_COLOR,
+    roughness: 0.5,
+    transparent: true,
+    opacity: HELIX_OPACITY
+  })
+  const helix = new Mesh(helixGeometry, helixMaterial)
+  // xy 平面より先に描いて、面より奥を通る部分が面に覆われるようにする
+  helix.renderOrder = -1
+  group.add(helix)
+
+  // 頂点データの先頭（下端）と末尾（上端）の点。同じ座標値でも置かれる場所が系によって変わること、
+  // そのなかで上下（y 軸方向）だけは変わらないことが、この 2 点で見比べられる
+  const startMarker = createMarker(START_MARKER_COLOR)
+  startMarker.position.copy(points[0])
+  const endMarker = createMarker(END_MARKER_COLOR)
+  endMarker.position.copy(points[points.length - 1])
+  group.add(startMarker, endMarker)
+
+  return group
+}
+
+// 右手系を左、左手系を右に並べる
+scene.add(
+  createSystem("右手系", RIGHT_HANDED, -GROUP_OFFSET),
+  createSystem("左手系", LEFT_HANDED, GROUP_OFFSET)
+)
+
+// らせんの前後を陰影でも読み取れるようにする光
+const light = new DirectionalLight(LIGHT_COLOR, 2.5)
+light.position.set(4, 5, 3)
+scene.add(light, new AmbientLight(LIGHT_COLOR, 0.4))
+```
+
+:::
 
 :::Note
 CGでは、扱うソフトウェアやAPIによって右手系と左手系のどちらを採用するかが異なります。
-同じ座標値でも採用する系が違えば奥行きの向きが反転してしまうため、作業する環境がどちらの系を採用しているかを確認しておく必要があります。
+同じ座標値でも採用する系が違えば:Mark[奥行き]の向きが反転してしまうため、作業する環境がどちらの系を採用しているかを確認しておく必要があります。
 :::
 
 ### 球面座標系
 
-2次元の極座標を空間へ拡張する方法の一つが、:Mark[球面座標系]です。
-原点からの距離`r`と、向きを決める2つの角度`θ`・`φ`の組`(r, θ, φ)`で、空間内の位置を表します。`θ`はz軸からの:Mark[傾き]、`φ`はxy平面上での:Mark[回転角]として測るのが一般的です。
+2次元の極座標を空間へ拡張する方法の一つが、:Anki[球面座標系]です。
+原点からの距離`r`と、向きを決める2つの角度`θ`・`φ`の組`(r, θ, φ)`で、空間内の位置を表します。`θ`はz軸からの:Anki[傾き]、`φ`はxy平面上での:Anki[回転角]として測るのが一般的です。
+
+:::Action
+$$r, \theta, \phi$$を変えることで、さまざまな位置を表せることを確認しよう
+:::
+
+<CanvasWrapper>
+  <SphericalCoordinatesDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 文字を描いた canvas をテクスチャにして、常にカメラを向く板（Sprite）にする。
+// 文字の大きさは板の一辺（size）で決まる。テクスチャの解像度は変えない
+const createLabel = (text: string, color: string, size: number) => {
+  const canvas = document.createElement("canvas")
+  canvas.width = LABEL_TEXTURE_SIZE
+  canvas.height = LABEL_TEXTURE_SIZE
+
+  const context = canvas.getContext("2d")
+  if (context) {
+    context.font = LABEL_FONT
+    context.textAlign = "center"
+    context.textBaseline = "middle"
+    context.fillStyle = color
+    context.fillText(text, LABEL_TEXTURE_SIZE / 2, LABEL_TEXTURE_SIZE / 2)
+  }
+
+  const texture = new CanvasTexture(canvas)
+  texture.colorSpace = SRGBColorSpace
+  const sprite = new Sprite(new SpriteMaterial({ map: texture, transparent: true }))
+  sprite.scale.setScalar(size)
+
+  return sprite
+}
+
+// 1 本の軸を、原点をまたぐ直線・正の向きを指す矢印・軸名のラベルの 3 点セットで作る
+const createAxis = (name: string, color: string, direction: Vector3) => {
+  const group = new Group()
+
+  const lineGeometry = new BufferGeometry().setFromPoints([
+    direction.clone().multiplyScalar(-AXIS_LENGTH),
+    direction.clone().multiplyScalar(AXIS_LENGTH)
+  ])
+  group.add(new LineSegments(lineGeometry, new LineBasicMaterial({ color })))
+
+  // ConeGeometry は +y を向いているので、軸の正の向きへ回してから先端に置く
+  const arrowGeometry = new ConeGeometry(ARROW_RADIUS, ARROW_HEIGHT, 16)
+  const arrow = new Mesh(arrowGeometry, new MeshBasicMaterial({ color }))
+  arrow.position.copy(direction).multiplyScalar(AXIS_LENGTH)
+  arrow.quaternion.setFromUnitVectors(CONE_UP, direction)
+  group.add(arrow)
+
+  const label = createLabel(name, color, AXIS_LABEL_SIZE)
+  label.position.copy(direction).multiplyScalar(AXIS_LENGTH + LABEL_OFFSET)
+  group.add(label)
+
+  return group
+}
+
+// 角度を表す扇形。原点と弧の分割点で三角形を敷き詰めた塗りに、外周の弧の線を重ねる
+const createSector = (arcPoints: Vector3[], color: string) => {
+  // 三角形は「原点・隣り合う 2 つの分割点」の組。頂点 0 番が原点になる
+  const fillIndex: number[] = []
+  for (let i = 0; i < arcPoints.length - 1; i++) fillIndex.push(0, i + 1, i + 2)
+  const fillGeometry = new BufferGeometry()
+    .setFromPoints([new Vector3(0, 0, 0), ...arcPoints])
+    .setIndex(fillIndex)
+  const fill = new Mesh(
+    fillGeometry,
+    new MeshBasicMaterial({
+      color,
+      side: DoubleSide,
+      transparent: true,
+      opacity: SECTOR_OPACITY,
+      // 塗りが奥の線やラベルを隠さないよう深度は書かない
+      depthWrite: false
+    })
+  )
+
+  // 外周の弧。塗りの縁をはっきりさせる
+  const arcGeometry = new BufferGeometry().setFromPoints(arcPoints)
+  const arc = new Line(arcGeometry, new LineBasicMaterial({ color }))
+
+  return [fill, arc]
+}
+
+// Three.js は既定で +y が画面の上を向く。球面座標は z 軸を上にとって考えるので、
+// 図全体をまとめた Group を x 軸まわりに -90° 回し、z 軸が上に立つ向きで見せる。
+// この Group の中では x・y・z をそのまま使える（右手系のまま、y 軸が奥へ向く）
+const world = new Group()
+world.rotation.x = -Math.PI / 2
+scene.add(world)
+
+// xy 平面。φ を測る平面であり、点を投影する先でもある（PlaneGeometry は既定で xy 平面にある）
+const planeGeometry = new PlaneGeometry(PLANE_SIZE, PLANE_SIZE)
+const planeMaterial = new MeshBasicMaterial({
+  color: PLANE_COLOR,
+  side: DoubleSide,
+  transparent: true,
+  opacity: 0.07,
+  // ごく薄い面なので、奥にあるラベルや線を隠さないよう深度は書かない
+  depthWrite: false
+})
+world.add(new Mesh(planeGeometry, planeMaterial))
+
+world.add(
+  createAxis("x", X_COLOR, X_DIRECTION),
+  createAxis("y", Y_COLOR, Y_DIRECTION),
+  createAxis("z", Z_COLOR, Z_DIRECTION)
+)
+
+// 球面座標から直交座標への変換。線分を z 軸方向の成分と xy 平面への投影に分け、
+// 投影した長さ r sinθ をさらに x 方向・y 方向へ分ける
+const r = 1.4
+const theta = MathUtils.degToRad(55)
+const phi = MathUtils.degToRad(40)
+
+const x = r * Math.sin(theta) * Math.cos(phi)
+const y = r * Math.sin(theta) * Math.sin(phi)
+const z = r * Math.cos(theta)
+
+// 球面座標が指す点
+const point = new Mesh(
+  new SphereGeometry(POINT_RADIUS, 16, 12),
+  new MeshBasicMaterial({ color: RADIUS_COLOR })
+)
+point.position.set(x, y, z)
+world.add(point)
+
+// 原点から点までの線分。長さが r になる
+const radiusGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, 0, x, y, z], 3)
+)
+world.add(new LineSegments(radiusGeometry, new LineBasicMaterial({ color: RADIUS_COLOR })))
+
+// どちらも長さが r sinθ になる 2 本の線分。
+// 1 本は上の線分を xy 平面へ落としたもので、z 成分を落としただけ。
+// もう 1 本は点から z 軸へおろした垂線で、点から x 成分・y 成分を落として z 軸上まで戻る
+const projectionGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, 0, x, y, 0, x, y, z, 0, 0, z], 3)
+)
+world.add(
+  new LineSegments(
+    projectionGeometry,
+    new LineBasicMaterial({ color: RADIUS_COLOR, transparent: true, opacity: 0.6 })
+  )
+)
+
+// 原点 →（x だけ進む）→（y だけ進む）→（z だけ進む）= 点 をたどる折れ線
+const guideGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, 0, x, 0, 0, x, 0, 0, x, y, 0, x, y, 0, x, y, z], 3)
+)
+world.add(new LineSegments(guideGeometry, new LineBasicMaterial({ color: GUIDE_COLOR })))
+
+// θ の弧。半径を SECTOR_RADIUS に固定して θ だけを 0 から動かした軌跡なので、
+// 点の位置と同じ変換式で描ける（線分が z 軸から倒れていく道筋になる）
+const thetaArcPoints: Vector3[] = []
+for (let i = 0; i <= ARC_SEGMENTS; i++) {
+  const angle = theta * (i / ARC_SEGMENTS)
+  thetaArcPoints.push(
+    new Vector3(
+      SECTOR_RADIUS * Math.sin(angle) * Math.cos(phi),
+      SECTOR_RADIUS * Math.sin(angle) * Math.sin(phi),
+      SECTOR_RADIUS * Math.cos(angle)
+    )
+  )
+}
+world.add(...createSector(thetaArcPoints, THETA_COLOR))
+
+// φ の弧は xy 平面上にあるので、2 次元の極座標と同じ式で描ける
+const phiArcPoints: Vector3[] = []
+for (let i = 0; i <= ARC_SEGMENTS; i++) {
+  const angle = phi * (i / ARC_SEGMENTS)
+  phiArcPoints.push(new Vector3(SECTOR_RADIUS * Math.cos(angle), SECTOR_RADIUS * Math.sin(angle), 0))
+}
+world.add(...createSector(phiArcPoints, PHI_COLOR))
+
+// 角度のラベルは、それぞれの弧の中間の向きへ、弧より少し外に置く
+const thetaLabel = createLabel("θ", THETA_COLOR, VALUE_LABEL_SIZE)
+thetaLabel.position
+  .set(
+    Math.sin(theta / 2) * Math.cos(phi),
+    Math.sin(theta / 2) * Math.sin(phi),
+    Math.cos(theta / 2)
+  )
+  .multiplyScalar(SECTOR_RADIUS + LABEL_GAP)
+world.add(thetaLabel)
+
+const phiLabel = createLabel("φ", PHI_COLOR, VALUE_LABEL_SIZE)
+phiLabel.position
+  .set(Math.cos(phi / 2), Math.sin(phi / 2), 0)
+  .multiplyScalar(SECTOR_RADIUS + LABEL_GAP)
+world.add(phiLabel)
+
+// r のラベルは線分の中点に置く。線分と重ならないよう、線分に垂直な向きへずらす
+const sideways = new Vector3(x, y, z)
+  .normalize()
+  .cross(Z_DIRECTION)
+  .normalize()
+  .multiplyScalar(LABEL_GAP)
+const radiusLabel = createLabel("r", RADIUS_COLOR, VALUE_LABEL_SIZE)
+radiusLabel.position.set(x / 2, y / 2, z / 2).add(sideways)
+world.add(radiusLabel)
+```
+
+:::
 
 直交座標`(x, y, z)`との関係は、2段階に分けて導けます。
 
@@ -127,12 +654,139 @@ $$
 :::
 ::::
 
-<!-- TODO: 球面座標系の (r, θ, φ) を示す図 -->
-
 ### 円柱座標系
 
-もう一つの拡張が、平面上の極座標`(r, θ)`に高さ`z`を加えた:Mark[円柱座標系]です。
-xy平面上の位置を:Mark[極座標]で表し、そこにz軸方向の高さを組み合わせて、空間内の位置を`(r, θ, z)`で表します。
+もう一つの拡張が、平面上の極座標`(r, θ)`に高さ`z`を加えた:Anki[円柱座標系]です。
+xy平面上の位置を:Anki[極座標]で表し、そこにz軸方向の高さを組み合わせて、空間内の位置を`(r, θ, z)`で表します。
+
+:::Action
+$$r, \theta, z$$を変えることで、さまざまな位置を表せることを確認しよう
+:::
+
+<CanvasWrapper>
+  <CylindricalCoordinatesDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// createLabel・createAxis・createSector は、球面座標系のデモと同じものを使う
+
+// Three.js は既定で +y が画面の上を向く。円柱座標は z 軸を上にとって考えるので、
+// 図全体をまとめた Group を x 軸まわりに -90° 回し、z 軸が上に立つ向きで見せる。
+// この Group の中では x・y・z をそのまま使える（右手系のまま、y 軸が奥へ向く）
+const world = new Group()
+world.rotation.x = -Math.PI / 2
+scene.add(world)
+
+// xy 平面。r と θ で位置を決める平面（PlaneGeometry は既定で xy 平面にある）
+const planeGeometry = new PlaneGeometry(PLANE_SIZE, PLANE_SIZE)
+const planeMaterial = new MeshBasicMaterial({
+  color: PLANE_COLOR,
+  side: DoubleSide,
+  transparent: true,
+  opacity: 0.07,
+  // ごく薄い面なので、奥にあるラベルや線を隠さないよう深度は書かない
+  depthWrite: false
+})
+world.add(new Mesh(planeGeometry, planeMaterial))
+
+world.add(
+  createAxis("x", X_COLOR, X_DIRECTION),
+  createAxis("y", Y_COLOR, Y_DIRECTION),
+  createAxis("z", Z_COLOR, Z_DIRECTION)
+)
+
+// 円柱座標から直交座標への変換。xy 平面の部分は 2 次元の極座標そのままで、
+// 高さ z は測り方が変わらないのでそのまま受け渡される
+const r = 1.2
+const theta = MathUtils.degToRad(50)
+const z = 0.9
+
+const x = r * Math.cos(theta)
+const y = r * Math.sin(theta)
+
+// 円柱座標が指す点
+const point = new Mesh(
+  new SphereGeometry(POINT_RADIUS, 16, 12),
+  new MeshBasicMaterial({ color: RADIUS_COLOR })
+)
+point.position.set(x, y, z)
+world.add(point)
+
+// xy 平面上で原点から伸びる線分。長さが r になる
+const radiusGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, 0, x, y, 0], 3)
+)
+world.add(new LineSegments(radiusGeometry, new LineBasicMaterial({ color: RADIUS_COLOR })))
+
+// 上の線分の先から点までを結ぶ縦の線分。長さがそのまま高さ z になる
+const heightGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([x, y, 0, x, y, z], 3)
+)
+world.add(new LineSegments(heightGeometry, new LineBasicMaterial({ color: HEIGHT_COLOR })))
+
+// 原点 →（x だけ進む）→（y だけ進む）= xy 平面上の位置 をたどる折れ線
+const guideGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, 0, x, 0, 0, x, 0, 0, x, y, 0], 3)
+)
+world.add(new LineSegments(guideGeometry, new LineBasicMaterial({ color: GUIDE_COLOR })))
+
+// θ だけを 1 周させたときに点が描く円。半径 r・高さ z は変わらないので、
+// z 軸を軸とする円柱の断面がそのまま見える。点の位置と同じ変換式で描ける
+const circlePoints: Vector3[] = []
+for (let i = 0; i <= CIRCLE_SEGMENTS; i++) {
+  const angle = (Math.PI * 2 * i) / CIRCLE_SEGMENTS
+  circlePoints.push(new Vector3(r * Math.cos(angle), r * Math.sin(angle), z))
+}
+const circleGeometry = new BufferGeometry().setFromPoints(circlePoints)
+world.add(
+  new Line(
+    circleGeometry,
+    new LineBasicMaterial({ color: RADIUS_COLOR, transparent: true, opacity: 0.4 })
+  )
+)
+
+// x 軸から xy 平面上の線分までの角度 θ。
+// 扇形も xy 平面上にあるので、半径を SECTOR_RADIUS に固定した同じ変換式で描ける
+const arcPoints: Vector3[] = []
+for (let i = 0; i <= ARC_SEGMENTS; i++) {
+  const angle = theta * (i / ARC_SEGMENTS)
+  arcPoints.push(new Vector3(SECTOR_RADIUS * Math.cos(angle), SECTOR_RADIUS * Math.sin(angle), 0))
+}
+world.add(...createSector(arcPoints, THETA_COLOR))
+
+// θ のラベルは扇形の中間の向きへ、扇形より少し外に置く
+const thetaLabel = createLabel("θ", THETA_COLOR, VALUE_LABEL_SIZE)
+thetaLabel.position
+  .set(Math.cos(theta / 2), Math.sin(theta / 2), 0)
+  .multiplyScalar(SECTOR_RADIUS + LABEL_GAP)
+world.add(thetaLabel)
+
+// r のラベルは線分の外寄りに置き、線分の向こう側（xy 平面上で θ が増える側）へ垂直にずらす。
+// 手前側は x 軸へ下ろした垂線（折れ線）が通っているので、そちらへ出すと重なる。
+// また r が小さいと線分ごと原点付近に収まって θ のラベルに寄るので、そのときは外へ押し出す
+const radiusLabel = createLabel("r", RADIUS_COLOR, VALUE_LABEL_SIZE)
+radiusLabel.position.set(
+  x * RADIUS_LABEL_ALONG - Math.sin(theta) * LABEL_GAP,
+  y * RADIUS_LABEL_ALONG + Math.cos(theta) * LABEL_GAP,
+  0
+)
+if (radiusLabel.position.length() < RADIUS_LABEL_MIN_DISTANCE) {
+  radiusLabel.position.setLength(RADIUS_LABEL_MIN_DISTANCE)
+}
+world.add(radiusLabel)
+
+// z のラベルは縦の線分の中点に置く。z 軸から遠ざかる向き（r の向き）へずらす
+const heightLabel = createLabel("z", HEIGHT_COLOR, VALUE_LABEL_SIZE)
+heightLabel.position.set(x + Math.cos(theta) * LABEL_GAP, y + Math.sin(theta) * LABEL_GAP, z / 2)
+world.add(heightLabel)
+```
+
+:::
 
 直交座標`(x, y, z)`との関係は、極座標との変換式を用いることで簡単にわかります。
 
@@ -152,5 +806,3 @@ z &= z
 $$
 :::
 ::::
-
-<!-- TODO: 円柱座標系の (r, θ, z) を示す図 -->

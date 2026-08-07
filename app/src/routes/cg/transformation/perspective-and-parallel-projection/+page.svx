@@ -4,53 +4,179 @@ title: 透視投影と平行投影 # CG 2-3-2
 
 group: ["CG", "ImgP"]
 visual: true
-
-draft: true
 ---
 
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import PerspectiveProjectionDemo from '$lib/demo/threejs/transformation/perspective-and-parallel-projection/perspective-projection/PerspectiveProjectionDemo.svelte'
   import ProjectionCenterDemo from '$lib/demo/threejs/transformation/perspective-and-parallel-projection/projection-center/ProjectionCenterDemo.svelte'
   import ProjectionCameraDemo from '$lib/demo/threejs/transformation/perspective-and-parallel-projection/projection-camera/ProjectionCameraDemo.svelte'
 </script>
 
-[ピンホールカメラ](/cg/transformation/pinhole-camera/)では、光学中心を通る光の直進だけで、`3`次元の世界が`2`次元の像になるしくみを見ました。
-ただし、`3`次元の形状を平面へ写す方法は、これだけではありません。
-ここでは、CGで使われる`2`つの写し方と、その違いを生む投影中心の位置を見ていきます。
+[ピンホールカメラ](/cg/transformation/pinhole-camera/)では、光の直進だけで`3`次元の物体が`2`次元の像になる仕組みを見ました。
+CGでは、ピンホールカメラモデルを数式化した:Anki[透視投影]と、それを発展させた:Anki[平行投影]という仕組みがよく使われます。
 
 ## :WithGroupTag[投影]{group="{['CG', 'ImgP']}"}
 
-`3`次元空間に置かれた形状を、`2`次元の平面上の像へ写す操作を:Mark[投影]といいます。立体を平面の画像として表示する以上、CGの処理はどこかで必ずこの投影を通ります。
+`3`次元空間に置かれた物体を、`2`次元の平面上の像へ写す操作を:Anki[投影]といいます。
 
-投影では、形状の上の各点から`1`本ずつ線を引き、その線が[投影面](/cg/transformation/pinhole-camera/)と交わった位置を、その点の像とします。この線を:Mark[投影線]といいます。
+立体を平面の画像として表示する以上、3DCGではこの投影の処理が必要です。大まかには、次のような処理を行います。
 
-投影線の引き方は`1`通りではありません。ピンホールカメラモデルでは、投影線はすべて光学中心という`1`点を通っていました。このように投影線が集まる点を:Mark[投影中心]といいます。
+1. 物体の上の各点から`1`本ずつ:Anki[投射線]を引く
+2. 線が[投影面](/cg/transformation/pinhole-camera/)と交わった位置を、その点の:Anki[像]とする
 
-投影は、この投影中心を空間のどこに置くかで大きく`2`つに分かれます。有限の距離に置いたものが:Mark[透視投影]、無限に遠ざけたものが:Mark[平行投影]です。
+[ピンホールカメラモデル](/cg/transformation/pinhole-camera/)では、投射線はすべて光学中心という`1`点を通っていました。このような、投射線が集まる点を:Anki[投影中心]といいます。
 
-:::Todo
-透視投影と平行投影で投影線の引かれ方を対比した図解。同じ形状に対して、透視投影では投影線が投影中心の`1`点に集まり、平行投影では投影線が互いに平行に走るようすを、並べて示す
-:::
+CGで使われる投影法は、この:Anki[投影中心]を空間のどこに置くかによって、大きく`2`種類に分けられます。
+投影中心を有限の距離に置いたものが:Anki[透視投影]、無限に遠ざけたものが:Anki[平行投影]です。
 
 ## :WithGroupTag[透視投影]{group="{['CG', 'ImgP']}"}
 
-:Mark[透視投影]は、`1`点に集まる投影線で形状を写す投影です。投影中心と形状上の点を結んだ直線が投影面と交わる位置が、その点の像になります。
+:Anki[透視投影]は、`1`点に集まる投射線で物体を写す投影です。
+物体上の点と投影中心を結ぶ直線が、投影面と交わる位置に、その点の像ができます。
 
-これは、ピンホールカメラモデルで見た像の成り立ちと同じもので、光学中心がそのまま投影中心にあたります。カメラも人の目も、`1`点に光を集めて像を作る以上、その写り方は透視投影で表されます。
+<CanvasWrapper>
+  <PerspectiveProjectionDemo />
+</CanvasWrapper>
 
-投影線が`1`点に集まるため、同じ大きさの物体でも、投影中心から遠いものほど小さく写ります。この縮み方が像に[遠近感](/cg/transformation/pinhole-camera/)を与えます。私たちが普段目にしている光景と同じ写り方をするので、写実的な描写を目的とするCGでは、透視投影が基本の投影方式になります。
+:::Foldable{title="Three.jsによる実装概要"}
 
-空間で平行に伸びる直線どうしも、像の上では`1`点へ集まっていきます。まっすぐな線路のレールが遠くで交わって見えるのと同じことが、投影面の上でも起こります。
+```ts
+// 投影中心。投射線が集まる 1 点で、大きさをもたない点として原点に置く
+const centerGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute([0, 0, 0], 3)
+)
+scene.add(new Points(centerGeometry, new PointsMaterial({ color: CENTER_COLOR, size: 0.14 })))
 
-<!-- TODO: 平行線が集まる点を扱う「消失点とn点透視（CG 2-3-3 / ImgP 2-2-2）」ページへのリンク（ページ未作成） -->
+// 投影面。投影中心の前（形状と同じ側）に PLANE_DISTANCE だけ離して置いた正方形の面
+const planeGeometry = new PlaneGeometry(PLANE_SIZE, PLANE_SIZE)
+const plane = new Mesh(
+  planeGeometry,
+  new MeshBasicMaterial({
+    color: PLANE_COLOR,
+    side: DoubleSide,
+    transparent: true,
+    opacity: 0.12
+  })
+)
+plane.position.z = PLANE_DISTANCE
+scene.add(plane)
 
-その一方で、像の大きさは物体までの距離に左右されます。同じ長さの辺でも、手前にあるか奥にあるかで像の長さは変わってしまうため、透視投影で描いた図から、もとの形状の寸法を読み取ることはできません。
+const border = new LineSegments(
+  new EdgesGeometry(planeGeometry),
+  new LineBasicMaterial({ color: PLANE_COLOR })
+)
+border.position.z = PLANE_DISTANCE
+scene.add(border)
+
+// 投影する形状。透視投影での歪み方が形ごとに違うので、平らな板・曲面・角のある立体を混ぜる。
+// どれも投影中心の前（z の正の側）に、投影中心からの距離を変えて置く
+const shapeMaterial = new LineBasicMaterial({ color: SHAPE_COLOR })
+const shapes = [
+  {
+    // 円柱。投影面に正対していない円は、像の上では楕円になる
+    geometry: new CylinderGeometry(0.4, 0.4, 1.05, 12),
+    position: new Vector3(-0.88, 0.6, 3),
+    rotation: new Euler(0.55, 0, 0.45)
+  },
+  {
+    // 立方体。投影面に正対していない面は、像の上では正方形ではなく台形になる
+    geometry: new BoxGeometry(0.9, 0.9, 0.9),
+    position: new Vector3(0.86, -1, 4.3),
+    rotation: new Euler(0.25, -0.5, 0)
+  },
+  {
+    // 奥行きに長い直方体。手前の面ほど大きく写り、奥行き方向の稜線は像の上で狭まっていく
+    geometry: new BoxGeometry(0.75, 0.75, 1.5),
+    position: new Vector3(1.03, 1.25, 5.5),
+    rotation: new Euler(0, 0.25, 0)
+  }
+].map(({ geometry, position, rotation }) => {
+  // 稜線だけを線で描く。もとのジオメトリは稜線を取り出したら要らない
+  const edgesGeometry = new EdgesGeometry(geometry)
+  geometry.dispose()
+
+  const shape = new LineSegments(edgesGeometry, shapeMaterial)
+  shape.position.copy(position)
+  shape.rotation.copy(rotation)
+  // 投影の計算には世界座標での頂点位置が必要なので、行列を作っておく
+  shape.updateMatrixWorld()
+  scene.add(shape)
+
+  // 稜線の頂点を世界座標に直したもの。投射線と像はこの位置から求める
+  const localPosition = edgesGeometry.getAttribute("position")
+  const vertices = Array.from({ length: localPosition.count }, (_, i) =>
+    new Vector3().fromBufferAttribute(localPosition, i).applyMatrix4(shape.matrixWorld)
+  )
+
+  return vertices
+})
+
+// 投射線。稜線の頂点 1 つにつき 1 本（2 頂点）、頂点から投影中心へ引く。
+// どの頂点も同じ 1 点へ向かうので、投影面をどこに置いても投射線は変わらない
+const rayVertices = shapes.flat()
+const rayPosition = new Float32BufferAttribute(new Float32Array(rayVertices.length * 6), 3)
+rayVertices.forEach(({ x, y, z }, i) => {
+  rayPosition.setXYZ(i * 2, x, y, z)
+  rayPosition.setXYZ(i * 2 + 1, 0, 0, 0)
+})
+const rayGeometry = new BufferGeometry().setAttribute("position", rayPosition)
+scene.add(new LineSegments(rayGeometry, new LineBasicMaterial({ color: RAY_COLOR })))
+
+// 投影面に写る像。形状 1 つにつき 1 つで、稜線のつなぎ方は形状と同じ
+const imageMaterial = new LineBasicMaterial({ color: IMAGE_COLOR })
+shapes.forEach((vertices) => {
+  const imagePosition = new Float32BufferAttribute(new Float32Array(vertices.length * 3), 3)
+  vertices.forEach(({ x, y, z }, i) => {
+    // 頂点と投影中心（原点）を結ぶ直線が投影面 z = PLANE_DISTANCE と交わる位置は、
+    // 投影面に平行な向きの座標を PLANE_DISTANCE / z 倍したもの。
+    // 投影中心から遠い頂点ほど倍率が小さくなるので、1 つの形状の中でも
+    // 手前と奥で縮み方が変わり、像は歪んで写る
+    const scale = PLANE_DISTANCE / z
+    imagePosition.setXYZ(i, x * scale, y * scale, PLANE_DISTANCE)
+  })
+  const imageGeometry = new BufferGeometry().setAttribute("position", imagePosition)
+  scene.add(new LineSegments(imageGeometry, imageMaterial))
+})
+```
+
+:::
+
+これは、[ピンホールカメラモデル](/cg/transformation/pinhole-camera/)で見た像の成り立ちと同じものです。
+カメラも人の眼も、`1`点に光を集めて像を作る以上、その写り方は:Anki[透視投影]で表されます。
+
+:::Note
+光が集まる点である投影中心は:Anki[眼]や:Anki[カメラ]であり、その点から眺めた:Anki[投影面]が、眼や画像に映る景色だと捉えると、CGにおける透視投影の役割がわかってきます。
+:::
+
+### 透視投影の強み：写実的な描画
+
+透視投影では、投射線が`1`点に集まることで、同じ大きさの物体でも、投影中心から:Anki[遠い]ものほど小さく写ります。
+この縮み方が像に:Anki[遠近感]を与え、私たちが普段目にしている光景と同じ写り方になります。そのため、:Anki[写実的]な描写を目的とする場合は、透視投影が基本の投影方式になります。
+
+### 透視投影の弱点：形状の把握
+
+その一方で、像の大きさが投影中心からの距離に左右されることは、デメリットにもなり得ます。
+同じ長さの辺でも、手前にあるか奥にあるかで像の長さは変わってしまうため、透視投影で描いた図から、もとの形状の寸法を読み取ることはできません。
+さらに、平行な線が歪んで表示されることもあり、透視投影は形状を正確に把握したい場合には適していないのです。
 
 ## :WithGroupTag[平行投影]{group="{['CG']}"}
 
-寸法を読み取れないことは、図の用途によっては見過ごせない欠点になります。機械の部品や建物の設計図に求められるのは、見た目の自然さよりも、描かれた図から長さや角度を正しくたどれることです。
+たとえば、機械の部品や建物の設計図では、描かれた図から長さや角度を正しく把握できることが求められます。このような場合、透視投影は適していません。
 
-そこで、投影中心を投影面から遠ざけていくとどうなるかを考えてみます。投影中心が遠いほど、そこから伸びる投影線どうしの開きは小さくなっていき、無限に遠ざけた先では、投影線は互いに平行になります。このように、平行な投影線で形状を写す投影を:Mark[平行投影]といいます。
+そこで、各点から投影面への投射線を平行にした、:Anki[平行投影]という投影法があります。
+
+### 透視投影と平行投影の関係
+
+平行投影は、:Anki[透視投影]の特別な場合と考えることができます。
+
+透視投影において、投影中心を投影面から遠ざけていくと、投射線の間隔が小さくなっていき、やがて投射線が重なってしまいそうです。
+そして:Anki[無限]に遠ざけた先では、重なり合った投射線が互いに平行になります。この平行な投射線で形状を写す投影が:Anki[平行投影]なのです。
+
+:::Action
+投影中心までの距離を最大にした後に、投影中心を無限遠に置くことで、投射線が平行になる過程を見てみよう
+:::
 
 <CanvasWrapper>
   <ProjectionCenterDemo />
@@ -100,7 +226,7 @@ const imageGeometry = new BufferGeometry()
   .setIndex(CUBE_EDGES)
 scene.add(new LineSegments(imageGeometry, new LineBasicMaterial({ color: IMAGE_COLOR })))
 
-// 投影線。形状の頂点 1 つにつき 1 本（2 頂点）
+// 投射線。形状の頂点 1 つにつき 1 本（2 頂点）
 const rayPosition = new Float32BufferAttribute(new Float32Array(VERTICES.length * 6), 3)
 const rayGeometry = new BufferGeometry().setAttribute("position", rayPosition)
 scene.add(new LineSegments(rayGeometry, new LineBasicMaterial({ color: RAY_COLOR })))
@@ -112,7 +238,7 @@ VERTICES.forEach(([x, y, z], i) => {
   const scale = AT_INFINITY ? 1 : DISTANCE / (DISTANCE + z)
   imagePosition.setXYZ(i, x * scale, y * scale, 0)
 
-  // 投影線は頂点から投影中心へ向かう。無限遠では 1 点に集まらず、
+  // 投射線は頂点から投影中心へ向かう。無限遠では 1 点に集まらず、
   // 投影面に垂直なまま向こう側へ抜けていく
   rayPosition.setXYZ(i * 2, x, y, z)
   if (AT_INFINITY) rayPosition.setXYZ(i * 2 + 1, x, y, -RAY_TAIL)
@@ -122,21 +248,17 @@ VERTICES.forEach(([x, y, z], i) => {
 
 :::
 
-平行投影の写り方を決めるのは、投影中心の位置ではなく投影線の向きです。その向きをどう取るかによって、平行投影はさらにいくつかの種類に分かれます。
+投射線が平行であれば、物体が投影面からどれだけ離れても、投射線の:Anki[間隔]は変わりません。そのため、同じ向きの同じ長さの辺は、手前にあっても奥にあっても同じ長さに写ります。空間で平行な直線どうしは、像の上でも:Anki[平行]なままです。
 
-<!-- TODO: 「さまざまな平行投影（CG 2-3-3）」ページへのリンク（ページ未作成） -->
+### 平行投影の特徴とユースケース
 
-投影線が平行であれば、形状が投影面からどれだけ離れても、投影線の間隔は変わりません。そのため、同じ向きの同じ長さの辺は、手前にあっても奥にあっても同じ長さに写ります。空間で平行な直線どうしは、像の上でも平行なままです。
+平行投影では、投影面に平行な向きの長さは縮まずに写るので、図の上で測った長さが、そのまま形状の寸法に対応します。設計図や製図で平行投影が使われるのは、この読み取りやすさによります。
 
-:::Todo
-同じ大きさの立方体を奥行き方向に並べ、透視投影では奥のものほど小さく写るのに対して、平行投影ではどれも同じ大きさに写ることを対比した図解
+その代わり、平行投影の像に遠近感はありません。奥行きの違いが像の大きさに現れないため、どちらが手前にあるのかは、形の重なりや陰影といった別の手がかりから判断することになります。
+
+:::Action
+カメラ（平行投影と透視投影）を切り替えて、箱の壁に写る像を見比べてみよう
 :::
-
-投影面に平行な向きの長さは縮まずに写るので、図の上で測った長さが、そのまま形状の寸法に対応します。設計図や製図で平行投影が使われるのは、この読み取りやすさによります。
-
-そのかわり、平行投影の像に遠近感はありません。奥行きの違いが像の大きさに現れないぶん、どちらが手前にあるのかは、形の重なりや陰影といった別の手がかりから判断することになります。
-
-このように、透視投影と平行投影は、写実的な見え方を取るか、形の読み取りやすさを取るかで選び分けます。
 
 <CanvasWrapper>
   <ProjectionCameraDemo />
@@ -238,4 +360,11 @@ CUBE_POSITIONS.forEach(([centerX, centerY, centerZ]) => {
 })
 ```
 
+:::
+
+:Anki[平行投影]は、形状の読み取りやすさが重視される場面で活用されます。
+一方、写実的な仕上がりを求める場合や、奥行きがあってダイナミックな世界を表現する映画やゲームに使われることはほとんどなく、これらは:Anki[透視投影]の出番です。
+
+:::Note
+平行投影の写り方を決めるのは、投影中心の位置ではなく:Anki[投射線]の:Anki[向き]です。その向きをどう取るかによって、[さまざまな平行投影](/cg/transformation/parallel-projection-types/)を考えることができます。
 :::

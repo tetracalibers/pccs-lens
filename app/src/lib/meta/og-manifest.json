@@ -123,14 +123,26 @@
     "cg/transformation": {
       "title": "変換と投影"
     },
-    "cg/transformation/affine-and-projective-transformation": {
-      "title": "アフィン変換と射影変換"
+    "cg/transformation/affine-transformation": {
+      "title": "アフィン変換"
     },
     "cg/transformation/basic-transformations": {
-      "title": "基本的な変換と同次座標"
+      "title": "基本的な変換"
     },
     "cg/transformation/coordinate-systems": {
       "title": "座標系"
+    },
+    "cg/transformation/perspective-and-parallel-projection": {
+      "title": "透視投影と平行投影"
+    },
+    "cg/transformation/pinhole-camera": {
+      "title": "ピンホールカメラ"
+    },
+    "cg/transformation/projection-steps": {
+      "title": "投影の手順"
+    },
+    "cg/transformation/projective-transformation": {
+      "title": "射影変換と同次座標"
     },
     "cg/transformation/reflection-and-skew": {
       "title": "鏡映とスキュー"

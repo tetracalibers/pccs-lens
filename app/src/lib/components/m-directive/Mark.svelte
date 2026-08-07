@@ -1,11 +1,11 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
-  import { ankiMode } from "$lib/state/anki.svelte"
 
   let { children }: { children?: Snippet } = $props()
 </script>
 
-<span class="mark" class:anki={ankiMode.isAnki}>
+<!-- 強調のみを担うマーク。暗記モードでも伏せ字にならない（伏せたいときは Anki を使う） -->
+<span class="mark">
   {@render children?.()}
 </span>
 
@@ -17,13 +17,5 @@
     display: inline-block;
     margin-inline: 0.1rem;
     line-height: 1.5;
-  }
-
-  .mark.anki {
-    color: transparent;
-    text-decoration: underline;
-    text-decoration-color: darkgray;
-    text-decoration-thickness: 2px;
-    text-decoration-skip-ink: none;
   }
 </style>

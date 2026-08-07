@@ -303,16 +303,17 @@
 - [x] `/cg/transformation/basic-transformations`
 - [x] `/cg/transformation/transformation-composition`
 - [x] `/cg/transformation/reflection-and-skew`
-- [x] `/cg/transformation/affine-and-projective-transformation`
-- [draft] `/cg/transformation/pinhole-camera`
-- [draft] `/cg/transformation/perspective-and-parallel-projection`
-- [draft] `/cg/transformation/projection-steps`
-- [ページ未作成] 投影の計算法
-- [ページ未作成] 消失点とn点透視
-- [ページ未作成] さまざまな平行投影
+- [x] `/cg/transformation/affine-transformation`
+- [x] `/cg/transformation/projective-transformation`
 - [draft] `/cg/transformation/viewing-pipeline-transformations`
-- [ページ未作成] クリッピングのアルゴリズム
 - [ページ未作成] 階層モデリング
+- [x] `/cg/transformation/pinhole-camera`
+- [x] `/cg/transformation/perspective-and-parallel-projection`
+- [x] `/cg/transformation/projection-steps`
+- [draft] `/cg/transformation/projection-calculation`
+- [draft] `/cg/transformation/clipping-algorithms`
+- [draft] `/cg/transformation/vanishing-points-and-n-point-perspective`
+- [draft] `/cg/transformation/parallel-projection-types`
 - [ページ未作成] 画像の幾何学的変換
 - [ページ未作成] 画像の再標本化と補間
 - [ページ未作成] ニアレストネイバー
@@ -353,15 +354,15 @@
 ## CGと画像処理（nested） — 記事：モデリング（`cg/modeling.yaml`）
 
 - [draft] `/cg/modeling/shape-model-overview`
-- [ページ未作成] CSG表現
+- [draft] `/cg/modeling/csg-representation`
 - [ページ未作成] 境界表現
 - [ページ未作成] スイープ表現
 - [ページ未作成] 境界表現のデータ構造
 - [ページ未作成] オイラー表現
-- [ページ未作成] 曲線・曲面の数式表現
+- [draft] `/cg/modeling/curve-surface-equations`
 - [ページ未作成] 2次曲線
 - [ページ未作成] パラメトリック曲線・曲面
-- [ページ未作成] ベジェ曲線・曲面
+- [draft] `/cg/modeling/bezier-curve-surface`
 - [ページ未作成] ファーガソン曲線
 - [ページ未作成] 双3次クーンズ曲面
 - [ページ未作成] Bスプライン曲線・曲面

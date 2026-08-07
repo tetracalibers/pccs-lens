@@ -1,6 +1,7 @@
 {
   "files.associations": {
-    "**/.claude/skills/*/SKILL.md": "markdown"
+    "**/.claude/skills/*/SKILL.md": "markdown",
+    "*.svx": "markdown"
   },
   "svg.preview.background": "transparent"
 }

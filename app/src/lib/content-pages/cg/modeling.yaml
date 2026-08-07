@@ -5,8 +5,7 @@ sections:
     id: shape-models
     links:
       - slug: shape-model-overview
-      - title: CSG表現 # CG 3-2-1
-        group: ["CG"]
+      - slug: csg-representation
       - title: 境界表現 # CG 3-2-2
         group: ["CG"]
       - title: スイープ表現 # CG 3-2-3
@@ -18,14 +17,12 @@ sections:
   - heading: 曲線と曲面
     id: curves-surfaces
     links:
-      - title: 曲線・曲面の数式表現 # CG 3-4-1
-        group: ["CG"]
+      - slug: curve-surface-equations
       - title: 2次曲線 # CG 3-4-2
         group: ["CG"]
       - title: パラメトリック曲線・曲面 # CG 3-4-3, 3-4-4
         group: ["CG"]
-      - title: ベジェ曲線・曲面 # CG 3-4-3
-        group: ["CG"]
+      - slug: bezier-curve-surface
       - title: ファーガソン曲線 # CG 3-4-3
         group: ["CG"]
       - title: 双3次クーンズ曲面 # CG 3-4-4
