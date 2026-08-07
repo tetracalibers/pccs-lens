@@ -334,6 +334,37 @@ const createWireframe = (vertices: Vector3[], matrix: Matrix4, edges: number[], 
   return new LineSegments(geometry, new LineBasicMaterial({ color }))
 }
 
+// カメラの形。線だけで描く場面の物体と見分けがつくよう、レンズの付いた筐体として作る。
+//
+// カメラ座標系での形で、視点が原点、視線が z 軸の負の向き。
+// レンズの先端が原点に来るように全体を +z へずらしてあるので、
+// 視線の先（-z 側）には何も置かれず、カメラが場面を隠さない
+const createCameraShape = () => {
+  const bodyMaterial = new MeshStandardMaterial({ color: CAMERA_BODY_COLOR })
+  const body = new Mesh(new BoxGeometry(1.2, 0.8, 0.7), bodyMaterial)
+  body.position.z = 0.8
+
+  const lensMaterial = new MeshStandardMaterial({ color: CAMERA_LENS_COLOR })
+  const lens = new Mesh(new CylinderGeometry(0.25, 0.3, 0.5, 32), lensMaterial)
+  // CylinderGeometry は y 軸方向に伸びるので、視線の向きへ倒す
+  lens.rotation.x = Math.PI / 2
+  lens.position.z = 0.25
+
+  // 上に載せたビューファインダー。これが無いと、上下が引っくり返っても形が同じで分からない
+  const finder = new Mesh(new BoxGeometry(0.5, 0.25, 0.4), bodyMaterial)
+  finder.position.set(0, 0.52, 0.9)
+
+  // 大きさを合わせる倍率は内側の群に持たせ、外側の群には置き方だけを持たせる
+  const model = new Group()
+  model.scale.setScalar(CAMERA_SCALE)
+  model.add(body, lens, finder)
+
+  const object = new Group()
+  object.add(model)
+
+  return object
+}
+
 // 枠に写る像。頂点をカメラで投影すると -1〜1 の正規化デバイス座標が返るので、
 // それを枠の大きさに合わせて広げた位置が、この枠に写る像になる
 const createImage = (camera: PerspectiveCamera, modeling: Matrix4, color: string) => {
@@ -346,7 +377,6 @@ const createImage = (camera: PerspectiveCamera, modeling: Matrix4, color: string
 }
 
 const houseVertices = HOUSE_VERTICES.map(([x, y, z]) => new Vector3(x, y, z))
-const cameraVertices = CAMERA_VERTICES.map(([x, y, z]) => new Vector3(x, y, z))
 const frameCorners = FRAME_CORNERS.map(([x, y, z]) => new Vector3(x, y, z))
 
 // 左に場面とカメラ、右に写る像の枠を並べる
@@ -374,6 +404,11 @@ PLACEMENTS.forEach((placement) => {
 // 像を写す枠。カメラの縦横比に合わせた長方形
 panel.add(createWireframe(frameCorners, new Matrix4(), FRAME_EDGES, FRAME_COLOR))
 
+// カメラの形だけが陰影の付く材質なので、光もカメラのためだけに置く
+const keyLight = new DirectionalLight("#ffffff", KEY_LIGHT_INTENSITY)
+keyLight.position.set(...KEY_LIGHT_POSITION)
+scene.add(new AmbientLight("#ffffff", AMBIENT_INTENSITY), keyLight)
+
 // 写す側のカメラ。カメラの置き方は、視点の位置・視線の向き・上方向の 3 つで決まる。
 // ここでは位置と向きを固定し、上方向だけを視線のまわりに回す
 const roll = 0
@@ -385,8 +420,10 @@ camera.up.set(0, 1, 0).applyAxisAngle(forward, MathUtils.degToRad(roll))
 camera.lookAt(TARGET)
 camera.updateMatrixWorld()
 
-// カメラの置き方を表す行列（matrixWorld）どおりの位置と向きに、カメラの形を置く
-sceneGroup.add(createWireframe(cameraVertices, camera.matrixWorld, CAMERA_EDGES, CAMERA_COLOR))
+// カメラの置き方を表す行列（matrixWorld）を、位置・向き・大きさに分けてカメラの形へ反映する
+const cameraShape = createCameraShape()
+camera.matrixWorld.decompose(cameraShape.position, cameraShape.quaternion, cameraShape.scale)
+sceneGroup.add(cameraShape)
 
 // 枠に写る像。上方向を回すと、視点も視線の向きも変わらないのに、像だけが回る
 PLACEMENTS.forEach((placement) => {
@@ -429,7 +466,8 @@ CG処理によって最終的に作りたいシーンは、カメラの:Anki[視
 ```ts
 // createLabel（文字を描いた板）・createAxis（軸の線・矢印・軸名のラベル）・
 // createModelingMatrix（モデリング変換行列）は座標系間の変換のデモと、
-// createWireframe（頂点に行列を掛けて線でつなぐ）はカメラの置き方のデモと同じものを使う
+// createWireframe（頂点に行列を掛けて線でつなぐ）・createCameraShape（レンズの付いたカメラの形）は
+// カメラの置き方のデモと同じものを使う
 
 // カメラの置き方を表す行列。視点の位置・視線の向き・上方向の 3 つから、
 // カメラ座標系の 3 本の軸を組み立てる
@@ -482,13 +520,14 @@ const createSystem = (title: string, offsetX: number, systemMatrix: Matrix4, pos
 
   // カメラも同じで、置き方を表す行列に、この座標系へ移す行列を掛ける
   const cameraMatrix = new Matrix4().multiplyMatrices(systemMatrix, pose)
-  group.add(createWireframe(cameraVertices, cameraMatrix, CAMERA_EDGES, CAMERA_COLOR))
+  const cameraShape = createCameraShape()
+  cameraMatrix.decompose(cameraShape.position, cameraShape.quaternion, cameraShape.scale)
+  group.add(cameraShape)
 
   return group
 }
 
 const houseVertices = HOUSE_VERTICES.map(([x, y, z]) => new Vector3(x, y, z))
-const cameraVertices = CAMERA_VERTICES.map(([x, y, z]) => new Vector3(x, y, z))
 
 // カメラの置き方（視点の位置・視線の向き・上方向）を表す行列
 const pose = createPoseMatrix({ azimuth: 25, elevation: 18, distance: 2.1, roll: 0 })
@@ -502,6 +541,11 @@ scene.add(
   createSystem("ワールド座標系", -GROUP_OFFSET, new Matrix4(), pose),
   createSystem("カメラ座標系", GROUP_OFFSET, view, pose)
 )
+
+// カメラの形だけが陰影の付く材質なので、光もカメラのためだけに置く
+const keyLight = new DirectionalLight("#ffffff", KEY_LIGHT_INTENSITY)
+keyLight.position.set(...KEY_LIGHT_POSITION)
+scene.add(new AmbientLight("#ffffff", AMBIENT_INTENSITY), keyLight)
 ```
 
 :::

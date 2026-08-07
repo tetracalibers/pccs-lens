@@ -1,7 +1,11 @@
 import {
+  AmbientLight,
+  BoxGeometry,
   BufferGeometry,
   CanvasTexture,
   ConeGeometry,
+  CylinderGeometry,
+  DirectionalLight,
   Group,
   LineBasicMaterial,
   LineSegments,
@@ -9,6 +13,7 @@ import {
   Matrix4,
   Mesh,
   MeshBasicMaterial,
+  MeshStandardMaterial,
   Scene,
   Sprite,
   SpriteMaterial,
@@ -77,21 +82,8 @@ const PLACEMENTS: Placement[] = [
   { scale: 0.7, rotationY: 8, position: [0.05, 0, -0.75], color: "#b79cf5" }
 ]
 
-/**
- * カメラの形。カメラ座標系での座標で、視点が原点、視線が z 軸の負の向き。
- * 0 が視点、1〜4 が前方の四角形の隅、5 が上方向を示す三角形の先端
- */
-const CAMERA_VERTICES: [number, number, number][] = [
-  [0, 0, 0],
-  [-0.3, -0.21, -0.5],
-  [0.3, -0.21, -0.5],
-  [0.3, 0.21, -0.5],
-  [-0.3, 0.21, -0.5],
-  [0, 0.4, -0.5]
-]
-
-/** カメラの形の稜線。結ぶ 2 頂点の番号を並べる */
-const CAMERA_EDGES = [0, 1, 0, 2, 0, 3, 0, 4, 1, 2, 2, 3, 3, 4, 4, 1, 3, 5, 4, 5]
+/** カメラの形の大きさ。場面に並ぶ物体と釣り合う倍率まで縮める */
+const CAMERA_SCALE = 0.42
 
 /** カメラが向く先。3 体の並びのおおよその中心に置く */
 const TARGET = new Vector3(0, 0.4, 0)
@@ -131,8 +123,17 @@ const CONE_UP = new Vector3(0, 1, 0)
 const X_COLOR = "#f2766a"
 const Y_COLOR = "#7fd88f"
 const Z_COLOR = "#5ec8f2"
-const CAMERA_COLOR = "#e8e8ee"
+const CAMERA_BODY_COLOR = "#444444"
+const CAMERA_LENS_COLOR = "#222222"
 const TITLE_COLOR = "#e8e8ee"
+
+/**
+ * カメラを照らす光。カメラだけが陰影の付く材質で、ほかの線には効かない。
+ * 面ごとの明るさの差がないと、単色で塗った箱が平らな影絵に見えてしまう
+ */
+const AMBIENT_INTENSITY = 2.5
+const KEY_LIGHT_INTENSITY = 6
+const KEY_LIGHT_POSITION: [number, number, number] = [2, 3, 2]
 
 /**
  * 文字を描いた canvas をテクスチャにして、常にカメラを向く板（Sprite）にする。
@@ -266,8 +267,52 @@ const createWireframe = (
 }
 
 const houseVertices = HOUSE_VERTICES.map(([x, y, z]) => new Vector3(x, y, z))
-const cameraVertices = CAMERA_VERTICES.map(([x, y, z]) => new Vector3(x, y, z))
 const modelingMatrices = PLACEMENTS.map(createModelingMatrix)
+
+/**
+ * カメラの形。線だけで描く場面の物体と見分けがつくよう、レンズの付いた筐体として作る。
+ *
+ * カメラ座標系での形で、視点が原点、視線が z 軸の負の向き。
+ * レンズの先端が原点に来るように全体を +z へずらしてあるので、
+ * 視線の先（-z 側）には何も置かれず、カメラが場面を隠さない
+ */
+const createCameraShape = () => {
+  const bodyGeometry = new BoxGeometry(1.2, 0.8, 0.7)
+  const bodyMaterial = new MeshStandardMaterial({ color: CAMERA_BODY_COLOR })
+  const body = new Mesh(bodyGeometry, bodyMaterial)
+  body.position.z = 0.8
+
+  const lensGeometry = new CylinderGeometry(0.25, 0.3, 0.5, 32)
+  const lensMaterial = new MeshStandardMaterial({ color: CAMERA_LENS_COLOR })
+  const lens = new Mesh(lensGeometry, lensMaterial)
+  // CylinderGeometry は y 軸方向に伸びるので、視線の向きへ倒す
+  lens.rotation.x = Math.PI / 2
+  lens.position.z = 0.25
+
+  // 上に載せたビューファインダー。これが無いと、上下が引っくり返っても形が同じで分からない
+  const finderGeometry = new BoxGeometry(0.5, 0.25, 0.4)
+  const finder = new Mesh(finderGeometry, bodyMaterial)
+  finder.position.set(0, 0.52, 0.9)
+
+  const model = new Group()
+  model.scale.setScalar(CAMERA_SCALE)
+  model.add(body, lens, finder)
+
+  const object = new Group()
+  object.add(model)
+
+  return {
+    object,
+    /** カメラの置き方を表す行列を、位置・向き・大きさに分けて反映する */
+    place: (matrix: Matrix4) => {
+      matrix.decompose(object.position, object.quaternion, object.scale)
+    },
+    dispose: () => {
+      const disposables = [bodyGeometry, lensGeometry, finderGeometry, bodyMaterial, lensMaterial]
+      disposables.forEach((disposable) => disposable.dispose())
+    }
+  }
+}
 
 /** 1 つの座標系を、3 本の軸・系の名前・3 体の物体・カメラの組で作る */
 const createSystem = (title: string, offsetX: number) => {
@@ -285,10 +330,14 @@ const createSystem = (title: string, offsetX: number) => {
   label.sprite.position.y = AXIS_LENGTH + TITLE_OFFSET
   group.add(label.sprite)
 
-  // 物体とカメラはカメラの置き方が変わるたびに作り直すので、軸や名前とは分けておく
+  // 物体はカメラの置き方が変わるたびに作り直すので、軸や名前とは分けておく
   const content = new Group()
   group.add(content)
   let built: Wireframe[] = []
+
+  // カメラの形は置き方が変わっても同じなので、一度だけ作って置き直す
+  const cameraShape = createCameraShape()
+  group.add(cameraShape.object)
 
   return {
     object: group,
@@ -303,26 +352,21 @@ const createSystem = (title: string, offsetX: number) => {
       })
       content.clear()
 
-      built = [
-        ...PLACEMENTS.map((placement, i) =>
-          createWireframe(
-            houseVertices,
-            new Matrix4().multiplyMatrices(systemMatrix, modelingMatrices[i]),
-            HOUSE_EDGES,
-            placement.color
-          )
-        ),
+      built = PLACEMENTS.map((placement, i) =>
         createWireframe(
-          cameraVertices,
-          new Matrix4().multiplyMatrices(systemMatrix, pose),
-          CAMERA_EDGES,
-          CAMERA_COLOR
+          houseVertices,
+          new Matrix4().multiplyMatrices(systemMatrix, modelingMatrices[i]),
+          HOUSE_EDGES,
+          placement.color
         )
-      ]
+      )
       built.forEach((wireframe) => content.add(wireframe))
+
+      cameraShape.place(new Matrix4().multiplyMatrices(systemMatrix, pose))
     },
     dispose: () => {
       axes.forEach((axis) => axis.dispose())
+      cameraShape.dispose()
       built.forEach((wireframe) => {
         wireframe.geometry.dispose()
         wireframe.material.dispose()
@@ -338,6 +382,12 @@ export const createViewTransformScene = ({ scene, params }: SceneContext) => {
   const worldSystem = createSystem("ワールド座標系", -GROUP_OFFSET)
   const cameraSystem = createSystem("カメラ座標系", GROUP_OFFSET)
   scene.add(worldSystem.object, cameraSystem.object)
+
+  // カメラの形だけが陰影の付く材質なので、光もカメラのためだけに置く
+  const ambient = new AmbientLight("#ffffff", AMBIENT_INTENSITY)
+  const keyLight = new DirectionalLight("#ffffff", KEY_LIGHT_INTENSITY)
+  keyLight.position.set(...KEY_LIGHT_POSITION)
+  scene.add(ambient, keyLight)
 
   // カメラの置き方が変わったときだけ作り直す（カメラを回しただけでは作り直さない）
   let builtKey = ""

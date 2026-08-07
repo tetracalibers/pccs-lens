@@ -1,11 +1,17 @@
 import {
+  AmbientLight,
+  BoxGeometry,
   BufferGeometry,
   CanvasTexture,
+  CylinderGeometry,
+  DirectionalLight,
   Group,
   LineBasicMaterial,
   LineSegments,
   MathUtils,
   Matrix4,
+  Mesh,
+  MeshStandardMaterial,
   PerspectiveCamera,
   Scene,
   Sprite,
@@ -69,21 +75,8 @@ const PLACEMENTS: Placement[] = [
   { scale: 0.7, rotationY: 8, position: [0.05, 0, -0.75], color: "#b79cf5" }
 ]
 
-/**
- * カメラの形。カメラ座標系での座標で、視点が原点、視線が z 軸の負の向き。
- * 0 が視点、1〜4 が前方の四角形の隅、5 が上方向を示す三角形の先端
- */
-const CAMERA_VERTICES: [number, number, number][] = [
-  [0, 0, 0],
-  [-0.3, -0.21, -0.5],
-  [0.3, -0.21, -0.5],
-  [0.3, 0.21, -0.5],
-  [-0.3, 0.21, -0.5],
-  [0, 0.4, -0.5]
-]
-
-/** カメラの形の稜線。結ぶ 2 頂点の番号を並べる */
-const CAMERA_EDGES = [0, 1, 0, 2, 0, 3, 0, 4, 1, 2, 2, 3, 3, 4, 4, 1, 3, 5, 4, 5]
+/** カメラの形の大きさ。場面に並ぶ物体と釣り合う倍率まで縮める */
+const CAMERA_SCALE = 0.42
 
 /** 視点の位置と、カメラが向く先。上方向を回しても、この 2 つは動かさない */
 const CAMERA_POSITION = new Vector3(2.46, 1.33, 2.46)
@@ -130,9 +123,18 @@ const LABEL_FONT = "bold 92px sans-serif"
 
 // 背景（暗めのグレー）の上で、物体・カメラ・枠・見出しが見分けられる色にする。
 // 物体の色は、座標系間の変換のデモと揃える
-const CAMERA_COLOR = "#e8e8ee"
+const CAMERA_BODY_COLOR = "#444444"
+const CAMERA_LENS_COLOR = "#222222"
 const FRAME_COLOR = "#8fa3bf"
 const TITLE_COLOR = "#e8e8ee"
+
+/**
+ * カメラを照らす光。カメラだけが陰影の付く材質で、ほかの線には効かない。
+ * 面ごとの明るさの差がないと、単色で塗った箱が平らな影絵に見えてしまう
+ */
+const AMBIENT_INTENSITY = 2.5
+const KEY_LIGHT_INTENSITY = 6
+const KEY_LIGHT_POSITION: [number, number, number] = [2, 3, 2]
 
 /**
  * 文字を描いた canvas をテクスチャにして、常にカメラを向く板（Sprite）にする。
@@ -198,9 +200,53 @@ const createWireframe = (
 }
 
 const houseVertices = HOUSE_VERTICES.map(([x, y, z]) => new Vector3(x, y, z))
-const cameraVertices = CAMERA_VERTICES.map(([x, y, z]) => new Vector3(x, y, z))
 const frameCorners = FRAME_CORNERS.map(([x, y, z]) => new Vector3(x, y, z))
 const modelingMatrices = PLACEMENTS.map(createModelingMatrix)
+
+/**
+ * カメラの形。線だけで描く場面の物体と見分けがつくよう、レンズの付いた筐体として作る。
+ *
+ * カメラ座標系での形で、視点が原点、視線が z 軸の負の向き。
+ * レンズの先端が原点に来るように全体を +z へずらしてあるので、
+ * 視線の先（-z 側）には何も置かれず、カメラが場面を隠さない
+ */
+const createCameraShape = () => {
+  const bodyGeometry = new BoxGeometry(1.2, 0.8, 0.7)
+  const bodyMaterial = new MeshStandardMaterial({ color: CAMERA_BODY_COLOR })
+  const body = new Mesh(bodyGeometry, bodyMaterial)
+  body.position.z = 0.8
+
+  const lensGeometry = new CylinderGeometry(0.25, 0.3, 0.5, 32)
+  const lensMaterial = new MeshStandardMaterial({ color: CAMERA_LENS_COLOR })
+  const lens = new Mesh(lensGeometry, lensMaterial)
+  // CylinderGeometry は y 軸方向に伸びるので、視線の向きへ倒す
+  lens.rotation.x = Math.PI / 2
+  lens.position.z = 0.25
+
+  // 上に載せたビューファインダー。これが無いと、上下が引っくり返っても形が同じで分からない
+  const finderGeometry = new BoxGeometry(0.5, 0.25, 0.4)
+  const finder = new Mesh(finderGeometry, bodyMaterial)
+  finder.position.set(0, 0.52, 0.9)
+
+  const model = new Group()
+  model.scale.setScalar(CAMERA_SCALE)
+  model.add(body, lens, finder)
+
+  const object = new Group()
+  object.add(model)
+
+  return {
+    object,
+    /** カメラの置き方を表す行列を、位置・向き・大きさに分けて反映する */
+    place: (matrix: Matrix4) => {
+      matrix.decompose(object.position, object.quaternion, object.scale)
+    },
+    dispose: () => {
+      const disposables = [bodyGeometry, lensGeometry, finderGeometry, bodyMaterial, lensMaterial]
+      disposables.forEach((disposable) => disposable.dispose())
+    }
+  }
+}
 
 /**
  * 枠に写る像。頂点をカメラで投影すると -1〜1 の正規化デバイス座標が返るので、
@@ -241,6 +287,16 @@ export const createUpDirectionScene = ({ scene, params }: SceneContext) => {
   const frame = createWireframe(frameCorners, new Matrix4(), FRAME_EDGES, FRAME_COLOR)
   panel.add(frame)
 
+  // カメラの形だけが陰影の付く材質なので、光もカメラのためだけに置く
+  const ambient = new AmbientLight("#ffffff", AMBIENT_INTENSITY)
+  const keyLight = new DirectionalLight("#ffffff", KEY_LIGHT_INTENSITY)
+  keyLight.position.set(...KEY_LIGHT_POSITION)
+  scene.add(ambient, keyLight)
+
+  // カメラの形は置き方が変わっても同じなので、一度だけ作って置き直す
+  const cameraShape = createCameraShape()
+  sceneGroup.add(cameraShape.object)
+
   // 写す側のカメラ。位置と向きは固定で、上方向だけが変わる
   const camera = new PerspectiveCamera(FOV, ASPECT, NEAR, FAR)
   camera.position.copy(CAMERA_POSITION)
@@ -248,7 +304,7 @@ export const createUpDirectionScene = ({ scene, params }: SceneContext) => {
   // 視点から注視点へ向かう向き。上方向はこの向きを軸にして回す
   const forward = TARGET.clone().sub(CAMERA_POSITION).normalize()
 
-  // カメラと像は上方向が変わるたびに作り直す
+  // 像は上方向が変わるたびに作り直す
   let built: Wireframe[] = []
   const replaceBuilt = (wireframes: Wireframe[]) => {
     built.forEach((wireframe) => {
@@ -274,8 +330,7 @@ export const createUpDirectionScene = ({ scene, params }: SceneContext) => {
       camera.updateMatrixWorld()
 
       // カメラの置き方を表す行列（matrixWorld）どおりの位置と向きに、カメラの形を置く
-      const gizmo = createWireframe(cameraVertices, camera.matrixWorld, CAMERA_EDGES, CAMERA_COLOR)
-      sceneGroup.add(gizmo)
+      cameraShape.place(camera.matrixWorld)
 
       // 枠に写る像。上方向を回すと、視点も視線の向きも変わらないのに、像だけが回る
       const images = PLACEMENTS.map((placement, i) =>
@@ -283,10 +338,11 @@ export const createUpDirectionScene = ({ scene, params }: SceneContext) => {
       )
       images.forEach((image) => panel.add(image))
 
-      replaceBuilt([gizmo, ...images])
+      replaceBuilt(images)
     },
     dispose: () => {
       replaceBuilt([])
+      cameraShape.dispose()
       houses.forEach((house) => {
         house.geometry.dispose()
         house.material.dispose()
