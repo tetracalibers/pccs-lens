@@ -3,7 +3,7 @@
   import { createViewportTransformScene, type ViewportTransformParams } from "./scene"
 
   // Tweakpane が直接書き換え、scene.ts が毎フレーム読む。$state ではなくプレーンオブジェクトにする
-  const params: ViewportTransformParams = { width: 300, height: 200, x: 170, y: 100, flipY: true }
+  const params: ViewportTransformParams = { width: 300, height: 200, flipY: true }
 </script>
 
 <ThreeDemoCanvas
@@ -24,8 +24,6 @@
     const asPixels = (value: number) => `${value.toFixed(0)}px`
     pane.addBinding(p, "width", { min: 120, max: 440, step: 10, format: asPixels, label: "幅" })
     pane.addBinding(p, "height", { min: 80, max: 280, step: 10, format: asPixels, label: "高さ" })
-    pane.addBinding(p, "x", { min: 0, max: 200, step: 10, format: asPixels, label: "左からの位置" })
-    pane.addBinding(p, "y", { min: 0, max: 120, step: 10, format: asPixels, label: "上からの位置" })
     pane.addBinding(p, "flipY", { label: "y軸を反転" })
   }}
 />

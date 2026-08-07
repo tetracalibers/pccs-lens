@@ -621,10 +621,8 @@ $$
 ビューポートの:Anki[縦横比]にも注意が必要です。画像に写す範囲の縦横比とビューポートの縦横比が食い違っていると、拡大・縮小の割合が縦と横で変わり、像が引き伸ばされて写ってしまいます。
 
 :::Action
-ビューポートの幅と高さを変えて、次の点に着目してみよう
-
-- ビューポートの縦横比が画像に写す範囲の縦横比と食い違うと、像がどちらの向きへ引き伸ばされるか
-- y軸を反転させると、正規化デバイス座標系の上の辺（水色）がビューポートのどちら側へ移るか
+ビューポートの幅と高さを変えてみよう
+ビューポートの縦横比が画像に写す範囲の縦横比と食い違うと、像はどのように引き伸ばされる？
 :::
 
 <CanvasWrapper>
@@ -663,11 +661,12 @@ const createArrow = (name: string, color: string, from: Vector3, to: Vector3) =>
 }
 
 // ビューポート変換行列。正規化デバイス座標（-1〜1）を、ビューポートの中に収まる位置へ移す。
-// 中身は、ビューポートの大きさに合わせた拡大/縮小と、ビューポートの位置への平行移動。
+// 中身は、ビューポートの大きさに合わせた拡大/縮小と、
+// ビューポートの位置（画面の左端・上端からの距離）への平行移動。
 // y 軸を反転する環境では、拡大/縮小の y 方向の倍率が負になる
-const createViewportMatrix = ({ x, y, width, height, flipY }: ViewportTransformParams) =>
+const createViewportMatrix = ({ width, height, flipY }: ViewportTransformParams) =>
   new Matrix4()
-    .makeTranslation(x + width / 2, y + height / 2, 0)
+    .makeTranslation(VIEWPORT_X + width / 2, VIEWPORT_Y + height / 2, 0)
     .multiply(new Matrix4().makeScale(width / 2, flipY ? -height / 2 : height / 2, 1))
 
 // 投影変換までを済ませた頂点を、正規化デバイス座標で求める。
@@ -729,7 +728,7 @@ screenTitle.position.set(SCREEN_ORIGIN.x + (SCREEN_WIDTH * DISPLAY_SCALE) / 2, T
 scene.add(ndcTitle, screenTitle)
 
 // ビューポート変換で移した先を、画面として描く位置に直す
-const viewport = createViewportMatrix({ width: 300, height: 200, x: 170, y: 100, flipY: true })
+const viewport = createViewportMatrix({ width: 300, height: 200, flipY: true })
 const matrix = new Matrix4().multiplyMatrices(screenDisplay, viewport)
 
 // ビューポートの枠と、その中に写る像。断面の上の辺が、枠のどちら側へ移るかが色で分かる

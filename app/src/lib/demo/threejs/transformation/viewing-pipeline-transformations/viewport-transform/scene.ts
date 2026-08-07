@@ -23,10 +23,6 @@ export type ViewportTransformParams = {
   width: number
   /** ビューポートの高さ */
   height: number
-  /** 画面の左端からビューポートの左端までの距離 */
-  x: number
-  /** 画面の上端からビューポートの上端までの距離 */
-  y: number
   /** ビューポート変換で y 軸の向きを入れ替えるか */
   flipY: boolean
 }
@@ -106,6 +102,13 @@ const TOP_EDGE = [2, 3]
 /** 画面の大きさ（画素数） */
 const SCREEN_WIDTH = 640
 const SCREEN_HEIGHT = 400
+
+/**
+ * ビューポートの置き場所。画面の左端・上端からビューポートの左上の隅までの距離で、
+ * 動かしても像がそのまま滑るだけなので固定する（幅・高さを最大にしても画面に収まる値）
+ */
+const VIEWPORT_X = 170
+const VIEWPORT_Y = 100
 
 /** 画面の 4 隅（デバイス座標系での座標）と、その稜線 */
 const SCREEN_CORNERS: [number, number, number][] = [
@@ -254,12 +257,13 @@ const createModelingMatrix = ({ scale, rotationY, position }: Placement) =>
 
 /**
  * ビューポート変換行列。正規化デバイス座標（-1〜1）を、ビューポートの中に収まる位置へ移す。
- * 中身は、ビューポートの大きさに合わせた拡大/縮小と、ビューポートの位置への平行移動。
+ * 中身は、ビューポートの大きさに合わせた拡大/縮小と、
+ * ビューポートの位置（画面の左端・上端からの距離）への平行移動。
  * y 軸を反転する環境では、拡大/縮小の y 方向の倍率が負になる
  */
-const createViewportMatrix = ({ x, y, width, height, flipY }: ViewportTransformParams) =>
+const createViewportMatrix = ({ width, height, flipY }: ViewportTransformParams) =>
   new Matrix4()
-    .makeTranslation(x + width / 2, y + height / 2, 0)
+    .makeTranslation(VIEWPORT_X + width / 2, VIEWPORT_Y + height / 2, 0)
     .multiply(new Matrix4().makeScale(width / 2, flipY ? -height / 2 : height / 2, 1))
 
 /** 頂点に行列を掛けた位置で、稜線を結んだ線を作る */
@@ -362,7 +366,7 @@ export const createViewportTransformScene = ({ scene, params }: SceneContext) =>
 
   return {
     update: () => {
-      const key = `${params.x} ${params.y} ${params.width} ${params.height} ${params.flipY}`
+      const key = `${params.width} ${params.height} ${params.flipY}`
       if (key === builtKey) return
       builtKey = key
 
