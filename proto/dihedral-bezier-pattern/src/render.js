@@ -66,23 +66,24 @@ function renderCard(entry) {
   return `      <figure>
         <img src="./${entry.filename}" alt="${entry.filename}" loading="lazy">
         <figcaption>
-          <strong>${entry.colors.length}色</strong> / D${entry.n} / seed ${entry.seed}
+          <strong>${entry.colors.length}色</strong> / ${entry.label ?? entry.section} / seed ${entry.seed}
           <span class="swatches">${swatches}</span>
         </figcaption>
       </figure>`
 }
 
 export function renderIndexHTML(title, entries) {
-  // n ごとに節を分ける（n を範囲で一括生成したときに見比べやすくするため）
-  const byN = new Map()
+  // 節（対称性の次数 D_n や壁紙群）ごとに分ける。
+  // 1 回の実行で複数の対称性を出したときに見比べやすくするため。
+  const bySection = new Map()
   for (const e of entries) {
-    if (!byN.has(e.n)) byN.set(e.n, [])
-    byN.get(e.n).push(e)
+    if (!bySection.has(e.section)) bySection.set(e.section, [])
+    bySection.get(e.section).push(e)
   }
 
-  const sections = [...byN.entries()]
-    .map(([n, group]) => {
-      const heading = byN.size > 1 ? `    <h2>D${n}</h2>\n` : ''
+  const sections = [...bySection.entries()]
+    .map(([name, group]) => {
+      const heading = bySection.size > 1 ? `    <h2>${name}</h2>\n` : ''
       return `${heading}    <div class="grid">\n${group.map(renderCard).join('\n')}\n    </div>`
     })
     .join('\n')
