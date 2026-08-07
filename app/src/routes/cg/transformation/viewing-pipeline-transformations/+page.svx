@@ -12,6 +12,7 @@ draft: true
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import PipelineStagesDemo from '$lib/demo/threejs/transformation/viewing-pipeline-transformations/pipeline-stages/PipelineStagesDemo.svelte'
   import ViewTransformDemo from '$lib/demo/threejs/transformation/viewing-pipeline-transformations/view-transform/ViewTransformDemo.svelte'
+  import UpDirectionDemo from '$lib/demo/threejs/transformation/viewing-pipeline-transformations/up-direction/UpDirectionDemo.svelte'
 </script>
 
 物体に与えられた座標が画面上の位置として決まるまでには、さまざまな座標系を経由します。
@@ -253,6 +254,82 @@ if (stage === "modeling") {
 - 上方向は:Anki[y軸]、横方向は:Anki[x軸]にあたる
 
 この`3`つの規定が、そのままカメラ座標系の骨組みになります。
+
+:::Action
+上方向の傾きを回して、視点の位置と視線の向きが変わらないまま、写る像だけが傾いていくことを確かめよう
+:::
+
+<CanvasWrapper>
+  <UpDirectionDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// createLabel（文字を描いた板）・createModelingMatrix（モデリング変換行列）・
+// createWireframe（頂点に行列を掛けて線でつなぐ）は、パイプラインのデモと同じものを使う
+
+// 枠に写る像。頂点をカメラで投影すると -1〜1 の正規化デバイス座標が返るので、
+// それを枠の大きさに合わせて広げた位置が、この枠に写る像になる
+const createImage = (camera: PerspectiveCamera, modeling: Matrix4, color: string) => {
+  const points = houseVertices.map((vertex) => {
+    const ndc = vertex.clone().applyMatrix4(modeling).project(camera)
+    return new Vector3(ndc.x * PANEL_HALF_WIDTH, ndc.y * PANEL_HALF_HEIGHT, 0)
+  })
+  const geometry = new BufferGeometry().setFromPoints(points).setIndex(HOUSE_EDGES)
+  return new LineSegments(geometry, new LineBasicMaterial({ color }))
+}
+
+const houseVertices = HOUSE_VERTICES.map(([x, y, z]) => new Vector3(x, y, z))
+const cameraVertices = CAMERA_VERTICES.map(([x, y, z]) => new Vector3(x, y, z))
+const frameCorners = FRAME_CORNERS.map(([x, y, z]) => new Vector3(x, y, z))
+
+// 左に場面とカメラ、右に写る像の枠を並べる
+const sceneGroup = new Group()
+sceneGroup.position.x = SCENE_OFFSET
+const panel = new Group()
+panel.position.copy(PANEL_CENTER)
+scene.add(sceneGroup, panel)
+
+// 左右の見出し。同じ高さに揃えて置く
+const sceneTitle = createLabel("カメラの置き方", TITLE_COLOR, TITLE_HEIGHT)
+sceneTitle.position.set(SCENE_TITLE_X, TITLE_HEIGHT_Y, 0)
+sceneGroup.add(sceneTitle)
+
+const panelTitle = createLabel("写る像", TITLE_COLOR, TITLE_HEIGHT)
+panelTitle.position.set(0, TITLE_HEIGHT_Y - PANEL_CENTER.y, 0)
+panel.add(panelTitle)
+
+// 場面に並ぶ 3 体
+PLACEMENTS.forEach((placement) => {
+  const modeling = createModelingMatrix(placement)
+  sceneGroup.add(createWireframe(houseVertices, modeling, HOUSE_EDGES, placement.color))
+})
+
+// 像を写す枠。カメラの縦横比に合わせた長方形
+panel.add(createWireframe(frameCorners, new Matrix4(), FRAME_EDGES, FRAME_COLOR))
+
+// 写す側のカメラ。カメラの置き方は、視点の位置・視線の向き・上方向の 3 つで決まる。
+// ここでは位置と向きを固定し、上方向だけを視線のまわりに回す
+const roll = 0
+const forward = TARGET.clone().sub(CAMERA_POSITION).normalize()
+
+const camera = new PerspectiveCamera(FOV, ASPECT, NEAR, FAR)
+camera.position.copy(CAMERA_POSITION)
+camera.up.set(0, 1, 0).applyAxisAngle(forward, MathUtils.degToRad(roll))
+camera.lookAt(TARGET)
+camera.updateMatrixWorld()
+
+// カメラの置き方を表す行列（matrixWorld）どおりの位置と向きに、カメラの形を置く
+sceneGroup.add(createWireframe(cameraVertices, camera.matrixWorld, CAMERA_EDGES, CAMERA_COLOR))
+
+// 枠に写る像。上方向を回すと、視点も視線の向きも変わらないのに、像だけが回る
+PLACEMENTS.forEach((placement) => {
+  panel.add(createImage(camera, createModelingMatrix(placement), placement.color))
+})
+```
+
+:::
 
 ### ワールド座標からカメラ座標へ
 
