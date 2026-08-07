@@ -822,7 +822,7 @@
 
 ## CGと画像処理 — 変換と投影／ビューイングパイプライン（`cg/transformation.yaml` #viewing-pipeline）
 
-- [draft] `/cg/transformation/viewing-pipeline-transformations`
+- [ ] `/cg/transformation/viewing-pipeline-transformations`
 - [draft] `/cg/transformation/hierarchical-modeling`
 
 ## CGと画像処理 — 変換と投影／投影とクリッピング（`cg/transformation.yaml` #projection-and-clipping）
