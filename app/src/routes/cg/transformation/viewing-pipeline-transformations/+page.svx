@@ -11,6 +11,7 @@ draft: true
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import PipelineStagesDemo from '$lib/demo/threejs/transformation/viewing-pipeline-transformations/pipeline-stages/PipelineStagesDemo.svelte'
+  import StageTransitionDemo from '$lib/demo/threejs/transformation/viewing-pipeline-transformations/stage-transition/StageTransitionDemo.svelte'
   import ViewTransformDemo from '$lib/demo/threejs/transformation/viewing-pipeline-transformations/view-transform/ViewTransformDemo.svelte'
   import UpDirectionDemo from '$lib/demo/threejs/transformation/viewing-pipeline-transformations/up-direction/UpDirectionDemo.svelte'
   import ViewportTransformDemo from '$lib/demo/threejs/transformation/viewing-pipeline-transformations/viewport-transform/ViewportTransformDemo.svelte'
@@ -203,6 +204,169 @@ if (stage === "modeling") {
   // カメラが写す範囲。正規化デバイス座標系では -1〜1 の立方体に収まる
   content.add(createWireframe(frustumCorners, stageMatrix, BOX_EDGES, FRUSTUM_COLOR))
 }
+```
+
+:::
+
+:::Action
+変換を選び、進み具合を`0`から`1`へ動かして、次の点に着目してみよう
+
+- モデリング変換で、`1`つの形状データが`3`体へ分かれていくこと
+- 視野変換で、場面もカメラが写す範囲も丸ごと動くこと
+- z軸の反転で、形がいったん平らになってから裏返ること
+- 投影変換で、カメラが写す範囲が立方体の形に収まっていくこと
+:::
+
+<CanvasWrapper>
+  <StageTransitionDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// createLabel（文字を描いた板）・createAxis（軸の線・矢印・軸名のラベル）・
+// createModelingMatrix（モデリング変換行列）は、パイプラインのデモと同じものを使う
+
+// ビューイングパイプラインが経由する座標系
+type PipelineStage = "modeling" | "world" | "camera" | "projection" | "ndc"
+
+// 頂点に行列を掛けた位置を求める。
+// applyMatrix4 は同次座標の w で割るので、投影行列を含む段では透視除算まで済んだ座標になる
+const transformPoints = (vertices: Vector3[], matrix: Matrix4) =>
+  vertices.map((vertex) => vertex.clone().applyMatrix4(matrix))
+
+// 頂点位置を書き換えながら使う線。稜線のつなぎ方と色だけを先に決めておき、
+// 位置は変換の進み具合に応じて入れ直す
+const createMorphingWireframe = (vertexCount: number, edges: number[], color: string) => {
+  const position = new Float32BufferAttribute(vertexCount * 3, 3)
+  // 中身を何度も書き換えることを three.js に伝えておく
+  position.setUsage(DynamicDrawUsage)
+
+  const geometry = new BufferGeometry()
+  geometry.setAttribute("position", position)
+  geometry.setIndex(edges)
+
+  const lines = new LineSegments(geometry, new LineBasicMaterial({ color }))
+  // 頂点が動き回るので、生成時に求めた境界球で視錐台カリングを判断させない
+  lines.frustumCulled = false
+
+  return { lines, position }
+}
+
+// 変換前の位置と変換後の位置を、進み具合で混ぜて線に書き込む。
+// 途中の位置は 2 つの座標系を見比べるための見せかけで、そこに座標系があるわけではない
+const morphWireframe = (
+  wireframe: MorphingWireframe,
+  from: Vector3[],
+  to: Vector3[],
+  progress: number
+) => {
+  const point = new Vector3()
+  from.forEach((start, i) => {
+    point.lerpVectors(start, to[i], progress)
+    wireframe.position.setXYZ(i, point.x, point.y, point.z)
+  })
+  wireframe.position.needsUpdate = true
+}
+
+// 3 本の軸は、いま見ている座標系そのものを表す。原点と向きが読み取れればよいので、
+// 段ごとの表示倍率（content）の外に置き、長さは変えない
+scene.add(
+  createAxis("x", X_COLOR, new Vector3(1, 0, 0)),
+  createAxis("y", Y_COLOR, new Vector3(0, 1, 0)),
+  createAxis("z", Z_COLOR, new Vector3(0, 0, 1))
+)
+
+const content = new Group()
+scene.add(content)
+
+// 写す側のカメラ。ここでは置き方を固定し、そこから決まる行列だけを使う
+const subject = new PerspectiveCamera(SUBJECT_FOV, SUBJECT_ASPECT, SUBJECT_NEAR, SUBJECT_FAR)
+subject.position.set(...SUBJECT_POSITION)
+subject.lookAt(...SUBJECT_TARGET)
+subject.updateMatrixWorld()
+
+// 視野変換。カメラを置くために行った回転と平行移動を、ちょうど打ち消す逆行列
+const view = subject.matrixWorld.clone().invert()
+
+// z 軸の反転。右手系のカメラ座標系を、視線が z 軸の正の向きになる左手系へ移す
+const zFlip = new Matrix4().makeScale(1, 1, -1)
+
+// 投影変換。three.js の投影行列は右手系のカメラ座標を前提にしているので、
+// 左手系に直した分（z 軸の反転）を打ち消してから掛ける
+const projection = new Matrix4().multiplyMatrices(subject.projectionMatrix, zFlip)
+
+// ワールド座標を、それぞれの段の座標系へ移す行列。手前の段の行列に順に掛け合わせていく
+const toCamera = view.clone()
+const toProjection = new Matrix4().multiplyMatrices(zFlip, toCamera)
+const toNdc = new Matrix4().multiplyMatrices(projection, toProjection)
+
+// 3 体が共有する 1 つの頂点データと、体ごとに違うモデリング変換行列
+const houseVertices = HOUSE_VERTICES.map(([x, y, z]) => new Vector3(x, y, z))
+const modelingMatrices = PLACEMENTS.map(createModelingMatrix)
+
+// カメラが写す範囲の 8 隅。正規化デバイス座標系の立方体の隅を逆投影すると、ワールド座標での隅になる
+const frustumCorners = NDC_CORNERS.map(([x, y, z]) => new Vector3(x, y, z).unproject(subject))
+
+// ワールド座標をその段の座標系へ移す行列から、その段での頂点位置を求める
+const pointsAt = (stageMatrix: Matrix4) => ({
+  houses: modelingMatrices.map((modeling) =>
+    transformPoints(houseVertices, new Matrix4().multiplyMatrices(stageMatrix, modeling))
+  ),
+  frustum: transformPoints(frustumCorners, stageMatrix)
+})
+
+const stagePoints: Record<PipelineStage, StagePoints> = {
+  // モデリング座標系にあるのは、3 体が共有している 1 つの形状データ。
+  // カメラが写す範囲はワールド座標系のもので、モデリング変換では動かない（現れるだけ）
+  modeling: {
+    houses: modelingMatrices.map(() => houseVertices),
+    frustum: frustumCorners
+  },
+  world: pointsAt(new Matrix4()),
+  camera: pointsAt(toCamera),
+  projection: pointsAt(toProjection),
+  ndc: pointsAt(toNdc)
+}
+
+const houses = PLACEMENTS.map((placement) =>
+  createMorphingWireframe(HOUSE_VERTICES.length, HOUSE_EDGES, placement.color)
+)
+const frustum = createMorphingWireframe(NDC_CORNERS.length, BOX_EDGES, FRUSTUM_COLOR)
+// カメラが写す範囲は、モデリング変換のあいだに現れる
+frustum.lines.material.transparent = true
+content.add(...houses.map((house) => house.lines), frustum.lines)
+
+// 形状データの色から各体の色へ移すために、色も混ぜられる形で持っておく
+const shapeColor = new Color(SHAPE_COLOR)
+const placementColors = PLACEMENTS.map((placement) => new Color(placement.color))
+
+// 見ている変換。ここではモデリング変換（モデリング座標系 → ワールド座標系）と、その進み具合
+const from: PipelineStage = "modeling"
+const to: PipelineStage = "world"
+const progress = 0
+
+const before = stagePoints[from]
+const after = stagePoints[to]
+
+// 表示倍率も、変換前の段と変換後の段のあいだを取る（座標値そのものは変えない）
+content.scale.setScalar(MathUtils.lerp(VIEW_SCALE[from], VIEW_SCALE[to], progress))
+
+houses.forEach((house, i) => {
+  morphWireframe(house, before.houses[i], after.houses[i], progress)
+  // モデリング座標系にあるのは 3 体に共有された 1 つの形状データなので、
+  // 3 体に分かれていくにつれて、無彩色から体ごとの色へ移す
+  const separation = from === "modeling" ? progress : 1
+  house.lines.material.color.copy(shapeColor).lerp(placementColors[i], separation)
+})
+
+morphWireframe(frustum, before.frustum, after.frustum, progress)
+frustum.lines.material.opacity = from === "modeling" ? progress : 1
+
+// 変換の見出しを図の下に置く
+const title = createLabel("モデリング座標系 → ワールド座標系", TITLE_COLOR, TITLE_HEIGHT)
+title.position.y = TITLE_Y
+scene.add(title)
 ```
 
 :::
