@@ -1,0 +1,13 @@
+{
+  "route": "cg/transformation/viewing-pipeline-transformations",
+  "title": "ビューイングパイプラインでの変換",
+  "titleLines": [
+    "ビューイングパイプライン",
+    "での変換"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "変換と投影"
+  ],
+  "figure": "assets/cg/transformation/viewing-pipeline-transformations/figure.png"
+}

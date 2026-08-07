@@ -305,7 +305,7 @@
 - [x] `/cg/transformation/reflection-and-skew`
 - [x] `/cg/transformation/affine-transformation`
 - [x] `/cg/transformation/projective-transformation`
-- [draft] `/cg/transformation/viewing-pipeline-transformations`
+- [x] `/cg/transformation/viewing-pipeline-transformations`
 - [draft] `/cg/transformation/hierarchical-modeling`
 - [x] `/cg/transformation/pinhole-camera`
 - [x] `/cg/transformation/perspective-and-parallel-projection`
