@@ -123,8 +123,8 @@ const LABEL_FONT = "bold 92px sans-serif"
 
 // 背景（暗めのグレー）の上で、物体・カメラ・枠・見出しが見分けられる色にする。
 // 物体の色は、座標系間の変換のデモと揃える
-const CAMERA_BODY_COLOR = "#444444"
-const CAMERA_LENS_COLOR = "#222222"
+const CAMERA_BODY_COLOR = "#3f5f8a"
+const CAMERA_LENS_COLOR = "#1c2a3d"
 const FRAME_COLOR = "#8fa3bf"
 const TITLE_COLOR = "#e8e8ee"
 

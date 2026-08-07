@@ -123,8 +123,8 @@ const CONE_UP = new Vector3(0, 1, 0)
 const X_COLOR = "#f2766a"
 const Y_COLOR = "#7fd88f"
 const Z_COLOR = "#5ec8f2"
-const CAMERA_BODY_COLOR = "#444444"
-const CAMERA_LENS_COLOR = "#222222"
+const CAMERA_BODY_COLOR = "#3f5f8a"
+const CAMERA_LENS_COLOR = "#1c2a3d"
 const TITLE_COLOR = "#e8e8ee"
 
 /**
