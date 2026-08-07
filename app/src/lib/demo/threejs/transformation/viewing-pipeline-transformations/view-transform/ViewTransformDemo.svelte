@@ -14,8 +14,8 @@
   camera={{ position: [1.2, 2.6, 7.2] }}
   orbit={{ target: [0, 0.3, 0], minDistance: 4, maxDistance: 22 }}
   buildPane={(pane, p) => {
-    pane.addBinding(p, "azimuth", { min: -180, max: 180, step: 1, label: "方位角" })
-    pane.addBinding(p, "elevation", { min: -25, max: 70, step: 1, label: "仰角" })
+    pane.addBinding(p, "azimuth", { min: -180, max: 180, step: 1, label: "カメラを横に回す（方位角）" })
+    pane.addBinding(p, "elevation", { min: -25, max: 70, step: 1, label: "カメラを上下に回す（仰角）" })
     pane.addBinding(p, "distance", { min: 1.6, max: 2.4, step: 0.01, label: "距離" })
     pane.addBinding(p, "roll", { min: -60, max: 60, step: 1, label: "上方向の傾き" })
   }}
