@@ -190,7 +190,7 @@ const LABEL_FONT = "bold 92px sans-serif"
 const CONE_UP = new Vector3(0, 1, 0)
 
 // 背景（暗めのグレー）の上で、3 軸・物体・カメラが写す範囲が見分けられる色にする。
-// 軸と物体の色は、パイプラインのデモと揃える
+// 軸と物体の色は、この記事のほかのデモと揃える
 const X_COLOR = "#f2766a"
 const Y_COLOR = "#7fd88f"
 const Z_COLOR = "#5ec8f2"

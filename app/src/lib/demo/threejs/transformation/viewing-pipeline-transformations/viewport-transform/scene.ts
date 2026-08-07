@@ -150,7 +150,7 @@ const LABEL_FONT = "bold 92px sans-serif"
 const CONE_UP = new Vector3(0, 1, 0)
 
 // 背景（暗めのグレー）の上で、軸・像・枠が見分けられる色にする。
-// 軸と物体の色は、パイプラインのデモと揃える
+// 軸と物体の色は、座標系間の変換のデモと揃える
 const X_COLOR = "#f2766a"
 const Y_COLOR = "#7fd88f"
 /** 上の辺の色。正規化デバイス座標系の側とビューポートの側で同じ色にする */

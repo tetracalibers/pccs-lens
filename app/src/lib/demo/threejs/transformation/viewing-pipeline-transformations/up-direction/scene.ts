@@ -129,7 +129,7 @@ const LABEL_TEXTURE_PADDING = 12
 const LABEL_FONT = "bold 92px sans-serif"
 
 // 背景（暗めのグレー）の上で、物体・カメラ・枠・見出しが見分けられる色にする。
-// 物体の色は、パイプラインのデモと揃える
+// 物体の色は、座標系間の変換のデモと揃える
 const CAMERA_COLOR = "#e8e8ee"
 const FRAME_COLOR = "#8fa3bf"
 const TITLE_COLOR = "#e8e8ee"
