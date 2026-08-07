@@ -13,6 +13,7 @@ draft: true
   import PipelineStagesDemo from '$lib/demo/threejs/transformation/viewing-pipeline-transformations/pipeline-stages/PipelineStagesDemo.svelte'
   import ViewTransformDemo from '$lib/demo/threejs/transformation/viewing-pipeline-transformations/view-transform/ViewTransformDemo.svelte'
   import UpDirectionDemo from '$lib/demo/threejs/transformation/viewing-pipeline-transformations/up-direction/UpDirectionDemo.svelte'
+  import ViewportTransformDemo from '$lib/demo/threejs/transformation/viewing-pipeline-transformations/viewport-transform/ViewportTransformDemo.svelte'
 </script>
 
 物体に与えられた座標が画面上の位置として決まるまでには、さまざまな座標系を経由します。
@@ -521,6 +522,130 @@ $$
 
 :::Todo
 正規化デバイス座標系からデバイス座標系への対応を示す図解。左に正規化デバイス座標系の断面（原点が中央、y軸が上向き）、右に画面とその中に置かれたビューポート（原点が左上、y軸が下向き）を並べ、断面の四隅がビューポートのどの隅へ移るかを対応づけて示す
+:::
+
+:::Action
+ビューポートの幅と高さを変えて、次の点に着目してみよう
+
+- ビューポートの縦横比が画像に写す範囲の縦横比と食い違うと、像がどちらの向きへ引き伸ばされるか
+- y軸を反転させると、正規化デバイス座標系の上の辺（水色）がビューポートのどちら側へ移るか
+:::
+
+<CanvasWrapper>
+  <ViewportTransformDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// createLabel（文字を描いた板）・createModelingMatrix（モデリング変換行列）・
+// createWireframe（頂点に行列を掛けて線でつなぐ）は、パイプラインのデモと同じものを使う
+
+// 原点から 1 方向だけへ伸ばす軸。
+// 断面は中心が原点で y が上向き、画面は左上の隅が原点で y が下向きになる
+const createArrow = (name: string, color: string, from: Vector3, to: Vector3) => {
+  const group = new Group()
+  const direction = to.clone().sub(from).normalize()
+
+  const lineGeometry = new BufferGeometry().setFromPoints([from, to])
+  group.add(new LineSegments(lineGeometry, new LineBasicMaterial({ color })))
+
+  // ConeGeometry は +y を向いているので、軸の向きへ回してから先端に置く
+  const arrow = new Mesh(
+    new ConeGeometry(ARROW_RADIUS, ARROW_HEIGHT, 16),
+    new MeshBasicMaterial({ color })
+  )
+  arrow.position.copy(to)
+  arrow.quaternion.setFromUnitVectors(CONE_UP, direction)
+  group.add(arrow)
+
+  const label = createLabel(name, color, AXIS_LABEL_HEIGHT)
+  label.position.copy(to).addScaledVector(direction, LABEL_OFFSET)
+  group.add(label)
+
+  return group
+}
+
+// ビューポート変換行列。正規化デバイス座標（-1〜1）を、ビューポートの中に収まる位置へ移す。
+// 中身は、ビューポートの大きさに合わせた拡大/縮小と、ビューポートの位置への平行移動。
+// y 軸を反転する環境では、拡大/縮小の y 方向の倍率が負になる
+const createViewportMatrix = ({ x, y, width, height, flipY }: ViewportTransformParams) =>
+  new Matrix4()
+    .makeTranslation(x + width / 2, y + height / 2, 0)
+    .multiply(new Matrix4().makeScale(width / 2, flipY ? -height / 2 : height / 2, 1))
+
+// 投影変換までを済ませた頂点を、正規化デバイス座標で求める。
+// 画像の上での位置を決めるのに使うのは x 座標と y 座標だけなので、z は落としておく
+const camera = new PerspectiveCamera(FOV, ASPECT, NEAR, FAR)
+camera.position.copy(CAMERA_POSITION)
+camera.lookAt(TARGET)
+camera.updateMatrixWorld()
+
+const ndcVertices = PLACEMENTS.map((placement) => {
+  const modeling = createModelingMatrix(placement)
+  return HOUSE_VERTICES.map(([x, y, z]) => {
+    const ndc = new Vector3(x, y, z).applyMatrix4(modeling).project(camera)
+    return new Vector3(ndc.x, ndc.y, 0)
+  })
+})
+
+const squareCorners = SQUARE_CORNERS.map(([x, y, z]) => new Vector3(x, y, z))
+const screenCorners = SCREEN_CORNERS.map(([x, y, z]) => new Vector3(x, y, z))
+
+// 正規化デバイス座標系の断面を、左側に置いて描くための変換
+const ndcDisplay = new Matrix4().makeTranslation(NDC_CENTER.x, NDC_CENTER.y, NDC_CENTER.z)
+
+// デバイス座標系を、右側に画面として置いて描くための変換。
+// デバイス座標系は y が下向きなので、描くときだけ y の向きを戻す（表示のための変換）
+const screenDisplay = new Matrix4()
+  .makeScale(DISPLAY_SCALE, -DISPLAY_SCALE, 1)
+  .setPosition(SCREEN_ORIGIN)
+
+// 左に正規化デバイス座標系の断面（上の辺だけ色を変える）と、そこに写っている像を置く
+scene.add(
+  createWireframe(squareCorners, ndcDisplay, SQUARE_EDGES, FRAME_COLOR),
+  createWireframe(squareCorners, ndcDisplay, TOP_EDGE, TOP_EDGE_COLOR)
+)
+ndcVertices.forEach((vertices, i) => {
+  scene.add(createWireframe(vertices, ndcDisplay, HOUSE_EDGES, PLACEMENTS[i].color))
+})
+
+// 右に画面を置く
+scene.add(createWireframe(screenCorners, screenDisplay, RECT_EDGES, SCREEN_COLOR))
+
+// 断面は中心が原点で y が上向き、画面は左上の隅が原点で y が下向き
+const ndcAxisX = NDC_CENTER.clone().setX(NDC_CENTER.x + NDC_AXIS_LENGTH)
+const ndcAxisY = NDC_CENTER.clone().setY(NDC_CENTER.y + NDC_AXIS_LENGTH)
+const screenAxisX = SCREEN_ORIGIN.clone().setX(SCREEN_ORIGIN.x + SCREEN_AXIS_LENGTH)
+const screenAxisY = SCREEN_ORIGIN.clone().setY(SCREEN_ORIGIN.y - SCREEN_AXIS_LENGTH)
+scene.add(
+  createArrow("x", X_COLOR, NDC_CENTER, ndcAxisX),
+  createArrow("y", Y_COLOR, NDC_CENTER, ndcAxisY),
+  createArrow("x", X_COLOR, SCREEN_ORIGIN, screenAxisX),
+  createArrow("y", Y_COLOR, SCREEN_ORIGIN, screenAxisY)
+)
+
+// 左右の見出し。同じ高さに揃えて置く
+const ndcTitle = createLabel("正規化デバイス座標系", TITLE_COLOR, TITLE_HEIGHT)
+ndcTitle.position.set(NDC_CENTER.x, TITLE_HEIGHT_Y, 0)
+const screenTitle = createLabel("デバイス座標系", TITLE_COLOR, TITLE_HEIGHT)
+screenTitle.position.set(SCREEN_ORIGIN.x + (SCREEN_WIDTH * DISPLAY_SCALE) / 2, TITLE_HEIGHT_Y, 0)
+scene.add(ndcTitle, screenTitle)
+
+// ビューポート変換で移した先を、画面として描く位置に直す
+const viewport = createViewportMatrix({ width: 300, height: 200, x: 170, y: 100, flipY: true })
+const matrix = new Matrix4().multiplyMatrices(screenDisplay, viewport)
+
+// ビューポートの枠と、その中に写る像。断面の上の辺が、枠のどちら側へ移るかが色で分かる
+scene.add(
+  createWireframe(squareCorners, matrix, SQUARE_EDGES, FRAME_COLOR),
+  createWireframe(squareCorners, matrix, TOP_EDGE, TOP_EDGE_COLOR)
+)
+ndcVertices.forEach((vertices, i) => {
+  scene.add(createWireframe(vertices, matrix, HOUSE_EDGES, PLACEMENTS[i].color))
+})
+```
+
 :::
 
 モデリング座標系の中だけで定められていた:Anki[形状]の座標は、こうして`4`つの変換を通り抜け、:Anki[画面]上の位置として決まります。
