@@ -19,7 +19,6 @@
       options: {
         モデリング変換: "modeling",
         視野変換: "view",
-        "z軸の反転": "zFlip",
         投影変換: "projection"
       }
     })

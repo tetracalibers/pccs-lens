@@ -24,7 +24,7 @@ import {
 type PipelineStage = "modeling" | "world" | "camera" | "projection" | "ndc"
 
 /** 座標系と座標系のあいだの変換 */
-export type TransitionStep = "modeling" | "view" | "zFlip" | "projection"
+export type TransitionStep = "modeling" | "view" | "projection"
 
 /** Tweakpane で操作するパラメータ */
 export type StageTransitionParams = {
@@ -121,7 +121,11 @@ const PLACEMENTS: Placement[] = [
   { scale: 0.7, rotationY: 8, position: [0.05, 0, -0.75], color: "#b79cf5" }
 ]
 
-/** 変換の並び。パイプラインを進む順に並べる */
+/**
+ * 変換の並び。パイプラインを進む順に並べる。
+ * カメラ座標系から投影座標系への z 軸の反転は入れない。右手系から左手系への
+ * 移り変わりを連続的にたどると、途中で必ず形が平らに潰れる瞬間を通るため
+ */
 const STEPS: Step[] = [
   {
     key: "modeling",
@@ -130,7 +134,6 @@ const STEPS: Step[] = [
     title: "モデリング座標系 → ワールド座標系"
   },
   { key: "view", from: "world", to: "camera", title: "ワールド座標系 → カメラ座標系" },
-  { key: "zFlip", from: "camera", to: "projection", title: "カメラ座標系 → 投影座標系" },
   {
     key: "projection",
     from: "projection",
