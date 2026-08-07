@@ -3,91 +3,742 @@ layout: guide-content
 title: ビューイングパイプラインでの変換 # CG 2-4-1
 
 group: ["CG"]
-
-draft: true
+visual: true
 ---
 
-[投影の手順](/cg/transformation/projection-steps/)では、視点を原点にとった投影座標系を出発点にして、写す範囲の決め方を見ました。
-しかし、形状の座標が、はじめからその座標系で測られていることはまずありません。
-ここでは、物体に与えられた座標が画面上の位置として決まるまでに、どの座標系をどのように乗り換えていくのかを見ていきます。
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import StageTransitionDemo from '$lib/demo/threejs/transformation/viewing-pipeline-transformations/stage-transition/StageTransitionDemo.svelte'
+  import ViewTransformDemo from '$lib/demo/threejs/transformation/viewing-pipeline-transformations/view-transform/ViewTransformDemo.svelte'
+  import UpDirectionDemo from '$lib/demo/threejs/transformation/viewing-pipeline-transformations/up-direction/UpDirectionDemo.svelte'
+  import ViewportTransformDemo from '$lib/demo/threejs/transformation/viewing-pipeline-transformations/viewport-transform/ViewportTransformDemo.svelte'
+</script>
 
-## :WithGroupTag[座標系の乗り換え]{group="{['CG']}"}
+物体に与えられた座標が画面上の位置として決まるまでには、さまざまな座標系を経由します。
 
-形をつくる、場面に並べる、視点から見る、画面へ描き出すといった段階では、座標を測るのに都合のよい基準がそれぞれ違います。`1`つの座標系ですべてを引き受けようとすると、どの段階から見ても扱いにくくなります。
+## :WithGroupTag[座標系間の変換]{group="{['CG']}"}
 
-そこで、目的に合った座標系をいくつも用意し、形状の座標をそのあいだで順に測り直していきます。[ビューイングパイプライン](/cg/basics/camera-capture-and-cg/)は、被写体・カメラ・光のデータからカメラに写る像を計算していく一連の処理でしたが、そのうち位置を扱う部分は、この測り直しの連なりとして組み立てられています。
+形を作る、場面に並べる、視点から見る、画面へ描き出すといった各段階では、都合のよい:Anki[座標系]（座標の測り方）がそれぞれ異なります。`1`つの座標系ですべてを引き受けようとすると、どの段階から見ても扱いにくくなります。
 
-測り直しは、次の`4`つの変換で進みます。
+そこで、目的に合った座標系をいくつも用意し、形状の座標を[幾何学的変換](/cg/transformation/basic-transformations/)で順に測り直していきます。この一連の処理が:Anki[ビューイングパイプライン]です。
 
-- :Anki[モデリング変換]：物体ごとに決めた座標を、場面全体で共通の座標へ移す
-- :Anki[視野変換]：場面全体の座標を、視点を基準にした座標へ移す
-- :Anki[投影変換]：視点を基準にした座標を、あらかじめ決めた大きさの直方体に収まる座標へ移す
-- :Anki[ビューポート変換]：直方体に収まる座標を、画面上の位置へ移す
+ビューイングパイプラインでは、次の`4`つの変換を経て、画像上の位置を決定します。
 
-いずれも[同次座標](/cg/transformation/basic-transformations/)を使えば行列の掛け算として表せます。モデリング変換から投影変換までは、あらかじめ合成して`1`本の行列にまとめておけるため、頂点`1`つあたりの計算は`1`回の掛け算で済みます。
+1. :Anki[モデリング変換]：物体ごとに決めた座標を、場面全体で共通の座標へ移す
+2. :Anki[視野変換]：場面全体の座標を、視点を基準にした座標へ移す
+3. :Anki[投影変換]：視点を基準にした座標を、あらかじめ決めた大きさの直方体に収まる座標へ移す
+4. :Anki[ビューポート変換]：直方体に収まる座標を、画面上の位置へ移す
 
-:::Todo
-座標系の乗り換えを示す図解。物体ごとの座標・場面全体の座標・視点を基準にした座標・画面上の座標を左から順に並べ、そのあいだをモデリング変換・視野変換・投影変換・ビューポート変換の矢印でつなぐ。同じ物体が、それぞれの段階でどこにどう置かれているかもあわせて示す
+いずれの変換も、[同次座標](/cg/transformation/basic-transformations/)を使えば行列の掛け算として表せます。特に、:Anki[モデリング変換]から:Anki[投影変換]までは、あらかじめ合成して`1`本の行列にまとめておけるため、頂点`1`つあたりの計算は`1`回の掛け算で済みます。
+
+:::Action
+:Mark[進み具合]を`100`%にしたら、次の:Mark[変換]を選んで、また変換が進んでいく過程を見てみよう
+:::
+
+<CanvasWrapper>
+  <StageTransitionDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// ビューイングパイプラインが経由する座標系
+type PipelineStage = "modeling" | "world" | "camera" | "projection" | "ndc"
+
+// 文字を描いた canvas をテクスチャにして、常にカメラを向く板（Sprite）にする。
+// 「モデリング座標系 → ワールド座標系」のような長いラベルもあるので、文字の幅を測って板の横幅を決める
+const createLabel = (text: string, color: string, height: number) => {
+  const canvas = document.createElement("canvas")
+  const context = canvas.getContext("2d")
+
+  let textWidth = LABEL_TEXTURE_HEIGHT
+  if (context) {
+    context.font = LABEL_FONT
+    textWidth = context.measureText(text).width
+  }
+
+  canvas.width = Math.ceil(textWidth + LABEL_TEXTURE_PADDING * 2)
+  canvas.height = LABEL_TEXTURE_HEIGHT
+
+  if (context) {
+    // canvas の大きさを変えると描画状態が初期化されるので、書体はここで指定し直す
+    context.font = LABEL_FONT
+    context.textAlign = "center"
+    context.textBaseline = "middle"
+    context.fillStyle = color
+    context.fillText(text, canvas.width / 2, canvas.height / 2)
+  }
+
+  const texture = new CanvasTexture(canvas)
+  texture.colorSpace = SRGBColorSpace
+  // 透明な余白まで深度を書くと、あとから描く線がラベルの矩形の形に欠けてしまう
+  const sprite = new Sprite(
+    new SpriteMaterial({ map: texture, transparent: true, depthWrite: false })
+  )
+  // 高さを指定の値に揃え、幅は canvas の縦横比から決める
+  sprite.scale.set((height * canvas.width) / canvas.height, height, 1)
+
+  return sprite
+}
+
+// 1 本の軸を、原点をまたぐ直線・正の向きを指す矢印・軸名のラベルの 3 点セットで作る
+const createAxis = (name: string, color: string, direction: Vector3) => {
+  const group = new Group()
+
+  const lineGeometry = new BufferGeometry().setFromPoints([
+    direction.clone().multiplyScalar(-AXIS_LENGTH),
+    direction.clone().multiplyScalar(AXIS_LENGTH)
+  ])
+  group.add(new LineSegments(lineGeometry, new LineBasicMaterial({ color })))
+
+  // ConeGeometry は +y を向いているので、軸の正の向きへ回してから先端に置く
+  const arrowGeometry = new ConeGeometry(ARROW_RADIUS, ARROW_HEIGHT, 16)
+  const arrow = new Mesh(arrowGeometry, new MeshBasicMaterial({ color }))
+  arrow.position.copy(direction).multiplyScalar(AXIS_LENGTH)
+  arrow.quaternion.setFromUnitVectors(CONE_UP, direction)
+  group.add(arrow)
+
+  const label = createLabel(name, color, AXIS_LABEL_HEIGHT)
+  label.position.copy(direction).multiplyScalar(AXIS_LENGTH + LABEL_OFFSET)
+  group.add(label)
+
+  return group
+}
+
+// モデリング変換行列。拡大/縮小と回転はどちらも原点を中心とする変換なので、
+// 物体が原点にあるうちに大きさと向きを決め、最後の平行移動で置き場所へ運ぶ
+const createModelingMatrix = ({ scale, rotationY, position }: Placement) =>
+  new Matrix4()
+    .makeTranslation(...position)
+    .multiply(new Matrix4().makeRotationY(MathUtils.degToRad(rotationY)))
+    .multiply(new Matrix4().makeScale(scale, scale, scale))
+
+// 頂点に行列を掛けた位置を求める。
+// applyMatrix4 は同次座標の w で割るので、投影行列を含む段では透視除算まで済んだ座標になる
+const transformPoints = (vertices: Vector3[], matrix: Matrix4) =>
+  vertices.map((vertex) => vertex.clone().applyMatrix4(matrix))
+
+// 頂点位置を書き換えながら使う線。稜線のつなぎ方と色だけを先に決めておき、
+// 位置は変換の進み具合に応じて入れ直す
+const createMorphingWireframe = (vertexCount: number, edges: number[], color: string) => {
+  const position = new Float32BufferAttribute(vertexCount * 3, 3)
+  // 中身を何度も書き換えることを three.js に伝えておく
+  position.setUsage(DynamicDrawUsage)
+
+  const geometry = new BufferGeometry()
+  geometry.setAttribute("position", position)
+  geometry.setIndex(edges)
+
+  const lines = new LineSegments(geometry, new LineBasicMaterial({ color }))
+  // 頂点が動き回るので、生成時に求めた境界球で視錐台カリングを判断させない
+  lines.frustumCulled = false
+
+  return { lines, position }
+}
+
+// 変換前の位置と変換後の位置を、進み具合で混ぜて線に書き込む。
+// 途中の位置は 2 つの座標系を見比べるための見せかけで、そこに座標系があるわけではない
+const morphWireframe = (
+  wireframe: MorphingWireframe,
+  from: Vector3[],
+  to: Vector3[],
+  progress: number
+) => {
+  const point = new Vector3()
+  from.forEach((start, i) => {
+    point.lerpVectors(start, to[i], progress)
+    wireframe.position.setXYZ(i, point.x, point.y, point.z)
+  })
+  wireframe.position.needsUpdate = true
+}
+
+// 3 本の軸は、いま見ている座標系そのものを表す。原点と向きが読み取れればよいので、
+// 段ごとの表示倍率（content）の外に置き、長さは変えない
+scene.add(
+  createAxis("x", X_COLOR, new Vector3(1, 0, 0)),
+  createAxis("y", Y_COLOR, new Vector3(0, 1, 0)),
+  createAxis("z", Z_COLOR, new Vector3(0, 0, 1))
+)
+
+const content = new Group()
+scene.add(content)
+
+// 写す側のカメラ。ここでは置き方を固定し、そこから決まる行列だけを使う
+const subject = new PerspectiveCamera(SUBJECT_FOV, SUBJECT_ASPECT, SUBJECT_NEAR, SUBJECT_FAR)
+subject.position.set(...SUBJECT_POSITION)
+subject.lookAt(...SUBJECT_TARGET)
+subject.updateMatrixWorld()
+
+// 視野変換。カメラを置くために行った回転と平行移動を、ちょうど打ち消す逆行列
+const view = subject.matrixWorld.clone().invert()
+
+// z 軸の反転。右手系のカメラ座標系を、視線が z 軸の正の向きになる左手系へ移す
+const zFlip = new Matrix4().makeScale(1, 1, -1)
+
+// 投影変換。three.js の投影行列は右手系のカメラ座標を前提にしているので、
+// 左手系に直した分（z 軸の反転）を打ち消してから掛ける
+const projection = new Matrix4().multiplyMatrices(subject.projectionMatrix, zFlip)
+
+// ワールド座標を、それぞれの段の座標系へ移す行列。手前の段の行列に順に掛け合わせていく
+const toCamera = view.clone()
+const toProjection = new Matrix4().multiplyMatrices(zFlip, toCamera)
+const toNdc = new Matrix4().multiplyMatrices(projection, toProjection)
+
+// 3 体が共有する 1 つの頂点データと、体ごとに違うモデリング変換行列
+const houseVertices = HOUSE_VERTICES.map(([x, y, z]) => new Vector3(x, y, z))
+const modelingMatrices = PLACEMENTS.map(createModelingMatrix)
+
+// カメラが写す範囲の 8 隅。正規化デバイス座標系の立方体の隅を逆投影すると、ワールド座標での隅になる
+const frustumCorners = NDC_CORNERS.map(([x, y, z]) => new Vector3(x, y, z).unproject(subject))
+
+// ワールド座標をその段の座標系へ移す行列から、その段での頂点位置を求める
+const pointsAt = (stageMatrix: Matrix4) => ({
+  houses: modelingMatrices.map((modeling) =>
+    transformPoints(houseVertices, new Matrix4().multiplyMatrices(stageMatrix, modeling))
+  ),
+  frustum: transformPoints(frustumCorners, stageMatrix)
+})
+
+const stagePoints: Record<PipelineStage, StagePoints> = {
+  // モデリング座標系にあるのは、3 体が共有している 1 つの形状データ。
+  // カメラが写す範囲はワールド座標系のもので、モデリング変換では動かない（現れるだけ）
+  modeling: {
+    houses: modelingMatrices.map(() => houseVertices),
+    frustum: frustumCorners
+  },
+  world: pointsAt(new Matrix4()),
+  camera: pointsAt(toCamera),
+  projection: pointsAt(toProjection),
+  ndc: pointsAt(toNdc)
+}
+
+const houses = PLACEMENTS.map((placement) =>
+  createMorphingWireframe(HOUSE_VERTICES.length, HOUSE_EDGES, placement.color)
+)
+const frustum = createMorphingWireframe(NDC_CORNERS.length, BOX_EDGES, FRUSTUM_COLOR)
+// カメラが写す範囲は、モデリング変換のあいだに現れる
+frustum.lines.material.transparent = true
+content.add(...houses.map((house) => house.lines), frustum.lines)
+
+// 形状データの色から各体の色へ移すために、色も混ぜられる形で持っておく
+const shapeColor = new Color(SHAPE_COLOR)
+const placementColors = PLACEMENTS.map((placement) => new Color(placement.color))
+
+// 見ている変換。ここではモデリング変換（モデリング座標系 → ワールド座標系）と、
+// その進み具合（0 で変換前の座標系、1 で変換後の座標系）
+const from: PipelineStage = "modeling"
+const to: PipelineStage = "world"
+const progress = 0
+
+const before = stagePoints[from]
+const after = stagePoints[to]
+
+// 表示倍率も、変換前の段と変換後の段のあいだを取る（座標値そのものは変えない）
+content.scale.setScalar(MathUtils.lerp(VIEW_SCALE[from], VIEW_SCALE[to], progress))
+
+houses.forEach((house, i) => {
+  morphWireframe(house, before.houses[i], after.houses[i], progress)
+  // モデリング座標系にあるのは 3 体に共有された 1 つの形状データなので、
+  // 3 体に分かれていくにつれて、無彩色から体ごとの色へ移す
+  const separation = from === "modeling" ? progress : 1
+  house.lines.material.color.copy(shapeColor).lerp(placementColors[i], separation)
+})
+
+morphWireframe(frustum, before.frustum, after.frustum, progress)
+frustum.lines.material.opacity = from === "modeling" ? progress : 1
+
+// 変換の見出しを図の下に置く
+const title = createLabel("モデリング座標系 → ワールド座標系", TITLE_COLOR, TITLE_HEIGHT)
+title.position.y = TITLE_Y
+scene.add(title)
+```
+
 :::
 
 ## :WithGroupTag[モデリング変換]{group="{['CG']}"}
 
-物体の形は、それが場面のどこに置かれるかとは切り離して決められます。たとえば椅子であれば、座面や脚の位置を測りやすいところに原点をとり、まっすぐ立った姿勢のまま形を決めておけば足ります。このように物体ごとに決めた座標系を:Anki[モデリング座標系]といい、:Anki[ローカル座標系]とも呼ばれます。
+:Anki[シーン]（場面）には複数の物体が並び、光源やカメラなども置かれます。それらの位置関係を決める、仮想世界全体の座標系を:Anki[ワールド座標系]といいます。
 
-一方、場面には複数の物体が並び、光源やカメラも置かれます。それらの位置関係を決めるには、物体ごとの座標系とは別に、場面全体で共通の物差しが要ります。この共通の座標系が:Anki[ワールド座標系]です。
+### モデリング座標系
 
-モデリング座標系で与えられた形状の座標を、ワールド座標系での座標へ移す変換を:Anki[モデリング変換]といいます。中身は平行移動、拡大・縮小、回転の組み合わせで、大きさを拡大・縮小で、向きを回転で、置き場所を平行移動で決めます。
+物体の形状は、それがシーンのどこに置かれるかとは切り離して決められます。ワールド座標系で形状を決めてしまうと、物体を移動させるたびに、物体を構成するすべての点（形状）を再計算することになってしまうからです。
+物体ごとに決めた座標系は:Anki[モデリング座標系]といい、:Anki[ローカル座標系]とも呼ばれます。
 
-拡大・縮小と回転はいずれも原点を中心とする変換のため、物体が原点にあるうちに大きさと向きを決め、最後に平行移動で置き場所へ運びます。[変換の合成](/cg/transformation/transformation-composition/)は順序を入れ替えると結果が変わるので、この並びを崩すと、狙った場所とは違うところに物体が現れてしまいます。
+### モデリング座標からワールド座標へ
 
-モデリング座標系を分けておく利点は、同じ形の物体を場面にいくつも並べるときに現れます。形状のデータは`1`つのまま、物体ごとにモデリング変換だけを替えれば、大きさも向きも位置も違う物体として並べられます。
+モデリング座標系で定められた形状の座標を、ワールド座標系での座標へ移す変換を:Anki[モデリング変換]といい、その変換行列は$$M$$で表します。
 
-物体が部品の組み合わせでできている場合には、部品ごとのモデリング変換を積み重ねて置き場所を決めることになります。
+モデリング変換の中身は、平行移動・拡大/縮小・回転の組み合わせです。大きさは:Anki[拡大/縮小]で、向きを:Anki[回転]で、置き場所を:Anki[平行移動]で決めていきます。
+ここで、拡大/縮小と回転はいずれも:Anki[原点]を中心とする変換のため、物体が原点にあるうちに大きさと向きを決め、最後に平行移動で置き場所へ運びます。
 
-<!-- TODO: 「階層モデリング（CG 2-4-4）」ページへのリンク（ページ未作成） -->
+:::Note
+[変換の合成](/cg/transformation/transformation-composition/)は順序を入れ替えると結果が変わるので、この並びを崩すと、狙った場所とは違うところに物体が配置されてしまいます。行列の掛け算の順序には注意が必要です。
+:::
+
+物体を:Anki[ワールド座標系]の中で移動させるときは、物体の形状の再計算は必要なく、:Anki[モデリング変換行列]を変えればよいだけです。
+また、同じ形状の物体をシーンにいくつも並べるときも、形状のデータは`1`回計算するだけでよく、物体ごとにモデリング変換行列だけを変えるだけで、異なる大きさ・向き・位置に物体を配置することができます。
+
+:::Info
+物体が部品の組み合わせでできている場合には、部品ごとのモデリング変換を積み重ねて置き場所を決めることになります。詳しくは[階層モデリング](/cg/transformation/hierarchical-modeling/)で扱います。
+:::
 
 ## :WithGroupTag[視野変換]{group="{['CG']}"}
 
-場面がワールド座標系の上に組み上がっても、そのままでは投影へ進めません。投影の計算が単純になるのは、視点を原点にとり、視線の向きにz軸をとった座標系の上でのことでした。
+シーンがワールド座標系の上に置かれても、それぞれの点が画面のどこに写るかは、まだ求められません。写る位置を決めるのは:Anki[カメラ]（視点）から見た対象の位置であって、仮想世界の原点から測った:Anki[ワールド座標系]の座標は、それを直接には表していないからです。
 
-カメラの置き方は、視点の位置、視線の向き、そして上方向の`3`つで決まります。位置と向きだけでは、視線を軸にした回転が残るためです。カメラを傾ければ場面も傾いて写るので、どちらを上とするかまで指定して、はじめて写り方が定まります。
+:Anki[視点]を原点にとり、視線の向きに:Anki[z軸]をとった座標系へ測り直せば、点の座標がカメラから見た位置を表すようになります。この座標系を:Anki[カメラ座標系]といい、視点を基準にとることから:Anki[視点座標系]とも呼ばれます。
 
-こうして決めたカメラを基準に、ワールド座標系で表された座標を測り直す変換を:Anki[視野変換]といいます。:Anki[ビューイング変換]とも呼ばれます。移った先は投影の手順で見た投影座標系にあたり、視点を基準にとることから:Anki[視点座標系]とも呼ばれます。
+### カメラの置き方
 
-視野変換は、カメラを場面の中へ運ぶ変換だと考えるかもしれません。しかし、実際に動かすのは場面の側です。カメラを原点に固定したまま、カメラを置くために行った回転と平行移動をちょうど打ち消すように、場面全体を逆向きに動かします。視野変換の行列は、カメラを置く変換の逆行列になります。
+カメラ座標系をとるには、まずカメラの置き方が決まっていなければなりません。カメラの置き方は、視点の:Anki[位置]、視線の:Anki[向き]、そして:Anki[上]方向の`3`つで決まります。
 
-写り方を決めるのは、カメラと場面の相対的な位置関係だけです。カメラを場面の中へ動かしても、場面をカメラの側へ逆向きに動かしても、写る像は変わりません。視点を原点に固定できる分、このあとの計算は単純になります。
+位置と向きを決めただけでは、カメラの置き方はまだ`1`つに定まりません。視点の場所と視線の向きが同じでも、視線を軸としてカメラを回せるからです。
+
+カメラを回せば、写る像もその分だけ回ります。同じ場所から同じ方向を見ていても、像がどれだけ傾いて写るかは決まりません。どちらを上とするかまで指定して、はじめて写り方が定まります。
+
+:::Action
+:Mark[上方向の傾き]を変えて、カメラが同じ位置・方向にあるのに、写る像の傾きが変わる様子を確かめよう
+:::
+
+<CanvasWrapper>
+  <UpDirectionDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// createLabel（文字を描いた板）・createModelingMatrix（モデリング変換行列）は、
+// 座標系間の変換のデモと同じものを使う
+
+// 頂点に行列を掛けた位置で、稜線を結んだ線を作る
+const createWireframe = (vertices: Vector3[], matrix: Matrix4, edges: number[], color: string) => {
+  const points = vertices.map((vertex) => vertex.clone().applyMatrix4(matrix))
+  const geometry = new BufferGeometry().setFromPoints(points).setIndex(edges)
+  return new LineSegments(geometry, new LineBasicMaterial({ color }))
+}
+
+// カメラの形。線だけで描く場面の物体と見分けがつくよう、レンズの付いた筐体として作る。
+//
+// カメラ座標系での形で、視点が原点、視線が z 軸の負の向き。
+// レンズの先端が原点に来るように全体を +z へずらしてあるので、
+// 視線の先（-z 側）には何も置かれず、カメラが場面を隠さない
+const createCameraShape = () => {
+  const bodyMaterial = new MeshStandardMaterial({ color: CAMERA_BODY_COLOR })
+  const body = new Mesh(new BoxGeometry(1.2, 0.8, 0.7), bodyMaterial)
+  body.position.z = 0.8
+
+  const lensMaterial = new MeshStandardMaterial({ color: CAMERA_LENS_COLOR })
+  const lens = new Mesh(new CylinderGeometry(0.25, 0.3, 0.5, 32), lensMaterial)
+  // CylinderGeometry は y 軸方向に伸びるので、視線の向きへ倒す
+  lens.rotation.x = Math.PI / 2
+  lens.position.z = 0.25
+
+  // 上に載せたビューファインダー。これが無いと、上下が引っくり返っても形が同じで分からない
+  const finder = new Mesh(new BoxGeometry(0.5, 0.25, 0.4), bodyMaterial)
+  finder.position.set(0, 0.52, 0.9)
+
+  // 大きさを合わせる倍率は内側の群に持たせ、外側の群には置き方だけを持たせる
+  const model = new Group()
+  model.scale.setScalar(CAMERA_SCALE)
+  model.add(body, lens, finder)
+
+  const object = new Group()
+  object.add(model)
+
+  return object
+}
+
+// 枠に写る像。頂点をカメラで投影すると -1〜1 の正規化デバイス座標が返るので、
+// それを枠の大きさに合わせて広げた位置が、この枠に写る像になる
+const createImage = (camera: PerspectiveCamera, modeling: Matrix4, color: string) => {
+  const points = houseVertices.map((vertex) => {
+    const ndc = vertex.clone().applyMatrix4(modeling).project(camera)
+    return new Vector3(ndc.x * PANEL_HALF_WIDTH, ndc.y * PANEL_HALF_HEIGHT, 0)
+  })
+  const geometry = new BufferGeometry().setFromPoints(points).setIndex(HOUSE_EDGES)
+  return new LineSegments(geometry, new LineBasicMaterial({ color }))
+}
+
+const houseVertices = HOUSE_VERTICES.map(([x, y, z]) => new Vector3(x, y, z))
+const frameCorners = FRAME_CORNERS.map(([x, y, z]) => new Vector3(x, y, z))
+
+// 左に場面とカメラ、右に写る像の枠を並べる
+const sceneGroup = new Group()
+sceneGroup.position.x = SCENE_OFFSET
+const panel = new Group()
+panel.position.copy(PANEL_CENTER)
+scene.add(sceneGroup, panel)
+
+// 左右の見出し。同じ高さに揃えて置く
+const sceneTitle = createLabel("カメラの置き方", TITLE_COLOR, TITLE_HEIGHT)
+sceneTitle.position.set(SCENE_TITLE_X, TITLE_HEIGHT_Y, 0)
+sceneGroup.add(sceneTitle)
+
+const panelTitle = createLabel("写る像", TITLE_COLOR, TITLE_HEIGHT)
+panelTitle.position.set(0, TITLE_HEIGHT_Y - PANEL_CENTER.y, 0)
+panel.add(panelTitle)
+
+// 場面に並ぶ 3 体
+PLACEMENTS.forEach((placement) => {
+  const modeling = createModelingMatrix(placement)
+  sceneGroup.add(createWireframe(houseVertices, modeling, HOUSE_EDGES, placement.color))
+})
+
+// 像を写す枠。カメラの縦横比に合わせた長方形
+panel.add(createWireframe(frameCorners, new Matrix4(), FRAME_EDGES, FRAME_COLOR))
+
+// カメラの形だけが陰影の付く材質なので、光もカメラのためだけに置く
+const keyLight = new DirectionalLight("#ffffff", KEY_LIGHT_INTENSITY)
+keyLight.position.set(...KEY_LIGHT_POSITION)
+scene.add(new AmbientLight("#ffffff", AMBIENT_INTENSITY), keyLight)
+
+// 写す側のカメラ。カメラの置き方は、視点の位置・視線の向き・上方向の 3 つで決まる。
+// ここでは位置と向きを固定し、上方向だけを視線のまわりに回す
+const roll = 0
+const forward = TARGET.clone().sub(CAMERA_POSITION).normalize()
+
+const camera = new PerspectiveCamera(FOV, ASPECT, NEAR, FAR)
+camera.position.copy(CAMERA_POSITION)
+camera.up.set(0, 1, 0).applyAxisAngle(forward, MathUtils.degToRad(roll))
+camera.lookAt(TARGET)
+camera.updateMatrixWorld()
+
+// カメラの置き方を表す行列（matrixWorld）を、位置・向き・大きさに分けてカメラの形へ反映する
+const cameraShape = createCameraShape()
+camera.matrixWorld.decompose(cameraShape.position, cameraShape.quaternion, cameraShape.scale)
+sceneGroup.add(cameraShape)
+
+// 枠に写る像。上方向を回すと、視点も視線の向きも変わらないのに、像だけが回る
+PLACEMENTS.forEach((placement) => {
+  panel.add(createImage(camera, createModelingMatrix(placement), placement.color))
+})
+```
+
+:::
+
+そのため、カメラの置き方を決めるには、位置・向き・上方向の`3`つの定義が必要です。
+
+- 視点を:Anki[原点]としてとる
+- 視線の方向は:Anki[z軸]で表す
+- 上方向は:Anki[y軸]、横方向は:Anki[x軸]にあたる
+
+この`3`つの規定が、そのままカメラ座標系の骨組みになります。
+
+### ワールド座標からカメラ座標へ
+
+CG処理によって最終的に作りたいシーンは、カメラの:Anki[視点]から眺めた風景です。
+そのため、ワールド座標系全体を、カメラ座標系に変換してしまいます。
+
+:Anki[ワールド座標系]の原点もカメラ視点にしたいため、カメラの置き場所を決めるために行った回転や平行移動をちょうど打ち消すように、ワールド座標系全体を:Anki[逆向き]に動かします。
+
+:::Note
+つまり、カメラ座標系上で行った変換の、:Anki[逆行列]をかければよいわけです。
+:::
+
+このような、ワールド座標系からカメラ座標系への変換を:Anki[視野変換]といい、変換行列は$$V$$で表します。
+
+カメラをワールド座標系の中で移動させるときは、:Anki[カメラ座標系]ごと丸ごと移動させます。
+すると、ワールド座標系とカメラ座標系との位置関係が変わるため、再び視点を原点に置くための:Anki[視野変換行列]を再計算する必要があります。
+
+:::Action
+カメラを回したり、距離を変えたりして、`2`つの座標系での挙動を見比べてみよう
+
+- :Anki[ワールド座標系]では、カメラだけが動き、物体は置かれた場所から動かない
+- :Anki[カメラ座標系]では、カメラが原点から動かず、場面全体が丸ごと逆向きに動く
+:::
+
+<CanvasWrapper>
+  <ViewTransformDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// createLabel（文字を描いた板）・createAxis（軸の線・矢印・軸名のラベル）・
+// createModelingMatrix（モデリング変換行列）は座標系間の変換のデモと、
+// createWireframe（頂点に行列を掛けて線でつなぐ）・createCameraShape（レンズの付いたカメラの形）は
+// カメラの置き方のデモと同じものを使う
+
+// カメラの置き方を表す行列。視点の位置・視線の向き・上方向の 3 つから、
+// カメラ座標系の 3 本の軸を組み立てる
+const createPoseMatrix = ({ azimuth, elevation, distance, roll }: ViewTransformParams) => {
+  const azimuthRad = MathUtils.degToRad(azimuth)
+  const elevationRad = MathUtils.degToRad(elevation)
+
+  // 視点の位置。注視点のまわりを、方位角・仰角・距離で回す
+  const position = new Vector3(
+    Math.cos(elevationRad) * Math.sin(azimuthRad),
+    Math.sin(elevationRad),
+    Math.cos(elevationRad) * Math.cos(azimuthRad)
+  )
+    .multiplyScalar(distance)
+    .add(TARGET)
+
+  // 右手系では視線が z 軸の負の向きになるので、視点から注視点へ向かう向きの逆を z 軸にとる
+  const zAxis = position.clone().sub(TARGET).normalize()
+  // 上方向。視線を軸に回すと、位置と向きが同じままでもカメラの置き方が変わる
+  const up = new Vector3(0, 1, 0).applyAxisAngle(zAxis, MathUtils.degToRad(roll))
+  // 上方向と z 軸の両方に直交する向きが x 軸で、そこから y 軸が決まる
+  const xAxis = new Vector3().crossVectors(up, zAxis).normalize()
+  const yAxis = new Vector3().crossVectors(zAxis, xAxis)
+
+  // 3 本の軸を列に並べ、視点の位置を最後の列に置いたものが、カメラの置き方を表す行列になる
+  return new Matrix4().makeBasis(xAxis, yAxis, zAxis).setPosition(position)
+}
+
+// 1 つの座標系を、3 本の軸・系の名前・3 体の物体・カメラの組で作る。
+// systemMatrix はワールド座標をこの座標系へ移す行列、pose はカメラの置き方を表す行列
+const createSystem = (title: string, offsetX: number, systemMatrix: Matrix4, pose: Matrix4) => {
+  const group = new Group()
+  group.position.x = offsetX
+
+  group.add(
+    createAxis("x", X_COLOR, new Vector3(1, 0, 0)),
+    createAxis("y", Y_COLOR, new Vector3(0, 1, 0)),
+    createAxis("z", Z_COLOR, new Vector3(0, 0, 1))
+  )
+
+  const label = createLabel(title, TITLE_COLOR, TITLE_HEIGHT)
+  label.position.y = AXIS_LENGTH + TITLE_OFFSET
+  group.add(label)
+
+  // 物体はモデリング変換で場面の中に置かれている。そこへ、この座標系へ移す行列を掛ける
+  PLACEMENTS.forEach((placement) => {
+    const matrix = new Matrix4().multiplyMatrices(systemMatrix, createModelingMatrix(placement))
+    group.add(createWireframe(houseVertices, matrix, HOUSE_EDGES, placement.color))
+  })
+
+  // カメラも同じで、置き方を表す行列に、この座標系へ移す行列を掛ける
+  const cameraMatrix = new Matrix4().multiplyMatrices(systemMatrix, pose)
+  const cameraShape = createCameraShape()
+  cameraMatrix.decompose(cameraShape.position, cameraShape.quaternion, cameraShape.scale)
+  group.add(cameraShape)
+
+  return group
+}
+
+const houseVertices = HOUSE_VERTICES.map(([x, y, z]) => new Vector3(x, y, z))
+
+// カメラの置き方（視点の位置・視線の向き・上方向）を表す行列
+const pose = createPoseMatrix({ azimuth: 25, elevation: 18, distance: 2.1, roll: 0 })
+
+// 視野変換行列。カメラを置くために行った回転と平行移動を、ちょうど打ち消す逆行列
+const view = pose.clone().invert()
+
+// 同じ中身を、ワールド座標系ではそのまま、カメラ座標系では視野変換を掛けて置く。
+// ワールド座標系を左、カメラ座標系を右に並べる
+scene.add(
+  createSystem("ワールド座標系", -GROUP_OFFSET, new Matrix4(), pose),
+  createSystem("カメラ座標系", GROUP_OFFSET, view, pose)
+)
+
+// カメラの形だけが陰影の付く材質なので、光もカメラのためだけに置く
+const keyLight = new DirectionalLight("#ffffff", KEY_LIGHT_INTENSITY)
+keyLight.position.set(...KEY_LIGHT_POSITION)
+scene.add(new AmbientLight("#ffffff", AMBIENT_INTENSITY), keyLight)
+```
+
+:::
 
 ## :WithGroupTag[投影変換]{group="{['CG']}"}
 
-視点を基準にした座標が得られると、写す範囲を区切る段階に入ります。ウィンドウとクリッピング面でビューボリュームを決め、それをあらかじめ決めた大きさの[正規化ビューボリューム](/cg/transformation/projection-steps/)へ変換する、という手順でした。この変換が:Anki[投影変換]です。
+視点を基準にした座標が得られたら、写す範囲を切り取る段階に入ります。
+カメラから見える空間のうち、画像に写す部分だけを立体として切り出し、その立体があらかじめ決めた大きさの直方体に収まるように座標を移すのが:Anki[投影変換]です。
 
-投影変換を終えた点の座標は、どの向きについても決まった範囲に収まっています。この座標系を:Anki[正規化デバイス座標系]といいます。
+:::Info
+どのように範囲を切り出し、どんな直方体へ移すのかは[投影の手順](/cg/transformation/projection-steps/)で詳しく扱います。
+:::
 
-「デバイス」とありますが、この段階ではまだ画面の画素とは結びついていません。表示する装置の解像度や画面の大きさがどうであっても同じ値になる、という意味で正規化されています。
+### 投影座標系
 
-境界が座標軸に垂直な面だけになるため、ビューボリュームの外にある部分を取り除くクリッピングも、この座標系で行います。
+視点を原点にとっても、座標系はまだ`1`つに決まりません。`3`次元の座標空間では、[右手系と左手系](/cg/transformation/coordinate-systems/)の違いがあるからです。x軸を右、y軸を上に向けたとき、z軸の正の向きを手前にとるのが:Anki[右手系]、奥にとるのが:Anki[左手系]でした。
 
-<!-- TODO: 「クリッピングのアルゴリズム（CG 2-4-3）」ページへのリンク（ページ未作成） -->
+右手系でカメラ座標系をとると、視線はz軸の:Anki[負]の向きになります。写す対象は視点より:Anki[奥]にあるため、画像に写る点は、どれもz座標が:Anki[負]の値です。
+奥にあるものほどz座標が:Anki[小さい]という並びは、前後を比べる処理では扱いにくくなります。
 
-投影を終えても、奥行きにあたる座標は残したままにします。画像の上での位置が決まっても、同じ位置に重なった面のどちらが手前にあるかは、奥行きを見なければ決められないためです。
+そこで、写す範囲を切り取る前に、:Anki[z軸]の向きだけを反転させて:Anki[左手系]へ移します。
+これにより、視線がz軸の:Anki[正]の向きになり、:Anki[視線]に沿って測った奥行きが、そのままz座標になります。この座標系を:Anki[投影座標系]といいます。
 
-<!-- TODO: 「隠面消去法の分類（CG 4-2-2）」ページへのリンク（ページ未作成） -->
+:::Note
+最初から:Anki[左手系]でカメラ座標系をとる環境では、この反転は必要ありません。その場合、:Anki[カメラ座標系]と投影座標系は同じ座標系を指すことになります。
+:::
+
+写す範囲を切り取る面は、この投影座標系の上に置きます。切り出した範囲を直方体へ移す行列も、この座標系を出発点として[投影の計算法](/cg/transformation/projection-calculation/)で組み立てます。
+
+### 切り取る前のz軸の反転
+
+z軸の反転は、z座標の符号を変えるだけの操作です。x座標とy座標はそのままなので、z方向の倍率だけを`-1`にした[拡大/縮小](/cg/transformation/basic-transformations/)にあたり、[同次座標](/cg/transformation/basic-transformations/)を使えばほかの変換と同じ`4`行`4`列の行列で書けます。
+
+$$
+\begin{pmatrix} x^{\prime} \\\\ y^{\prime} \\\\ z^{\prime} \\\\ 1 \end{pmatrix} = \begin{pmatrix} 1 & 0 & 0 & 0 \\\\ 0 & 1 & 0 & 0 \\\\ 0 & 0 & -1 & 0 \\\\ 0 & 0 & 0 & 1 \end{pmatrix} \begin{pmatrix} x \\\\ y \\\\ z \\\\ 1 \end{pmatrix}
+$$
+
+そのため、この行列は投影変換の行列とあらかじめ掛け合わせて`1`本にまとめておけます。座標系の変換が`1`つ増えても、行列にまとめておけば、頂点ごとの計算は`1`回の掛け算で済みます。
+
+### 正規化デバイス座標系
+
+切り出した範囲は、投影変換によってあらかじめ決めた大きさの直方体へ移ります。そのため、画像に写る点の座標は、x・y・zのどれをとっても、その直方体の内側に収まる値になります。この座標系を:Anki[正規化デバイス座標系]といいます。
+
+:::Note
+名前に「デバイス」とありますが、実際に表示するモニターなどの画素で位置を決めるのは、最後の:Mark[ビューポート変換]で移る先の:Mark[デバイス座標系]です。
+:::
+
+:Anki[正規化デバイス座標系]では、表示する装置の解像度や画面の大きさに関わらず、座標が同じ値になります。装置による違いを持ち込まずに値を揃えてあるので、:Anki[正規化]とついた名称になっています。
+
+範囲の取り方は環境によって異なります。たとえば、次が一例です。
+
+$$
+-1 \le x \le 1,\quad -1 \le y \le 1,\quad 0 \le z \le 1
+$$
+
+このように軸ごとの値の範囲で表現すると、`x`座標が`-1`より小さければ左へはみ出している、というように、座標値の:Anki[大小]を比べるだけで点が内側にあるかどうかを判定できます。
+
+また、はみ出した部分を取り除く:Anki[クリッピング]処理も、この正規化デバイス座標系で行います。
+
+画像の上での位置を決めるのに使うのは、x座標とy座標だけです。`z`座標は画像の上での位置に関わるわけではありませんが、:Anki[奥行き]にあたる情報なので、今後の計算で使われます。
+
+:::Note
+たとえば、同じ位置に重なった面のどちらが手前にあるかを決める[隠面消去](/cg/rendering/hidden-surface-removal-methods/)では、:Mark[奥行き]の情報が必要になります。
+:::
 
 ## :WithGroupTag[ビューポート変換]{group="{['CG']}"}
 
 正規化デバイス座標系まで来ても、画面のどこに何画素で描かれるかはまだ決まっていません。装置に依らない形へそろえた分、装置の側の情報を最後に足すことになります。
 
-画像を描き出す領域は、画面全体とは限りません。ウィンドウの一部だけを使うこともあれば、同じ場面を別の視点から写した画像を並べて置くこともあります。こうして画面上にとった、画像を描き出す長方形の領域を:Anki[ビューポート]といいます。
+描画範囲は必ずしも画面全体とは限りません。画面の一部だけを使うこともあれば、複数の描画結果を並べて置くこともあります。
+こうして画面上にとった、画像を描き出す範囲である長方形の領域を:Anki[ビューポート]といいます。
 
-正規化デバイス座標系の座標を、ビューポートの中の位置へ移す変換が:Anki[ビューポート変換]です。移った先の座標系を:Anki[デバイス座標系]といい、:Anki[スクリーン座標系]とも呼ばれます。中身は、ビューポートの大きさに合わせた拡大・縮小と、ビューポートの位置への平行移動です。
+正規化デバイス座標系の座標を、ちょうどビューポートの中に収まる位置へ移す変換が:Anki[ビューポート変換]です。移った先の座標系を:Anki[デバイス座標系]といい、変換の中身は、このビューポートの大きさに合わせた:Anki[拡大/縮小]と、ビューポートの位置への:Anki[平行移動]です。
 
-このとき、y軸の向きが入れ替わります。正規化デバイス座標系では上を正にとるのに対し、画像を扱うときの[座標系](/cg/transformation/coordinate-systems/)では、左上を原点として下を正にとるためです。
+### ビューポート変換とy軸の反転
 
-ビューポートの縦横比にも注意が要ります。ビューボリュームの断面の縦横比とビューポートの縦横比が食い違っていると、拡大・縮小の割合が縦と横で変わり、像が引き伸ばされて写ります。
+ここで注意すべきなのが、環境によってはビューポート変換で:Anki[y軸]の向きが入れ替わることです。正規化デバイス座標系では:Anki[上]を正にとるのに対し、画像を扱うときの座標系では、左上を原点として:Anki[下]を正にとるためです。
 
-:::Todo
-正規化デバイス座標系からデバイス座標系への対応を示す図解。左に正規化デバイス座標系の断面（原点が中央、y軸が上向き）、右に画面とその中に置かれたビューポート（原点が左上、y軸が下向き）を並べ、断面の四隅がビューポートのどの隅へ移るかを対応づけて示す
+### ビューポートの縦横比
+
+ビューポートの:Anki[縦横比]にも注意が必要です。画像に写す範囲の縦横比とビューポートの縦横比が食い違っていると、拡大・縮小の割合が縦と横で変わり、像が引き伸ばされて写ってしまいます。
+
+:::Action
+ビューポートの:Mark[幅]と:Mark[高さ]を変えてみよう
+ビューポートの縦横比が画像に写す範囲の縦横比と食い違うと、像はどのように引き伸ばされる？
 :::
 
-モデリング座標系の中だけで決められていた形状の座標は、こうして`4`つの変換を通り抜け、画面上の位置として決まります。
+<CanvasWrapper>
+  <ViewportTransformDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// createLabel（文字を描いた板）・createModelingMatrix（モデリング変換行列）は座標系間の変換のデモと、
+// createWireframe（頂点に行列を掛けて線でつなぐ）はカメラの置き方のデモと同じものを使う
+
+// 原点から 1 方向だけへ伸ばす軸。
+// 断面は中心が原点で y が上向き、画面は左上の隅が原点で y が下向きになる
+const createArrow = (name: string, color: string, from: Vector3, to: Vector3) => {
+  const group = new Group()
+  const direction = to.clone().sub(from).normalize()
+
+  const lineGeometry = new BufferGeometry().setFromPoints([from, to])
+  group.add(new LineSegments(lineGeometry, new LineBasicMaterial({ color })))
+
+  // ConeGeometry は +y を向いているので、軸の向きへ回してから先端に置く
+  const arrow = new Mesh(
+    new ConeGeometry(ARROW_RADIUS, ARROW_HEIGHT, 16),
+    new MeshBasicMaterial({ color })
+  )
+  arrow.position.copy(to)
+  arrow.quaternion.setFromUnitVectors(CONE_UP, direction)
+  group.add(arrow)
+
+  const label = createLabel(name, color, AXIS_LABEL_HEIGHT)
+  label.position.copy(to).addScaledVector(direction, LABEL_OFFSET)
+  group.add(label)
+
+  return group
+}
+
+// ビューポート変換行列。正規化デバイス座標（-1〜1）を、ビューポートの中に収まる位置へ移す。
+// 中身は、ビューポートの大きさに合わせた拡大/縮小と、
+// ビューポートの位置（画面の左端・上端からの距離）への平行移動。
+// y 軸を反転する環境では、拡大/縮小の y 方向の倍率が負になる
+const createViewportMatrix = ({ width, height, flipY }: ViewportTransformParams) =>
+  new Matrix4()
+    .makeTranslation(VIEWPORT_X + width / 2, VIEWPORT_Y + height / 2, 0)
+    .multiply(new Matrix4().makeScale(width / 2, flipY ? -height / 2 : height / 2, 1))
+
+// 投影変換までを済ませた頂点を、正規化デバイス座標で求める。
+// 画像の上での位置を決めるのに使うのは x 座標と y 座標だけなので、z は落としておく
+const camera = new PerspectiveCamera(FOV, ASPECT, NEAR, FAR)
+camera.position.copy(CAMERA_POSITION)
+camera.lookAt(TARGET)
+camera.updateMatrixWorld()
+
+const ndcVertices = PLACEMENTS.map((placement) => {
+  const modeling = createModelingMatrix(placement)
+  return HOUSE_VERTICES.map(([x, y, z]) => {
+    const ndc = new Vector3(x, y, z).applyMatrix4(modeling).project(camera)
+    return new Vector3(ndc.x, ndc.y, 0)
+  })
+})
+
+const squareCorners = SQUARE_CORNERS.map(([x, y, z]) => new Vector3(x, y, z))
+const screenCorners = SCREEN_CORNERS.map(([x, y, z]) => new Vector3(x, y, z))
+
+// 正規化デバイス座標系の断面を、左側に置いて描くための変換
+const ndcDisplay = new Matrix4().makeTranslation(NDC_CENTER.x, NDC_CENTER.y, NDC_CENTER.z)
+
+// デバイス座標系を、右側に画面として置いて描くための変換。
+// デバイス座標系は y が下向きなので、描くときだけ y の向きを戻す（表示のための変換）
+const screenDisplay = new Matrix4()
+  .makeScale(DISPLAY_SCALE, -DISPLAY_SCALE, 1)
+  .setPosition(SCREEN_ORIGIN)
+
+// 左に正規化デバイス座標系の断面（上の辺だけ色を変える）と、そこに写っている像を置く
+scene.add(
+  createWireframe(squareCorners, ndcDisplay, SQUARE_EDGES, FRAME_COLOR),
+  createWireframe(squareCorners, ndcDisplay, TOP_EDGE, TOP_EDGE_COLOR)
+)
+ndcVertices.forEach((vertices, i) => {
+  scene.add(createWireframe(vertices, ndcDisplay, HOUSE_EDGES, PLACEMENTS[i].color))
+})
+
+// 右に画面を置く
+scene.add(createWireframe(screenCorners, screenDisplay, RECT_EDGES, SCREEN_COLOR))
+
+// 断面は中心が原点で y が上向き、画面は左上の隅が原点で y が下向き
+const ndcAxisX = NDC_CENTER.clone().setX(NDC_CENTER.x + NDC_AXIS_LENGTH)
+const ndcAxisY = NDC_CENTER.clone().setY(NDC_CENTER.y + NDC_AXIS_LENGTH)
+const screenAxisX = SCREEN_ORIGIN.clone().setX(SCREEN_ORIGIN.x + SCREEN_AXIS_LENGTH)
+const screenAxisY = SCREEN_ORIGIN.clone().setY(SCREEN_ORIGIN.y - SCREEN_AXIS_LENGTH)
+scene.add(
+  createArrow("x", X_COLOR, NDC_CENTER, ndcAxisX),
+  createArrow("y", Y_COLOR, NDC_CENTER, ndcAxisY),
+  createArrow("x", X_COLOR, SCREEN_ORIGIN, screenAxisX),
+  createArrow("y", Y_COLOR, SCREEN_ORIGIN, screenAxisY)
+)
+
+// 左右の見出し。同じ高さに揃えて置く
+const ndcTitle = createLabel("正規化デバイス座標系", TITLE_COLOR, TITLE_HEIGHT)
+ndcTitle.position.set(NDC_CENTER.x, TITLE_HEIGHT_Y, 0)
+const screenTitle = createLabel("デバイス座標系", TITLE_COLOR, TITLE_HEIGHT)
+screenTitle.position.set(SCREEN_ORIGIN.x + (SCREEN_WIDTH * DISPLAY_SCALE) / 2, TITLE_HEIGHT_Y, 0)
+scene.add(ndcTitle, screenTitle)
+
+// ビューポート変換で移した先を、画面として描く位置に直す
+const viewport = createViewportMatrix({ width: 300, height: 200, flipY: true })
+const matrix = new Matrix4().multiplyMatrices(screenDisplay, viewport)
+
+// ビューポートの枠と、その中に写る像。断面の上の辺が、枠のどちら側へ移るかが色で分かる
+scene.add(
+  createWireframe(squareCorners, matrix, SQUARE_EDGES, FRAME_COLOR),
+  createWireframe(squareCorners, matrix, TOP_EDGE, TOP_EDGE_COLOR)
+)
+ndcVertices.forEach((vertices, i) => {
+  scene.add(createWireframe(vertices, matrix, HOUSE_EDGES, PLACEMENTS[i].color))
+})
+```
+
+:::
+
+モデリング座標系の中だけで定められていた:Anki[形状]の座標は、こうして`4`つの変換を通り抜け、:Anki[画面]上の位置として決まります。

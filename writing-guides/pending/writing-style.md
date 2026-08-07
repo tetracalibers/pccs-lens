@@ -34,7 +34,7 @@
 - WS-P019｜抽象的な定義の直後に「1つは〜もう1つは〜」の要素分解で同内容を別角度から再提示する：1例のみ｜支持: /cg/basics/image-digitization
 - WS-P020｜導入の締めにゴールか読み進め順を1文で明示する：5記事中2記事で欠落・1記事で配置違いと反例が優勢で、「この記事では〜を説明します」型は一般的な文章術｜支持: /cg/transformation/basic-transformations, /cg/transformation/transformation-composition
 - WS-P021｜一般原則を述べた後、具体例を「確かめてみる」枠として後置する：1記事のみで、比喩を定義に先んじて置く具体→抽象の箇所もあり向きが固定しない｜支持: /cg/transformation/transformation-composition
-- WS-P022｜`発展：` プレフィックスで応用・任意の内容を記事末尾の小節に置く：単一例｜支持: /cg/transformation/affine-transformation
+- WS-P022｜`発展：` プレフィックスで応用・任意の内容を記事末尾の小節に置く：2記事とも同一シリーズで、本筋外の深掘りを `###` へ下げること自体は本体 WS-071 が扱う｜支持: /cg/transformation/affine-transformation, /cg/transformation/projective-transformation
 - WS-P023｜実装セクションを素朴解→限界→改良の段階的洗練で構成する：3段以上の連鎖が明確なのは1記事のみで、もう1記事は用途に応じた別手法への切り替えという別現象｜支持: /cg/basics/shape-rasterization
 - WS-P024｜末尾に次記事への前方リンクを置く配置：導入での後方リンクは4本すべてで一貫するが、末尾の前方リンクは1本のみ｜支持: /cg/basics/shape-rasterization
 - WS-P025｜定義先行・主題先行の書き出し：リード文が定義ではなく動機づけの記事、描写→命名の逆順で始まる節があり「各セクションが必ず定義から始まる」とは言い切れない。リード文と各節のどちらで定義が来るかを切り分けて他コーパスで再確認するまで保留｜支持: /color-theory/what-is-lighting, /color-theory/subjective-color
@@ -99,7 +99,7 @@
 - WS-P084｜節末を一文の再定義で着地させる：1記事2例のみで、もう1記事に対応する例がない（節末の凝縮そのものは本体 WS-026 が扱う）｜支持: /color-theory/photometric-quantities
 - WS-P085｜視覚デモの区画を「本文の説明→:::Action の着眼点→<CanvasWrapper> のデモ→:::Foldable の実装コード」の4点セットに定型化し、節をまたいで反復する（地の文はコードに言及しない）：Three.js デモを持つ記事が2本にとどまり、うち1本は3区画中1区画に着眼点がなく4点セットが崩れる。固定が確認できるのは「デモ→畳んだ実装コード」の隣接と地の文がコードに言及しない点まで。デモ前の着眼点提示は本体 WS-065／TF-057 が扱う｜支持: /cg/transformation/pinhole-camera, /cg/transformation/perspective-and-parallel-projection
 - WS-P086｜見出しに用語を掲げた節では定義文を節末へ置き、節本文は現象の組み立てに充てる（見出し語と定義位置をずらす）：命名後置そのものは本体 WS-052／TF-015 が扱っており、見出しに用語が既出の場合の扱いという上乗せ部分を1記事でしか確認できていない｜支持: /cg/transformation/pinhole-camera
-- WS-P087｜続き記事のリードを「先行記事の到達点（リンク付き過去形）→本記事の主題語の設置」の2文で閉じ、予告文・問いを置かない：1記事のみで、同シリーズの直前記事のリードは予告文で閉じており、本体 WS-010 の「橋渡しの締めは予告文か問い」に対する単発の揺れにとどまる｜支持: /cg/transformation/perspective-and-parallel-projection
+- WS-P087｜続き記事のリードを「先行内容の到達点→本記事の主題語の設置」の2文で閉じ、予告文・問いを置かない：3記事すべてが同一シリーズ（CG・変換）に閉じており、前記事へのリンクを張るかどうかも揺れる。本体 WS-010 の「橋渡しの締めは予告文か問い」を書き換えるには他シリーズでの再現が必要｜支持: /cg/transformation/perspective-and-parallel-projection, /cg/transformation/projective-transformation, /cg/transformation/projection-steps
 - WS-P088｜分類の予告を箇条書きにせず「軸と件数の宣言＋各種を同一文型で命名する対句」の2文で行い、直後の `##` 節を同語・同順に並べる：1記事のみで、分類を1文で予告して見出しと語・順序を一致させること自体は技術文書一般の書き方（件数明示と総論→各論は本体 WS-030／WS-031 が扱う）｜支持: /cg/transformation/perspective-and-parallel-projection
 - WS-P089｜並列する2概念が主題の記事で、両者を包む上位概念の節を第1節に置き、共通の定義・用語・処理をそこで処理してから各論へ分ける：1記事のみで、共通項を先に述べてから差分へ進む配置は対比構成の一般的な書き方。本体 WS-003／WS-079 は題材が原理・体系の場合に限っており、並列2概念への一般化を支えられない｜支持: /cg/transformation/perspective-and-parallel-projection
 - WS-P090｜新概念を直接定義した後、既習概念の極限・特殊化として導き直す展開を独立した `###` 小節に置き、末尾の1文で同一性を確定する：本体 WS-047 の行列を伴わない概念版にあたるが1記事のみで、導出過程に推量表現が混じり厳密な一致確認になっていない｜支持: /cg/transformation/perspective-and-parallel-projection
@@ -109,3 +109,11 @@
 - WS-P094｜問題駆動で新概念を導入する節の第1文を「たとえば、〜が求められます」という要求場面の提示にあてる：1記事1箇所のみで、同記事の他の節はいずれも定義文で書き起こす（限界→新概念の順序そのものは本体 WS-032）｜支持: /cg/transformation/perspective-and-parallel-projection
 - WS-P095｜見出しが用語を掲げる節で、定義対象が操作・処理なら命名後置、事物・手法なら定義先行と語順を分ける：同一記事内に支持1例・反例1例しかなく条件を確定できない。本体 WS-052 の適用しない状況（見出しが用語を掲げる節は定義先行）への反例としてのみ記録する｜支持: /cg/transformation/perspective-and-parallel-projection
 - WS-P096｜手順の番号付きリストでは直後の受け文を置かず、リスト内の語を次段落の主語に取って進む：1記事1箇所のみで、受け文を省く条件を一般化できない（本体 WS-030 の「受け文は必ず伴うわけではない」に対応する実例）｜支持: /cg/transformation/perspective-and-parallel-projection
+- WS-P097｜別ページへの委譲を `:::Info`、話の脇道を `:::Note` で書き分ける：2記事で一致せず、もう1記事は後続トピックへの言及も `:::Note` に入れている（ブロックの役割分担そのものは本体 WS-068）｜支持: /cg/transformation/projection-steps
+- WS-P098｜数式ブロックを1つの文の途中に挟み、文が式をまたいで続く形にする：1記事1箇所のみで、もう1記事は式の前で必ず文を切る（本体 WS-076 の操作説明→表示式とは逆方向）｜支持: /cg/transformation/projection-steps
+- WS-P099｜散文で定義した2項目を、直後に「:Anki[用語]：役割」の2行箇条書きで一覧化する：1記事1箇所のみで、定義直後の箇条書き列挙という一般形（本体 WS-056／WS-028）と切り分けられない｜支持: /cg/transformation/projection-steps
+- WS-P100｜判定条件を「`x < -1`なら左にはみ出している」形の箇条書きにし、前後を1文でつないで挟む：1記事1箇所のみ｜支持: /cg/transformation/projection-steps
+- WS-P101｜デモ本体を節の後方に1つだけ置き、節冒頭にスクロール誘導の `:::Action` を添える：1記事のみで、もう1記事は各デモの直前に `:::Action` を1つずつ置く配置（着眼点の提示そのものは本体 WS-065）｜支持: /cg/transformation/projective-transformation
+- WS-P102｜`###` を持たない `##` を混ぜる基準：本文3段落＋`:::Note` で足りるからと読めるが、2記事では判断基準を確定できない（`###` の個数の上限は本体 WS-034 へ反映済み）｜支持: /cg/transformation/projection-steps
+- WS-P103｜節で導入する中心用語を第1段落の末尾で名づける：引用6箇所のうち3箇所が節冒頭から3段落目での命名で、「第1段落の末尾」という位置の固定が成り立たない（説明→命名の語順そのものは本体 WS-052）｜支持: /cg/transformation/projective-transformation, /cg/transformation/projection-steps
+- WS-P104｜対になる2ケースを同形式で並置しつつ、主要ケースを厚く・副ケースを2文で閉じる非対称配置：非対称がはっきり出るのは1記事1箇所のみで、もう1記事の対比はほぼ対称。カードでの対比も分量差がわずか（同形式の並置は本体 WS-049）｜支持: /cg/transformation/projection-steps

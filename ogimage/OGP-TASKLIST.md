@@ -305,8 +305,8 @@
 - [x] `/cg/transformation/reflection-and-skew`
 - [x] `/cg/transformation/affine-transformation`
 - [x] `/cg/transformation/projective-transformation`
-- [draft] `/cg/transformation/viewing-pipeline-transformations`
-- [ページ未作成] 階層モデリング
+- [x] `/cg/transformation/viewing-pipeline-transformations`
+- [draft] `/cg/transformation/hierarchical-modeling`
 - [x] `/cg/transformation/pinhole-camera`
 - [x] `/cg/transformation/perspective-and-parallel-projection`
 - [x] `/cg/transformation/projection-steps`
@@ -361,7 +361,7 @@
 - [ページ未作成] オイラー表現
 - [draft] `/cg/modeling/curve-surface-equations`
 - [ページ未作成] 2次曲線
-- [ページ未作成] パラメトリック曲線・曲面
+- [draft] `/cg/modeling/parametric-curve-surface`
 - [draft] `/cg/modeling/bezier-curve-surface`
 - [ページ未作成] ファーガソン曲線
 - [ページ未作成] 双3次クーンズ曲面
@@ -392,7 +392,7 @@
 - [ページ未作成] 写実的表現のためのモデリング
 - [ページ未作成] レンダリングにおける処理
 - [ページ未作成] バックフェースカリング
-- [ページ未作成] 隠面消去法の分類
+- [draft] `/cg/rendering/hidden-surface-removal-methods`
 - [ページ未作成] 優先順位アルゴリズム
 - [ページ未作成] スキャンライン法
 - [ページ未作成] Zバッファ法
@@ -686,7 +686,8 @@
 
 ## CGと画像処理（nested） — 記事：CGシステムとデバイス（`cg/systems.yaml`）
 
-- [ページ未作成] CGシステムの応用と構成
+- [ページ未作成] CGシステムの構成
+- [ページ未作成] CGシステムの応用
 - [ページ未作成] コンピュータネットワーク
 - [ページ未作成] プログラム記述言語
 - [ページ未作成] グラフィックス用API

@@ -116,7 +116,13 @@ const createLabel = (text: string, color: string, size: number) => {
 
   const texture = new CanvasTexture(canvas)
   texture.colorSpace = SRGBColorSpace
-  const material = new SpriteMaterial({ map: texture, transparent: true })
+  const material = new SpriteMaterial({
+    map: texture,
+    transparent: true,
+    // 文字のない透明な余白まで深度を書いてしまうと、あとから描かれる半透明の面や線が
+    // ラベルの矩形の形に欠け、文字に黒い下敷きが付いたように見える
+    depthWrite: false
+  })
   const sprite = new Sprite(material)
   sprite.scale.setScalar(size)
 

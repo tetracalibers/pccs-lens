@@ -508,7 +508,7 @@
 
 - [draft] `/cg/modeling/curve-surface-equations`
 - [ページ未作成] 2次曲線
-- [ページ未作成] パラメトリック曲線・曲面
+- [draft] `/cg/modeling/parametric-curve-surface`
 - [draft] `/cg/modeling/bezier-curve-surface`
 - [ページ未作成] ファーガソン曲線
 - [ページ未作成] 双3次クーンズ曲面
@@ -626,7 +626,7 @@
 ## CGと画像処理 — レンダリング／隠面消去（`cg/rendering.yaml` #hidden-surface）
 
 - [ページ未作成] バックフェースカリング
-- [ページ未作成] 隠面消去法の分類
+- [draft] `/cg/rendering/hidden-surface-removal-methods`
 - [ページ未作成] 優先順位アルゴリズム
 - [ページ未作成] スキャンライン法
 - [ページ未作成] Zバッファ法
@@ -741,7 +741,8 @@
 
 ## CGと画像処理 — CGシステムとデバイス／CGシステムとソフトウェア（`cg/systems.yaml` #systems-software）
 
-- [ページ未作成] CGシステムの応用と構成
+- [ページ未作成] CGシステムの構成
+- [ページ未作成] CGシステムの応用
 - [ページ未作成] コンピュータネットワーク
 - [ページ未作成] プログラム記述言語
 - [ページ未作成] グラフィックス用API
@@ -817,18 +818,18 @@
 - [x] `/cg/transformation/transformation-composition`
 - [x] `/cg/transformation/reflection-and-skew`
 - [x] `/cg/transformation/affine-transformation`
-- [ ] `/cg/transformation/projective-transformation`
+- [x] `/cg/transformation/projective-transformation`
 
 ## CGと画像処理 — 変換と投影／ビューイングパイプライン（`cg/transformation.yaml` #viewing-pipeline）
 
-- [draft] `/cg/transformation/viewing-pipeline-transformations`
-- [ページ未作成] 階層モデリング
+- [ ] `/cg/transformation/viewing-pipeline-transformations`
+- [draft] `/cg/transformation/hierarchical-modeling`
 
 ## CGと画像処理 — 変換と投影／投影とクリッピング（`cg/transformation.yaml` #projection-and-clipping）
 
 - [x] `/cg/transformation/pinhole-camera`
 - [x] `/cg/transformation/perspective-and-parallel-projection`
-- [ ] `/cg/transformation/projection-steps`
+- [x] `/cg/transformation/projection-steps`
 - [draft] `/cg/transformation/projection-calculation`
 - [draft] `/cg/transformation/clipping-algorithms`
 - [draft] `/cg/transformation/vanishing-points-and-n-point-perspective`

@@ -107,6 +107,7 @@ description: 過去記事とGitのコミット履歴を分析し、著者の思�
 | `style-evidence-write.mjs <json> --write` | 判定結果から `evidence/<観点>/<slug>.md` を機械生成する（根拠モードの記帳） |
 | `style-evidence-tally.mjs` | 支持記事数を集計し、確度の降格候補・廃止候補・ID不整合を検出する |
 | `style-pending-promote.mjs` | 保留プールから昇格候補（支持3記事以上）を抽出する |
+| `style-guide-size.mjs [--ref <rev>]` | writer が読むガイドの肥大化率（文字数の増減%・ルール数）を測る |
 
 `style-evidence-split.mjs` は移行専用（1回きり）で、通常の分析では使わない。
 
@@ -219,7 +220,7 @@ description: 過去記事とGitのコミット履歴を分析し、著者の思�
 4. **記帳（スクリプト）**：Workflow の戻り値を `node scripts/style-evidence-write.mjs <json> --write` へ渡し、`evidence/<観点>/<slug>.md` を機械生成する。**統合エージェントは起動しない。**
 5. **確度の降格（スクリプト＋メインセッション）**：`node scripts/style-evidence-tally.mjs --round <今回のslug群>` で、支持が2記事以下に落ちたルールを検出し、該当ルールの `確度` 欄のみ「弱い傾向」へ更新する。**該当が無ければ本体は一切変更しない。** `--round` を必ず付ける（付けないと全ルールの棚卸しになり、根拠が未登録なだけのルールまで降格対象に出る）。
 6. **新特徴の記録**：戻り値の `newFeatures` を `pending/` へ1行で追記する。
-7. **後処理**：タスクリストの更新、報告。報告には**昇格候補の件数と未処理の保留件数**（`node scripts/style-pending-promote.mjs`）を必ず含め、閾値を超えていれば発見モードの実行を推奨する。
+7. **後処理**：タスクリストの更新、報告。報告には**昇格候補の件数と未処理の保留件数**（`node scripts/style-pending-promote.mjs`）を必ず含め、閾値を超えていれば発見モードの実行を推奨する。あわせて `node scripts/style-guide-size.mjs` で**肥大化率**を測って報告する（確度の降格が0件なら全ファイル `±0%` になる。これが本体を触っていないことの裏づけになる）。
 
 #### 発見モードの手順
 
@@ -228,7 +229,7 @@ description: 過去記事とGitのコミット履歴を分析し、著者の思�
 3. **反証（Workflow・観点ごと4体）**：Evidence Reviewer が根拠を検証する。
 4. **統合（Workflow・観点ごと4体）**：ガイド本体・`evidence/`・`pending/` を更新する。渡すのは**自観点の特徴のみ**（他観点の特徴は渡さない）。
 5. **境界レビュー（Workflow・1体・後段）**：書き上がった本体4ファイルを読み、重複・配置の誤りを検出して報告する。**修正はしない。** 重複・配置誤りの解決は「書く前の事前回避」から「書いた後の事後検出」に変わる。検出結果は報告し、修正は次のラウンドまたは個別の指示で行う。
-6. **後処理**：`node scripts/style-rule-ids.mjs --write` で追加されたルールへ ID を採番し、`node scripts/style-evidence-tally.mjs` で不整合を確認する。タスクリストの更新、報告。
+6. **後処理**：`node scripts/style-rule-ids.mjs --write` で追加されたルールへ ID を採番し、`node scripts/style-evidence-tally.mjs` で不整合を確認する。`node scripts/style-guide-size.mjs` で**肥大化率**を測る（ID の採番後に測る。採番でファイルが書き換わるため）。タスクリストの更新、報告。
 
 いずれのモードも、`Workflow({ scriptPath: '.claude/skills/author-style-analyzer/references/analysis-workflow.js', args: <manifest> })` で実行する。manifest の形は `references/analysis-workflow.js` 冒頭のコメントに定義されている（`mode: 'evidence' | 'discover'`）。各ステージの意図・役割の内訳・レビュー観点は `references/collaboration-workflow.md` を参照。
 
@@ -358,6 +359,10 @@ Git差分を文字単位で列挙するだけで終えず、修正の目的を�
 - `node scripts/style-rule-ids.mjs --check` と `node scripts/style-evidence-tally.mjs` が不整合を報告しない（本体に存在しないIDが根拠に残っていない・ID未採番のルールがない）
 - 分析した記事について、`writing-guides/STYLE-ANALYSIS-TASKLIST.md` の該当行が `[x]` に更新されている（一意に特定できずスキップした行があれば、その旨をユーザーへ確認している）
 - 後処理として、変更をファイルシステム上で検証し、ユーザーへ変更内容を報告している
+- **完了報告に、writer が読むガイドの肥大化率が含まれている**（`node scripts/style-guide-size.mjs` の出力。ファイルごとの文字数の増減%とルール数の増減、合計、1ルールあたりの平均文字数）
+  - ガイド本体は `author-style-writer` が毎回全文を読むため、増えた分はそのまま執筆側のコンテキスト負荷になる。ラウンドごとに数字を出して、「量はルール数に比例させ、記事数に比例させない」が守られているかを可視化する。
+  - 測定はコミット前なら既定（`HEAD` と作業ツリーの比較）、コミット後なら `--ref HEAD~1`。差分が0のときはスクリプトがその旨を出す。
+  - **ルール数が増えていないのに本文が5%以上膨らんだファイルはスクリプトが警告する。** 出たら、根拠・確度の説明や記事単位の記録が本体へ漏れていないかを確認し、該当箇所を `evidence/` や `pending/` へ移してから報告する（数字を報告するだけで済ませない）。
 
 ### 根拠モード
 

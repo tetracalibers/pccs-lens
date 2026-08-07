@@ -150,6 +150,9 @@
     "cg/transformation/transformation-composition": {
       "title": "変換の合成と順序"
     },
+    "cg/transformation/viewing-pipeline-transformations": {
+      "title": "ビューイングパイプラインでの変換"
+    },
     "cg/video": {
       "title": "動画像処理"
     },

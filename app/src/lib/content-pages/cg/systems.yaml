@@ -4,7 +4,9 @@ sections:
   - heading: CGシステムとソフトウェア
     id: systems-software
     links:
-      - title: CGシステムの応用と構成 # CG 8-1-1, 8-1-2
+      - title: CGシステムの構成 # CG 8-1-2
+        group: ["CG"]
+      - title: CGシステムの応用 # CG 8-1-1
         group: ["CG"]
       - title: コンピュータネットワーク # CG 8-1-3
         group: ["CG"]
