@@ -30,7 +30,7 @@ export type TransitionStep = "modeling" | "view" | "projection"
 export type StageTransitionParams = {
   /** どの変換を見るか */
   step: TransitionStep
-  /** 変換の進み具合。0 で変換前の座標系、1 で変換後の座標系 */
+  /** 変換の進み具合（%）。0 で変換前の座標系、100 で変換後の座標系 */
   progress: number
 }
 
@@ -432,7 +432,8 @@ export const createStageTransitionScene = ({ scene, params }: SceneContext) => {
       builtKey = key
 
       const step = STEPS.find((candidate) => candidate.key === params.step) ?? STEPS[0]
-      const progress = params.progress
+      // 位置を混ぜる割合は 0〜1 で扱うので、パネルの % を割り戻す
+      const progress = params.progress / 100
       const before = stagePoints[step.from]
       const after = stagePoints[step.to]
 

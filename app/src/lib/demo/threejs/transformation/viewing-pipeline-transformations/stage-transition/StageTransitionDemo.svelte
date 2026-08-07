@@ -24,9 +24,9 @@
     })
     const progress = pane.addBinding(p, "progress", {
       min: 0,
-      max: 1,
-      step: 0.01,
-      label: "進み具合"
+      max: 100,
+      step: 1,
+      label: "進み具合（%）"
     })
 
     // 変換を切り替えたら、その変換の始まり（変換前の座標系）から見せる

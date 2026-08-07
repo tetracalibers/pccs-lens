@@ -38,7 +38,7 @@ draft: true
 :::
 
 :::Action
-変換を選び、進み具合を`0`から`1`へ動かして、次の点に着目してみよう
+変換を選び、進み具合を`0`から`100`へ動かして、次の点に着目してみよう
 
 - モデリング変換で、`1`つの形状データが`3`体へ分かれていくこと
 - 視野変換で、場面もカメラが写す範囲も丸ごと動くこと
@@ -234,7 +234,8 @@ content.add(...houses.map((house) => house.lines), frustum.lines)
 const shapeColor = new Color(SHAPE_COLOR)
 const placementColors = PLACEMENTS.map((placement) => new Color(placement.color))
 
-// 見ている変換。ここではモデリング変換（モデリング座標系 → ワールド座標系）と、その進み具合
+// 見ている変換。ここではモデリング変換（モデリング座標系 → ワールド座標系）と、
+// その進み具合（0 で変換前の座標系、1 で変換後の座標系）
 const from: PipelineStage = "modeling"
 const to: PipelineStage = "world"
 const progress = 0
