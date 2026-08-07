@@ -14,7 +14,7 @@
   camera={{ position: [4.4, 3, 5.8] }}
   orbit={{ target: [0, 0.2, -0.3], minDistance: 3, maxDistance: 24 }}
   buildPane={(pane, p) => {
-    pane.addBinding(p, "step", {
+    const step = pane.addBinding(p, "step", {
       label: "変換",
       options: {
         モデリング変換: "modeling",
@@ -22,6 +22,17 @@
         投影変換: "projection"
       }
     })
-    pane.addBinding(p, "progress", { min: 0, max: 1, step: 0.01, label: "進み具合" })
+    const progress = pane.addBinding(p, "progress", {
+      min: 0,
+      max: 1,
+      step: 0.01,
+      label: "進み具合"
+    })
+
+    // 変換を切り替えたら、その変換の始まり（変換前の座標系）から見せる
+    step.on("change", () => {
+      p.progress = 0
+      progress.refresh()
+    })
   }}
 />
