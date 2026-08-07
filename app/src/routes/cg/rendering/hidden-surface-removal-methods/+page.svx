@@ -1,0 +1,10 @@
+---
+layout: guide-content
+title: 隠面消去法の分類 # CG 4-2-2
+
+group: ["CG"]
+
+draft: true
+---
+
+## TODO

@@ -17,8 +17,7 @@ sections:
     links:
       - title: バックフェースカリング # CG 4-2-1
         group: ["CG"]
-      - title: 隠面消去法の分類 # CG 4-2-2
-        group: ["CG"]
+      - slug: hidden-surface-removal-methods
       - title: 優先順位アルゴリズム # CG 4-2-3
         group: ["CG"]
       - title: スキャンライン法 # CG 4-2-4
