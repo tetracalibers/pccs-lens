@@ -21,7 +21,8 @@ import {
   Sprite,
   SpriteMaterial,
   SRGBColorSpace,
-  Vector3
+  Vector3,
+  WebGLRenderer
 } from "three"
 
 /** Tweakpane で操作するパラメータ */
@@ -39,7 +40,10 @@ export type ObliqueParams = {
 // _shared の ThreeSceneContext と同じ形をローカルに宣言する（_shared を import しないため）
 type SceneContext = {
   scene: Scene
+  renderer: WebGLRenderer
   params: ObliqueParams
+  /** 次のフレームで 1 回だけ描画させる。ドラッグで左の図を回したあとに呼ぶ */
+  invalidate: () => void
 }
 
 /**
@@ -105,6 +109,19 @@ const PANEL_OFFSET = 2
 const SETUP_SCALE = 0.62
 const SETUP_TILT_X = 0.28
 const SETUP_TILT_Y = -0.75
+
+/** 左の面をドラッグで回す速さ（1 px あたりのラジアン） */
+const DRAG_ROTATE_SPEED = 0.007
+
+/**
+ * 左の面を回せる範囲。
+ *
+ * 横は投影面の正面（`0`）まで回せるようにする。そこまで回すと投射方向から見ることになり、
+ * 像とそれを生む形状がぴったり重なる。真横まで倒すと投影面が線に潰れるので、手前で止める。
+ * 縦は、見上げる向きと見下ろしすぎる向きの両方を落とす
+ */
+const SETUP_YAW_RANGE: [number, number] = [-1.2, 0.2]
+const SETUP_PITCH_RANGE: [number, number] = [-0.2, 0.8]
 
 /**
  * スキューさせた形状を照らす光。塗った面だけが陰影の付く材質で、ほかの線には効かない。
@@ -263,7 +280,9 @@ const createWireframe = (vertexCount: number, edges: number[], color: string) =>
   return { object: new LineSegments(geometry, material), vertices, geometry, material }
 }
 
-export const createObliqueScene = ({ scene, params }: SceneContext) => {
+const clamp = (value: number, [min, max]: [number, number]) => Math.min(Math.max(value, min), max)
+
+export const createObliqueScene = ({ scene, renderer, params, invalidate }: SceneContext) => {
   // 左は空間のようす（立方体・座標軸・投影面・投射線・投影面に写った像）。
   // 投影面が画面と平行なままなので、傾けているのは形状の側に見える
   const setup = new Group()
@@ -386,6 +405,59 @@ export const createObliqueScene = ({ scene, params }: SceneContext) => {
   titles[1].sprite.position.set(PANEL_OFFSET, TITLE_Y, 0)
   titles.forEach((title) => scene.add(title.sprite))
 
+  // 左の面だけをドラッグで回す。カメラを回すと右の面まで傾き、像の上の長さの比も角度も
+  // 読めなくなるので、動かすのはこの Group だけにする
+  const canvas = renderer.domElement
+  let dragPointer: number | null = null
+  let lastX = 0
+  let lastY = 0
+
+  const handlePointerDown = (event: PointerEvent) => {
+    // 2 本目の指はピンチによるズーム。回転は取りやめて OrbitControls に任せる
+    if (dragPointer !== null) {
+      dragPointer = null
+      return
+    }
+    // 起点が左半分のときだけ回す。右の面（像を正面から読む図）の上では反応させない
+    const bounds = canvas.getBoundingClientRect()
+    if (event.clientX - bounds.left > bounds.width / 2) return
+
+    dragPointer = event.pointerId
+    lastX = event.clientX
+    lastY = event.clientY
+    // canvas の外まで指が出ても動かし続けられるようにする（pointerup で自動的に解ける）
+    canvas.setPointerCapture(event.pointerId)
+  }
+
+  const handlePointerMove = (event: PointerEvent) => {
+    if (event.pointerId !== dragPointer) return
+
+    // 横は投影面に垂直な軸まわり、縦は画面の横軸まわりに回す（回転の順は y のあとに x）
+    setup.rotation.y = clamp(
+      setup.rotation.y + (event.clientX - lastX) * DRAG_ROTATE_SPEED,
+      SETUP_YAW_RANGE
+    )
+    setup.rotation.x = clamp(
+      setup.rotation.x + (event.clientY - lastY) * DRAG_ROTATE_SPEED,
+      SETUP_PITCH_RANGE
+    )
+    lastX = event.clientX
+    lastY = event.clientY
+
+    // 描画は要求されたときだけ走る。Tweakpane や OrbitControls を経由しない操作なので、
+    // ここで次のフレームを頼む
+    invalidate()
+  }
+
+  const handlePointerUp = (event: PointerEvent) => {
+    if (event.pointerId === dragPointer) dragPointer = null
+  }
+
+  canvas.addEventListener("pointerdown", handlePointerDown)
+  canvas.addEventListener("pointermove", handlePointerMove)
+  canvas.addEventListener("pointerup", handlePointerUp)
+  canvas.addEventListener("pointercancel", handlePointerUp)
+
   const tip = new Vector3()
 
   return {
@@ -432,6 +504,11 @@ export const createObliqueScene = ({ scene, params }: SceneContext) => {
       params.rayAngle = `${Math.round(rayAngleDeg)}°`
     },
     dispose: () => {
+      canvas.removeEventListener("pointerdown", handlePointerDown)
+      canvas.removeEventListener("pointermove", handlePointerMove)
+      canvas.removeEventListener("pointerup", handlePointerUp)
+      canvas.removeEventListener("pointercancel", handlePointerUp)
+
       const disposables = [
         planeGeometry,
         planeMaterial,

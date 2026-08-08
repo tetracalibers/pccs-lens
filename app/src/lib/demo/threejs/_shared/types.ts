@@ -34,6 +34,14 @@ export type ThreeSceneContext<P> = {
   renderer: WebGLRenderer
   /** Tweakpane と共有するパラメータ。`update()` の中で読んでシーンに反映する */
   params: P
+  /**
+   * 次のフレームで 1 回だけ描画させる。
+   *
+   * 描画は要求されたときだけ走るので、`scene.ts` が独自の入力（canvas のドラッグなど）で
+   * シーンを動かす場合は、動かしたあとにこれを呼ぶ。Tweakpane と OrbitControls の操作は
+   * `_shared` 側で繋いであるため、そこでは呼ばなくてよい。
+   */
+  invalidate: () => void
 }
 
 /** `createXxxScene` の戻り値 */
