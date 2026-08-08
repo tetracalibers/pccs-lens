@@ -49,7 +49,7 @@
     // 選ぶと 2 つの図ちょうどの倍率へ飛ぶ。飛んだあとにスライダーを動かしても選択はそのまま残る
     const preset = pane.addBinding(selection, "preset", {
       options: PRESET_OPTIONS,
-      label: "プリセットへ合わせる"
+      label: "代表的な図に合わせる"
     })
     const depthScale = pane.addBinding(p, "depthScale", {
       min: 0,

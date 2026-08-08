@@ -1,10 +1,13 @@
 import {
+  AmbientLight,
   BufferGeometry,
   CanvasTexture,
   ConeGeometry,
+  DirectionalLight,
   DoubleSide,
   EdgesGeometry,
   Float32BufferAttribute,
+  FrontSide,
   Group,
   LineBasicMaterial,
   LineLoop,
@@ -12,6 +15,7 @@ import {
   MathUtils,
   Mesh,
   MeshBasicMaterial,
+  MeshStandardMaterial,
   PlaneGeometry,
   Scene,
   Sprite,
@@ -62,6 +66,16 @@ const CUBE_EDGES = [0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 
  */
 const CUBE_EDGES_OFF_PLANE = [4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7]
 
+/**
+ * 立方体の 6 面を三角形 2 枚ずつに割ったもの。塗って見せるスキュー形状に使う。
+ * 手前を向いた面だけを描かせるので、外から見て反時計回りになる順に並べる。
+ * 面の順は、投影面に接した面（z = 0）・手前の面（z = 1）・下・上・左・右
+ */
+const CUBE_FACES = [
+  0, 3, 2, 0, 2, 1, 4, 5, 6, 4, 6, 7, 0, 1, 5, 0, 5, 4, 2, 3, 7, 2, 7, 6, 0, 4, 7, 0, 7, 3, 1, 2, 6,
+  1, 6, 5
+]
+
 /** 座標軸の向き。順に x・y・z */
 const AXIS_DIRECTIONS: [number, number, number][] = [
   [1, 0, 0],
@@ -91,6 +105,14 @@ const PANEL_OFFSET = 2
 const SETUP_SCALE = 0.62
 const SETUP_TILT_X = 0.28
 const SETUP_TILT_Y = -0.75
+
+/**
+ * スキューさせた形状を照らす光。塗った面だけが陰影の付く材質で、ほかの線には効かない。
+ * 面ごとの明るさの差がないと、単色で塗った箱が平らな影絵に見えてしまう
+ */
+const AMBIENT_INTENSITY = 2.5
+const KEY_LIGHT_INTENSITY = 6
+const KEY_LIGHT_POSITION: [number, number, number] = [2, 3, 2]
 
 /** 矢印の大きさ */
 const ARROW_RADIUS = 0.05
@@ -283,8 +305,32 @@ export const createObliqueScene = ({ scene, params }: SceneContext) => {
   skewed.visible = false
   setup.add(skewed)
 
-  const skewedShape = createWireframe(CUBE_VERTICES.length, CUBE_EDGES_OFF_PLANE, SKEW_COLOR)
-  skewed.add(skewedShape.object)
+  // 稜線で描くと立方体・像・投射線に線が重なって読み取りづらくなるので、
+  // スキューさせた形状は薄く塗った面だけで見せる
+  const skewedVertices = new Float32BufferAttribute(new Float32Array(CUBE_VERTICES.length * 3), 3)
+  const skewedGeometry = new BufferGeometry()
+    .setAttribute("position", skewedVertices)
+    .setIndex(CUBE_FACES)
+  const skewedMaterial = new MeshStandardMaterial({
+    color: SKEW_COLOR,
+    // 光沢を出さない。面ごとの明るさの差だけで立体に見せる
+    roughness: 1,
+    // 8 頂点を面どうしで共有しているので、法線は面ごとに求めさせる。
+    // スキューで面の向きが変わっても、陰影がそのまま追従する
+    flatShading: true,
+    // 裏を向いた面は描かない。表と裏が重なると濃さが均されて、塗りが平らな影絵に見える
+    side: FrontSide,
+    transparent: true,
+    opacity: 0.38,
+    // 面に深度を書かせない。向こう側を通る投射線と、投影面に写った像を隠さないため
+    depthWrite: false
+  })
+  skewed.add(new Mesh(skewedGeometry, skewedMaterial))
+
+  // スキューさせた形状だけが陰影の付く材質なので、光もそのためだけに置く
+  const keyLight = new DirectionalLight("#ffffff", KEY_LIGHT_INTENSITY)
+  keyLight.position.set(...KEY_LIGHT_POSITION)
+  scene.add(new AmbientLight("#ffffff", AMBIENT_INTENSITY), keyLight)
 
   const skewedRayPosition = new Float32BufferAttribute(
     new Float32Array(CUBE_VERTICES.length * 6),
@@ -359,14 +405,14 @@ export const createObliqueScene = ({ scene, params }: SceneContext) => {
 
         // 像と同じずれを与えたまま投影面からの距離（z）を保つと、
         // 奥行き方向にスキューさせた形状になる。垂直に下ろすと同じ像に重なる
-        skewedShape.vertices.setXYZ(i, imageX, imageY, z)
+        skewedVertices.setXYZ(i, imageX, imageY, z)
         skewedRayPosition.setXYZ(i * 2, imageX, imageY, z)
         skewedRayPosition.setXYZ(i * 2 + 1, imageX, imageY, 0)
       })
       planeImage.vertices.needsUpdate = true
       panelImage.vertices.needsUpdate = true
       rayPosition.needsUpdate = true
-      skewedShape.vertices.needsUpdate = true
+      skewedVertices.needsUpdate = true
       skewedRayPosition.needsUpdate = true
 
       skewed.visible = params.showSkewed
@@ -392,8 +438,8 @@ export const createObliqueScene = ({ scene, params }: SceneContext) => {
         shape.material,
         rayGeometry,
         rayMaterial,
-        skewedShape.geometry,
-        skewedShape.material,
+        skewedGeometry,
+        skewedMaterial,
         skewedRayGeometry,
         skewedRayMaterial,
         planeImage.geometry,

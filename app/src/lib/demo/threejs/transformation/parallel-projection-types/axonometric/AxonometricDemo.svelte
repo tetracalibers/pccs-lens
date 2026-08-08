@@ -50,24 +50,25 @@
     const asDegrees = (value: number) => `${value.toFixed(2)}°`
 
     // 選ぶと 3 種類ちょうどの向きへ飛ぶ。飛んだあとにスライダーを動かしても選択はそのまま残るので、
-    // 今どの種類になっているかは下の「種類」で読む
+    // 今どの種類になっているかは下の「投影の種類」で読む
     const preset = pane.addBinding(selection, "preset", {
       options: PRESET_OPTIONS,
-      label: "プリセットへ合わせる"
+      label: "代表的な向きに合わせる"
     })
+    // 方位角・仰角は記事の地の文では扱っていないので、ラベルに短い説明を添える
     const azimuth = pane.addBinding(p, "azimuthDeg", {
       min: 5,
       max: 85,
       step: 0.01,
       format: asDegrees,
-      label: "方位角"
+      label: "方位角（水平の傾き）"
     })
     const elevation = pane.addBinding(p, "elevationDeg", {
       min: 5,
       max: 80,
       step: 0.01,
       format: asDegrees,
-      label: "仰角"
+      label: "仰角（上下の傾き）"
     })
 
     preset.on("change", (event) => {
@@ -80,6 +81,6 @@
 
     pane.addBinding(p, "scales", { readonly: true, label: "縮み率（x / y / z）" })
     pane.addBinding(p, "angles", { readonly: true, label: "軸のなす角（xy / yz / zx）" })
-    pane.addBinding(p, "kind", { readonly: true, label: "種類" })
+    pane.addBinding(p, "kind", { readonly: true, label: "投影の種類" })
   }}
 />

@@ -3,11 +3,11 @@
   import { createOrthographicScene, type OrthographicParams } from "./scene"
 
   // Tweakpane が直接書き換え、scene.ts が毎フレーム読む。$state ではなくプレーンオブジェクトにする
-  const params: OrthographicParams = { depth: 1, showRays: true }
+  const params: OrthographicParams = { depth: 1, showRays: false }
 </script>
 
 <ThreeDemoCanvas
-  ariaLabel="断面が正方形の立体と、その向こう側に置かれた投影面。立体の各頂点から投影面へ垂直に下ろした投射線と、投影面に写った像が描かれる。像は正方形で、奥行き方向の稜線が潰れた隅に点が付く。奥行きを変えても像は変わらない（ドラッグで回転、ホイールで拡大縮小）"
+  ariaLabel="断面が正方形の立体と、その向こう側に置かれた投影面。投影面に写った像と、切り替えで表示できる投射線（立体の各頂点から投影面へ垂直に下ろしたもの）が描かれる。像は正方形で、奥行き方向の稜線が潰れた隅に点が付く。奥行きを変えても像は変わらない（ドラッグで回転、ホイールで拡大縮小）"
   createScene={createOrthographicScene}
   {params}
   aspectRatio="16 / 10"

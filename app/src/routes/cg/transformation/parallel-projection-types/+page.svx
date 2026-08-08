@@ -31,10 +31,6 @@ draft: true
 :Mark[投射線を表示]して、投射線とつながる辺（投影面に垂直な辺）が投影面上の一点に写ることを確認しよう
 :::
 
-:::Todo{type="fix"}
-デモの「投射線を表示」をデフォルトでoffに
-:::
-
 <CanvasWrapper>
   <OrthographicDemo />
 </CanvasWrapper>
@@ -278,12 +274,6 @@ rightGroup.rotation.y = -fold
 - :Mark[方位角]と:Mark[仰角]を動かすと、揃っていた縮み率がどう崩れ、:Mark[投影の種類]はどう変わるだろうか？
 :::
 
-:::Todo{type="fix"}
-- 「方位角」と「仰角」は未習なので、UIのラベルでは「方位角（〜）」「仰角（〜）」のように、短い説明を添えて表記する
-- 「プリセットへ合わせる」がわかりづらいので、「デフォルトに戻す」とか？（他の案も考えたい）
-- 「種類」は「投影の種類」に改名
-:::
-
 <CanvasWrapper>
   <AxonometricDemo />
 </CanvasWrapper>
@@ -378,11 +368,6 @@ const angles = projectedAxes.map((axis, i) =>
 
 :::Action
 :Mark[カバリエ図]と:Mark[キャビネット図]を切り替えると、像に写る奥行きの辺の長さはどう変わるだろうか？
-:::
-
-:::Todo{type="fix"}
-- 「プリセットへ合わせる」は前の図と同様に修正
-- スキューさせた形状を重ねると線が多すぎてわかりづらいので、スキューさせた形状を薄く塗るのはどうだろうか？
 :::
 
 <CanvasWrapper>
