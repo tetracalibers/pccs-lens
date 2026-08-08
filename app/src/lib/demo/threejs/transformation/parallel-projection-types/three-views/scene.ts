@@ -3,6 +3,7 @@ import {
   CanvasTexture,
   DoubleSide,
   EdgesGeometry,
+  ExtrudeGeometry,
   Group,
   LineBasicMaterial,
   LineSegments,
@@ -11,9 +12,11 @@ import {
   MeshBasicMaterial,
   PlaneGeometry,
   Scene,
+  Shape,
   Sprite,
   SpriteMaterial,
   SRGBColorSpace,
+  Vector2,
   Vector3
 } from "three"
 
@@ -67,6 +70,25 @@ const BOX_X = 1.1
 const BOX_Y = 0.9
 const BOX_Z = 0.8
 
+/** 投影の向き（落とす座標の番号）と、その先にある投影面の位置。順に側面図・平面図・正面図 */
+const PROJECTIONS: [number, number][] = [
+  [0, BOX_X],
+  [1, BOX_Y],
+  [2, BOX_Z]
+]
+
+/**
+ * 頂点 `i` から `axis` の向きへ投射線を引くか。
+ * 同じ線上に頂点が並ぶときは、いちばん先の 1 つからだけ引く。手前の頂点から引くと
+ * 投射線が稜線をなぞって線が二重になり、深度の競り合いで稜線が途切れて見える
+ */
+const isRaySource = (i: number, axis: number) =>
+  !SOLID_VERTICES.some(
+    (other) =>
+      other[axis] > SOLID_VERTICES[i][axis] &&
+      other.every((value, k) => k === axis || value === SOLID_VERTICES[i][k])
+  )
+
 /** 折り開く前の全体の傾き。3 枚の面が重ならずに見える向きにする */
 const FOLDED_TILT_X = 0.3
 const FOLDED_TILT_Y = -0.6
@@ -94,6 +116,8 @@ const LABEL_FONT = "bold 92px sans-serif"
 // 背景（暗めのグレー）の上で、立体・像・投影面が見分けられる色にする。
 // 像は立体と見分けのつく暖色にし、対応線は図より目立たない色にする
 const SOLID_COLOR = "#e8e8ee"
+/** 立体の面の濃さ。稜線だけでは奥行きが反転して見えるので、薄く塗って向きを決める */
+const SOLID_OPACITY = 0.18
 const IMAGE_COLOR = "#ffc857"
 const RAY_COLOR = "#7d8794"
 const PLANE_COLOR = "#8fa3bf"
@@ -204,9 +228,26 @@ export const createThreeViewsScene = ({ scene, params }: SceneContext) => {
   rightPlane.object.position.z = -BOX_Z
   rightGroup.add(rightPlane.object)
 
-  // 投影される立体
+  // 投影される立体。断面から押し出した面を薄く敷き、その上に稜線を重ねる
+  const solidGroup = new Group()
+  root.add(solidGroup)
+
+  const shape = new Shape(PROFILE.map(([x, y]) => new Vector2(x, y)))
+  const solidGeometry = new ExtrudeGeometry(shape, { depth: SOLID_DEPTH * 2, bevelEnabled: false })
+  // 押し出しは断面の位置から z の正の側へ伸びるので、前後に振り分ける
+  solidGeometry.translate(0, 0, -SOLID_DEPTH)
+  const solidMaterial = new MeshBasicMaterial({
+    color: SOLID_COLOR,
+    side: DoubleSide,
+    transparent: true,
+    opacity: SOLID_OPACITY,
+    // 面に深度を書かせない。立体の向こう側を通る投射線と、投影面に写った像を隠さないため
+    depthWrite: false
+  })
+  solidGroup.add(new Mesh(solidGeometry, solidMaterial))
+
   const solid = createWireframe(SOLID_VERTICES, SOLID_EDGES, SOLID_COLOR)
-  root.add(solid.object)
+  solidGroup.add(solid.object)
 
   // 正面図。投影面に垂直な向き（z）の座標を投影面の位置に置き換えると求まる
   const frontVertices = SOLID_VERTICES.map(([x, y]) => [x, y, BOX_Z])
@@ -224,17 +265,16 @@ export const createThreeViewsScene = ({ scene, params }: SceneContext) => {
   const sideView = createWireframe(sideVertices, SOLID_EDGES, IMAGE_COLOR)
   rightGroup.add(sideView.object)
 
-  // 投射線。頂点 1 つにつき、3 枚の投影面へ 1 本ずつ引く。
+  // 投射線。頂点から 3 枚の投影面へ、それぞれ垂直に引く。
   // 折り開くと像との対応が崩れるので、開くにつれて消す
   const rayGeometry = new BufferGeometry().setFromPoints(
-    SOLID_VERTICES.flatMap(([x, y, z]) => [
-      new Vector3(x, y, z),
-      new Vector3(x, y, BOX_Z),
-      new Vector3(x, y, z),
-      new Vector3(x, BOX_Y, z),
-      new Vector3(x, y, z),
-      new Vector3(BOX_X, y, z)
-    ])
+    SOLID_VERTICES.flatMap((vertex, i) =>
+      PROJECTIONS.filter(([axis]) => isRaySource(i, axis)).flatMap(([axis, distance]) => {
+        const target = [...vertex]
+        target[axis] = distance
+        return [new Vector3(...vertex), new Vector3().fromArray(target)]
+      })
+    )
   )
   const rayMaterial = new LineBasicMaterial({ color: RAY_COLOR, transparent: true })
   const rays = new LineSegments(rayGeometry, rayMaterial)
@@ -290,7 +330,7 @@ export const createThreeViewsScene = ({ scene, params }: SceneContext) => {
       // 開いた 3 枚は正面の面から上と右へ広がるので、そのぶん中心を戻す
       root.position.setScalar(-BOX_Z * params.unfold * scale)
 
-      solid.object.visible = params.showSolid
+      solidGroup.visible = params.showSolid
       rays.visible = params.showSolid && params.unfold < 1
       rayMaterial.opacity = 1 - params.unfold
 
@@ -314,6 +354,8 @@ export const createThreeViewsScene = ({ scene, params }: SceneContext) => {
           wireframe.geometry,
           wireframe.material
         ]),
+        solidGeometry,
+        solidMaterial,
         rayGeometry,
         rayMaterial,
         guideGeometry,

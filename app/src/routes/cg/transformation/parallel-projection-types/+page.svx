@@ -115,7 +115,20 @@ rightPlane.rotation.y = Math.PI / 2
 rightPlane.position.z = -BOX_Z
 rightGroup.add(rightPlane)
 
-// 投影される立体
+// 投影される立体。断面から押し出した面を薄く敷き、その上に稜線を重ねる
+const shape = new Shape(PROFILE.map(([x, y]) => new Vector2(x, y)))
+const solidGeometry = new ExtrudeGeometry(shape, { depth: SOLID_DEPTH * 2, bevelEnabled: false })
+// 押し出しは断面の位置から z の正の側へ伸びるので、前後に振り分ける
+solidGeometry.translate(0, 0, -SOLID_DEPTH)
+const solidMaterial = new MeshBasicMaterial({
+  color: SOLID_COLOR,
+  side: DoubleSide,
+  transparent: true,
+  opacity: 0.18,
+  // 面に深度を書かせない。立体の向こう側を通る投射線と、投影面に写った像を隠さないため
+  depthWrite: false
+})
+scene.add(new Mesh(solidGeometry, solidMaterial))
 scene.add(createWireframe(SOLID_VERTICES, SOLID_EDGES, SOLID_COLOR))
 
 // 正面図。投影面に垂直な向き（z）の座標を投影面の位置に置き換えると求まる
@@ -131,16 +144,24 @@ topGroup.add(createWireframe(topVertices, SOLID_EDGES, IMAGE_COLOR))
 const sideVertices = SOLID_VERTICES.map(([, y, z]) => [0, y, z - BOX_Z])
 rightGroup.add(createWireframe(sideVertices, SOLID_EDGES, IMAGE_COLOR))
 
-// 投射線。頂点 1 つにつき、3 枚の投影面へ 1 本ずつ引く
+// 頂点 i から axis の向きへ投射線を引くか。同じ線上に頂点が並ぶときは、いちばん先の 1 つからだけ引く。
+// 手前の頂点から引くと投射線が稜線をなぞって線が二重になり、深度の競り合いで稜線が途切れて見える
+const isRaySource = (i: number, axis: number) =>
+  !SOLID_VERTICES.some(
+    (other) =>
+      other[axis] > SOLID_VERTICES[i][axis] &&
+      other.every((value, k) => k === axis || value === SOLID_VERTICES[i][k])
+  )
+
+// 投射線。頂点から 3 枚の投影面へ、それぞれ垂直に引く
 const rayGeometry = new BufferGeometry().setFromPoints(
-  SOLID_VERTICES.flatMap(([x, y, z]) => [
-    new Vector3(x, y, z),
-    new Vector3(x, y, BOX_Z),
-    new Vector3(x, y, z),
-    new Vector3(x, BOX_Y, z),
-    new Vector3(x, y, z),
-    new Vector3(BOX_X, y, z)
-  ])
+  SOLID_VERTICES.flatMap((vertex, i) =>
+    PROJECTIONS.filter(([axis]) => isRaySource(i, axis)).flatMap(([axis, distance]) => {
+      const target = [...vertex]
+      target[axis] = distance
+      return [new Vector3(...vertex), new Vector3().fromArray(target)]
+    })
+  )
 )
 scene.add(new LineSegments(rayGeometry, new LineBasicMaterial({ color: RAY_COLOR })))
 
