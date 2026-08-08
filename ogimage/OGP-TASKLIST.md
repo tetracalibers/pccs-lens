@@ -387,7 +387,7 @@
 
 ## CGと画像処理（nested） — 記事：レンダリング（`cg/rendering.yaml`）
 
-- [ページ未作成] 写実的表現とリアリティの要素
+- [draft] `/cg/rendering/photorealism-and-reality-elements`
 - [ページ未作成] 写実的表現のためのモデリング
 - [ページ未作成] レンダリングにおける処理
 - [ページ未作成] バックフェースカリング

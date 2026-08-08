@@ -618,7 +618,7 @@
 
 ## CGと画像処理 — レンダリング／写実的レンダリング（`cg/rendering.yaml` #photorealistic）
 
-- [ページ未作成] 写実的表現とリアリティの要素
+- [draft] `/cg/rendering/photorealism-and-reality-elements`
 - [ページ未作成] 写実的表現のためのモデリング
 - [ページ未作成] レンダリングにおける処理
 
