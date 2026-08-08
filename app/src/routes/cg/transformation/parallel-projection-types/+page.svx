@@ -14,6 +14,7 @@ draft: true
   import AxonometricDemo from '$lib/demo/threejs/transformation/parallel-projection-types/axonometric/AxonometricDemo.svelte'
   import ObliqueDemo from '$lib/demo/threejs/transformation/parallel-projection-types/oblique/ObliqueDemo.svelte'
   import ThreeViewsDemo from '$lib/demo/threejs/transformation/parallel-projection-types/three-views/ThreeViewsDemo.svelte'
+  import OrthographicDemo from '$lib/demo/threejs/transformation/parallel-projection-types/orthographic/OrthographicDemo.svelte'
 </script>
 
 [平行投影](/cg/transformation/perspective-and-parallel-projection/)では、投射線を互いに:Anki[平行]にすることで、寸法をそのまま読み取れる像が得られます。
@@ -25,8 +26,84 @@ draft: true
 
 投射線が投影面と直角に交わるため、投影面に平行に置かれた面は、形も大きさも変わらずに写ります。逆に、投影面に垂直な向きの辺は、像の上では長さを持たない`1`点に潰れます。
 
-:::Todo
-立方体を直投影で写した図解。投射線が投影面と直角に交わるようすと、投影面に平行な前面が正方形のまま実寸で写る一方で、投影面に垂直な奥行き方向の辺が像の上では点に潰れることを示す
+:::Action
+次の点に着目して、デモを観察してみよう
+
+- 奥行きを伸ばしても、投影面に写った像がまったく変わらないこと
+- 奥行き方向の辺が、像の上では隅の`1`点に重なってしまうこと
+- ドラッグして投影面の正面へ回すと、投影面に平行な面と像がぴたりと重なること
+:::
+
+<CanvasWrapper>
+  <OrthographicDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 投影面。xy 平面に平行な正方形を、形状の向こう側（z の負の側）に置く
+const planeGeometry = new PlaneGeometry(PLANE_SIZE, PLANE_SIZE)
+const plane = new Mesh(
+  planeGeometry,
+  new MeshBasicMaterial({ color: PLANE_COLOR, side: DoubleSide, transparent: true, opacity: 0.12 })
+)
+plane.position.z = PLANE_Z
+scene.add(plane)
+scene.add(
+  new LineSegments(new EdgesGeometry(planeGeometry), new LineBasicMaterial({ color: PLANE_COLOR }))
+)
+
+// 投影される立体。奥行きで前後に伸び縮みする
+const shapePosition = new Float32BufferAttribute(new Float32Array(BOX_CORNERS.length * 6), 3)
+const shapeGeometry = new BufferGeometry()
+  .setAttribute("position", shapePosition)
+  .setIndex(BOX_EDGES)
+scene.add(new LineSegments(shapeGeometry, new LineBasicMaterial({ color: SHAPE_COLOR })))
+
+// 投影面に写る像。稜線のつなぎ方（インデックス）は立体と同じ
+const imagePosition = new Float32BufferAttribute(new Float32Array(BOX_CORNERS.length * 6), 3)
+const imageGeometry = new BufferGeometry()
+  .setAttribute("position", imagePosition)
+  .setIndex(BOX_EDGES)
+scene.add(new LineSegments(imageGeometry, new LineBasicMaterial({ color: IMAGE_COLOR })))
+
+// 奥行き方向の稜線が潰れた先。像の隅に点を置いて、辺 1 本が 1 点になったことを示す
+const dotGeometry = new BufferGeometry().setFromPoints(
+  BOX_CORNERS.map(([x, y]) => new Vector3(x, y, PLANE_Z))
+)
+scene.add(
+  new Points(
+    dotGeometry,
+    new PointsMaterial({ color: IMAGE_COLOR, size: DOT_SIZE, sizeAttenuation: false })
+  )
+)
+
+// 投射線。奥（投影面側）の 4 頂点から 1 本ずつ引く。
+// 手前の頂点から引くと奥行きの稜線をなぞって線が二重になるので、そちらは引かない
+const rayPosition = new Float32BufferAttribute(new Float32Array(BOX_CORNERS.length * 6), 3)
+const rayGeometry = new BufferGeometry().setAttribute("position", rayPosition)
+scene.add(new LineSegments(rayGeometry, new LineBasicMaterial({ color: RAY_COLOR })))
+
+// 奥行きは投影面に垂直な向きへ前後に振り分ける。
+// 投影面に平行な断面（x・y）は奥行きによらず変わらない
+const half = DEPTH / 2
+
+BOX_CORNERS.forEach(([x, y], i) => {
+  shapePosition.setXYZ(i, x, y, -half)
+  shapePosition.setXYZ(i + BOX_CORNERS.length, x, y, half)
+
+  // 直投影の像は、投影面に垂直な向きの座標（z）を投影面の位置に置き換えるだけ。
+  // x・y はそのまま残るので、投影面に平行な断面は形も大きさも変わらずに写る。
+  // 奥行きの両端はどちらも同じ 1 点に重なり、奥行き方向の辺は長さを失う
+  imagePosition.setXYZ(i, x, y, PLANE_Z)
+  imagePosition.setXYZ(i + BOX_CORNERS.length, x, y, PLANE_Z)
+
+  // 投射線は投影面へ垂直に下ろす。どの頂点でも向きは同じ（互いに平行）
+  rayPosition.setXYZ(i * 2, x, y, -half)
+  rayPosition.setXYZ(i * 2 + 1, x, y, PLANE_Z)
+})
+```
+
 :::
 
 投射線の向きを投影面に垂直にしても、その投影面自体をどちらへ向けるかは自由に選べます。投影面の向きにより、直投影は次の`2`種類に分かれます。
