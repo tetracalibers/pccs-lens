@@ -1,0 +1,10 @@
+---
+layout: guide-content
+title: 散乱・減衰の表現 # CG 4-3-6
+
+group: ["CG"]
+
+draft: true
+---
+
+## TODO

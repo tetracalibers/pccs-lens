@@ -619,8 +619,8 @@
 ## CGと画像処理 — レンダリング／写実的レンダリング（`cg/rendering.yaml` #photorealistic）
 
 - [draft] `/cg/rendering/photorealism-and-reality-elements`
-- [ページ未作成] 写実的表現のためのモデリング
-- [ページ未作成] レンダリングにおける処理
+- [draft] `/cg/rendering/modeling-for-photorealism`
+- [draft] `/cg/rendering/rendering-process`
 
 ## CGと画像処理 — レンダリング／隠面消去（`cg/rendering.yaml` #hidden-surface）
 
@@ -633,29 +633,29 @@
 
 ## CGと画像処理 — レンダリング／シェーディング（`cg/rendering.yaml` #shading）
 
-- [ページ未作成] シェーディングの目的
+- [draft] `/cg/rendering/shading-purpose`
 - [ページ未作成] 光を表す量
 - [ページ未作成] シェーディングモデル
 - [ページ未作成] 環境光の表現
 - [ページ未作成] 拡散反射の表現
 - [ページ未作成] 鏡面反射の表現
-- [ページ未作成] 反射・透過・屈折の表現
-- [ページ未作成] 散乱・減衰の表現
-- [ページ未作成] スムーズシェーディングの手法
+- [draft] `/cg/rendering/reflection-transmission-refraction`
+- [draft] `/cg/rendering/scattering-and-attenuation`
+- [draft] `/cg/rendering/smooth-shading`
 - [ページ未作成] グローシェーディング
 - [ページ未作成] フォンシェーディング
 
 ## CGと画像処理 — レンダリング／シャドウイング（`cg/rendering.yaml` #shadowing）
 
-- [ページ未作成] 平行光源・点光源による影
+- [draft] `/cg/rendering/shadows-from-point-and-directional-lights`
 - [ページ未作成] 大きさをもつ光源による影
 
 ## CGと画像処理 — レンダリング／マッピング（`cg/rendering.yaml` #mapping）
 
 - [ページ未作成] マッピングの目的と手法
-- [ページ未作成] テクスチャマッピング
+- [draft] `/cg/rendering/texture-mapping`
 - [ページ未作成] アンチエイリアシング
-- [ページ未作成] バンプマッピング
+- [draft] `/cg/rendering/bump-mapping`
 - [ページ未作成] 環境マッピング
 - [ページ未作成] ソリッドテクスチャマッピング
 
