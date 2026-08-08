@@ -63,7 +63,7 @@ function helpText(scriptName, title) {
   --out=<dir>           出力先ディレクトリ（既定: .generated/<pattern>/<timestamp>）
   --help                このヘルプ
 
-  --guide を付けなくても、一覧 HTML の先頭に群ごとの解説図を 1 枚ずつ並べる。
+  一覧 HTML は群ごとに節を分ける。節の中に色数 2〜6 が並ぶ。
 `
 }
 
@@ -97,7 +97,6 @@ export function run({ patternName, scriptName, title, buildMotif }) {
     const domainArea = (size / repeat) ** 2
 
     const entries = []
-    const guideEntries = []
 
     for (const group of groups) {
       // 基本領域は色数や seed に依らないので、群ごとに 1 度だけ作る
@@ -118,41 +117,14 @@ export function run({ patternName, scriptName, title, buildMotif }) {
             renderWallpaperSVG({ domain, motif, colors, size, seed, guide }),
             'utf-8',
           )
-          entries.push({
-            filename,
-            section: `${colors.length}色`,
-            label: group,
-            seed,
-            colors,
-          })
-
-          // 群ごとに 1 枚だけ、対称性の要素を重ねた解説図も出す
-          if (!guide && variant === 0 && colors === palettes[0]) {
-            const guideName = `${group}-guide.svg`
-            fs.writeFileSync(
-              path.join(outDir, guideName),
-              renderWallpaperSVG({ domain, motif, colors, size, seed, guide: true }),
-              'utf-8',
-            )
-            guideEntries.push({
-              filename: guideName,
-              section: '対称性の要素',
-              label: `${group}（点群 ${domain.pointGroup} / ${domain.ops.length} 変換）`,
-              seed,
-              colors,
-            })
-          }
+          // 群ごとに節を分ける。節の中に色数 2〜6 が並ぶので、
+          // 同じ群で色数を増やしたときの見え方を並べて比べられる
+          entries.push({ filename, section: group, seed, colors })
         }
       }
     }
 
-    finish({
-      outDir,
-      entries: [...guideEntries, ...entries],
-      title,
-      baseSeed,
-      started,
-    })
+    finish({ outDir, entries, title, baseSeed, started })
   } catch (error) {
     console.error(`Error: ${error.message}`)
     process.exitCode = 1
