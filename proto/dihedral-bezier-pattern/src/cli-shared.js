@@ -1,0 +1,85 @@
+/** 生成スクリプトで共通のコマンドライン解釈と、出力の後始末 */
+
+import fs from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+import { randomSeed, hashSeed } from './random.js'
+import { DEFAULT_PALETTES, COLOR_COUNTS, parsePalette } from './palettes.js'
+import { renderIndexHTML } from './render.js'
+
+const PACKAGE_ROOT = fileURLToPath(new URL('..', import.meta.url))
+
+export function parseArgs(argv) {
+  const opts = {}
+  for (const arg of argv) {
+    const m = /^--([\w-]+)(?:=(.*))?$/.exec(arg)
+    if (!m) throw new Error(`不明な引数: ${arg}`)
+    opts[m[1]] = m[2] ?? 'true'
+  }
+  return opts
+}
+
+export function resolveSeed(value) {
+  if (value === undefined) return randomSeed()
+  return /^\d+$/.test(value) ? Number(value) >>> 0 : hashSeed(value)
+}
+
+export function readSize(value) {
+  const size = Number(value ?? 480)
+  if (!Number.isFinite(size) || size < 64) {
+    throw new Error(`--size は 64 以上の数値で指定してください（指定: ${value}）`)
+  }
+  return size
+}
+
+export function readCount(value) {
+  const count = Number(value ?? 1)
+  if (!Number.isInteger(count) || count < 1) {
+    throw new Error(`--count は 1 以上の整数で指定してください（指定: ${value}）`)
+  }
+  return count
+}
+
+/** --colors があればその 1 つ、無ければ既定の色数 2〜6 のパレット */
+export function readPalettes(value) {
+  return value ? [parsePalette(value)] : COLOR_COUNTS.map((k) => DEFAULT_PALETTES[k])
+}
+
+function timestamp() {
+  const now = new Date()
+  const pad = (n) => String(n).padStart(2, '0')
+  return (
+    `${now.getUTCFullYear()}${pad(now.getUTCMonth() + 1)}${pad(now.getUTCDate())}` +
+    `-T${pad(now.getUTCHours())}${pad(now.getUTCMinutes())}${pad(now.getUTCSeconds())}Z`
+  )
+}
+
+export function resolveOutDir(value, patternName) {
+  return value
+    ? path.resolve(value)
+    : path.join(PACKAGE_ROOT, '.generated', patternName, timestamp())
+}
+
+/** 一覧 HTML を書き出して、生成結果をコンソールに報告する */
+export function finish({ outDir, entries, title, baseSeed, started }) {
+  fs.writeFileSync(
+    path.join(outDir, 'index.html'),
+    renderIndexHTML(title, entries),
+    'utf-8',
+  )
+
+  const elapsed = (performance.now() - started).toFixed(1)
+  const shown = (name) => path.relative(process.cwd(), path.join(outDir, name))
+  console.log(`Seed: ${baseSeed}`)
+  // 枚数が多いときは 1 枚ずつ並べても読めないので、まとめて件数で示す
+  if (entries.length > 12) {
+    console.log(
+      `Generated: ${entries.length} files in ${path.relative(process.cwd(), outDir)}`,
+    )
+  } else {
+    for (const e of entries) console.log(`Generated: ${shown(e.filename)}`)
+  }
+  console.log(`Index: ${shown('index.html')}`)
+  console.log(`Time: ${elapsed}ms`)
+}
