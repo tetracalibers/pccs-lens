@@ -302,7 +302,10 @@ export const createObliqueScene = ({ scene, renderer, params, invalidate }: Scen
     color: PLANE_COLOR,
     side: DoubleSide,
     transparent: true,
-    opacity: 0.12
+    opacity: 0.12,
+    // 面に深度を書かせない。x 軸・y 軸はこの面の中を通るので、軸名のラベル（常にカメラを
+    // 向く板）が面をまたいで置かれ、深度を書くと向こう側にはみ出た半分が欠けて見える
+    depthWrite: false
   })
   setup.add(new Mesh(planeGeometry, planeMaterial))
 
