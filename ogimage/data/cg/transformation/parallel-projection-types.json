@@ -1,0 +1,12 @@
+{
+  "route": "cg/transformation/parallel-projection-types",
+  "title": "さまざまな平行投影",
+  "titleLines": [
+    "さまざまな平行投影"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "変換と投影"
+  ],
+  "figure": "assets/cg/transformation/parallel-projection-types/figure.png"
+}

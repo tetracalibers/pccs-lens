@@ -313,7 +313,7 @@
 - [draft] `/cg/transformation/projection-calculation`
 - [draft] `/cg/transformation/clipping-algorithms`
 - [draft] `/cg/transformation/vanishing-points-and-n-point-perspective`
-- [draft] `/cg/transformation/parallel-projection-types`
+- [x] `/cg/transformation/parallel-projection-types`
 - [ページ未作成] 画像の幾何学的変換
 - [ページ未作成] 画像の再標本化と補間
 - [ページ未作成] ニアレストネイバー

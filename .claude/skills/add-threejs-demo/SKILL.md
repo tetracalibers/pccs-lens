@@ -74,6 +74,13 @@ find app/src/routes/cg -maxdepth 2 -type d -name "<記事slug>"
 
 守ること:
 
+- **記事に残っている `:::Todo` は案の材料にしてよいが、`:::Todo{type="text"}` は除外する。** `type="text"` は文章の加筆メモ（`author-style-writer` の担当）で、図解・デモの依頼ではない。デモ化の候補として拾うのは属性なし・`{type="figure"}` の `:::Todo` だけ（→ `writing-guides/syntax-guide.md` ルール4）
+
+  ```bash
+  # 記事から図解のTODO（属性なし・figure）だけを拾う
+  grep -n ':::Todo' <対象記事の +page.svx> | grep -v 'type="text"'
+  ```
+
 - **件数は記事次第。** 「1 つの視点に 1 デモ」に縛らない。片方の視点が 0 案でもよい
 - **提示は 5 案程度を上限とする**
 - **各案に必ず「弱み」を書く。** 自分の案を売り込むだけの提案にしない

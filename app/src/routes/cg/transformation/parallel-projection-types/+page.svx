@@ -4,84 +4,433 @@ title: さまざまな平行投影 # CG 2-3-3
 
 group: ["CG"]
 
-draft: true
+visual: true
 ---
 
-[透視投影と平行投影](/cg/transformation/perspective-and-parallel-projection/)では、投射線を互いに平行にすることで、寸法をそのまま読み取れる像が得られることを見ました。
-ただし、平行だという条件だけでは、投射線をどの向きに走らせるかまでは決まりません。
-ここでは、その向きの取り方で分かれる平行投影の種類を見ていきます。
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import AxonometricDemo from '$lib/demo/threejs/transformation/parallel-projection-types/axonometric/AxonometricDemo.svelte'
+  import ObliqueDemo from '$lib/demo/threejs/transformation/parallel-projection-types/oblique/ObliqueDemo.svelte'
+  import ThreeViewsDemo from '$lib/demo/threejs/transformation/parallel-projection-types/three-views/ThreeViewsDemo.svelte'
+  import OrthographicDemo from '$lib/demo/threejs/transformation/parallel-projection-types/orthographic/OrthographicDemo.svelte'
+</script>
+
+[平行投影](/cg/transformation/perspective-and-parallel-projection/)では、投射線を互いに:Anki[平行]にすることで、寸法をそのまま読み取れる像が得られます。
+この平行な投射線をどの向きに伸ばすかによって、平行投影はいくつかに分類されます。
 
 ## :WithGroupTag[直投影]{group="{['CG']}"}
 
-:Anki[直投影]は、投影面に垂直な投射線で形状を写す平行投影です。:Anki[正投影]と呼ばれることもあります。
+[透視投影と平行投影](/cg/transformation/perspective-and-parallel-projection/)で扱ったような、投影面に垂直な投射線で形状を写す平行投影は:Anki[直投影]と呼ばれます。
 
-投射線が投影面と直角に交わるため、投影面に平行に置かれた面は、形も大きさも変わらずに写ります。逆に、投影面に垂直な向きの辺は、像の上では長さを持たない`1`点に潰れます。
+投射線が投影面と:Mark[直角]に交わるため、投影面に平行に置かれた面は、形も大きさも変わらずに写ります。
+逆に、投影面に垂直な向きの辺は、像の上では長さを持たない`1`点に潰れます。
 
-:::Todo
-立方体を直投影で写した図解。投射線が投影面と直角に交わるようすと、投影面に平行な前面が正方形のまま実寸で写る一方で、投影面に垂直な奥行き方向の辺が像の上では点に潰れることを示す
+:::Action
+:Mark[投射線を表示]して、投射線とつながる辺（投影面に垂直な辺）が投影面上の一点に写ることを確認しよう
 :::
 
-投射線の向きを投影面に垂直と決めても、その投影面自体をどちらへ向けるかは自由に選べます。座標平面に平行に置いたものが三面図、どの座標平面とも平行でない向きへ傾けたものが軸測投影で、直投影はこの`2`種類に分かれます。
+<CanvasWrapper>
+  <OrthographicDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 投影面。xy 平面に平行な正方形を、形状の向こう側（z の負の側）に置く
+const planeGeometry = new PlaneGeometry(PLANE_SIZE, PLANE_SIZE)
+const plane = new Mesh(
+  planeGeometry,
+  new MeshBasicMaterial({ color: PLANE_COLOR, side: DoubleSide, transparent: true, opacity: 0.12 })
+)
+plane.position.z = PLANE_Z
+scene.add(plane)
+scene.add(
+  new LineSegments(new EdgesGeometry(planeGeometry), new LineBasicMaterial({ color: PLANE_COLOR }))
+)
+
+// 投影される立体。奥行きで前後に伸び縮みする
+const shapePosition = new Float32BufferAttribute(new Float32Array(BOX_CORNERS.length * 6), 3)
+const shapeGeometry = new BufferGeometry()
+  .setAttribute("position", shapePosition)
+  .setIndex(BOX_EDGES)
+scene.add(new LineSegments(shapeGeometry, new LineBasicMaterial({ color: SHAPE_COLOR })))
+
+// 投影面に写る像。稜線のつなぎ方（インデックス）は立体と同じ
+const imagePosition = new Float32BufferAttribute(new Float32Array(BOX_CORNERS.length * 6), 3)
+const imageGeometry = new BufferGeometry()
+  .setAttribute("position", imagePosition)
+  .setIndex(BOX_EDGES)
+scene.add(new LineSegments(imageGeometry, new LineBasicMaterial({ color: IMAGE_COLOR })))
+
+// 奥行き方向の稜線が潰れた先。像の隅に点を置いて、辺 1 本が 1 点になったことを示す
+const dotGeometry = new BufferGeometry().setFromPoints(
+  BOX_CORNERS.map(([x, y]) => new Vector3(x, y, PLANE_Z))
+)
+scene.add(
+  new Points(
+    dotGeometry,
+    new PointsMaterial({ color: IMAGE_COLOR, size: DOT_SIZE, sizeAttenuation: false })
+  )
+)
+
+// 投射線。奥（投影面側）の 4 頂点から 1 本ずつ引く。
+// 手前の頂点から引くと奥行きの稜線をなぞって線が二重になるので、そちらは引かない
+const rayPosition = new Float32BufferAttribute(new Float32Array(BOX_CORNERS.length * 6), 3)
+const rayGeometry = new BufferGeometry().setAttribute("position", rayPosition)
+scene.add(new LineSegments(rayGeometry, new LineBasicMaterial({ color: RAY_COLOR })))
+
+// 奥行きは投影面に垂直な向きへ前後に振り分ける。
+// 投影面に平行な断面（x・y）は奥行きによらず変わらない
+const half = DEPTH / 2
+
+BOX_CORNERS.forEach(([x, y], i) => {
+  shapePosition.setXYZ(i, x, y, -half)
+  shapePosition.setXYZ(i + BOX_CORNERS.length, x, y, half)
+
+  // 直投影の像は、投影面に垂直な向きの座標（z）を投影面の位置に置き換えるだけ。
+  // x・y はそのまま残るので、投影面に平行な断面は形も大きさも変わらずに写る。
+  // 奥行きの両端はどちらも同じ 1 点に重なり、奥行き方向の辺は長さを失う
+  imagePosition.setXYZ(i, x, y, PLANE_Z)
+  imagePosition.setXYZ(i + BOX_CORNERS.length, x, y, PLANE_Z)
+
+  // 投射線は投影面へ垂直に下ろす。どの頂点でも向きは同じ（互いに平行）
+  rayPosition.setXYZ(i * 2, x, y, -half)
+  rayPosition.setXYZ(i * 2 + 1, x, y, PLANE_Z)
+})
+```
+
+:::
+
+直投影で決まっているのは、投射線が投影面と直角に交わることだけです。その投射線をどの向きに走らせるか、言い換えれば形状をどの向きから見るかまでは決まっていません。
+この向きの取り方によって、直投影は次の`2`種類に分類されます。
+
+- :Anki[三面図]：座標平面に平行に置いたもの
+- :Anki[軸測投影]：どの座標平面とも平行でない向きへ傾けたもの
 
 ### 三面図
 
 :Anki[三面図]は、座標平面に平行な`3`つの投影面へ形状を写し、`3`枚の図を組にして立体を表す描き方です。
 
-`1`枚の図では、投影面に垂直な向きの情報が失われます。そこで、向きの異なる`3`方向から写した図をそろえ、互いの欠けを補い合わせます。
-
-`3`枚は、どの向きから見た図かで呼び分けます。
+三面図では、向きの異なる`3`方向から写した図を組み合わせて、立体の形を表現します。
 
 - :Anki[正面図]：形状の特徴が最もよく表れる向きから見た図
 - :Anki[平面図]：真上から見下ろした図
 - :Anki[側面図]：真横から見た図
 
-どの図も投影面に平行な面を実寸で写しているため、図の上で測った長さは、そのまま形状の寸法として読み取れます。寸法を正確に伝えることが目的の図面では、この`3`枚組が基本の描き方になります。
+三面図を構成するこの`3`枚の図は、立体をどの向きから見た図かで呼び分けられ、それぞれ紙の上でどこに置くかまで決まっています。
+日本の製図で用いられるのは:Anki[第三角法]という並べ方で、形状と見る人の間に投影面を置き、写った図をその位置のまま外へ開いて`1`枚に収めます。真上から見た平面図は正面図の:Anki[上]に、右から見た側面図は正面図の:Anki[右]に来るため、どの向きから見た図かが並びから読み取れます。
 
-:::Todo
-L字型に切り欠いた立体を例に、正面図・平面図・側面図の`3`枚を配置した三面図の図解。それぞれがどの向きから見た図かと、`3`枚のあいだで同じ辺の長さが一致することを示す
+:::Action
+:Mark[展開]して`3`枚の投影面を`1`枚に折り開いてみよう
+また、:Mark[立体の表示]をOFFにして、`3`枚の平面図から立体の形を想像してみよう
 :::
 
-立体の形をつかむには`3`枚を見比べて頭の中で組み立てる必要があり、`1`枚だけで全体像がわかるわけではありません。
+<CanvasWrapper>
+  <ThreeViewsDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 半透明の面と輪郭線でできた投影面 1 枚
+const createPlane = (width: number, height: number) => {
+  const group = new Group()
+  const geometry = new PlaneGeometry(width, height)
+  const material = new MeshBasicMaterial({
+    color: PLANE_COLOR,
+    side: DoubleSide,
+    transparent: true,
+    opacity: 0.12
+  })
+  group.add(new Mesh(geometry, material))
+  group.add(
+    new LineSegments(new EdgesGeometry(geometry), new LineBasicMaterial({ color: PLANE_COLOR }))
+  )
+  return group
+}
+
+// 稜線でつないだ線。立体も像も動かないので、頂点はここで決めきる
+const createWireframe = (vertices: number[][], edges: number[], color: string) => {
+  const geometry = new BufferGeometry()
+    .setFromPoints(vertices.map(([x, y, z]) => new Vector3(x, y, z)))
+    .setIndex(edges)
+  return new LineSegments(geometry, new LineBasicMaterial({ color }))
+}
+
+// 上（平面図）と右（側面図）の面は、折り開くときの回転軸まわりに回る。
+// 正面の面と共有する辺を Group の原点に置くと、軸まわりの回転だけで折り開ける
+const topGroup = new Group()
+topGroup.position.set(0, BOX_Y, BOX_Z)
+scene.add(topGroup)
+
+const rightGroup = new Group()
+rightGroup.position.set(BOX_X, 0, BOX_Z)
+scene.add(rightGroup)
+
+// 座標平面に平行な 3 枚の投影面。立体を囲む箱の、手前・上・右の面にあたる
+const frontPlane = createPlane(BOX_X * 2, BOX_Y * 2)
+frontPlane.position.z = BOX_Z
+scene.add(frontPlane)
+
+const topPlane = createPlane(BOX_X * 2, BOX_Z * 2)
+topPlane.rotation.x = Math.PI / 2
+topPlane.position.z = -BOX_Z
+topGroup.add(topPlane)
+
+const rightPlane = createPlane(BOX_Z * 2, BOX_Y * 2)
+rightPlane.rotation.y = Math.PI / 2
+rightPlane.position.z = -BOX_Z
+rightGroup.add(rightPlane)
+
+// 投影される立体。断面から押し出した面を薄く敷き、その上に稜線を重ねる
+const shape = new Shape(PROFILE.map(([x, y]) => new Vector2(x, y)))
+const solidGeometry = new ExtrudeGeometry(shape, { depth: SOLID_DEPTH * 2, bevelEnabled: false })
+// 押し出しは断面の位置から z の正の側へ伸びるので、前後に振り分ける
+solidGeometry.translate(0, 0, -SOLID_DEPTH)
+const solidMaterial = new MeshBasicMaterial({
+  color: SOLID_COLOR,
+  side: DoubleSide,
+  transparent: true,
+  opacity: 0.18,
+  // 面に深度を書かせない。立体の向こう側を通る投射線と、投影面に写った像を隠さないため
+  depthWrite: false
+})
+scene.add(new Mesh(solidGeometry, solidMaterial))
+scene.add(createWireframe(SOLID_VERTICES, SOLID_EDGES, SOLID_COLOR))
+
+// 正面図。投影面に垂直な向き（z）の座標を投影面の位置に置き換えると求まる
+const frontVertices = SOLID_VERTICES.map(([x, y]) => [x, y, BOX_Z])
+scene.add(createWireframe(frontVertices, SOLID_EDGES, IMAGE_COLOR))
+
+// 平面図。真上から見下ろすので y を置き換える。
+// 折り開く Group の中に置くため、共有する辺を原点とした座標にする
+const topVertices = SOLID_VERTICES.map(([x, , z]) => [x, 0, z - BOX_Z])
+topGroup.add(createWireframe(topVertices, SOLID_EDGES, IMAGE_COLOR))
+
+// 側面図。真横から見るので x を置き換える
+const sideVertices = SOLID_VERTICES.map(([, y, z]) => [0, y, z - BOX_Z])
+rightGroup.add(createWireframe(sideVertices, SOLID_EDGES, IMAGE_COLOR))
+
+// 頂点 i から axis の向きへ投射線を引くか。同じ線上に頂点が並ぶときは、いちばん先の 1 つからだけ引く。
+// 手前の頂点から引くと投射線が稜線をなぞって線が二重になり、深度の競り合いで稜線が途切れて見える
+const isRaySource = (i: number, axis: number) =>
+  !SOLID_VERTICES.some(
+    (other) =>
+      other[axis] > SOLID_VERTICES[i][axis] &&
+      other.every((value, k) => k === axis || value === SOLID_VERTICES[i][k])
+  )
+
+// 投射線。頂点から 3 枚の投影面へ、それぞれ垂直に引く
+const rayGeometry = new BufferGeometry().setFromPoints(
+  SOLID_VERTICES.flatMap((vertex, i) =>
+    PROJECTIONS.filter(([axis]) => isRaySource(i, axis)).flatMap(([axis, distance]) => {
+      const target = [...vertex]
+      target[axis] = distance
+      return [new Vector3(...vertex), new Vector3().fromArray(target)]
+    })
+  )
+)
+scene.add(new LineSegments(rayGeometry, new LineBasicMaterial({ color: RAY_COLOR })))
+
+// 上の面は共有する辺まわりに起こし、右の面は同じ辺まわりに開く。
+// どちらも 90 度回すと、正面の面と同じ 1 枚の平面に収まる
+const fold = (Math.PI / 2) * UNFOLD
+topGroup.rotation.x = fold
+rightGroup.rotation.y = -fold
+```
+
+:::
+
+三面図で立体の形を掴むには、`3`枚を見比べて頭の中で組み立てる必要があり、`1`枚だけで全体像がわかるわけではありません。
+
+しかし、どの図も投影面に平行な面を実寸で写しているため、図の上で測った長さは、そのまま形状の寸法として読み取れます。:Anki[寸法]を正確に伝えることが目的の:Anki[図面]では、この三面図が基本の描き方になります。
 
 ### 軸測投影
 
 :Anki[軸測投影]は、どの座標平面とも平行でない向きに投影面を置いた直投影です。
 
-`3`つの座標軸がどれも投影面に対して斜めを向くため、`1`枚の図に`3`つの面が同時に現れます。`3`枚を見比べなくても、そこから立体の形を見て取れます。そのかわり、座標軸に沿った辺は斜めから写されることになり、像の上では実際より短くなります。
+`3`つの座標軸がどれも投影面に対して:Anki[斜め]を向くため、`1`枚の図に`3`つの面が同時に現れます。
+`3`枚を見比べなくても立体の形を読み取れるのがメリットですが、その代わり、座標軸に沿った辺は:Anki[斜め]から写されるため、像の上では実際より:Anki[短く]なります。
 
-軸に沿った長さが像の上で何倍になるか（縮み率）は、軸ごとに違います。軸測投影は、`3`つの軸の縮み率がどう揃うかで`3`種類に分かれます。
+軸に沿った辺の長さが像の上で何倍になるか（縮み率）は、軸ごとに異なります。`3`つの軸の縮み率のばらつきによって、軸測投影は次の`3`種類に分類されます。
 
 - :Anki[等測投影]：`3`軸の縮み率がすべて等しい
 - :Anki[二等測投影]：`2`軸の縮み率だけが等しい
 - :Anki[不等測投影]：`3`軸の縮み率がすべて異なる
 
-このうち、図として描かれることが多いのは等測投影です。`3`つの軸を投影面に対して等しく傾けるので、像の上では軸どうしが互いに`120`度をなし、どの軸方向の辺もおよそ`0.82`倍という同じ割合で縮みます。縮み率が揃っているぶん、辺の長さの比は実際の形状のまま保たれます。この描き方で得られる図を:Anki[アイソメ図]（:Anki[等測投影図]）といいます。
+このうち、図として描かれることが多いのは:Anki[等測投影]です。
+`3`つの軸を投影面に対して等しく傾けるので、像の上では軸どうしが互いに:Anki[120]度をなし、どの軸方向の辺もおよそ`0.82`倍という同じ割合で縮みます。
+縮み率が揃っている分、辺の長さの:Anki[比]は実際の形状のまま保たれます。このような等測投影で得られる図を:Anki[アイソメ図]（:Anki[等測投影図]）といいます。
 
-:::Note
-実際の作図では、縮み率を`1`とみなして軸方向の長さをそのまま描くこともあります。像は本来の等測投影より少し大きくなりますが、図の上の長さを換算せずに測れます。
+:::Action
+- :Mark[投影面に写った像]から、大まかな立体の形がわかるだろうか？
+- :Mark[等測]を選ぶと、:Mark[縮み率]と:Mark[軸のなす角]が揃うことに注目しよう
+- :Mark[方位角]と:Mark[仰角]を動かすと、揃っていた縮み率がどう崩れ、:Mark[投影の種類]はどう変わるだろうか？
 :::
 
-:::Todo
-等測投影で立方体を写した図解。像の上で`3`つの座標軸が互いに`120`度をなすことと、どの軸方向の辺も同じ割合で縮むことを示す。あわせて、二等測投影・不等測投影では軸の角度と縮み率が揃わないようすを並べて対比する
+<CanvasWrapper>
+  <AxonometricDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 投影面。xy 平面に平行な正方形を、形状の向こう側（z の負の側）に置く
+const planeGeometry = new PlaneGeometry(PLANE_SIZE, PLANE_SIZE)
+const plane = new Mesh(
+  planeGeometry,
+  new MeshBasicMaterial({ color: PLANE_COLOR, side: DoubleSide, transparent: true, opacity: 0.12 })
+)
+plane.position.z = PLANE_Z
+scene.add(plane)
+scene.add(
+  new LineSegments(new EdgesGeometry(planeGeometry), new LineBasicMaterial({ color: PLANE_COLOR }))
+)
+
+// 投影される立方体
+const shapePosition = new Float32BufferAttribute(new Float32Array(CUBE_VERTICES.length * 3), 3)
+const shapeGeometry = new BufferGeometry()
+  .setAttribute("position", shapePosition)
+  .setIndex(CUBE_EDGES)
+scene.add(new LineSegments(shapeGeometry, new LineBasicMaterial({ color: SHAPE_COLOR })))
+
+// 投影面に写る像。稜線のつなぎ方（インデックス）は立方体と同じ
+const imagePosition = new Float32BufferAttribute(new Float32Array(CUBE_VERTICES.length * 3), 3)
+const imageGeometry = new BufferGeometry()
+  .setAttribute("position", imagePosition)
+  .setIndex(CUBE_EDGES)
+scene.add(new LineSegments(imageGeometry, new LineBasicMaterial({ color: IMAGE_COLOR })))
+
+// 投射線。頂点 1 つにつき 1 本（2 頂点）
+const rayPosition = new Float32BufferAttribute(new Float32Array(CUBE_VERTICES.length * 6), 3)
+const rayGeometry = new BufferGeometry().setAttribute("position", rayPosition)
+scene.add(new LineSegments(rayGeometry, new LineBasicMaterial({ color: RAY_COLOR })))
+
+// 投影面に垂直な向き（方位角と仰角で決まる）が z 軸に重なるように形状を回す。
+// 投影面を傾けるかわりに形状の側を回しているが、両者の関係は変わらない
+const orientation = new Matrix4()
+  .makeRotationX(MathUtils.degToRad(ELEVATION_DEG))
+  .multiply(new Matrix4().makeRotationY(-MathUtils.degToRad(AZIMUTH_DEG)))
+
+const point = new Vector3()
+CUBE_VERTICES.forEach(([x, y, z], i) => {
+  point.set(x, y, z).applyMatrix4(orientation)
+  shapePosition.setXYZ(i, point.x, point.y, point.z)
+
+  // 直投影の像は、投影面に垂直な向きの座標（z）を落とすだけで求まる。
+  // 投影面までの距離が変わっても像は動かない
+  imagePosition.setXYZ(i, point.x, point.y, PLANE_Z)
+
+  // 投射線は頂点から投影面へまっすぐ下ろす。どの頂点でも向きは同じ（互いに平行）
+  rayPosition.setXYZ(i * 2, point.x, point.y, point.z)
+  rayPosition.setXYZ(i * 2 + 1, point.x, point.y, PLANE_Z)
+})
+
+// 座標軸の像。長さ 1 の軸が像の上で何倍になるかが縮み率になる
+const projectedAxes = AXIS_DIRECTIONS.map(([x, y, z]) => {
+  const tip = new Vector3(x, y, z).applyMatrix4(orientation)
+  return new Vector3(tip.x, tip.y, 0)
+})
+const scales = projectedAxes.map((axis) => axis.length())
+
+// 像の上で軸どうしがなす角
+const angles = projectedAxes.map((axis, i) =>
+  MathUtils.radToDeg(axis.angleTo(projectedAxes[(i + 1) % 3]))
+)
+```
+
 :::
 
-アイソメ図は、辺の長さの比を保ったまま立体の形を`1`枚で示せるため、機器の組立説明図や、見下ろし視点のゲーム画面など、形のわかりやすさが求められる場面で広く使われています。
+「代表的な向きに合わせる」で「等測」を選んだものが、:Anki[アイソメ図]です。
+アイソメ図は、方位角が`45`度、仰角が約`35.26`度で、投影面に垂直な向きがちょうど`3`つの座標軸と等しい角をなす向きとなり、ここから少しでもずらすと`3`軸の縮み率は揃わなくなります。
+
+アイソメ図は、辺の長さの比を保ったまま立体の形を`1`枚で示せるため、機器の:Anki[組立説明図]や、見下ろし視点のゲーム画面など、形のわかりやすさが求められる場面で広く使われています。
 
 ## :WithGroupTag[斜投影]{group="{['CG']}"}
 
-:Anki[斜投影]は、投影面に斜めに交わる投射線で形状を写す平行投影です。平行投影に求められるのは投射線が互いに平行であることだけで、投影面と直角に交わることまでは必要ありません。
+平行投影に求められるのは投射線が互いに:Anki[平行]であることだけで、投影面と:Anki[直角]に交わることまでは必要ありません。:Anki[斜投影]は、投影面に斜めに交わる投射線で形状を写す平行投影です。
 
-投影面に平行な面が実寸で写るのは直投影と同じですが、投影面に垂直な向きの辺は点に潰れず、斜めに伸びた線として像に現れます。そのため、正面の形をそのまま保ちながら、奥行きの広がりも`1`枚の図に収められます。
+投影面に平行な面が実寸で写るのは:Anki[直投影]と同じですが、投影面に:Anki[垂直]な向きの辺は点に潰れず、:Anki[斜め]に伸びた線として像に現れます。そのため、正面の形をそのまま保ちながら、:Anki[奥行き]の広がりも`1`枚の図に収められます。
 
-奥行き方向の辺が像の上でどれだけの長さになるかは、投射線が投影面となす角で決まります。この角が`45`度のとき、辺は実際の長さのまま写ります。斜投影は、この奥行きをどの長さで描くかによって`2`つに呼び分けられます。
+奥行き方向の辺が像の上でどれだけの長さになるかは、投射線と投影面との:Anki[角度]で決まります。この角が`45`度のとき、辺は実際の長さのまま写ります。斜投影は、この奥行きをどの長さで描くかによって、次の`2`種類に呼び分けられます。
 
 - :Anki[カバリエ図]：奥行き方向の辺を実際の長さのまま描いたもの
 - :Anki[キャビネット図]：奥行き方向の辺を`1 / 2`に縮めて描いたもの
 
-カバリエ図は奥行きが実際より長く見えるため、見た目の自然さを優先する場面では、奥行きを詰めたキャビネット図が選ばれます。
+見た目の自然さを優先する場面では、奥行きを詰めた:Anki[キャビネット図]が選ばれます。
 
-:::Todo
-斜投影で立方体を写した図解。投射線が投影面に斜めに交わるようすと、投影面に平行な前面が正方形のまま写り、奥行き方向の辺だけが斜めに伸びること。奥行きを実際の長さで描いたカバリエ図と、半分に縮めたキャビネット図を並べて対比する
+:::Action
+:Mark[カバリエ図]と:Mark[キャビネット図]を切り替えると、像に写る奥行きの辺の長さはどう変わるだろうか？
 :::
 
-斜投影の像は、奥にある点ほど大きくずらして写したものになっています。奥行きに比例したずれを加えるこの変形は[スキュー](/cg/transformation/reflection-and-skew/)そのもので、形状を奥行き方向にスキューさせてから直投影しても、同じ像が得られます。
+<CanvasWrapper>
+  <ObliqueDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 投影面。xy 平面に置いた正方形で、立方体の面がちょうど接する
+const planeGeometry = new PlaneGeometry(PLANE_SIZE, PLANE_SIZE)
+const plane = new Mesh(
+  planeGeometry,
+  new MeshBasicMaterial({ color: PLANE_COLOR, side: DoubleSide, transparent: true, opacity: 0.12 })
+)
+scene.add(plane)
+scene.add(
+  new LineSegments(new EdgesGeometry(planeGeometry), new LineBasicMaterial({ color: PLANE_COLOR }))
+)
+
+// 投影される立方体。向きも大きさも変わらないので、頂点はここで一度だけ書き込む。
+// 投影面に接した面は自分自身の像と重なるので、稜線からは外してある
+const shapePosition = new Float32BufferAttribute(new Float32Array(CUBE_VERTICES.length * 3), 3)
+CUBE_VERTICES.forEach(([x, y, z], i) => shapePosition.setXYZ(i, x, y, z))
+const shapeGeometry = new BufferGeometry()
+  .setAttribute("position", shapePosition)
+  .setIndex(CUBE_EDGES_OFF_PLANE)
+scene.add(new LineSegments(shapeGeometry, new LineBasicMaterial({ color: SHAPE_COLOR })))
+
+// 投影面に写る像。稜線のつなぎ方（インデックス）は立方体と同じ
+const imagePosition = new Float32BufferAttribute(new Float32Array(CUBE_VERTICES.length * 3), 3)
+const imageGeometry = new BufferGeometry()
+  .setAttribute("position", imagePosition)
+  .setIndex(CUBE_EDGES)
+scene.add(new LineSegments(imageGeometry, new LineBasicMaterial({ color: IMAGE_COLOR })))
+
+// 投射線。頂点 1 つにつき 1 本（2 頂点）
+const rayPosition = new Float32BufferAttribute(new Float32Array(CUBE_VERTICES.length * 6), 3)
+const rayGeometry = new BufferGeometry().setAttribute("position", rayPosition)
+scene.add(new LineSegments(rayGeometry, new LineBasicMaterial({ color: RAY_COLOR })))
+
+// 奥行き 1 に対して、像が投影面の上でどれだけずれるか。
+// 倍率 1 ならカバリエ図、0.5 ならキャビネット図になる
+const angle = MathUtils.degToRad(DEPTH_ANGLE_DEG)
+const shiftX = DEPTH_SCALE * Math.cos(angle)
+const shiftY = DEPTH_SCALE * Math.sin(angle)
+
+CUBE_VERTICES.forEach(([x, y, z], i) => {
+  // 斜投影の像は、投影面からの距離（z）に比例したずれを x・y に加えると求まる。
+  // 投影面に接した面（z = 0）はずれを受けないので、形も大きさも変わらずに写る
+  const imageX = x + z * shiftX
+  const imageY = y + z * shiftY
+  imagePosition.setXYZ(i, imageX, imageY, 0)
+
+  // 投射線は頂点から像へ結ぶ。どの頂点でも向きは同じ（互いに平行）だが、
+  // 投影面とは直角に交わらない
+  rayPosition.setXYZ(i * 2, x, y, z)
+  rayPosition.setXYZ(i * 2 + 1, imageX, imageY, 0)
+})
+
+// 投射線が投影面となす角。奥行き 1 に対して像が倍率のぶんだけずれるので、
+// 傾きは atan(1 / 倍率) で決まる。倍率 1（カバリエ図）でちょうど 45 度になる
+const rayAngleDeg = MathUtils.radToDeg(Math.atan2(1, DEPTH_SCALE))
+```
+
+:::
+
+斜投影の像は、奥にある点ほど大きくずらして写したものになっています。奥行きに比例したずれを加えるこの変形は[スキュー](/cg/transformation/reflection-and-skew/)そのもので、形状を:Anki[奥行き]方向にスキューさせてから:Anki[直投影]しても、同じ像が得られます。
+
+:::Action
+:Mark[スキューした形状]を重ねた上で、:Mark[立方体と投影面]の図をドラッグで回転させよう
+投影面の正面まで回すと、スキューした立体と像が重なることを確かめよう
+:::

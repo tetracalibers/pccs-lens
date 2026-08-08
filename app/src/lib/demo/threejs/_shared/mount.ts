@@ -95,10 +95,6 @@ export const mountThreeDemo = <P>(options: MountThreeDemoOptions<P>): ThreeDemo 
   )
   camera.position.set(...(cameraOptions?.position ?? CAMERA_POSITION))
 
-  // シーン構築はカメラの初期値を入れたあとに行う。カメラそのものが主題のデモでは
-  // scene.ts 側でカメラを上書きでき、その状態で OrbitControls が初期化される。
-  const handle: ThreeSceneHandle = createScene({ scene, camera, renderer, params })
-
   let frame = 0
   let visible = true
   let disposed = false
@@ -122,10 +118,16 @@ export const mountThreeDemo = <P>(options: MountThreeDemoOptions<P>): ThreeDemo 
     renderer.render(scene, camera)
   }
 
+  // 描画ループは scene.ts へ invalidate を渡すために先に組み立てておく。
+  // 中で参照している handle・controls は、実際に描画が走る次のフレームには揃っている
   const invalidate = () => {
     if (disposed || !visible || frame) return
     frame = requestAnimationFrame(renderFrame)
   }
+
+  // シーン構築はカメラの初期値を入れたあとに行う。カメラそのものが主題のデモでは
+  // scene.ts 側でカメラを上書きでき、その状態で OrbitControls が初期化される。
+  const handle: ThreeSceneHandle = createScene({ scene, camera, renderer, params, invalidate })
 
   let controls: OrbitControls | null = null
   /** ズームの寄り先を視野に反映する。`zoomFocus` を渡したデモでだけ組み立てられる */

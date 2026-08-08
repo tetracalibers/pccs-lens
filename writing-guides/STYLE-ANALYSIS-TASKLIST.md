@@ -833,7 +833,7 @@
 - [draft] `/cg/transformation/projection-calculation`
 - [draft] `/cg/transformation/clipping-algorithms`
 - [draft] `/cg/transformation/vanishing-points-and-n-point-perspective`
-- [draft] `/cg/transformation/parallel-projection-types`
+- [ ] `/cg/transformation/parallel-projection-types`
 
 ## CGと画像処理 — 変換と投影／画像の幾何学的変換（`cg/transformation.yaml` #image-geometric-transform）
 
