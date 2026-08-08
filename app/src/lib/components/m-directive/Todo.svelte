@@ -2,13 +2,18 @@
   import type { Snippet } from "svelte"
 
   interface Props {
+    /** `figure`: 図解・デモを入れたい箇所 / `text`: 文章を加筆したい箇所 */
+    type?: "figure" | "text"
     children?: Snippet
   }
 
-  let { children }: Props = $props()
+  let { type = "figure", children }: Props = $props()
+
+  /** ディレクティブの属性値は文字列で渡るため、既定の図解以外は明示された `text` のみ */
+  const isFigure = $derived(type !== "text")
 </script>
 
-<div class="todo">
+<div class="todo" class:figure={isFigure}>
   {@render children?.()}
 </div>
 
@@ -24,15 +29,21 @@
   }
 
   .todo::before {
-    content: "Todo";
+    content: "TODO：追記";
     display: block;
-    font-size: 0.68rem;
-    font-weight: 700;
+    font-size: 0.75rem;
     letter-spacing: 0.1em;
-    text-transform: uppercase;
     color: light-dark(#6b7280, #a3a8b4);
     margin-bottom: 0.25rem;
-    opacity: 0.85;
+  }
+
+  /** 図解のTODOだけを数えて、ページ内での通し番号をタイトルに出す */
+  .todo.figure {
+    counter-increment: todo-figure;
+  }
+
+  .todo.figure::before {
+    content: "TODO：図解." counter(todo-figure);
   }
 
   .todo :global(p) {
