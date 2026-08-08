@@ -34,7 +34,9 @@ function renderElement(element, colors) {
   const hairline = element.hairline
     ? ` stroke="${color}" stroke-width="0.7" stroke-linejoin="round"`
     : ''
-  return `<path d="${polygonPath(element.points)}" fill="${color}"${hairline}/>`
+  // kind: 'path' は円弧やベジェを含む輪郭。モチーフ側で組み立てた d をそのまま使う
+  const d = element.kind === 'path' ? element.d : polygonPath(element.points)
+  return `<path d="${d}" fill="${color}"${hairline}/>`
 }
 
 /* --- ガイド --- */

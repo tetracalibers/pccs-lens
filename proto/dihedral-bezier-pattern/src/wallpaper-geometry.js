@@ -158,6 +158,25 @@ export function sectorPolygons(points, center, angles) {
   })
 }
 
+/**
+ * 重なった頂点と、一直線上に並んだ頂点を落とす。
+ *
+ * ディリクレ領域は半平面で切って作るので、長さが 1e-14 のような辺が残ることがある。
+ * 見た目には出ないが、頂点まわりの内角や辺の長さを使うときは 0 除算になりうるので、
+ * そういう用途では先にこれで均しておく。
+ */
+export function simplifyPolygon(points, tolerance) {
+  const distinct = points.filter((p, i) => len(sub(p, points[(i + 1) % points.length])) > tolerance)
+  if (distinct.length < 3) return points
+  return distinct.filter((p, i) => {
+    const a = distinct[(i - 1 + distinct.length) % distinct.length]
+    const b = distinct[(i + 1) % distinct.length]
+    const e = sub(b, a)
+    const l = len(e) || 1
+    return Math.abs((e[0] * (p[1] - a[1]) - e[1] * (p[0] - a[0])) / l) > tolerance
+  })
+}
+
 /** 中心を固定して多角形を相似縮小する */
 export const scalePolygon = (points, center, k) =>
   points.map((p) => [center[0] + (p[0] - center[0]) * k, center[1] + (p[1] - center[1]) * k])
