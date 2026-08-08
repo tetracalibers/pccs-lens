@@ -4,8 +4,15 @@ title: さまざまな平行投影 # CG 2-3-3
 
 group: ["CG"]
 
+visual: true
+
 draft: true
 ---
+
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import AxonometricDemo from '$lib/demo/threejs/transformation/parallel-projection-types/axonometric/AxonometricDemo.svelte'
+</script>
 
 [平行投影](/cg/transformation/perspective-and-parallel-projection/)では、投射線を互いに:Anki[平行]にすることで、寸法をそのまま読み取れる像が得られます。
 この平行な投射線をどの向きに伸ばすかによって、平行投影はいくつかに分類されます。
@@ -69,8 +76,85 @@ L字型に切り欠いた立体を例に、正面図・平面図・側面図の`
 実際の作図では、縮み率を`1`とみなして軸方向の長さをそのまま描くこともあります。像は本来の等測投影より少し大きくなりますが、図の上の長さを換算せずに測れます。
 :::
 
-:::Todo
-等測投影で立方体を写した図解。像の上で`3`つの座標軸が互いに`120`度をなすことと、どの軸方向の辺も同じ割合で縮むことを示す。あわせて、二等測投影・不等測投影では軸の角度と縮み率が揃わないようすを並べて対比する
+:::Action
+次の点に着目して、デモを観察してみよう
+
+- 向きのプリセットを切り替えることで、`3`軸の縮み率の揃い方と種類がどう変わるか
+- 等測を選んだとき、像の上で軸がなす角と縮み率がどんな値に揃うか
+- 方位角と仰角を動かすと、揃っていた縮み率がどう崩れるか
+:::
+
+<CanvasWrapper>
+  <AxonometricDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 投影面。xy 平面に平行な正方形を、形状の向こう側（z の負の側）に置く
+const planeGeometry = new PlaneGeometry(PLANE_SIZE, PLANE_SIZE)
+const plane = new Mesh(
+  planeGeometry,
+  new MeshBasicMaterial({ color: PLANE_COLOR, side: DoubleSide, transparent: true, opacity: 0.12 })
+)
+plane.position.z = PLANE_Z
+scene.add(plane)
+scene.add(
+  new LineSegments(new EdgesGeometry(planeGeometry), new LineBasicMaterial({ color: PLANE_COLOR }))
+)
+
+// 投影される立方体
+const shapePosition = new Float32BufferAttribute(new Float32Array(CUBE_VERTICES.length * 3), 3)
+const shapeGeometry = new BufferGeometry()
+  .setAttribute("position", shapePosition)
+  .setIndex(CUBE_EDGES)
+scene.add(new LineSegments(shapeGeometry, new LineBasicMaterial({ color: SHAPE_COLOR })))
+
+// 投影面に写る像。稜線のつなぎ方（インデックス）は立方体と同じ
+const imagePosition = new Float32BufferAttribute(new Float32Array(CUBE_VERTICES.length * 3), 3)
+const imageGeometry = new BufferGeometry()
+  .setAttribute("position", imagePosition)
+  .setIndex(CUBE_EDGES)
+scene.add(new LineSegments(imageGeometry, new LineBasicMaterial({ color: IMAGE_COLOR })))
+
+// 投射線。頂点 1 つにつき 1 本（2 頂点）
+const rayPosition = new Float32BufferAttribute(new Float32Array(CUBE_VERTICES.length * 6), 3)
+const rayGeometry = new BufferGeometry().setAttribute("position", rayPosition)
+scene.add(new LineSegments(rayGeometry, new LineBasicMaterial({ color: RAY_COLOR })))
+
+// 投影面に垂直な向き（方位角と仰角で決まる）が z 軸に重なるように形状を回す。
+// 投影面を傾けるかわりに形状の側を回しているが、両者の関係は変わらない
+const orientation = new Matrix4()
+  .makeRotationX(MathUtils.degToRad(ELEVATION_DEG))
+  .multiply(new Matrix4().makeRotationY(-MathUtils.degToRad(AZIMUTH_DEG)))
+
+const point = new Vector3()
+CUBE_VERTICES.forEach(([x, y, z], i) => {
+  point.set(x, y, z).applyMatrix4(orientation)
+  shapePosition.setXYZ(i, point.x, point.y, point.z)
+
+  // 直投影の像は、投影面に垂直な向きの座標（z）を落とすだけで求まる。
+  // 投影面までの距離が変わっても像は動かない
+  imagePosition.setXYZ(i, point.x, point.y, PLANE_Z)
+
+  // 投射線は頂点から投影面へまっすぐ下ろす。どの頂点でも向きは同じ（互いに平行）
+  rayPosition.setXYZ(i * 2, point.x, point.y, point.z)
+  rayPosition.setXYZ(i * 2 + 1, point.x, point.y, PLANE_Z)
+})
+
+// 座標軸の像。長さ 1 の軸が像の上で何倍になるかが縮み率になる
+const projectedAxes = AXIS_DIRECTIONS.map(([x, y, z]) => {
+  const tip = new Vector3(x, y, z).applyMatrix4(orientation)
+  return new Vector3(tip.x, tip.y, 0)
+})
+const scales = projectedAxes.map((axis) => axis.length())
+
+// 像の上で軸どうしがなす角
+const angles = projectedAxes.map((axis, i) =>
+  MathUtils.radToDeg(axis.angleTo(projectedAxes[(i + 1) % 3]))
+)
+```
+
 :::
 
 アイソメ図は、辺の長さの比を保ったまま立体の形を`1`枚で示せるため、機器の組立説明図や、見下ろし視点のゲーム画面など、形のわかりやすさが求められる場面で広く使われています。
