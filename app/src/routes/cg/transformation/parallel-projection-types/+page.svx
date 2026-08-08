@@ -13,6 +13,7 @@ draft: true
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import AxonometricDemo from '$lib/demo/threejs/transformation/parallel-projection-types/axonometric/AxonometricDemo.svelte'
   import ObliqueDemo from '$lib/demo/threejs/transformation/parallel-projection-types/oblique/ObliqueDemo.svelte'
+  import ThreeViewsDemo from '$lib/demo/threejs/transformation/parallel-projection-types/three-views/ThreeViewsDemo.svelte'
 </script>
 
 [平行投影](/cg/transformation/perspective-and-parallel-projection/)では、投射線を互いに:Anki[平行]にすることで、寸法をそのまま読み取れる像が得られます。
@@ -49,8 +50,107 @@ draft: true
 
 どの図も投影面に平行な面を実寸で写しているため、図の上で測った長さは、そのまま形状の寸法として読み取れます。寸法を正確に伝えることが目的の図面では、この`3`枚組が基本の描き方になります。
 
-:::Todo
-L字型に切り欠いた立体を例に、正面図・平面図・側面図の`3`枚を配置した三面図の図解。それぞれがどの向きから見た図かと、`3`枚のあいだで同じ辺の長さが一致することを示す
+:::Action
+次の点に着目して、デモを観察してみよう
+
+- 展開を上げて`3`枚の投影面を`1`枚に折り開くと、正面図・平面図・側面図がどう並ぶか
+- 折り開いたあと、正面図と平面図のあいだで幅が、正面図と側面図のあいだで高さがどうそろうか
+- 立体の表示を切ると、`3`枚の図だけから立体の形を組み立てられるか
+:::
+
+<CanvasWrapper>
+  <ThreeViewsDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 半透明の面と輪郭線でできた投影面 1 枚
+const createPlane = (width: number, height: number) => {
+  const group = new Group()
+  const geometry = new PlaneGeometry(width, height)
+  const material = new MeshBasicMaterial({
+    color: PLANE_COLOR,
+    side: DoubleSide,
+    transparent: true,
+    opacity: 0.12
+  })
+  group.add(new Mesh(geometry, material))
+  group.add(
+    new LineSegments(new EdgesGeometry(geometry), new LineBasicMaterial({ color: PLANE_COLOR }))
+  )
+  return group
+}
+
+// 稜線でつないだ線。立体も像も動かないので、頂点はここで決めきる
+const createWireframe = (vertices: number[][], edges: number[], color: string) => {
+  const geometry = new BufferGeometry()
+    .setFromPoints(vertices.map(([x, y, z]) => new Vector3(x, y, z)))
+    .setIndex(edges)
+  return new LineSegments(geometry, new LineBasicMaterial({ color }))
+}
+
+// 上（平面図）と右（側面図）の面は、折り開くときの回転軸まわりに回る。
+// 正面の面と共有する辺を Group の原点に置くと、軸まわりの回転だけで折り開ける
+const topGroup = new Group()
+topGroup.position.set(0, BOX_Y, BOX_Z)
+scene.add(topGroup)
+
+const rightGroup = new Group()
+rightGroup.position.set(BOX_X, 0, BOX_Z)
+scene.add(rightGroup)
+
+// 座標平面に平行な 3 枚の投影面。立体を囲む箱の、手前・上・右の面にあたる
+const frontPlane = createPlane(BOX_X * 2, BOX_Y * 2)
+frontPlane.position.z = BOX_Z
+scene.add(frontPlane)
+
+const topPlane = createPlane(BOX_X * 2, BOX_Z * 2)
+topPlane.rotation.x = Math.PI / 2
+topPlane.position.z = -BOX_Z
+topGroup.add(topPlane)
+
+const rightPlane = createPlane(BOX_Z * 2, BOX_Y * 2)
+rightPlane.rotation.y = Math.PI / 2
+rightPlane.position.z = -BOX_Z
+rightGroup.add(rightPlane)
+
+// 投影される立体
+scene.add(createWireframe(SOLID_VERTICES, SOLID_EDGES, SOLID_COLOR))
+
+// 正面図。投影面に垂直な向き（z）の座標を投影面の位置に置き換えると求まる
+const frontVertices = SOLID_VERTICES.map(([x, y]) => [x, y, BOX_Z])
+scene.add(createWireframe(frontVertices, SOLID_EDGES, IMAGE_COLOR))
+
+// 平面図。真上から見下ろすので y を置き換える。
+// 折り開く Group の中に置くため、共有する辺を原点とした座標にする
+const topVertices = SOLID_VERTICES.map(([x, , z]) => [x, 0, z - BOX_Z])
+topGroup.add(createWireframe(topVertices, SOLID_EDGES, IMAGE_COLOR))
+
+// 側面図。真横から見るので x を置き換える
+const sideVertices = SOLID_VERTICES.map(([, y, z]) => [0, y, z - BOX_Z])
+rightGroup.add(createWireframe(sideVertices, SOLID_EDGES, IMAGE_COLOR))
+
+// 投射線。頂点 1 つにつき、3 枚の投影面へ 1 本ずつ引く
+const rayGeometry = new BufferGeometry().setFromPoints(
+  SOLID_VERTICES.flatMap(([x, y, z]) => [
+    new Vector3(x, y, z),
+    new Vector3(x, y, BOX_Z),
+    new Vector3(x, y, z),
+    new Vector3(x, BOX_Y, z),
+    new Vector3(x, y, z),
+    new Vector3(BOX_X, y, z)
+  ])
+)
+scene.add(new LineSegments(rayGeometry, new LineBasicMaterial({ color: RAY_COLOR })))
+
+// 上の面は共有する辺まわりに起こし、右の面は同じ辺まわりに開く。
+// どちらも 90 度回すと、正面の面と同じ 1 枚の平面に収まる
+const fold = (Math.PI / 2) * UNFOLD
+topGroup.rotation.x = fold
+rightGroup.rotation.y = -fold
+```
+
 :::
 
 立体の形をつかむには`3`枚を見比べて頭の中で組み立てる必要があり、`1`枚だけで全体像がわかるわけではありません。
