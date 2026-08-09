@@ -17,7 +17,7 @@
   createScene={createTransmissionSpreadScene}
   {params}
   aspectRatio="4 / 3"
-  camera={{ position: [3.2, 2, 4.8] }}
+  camera={{ position: [-1, -0.1, 5] }}
   orbit={{ target: [0, 0.2, 0], enableZoom: false }}
   buildPane={(pane, p) => {
     pane.addBinding(p, "incidenceDeg", {
