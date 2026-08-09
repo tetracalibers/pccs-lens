@@ -11,6 +11,7 @@ draft: true
 <script>
   import CanvasWrapper from "$lib/demo/CanvasWrapper.svelte"
   import ReflectionSpreadDemo from "$lib/demo/threejs/color/reflection-spread/ReflectionSpreadDemo.svelte"
+  import TransmissionSpreadDemo from "$lib/demo/threejs/color/transmission-spread/TransmissionSpreadDemo.svelte"
 </script>
 
 物体に届いた光は、表面で跳ね返ったり、内部を通り抜けたりします。
@@ -90,9 +91,16 @@ draft: true
 - すりガラスや曇りガラスで起こる透過は:Anki[拡散透過]で、光が入射するとさまざまな方向に散らばって出てくる
 -->
 
-:::Todo
-正透過と拡散透過の図をまとめてThree.jsで
+:::Action
+入射角と拡散の度合いを動かし、ドラッグで視点を回しながら、次の点に着目してみよう
+
+- 拡散の度合いが`0`のとき、ガラスに入った光が板の中と反対側でどの向きに進むか
+- 拡散の度合いを上げると、通り抜けた光がどの範囲まで散らばるか
 :::
+
+<CanvasWrapper>
+  <TransmissionSpreadDemo />
+</CanvasWrapper>
 
 ## :WithGradeTag[光の屈折]{grades="3"}
 
