@@ -21,7 +21,7 @@
   orbit={{ target: [0, 0.2, 0], enableZoom: false }}
   buildPane={(pane, p) => {
     pane.addBinding(p, "incidenceDeg", {
-      min: 20,
+      min: 0,
       max: 60,
       step: 1,
       format: (value: number) => `${value.toFixed(0)}°`,
