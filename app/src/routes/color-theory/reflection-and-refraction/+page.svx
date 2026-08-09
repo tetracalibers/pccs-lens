@@ -10,6 +10,7 @@ draft: true
 
 <script>
   import CanvasWrapper from "$lib/demo/CanvasWrapper.svelte"
+  import FrostedGlassDemo from "$lib/demo/threejs/color/frosted-glass/FrostedGlassDemo.svelte"
   import ReflectionSpreadDemo from "$lib/demo/threejs/color/reflection-spread/ReflectionSpreadDemo.svelte"
   import TransmissionSpreadDemo from "$lib/demo/threejs/color/transmission-spread/TransmissionSpreadDemo.svelte"
 </script>
@@ -100,6 +101,17 @@ draft: true
 
 <CanvasWrapper>
   <TransmissionSpreadDemo />
+</CanvasWrapper>
+
+:::Action
+ガラスの粗さを動かし、ドラッグで視点を回しながら、次の点に着目してみよう
+
+- 粗さが`0`のとき、ガラス越しの図形の輪郭や細い縞がどこまで読み取れるか
+- 粗さを上げると、どの大きさのものから順に読み取れなくなっていくか
+:::
+
+<CanvasWrapper>
+  <FrostedGlassDemo />
 </CanvasWrapper>
 
 ## :WithGradeTag[光の屈折]{grades="3"}

@@ -1,0 +1,197 @@
+import {
+  BoxGeometry,
+  CircleGeometry,
+  EdgesGeometry,
+  Group,
+  LineBasicMaterial,
+  LineSegments,
+  Mesh,
+  MeshBasicMaterial,
+  MeshPhysicalMaterial,
+  PlaneGeometry
+} from "three"
+import type { ThreeSceneContext } from "$lib/demo/threejs/_shared/types"
+
+/** Tweakpane で操作するパラメータ */
+export type FrostedGlassParams = {
+  /** ガラスの粗さ。0 が透明なガラス、1 がすりガラスのように向こう側がぼやける状態 */
+  roughness: number
+  /** いまの状態が透明なガラスかすりガラスか。scene.ts が計算して書き戻す表示用の値 */
+  glassType: string
+}
+
+/** 図形を並べる平面の奥行き。板ガラスの裏面から少し離して置く */
+const SHAPES_Z = -0.7
+
+/**
+ * 板ガラスの寸法。原点に置き、図形群ごと画面の中心に据える。
+ *
+ * 図形群より一回り大きくとってある。視点を回すと手前のガラスと奥の図形はずれて見えるので、
+ * 回せる範囲の端でも図形がガラスの外へはみ出さない余裕をもたせる
+ */
+const GLASS_WIDTH = 2.5
+const GLASS_HEIGHT = 2.4
+const GLASS_THICKNESS = 0.5
+
+/** ガラスの屈折率 */
+const GLASS_IOR = 1.5
+
+/**
+ * `ガラスの粗さ` が 1 のときのマテリアルの roughness。
+ *
+ * Three.js は「一度描いた画面を縮小した画像の何段目を読むか」でガラス越しのぼけを作り、
+ * その段数が roughness に比例する。roughness を 1 まで上げると 1 ドットまで潰れて
+ * 像が完全に消えてしまうので、**向こう側がぼんやり見えるところで頭打ちにする**
+ */
+const MAX_ROUGHNESS = 0.52
+
+/**
+ * ここまでの粗さを透明なガラスとみなす。
+ * 案となった反射・透過のデモと同じ境目にして、3 つのデモで読み取りをそろえる
+ */
+const CLEAR_ROUGHNESS_MAX = 0.15
+
+/** パネルに出すガラスの種類 */
+const CLEAR_TYPE = "透明なガラス"
+const FROSTED_TYPE = "すりガラス"
+
+// 記事の SVG 図解と同じ役割分担で色を決める（--canvas-pen-* の値をリテラルで踏襲）。
+// 板ガラスは水の色。透過そのものは無色で描くので、色が付くのは枠だけになる
+const GLASS_COLOR = "#24b9ff"
+const SHAPE_ORANGE = "#ef8c00"
+const SHAPE_YELLOW = "#f6ce46"
+const SHAPE_PINK = "#eb539f"
+const STRIPE_COLOR = "#e8e8ee"
+
+/** ガラスの向こう側に並べる図形。大きさに幅をもたせ、ぼけ方の違いを読ませる */
+const CIRCLES = [
+  { x: -0.34, y: 0.42, radius: 0.34, color: SHAPE_ORANGE },
+  { x: -0.4, y: -0.42, radius: 0.21, color: SHAPE_YELLOW }
+]
+const SQUARE = { x: 0.36, y: 0.44, size: 0.6, color: SHAPE_PINK }
+
+/** 細い縞。粗さを上げると 1 本ずつの区別が付かなくなり、まとまった 1 つの面に見えてくる */
+const STRIPE_COUNT = 6
+const STRIPE_WIDTH = 0.032
+const STRIPE_HEIGHT = 0.6
+const STRIPE_PITCH = 0.086
+const STRIPES_X = 0.32
+const STRIPES_Y = -0.44
+
+/**
+ * ガラスの向こう側に置く図形。
+ *
+ * ライトを当てず `MeshBasicMaterial` で描くので、指定した色がそのまま出る。
+ * 大きさの違う円・四角・細い縞を混ぜて、**細かいものほど早くぼけて消える**ことを読ませる
+ */
+const createShapes = () => {
+  // 単位の大きさで作った geometry を、拡大縮小しながら使い回す
+  const circleGeometry = new CircleGeometry(1, 64)
+  const planeGeometry = new PlaneGeometry(1, 1)
+
+  const circleMaterials = CIRCLES.map(({ color }) => new MeshBasicMaterial({ color }))
+  const squareMaterial = new MeshBasicMaterial({ color: SQUARE.color })
+  const stripeMaterial = new MeshBasicMaterial({ color: STRIPE_COLOR })
+
+  const group = new Group()
+  group.position.set(0, 0, SHAPES_Z)
+
+  CIRCLES.forEach(({ x, y, radius }, i) => {
+    const circle = new Mesh(circleGeometry, circleMaterials[i])
+    circle.position.set(x, y, 0)
+    circle.scale.setScalar(radius)
+    group.add(circle)
+  })
+
+  const square = new Mesh(planeGeometry, squareMaterial)
+  square.position.set(SQUARE.x, SQUARE.y, 0)
+  square.scale.set(SQUARE.size, SQUARE.size, 1)
+  group.add(square)
+
+  for (let i = 0; i < STRIPE_COUNT; i++) {
+    const stripe = new Mesh(planeGeometry, stripeMaterial)
+    stripe.position.set(STRIPES_X + (i - (STRIPE_COUNT - 1) / 2) * STRIPE_PITCH, STRIPES_Y, 0)
+    stripe.scale.set(STRIPE_WIDTH, STRIPE_HEIGHT, 1)
+    group.add(stripe)
+  }
+
+  return {
+    object: group,
+    dispose: () => {
+      const disposables = [
+        circleGeometry,
+        planeGeometry,
+        ...circleMaterials,
+        squareMaterial,
+        stripeMaterial
+      ]
+      disposables.forEach((disposable) => disposable.dispose())
+    }
+  }
+}
+
+/**
+ * 板ガラス。`transmission` を使うと、Three.js が一度描いた画面を読み直して
+ * 「この面の向こう側に何が見えるか」を計算する。粗さを上げるとその像がぼける。
+ *
+ * 色は白（無色）にして、背後の図形の色を変えないようにする
+ */
+const createGlass = () => {
+  const geometry = new BoxGeometry(GLASS_WIDTH, GLASS_HEIGHT, GLASS_THICKNESS)
+  const material = new MeshPhysicalMaterial({
+    color: "#ffffff",
+    metalness: 0,
+    // 実際の値は update() で params から入れ直す
+    roughness: 0,
+    transmission: 1,
+    thickness: GLASS_THICKNESS,
+    ior: GLASS_IOR,
+    transparent: true,
+    // 稜線が板の手前側だけになって厚みが読めなくなるので、深度は書かない
+    depthWrite: false
+  })
+
+  // 粗さ 0 のガラスは向こう側をほとんどそのまま見せるため、
+  // 枠が無いとどこにガラスがあるのか読み取れない。
+  //
+  // 稜線を transparent にするのは色を薄めるためではない。Three.js が
+  // 「ガラス越しの像」を作るときに写し込むのは**不透明な物体だけ**なので、
+  // 不透明のままだとこの枠自体が像に混ざり、ぼけた枠が二重に見えてしまう
+  const edgesGeometry = new EdgesGeometry(geometry)
+  const edgesMaterial = new LineBasicMaterial({ color: GLASS_COLOR, transparent: true })
+
+  return {
+    objects: [new Mesh(geometry, material), new LineSegments(edgesGeometry, edgesMaterial)],
+    setRoughness: (roughness: number) => {
+      material.roughness = roughness
+    },
+    dispose: () => {
+      const disposables = [geometry, material, edgesGeometry, edgesMaterial]
+      disposables.forEach((disposable) => disposable.dispose())
+    }
+  }
+}
+
+export const createFrostedGlassScene = ({
+  scene,
+  params
+}: ThreeSceneContext<FrostedGlassParams>) => {
+  const shapes = createShapes()
+  scene.add(shapes.object)
+
+  const glass = createGlass()
+  scene.add(...glass.objects)
+
+  return {
+    update: () => {
+      glass.setRoughness(params.roughness * MAX_ROUGHNESS)
+
+      // パネルの表示は、向こう側がそのまま見えていると言える範囲かどうかで切り替える
+      params.glassType = params.roughness <= CLEAR_ROUGHNESS_MAX ? CLEAR_TYPE : FROSTED_TYPE
+    },
+    dispose: () => {
+      shapes.dispose()
+      glass.dispose()
+    }
+  }
+}
