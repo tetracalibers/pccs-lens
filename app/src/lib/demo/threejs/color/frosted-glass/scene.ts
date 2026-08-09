@@ -56,8 +56,20 @@ const CLEAR_TYPE = "透明なガラス"
 const FROSTED_TYPE = "すりガラス"
 
 // 記事の SVG 図解と同じ役割分担で色を決める（--canvas-pen-* の値をリテラルで踏襲）。
-// 板ガラスは水の色。透過そのものは無色で描くので、色が付くのは枠だけになる
+// 板ガラスは水の色。稜線にはこの色をそのまま使う
 const GLASS_COLOR = "#24b9ff"
+
+/**
+ * 板の面に重ねる塗りの不透明度。
+ *
+ * 透過のマテリアルは「透った光に色を掛ける」作りなので、板の向こうが暗い背景のところでは
+ * 掛けても暗いままで何も変わらない。それだけでは粗さ 0 のとき板の在り処が稜線でしか
+ * 分からないので、**面そのものを薄く塗る**。背景の上でも図形の上でも同じだけ色が乗り、
+ * 板が 1 枚の面として見える。
+ *
+ * 案3の板ガラスと同じ作りだが、こちらは板が図の主役で面積が大きいぶん薄くしてある
+ */
+const GLASS_FILL_OPACITY = 0.1
 const SHAPE_ORANGE = "#ef8c00"
 const SHAPE_YELLOW = "#f6ce46"
 const SHAPE_PINK = "#eb539f"
@@ -134,7 +146,7 @@ const createShapes = () => {
  * 板ガラス。`transmission` を使うと、Three.js が一度描いた画面を読み直して
  * 「この面の向こう側に何が見えるか」を計算する。粗さを上げるとその像がぼける。
  *
- * 色は白（無色）にして、背後の図形の色を変えないようにする
+ * 透った光そのものは無色（`color` は白）にして、色は面の塗りと稜線だけで付ける
  */
 const createGlass = () => {
   const geometry = new BoxGeometry(GLASS_WIDTH, GLASS_HEIGHT, GLASS_THICKNESS)
@@ -160,13 +172,27 @@ const createGlass = () => {
   const edgesGeometry = new EdgesGeometry(geometry)
   const edgesMaterial = new LineBasicMaterial({ color: GLASS_COLOR, transparent: true })
 
+  // 面の塗り。稜線と同じく transparent なので像には写し込まれず、
+  // 透過を描いたあとに重なる。粗さを上げてぼけた像の上にも同じ濃さで乗る。
+  // 塗り → 稜線の順に並べ、稜線が塗りに沈まないようにする
+  const fillMaterial = new MeshBasicMaterial({
+    color: GLASS_COLOR,
+    transparent: true,
+    opacity: GLASS_FILL_OPACITY,
+    depthWrite: false
+  })
+
   return {
-    objects: [new Mesh(geometry, material), new LineSegments(edgesGeometry, edgesMaterial)],
+    objects: [
+      new Mesh(geometry, material),
+      new Mesh(geometry, fillMaterial),
+      new LineSegments(edgesGeometry, edgesMaterial)
+    ],
     setRoughness: (roughness: number) => {
       material.roughness = roughness
     },
     dispose: () => {
-      const disposables = [geometry, material, edgesGeometry, edgesMaterial]
+      const disposables = [geometry, material, fillMaterial, edgesGeometry, edgesMaterial]
       disposables.forEach((disposable) => disposable.dispose())
     }
   }
