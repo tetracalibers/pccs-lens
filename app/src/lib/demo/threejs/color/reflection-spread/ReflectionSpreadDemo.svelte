@@ -3,8 +3,9 @@
   import { createReflectionSpreadScene, type ReflectionSpreadParams } from "./scene"
 
   // Tweakpane が直接書き換え、scene.ts が毎フレーム読む。$state ではなくプレーンオブジェクトにする。
-  // 粗さは 0（正反射）から始める。記事が正反射 → 拡散反射の順で説明しているため
-  const params: ReflectionSpreadParams = { incidenceDeg: 60, roughness: 0 }
+  // 粗さは 0（正反射）から始める。記事が正反射 → 拡散反射の順で説明しているため。
+  // reflectionType は scene.ts が計算して書き戻す表示用の値
+  const params: ReflectionSpreadParams = { incidenceDeg: 60, roughness: 0, reflectionType: "正反射" }
 </script>
 
 <ThreeDemoCanvas
@@ -23,5 +24,6 @@
       label: "入射角"
     })
     pane.addBinding(p, "roughness", { min: 0, max: 1, step: 0.01, label: "表面の粗さ" })
+    pane.addBinding(p, "reflectionType", { readonly: true, label: "反射の種類" })
   }}
 />

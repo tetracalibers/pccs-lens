@@ -7,7 +7,6 @@ import {
   Group,
   Line,
   LineBasicMaterial,
-  LineDashedMaterial,
   LineSegments,
   MathUtils,
   Mesh,
@@ -31,6 +30,8 @@ export type ReflectionSpreadParams = {
   incidenceDeg: number
   /** 表面の粗さ。0 が鏡のような滑らかな面、1 が凹凸のあるマットな面 */
   roughness: number
+  /** いまの状態が正反射か拡散反射か。scene.ts が計算して書き戻す表示用の値 */
+  reflectionType: string
 }
 
 /** 反射面（水平な正方形）の 1 辺の長さ */
@@ -38,7 +39,7 @@ const SURFACE_SIZE = 4
 const SURFACE_HALF = SURFACE_SIZE / 2
 
 /** 格子線の本数（各方向 GRID_DIVISIONS + 1 本） */
-const GRID_DIVISIONS = 16
+const GRID_DIVISIONS = 24
 
 /** 格子線 1 本を何分割して折れ線にするか。凹凸を滑らかな波として見せるための刻み */
 const GRID_SAMPLES = 64
@@ -86,10 +87,8 @@ const MAX_SPREAD_DEG = 85
 /** 黄金角。乱数を使わずに、単位球面上へ方向を偏りなく散らすための刻み */
 const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5))
 
-/** 法線（破線）の長さと、破線の刻み。光線より高く伸ばして、ラベルが光束に埋もれないようにする */
+/** 法線の長さ。光線より高く伸ばして、ラベルが光束に埋もれないようにする */
 const NORMAL_LENGTH = 1.6
-const NORMAL_DASH_SIZE = 0.13
-const NORMAL_GAP_SIZE = 0.09
 
 /** 入射角・反射角を表す弧の半径と分割数 */
 const ARC_RADIUS = 0.42
@@ -114,12 +113,11 @@ const RAY_LABEL_GAP = 0.22
 const REFLECTED_LABEL_GAP = 0.62
 const REFLECTED_LABEL_SIDE_GAP = 0.12
 
-/** 法線のラベルを破線の先からさらに離す距離。入射角が小さいときに反射光のラベルと重ならないよう横へもずらす */
-const NORMAL_LABEL_GAP = 0.24
-const NORMAL_LABEL_X = -0.3
-
 /** ラベルの高さ（ワールド座標での大きさ）。幅は文字数に応じて決まる */
 const LABEL_HEIGHT = 0.24
+
+/** 法線のラベルの下端を、線の上端から離す距離 */
+const NORMAL_LABEL_GAP = 0.06
 
 /** ラベルの文字を描く canvas の高さ（テクスチャの解像度）と左右の余白 */
 const LABEL_TEXTURE_HEIGHT = 128
@@ -148,8 +146,12 @@ const INCIDENT_ARROW_ALONG = 0.55
  */
 const SPECULAR_FADE_END = 0.15
 
+/** パネルに出す反射の種類。表示が消えるのと同じ境目で切り替える */
+const SPECULAR_TYPE = "正反射"
+const DIFFUSE_TYPE = "拡散反射"
+
 /** 面の半透明な塗りの不透明度 */
-const SURFACE_OPACITY = 0.12
+const SURFACE_OPACITY = 0.2
 
 /** 入射角・反射角を表す扇形の塗りの不透明度。記事の SVG 図解と同じ濃さにする */
 const SECTOR_OPACITY = 0.32
@@ -396,14 +398,8 @@ export const createReflectionSpreadScene = ({
     new Vector3(0, 0, 0),
     new Vector3(0, NORMAL_LENGTH, 0)
   ])
-  const normalMaterial = new LineDashedMaterial({
-    color: NORMAL_COLOR,
-    dashSize: NORMAL_DASH_SIZE,
-    gapSize: NORMAL_GAP_SIZE
-  })
+  const normalMaterial = new LineBasicMaterial({ color: NORMAL_COLOR, transparent: true })
   const normalLine = new Line(normalGeometry, normalMaterial)
-  // 破線は頂点ごとの累積距離をもとに描かれるので、線を作ったら必ず計算しておく
-  normalLine.computeLineDistances()
   annotations.add(normalLine)
 
   // 入射光。平行に届いた光が、それぞれの反射点に当たる
@@ -456,8 +452,9 @@ export const createReflectionSpreadScene = ({
     reflectedAngleLabel.sprite
   )
 
-  // 法線のラベルだけは入射角にも粗さにも動かされない
-  normalLabel.sprite.position.set(NORMAL_LABEL_X, NORMAL_LENGTH + NORMAL_LABEL_GAP, 0)
+  // 法線のラベルだけは入射角にも粗さにも動かされない。
+  // 線の真上に、文字の下端が線の上端に触れない高さで置く
+  normalLabel.sprite.position.set(0, NORMAL_LENGTH + LABEL_HEIGHT / 2 + NORMAL_LABEL_GAP, 0)
 
   // 反射点の高さも粗さに比例するので、粗さ 1 での高さを先に求めておく
   const pointBaseHeights = REFLECTION_POINTS.map(({ x, z }) => bumpHeight(x, z))
@@ -566,11 +563,21 @@ export const createReflectionSpreadScene = ({
       incidentSector.setSweep(HALF_PI, HALF_PI + theta)
       reflectedSector.setSweep(HALF_PI, HALF_PI - theta)
 
-      // 拡散側では反射光の向きが定まらないので、粗さを上げると反射角の表示が消える
+      // 拡散側では反射光の向きが定まらず、入射角と反射角が等しいという関係も成り立たなくなる。
+      // 粗さを上げると、その関係を示していた法線・入射角・反射角の表示がまとめて消える
       const specularOpacity = MathUtils.clamp(1 - roughness / SPECULAR_FADE_END, 0, 1)
+      const specularVisible = specularOpacity > 0
+      // パネルの表示も同じ境目で切り替え、図と食い違わないようにする
+      params.reflectionType = specularVisible ? SPECULAR_TYPE : DIFFUSE_TYPE
+      incidentSector.setOpacity(specularOpacity)
       reflectedSector.setOpacity(specularOpacity)
-      reflectedAngleLabel.material.opacity = specularOpacity
-      reflectedAngleLabel.sprite.visible = specularOpacity > 0
+      normalMaterial.opacity = specularOpacity
+      normalLine.visible = specularVisible
+      const fadedLabels = [normalLabel, incidentAngleLabel, reflectedAngleLabel]
+      fadedLabels.forEach((label) => {
+        label.material.opacity = specularOpacity
+        label.sprite.visible = specularVisible
+      })
 
       // 入射光のラベルは、いちばん左の光線をはさんで法線と反対側（面寄り）に置く
       const labeled = REFLECTION_POINTS[INCIDENT_LABEL_POINT]
