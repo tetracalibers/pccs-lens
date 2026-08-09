@@ -14,7 +14,10 @@ import type { ThreeSceneContext } from "$lib/demo/threejs/_shared/types"
 
 /** Tweakpane で操作するパラメータ */
 export type FrostedGlassParams = {
-  /** ガラスの粗さ。0 が透明なガラス、1 がすりガラスのように向こう側がぼやける状態 */
+  /**
+   * ガラスの粗さ。`0` が透明なガラス、上限の `0.6` がすりガラスのように向こう側がぼやける状態。
+   * マテリアルの `roughness` へは `ROUGHNESS_SCALE` を掛けてから渡す
+   */
   roughness: number
   /** いまの状態が透明なガラスかすりガラスか。scene.ts が計算して書き戻す表示用の値 */
   glassType: string
@@ -37,17 +40,18 @@ const GLASS_THICKNESS = 0.5
 const GLASS_IOR = 1.5
 
 /**
- * `ガラスの粗さ` が 1 のときのマテリアルの roughness。
+ * スライダーの値をマテリアルの `roughness` へ渡すときの倍率。
  *
  * Three.js は「一度描いた画面を縮小した画像の何段目を読むか」でガラス越しのぼけを作り、
- * その段数が roughness に比例する。roughness を 1 まで上げると 1 ドットまで潰れて
- * 像が完全に消えてしまうので、**向こう側がぼんやり見えるところで頭打ちにする**
+ * その段数が `roughness` に比例する。`roughness` を 1 まで上げると 1 ドットまで潰れて
+ * 像が完全に消えるので、スライダーの目盛りには実際の `roughness` より控えめな幅を割り当てる。
+ * **ぼけは画面のピクセル単位で効くので、カメラの寄り・引きを変えたらここも見直す**
  */
-const MAX_ROUGHNESS = 0.52
+const ROUGHNESS_SCALE = 0.52
 
 /**
  * ここまでの粗さを透明なガラスとみなす。
- * 案となった反射・透過のデモと同じ境目にして、3 つのデモで読み取りをそろえる
+ * 案1・案3の「反射の種類」「透過の種類」と同じ目盛りで切り替わるよう、同じ値にしてある
  */
 const CLEAR_ROUGHNESS_MAX = 0.15
 
@@ -210,7 +214,7 @@ export const createFrostedGlassScene = ({
 
   return {
     update: () => {
-      glass.setRoughness(params.roughness * MAX_ROUGHNESS)
+      glass.setRoughness(params.roughness * ROUGHNESS_SCALE)
 
       // パネルの表示は、向こう側がそのまま見えていると言える範囲かどうかで切り替える
       params.glassType = params.roughness <= CLEAR_ROUGHNESS_MAX ? CLEAR_TYPE : FROSTED_TYPE
