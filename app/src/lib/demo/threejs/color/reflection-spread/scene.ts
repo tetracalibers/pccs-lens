@@ -17,8 +17,12 @@ import {
   Sprite,
   SpriteMaterial,
   SRGBColorSpace,
+  Vector2,
   Vector3
 } from "three"
+import { LineMaterial } from "three/addons/lines/LineMaterial.js"
+import { LineSegments2 } from "three/addons/lines/LineSegments2.js"
+import { LineSegmentsGeometry } from "three/addons/lines/LineSegmentsGeometry.js"
 import type { ThreeSceneContext } from "$lib/demo/threejs/_shared/types"
 
 /** Tweakpane で操作するパラメータ */
@@ -124,6 +128,13 @@ const LABEL_TEXTURE_PADDING = 12
 /** ラベルの書体。canvas の高さに対して十分大きくとる */
 const LABEL_FONT = "bold 92px sans-serif"
 
+/**
+ * 光線の太さ（ピクセル）。
+ * 図の主役なので格子や弧より太くする。`LineBasicMaterial` の `linewidth` は WebGL では
+ * 無視されて 1px になるため、光線だけは太さを指定できる Line2 系で描く
+ */
+const RAY_LINE_WIDTH = 2
+
 /** 光線の進行方向を示す矢じりの大きさ。本数が多いので小さめにする */
 const ARROW_RADIUS = 0.035
 const ARROW_HEIGHT = 0.12
@@ -148,7 +159,8 @@ const SECTOR_OPACITY = 0.32
 const INCIDENT_COLOR = "#ef8c00"
 const REFLECTED_COLOR = "#f6ce46"
 const NORMAL_COLOR = "#bfbfbf"
-const SURFACE_COLOR = "#8fa3bf"
+// 面（格子と半透明の塗り）は、光線・法線と役割が違うことがはっきりするよう青寄りのグレーにする
+const SURFACE_COLOR = "#7d9cc9"
 
 /** ConeGeometry が既定で向いている方向 */
 const CONE_UP = new Vector3(0, 1, 0)
@@ -209,6 +221,41 @@ const createLabel = (text: string, color: string) => {
     material,
     dispose: () => {
       texture.dispose()
+      material.dispose()
+    }
+  }
+}
+
+/**
+ * 太さを指定できる光線の束。`count` 本の線分をまとめて 1 つのオブジェクトとして描く。
+ *
+ * 太さはピクセル単位で、そのために canvas の実寸をマテリアルへ渡す必要がある
+ * （`setResolution`）。奥行きによらず画面上の太さが一定になるので、
+ * 光線が四方に散っても手前と奥で見え方がぶれない。
+ */
+const createRayLines = (count: number, color: string) => {
+  const positions = new Float32Array(count * 2 * 3)
+  const geometry = new LineSegmentsGeometry()
+  const material = new LineMaterial({ color, linewidth: RAY_LINE_WIDTH })
+
+  return {
+    object: new LineSegments2(geometry, material),
+    /** segment 番目の線分の端点を書き込む（end は 0 が始点、1 が終点） */
+    setPoint: (segment: number, end: number, x: number, y: number, z: number) => {
+      const offset = (segment * 2 + end) * 3
+      positions[offset] = x
+      positions[offset + 1] = y
+      positions[offset + 2] = z
+    },
+    /** 書き込んだ座標をジオメトリへ反映する */
+    commit: () => {
+      geometry.setPositions(positions)
+    },
+    setResolution: (width: number, height: number) => {
+      material.resolution.set(width, height)
+    },
+    dispose: () => {
+      geometry.dispose()
       material.dispose()
     }
   }
@@ -333,6 +380,7 @@ const createSurface = () => {
 
 export const createReflectionSpreadScene = ({
   scene,
+  renderer,
   params
 }: ThreeSceneContext<ReflectionSpreadParams>) => {
   const surface = createSurface()
@@ -359,13 +407,8 @@ export const createReflectionSpreadScene = ({
   annotations.add(normalLine)
 
   // 入射光。平行に届いた光が、それぞれの反射点に当たる
-  const incidentPosition = new Float32BufferAttribute(
-    new Float32Array(REFLECTION_POINTS.length * 2 * 3),
-    3
-  )
-  const incidentGeometry = new BufferGeometry().setAttribute("position", incidentPosition)
-  const incidentMaterial = new LineBasicMaterial({ color: INCIDENT_COLOR })
-  scene.add(new LineSegments(incidentGeometry, incidentMaterial))
+  const incidentRays = createRayLines(REFLECTION_POINTS.length, INCIDENT_COLOR)
+  scene.add(incidentRays.object)
 
   const arrowGeometry = new ConeGeometry(ARROW_RADIUS, ARROW_HEIGHT, 12)
   const incidentArrowMaterial = new MeshBasicMaterial({ color: INCIDENT_COLOR })
@@ -376,13 +419,8 @@ export const createReflectionSpreadScene = ({
   })
 
   // 反射光。粗さ 0 では全本が鏡面反射の向きに重なるので、見た目には 1 本になる
-  const reflectedPosition = new Float32BufferAttribute(
-    new Float32Array(REFLECTED_RAY_COUNT * 2 * 3),
-    3
-  )
-  const reflectedGeometry = new BufferGeometry().setAttribute("position", reflectedPosition)
-  const reflectedMaterial = new LineBasicMaterial({ color: REFLECTED_COLOR })
-  scene.add(new LineSegments(reflectedGeometry, reflectedMaterial))
+  const reflectedRays = createRayLines(REFLECTED_RAY_COUNT, REFLECTED_COLOR)
+  scene.add(reflectedRays.object)
 
   const reflectedArrowMaterial = new MeshBasicMaterial({ color: REFLECTED_COLOR })
   const reflectedArrows = new Group()
@@ -429,6 +467,7 @@ export const createReflectionSpreadScene = ({
   const offset = new Vector3()
   const axis = new Vector3()
   const axisRotation = new Quaternion()
+  const viewportSize = new Vector2()
 
   /** 面の高さの更新は粗さが変わったときだけでよい（頂点数が多いので毎フレームは回さない） */
   let appliedRoughness = Number.NaN
@@ -462,6 +501,11 @@ export const createReflectionSpreadScene = ({
       const main = REFLECTION_POINTS[MAIN_POINT]
       annotations.position.set(main.x, pointBaseHeights[MAIN_POINT] * roughness, main.z)
 
+      // 光線の太さはピクセル指定なので、canvas の実寸をマテリアルへ渡す（リサイズにも追従する）
+      renderer.getSize(viewportSize)
+      incidentRays.setResolution(viewportSize.x, viewportSize.y)
+      reflectedRays.setResolution(viewportSize.x, viewportSize.y)
+
       // 粗さが上がるほど、光束の中心は鏡面反射の向きから法線の向きへ寄り、開き角が広がる。
       // 粗さ 1 では法線を軸にした半球いっぱい（あらゆる方向）になる。
       // 中心と開き角を同時に動かすことで、どの入射角でも光線が面の下へ潜らない
@@ -477,8 +521,8 @@ export const createReflectionSpreadScene = ({
         const y = pointBaseHeights[p] * roughness
 
         // 入射光は左上から来て反射点に当たる。どの点へも同じ角度で平行に届く
-        incidentPosition.setXYZ(p * 2, x - RAY_LENGTH * sin, y + RAY_LENGTH * cos, z)
-        incidentPosition.setXYZ(p * 2 + 1, x, y, z)
+        incidentRays.setPoint(p, 0, x - RAY_LENGTH * sin, y + RAY_LENGTH * cos, z)
+        incidentRays.setPoint(p, 1, x, y, z)
 
         direction.set(sin, -cos, 0)
         incidentArrows[p].position
@@ -498,9 +542,10 @@ export const createReflectionSpreadScene = ({
             .applyQuaternion(axisRotation)
 
           const ray = p * REFLECTED_RAYS_PER_POINT + i
-          reflectedPosition.setXYZ(ray * 2, x, y, z)
-          reflectedPosition.setXYZ(
-            ray * 2 + 1,
+          reflectedRays.setPoint(ray, 0, x, y, z)
+          reflectedRays.setPoint(
+            ray,
+            1,
             x + direction.x * RAY_LENGTH,
             y + direction.y * RAY_LENGTH,
             z + direction.z * RAY_LENGTH
@@ -514,8 +559,8 @@ export const createReflectionSpreadScene = ({
           arrows[ray].quaternion.setFromUnitVectors(CONE_UP, direction)
         }
       })
-      incidentPosition.needsUpdate = true
-      reflectedPosition.needsUpdate = true
+      incidentRays.commit()
+      reflectedRays.commit()
 
       // 入射角・反射角は、どちらも法線（+y 方向）から測る
       incidentSector.setSweep(HALF_PI, HALF_PI + theta)
@@ -548,14 +593,12 @@ export const createReflectionSpreadScene = ({
       surface.dispose()
       incidentSector.dispose()
       reflectedSector.dispose()
+      incidentRays.dispose()
+      reflectedRays.dispose()
       labels.forEach((label) => label.dispose())
       const disposables = [
         normalGeometry,
         normalMaterial,
-        incidentGeometry,
-        incidentMaterial,
-        reflectedGeometry,
-        reflectedMaterial,
         arrowGeometry,
         incidentArrowMaterial,
         reflectedArrowMaterial
