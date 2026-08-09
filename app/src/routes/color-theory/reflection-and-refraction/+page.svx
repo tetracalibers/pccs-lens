@@ -1,6 +1,6 @@
 ---
 layout: guide-content
-title: 光の反射と屈折
+title: 光の反射・透過と屈折
 
 grades: ["3"]
 visual: true
