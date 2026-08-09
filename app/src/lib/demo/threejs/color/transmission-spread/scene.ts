@@ -55,11 +55,12 @@ const EXIT_POINTS = [
   { y: -0.3, z: -0.54, phase: 2.3 }
 ]
 
-/** 透過光のラベルを付ける点（出射点の並びの何番目か） */
+/**
+ * ラベルを付ける主役の点（出射点の並びの何番目か）。
+ * 入射光・透過光のラベルをどちらもこの点に付けることで、
+ * カメラからの距離がそろい、遠近による文字の大きさの差が出ない
+ */
 const MAIN_POINT = 0
-
-/** 入射光のラベルを付ける点。光束の外側になるよう、手前の点を選ぶ */
-const INCIDENT_LABEL_POINT = 1
 
 /**
  * 1 つの出射点から描く透過光の本数。拡散 0 では全本が入射方向に重なり、1 本に見える。
@@ -78,11 +79,13 @@ const MAX_SPREAD_DEG = 85
 /** 黄金角。乱数を使わずに、単位球面上へ方向を偏りなく散らすための刻み */
 const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5))
 
-/** 入射光のラベルを光線上のどこに置くか（0 が入射点、1 が光線の端） */
-const RAY_LABEL_ALONG = 0.85
-
-/** ラベルを、それが指す光線から垂直に離す距離 */
-const RAY_LABEL_GAP = 0.22
+/**
+ * 入射光のラベルを、光線の外側の端よりさらに先へ置くための距離。
+ * 3 本の入射光は平行で、しかも同じ長さで並んでいるので、
+ * 線の脇に寄せるとどれかの線に触れてしまう。全部の端より外側に出す
+ */
+const INCIDENT_LABEL_GAP = 0.42
+const INCIDENT_LABEL_SIDE_GAP = 0.2
 
 /** 透過光のラベルを、光束の外側（正透過の向きの先）に置くための距離 */
 const TRANSMITTED_LABEL_GAP = 0.5
@@ -371,13 +374,14 @@ export const createTransmissionSpreadScene = ({
 
       const main = EXIT_POINTS[MAIN_POINT]
 
-      // 入射光のラベルは、手前の光線をはさんで板と反対側（下側）に置く
-      const labeled = EXIT_POINTS[INCIDENT_LABEL_POINT]
+      // 入射光のラベルは、3 本の光線すべての外側の端よりさらに先へ置く。
+      // 光線は平行で同じ長さなので、端より外に出せばどの線とも重ならない。
+      // 少しだけ板と反対側（下側）へずらして、光線の延長上に乗らないようにする
       incidentLabel.sprite.position
         .set(-dirX, -dirY, 0)
-        .multiplyScalar(RAY_LENGTH * RAY_LABEL_ALONG)
-        .addScaledVector(offset.set(-sin, -cos, 0), RAY_LABEL_GAP)
-        .add(offset.set(-PLATE_HALF_THICKNESS, labeled.y + entryRise, labeled.z))
+        .multiplyScalar(RAY_LENGTH + INCIDENT_LABEL_GAP)
+        .addScaledVector(offset.set(-sin, -cos, 0), INCIDENT_LABEL_SIDE_GAP)
+        .add(offset.set(-PLATE_HALF_THICKNESS, main.y + entryRise, main.z))
 
       // 透過光のラベルは、広がった光束の外側になるよう正透過の向きの先に置く。
       // 光束は板に垂直な向き寄り（上側）へ広がるので、ラベルは反対の下側へずらす
