@@ -9,9 +9,8 @@ draft: true
 ---
 
 <script>
-  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
-  import SpecularReflection from "$lib/demo/color/light-phenomena/SpecularReflection.svelte"
-  import DiffuseReflection from "$lib/demo/color/light-phenomena/DiffuseReflection.svelte"
+  import CanvasWrapper from "$lib/demo/CanvasWrapper.svelte"
+  import ReflectionSpreadDemo from "$lib/demo/threejs/color/reflection-spread/ReflectionSpreadDemo.svelte"
 </script>
 
 物体に届いた光は、表面で跳ね返ったり、内部を通り抜けたりします。
@@ -35,14 +34,6 @@ draft: true
 - 正反射では、入射角（光が入る角度）と同じ角度で反射するため、同じ方向に光が集中して、眼に入ると眩しく感じる
 -->
 
-:::Todo
-SVGではなく、Three.jsによる図として再検討（拡散反射の図とまとめてもよい）
-:::
-
-<SVGWrapper maxW="600">
-  <SpecularReflection />
-</SVGWrapper>
-
 表面に細かな凹凸のあるマットな面で起こるのが:Anki[拡散反射]です。
 凹凸の向きがそろっていないため、当たった光は決まった方向に集中せず、あらゆる方向へ散らばって跳ね返ります。
 こうして散らばった光は、柔らかく感じられます。
@@ -53,13 +44,16 @@ SVGではなく、Three.jsによる図として再検討（拡散反射の図と
 - 拡散反射は光があらゆる方向に散らばるため、柔らかい光に感じる
 -->
 
-:::Todo
-SVGではなく、Three.jsによる図として再検討（正反射の図とまとめてもよい）
+:::Action
+入射角と表面の粗さを動かし、ドラッグで視点を回しながら、次の点に着目してみよう
+
+- 粗さが`0`のとき、それぞれの点で跳ね返った光の向きがどうそろい、入射角と反射角がどういう関係になるか
+- 粗さを上げると、それぞれの点から光がどの範囲まで散らばり、反射角がどうなるか
 :::
 
-<SVGWrapper maxW="600">
-  <DiffuseReflection />
-</SVGWrapper>
+<CanvasWrapper>
+  <ReflectionSpreadDemo />
+</CanvasWrapper>
 
 正反射と拡散反射の違いは、物体を見たときの印象に現れます。
 入射した光がまんべんなく反射、すなわち:Anki[拡散反射]すると、見る方向に関係なく、どこから見ても同じ強さの明るさに感じられます。
