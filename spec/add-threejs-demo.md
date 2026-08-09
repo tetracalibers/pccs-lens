@@ -1,6 +1,6 @@
-# CG記事へのThree.jsデモ掲載（add-threejs-demo）
+# 記事へのThree.jsデモ掲載（add-threejs-demo）
 
-CG記事（`/cg/**`）に、素の Three.js で実装したデモと、そのデモで実際に動いているコードを掲載するスキル。引数で記事 slug を受け取り、記事を解析してデモ案を提案し、合意された案を実装して記事に差し込む。
+記事に、素の Three.js で実装したデモを掲載するスキル。CG記事（`/cg/**`）では、あわせてそのデモで実際に動いているコードも掲載する。色彩記事（`/color-theory/**`・`/color-fields/**`）ではデモだけを置き、コードは載せない（→「色彩記事への適用」）。引数で記事 slug を受け取り、記事を解析してデモ案を提案し、合意された案を実装して記事に差し込む。
 
 ## 目的・背景
 
@@ -9,20 +9,23 @@ CG記事（`/cg/**`）に、素の Three.js で実装したデモと、そのデ
   - **実際の応用例を示し、読者の創作への橋渡しとなる** — 記事の理論が実際のコードでどう書かれるかを見せ、読者が自分の制作に持ち帰れるようにする。
 - 後者のため、デモとあわせて**そのデモで実際に動いているコード**を記事に掲載する。掲載コードが「一度も実行されていないコード」になることを避けるのが、この仕様全体で最も重視した点。
 - 既存の図解は SVG（`svg-diagram-component`）で作られており、静的な図では表現できない題材を扱う手段が無かった。
+- **色彩記事では 1 つ目の狙いだけを取る。** 読者に持ち帰ってもらうのは色の理論であって Three.js の書き方ではないため、コードは掲載しない（2026-08-09 に適用範囲を拡張。→「色彩記事への適用」）。
 
 ## スコープ
 
 ### やること
 
-- CG記事（`app/src/routes/cg/**/+page.svx`）を対象とした、Three.js デモの実装。
-- 記事へのデモの差し込み（import・デモ直前の `:::Action`・コンポーネント使用箇所・コードブロック・フロントマターの `visual: true`）。
+- CG記事（`app/src/routes/cg/**/+page.svx`）を対象とした、Three.js デモの実装とコードの掲載。
+- 色彩記事（`app/src/routes/color-theory/*/+page.svx`・`app/src/routes/color-fields/*/+page.svx`）を対象とした、Three.js デモの実装（コードの掲載は行わない）。
+- 記事へのデモの差し込み（import・デモ直前の `:::Action`・コンポーネント使用箇所・コードブロック〈CG記事のみ〉・フロントマターの `visual: true`）。
 - デモ案の提案とユーザーによる採否の合意。
 - 記事に載らない定型処理を担う共通モジュール（`_shared`）の整備。
 
 ### やらないこと
 
 - **記事本文の執筆**。本文は `author-style-writer` の担当で、**このスキルは執筆完了後に呼ばれる**。デモの説明文や、地の文からデモへの言及は書かない（デモの直前に置く `:::Action` だけは例外としてこのスキルが書く）。
-- 色彩記事（`color-theory`・`color-fields`）への適用。既存の 3D デモ（`PCCSColorSolid3D.svelte`・`MunsellColorSolid3D.svelte`）は Threlte 実装のまま据え置く。
+- **色彩記事への Three.js コードの掲載**（→「色彩記事への適用」）。
+- **既存の Threlte 製 3D デモ（`PCCSColorSolid3D.svelte`・`MunsellColorSolid3D.svelte`）の移植**。Threlte 実装のまま据え置く。
 - 「Web」タグの新設。**既存の `図解` タグ（`visual: true`）で代替する**。
 - 掲載コードと `scene.ts` の逐語一致、およびそれを検証する自動テスト。
 - アクセシビリティへの特別な配慮（Tweakpane を素直に使う）。
@@ -42,8 +45,8 @@ CG記事（`/cg/**`）に、素の Three.js で実装したデモと、そのデ
 /add-threejs-demo <記事slug> [<デモの内容>]
 ```
 
-- **`<記事slug>`（必須）** — CG記事の slug（例: `basic-transformations`）。`app/src/routes/cg/` を検索して実体を解決する。
-  - **0 件・複数ヒットの場合は確認して止める**（`svg-diagram-component` と同じ流儀）。
+- **`<記事slug>`（必須）** — 記事の slug（例: `basic-transformations`・`pccs-color-system`）。`app/src/routes/cg/`・`app/src/routes/color-theory/`・`app/src/routes/color-fields/` を検索して実体を解決する。
+  - **0 件・複数ヒットの場合は確認して止める**（`svg-diagram-component` と同じ流儀）。CG記事と色彩記事の両方に当たった場合も同じ。
   - slug が重複する場合のみ、ユニット込みで `transformation/basic-transformations` のように渡す。
 - **`<デモの内容>`（省略可）** — 作りたいデモの内容。指定の有無で動作パターンが分かれる。
 
@@ -85,7 +88,7 @@ CG記事（`/cg/**`）に、素の Three.js で実装したデモと、そのデ
 
 1. `<script>` ブロックにデモコンポーネントの import を追加する（`CanvasWrapper` が未 import であればあわせて追加）。
 2. 合意した挿入位置に `<CanvasWrapper><Demo /></CanvasWrapper>` を差し込み、**その直前に `:::Action`** を置く。どのパラメータを動かすと何が起きるか・どこに着目すれば記事の主題が読み取れるかを対で書き、casual な意志形（「〜してみよう」）で結ぶ。パラメータ名は Tweakpane のラベルと揃える。文面は下書き扱いで、完了報告に載せて著者が直せるようにする。
-3. **その直後に ` ```ts ` のコードブロック**で掲載コードを置く。**タイトル付き（` ```ts:タイトル `）にはしない** — `lib/remark/code-title.js` が remark 段階で `html` ノードに差し替えるため、後段の shiki のハイライトが効かなくなる。
+3. **その直後に ` ```ts ` のコードブロック**で掲載コードを置く（**色彩記事では省く**）。**タイトル付き（` ```ts:タイトル `）にはしない** — `lib/remark/code-title.js` が remark 段階で `html` ノードに差し替えるため、後段の shiki のハイライトが効かなくなる。
 4. フロントマターに `visual: true` が無ければ追加する。
 5. **`:::Action` 以外の説明文は書かない。**
 
@@ -116,7 +119,7 @@ app/src/lib/demo/threejs/
     <デモ名>Demo.svelte                 薄い殻（canvas のマウントと Tweakpane 配線）
 ```
 
-- ディレクトリは**ユニット込み**（`threejs/transformation/basic-transformations/`）。CG記事は今後大量に増えるため、slug の将来的な衝突を避け、記事の在り処と対応が取れるようにする。
+- ディレクトリは**ユニット込み**（`threejs/transformation/basic-transformations/`）。CG記事は今後大量に増えるため、slug の将来的な衝突を避け、記事の在り処と対応が取れるようにする。**色彩記事のデモは `threejs/color/<デモ名>/`**（→「色彩記事への適用」）。
 - **デモごとにサブディレクトリを作る**。1 デモが 2 ファイル以上になるため、フラットに置くと見通しが悪くなる。
 - Svelte コンポーネントは `<デモ名>Demo.svelte`（PascalCase）とする。
 
@@ -184,17 +187,43 @@ app/src/lib/demo/threejs/
 
 - **自動アニメーションは作らない。** 操作したときだけ動くようにする。
 
+## 色彩記事への適用
+
+2026-08-09 に適用範囲を色彩記事（`color-theory`・`color-fields`）へ広げた。当初は「色彩記事の 3D は Threlte、CG記事は素の Three.js」の 2 系統で運用する方針だったが、**新規の 3D デモは色彩記事でも素の Three.js（このスキル）で作る**ことにした。既存の Threlte 製デモは据え置き、移植はしない。
+
+### CG記事との差分
+
+- **記事に Three.js のコードを載せない。** 色彩記事の読者に持ち帰ってもらうのは色の理論であって Three.js の書き方ではないため、狙いの 2 つ目（応用例を示す）を取らない。`:::Foldable` のコードブロックを付けず、「掲載コードの規約」も適用しない。
+- **置き場所は `app/src/lib/demo/threejs/color/<デモ名>/`**（`scene.ts` と `<デモ名>Demo.svelte`）。CG記事のようにユニット・記事slugを挟まない。
+  - 色彩記事のルートは `color-theory/<slug>`・`color-fields/<slug>` の 1 階層で、slug 衝突の心配が薄い。
+  - デモは記事よりも題材（色立体・スペクトルなど）に紐づき、複数の記事から使われうる。既存の SVG 図解も `lib/demo/color/<題材>/` と題材で分かれている。
+  - `<デモ名>` は記事slugではなくデモの内容から決める（kebab-case）。頭字語は既存の色彩デモに合わせて大文字のまま（`PCCSColorSolidDemo.svelte`）。
+- **`scene.ts` の掲載前提の制約を外す。** 記事に載らないため、`_shared` の型 import（`ThreeSceneContext`）と、色データ・色計算モジュール（`$lib/data/pccs`・`$lib/color/**`・`chroma-js`）の import を許す。「記事に載せやすい単位で設計する」責任も負わない。色の値を `scene.ts` に手で書き写さず既存の出典から取る、という利点のほうが大きい。
+- **デモの狙いは「内容の理解を助ける」の 1 点。** 3 次元・連続量・視点移動が効く題材に絞り、2 次元の図解で足りるものは `svg-diagram-component` に任せる（「向かない」と申告して止まる判断は CG記事より多くなる）。
+- **提案フォーマットから「視点」「記事に載るコード」の 2 列を落とす。**
+- **完了報告から「記事に載せたコード」を落とし**、色データの出典と、色を歪めない設定（マテリアル・ライト・背景色）を書く。
+
+### 色を歪めないための約束
+
+色そのものが記事の主題になるため、レンダリングで色が変わる要因を持ち込まない。
+
+- 「その色を見せる」対象は `MeshBasicMaterial`（ライティングの影響を受けない）。既存の `PCCSColorSolid3D` も同じ。
+- トーンマッピングは素の `WebGLRenderer` の既定（`NoToneMapping`）のまま。Threlte の `<Canvas>` は AgX が既定で高彩度の色が褪せるが、素の Three.js ではこれが起きない。
+- 背景色は無彩色に保つ（背景の明度は明度対比で図の色の見えを変える）。既定の `DEMO_BACKGROUND` から変える場合も、無彩色かつライト／ダーク共通の固定色にする。
+
+なお、背景色を固定色にする 2 つ目の理由（掲載コードの見え方が読者の手元と一致する）は色彩記事では消えるが、1 つ目の理由（両モードで可読な 1 色に決められる）が残るため、方針は変えない。
+
 ## 既存機能との関係・整合
 
 - **`author-style-writer`** — 本文の執筆はこちらの担当。このスキルは執筆完了後に呼ばれ、地の文には手を入れない（デモ・デモ直前の `:::Action`・コードブロック・import・フロントマターのみ）。`:::Action` の文体（casual な意志形）は `writing-guides/stylistic-quirks.md`「本文とActionのレジスターの二層構造」に従い、`:Mark[]` は自分から書かない（`writing-guides/syntax-guide.md`）。
 - **`svg-diagram-component`** — 静的な SVG 図解の担当。引数で図の内容を渡す／プレースホルダを検索する／`visual: true` を付与する、といった流儀を部分的に踏襲するが、**プレースホルダの仕組みは使わない**（CG記事の `:::Todo` は図版用で、デモ用のプレースホルダは存在しない）。挿入位置はデモ案の提案時に合意する。
 - **`図解` タグ（`visual: true`）** — `lib/meta/guide-pages.ts` がフロントマターを集約し、`lib/components/m-directive/PageLink.svelte` が一覧リンクにタグを描画する。記事ページ上部（`page-meta`）には `visual` は表示されないため、デモの有無も一覧リンクにのみ現れる。
-- **既存の Threlte 3D デモ** — `PCCSColorSolid3D.svelte`・`MunsellColorSolid3D.svelte` はそのまま。今後、色彩記事の 3D デモは Threlte、CG記事の Three.js デモは素の Three.js という 2 系統が並ぶ。
+- **既存の Threlte 3D デモ** — `PCCSColorSolid3D.svelte`・`MunsellColorSolid3D.svelte` はそのまま据え置き、移植しない。新規の 3D デモは色彩記事でも素の Three.js で作るため、同じ記事に 2 系統が並びうる（→「色彩記事への適用」）。
 - **`CanvasWrapper`** — 既存の 3D デモ埋め込みと同じく `<CanvasWrapper>` で包む。
 
 ## ドメインルール上の考慮
 
-- PCCS の色相・トーンなど色彩ドメインのルールは、このスキルの対象（CG記事）には直接関わらない。
+- PCCS の色相・トーンなど色彩ドメインのルールは、CG記事のデモには直接関わらない。**色彩記事のデモでは主題そのもの**で、色の値は既存の色データモジュール（`$lib/data/pccs` など）から取り、レンダリングで色を歪めない（→「色彩記事への適用」）。
 - CG記事は `group: ["CG"]` / `["ImgP"]` を持ち、カリキュラム上の出典区分がタグとして表示される。デモの有無はこの区分とは別軸の情報で、`図解` タグが担う。
 
 ## データ・状態
@@ -223,13 +252,13 @@ app/src/lib/demo/threejs/
 - 静的サイト（`adapter-static`）で prerender されるため、Three.js・Tweakpane はクライアントのみで動かす（`{#if browser}` ガード）。
 - ` ```lang:タイトル ` 形式のコードブロックは shiki のハイライトが効かない（`code-title.js` が remark 段階で `html` ノードに置き換えるため）。デモのコード掲載ではタイトルを付けない。
 - 素の `WebGLRenderer` は既定が `NoToneMapping` のため、Threlte の `<Canvas>` で必要だったトーンマッピングの明示は不要。
-- CG記事の実体は `cg/<ユニット>/<記事slug>` で、slug 単体ではパスが確定しない。
+- CG記事の実体は `cg/<ユニット>/<記事slug>` で、slug 単体ではパスが確定しない。色彩記事は `color-theory/<記事slug>`・`color-fields/<記事slug>` の 1 階層。slug の解決時にどちらで見つかったかで、コードを載せるかどうかとデモの置き場所が決まる。
 
 ## 受け入れ条件
 
 - デモが意図どおり動く。**目視確認はユーザーが行う。**
 - `npm run check` が通る。**実行はユーザーが行い、スキルは勝手に実行しない**（`svg-diagram-component` と同じ）。エラー・警告が報告されたら修正する。
-- 記事の ` ```ts ` ブロックが `scene.ts` で実際に動いているコードから作られている（逐語一致は問わないが、処理の削除や書き換えは無い）。
+- 記事の ` ```ts ` ブロックが `scene.ts` で実際に動いているコードから作られている（逐語一致は問わないが、処理の削除や書き換えは無い）。**色彩記事ではコードブロックが無いこと。**
 - 記事のフロントマターに `visual: true` が付いている。
 - 各デモの直前に `:::Action` が置かれ、操作と着眼点が対で書かれている。
 - 記事本文（地の文）が変更されていない。

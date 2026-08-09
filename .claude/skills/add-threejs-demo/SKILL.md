@@ -1,11 +1,11 @@
 ---
 name: add-threejs-demo
-description: 引数で受け取ったCG記事（`app/src/routes/cg/**`）に、素のThree.jsで実装したデモと、そのデモで実際に動いているコードを掲載するスキル。記事を解析してデモ案を表で提案し、採否と挿入位置の合意を得てから1案ずつ実装して記事へ差し込む（import・デモ直前の `:::Action`・コンポーネント使用箇所・掲載コードのtsコードブロック・フロントマターの `visual` フラグ）。掲載コードは実際に動いている `scene.ts` から作る（読者が書き下せる形に整えてよく、逐語一致は求めない）。CG記事にThree.jsのデモを載せたい・追加したい場合に使用する。
+description: 引数で受け取った記事に、素のThree.jsで実装したデモを掲載するスキル。CG記事（`app/src/routes/cg/**`）ではデモとあわせて「そのデモで実際に動いているコード」も掲載し、色彩記事（`color-theory`・`color-fields`）ではデモだけを置いてThree.jsのコードは載せない。記事を解析してデモ案を表で提案し、採否と挿入位置の合意を得てから1案ずつ実装して記事へ差し込む（import・デモ直前の `:::Action`・コンポーネント使用箇所・CG記事のみ掲載コードのtsコードブロック・フロントマターの `visual` フラグ）。掲載コードは実際に動いている `scene.ts` から作る（読者が書き下せる形に整えてよく、逐語一致は求めない）。記事にThree.jsのデモを載せたい・追加したい場合に使用する。
 ---
 
-# CG記事へのThree.jsデモ掲載スキル
+# 記事へのThree.jsデモ掲載スキル
 
-CG記事に、**素の Three.js で実装したデモ**と、**そのデモで実際に動いているコード**を掲載する。
+記事に、**素の Three.js で実装したデモ**を掲載する。CG記事では、あわせて**そのデモで実際に動いているコード**も載せる。
 
 デモの狙いは 2 つある。
 
@@ -14,16 +14,19 @@ CG記事に、**素の Three.js で実装したデモ**と、**そのデモで�
 
 後者のため、デモとあわせて**そのデモで実際に動いているコード**を記事に載せる。**掲載コードが「一度も実行されていないコード」になることを避けるのが、このスキルで最も重視する点。**
 
+**2 つ目の狙いとコードの掲載は CG記事に限る。** 色彩記事（`color-theory`・`color-fields`）では 1 つ目の狙いだけを取り、Three.js のコードは記事に載せない（→「色彩記事のとき」）。
+
 仕様は `spec/add-threejs-demo.md` に固めてある。判断に迷ったらそちらを参照する。
 
 ## 適用範囲
 
 - CG記事（`app/src/routes/cg/**/+page.svx`）に Three.js のデモを載せるとき
+- 色彩記事（`app/src/routes/color-theory/*/+page.svx`・`app/src/routes/color-fields/*/+page.svx`）に Three.js のデモを載せるとき（→「色彩記事のとき」）
 - `app/src/lib/demo/threejs/` 配下に Three.js のデモを新規作成・編集するとき
 
 対象外:
 
-- **色彩記事（`color-theory`・`color-fields`）** — 既存の 3D デモ（`PCCSColorSolid3D.svelte`・`MunsellColorSolid3D.svelte`）は Threlte 実装のまま据え置く。今後も色彩記事の 3D は Threlte、CG記事は素の Three.js という 2 系統で運用する
+- **既存の Threlte 製 3D デモ**（`PCCSColorSolid3D.svelte`・`MunsellColorSolid3D.svelte`）— Threlte 実装のまま据え置く。**素の Three.js へ移植しない。** 一方で、**新規の 3D デモは色彩記事でも素の Three.js（このスキル）で作る。** 同じ記事に Threlte 製と Three.js 製が並んでよい
 - **静的な SVG 図解** — `svg-diagram-component` の担当
 - **記事本文の執筆** — `author-style-writer` の担当（→「本文には手を入れない」）
 
@@ -33,25 +36,108 @@ CG記事に、**素の Three.js で実装したデモ**と、**そのデモで�
 /add-threejs-demo <記事slug> [<デモの内容>]
 ```
 
-- **`<記事slug>`（必須）** — CG記事の slug（例: `basic-transformations`）
+- **`<記事slug>`（必須）** — 記事の slug（例: `basic-transformations`・`pccs-color-system`）
 - **`<デモの内容>`（省略可）** — 作りたいデモの内容。指定の有無で動作パターンが分かれる
 
 ### 記事slugの解決
 
-CG記事の実体は `cg/<ユニット>/<記事slug>` で、slug 単体ではパスが確定しない。`app/src/routes/cg/` を検索して実体を解決する。
+CG記事の実体は `cg/<ユニット>/<記事slug>` で、slug 単体ではパスが確定しない。色彩記事は `color-theory/<記事slug>`・`color-fields/<記事slug>` の 1 階層。**どちらで見つかったかで、デモの置き場所とコードを載せるかどうかが変わる**ので、両方を検索して実体を解決する。
 
 ```bash
 find app/src/routes/cg -maxdepth 2 -type d -name "<記事slug>"
+find app/src/routes/color-theory app/src/routes/color-fields -maxdepth 1 -type d -name "<記事slug>"
 ```
 
-- **0 件・複数ヒットの場合は、確認して止める。** 推測でどれかに決めない
+- **0 件・複数ヒットの場合は、確認して止める。** 推測でどれかに決めない（CG記事と色彩記事の両方に当たった場合も同じ）
 - slug が重複する場合は、ユニット込みで `transformation/basic-transformations` のように渡してもらう
 - **`draft: true` の記事も対象とする**（このスキルは執筆直後に呼ばれる想定）
+- `cg/` 配下で見つかったら、このまま以降の節に従う。`color-theory/`・`color-fields/` 配下で見つかったら、あわせて「色彩記事のとき」の差分を適用する
 
 ### 動作パターン
 
 - **パターンA（`<デモの内容>` なし）** — 記事を解析してデモ案を提案し、ユーザーの採否を待ってから実装する
 - **パターンB（`<デモの内容>` あり）** — 提案フェーズを飛ばし、指定された内容のデモを実装する
+
+## 色彩記事のとき（`color-theory`・`color-fields`）
+
+対象が色彩記事だったときは、以降の節に次の差分を当てる。ここに挙げていない節（`:::Action` の書き方・`<デモ名>Demo.svelte` の書き方・`_shared` の API・見た目・Tweakpane・アニメーション・品質チェック）は CG記事と同じ。
+
+### 記事に Three.js のコードを載せない
+
+**色彩記事にはデモだけを置き、コードブロックを付けない。**「記事への反映」の手順 3 を丸ごと省き、「掲載コードの規約」は適用しない。
+
+- 色彩記事の読者に持ち帰ってもらうのは色の理論であって Three.js の書き方ではない。コードを載せる狙い（応用例を示す）を取らない
+- したがって**デモの狙いは「内容の理解を助ける」の 1 点**。3 次元・連続量・視点移動が効く題材（色立体、色空間、分光分布の立体表示など）に絞る
+- コードを載せない代わりに、**デモの作りをコードの見せやすさで妥協しなくてよい**（→「`scene.ts` の書き方の差分」）
+
+### 置き場所
+
+```
+app/src/lib/demo/threejs/color/<デモ名>/
+  scene.ts
+  <デモ名>Demo.svelte
+```
+
+- **`color-theory`・`color-fields` で分けず、記事slugも挟まない。** 色彩記事のルートは 1 階層で slug 衝突の心配が薄く、デモは記事よりも題材（色立体・スペクトルなど）に紐づいて複数の記事から使われうる。既存の SVG 図解も `lib/demo/color/<題材>/` と題材で分かれている
+- **`<デモ名>` は記事slugではなく、デモの内容から決める。** kebab-case（例: `pccs-color-solid`・`spectral-distribution`）
+- コンポーネントは `<デモ名>Demo.svelte`、公開関数は `create<デモ名>Scene`（CG記事と同じ）。**頭字語は既存の色彩デモに合わせて大文字のままにする**（`pccs-color-solid` → `PCCSColorSolidDemo.svelte`・`createPCCSColorSolidScene`）
+- 記事からの import は `$lib/demo/threejs/color/<デモ名>/<デモ名>Demo.svelte`
+
+### `scene.ts` の書き方の差分
+
+記事に載らないので、掲載を前提にした次の制約を外す。
+
+- **`_shared` の型を import してよい** — 同じ形の型をローカルに宣言し直さない（あの重複は、掲載コードが `three` だけで動くようにするためのもの）
+
+  ```ts
+  import type { ThreeSceneContext } from "$lib/demo/threejs/_shared/types"
+
+  export type PCCSColorSolidParams = { tone: string }
+
+  export const createPCCSColorSolidScene = ({ scene, params }: ThreeSceneContext<PCCSColorSolidParams>) => {
+    // ...
+  }
+  ```
+
+- **色データ・色計算のモジュールを import してよい** — `$lib/data/pccs`（`PCCS_ALL`）・`$lib/data/munsell-hue`・`$lib/color/**`・`chroma-js`。**色の値を `scene.ts` に手で書き写さない。** 既存デモと同じ出典から取る
+- **「記事に載せやすい単位」で設計する責任はない** — ヘルパー関数への分割や行数は、デモの正確さと読みやすさだけで決めてよい
+
+変わらないもの:
+
+- 公開 API は `create<デモ名>Scene` の 1 関数、`params` は `update()` の中で読む、経過時間依存のアニメーションを書かない
+- **サイトの配色モード（CSS 変数）を読まない。** 背景がライト／ダーク共通の固定色なので、シーン側もモードで分岐させない
+
+### 色を歪めないための約束
+
+色そのものが記事の主題になるため、レンダリングで色が変わる要因を持ち込まない。
+
+- **色票・スペクトルなど「その色を見せる」対象は `MeshBasicMaterial`** にする。`MeshStandardMaterial` ＋ ライトでは陰影で明度・彩度が変わり、指定した色として読めなくなる（既存の `PCCSColorSolid3D` も `MeshBasicMaterial`）
+- **トーンマッピングは既定の `NoToneMapping` のまま。** 素の `WebGLRenderer` の既定なので何も書かなくてよい（Threlte の `<Canvas>` は AgX が既定で高彩度の色が褪せる。素の Three.js ではこれが起きない）
+- **立体感のためにライトを使うのは、色の見えを読み取らせないデモに限る。** 使った場合は完了報告に書く
+- **背景色は無彩色に保つ。** 背景の明度は図の色の見えを変える（明度対比）。既定の `DEMO_BACKGROUND`（暗めのニュートラルグレー）から変えるときも、無彩色で、かつライト／ダーク共通の固定色にする（`background` prop）
+
+### デモ案の提案（パターンA）の差分
+
+表から**「視点」と「記事に載るコード」の 2 列を落とす**。残る列は `#` / 何を見せるか / 操作 / 挿入位置 / この案の弱み。守ること（件数は記事次第・上限 5 案・弱み必須・挿入位置込み）は同じ。
+
+- **「この記事に 3D デモは向かない」と申告して止まる判断は、CG記事より多くなる。** 色彩記事は 2 次元の図解で足りる題材が多い。平面の図で読み取れるものにデモを作らない（`svg-diagram-component` の担当）
+
+### 記事への反映の差分
+
+手順 3（`:::Foldable` のコードブロック）を省く。残りは同じ。
+
+1. import（`CanvasWrapper` と `<デモ名>Demo`）
+2. 合意した挿入位置に `:::Action` ＋ `<CanvasWrapper>`
+3. ~~掲載コード~~ — **書かない**
+4. フロントマターに `visual: true`（色彩記事のフロントマターは `group` ではなく `grades` を持つが、足すのは `visual: true` だけ）
+5. `:::Action` 以外の説明文は書かない
+
+### 完了報告の差分
+
+「記事に載せたコード」の項目を落とす。かわりに次を書く。
+
+- **色データの出典**（`$lib/data/pccs` など。手で書いた色があればその値と根拠）
+- **色を歪めない設定として何を選んだか**（マテリアル・ライトの有無・背景色を変えた場合はその値）
 
 ## パターンA：デモ案の提案
 
@@ -71,6 +157,8 @@ find app/src/routes/cg -maxdepth 2 -type d -name "<記事slug>"
 | 記事に載るコード | `scene.ts` から載せる部分の見込み |
 | 挿入位置 | どの節の直後に入れるか |
 | この案の弱み | 不採用の理由になりうる限界 |
+
+**色彩記事では「視点」「記事に載るコード」の 2 列を落とす**（→「色彩記事のとき」）。
 
 守ること:
 
@@ -107,15 +195,17 @@ app/src/lib/demo/threejs/
 
 例: `threejs/transformation/basic-transformations/translation-matrix/` に `scene.ts` と `TranslationMatrixDemo.svelte`、公開関数は `createTranslationMatrixScene`。
 
+**色彩記事のデモは `threejs/color/<デモ名>/` に置く**（ユニットも記事slugも挟まない。→「色彩記事のとき」）。
+
 ## 責務分担
 
 | | 記事に載るか | 担当 |
 | --- | --- | --- |
 | `_shared/` | 載らない | renderer 生成・描画ループ・リサイズ・破棄・画面外での停止・OrbitControls・Tweakpane パネルの生成とテーマ・WebGL 非対応／コンテキストロストの案内 |
-| `scene.ts` | **載る** | その記事固有のシーン構築・行列計算・ジオメトリ生成・パラメータ適用 |
+| `scene.ts` | **載る**（色彩記事では載らない） | その記事固有のシーン構築・行列計算・ジオメトリ生成・パラメータ適用 |
 | `<デモ名>Demo.svelte` | 載らない | `ThreeDemoCanvas` への配線（パラメータの初期値と Tweakpane のバインディング） |
 
-**`scene.ts` は `_shared` を import しない。`three` にのみ依存させる。** 記事に載せたコードがそのまま読者の手元で動く条件なので、型の import であっても例外にしない。
+**`scene.ts` は `_shared` を import しない。`three` にのみ依存させる。** 記事に載せたコードがそのまま読者の手元で動く条件なので、型の import であっても例外にしない。**色彩記事のデモは `scene.ts` が記事に載らないため、この制約を外す**（→「色彩記事のとき」）。
 
 ## `scene.ts` の書き方
 
@@ -163,7 +253,7 @@ export const createTranslationScene = ({ scene, params }: SceneContext) => {
 - 描画は**操作された直後だけ**走る。`update()` に経過時間依存のアニメーションを書かない（→「アニメーション」）
 - `ctx.camera` は位置・fov・near・far が適用済み。**カメラ自体が記事の主題（投影・視錐台など）の場合は `scene.ts` 側で上書きしてよい**（`ThreeDemoCanvas` に `orbit={false}` を渡してカメラ操作を切る）
 - `ctx.renderer` は、**そのデモに固有で、かつ必須の renderer 設定**（`localClippingEnabled` など）を `scene.ts` 側で書くために渡している。それが無いと読者の手元で同じ絵にならないため、記事に載るコードに含める。全デモに共通の定型設定は `_shared` の担当
-- **`scene.ts` を「記事に載せやすい単位」で設計する責任は実装側にある**（→「掲載コードの規約」）
+- **`scene.ts` を「記事に載せやすい単位」で設計する責任は実装側にある**（→「掲載コードの規約」）。色彩記事のデモではこの責任を負わない（→「色彩記事のとき」）
 
 ## `<デモ名>Demo.svelte` の書き方
 
@@ -249,7 +339,7 @@ export const createTranslationScene = ({ scene, params }: SceneContext) => {
 
    `:::Action` とデモの間には空行を 1 行だけ置く。デモの直前に既に `:::Action` があるときは、それを活かして重ねて足さない（内容が今回のデモと合っていなければ書き換える）。
 
-3. **その直後に `:::Foldable` で包んだ ` ```ts ` のコードブロック**で掲載コードを置く
+3. **その直後に `:::Foldable` で包んだ ` ```ts ` のコードブロック**で掲載コードを置く（**色彩記事ではこの手順を丸ごと省く。** →「色彩記事のとき」）
 
    ````markdown
    :::Foldable{title="Three.jsによる実装概要"}
@@ -303,13 +393,15 @@ export const createTranslationScene = ({ scene, params }: SceneContext) => {
 
 ### 本文には手を入れない
 
-**地の文を 1 文字も変更しない。** このスキルが記事に加えるのは、import・デモ直前の `:::Action`・コンポーネント使用箇所・コードブロック・フロントマターの `visual: true` だけ。
+**地の文を 1 文字も変更しない。** このスキルが記事に加えるのは、import・デモ直前の `:::Action`・コンポーネント使用箇所・コードブロック（CG記事のみ）・フロントマターの `visual: true` だけ。
 
 - **デモの説明文や、地の文からデモへの言及は書かない。** いずれも本文であり `author-style-writer` の担当。デモに触れるのは直前の `:::Action` の中だけに閉じる
 - **既にある地の文を `:::Action` に合わせて書き換えない。** 合わせるのは Action の側
 - Action に収まらなかった「何を操作でき、何が読み取れるか」は完了報告に添える。著者が本文へ言及を書き足すときの材料になる
 
 ## 掲載コードの規約
+
+**この節は CG記事にだけ適用する。** 色彩記事では Three.js のコードを記事に載せない（→「色彩記事のとき」）。
 
 - **記事に載せるコードは、実際に動いている `scene.ts` から作る。** 記事用に書き下ろしたり、他の API から翻訳したりしてはならない
 - **`scene.ts` と逐語一致させる必要はない。** 記事側は「読者がそのまま書き下せる形」を優先し、デモの都合で入っている構造は外してよい
@@ -343,6 +435,8 @@ export const createTranslationScene = ({ scene, params }: SceneContext) => {
 
 `scene.ts` の中で色は**リテラルで書く**（CSS 変数を読まない）。この背景の上で両モードとも可読な色を選ぶ。
 
+色彩記事のデモは、色データを既存モジュールから取れる一方、背景の明度が色の見えを変える点に注意が要る（→「色を歪めないための約束」）。
+
 ### 軸・グリッド
 
 `AxesHelper`・`GridHelper` の色・スケール・ラベルの見せ方は**まだ規約化していない**。デモごとに判断し、**採用した値を完了報告に書く。** 最初の数本で実態が固まってから規約化する。
@@ -372,7 +466,7 @@ export const createTranslationScene = ({ scene, params }: SceneContext) => {
 
 - 挿入した記事と位置（どの節の直後か）
 - 作成したファイル
-- 記事に載せたコード（元になった `scene.ts` の関数名と、外した部分）
+- 記事に載せたコード（元になった `scene.ts` の関数名と、外した部分）。**色彩記事ではこの項目を落とし、かわりに色データの出典と色を歪めない設定を書く**（→「完了報告の差分」）
 - `visual: true` を付与したかどうか
 - **書いた `:::Action` の文面**（そのまま引用する。著者が直す前提の下書きとして扱う）
 - **このデモで何を操作でき、何が読み取れるか**（`:::Action` に書ききれなかったものを含む。著者が本文へ言及を書き足すときの材料になる）
