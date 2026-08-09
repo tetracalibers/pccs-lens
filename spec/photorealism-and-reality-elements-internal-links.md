@@ -48,7 +48,8 @@
 | 透視図, 透視投影, 遠近感 | `/cg/transformation/perspective-and-parallel-projection`, `/cg/transformation/vanishing-points-and-n-point-perspective` |
 | ピンホールカメラ | `/cg/transformation/pinhole-camera` |
 | 隠面消去, 陰線消去 | `/cg/rendering/hidden-surface-removal-methods` |
-| 光の物理的性質, 反射光, プリズム, 分散, 干渉, 回折, シャボン玉, コンパクトディスク | `/color-theory/light-phenomena` |
+| 光の物理的性質, 反射光, プリズム, 分散 | `/color-theory/reflection-and-refraction` |
+| 干渉, 回折, シャボン玉, コンパクトディスク | `/color-theory/interference-and-diffraction` |
 | 輝度 | `/color-theory/photometric-quantities`, `/color-theory/photometric-and-radiometric-quantities` |
 | 照明効果, 照明設計 | `/color-theory/what-is-lighting`, `/color-theory/illuminance-and-lighting-design` |
 | 建築 | `/color-fields/landscape-color-approach`, `/color-fields/housing-color-design-process` |

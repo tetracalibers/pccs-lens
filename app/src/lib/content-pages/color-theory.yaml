@@ -69,7 +69,11 @@
         - slug: how-color-works
         - slug: electromagnetic-waves
         - slug: light-components-and-reflectance
-        - slug: light-phenomena
+    - title: 光の現象
+      links:
+        - slug: reflection-and-refraction
+        - slug: interference-and-diffraction
+        - slug: light-scattering
     - title: 眼と視覚系
       links:
         - slug: eye-structure

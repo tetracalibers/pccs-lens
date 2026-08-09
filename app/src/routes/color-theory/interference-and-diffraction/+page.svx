@@ -1,0 +1,34 @@
+---
+layout: guide-content
+title: 光の干渉と回折
+
+grades: ["3"]
+visual: true
+
+draft: true
+---
+
+<script>
+  import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import SmallSlitDiffraction from "$lib/demo/color/light-phenomena/SmallSlitDiffraction.svelte"
+  import SmallBumpDiffraction from "$lib/demo/color/light-phenomena/SmallBumpDiffraction.svelte"
+</script>
+
+## :WithGradeTag[光の干渉]{grades="3"}
+
+- 複数の波が重なり合うことで、新しい波ができる現象を:Anki[干渉]という
+- 波が重なるときに、波の山どうし（谷どうし）が重なると、新しい波は山の高さが増幅して:Anki[明るく]見える。逆に、山と谷が重なってしまうと、打ち消しあって:Anki[暗く]見える
+- シャボン玉の表面で虹が流れるように見えるのは、光の:Anki[干渉]が起きているためである
+- コンパクトディスクの表面が虹のように色づいて見えるのは、ビットと呼ばれる凸部で:Anki[反射]した光が:Anki[回折]を起こし、その光が互いに:Anki[干渉]し合うためである
+
+## :WithGradeTag[光の回折]{grades="3"}
+
+- 波が物に当たったり、小さな隙間を通過した後、半円状に広がって進む現象を:Anki[回折]という
+
+<SVGWrapper maxW="440">
+  <SmallSlitDiffraction />
+</SVGWrapper>
+
+<SVGWrapper maxW="560">
+  <SmallBumpDiffraction />
+</SVGWrapper>
