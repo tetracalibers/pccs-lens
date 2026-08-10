@@ -1,9 +1,10 @@
 import {
   BoxGeometry,
+  BufferGeometry,
   CanvasTexture,
   ConeGeometry,
   DoubleSide,
-  EdgesGeometry,
+  Float32BufferAttribute,
   LineBasicMaterial,
   LineSegments,
   MathUtils,
@@ -25,8 +26,8 @@ import type { ThreeSceneContext } from "$lib/demo/threejs/_shared/types"
 export type TransmissionSpreadParams = {
   /** 板の法線から測った入射角（度） */
   incidenceDeg: number
-  /** 拡散の度合い。0 が透明なガラス、1 がすりガラスのように光が散らばる状態 */
-  diffusion: number
+  /** 表面の粗さ。0 が滑らかな透明のガラス、1 が凹凸のあるすりガラス */
+  roughness: number
   /** いまの状態が正透過か拡散透過か。scene.ts が計算して書き戻す表示用の値 */
   transmissionType: string
 }
@@ -37,8 +38,27 @@ const PLATE_HEIGHT = 2.4
 const PLATE_DEPTH = 2.4
 const PLATE_HALF_THICKNESS = PLATE_THICKNESS / 2
 
+/** 光が出入りする面は正方形（高さと奥行きが同じ）。格子と稜線はこの 1 辺で組む */
+const PLATE_FACE_SIZE = PLATE_HEIGHT
+const PLATE_FACE_HALF = PLATE_FACE_SIZE / 2
+
 /** 板の半透明な塗りの不透明度 */
 const PLATE_OPACITY = 0.15
+
+/**
+ * 板の分割数。厚み方向は分割せず（x が正の頂点がそのまま出ていく側の面になる）、
+ * 凹凸を付ける高さ・奥行き方向だけを細かく分ける
+ */
+const PLATE_SEGMENTS = 40
+
+/** 出ていく側の面に張る格子線の本数（各方向 GRID_DIVISIONS + 1 本） */
+const GRID_DIVISIONS = 12
+
+/** 格子線 1 本を何分割して折れ線にするか。凹凸を滑らかな波として見せるための刻み */
+const GRID_SAMPLES = 40
+
+/** 粗さ 1 のときの凹凸の振幅。板の厚みの半分（0.2）に対して読み取れる大きさにする */
+const BUMP_AMPLITUDE = 0.07
 
 /** 光線の長さ（入射光・透過光で共通。板の中の光路は厚みと入射角で決まる） */
 const RAY_LENGTH = 1.25
@@ -63,7 +83,7 @@ const EXIT_POINTS = [
 const MAIN_POINT = 0
 
 /**
- * 1 つの出射点から描く透過光の本数。拡散 0 では全本が入射方向に重なり、1 本に見える。
+ * 1 つの出射点から描く透過光の本数。粗さ 0 では全本が入射方向に重なり、1 本に見える。
  * 出射点が複数あるので、拡散側で線が増えすぎないよう 1 点あたりは少なくする
  */
 const TRANSMITTED_RAYS_PER_POINT = 4
@@ -71,7 +91,7 @@ const TRANSMITTED_RAYS_PER_POINT = 4
 const TRANSMITTED_RAY_COUNT = EXIT_POINTS.length * TRANSMITTED_RAYS_PER_POINT
 
 /**
- * 拡散 1 のときの光束の開き角（度）。
+ * 粗さ 1 のときの光束の開き角（度）。
  * 90 にすると板の面すれすれの光線が出て稜線と重なるので、少しだけ手前で止める
  */
 const MAX_SPREAD_DEG = 85
@@ -116,10 +136,10 @@ const ARROW_HEIGHT = 0.12
 const INCIDENT_ARROW_ALONG = 0.55
 
 /**
- * ここまでの拡散を正透過とみなす。
+ * ここまでの粗さを正透過とみなす。
  * これを超えると、通り抜けた光の向きがそろっているとは言えなくなる
  */
-const STRAIGHT_DIFFUSION_MAX = 0.15
+const STRAIGHT_ROUGHNESS_MAX = 0.15
 
 /** パネルに出す透過の種類 */
 const STRAIGHT_TYPE = "正透過"
@@ -134,6 +154,17 @@ const GLASS_COLOR = "#24b9ff"
 
 /** ConeGeometry が既定で向いている方向 */
 const CONE_UP = new Vector3(0, 1, 0)
+
+/**
+ * 粗さ 1 のときの、面のその位置での凹凸の高さ（板の面に垂直な向きへのずれ）。
+ * 反射のデモと同じく固定のサイン合成なので、同じ位置なら必ず同じ高さになる
+ * （乱数だと操作のたびに凹凸の形が変わってチラつく）。
+ * 主役の出射点である原点では必ず 0 になり、そこを通る光の光路が粗さで動かない。
+ */
+const bumpHeight = (y: number, z: number) =>
+  (BUMP_AMPLITUDE *
+    (Math.sin(y * 13) * Math.cos(z * 11) + 0.6 * Math.sin(z * 15) * Math.cos(y * 9))) /
+  1.6
 
 /**
  * 文字を描いた canvas をテクスチャにして、常にカメラを向く板（Sprite）にする。
@@ -219,9 +250,38 @@ const createRayLines = (count: number, color: string) => {
   }
 }
 
-/** 板ガラス。半透明の塗りと稜線で、厚みのある板として見せる */
+/** 板の 4 隅を (高さ, 奥行き) の符号で表したもの。稜線を 1 周ぶんつなぐのに使う */
+const FACE_CORNERS = [
+  [-1, -1],
+  [1, -1],
+  [1, 1],
+  [-1, 1]
+] as const
+
+/**
+ * 板ガラス。半透明の塗りと稜線で厚みのある板として見せ、
+ * 光が出ていく側の面（+x）だけを粗さに比例して凹凸させる。
+ * 光が入る側の面は滑らかなまま（片面だけを磨った板と同じ）にして、
+ * 入射光が平行に届く様子を保つ
+ */
 const createPlate = () => {
-  const geometry = new BoxGeometry(PLATE_THICKNESS, PLATE_HEIGHT, PLATE_DEPTH)
+  const geometry = new BoxGeometry(
+    PLATE_THICKNESS,
+    PLATE_HEIGHT,
+    PLATE_DEPTH,
+    1,
+    PLATE_SEGMENTS,
+    PLATE_SEGMENTS
+  )
+  const position = geometry.getAttribute("position")
+  // 厚み方向を分割していないので、x が正の頂点がそのまま「光が出ていく側の面」になる。
+  // その頂点だけを、粗さ 1 のときのずれとあわせて拾っておく
+  const bumpVertices: { index: number; bump: number }[] = []
+  for (let i = 0; i < position.count; i++) {
+    if (position.getX(i) > 0) {
+      bumpVertices.push({ index: i, bump: bumpHeight(position.getY(i), position.getZ(i)) })
+    }
+  }
   const material = new MeshBasicMaterial({
     color: GLASS_COLOR,
     side: DoubleSide,
@@ -231,13 +291,55 @@ const createPlate = () => {
     depthWrite: false
   })
 
-  const edgesGeometry = new EdgesGeometry(geometry)
-  const edgesMaterial = new LineBasicMaterial({ color: GLASS_COLOR })
+  // 稜線と、出ていく側の面に張る格子。ライトを使わない図なので、面の凹凸はこの線が
+  // 面に垂直な向きへ揺れる様子で読ませる。格子の外周がそのまま出ていく側の面の稜線になる
+  const linePoints: { baseX: number; bump: number; y: number; z: number }[] = []
+  const addBackPoint = (y: number, z: number) =>
+    linePoints.push({ baseX: PLATE_HALF_THICKNESS, bump: bumpHeight(y, z), y, z })
+  const addFrontPoint = (y: number, z: number) =>
+    linePoints.push({ baseX: -PLATE_HALF_THICKNESS, bump: 0, y, z })
+
+  // 出ていく側の面の格子。波を滑らかに見せるため、1 本の線を GRID_SAMPLES 個の線分に分ける
+  for (let axis = 0; axis < 2; axis++) {
+    for (let i = 0; i <= GRID_DIVISIONS; i++) {
+      const fixed = -PLATE_FACE_HALF + (i * PLATE_FACE_SIZE) / GRID_DIVISIONS
+      for (let s = 0; s < GRID_SAMPLES; s++) {
+        for (const step of [s, s + 1]) {
+          const along = -PLATE_FACE_HALF + (step * PLATE_FACE_SIZE) / GRID_SAMPLES
+          addBackPoint(axis === 0 ? along : fixed, axis === 0 ? fixed : along)
+        }
+      }
+    }
+  }
+
+  // 光が入る側の面の 4 辺（滑らかなので直線）と、表と裏をつなぐ 4 本
+  FACE_CORNERS.forEach(([cornerY, cornerZ], i) => {
+    const [nextY, nextZ] = FACE_CORNERS[(i + 1) % FACE_CORNERS.length]
+    addFrontPoint(cornerY * PLATE_FACE_HALF, cornerZ * PLATE_FACE_HALF)
+    addFrontPoint(nextY * PLATE_FACE_HALF, nextZ * PLATE_FACE_HALF)
+    addFrontPoint(cornerY * PLATE_FACE_HALF, cornerZ * PLATE_FACE_HALF)
+    addBackPoint(cornerY * PLATE_FACE_HALF, cornerZ * PLATE_FACE_HALF)
+  })
+
+  const linePosition = new Float32BufferAttribute(new Float32Array(linePoints.length * 3), 3)
+  // 高さと奥行きは粗さで動かないので先に入れておく（x は setRoughness で書き込む）
+  linePoints.forEach(({ y, z }, i) => linePosition.setXYZ(i, 0, y, z))
+  const lineGeometry = new BufferGeometry().setAttribute("position", linePosition)
+  const lineMaterial = new LineBasicMaterial({ color: GLASS_COLOR })
 
   return {
-    objects: [new Mesh(geometry, material), new LineSegments(edgesGeometry, edgesMaterial)],
+    objects: [new Mesh(geometry, material), new LineSegments(lineGeometry, lineMaterial)],
+    /** ずれは粗さに比例するので、粗さ 1 でのずれに掛けるだけでよい */
+    setRoughness: (roughness: number) => {
+      bumpVertices.forEach(({ index, bump }) =>
+        position.setX(index, PLATE_HALF_THICKNESS + bump * roughness)
+      )
+      position.needsUpdate = true
+      linePoints.forEach(({ baseX, bump }, i) => linePosition.setX(i, baseX + bump * roughness))
+      linePosition.needsUpdate = true
+    },
     dispose: () => {
-      const disposables = [geometry, material, edgesGeometry, edgesMaterial]
+      const disposables = [geometry, material, lineGeometry, lineMaterial]
       disposables.forEach((disposable) => disposable.dispose())
     }
   }
@@ -264,7 +366,7 @@ export const createTransmissionSpreadScene = ({
     return arrow
   })
 
-  // 透過光。拡散 0 では全本が入射方向に重なるので、見た目には 1 本になる
+  // 透過光。粗さ 0 では全本が入射方向に重なるので、見た目には 1 本になる
   const transmittedRays = createRayLines(TRANSMITTED_RAY_COUNT, TRANSMITTED_COLOR)
   scene.add(transmittedRays.object)
 
@@ -282,6 +384,9 @@ export const createTransmissionSpreadScene = ({
   const labels = [incidentLabel, transmittedLabel]
   scene.add(incidentLabel.sprite, transmittedLabel.sprite)
 
+  // 出射点が乗る凹凸の高さも粗さに比例するので、粗さ 1 でのずれを先に求めておく
+  const exitBumps = EXIT_POINTS.map(({ y, z }) => bumpHeight(y, z))
+
   // 毎フレーム使い回す作業用のベクトル・クォータニオン
   const direction = new Vector3()
   const offset = new Vector3()
@@ -289,12 +394,20 @@ export const createTransmissionSpreadScene = ({
   const axisRotation = new Quaternion()
   const viewportSize = new Vector2()
 
+  /** 板の頂点の更新は粗さが変わったときだけでよい（頂点数が多いので毎フレームは回さない） */
+  let appliedRoughness = Number.NaN
+
   return {
     update: () => {
-      const { diffusion } = params
+      const { roughness } = params
       const theta = MathUtils.degToRad(params.incidenceDeg)
       const sin = Math.sin(theta)
       const cos = Math.cos(theta)
+
+      if (roughness !== appliedRoughness) {
+        appliedRoughness = roughness
+        plate.setRoughness(roughness)
+      }
 
       // 光線の太さはピクセル指定なので、canvas の実寸をマテリアルへ渡す（リサイズにも追従する）
       renderer.getSize(viewportSize)
@@ -304,21 +417,24 @@ export const createTransmissionSpreadScene = ({
       // 光の進行方向。左上から右下へ、板を斜めに横切る
       const dirX = cos
       const dirY = -sin
-      // 入射点は出射点から板の中の光路をさかのぼった位置にあり、入射角を上げるほど上へ動く
-      const entryRise = PLATE_THICKNESS * (sin / cos)
+      const tan = sin / cos
 
-      // 拡散が上がるほど、光束の中心は入射方向から板の面に垂直な向き（+x）へ寄り、開き角が広がる。
-      // 拡散 1 ではその向きを軸にした半球いっぱい（さまざまな方向）になる。
+      // 粗さが上がるほど、光束の中心は入射方向から板の面に垂直な向き（+x）へ寄り、開き角が広がる。
+      // 粗さ 1 ではその向きを軸にした半球いっぱい（さまざまな方向）になる。
       // 中心と開き角を同時に動かすことで、どの入射角でも光線が板の中へ戻らない
-      const axisAngle = theta * (1 - diffusion)
+      const axisAngle = theta * (1 - roughness)
       axis.set(Math.cos(axisAngle), -Math.sin(axisAngle), 0)
       axisRotation.setFromUnitVectors(CONE_UP, axis)
 
-      const spread = MathUtils.degToRad(MAX_SPREAD_DEG * diffusion)
+      const spread = MathUtils.degToRad(MAX_SPREAD_DEG * roughness)
       const cosSpread = Math.cos(spread)
 
       EXIT_POINTS.forEach(({ y, z, phase }, p) => {
-        const entryY = y + entryRise
+        // 出射点は凹凸の上に乗る。粗さ 0 の滑らかな面では板の面ぴったりに戻る
+        const exitX = PLATE_HALF_THICKNESS + exitBumps[p] * roughness
+        // 入射点は出射点から板の中の光路をさかのぼった位置にあり、入射角を上げるほど上へ動く。
+        // 凹凸の分だけ板の中を進む距離も変わるので、さかのぼる量は出射点ごとに異なる
+        const entryY = y + (exitX + PLATE_HALF_THICKNESS) * tan
 
         // 入射光。どの点へも同じ角度で平行に届く
         incidentRays.setPoint(
@@ -330,9 +446,9 @@ export const createTransmissionSpreadScene = ({
         )
         incidentRays.setPoint(p * 2, 1, -PLATE_HALF_THICKNESS, entryY, z)
 
-        // 板の中の光路。屈折させず、入射方向のまま裏面まで直進する
+        // 板の中の光路。屈折させず、入射方向のまま出ていく側の面まで直進する
         incidentRays.setPoint(p * 2 + 1, 0, -PLATE_HALF_THICKNESS, entryY, z)
-        incidentRays.setPoint(p * 2 + 1, 1, PLATE_HALF_THICKNESS, y, z)
+        incidentRays.setPoint(p * 2 + 1, 1, exitX, y, z)
 
         direction.set(dirX, dirY, 0)
         incidentArrows[p].position
@@ -352,11 +468,11 @@ export const createTransmissionSpreadScene = ({
             .applyQuaternion(axisRotation)
 
           const ray = p * TRANSMITTED_RAYS_PER_POINT + i
-          transmittedRays.setPoint(ray, 0, PLATE_HALF_THICKNESS, y, z)
+          transmittedRays.setPoint(ray, 0, exitX, y, z)
           transmittedRays.setPoint(
             ray,
             1,
-            PLATE_HALF_THICKNESS + direction.x * RAY_LENGTH,
+            exitX + direction.x * RAY_LENGTH,
             y + direction.y * RAY_LENGTH,
             z + direction.z * RAY_LENGTH
           )
@@ -365,7 +481,7 @@ export const createTransmissionSpreadScene = ({
           transmittedArrows[ray].position
             .copy(direction)
             .multiplyScalar(RAY_LENGTH - ARROW_HEIGHT / 2)
-            .add(offset.set(PLATE_HALF_THICKNESS, y, z))
+            .add(offset.set(exitX, y, z))
           transmittedArrows[ray].quaternion.setFromUnitVectors(CONE_UP, direction)
         }
       })
@@ -373,6 +489,8 @@ export const createTransmissionSpreadScene = ({
       transmittedRays.commit()
 
       const main = EXIT_POINTS[MAIN_POINT]
+      const mainExitX = PLATE_HALF_THICKNESS + exitBumps[MAIN_POINT] * roughness
+      const mainEntryY = main.y + (mainExitX + PLATE_HALF_THICKNESS) * tan
 
       // 入射光のラベルは、3 本の光線すべての外側の端よりさらに先へ置く。
       // 光線は平行で同じ長さなので、端より外に出せばどの線とも重ならない。
@@ -381,7 +499,7 @@ export const createTransmissionSpreadScene = ({
         .set(-dirX, -dirY, 0)
         .multiplyScalar(RAY_LENGTH + INCIDENT_LABEL_GAP)
         .addScaledVector(offset.set(-sin, -cos, 0), INCIDENT_LABEL_SIDE_GAP)
-        .add(offset.set(-PLATE_HALF_THICKNESS, main.y + entryRise, main.z))
+        .add(offset.set(-PLATE_HALF_THICKNESS, mainEntryY, main.z))
 
       // 透過光のラベルは、広がった光束の外側になるよう正透過の向きの先に置く。
       // 光束は板に垂直な向き寄り（上側）へ広がるので、ラベルは反対の下側へずらす
@@ -389,10 +507,10 @@ export const createTransmissionSpreadScene = ({
         .set(dirX, dirY, 0)
         .multiplyScalar(RAY_LENGTH + TRANSMITTED_LABEL_GAP)
         .addScaledVector(offset.set(-sin, -cos, 0), TRANSMITTED_LABEL_SIDE_GAP)
-        .add(offset.set(PLATE_HALF_THICKNESS, main.y, main.z))
+        .add(offset.set(mainExitX, main.y, main.z))
 
       // パネルの表示は、光の向きがそろっていると言える範囲かどうかで切り替える
-      params.transmissionType = diffusion <= STRAIGHT_DIFFUSION_MAX ? STRAIGHT_TYPE : DIFFUSE_TYPE
+      params.transmissionType = roughness <= STRAIGHT_ROUGHNESS_MAX ? STRAIGHT_TYPE : DIFFUSE_TYPE
     },
     dispose: () => {
       plate.dispose()
