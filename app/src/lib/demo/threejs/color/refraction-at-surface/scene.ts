@@ -118,7 +118,7 @@ const LABEL_FONT = "bold 92px sans-serif"
  * 図の主役なので法線や弧より太くする。`LineBasicMaterial` の `linewidth` は WebGL では
  * 無視されて 1px になるため、光線だけは太さを指定できる Line2 系で描く
  */
-const RAY_LINE_WIDTH = 2
+const RAY_LINE_WIDTH = 1.5
 
 /** 光線の進行方向を示す矢じりの大きさ */
 const ARROW_RADIUS = 0.035
@@ -132,7 +132,7 @@ const GUIDE_DASH_SIZE = 0.04
 const GUIDE_GAP_SIZE = 0.03
 
 /** 破線の太さ（ピクセル）。実際に光が通る道ではないので、光線より少しだけ細くする */
-const GUIDE_LINE_WIDTH = 1.6
+const GUIDE_LINE_WIDTH = 1.2
 
 /** 入射角・屈折角を表す扇形の塗りの不透明度。記事の SVG 図解と同じ濃さにする */
 const SECTOR_OPACITY = 0.32

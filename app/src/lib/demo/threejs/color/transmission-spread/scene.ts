@@ -106,7 +106,7 @@ const LABEL_FONT = "bold 92px sans-serif"
  * 図の主役なので稜線や弧より太くする。`LineBasicMaterial` の `linewidth` は WebGL では
  * 無視されて 1px になるため、光線だけは太さを指定できる Line2 系で描く
  */
-const RAY_LINE_WIDTH = 2
+const RAY_LINE_WIDTH = 1.5
 
 /** 光線の進行方向を示す矢じりの大きさ。本数が多いので小さめにする */
 const ARROW_RADIUS = 0.035
