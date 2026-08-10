@@ -33,7 +33,7 @@ const piecewiseGaussian = (nm: number, peak: number, widthLow: number, widthHigh
  * Matching Functions", Journal of Computer Graphics Techniques Vol.2 No.2 (2013)。
  * 5nm 刻みの数表を持たずに、可視域全体で 1% 程度の誤差に収まる。
  */
-const colorMatching = (nm: number): Tristimulus => [
+export const colorMatching = (nm: number): Tristimulus => [
   1.056 * piecewiseGaussian(nm, 599.8, 37.9, 31.0) +
     0.362 * piecewiseGaussian(nm, 442.0, 16.0, 26.7) -
     0.065 * piecewiseGaussian(nm, 501.1, 20.4, 26.2),
@@ -98,6 +98,19 @@ export const desaturateToGamut = ([r, g, b]: Tristimulus): Tristimulus => {
   const lowest = Math.min(r, g, b)
   if (lowest >= 0) return [r, g, b]
   return [r - lowest, g - lowest, b - lowest]
+}
+
+/**
+ * 単色光（その波長だけを含む光）の色を線形 sRGB で返す。
+ *
+ * 単色光は sRGB の色域から大きく外れるうえ、両端の波長ほど暗くなって色が判別できなくなる。
+ * 波長の目盛りとして読ませるための色なので、色域へ引き戻したうえで
+ * いちばん明るい成分が `1` になるよう揃えている（明るさは波長ごとに比べられない）。
+ */
+export const wavelengthToLinearSrgb = (nm: number): Tristimulus => {
+  const linear = desaturateToGamut(xyzToLinearSrgb(colorMatching(nm)))
+  const peak = Math.max(...linear)
+  return peak > 0 ? [linear[0] / peak, linear[1] / peak, linear[2] / peak] : [0, 0, 0]
 }
 
 /** 線形 sRGB の 1 成分を、画面へ出す sRGB の値（`0`〜`1`）へ変換する */
