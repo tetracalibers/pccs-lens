@@ -3,13 +3,15 @@ import {
   CircleGeometry,
   EdgesGeometry,
   Group,
-  LineBasicMaterial,
-  LineSegments,
   Mesh,
   MeshBasicMaterial,
   MeshPhysicalMaterial,
-  PlaneGeometry
+  PlaneGeometry,
+  Vector2
 } from "three"
+import { LineMaterial } from "three/addons/lines/LineMaterial.js"
+import { LineSegments2 } from "three/addons/lines/LineSegments2.js"
+import { LineSegmentsGeometry } from "three/addons/lines/LineSegmentsGeometry.js"
 import type { ThreeSceneContext } from "$lib/demo/threejs/_shared/types"
 
 /** Tweakpane で操作するパラメータ */
@@ -74,6 +76,27 @@ const GLASS_COLOR = "#24b9ff"
  * 案3の板ガラスと同じ作りだが、こちらは板が図の主役で面積が大きいぶん薄くしてある
  */
 const GLASS_FILL_OPACITY = 0.1
+
+/**
+ * 板の稜線の太さ（CSS ピクセル）。
+ *
+ * `LineBasicMaterial` の `linewidth` は WebGL では無視されて 1 デバイスピクセル固定になり、
+ * Retina では CSS 上 0.5px のヘアラインになる。このデモは板を正面近くから見るので
+ * 稜線が画面の縦横とほぼ平行になり、視点を動かすと線が画素の切れ目に落ちて
+ * 一部だけ消えたようにちらつく。太さをピクセルで指定できる Line2 系で描き、
+ * 案1・案3の光線と同じ直し方をとる。
+ * 板は図の主役ではないので、案3の稜線に近い細さに留める
+ */
+const EDGE_LINE_WIDTH = 1
+
+/**
+ * 稜線の濃さ。
+ *
+ * 上の太さは案3の稜線（1 デバイスピクセル）より太いので、そのままでは線が主張しすぎる。
+ * 色そのものは案3と同じ水色に保ったまま濃さだけ落とし、線の重さを近づける
+ */
+const EDGE_OPACITY = 0.7
+
 const SHAPE_ORANGE = "#ef8c00"
 const SHAPE_YELLOW = "#f6ce46"
 const SHAPE_PINK = "#eb539f"
@@ -173,8 +196,14 @@ const createGlass = () => {
   // 稜線を transparent にするのは色を薄めるためではない。Three.js が
   // 「ガラス越しの像」を作るときに写し込むのは**不透明な物体だけ**なので、
   // 不透明のままだとこの枠自体が像に混ざり、ぼけた枠が二重に見えてしまう
-  const edgesGeometry = new EdgesGeometry(geometry)
-  const edgesMaterial = new LineBasicMaterial({ color: GLASS_COLOR, transparent: true })
+  const boxEdges = new EdgesGeometry(geometry)
+  const edgesGeometry = new LineSegmentsGeometry().fromEdgesGeometry(boxEdges)
+  const edgesMaterial = new LineMaterial({
+    color: GLASS_COLOR,
+    linewidth: EDGE_LINE_WIDTH,
+    transparent: true,
+    opacity: EDGE_OPACITY
+  })
 
   // 面の塗り。稜線と同じく transparent なので像には写し込まれず、
   // 透過を描いたあとに重なる。粗さを上げてぼけた像の上にも同じ濃さで乗る。
@@ -190,13 +219,17 @@ const createGlass = () => {
     objects: [
       new Mesh(geometry, material),
       new Mesh(geometry, fillMaterial),
-      new LineSegments(edgesGeometry, edgesMaterial)
+      new LineSegments2(edgesGeometry, edgesMaterial)
     ],
     setRoughness: (roughness: number) => {
       material.roughness = roughness
     },
+    /** 稜線の太さはピクセル指定なので、canvas の実寸を渡す（リサイズにも追従する） */
+    setResolution: (width: number, height: number) => {
+      edgesMaterial.resolution.set(width, height)
+    },
     dispose: () => {
-      const disposables = [geometry, material, fillMaterial, edgesGeometry, edgesMaterial]
+      const disposables = [geometry, material, fillMaterial, boxEdges, edgesGeometry, edgesMaterial]
       disposables.forEach((disposable) => disposable.dispose())
     }
   }
@@ -204,6 +237,7 @@ const createGlass = () => {
 
 export const createFrostedGlassScene = ({
   scene,
+  renderer,
   params
 }: ThreeSceneContext<FrostedGlassParams>) => {
   const shapes = createShapes()
@@ -212,9 +246,15 @@ export const createFrostedGlassScene = ({
   const glass = createGlass()
   scene.add(...glass.objects)
 
+  // 毎フレーム使い回す作業用のベクトル
+  const viewportSize = new Vector2()
+
   return {
     update: () => {
       glass.setRoughness(params.roughness * ROUGHNESS_SCALE)
+
+      renderer.getSize(viewportSize)
+      glass.setResolution(viewportSize.x, viewportSize.y)
 
       // パネルの表示は、向こう側がそのまま見えていると言える範囲かどうかで切り替える
       params.glassType = params.roughness <= CLEAR_ROUGHNESS_MAX ? CLEAR_TYPE : FROSTED_TYPE
