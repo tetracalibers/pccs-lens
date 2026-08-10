@@ -10,8 +10,10 @@ draft: true
 
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import CanvasWrapper from "$lib/demo/CanvasWrapper.svelte"
   import SmallSlitDiffraction from "$lib/demo/color/light-phenomena/SmallSlitDiffraction.svelte"
   import SmallBumpDiffraction from "$lib/demo/color/light-phenomena/SmallBumpDiffraction.svelte"
+  import SoapBubbleInterferenceDemo from "$lib/demo/threejs/color/soap-bubble-interference/SoapBubbleInterferenceDemo.svelte"
 </script>
 
 シャボン玉の表面やコンパクトディスクの記録面には、虹のような色が浮かんで見えます。
@@ -28,9 +30,17 @@ draft: true
 
 :Mark[シャボン玉]の表面で虹が流れるように見えるのも、光の:Anki[干渉]によるものです。
 
-:::Todo
-簡易的なシャボン玉で干渉を示すデモ？（Three.jsで）
+:::Action
+次の点に着目して、デモを観察してみよう
+
+- 膜の厚みを動かすことで、強め合う波長が変わり、シャボン玉の色がどう移り変わるか
+- 厚みのむらを`0`にして膜全体を同じ厚みにしても、色が同心円状に分かれること
+- ドラッグで回すことで、同じ場所の色がどう変わるか
 :::
+
+<CanvasWrapper>
+  <SoapBubbleInterferenceDemo />
+</CanvasWrapper>
 
 膜の外側の面で[反射](/color-theory/reflection-and-refraction/)した光と、膜を通り抜けて内側の面で反射した光とが重なり合い、[波長](/color-theory/electromagnetic-waves/)によって強め合うか打ち消しあうかが分かれます。膜の厚みや見る角度が少し変わるだけで強め合う:Anki[波長]も変わるため、目に届く色が次々と移り変わります。
 
