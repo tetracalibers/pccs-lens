@@ -392,6 +392,14 @@ export const createRefractionAtSurfaceScene = ({
   ]
   scene.add(...labels.map((label) => label.sprite))
 
+  // 角度のラベルは弧の内側という混み合ったところに出るので、深度を無視して最後に描き、
+  // 光線や水の稜線に隠れないようにする
+  const angleLabels = [incidentAngleLabel, refractedAngleLabel]
+  angleLabels.forEach(({ sprite }) => {
+    sprite.material.depthTest = false
+    sprite.renderOrder = 1
+  })
+
   // 入射角に動かされないラベルは、ここで置いたまま動かさない
   normalLabel.sprite.position.set(0, NORMAL_ABOVE + LABEL_HEIGHT / 2 + NORMAL_LABEL_GAP, 0)
   airLabel.sprite.position.copy(AIR_LABEL_POSITION)
