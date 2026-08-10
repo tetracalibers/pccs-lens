@@ -53,22 +53,26 @@ const REFRACTED_LENGTH = 1.25
  */
 const STRAIGHT_LENGTH = 1.15
 
-/** 法線を水面の上下へ伸ばす長さ。入射角・屈折角はどちらもこの線から測る */
-const NORMAL_ABOVE = 1.5
+/**
+ * 法線を水面の上下へ伸ばす長さ。入射角・屈折角はどちらもこの線から測る。
+ * 上側は、線の先に置くラベルまで含めて初期表示に収まる長さにする
+ */
+const NORMAL_ABOVE = 1.25
 const NORMAL_BELOW = 1.35
 
 /** 入射角・屈折角を表す扇形の半径と分割数 */
 const ARC_RADIUS = 0.42
 const ARC_SEGMENTS = 40
 
-/** 角度のラベルを角の二等分線上のどこに置くか */
-const ANGLE_LABEL_RADIUS = 0.72
+/** 角度のラベルを角の二等分線上のどこに置くか。弧のすぐ外側に置いて、扇の中央に見えるようにする */
+const ANGLE_LABEL_RADIUS = 0.6
 
 /**
  * 角度のラベルを法線から最低限離す距離。
- * 入射角が小さいと二等分線が法線に重なり、ラベルが法線の上に乗ってしまう
+ * 入射角が小さいと二等分線が法線に重なり、ラベルが法線の上に乗ってしまう。
+ * 二等分線から外れるほど扇の中央から見た位置がずれるので、線をよけるだけの最小限にとどめる
  */
-const MIN_ANGLE_LABEL_X = 0.4
+const MIN_ANGLE_LABEL_X = 0.2
 
 /** 光線のラベルを光線上のどこに置くか（0 が水面、1 が光線の端） */
 const INCIDENT_LABEL_ALONG = 0.95
@@ -77,9 +81,6 @@ const REFRACTED_LABEL_ALONG = 0.85
 /** ラベルを、それが指す光線から垂直に離す距離 */
 const INCIDENT_LABEL_GAP = 0.24
 const REFRACTED_LABEL_GAP = 0.3
-
-/** 直進した場合のラベルを、破線の端からさらに先へ離す距離 */
-const STRAIGHT_LABEL_GAP = 0.3
 
 /** 法線のラベルの下端を、線の上端から離す距離 */
 const NORMAL_LABEL_GAP = 0.06
@@ -90,6 +91,12 @@ const WATER_LABEL_POSITION = new Vector3(-1.95, -0.5, 0)
 
 /** ラベルの高さ（ワールド座標での大きさ）。幅は文字数に応じて決まる */
 const LABEL_HEIGHT = 0.24
+
+/**
+ * 角度のラベルの高さ。
+ * 弧の内側という狭いところに置くので、光線や物の名前のラベルより小さくする
+ */
+const ANGLE_LABEL_HEIGHT = 0.18
 
 /** ラベルの文字を描く canvas の高さ（テクスチャの解像度）と左右の余白 */
 const LABEL_TEXTURE_HEIGHT = 128
@@ -112,9 +119,9 @@ const ARROW_HEIGHT = 0.12
 /** 矢じりを光線上のどこに置くか（0 が始点、1 が終点） */
 const ARROW_ALONG = 0.55
 
-/** 直進した場合の道すじを示す破線の刻み */
-const GUIDE_DASH_SIZE = 0.08
-const GUIDE_GAP_SIZE = 0.06
+/** 直進した場合の道すじを示す破線の刻み。細かく刻んで、実線の光線とはっきり描き分ける */
+const GUIDE_DASH_SIZE = 0.04
+const GUIDE_GAP_SIZE = 0.03
 
 /** 入射角・屈折角を表す扇形の塗りの不透明度。記事の SVG 図解と同じ濃さにする */
 const SECTOR_OPACITY = 0.32
@@ -123,8 +130,6 @@ const SECTOR_OPACITY = 0.32
 // 同じ記事の反射・透過のデモと同じく、入射光を橙、向きが変わったあとの光を黄にする
 const INCIDENT_COLOR = "#ef8c00"
 const REFRACTED_COLOR = "#f6ce46"
-/** 屈折せずに直進した場合の道すじ。実際には光が通らない道なので別の色にする */
-const STRAIGHT_COLOR = "#eb539f"
 const NORMAL_COLOR = "#bfbfbf"
 const WATER_COLOR = "#24b9ff"
 
@@ -137,7 +142,7 @@ const HALF_PI = Math.PI / 2
  * 文字を描いた canvas をテクスチャにして、常にカメラを向く板（Sprite）にする。
  * 文字の幅を測って板の横幅を決めるので、文字数の違うラベルでも字の大きさがそろう
  */
-const createLabel = (text: string, color: string) => {
+const createLabel = (text: string, color: string, height = LABEL_HEIGHT) => {
   const canvas = document.createElement("canvas")
   const context = canvas.getContext("2d")
 
@@ -170,7 +175,7 @@ const createLabel = (text: string, color: string) => {
   })
   const sprite = new Sprite(material)
   // 高さを指定の値に揃え、幅は canvas の縦横比から決める
-  sprite.scale.set((LABEL_HEIGHT * canvas.width) / canvas.height, LABEL_HEIGHT, 1)
+  sprite.scale.set((height * canvas.width) / canvas.height, height, 1)
 
   return {
     sprite,
@@ -353,8 +358,9 @@ export const createRefractionAtSurfaceScene = ({
   const refractedRay = createRay(REFRACTED_COLOR)
   scene.add(incidentRay.object, refractedRay.object)
 
-  // 屈折せずにそのまま直進した場合の道すじ。屈折光とのひらきが、曲がった量になる
-  const straightGuide = createGuideLine(STRAIGHT_COLOR)
+  // 屈折せずにそのまま直進した場合の道すじ。屈折光とのひらきが、曲がった量になる。
+  // 入射光がそのまま伸びた線なので、色は入射光と同じにする
+  const straightGuide = createGuideLine(INCIDENT_COLOR)
   scene.add(straightGuide.object)
 
   const arrowGeometry = new ConeGeometry(ARROW_RADIUS, ARROW_HEIGHT, 12)
@@ -370,16 +376,14 @@ export const createRefractionAtSurfaceScene = ({
 
   const incidentLabel = createLabel("入射光", INCIDENT_COLOR)
   const refractedLabel = createLabel("屈折光", REFRACTED_COLOR)
-  const straightLabel = createLabel("直進した場合", STRAIGHT_COLOR)
   const normalLabel = createLabel("法線", NORMAL_COLOR)
-  const incidentAngleLabel = createLabel("入射角", INCIDENT_COLOR)
-  const refractedAngleLabel = createLabel("屈折角", REFRACTED_COLOR)
+  const incidentAngleLabel = createLabel("入射角", INCIDENT_COLOR, ANGLE_LABEL_HEIGHT)
+  const refractedAngleLabel = createLabel("屈折角", REFRACTED_COLOR, ANGLE_LABEL_HEIGHT)
   const airLabel = createLabel("空気", NORMAL_COLOR)
   const waterLabel = createLabel("水", WATER_COLOR)
   const labels = [
     incidentLabel,
     refractedLabel,
-    straightLabel,
     normalLabel,
     incidentAngleLabel,
     refractedAngleLabel,
@@ -474,11 +478,6 @@ export const createRefractionAtSurfaceScene = ({
         .set(sinRefraction, -cosRefraction, 0)
         .multiplyScalar(REFRACTED_LENGTH * REFRACTED_LABEL_ALONG)
         .addScaledVector(offset.set(-cosRefraction, -sinRefraction, 0), REFRACTED_LABEL_GAP)
-
-      // 直進した場合のラベルは、破線の延長上に置く。入射角 0 でも屈折光のラベルと重ならない
-      straightLabel.sprite.position
-        .set(sin, -cos, 0)
-        .multiplyScalar(STRAIGHT_LENGTH + STRAIGHT_LABEL_GAP)
 
       placeAngleLabel(incidentAngleLabel.sprite, HALF_PI + incidence / 2, -1)
       placeAngleLabel(refractedAngleLabel.sprite, -HALF_PI + refraction / 2, 1)
