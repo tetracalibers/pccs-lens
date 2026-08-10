@@ -12,6 +12,7 @@ draft: true
   import CanvasWrapper from "$lib/demo/CanvasWrapper.svelte"
   import FrostedGlassDemo from "$lib/demo/threejs/color/frosted-glass/FrostedGlassDemo.svelte"
   import ReflectionSpreadDemo from "$lib/demo/threejs/color/reflection-spread/ReflectionSpreadDemo.svelte"
+  import RefractionAtSurfaceDemo from "$lib/demo/threejs/color/refraction-at-surface/RefractionAtSurfaceDemo.svelte"
   import TransmissionSpreadDemo from "$lib/demo/threejs/color/transmission-spread/TransmissionSpreadDemo.svelte"
 </script>
 
@@ -127,6 +128,13 @@ draft: true
 - 光の:Anki[屈折]により、水面でストローが折れて見えたり、水槽内の魚は斜めから見ると実際より上にいるように見える
 -->
 
-:::Todo
-屈折の具体例（例えば水槽内の魚は斜めから見ると実際より上にいるように見える）の図をThree.jsで
+:::Action
+入射角を動かし、ドラッグで視点を回しながら、次の点に着目してみよう
+
+- 空気から水へ斜めに入った光が、水面でどちら向きに折れ、そのまま直進した場合の道すじ（破線）とどれだけひらくか
+- 入射角を`0`に戻すと、光の向きが変わるかどうか
 :::
+
+<CanvasWrapper>
+  <RefractionAtSurfaceDemo />
+</CanvasWrapper>
