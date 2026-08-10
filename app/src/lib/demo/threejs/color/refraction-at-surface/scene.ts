@@ -73,16 +73,25 @@ const ANGLE_LABEL_RADIUS = 0.6
  */
 const MIN_ANGLE_LABEL_X = 0.2
 
-/** 光線のラベルを光線上のどこに置くか（0 が水面、1 が光線の端） */
-const INCIDENT_LABEL_ALONG = 0.95
-const REFRACTED_LABEL_ALONG = 0.85
+/**
+ * 光線のラベルを、光線の端からさらに先へ離す距離。
+ * 入射角によらず線の延長上に置くので、垂直に入って光線が法線と重なっても
+ * ラベルが線に乗らない（入射光は上、屈折光は下に出る）
+ */
+const RAY_LABEL_GAP = 0.22
 
-/** ラベルを、それが指す光線から垂直に離す距離 */
-const INCIDENT_LABEL_GAP = 0.24
-const REFRACTED_LABEL_GAP = 0.3
+/**
+ * 光線のラベルを、線から垂直に逃がす距離の最大値。
+ * 入射角が大きいほど光線が寝てラベルが水面に近づくので、その分だけ
+ * 入射光は上、屈折光は下へずらす（垂直入射では 0 になり、位置が飛ばない）
+ */
+const RAY_LABEL_SIDE_GAP = 0.2
 
-/** 法線のラベルの下端を、線の上端から離す距離 */
-const NORMAL_LABEL_GAP = 0.06
+/**
+ * ここまで小さい入射角は「垂直に入った」とみなす。
+ * 光が曲がらず、入射角・屈折角も直進した場合の道すじも意味を持たなくなる境目
+ */
+const PERPENDICULAR_DEG = 0.5
 
 /** 空気・水のラベルを置く位置。図の左端に固定し、水面をはさんで上下に並べる */
 const AIR_LABEL_POSITION = new Vector3(-1.95, 0.72, 0)
@@ -385,7 +394,6 @@ export const createRefractionAtSurfaceScene = ({
 
   const incidentLabel = createLabel("入射光", INCIDENT_COLOR)
   const refractedLabel = createLabel("屈折光", REFRACTED_COLOR)
-  const normalLabel = createLabel("法線", NORMAL_COLOR)
   const incidentAngleLabel = createLabel("入射角", INCIDENT_COLOR, ANGLE_LABEL_HEIGHT)
   const refractedAngleLabel = createLabel("屈折角", REFRACTED_COLOR, ANGLE_LABEL_HEIGHT)
   const airLabel = createLabel("空気", NORMAL_COLOR)
@@ -393,7 +401,6 @@ export const createRefractionAtSurfaceScene = ({
   const labels = [
     incidentLabel,
     refractedLabel,
-    normalLabel,
     incidentAngleLabel,
     refractedAngleLabel,
     airLabel,
@@ -410,7 +417,6 @@ export const createRefractionAtSurfaceScene = ({
   })
 
   // 入射角に動かされないラベルは、ここで置いたまま動かさない
-  normalLabel.sprite.position.set(0, NORMAL_ABOVE + LABEL_HEIGHT / 2 + NORMAL_LABEL_GAP, 0)
   airLabel.sprite.position.copy(AIR_LABEL_POSITION)
   waterLabel.sprite.position.copy(WATER_LABEL_POSITION)
 
@@ -466,7 +472,10 @@ export const createRefractionAtSurfaceScene = ({
       )
       refractedRay.commit()
 
-      // 曲がらなかった場合の道すじは、入射光をそのまま水中へ伸ばしたもの
+      // 曲がらなかった場合の道すじは、入射光をそのまま水中へ伸ばしたもの。
+      // 垂直に入るときは屈折光とぴったり重なって比べる意味がないので、破線ごと消す
+      const perpendicular = params.incidenceDeg < PERPENDICULAR_DEG
+      straightGuide.object.visible = !perpendicular
       straightEnd.set(STRAIGHT_LENGTH * sin, -STRAIGHT_LENGTH * cos, 0)
       straightGuide.setSegment(origin, straightEnd)
 
@@ -485,18 +494,26 @@ export const createRefractionAtSurfaceScene = ({
       incidentSector.setSweep(HALF_PI, HALF_PI + incidence)
       refractedSector.setSweep(-HALF_PI, -HALF_PI + refraction)
 
-      // 入射光のラベルは、光線をはさんで法線と反対側（左上）に置く
+      // 光線のラベルは、どちらもその光線の延長上に置く。入射光は線の先（上）、
+      // 屈折光は線の先（下）に出るので、垂直入射で光線が法線に重なっても線に乗らない。
+      // 線から垂直に逃がす量は、光線が寝るほど（sin が大きいほど）増やす
       incidentLabel.sprite.position
         .set(-sin, cos, 0)
-        .multiplyScalar(INCIDENT_LENGTH * INCIDENT_LABEL_ALONG)
-        .addScaledVector(offset.set(cos, sin, 0), INCIDENT_LABEL_GAP)
+        .multiplyScalar(INCIDENT_LENGTH + RAY_LABEL_GAP)
+        .addScaledVector(offset.set(cos, sin, 0), RAY_LABEL_SIDE_GAP * sin)
 
-      // 屈折光のラベルは、破線とぶつからないよう光線の左側に置く
       refractedLabel.sprite.position
         .set(sinRefraction, -cosRefraction, 0)
-        .multiplyScalar(REFRACTED_LENGTH * REFRACTED_LABEL_ALONG)
-        .addScaledVector(offset.set(-cosRefraction, -sinRefraction, 0), REFRACTED_LABEL_GAP)
+        .multiplyScalar(REFRACTED_LENGTH + RAY_LABEL_GAP)
+        .addScaledVector(
+          offset.set(-cosRefraction, -sinRefraction, 0),
+          RAY_LABEL_SIDE_GAP * sinRefraction
+        )
 
+      // 垂直に入るときは角そのものが無いので、角度のラベルも消す
+      angleLabels.forEach(({ sprite }) => {
+        sprite.visible = !perpendicular
+      })
       placeAngleLabel(incidentAngleLabel.sprite, HALF_PI + incidence / 2, -1)
       placeAngleLabel(refractedAngleLabel.sprite, -HALF_PI + refraction / 2, 1)
 
