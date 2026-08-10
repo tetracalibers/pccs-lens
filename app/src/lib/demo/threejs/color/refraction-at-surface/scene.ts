@@ -8,7 +8,6 @@ import {
   Float32BufferAttribute,
   Line,
   LineBasicMaterial,
-  LineDashedMaterial,
   LineSegments,
   MathUtils,
   Mesh,
@@ -123,6 +122,9 @@ const ARROW_ALONG = 0.55
 const GUIDE_DASH_SIZE = 0.04
 const GUIDE_GAP_SIZE = 0.03
 
+/** 破線の太さ（ピクセル）。実際に光が通る道ではないので、光線より少しだけ細くする */
+const GUIDE_LINE_WIDTH = 1.6
+
 /** 入射角・屈折角を表す扇形の塗りの不透明度。記事の SVG 図解と同じ濃さにする */
 const SECTOR_OPACITY = 0.32
 
@@ -224,30 +226,37 @@ const createRay = (color: string) => {
 /**
  * 屈折せずに直進した場合の道すじを示す破線。実際に光が通る道ではないので、実線の光線と描き分ける。
  *
- * 破線の刻みは頂点ごとの「線に沿った距離」で決まるため、端点を動かすたびに
- * その距離も入れ直す（入れ直さないと線の向きが変わったときに模様が崩れる）。
+ * 光線と同じく、太さを指定できる Line2 系で描く（`LineDashedMaterial` の `linewidth` は
+ * WebGL では無視されて 1px になる）。破線の刻みは頂点ごとの「線に沿った距離」で決まるため、
+ * 端点を動かすたびに測り直す。
  */
 const createGuideLine = (color: string) => {
-  const positions = new Float32BufferAttribute(new Float32Array(2 * 3), 3)
-  const distances = new Float32BufferAttribute(new Float32Array(2), 1)
-  const geometry = new BufferGeometry()
-    .setAttribute("position", positions)
-    .setAttribute("lineDistance", distances)
-  const material = new LineDashedMaterial({
+  const positions = new Float32Array(2 * 3)
+  const geometry = new LineSegmentsGeometry()
+  const material = new LineMaterial({
     color,
+    linewidth: GUIDE_LINE_WIDTH,
+    dashed: true,
     dashSize: GUIDE_DASH_SIZE,
     gapSize: GUIDE_GAP_SIZE
   })
 
+  const object = new LineSegments2(geometry, material)
+
   return {
-    object: new LineSegments(geometry, material),
+    object,
     setSegment: (from: Vector3, to: Vector3) => {
-      positions.setXYZ(0, from.x, from.y, from.z)
-      positions.setXYZ(1, to.x, to.y, to.z)
-      distances.setX(0, 0)
-      distances.setX(1, from.distanceTo(to))
-      positions.needsUpdate = true
-      distances.needsUpdate = true
+      positions[0] = from.x
+      positions[1] = from.y
+      positions[2] = from.z
+      positions[3] = to.x
+      positions[4] = to.y
+      positions[5] = to.z
+      geometry.setPositions(positions)
+      object.computeLineDistances()
+    },
+    setResolution: (width: number, height: number) => {
+      material.resolution.set(width, height)
     },
     dispose: () => {
       geometry.dispose()
@@ -440,6 +449,7 @@ export const createRefractionAtSurfaceScene = ({
       renderer.getSize(viewportSize)
       incidentRay.setResolution(viewportSize.x, viewportSize.y)
       refractedRay.setResolution(viewportSize.x, viewportSize.y)
+      straightGuide.setResolution(viewportSize.x, viewportSize.y)
 
       // 入射光は左上から来て、水面上の原点に当たる
       incidentRay.setPoint(0, -INCIDENT_LENGTH * sin, INCIDENT_LENGTH * cos, 0)
