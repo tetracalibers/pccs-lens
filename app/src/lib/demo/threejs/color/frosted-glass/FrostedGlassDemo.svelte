@@ -25,9 +25,9 @@
     maxPolarAngle: Math.PI * 0.55
   }}
   buildPane={(pane, p) => {
-    // 上限の 0.6 は、実際に動かして「向こう側がぼんやり見える」と読める上端として選んだ値。
+    // 上限の 0.8 は、実際に動かして「向こう側がぼんやり見える」と読める上端として選んだ値。
     // scene.ts 側で倍率を掛けてからマテリアルへ渡すので、この数値がそのまま roughness ではない
-    pane.addBinding(p, "roughness", { min: 0, max: 0.6, step: 0.01, label: "ガラスの粗さ" })
+    pane.addBinding(p, "roughness", { min: 0, max: 0.8, step: 0.01, label: "ガラスの粗さ" })
     pane.addBinding(p, "glassType", { readonly: true, label: "ガラスの種類" })
   }}
 />

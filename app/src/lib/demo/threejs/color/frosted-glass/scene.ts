@@ -17,7 +17,7 @@ import type { ThreeSceneContext } from "$lib/demo/threejs/_shared/types"
 /** Tweakpane で操作するパラメータ */
 export type FrostedGlassParams = {
   /**
-   * ガラスの粗さ。`0` が透明なガラス、上限の `0.6` がすりガラスのように向こう側がぼやける状態。
+   * ガラスの粗さ。`0` が透明なガラス、上限の `0.8` がすりガラスのように向こう側がぼやける状態。
    * マテリアルの `roughness` へは `ROUGHNESS_SCALE` を掛けてから渡す
    */
   roughness: number
