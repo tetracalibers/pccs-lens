@@ -24,6 +24,7 @@ import { dirname, join, resolve, extname, relative, sep } from "node:path"
  * @property {string[]} titleLines  描画用の改行済みタイトル（1〜2 要素）
  * @property {string[]} [crumbs]    nested 系のみ。title-only では省略
  * @property {string}   [figure]    図版があるときのみ（data 基準の相対パス）
+ * @property {string}   [theme]     config.mjs の既定と違うテーマを明示したときのみ（"light" | "dark"）
  */
 
 /** 記録ファイルのパス（data 基準の key から）。 */

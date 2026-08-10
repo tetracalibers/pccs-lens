@@ -1,0 +1,13 @@
+{
+  "route": "color-theory/reflection-and-refraction",
+  "title": "光の反射・透過と屈折",
+  "titleLines": [
+    "光の反射・透過と屈折"
+  ],
+  "crumbs": [
+    "色の理論",
+    "色が見えるしくみ"
+  ],
+  "figure": "assets/color-theory/reflection-and-refraction/figure.png",
+  "theme": "dark"
+}

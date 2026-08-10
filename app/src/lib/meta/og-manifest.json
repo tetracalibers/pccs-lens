@@ -351,6 +351,9 @@
     "color-theory/real-world-color-mixing": {
       "title": "実世界でみられる混色"
     },
+    "color-theory/reflection-and-refraction": {
+      "title": "光の反射・透過と屈折"
+    },
     "color-theory/rgb-color-system": {
       "title": "RGB表色系"
     },

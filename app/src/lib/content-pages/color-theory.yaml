@@ -69,7 +69,11 @@
         - slug: how-color-works
         - slug: electromagnetic-waves
         - slug: light-components-and-reflectance
-        - slug: light-phenomena
+    - title: 光の現象
+      links:
+        - slug: reflection-and-refraction
+        - slug: interference-and-diffraction
+        - slug: light-scattering
     - title: 眼と視覚系
       links:
         - slug: eye-structure
@@ -138,8 +142,6 @@
         - slug: photometric-and-radiometric-quantities
     - title: 色の現れ方と感じ方
       links:
-        - title: 物体表面の質感と光
-          grades: ["2"]
         - title: 色の様相
           grades: ["1"]
         - title: 色の現れ方の分類

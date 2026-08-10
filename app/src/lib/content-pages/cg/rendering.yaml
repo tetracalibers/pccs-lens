@@ -4,14 +4,9 @@ sections:
   - heading: 写実的レンダリング
     id: photorealistic
     links:
-      - title: 写実的表現 # CG 4-1-1
-        group: ["CG"]
-      - title: リアリティの要素 # CG 4-1-2
-        group: ["CG"]
-      - title: 写実的表現のためのモデリング # CG 4-1-3
-        group: ["CG"]
-      - title: レンダリングにおける処理 # CG 4-1-4
-        group: ["CG"]
+      - slug: photorealism-and-reality-elements
+      - slug: modeling-for-photorealism
+      - slug: rendering-process
   - heading: 隠面消去
     id: hidden-surface
     links:
@@ -29,8 +24,7 @@ sections:
   - heading: シェーディング
     id: shading
     links:
-      - title: シェーディングの目的 # CG 4-3-1
-        group: ["CG"]
+      - slug: shading-purpose
       - title: 光を表す量 # CG 4-3-1
         group: ["CG"]
       - title: シェーディングモデル # CG 4-3-1
@@ -41,12 +35,9 @@ sections:
         group: ["CG"]
       - title: 鏡面反射の表現 # CG 4-3-4
         group: ["CG"]
-      - title: 反射・透過・屈折の表現 # CG 4-3-5
-        group: ["CG"]
-      - title: 散乱・減衰の表現 # CG 4-3-6
-        group: ["CG"]
-      - title: スムーズシェーディングの手法 # CG 4-3-7
-        group: ["CG"]
+      - slug: reflection-transmission-refraction
+      - slug: scattering-and-attenuation
+      - slug: smooth-shading
       - title: グローシェーディング # CG 4-3-7
         group: ["CG"]
       - title: フォンシェーディング # CG 4-3-7
@@ -54,8 +45,7 @@ sections:
   - heading: シャドウイング
     id: shadowing
     links:
-      - title: 平行光源・点光源による影 # CG 4-4-2
-        group: ["CG"]
+      - slug: shadows-from-point-and-directional-lights
       - title: 大きさをもつ光源による影 # CG 4-4-3
         group: ["CG"]
   - heading: マッピング
@@ -63,12 +53,10 @@ sections:
     links:
       - title: マッピングの目的と手法 # CG 4-5-1
         group: ["CG"]
-      - title: テクスチャマッピング # CG 4-5-2
-        group: ["CG"]
+      - slug: texture-mapping
       - title: アンチエイリアシング # CG 4-5-2
         group: ["CG"]
-      - title: バンプマッピング # CG 4-5-3
-        group: ["CG"]
+      - slug: bump-mapping
       - title: 環境マッピング # CG 4-5-4
         group: ["CG"]
       - title: ソリッドテクスチャマッピング # CG 4-5-5

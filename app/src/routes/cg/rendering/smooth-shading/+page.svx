@@ -1,0 +1,10 @@
+---
+layout: guide-content
+title: スムーズシェーディングの手法 # CG 4-3-7
+
+group: ["CG"]
+
+draft: true
+---
+
+## TODO

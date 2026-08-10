@@ -1,0 +1,10 @@
+---
+layout: guide-content
+title: レンダリングにおける処理 # CG 4-1-4
+
+group: ["CG"]
+
+draft: true
+---
+
+## TODO

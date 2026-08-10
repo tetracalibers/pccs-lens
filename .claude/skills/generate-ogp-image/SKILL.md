@@ -88,8 +88,18 @@ cd ogimage && npm install && npm run fonts && cd ..
 - **`ogimage/config.mjs` が唯一の情報源**。ルート → バリエーション種別・図版の可否・テーマをここで定義している。
 - 各対象ルートについて、`config.mjs` の `OG_RULES`（上から最初にマッチした規則を採用）で
   `variation`（`default` / `title-only` / `nested` / `nested-fig`）と `figure`（`none` / `optional` / `required`）を得る。
-- `theme`（`light` / `dark`・省略時 `light`）も規則が持つ。描画スクリプトが route から自動で引くので、**JSON に書かない**。CG 配下（`/cg`・`/cg/**`）は `dark`（地色 `#26282d`）。
+- `theme`（`light` / `dark`・省略時 `light`）も規則が持つ。描画スクリプトが route から自動で引くので、**通常は JSON に書かない**。CG 配下（`/cg`・`/cg/**`）は `dark`（地色 `#26282d`）。
+- **例外：Three.js デモの図版しか無いページは `light` のルートでも `dark` で生成する**（下記）。
 - 規則に該当しないルートは**明確なエラーで停止**し、勝手に生成しない。
+
+#### Three.js デモの図版しか無いページは dark にする
+
+`/color-theory/*` などの `light` ルートであっても、**埋め込む図版が Three.js デモのスクリーンショットしか無い場合は、payload に `"theme": "dark"` を明示して dark で生成する。**
+
+- Three.js デモは地色 `#26282d` の暗地でレンダリングされるため、light の装飾背景（白ベース＋淡いにじみ）に置くと**暗い箱として浮く**。図版側を明るくすることはできないので、テンプレート側を dark に寄せて地色を揃える。
+- 判定は「そのページで使える図版が Three.js デモの画面写真だけか」で行う。SVG 図解など明地の図版も選べるページで、ユーザーが明地の図版を選んだなら light のままでよい。
+- **図版を入れない（`nested`）ページや、`title-only` のページはこの例外の対象外**。`config.mjs` の規則どおり light で生成する。
+- **`config.mjs` の既定と違うテーマを明示すると、記録（`ogimage/data/<route>.json`）に `"theme": "dark"` として保存される。** 一括再生成（`node ogimage/regenerate.mjs`）はこれを尊重するので、dark の指定は作り直しても保たれる。既定と同じテーマを明示した場合は記録に残らない（規則の変更が一貫して効くようにするため）。
 
 ### 3. タイトル・パンくずを解決する
 
@@ -124,6 +134,8 @@ cd ogimage && npm install && npm run fonts && cd ..
 - 一括処理中でも、図版の要否は**ページごとに確認**する（改行案の一括承認とは別）。
 
 > **ダーク（`theme: "dark"`）のルートの図版**: CG 配下は地色 `#26282d` のダークなので、**白背景の図版は暗地に白い箱として浮く**。`knockoutWhite` で白を抜いても線画が暗色だと今度は読めなくなるため、透過では解決しない。ダークのルートでは**図版側も暗地（できれば同じ `#26282d`）**で用意してもらう。Three.js デモのスクリーンショットはそのまま条件を満たす。
+
+> **ライトのルートに Three.js デモの図版を入れるとき**: 上の逆で、`/color-theory/*` などライトのルートに暗地のデモ画面を置くと**明地に暗い箱として浮く**。図版が Three.js デモしか無いページは、手順 2 の例外に従って **payload に `"theme": "dark"` を載せてページ全体を dark で生成**し、地色を図版に揃える。
 
 #### 白背景の透過（knockoutWhite）の要否も確認する
 
@@ -208,7 +220,7 @@ JSON フィールド:
 | `knockoutWhite` | 省略可 | `true` で nested-fig の **PNG** 図版の白を透過してから埋め込む（要 ImageMagick）。白背景の PNG のときだけ付ける。省略時 `false` |
 | `knockoutMode` | 省略可 | 透過範囲。`"background"`＝背景に繋がった白だけ（既定）/ `"all"`＝全ての白を一律。`knockoutWhite: true` のときだけ有効 |
 | `magickFuzz` | 省略可 | `knockoutWhite` 時の `-fuzz` 値（数値＋任意の `%`。例 `"5%"`）。縁の抜け具合を調整。省略時はモード別（background=`"5%"` / all=`"2%"`） |
-| `theme` | **書かない** | `light` / `dark`。route から `config.mjs` が自動で引く。ユーザーから明示の上書き指示があったときだけ載せる |
+| `theme` | **原則書かない** | `light` / `dark`。route から `config.mjs` が自動で引く。**Three.js デモの図版しか無いライトのルート**（手順 2 の例外）と、ユーザーから明示の上書き指示があったときだけ `"dark"` を載せる。既定と違う値を載せたときだけ記録に保存され、一括再生成でも保たれる |
 | `out` | 省略可 | 出力先。省略時は `app/static/ogp/<route>.png` |
 
 - default 画像（サイト全体の既定 og:image）は既に `app/static/ogp/default.png` にある。再生成する場合のみ:
@@ -281,5 +293,6 @@ render.mjs は nested-fig の図版を `ogimage/data/assets/<route>/figure.<ext>
 - 第3引数を渡されたが図版が無い / PNG 以外 / 既存記録の図版を流用: 透過は適用せず、無視した旨を伝えて生成を続ける。
 - draft ページ: 個別生成しない（既定画像にフォールバック）。
 - 既存画像の再生成: 同一パスへ上書き（冪等）。記録・図版アセットも同一パスへ上書き。
+- `theme` を明示上書きしたページの一括再生成: 上書きは記録に保存され `regenerate.mjs` も尊重するので、作り直しても dark のまま。あとから `config.mjs` の規則をそのルートごと dark に変えた場合は、記録の `theme` が冗長になるだけで害はない（値が一致するため）。
 - 記録の再利用時に保存済み図版アセットが欠損: 流用せず、新規手渡しを促す。
 - タイトルが最大 2 行でも幅超過: 描画スクリプトが font-size を自動縮小して収める。3 行以上の `titleLines` はエラー。

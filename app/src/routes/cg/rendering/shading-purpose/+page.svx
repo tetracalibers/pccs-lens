@@ -1,0 +1,10 @@
+---
+layout: guide-content
+title: シェーディングの目的 # CG 4-3-1
+
+group: ["CG"]
+
+draft: true
+---
+
+## TODO

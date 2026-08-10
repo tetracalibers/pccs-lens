@@ -1,0 +1,108 @@
+---
+layout: guide-content
+title: 光の反射・透過と屈折
+
+grades: ["3", "2"]
+visual: true
+---
+
+<script>
+  import CanvasWrapper from "$lib/demo/CanvasWrapper.svelte"
+  import FrostedGlassDemo from "$lib/demo/threejs/color/frosted-glass/FrostedGlassDemo.svelte"
+  import ReflectionSpreadDemo from "$lib/demo/threejs/color/reflection-spread/ReflectionSpreadDemo.svelte"
+  import RefractionAtSurfaceDemo from "$lib/demo/threejs/color/refraction-at-surface/RefractionAtSurfaceDemo.svelte"
+  import TransmissionSpreadDemo from "$lib/demo/threejs/color/transmission-spread/TransmissionSpreadDemo.svelte"
+</script>
+
+## :WithGradeTag[光の反射]{grades="3"}
+
+[反射](/color-theory/how-color-works/)とは、光が物体の表面にぶつかって跳ね返ることでしたが、どのような方向に光が跳ね返るかは、物体の表面の性質によって異なります。
+
+反射は、その跳ね返り方によって、`2`種類に分けられます。
+
+- :Anki[正反射]：物体に当たった光が、すべて同じ方向に跳ね返る反射
+- :Anki[拡散反射]：物体に当たった光が、あちこちに散らばって跳ね返る反射
+
+::::CardGrid{cols=1}
+:::TermCard{title="正反射" ankiTitle="anki"}
+:Anki[入射角]（光が物体に当たる角度）と:Anki[反射角]（跳ね返っていく角度）が等しい反射
+:Anki[鏡]のような滑らかな面で起こるため、:Anki[鏡面反射]とも呼ばれる
+跳ね返った方向にすべての光が集中し、眼に入ると:Anki[眩しく]感じられる
+:::
+:::TermCard{title="拡散反射" ankiTitle="anki"}
+表面に細かな凹凸のある:Anki[マット]な面で起こる反射
+表面の凹凸の向きによって、光も異なる方向に跳ね返る
+光が決まった方向に集中しないため、その光は:Anki[柔らかく]感じられる
+:::
+::::
+
+:::Action
+:Mark[表面の粗さ]を上げていくと、反射光が多方向に散らばっていく様子を観察しよう
+:::
+
+<CanvasWrapper>
+  <ReflectionSpreadDemo />
+</CanvasWrapper>
+
+## :WithGradeTag[反射光と物体表面の質感]{grades="2"}
+
+物体からの反射光の広がり方は、物体の見え方に影響を与えます。
+
+::::CardGrid
+:::TermCard{title="正反射の場合"}
+一定方向に強く反射するため、物体に:Anki[光沢]や:Anki[きらめき]を感じる
+:::
+:::TermCard{title="拡散反射の場合"}
+まんべんなく反射すると、どこから見ても同じ強さの明るさに見え、物体は:Anki[マット]で:Anki[柔らか]に感じられる
+:::
+::::
+
+実際の物体の表面では、正反射と拡散反射が混在しています。
+たとえば、ツヤのある紙は、拡散反射の中に:Anki[正反射]を一部含んでいます。
+
+## :WithGradeTag[光の透過]{grades="3"}
+
+透明な物体では、光が物体をすり抜けてしまいます。これは[透過](/color-theory/how-color-works/)と呼ばれる現象でした。
+透過の場合も、光の通り抜け方によって`2`種類に分かれます。
+
+- :Anki[正透過]：入射した光が直進して物体の反対側に出てくる透過
+- :Anki[拡散透過]：入射した光がさまざまな方向に散らばって出てくる透過
+
+:::Action
+:Mark[表面の粗さ]を上げていくと、透過光が多方向に散らばっていく様子を観察しよう
+:::
+
+<CanvasWrapper>
+  <TransmissionSpreadDemo />
+</CanvasWrapper>
+
+透明なガラスで起こるのが:Anki[正透過]で、すりガラスや曇りガラスなど、表面に凹凸がある物体で起こるのが:Anki[拡散透過]です。
+
+:::Action
+ドラッグ操作でいろいろな視点で眺めながら、:Mark[ガラスの粗さ]を動かしてみよう
+:::
+
+<CanvasWrapper>
+  <FrostedGlassDemo />
+</CanvasWrapper>
+
+すりガラスの向こう側がぼんやりとしか見えないのは、通り抜けた光の方向が揃っていないからです。
+:Anki[拡散透過]では、ガラスを通り抜けるときに光の方向が変わり、離れた点から出た光どうしが混ざり合います。そのため、眼にはさまざまな点からの光がまとめて届き、細かい模様や輪郭が失われてしまうのです。
+
+## :WithGradeTag[光の屈折]{grades="3"}
+
+正透過では、光はガラスをまっすぐ通り抜けました。
+光は基本的に:Anki[直進]する性質をもっていますが、異なる物質を:Anki[斜め]に通過するときには進行方向を変えます。この現象を光の:Anki[屈折]といいます。
+
+水に入ったストローが折れて見えるのは、この光の:Anki[屈折]によるものです。
+
+:::Action
+:Mark[入射角]を動かして、空気から水へ斜めに入った光が、水面でどちら向きに折れ、そのまま直進した場合の経路（破線）とどれだけズレているかを観察しよう
+:::
+
+<CanvasWrapper>
+  <RefractionAtSurfaceDemo />
+</CanvasWrapper>
+
+光の:Anki[屈折]によって、水槽内の魚が斜めから見ると実際より上にいるように見えることもあります。
+水の中の魚から出た光は、水面で空気中へ出るときに、より水面に沿った向きへ折れ曲がります。物体がどこにあるかは、眼に届いた光をまっすぐ辿った先として捉えられますが、光が折れ曲がった分だけ、辿った先（破線）は実際の魚の位置よりも水面に近くなるためです。

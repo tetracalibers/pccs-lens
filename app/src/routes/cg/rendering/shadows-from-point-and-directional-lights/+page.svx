@@ -1,0 +1,10 @@
+---
+layout: guide-content
+title: 平行光源・点光源による影 # CG 4-4-2
+
+group: ["CG"]
+
+draft: true
+---
+
+## TODO

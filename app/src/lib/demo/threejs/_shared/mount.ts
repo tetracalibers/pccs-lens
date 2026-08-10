@@ -21,6 +21,12 @@ export type OrbitOptions = {
   minPolarAngle?: number
   maxPolarAngle?: number
   /**
+   * 水平方向に回せる範囲（ラジアン）。`0` が初期のカメラ位置ではなく `+z` 軸の向き。
+   * 正面から見る構図が前提のデモ（左右の見比べなど）で、回り込みすぎを防ぐために使う。
+   */
+  minAzimuthAngle?: number
+  maxAzimuthAngle?: number
+  /**
    * ズームの寄り先を返す関数。寄るほど視野の中心が注視点からこの点へ移り、
    * `minDistance` まで寄ると完全にこの点が中心になる（引き切ると注視点に戻る）。
    * **カメラと注視点を同じだけ動かすので、視線の向きも距離も変わらない。**
@@ -146,6 +152,10 @@ export const mountThreeDemo = <P>(options: MountThreeDemoOptions<P>): ThreeDemo 
       controls.minPolarAngle = orbitOptions.minPolarAngle
     if (orbitOptions.maxPolarAngle !== undefined)
       controls.maxPolarAngle = orbitOptions.maxPolarAngle
+    if (orbitOptions.minAzimuthAngle !== undefined)
+      controls.minAzimuthAngle = orbitOptions.minAzimuthAngle
+    if (orbitOptions.maxAzimuthAngle !== undefined)
+      controls.maxAzimuthAngle = orbitOptions.maxAzimuthAngle
     controls.update()
     controls.addEventListener("change", invalidate)
 
