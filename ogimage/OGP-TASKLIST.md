@@ -121,7 +121,6 @@
 - [x] `/color-theory/color-rendering`
 - [x] `/color-theory/lamp-types`
 - [x] `/color-theory/photometric-and-radiometric-quantities`
-- [ページ未作成] 物体表面の質感と光
 - [ページ未作成] 色の様相
 - [ページ未作成] 色の現れ方の分類
 - [ページ未作成] 三属性間の影響

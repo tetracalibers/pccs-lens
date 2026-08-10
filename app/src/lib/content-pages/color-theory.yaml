@@ -142,8 +142,6 @@
         - slug: photometric-and-radiometric-quantities
     - title: 色の現れ方と感じ方
       links:
-        - title: 物体表面の質感と光
-          grades: ["2"]
         - title: 色の様相
           grades: ["1"]
         - title: 色の現れ方の分類
