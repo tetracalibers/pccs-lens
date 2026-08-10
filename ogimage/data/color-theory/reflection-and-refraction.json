@@ -8,5 +8,6 @@
     "色の理論",
     "色が見えるしくみ"
   ],
-  "figure": "assets/color-theory/reflection-and-refraction/figure.png"
+  "figure": "assets/color-theory/reflection-and-refraction/figure.png",
+  "theme": "dark"
 }

@@ -99,7 +99,7 @@ cd ogimage && npm install && npm run fonts && cd ..
 - Three.js デモは地色 `#26282d` の暗地でレンダリングされるため、light の装飾背景（白ベース＋淡いにじみ）に置くと**暗い箱として浮く**。図版側を明るくすることはできないので、テンプレート側を dark に寄せて地色を揃える。
 - 判定は「そのページで使える図版が Three.js デモの画面写真だけか」で行う。SVG 図解など明地の図版も選べるページで、ユーザーが明地の図版を選んだなら light のままでよい。
 - **図版を入れない（`nested`）ページや、`title-only` のページはこの例外の対象外**。`config.mjs` の規則どおり light で生成する。
-- この上書きは記録（`ogimage/data/<route>.json`）に残らないため、**`node ogimage/regenerate.mjs` で一括再生成すると light に戻る。** 一括再生成をかけたあとは、該当ページをこのスキルで個別に生成し直す。
+- **`config.mjs` の既定と違うテーマを明示すると、記録（`ogimage/data/<route>.json`）に `"theme": "dark"` として保存される。** 一括再生成（`node ogimage/regenerate.mjs`）はこれを尊重するので、dark の指定は作り直しても保たれる。既定と同じテーマを明示した場合は記録に残らない（規則の変更が一貫して効くようにするため）。
 
 ### 3. タイトル・パンくずを解決する
 
@@ -220,7 +220,7 @@ JSON フィールド:
 | `knockoutWhite` | 省略可 | `true` で nested-fig の **PNG** 図版の白を透過してから埋め込む（要 ImageMagick）。白背景の PNG のときだけ付ける。省略時 `false` |
 | `knockoutMode` | 省略可 | 透過範囲。`"background"`＝背景に繋がった白だけ（既定）/ `"all"`＝全ての白を一律。`knockoutWhite: true` のときだけ有効 |
 | `magickFuzz` | 省略可 | `knockoutWhite` 時の `-fuzz` 値（数値＋任意の `%`。例 `"5%"`）。縁の抜け具合を調整。省略時はモード別（background=`"5%"` / all=`"2%"`） |
-| `theme` | **原則書かない** | `light` / `dark`。route から `config.mjs` が自動で引く。**Three.js デモの図版しか無いライトのルート**（手順 2 の例外）と、ユーザーから明示の上書き指示があったときだけ `"dark"` を載せる |
+| `theme` | **原則書かない** | `light` / `dark`。route から `config.mjs` が自動で引く。**Three.js デモの図版しか無いライトのルート**（手順 2 の例外）と、ユーザーから明示の上書き指示があったときだけ `"dark"` を載せる。既定と違う値を載せたときだけ記録に保存され、一括再生成でも保たれる |
 | `out` | 省略可 | 出力先。省略時は `app/static/ogp/<route>.png` |
 
 - default 画像（サイト全体の既定 og:image）は既に `app/static/ogp/default.png` にある。再生成する場合のみ:
@@ -293,6 +293,6 @@ render.mjs は nested-fig の図版を `ogimage/data/assets/<route>/figure.<ext>
 - 第3引数を渡されたが図版が無い / PNG 以外 / 既存記録の図版を流用: 透過は適用せず、無視した旨を伝えて生成を続ける。
 - draft ページ: 個別生成しない（既定画像にフォールバック）。
 - 既存画像の再生成: 同一パスへ上書き（冪等）。記録・図版アセットも同一パスへ上書き。
-- `theme` を明示上書きしたページの一括再生成: 記録に `theme` を持たないため `regenerate.mjs` は `config.mjs` の既定（light）で作り直してしまう。一括再生成の後は、dark で作った該当ページをこのスキルで個別に生成し直す。
+- `theme` を明示上書きしたページの一括再生成: 上書きは記録に保存され `regenerate.mjs` も尊重するので、作り直しても dark のまま。あとから `config.mjs` の規則をそのルートごと dark に変えた場合は、記録の `theme` が冗長になるだけで害はない（値が一致するため）。
 - 記録の再利用時に保存済み図版アセットが欠損: 流用せず、新規手渡しを促す。
 - タイトルが最大 2 行でも幅超過: 描画スクリプトが font-size を自動縮小して収める。3 行以上の `titleLines` はエラー。

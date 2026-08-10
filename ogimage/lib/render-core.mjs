@@ -41,7 +41,7 @@ export const resolveFromCwd = (p) => (isAbsolute(p) ? p : resolve(process.cwd(),
  * 1 件の確定値を検証し、描画に必要な値へ整形する。不正なら例外を投げる（呼び出し側で握る）。
  * figure は絶対パス or cwd 基準の相対パスで受け取る（regenerate は data 基準の相対を絶対に解決してから渡す）。
  * @param {object} item
- * @returns {{ variation: string, theme: string, key: string, out: string, title: string, titleLines: string[], crumbs: string[], figure: string | undefined, knockoutWhite: boolean, knockoutMode: "background" | "all", magickFuzz: string }}
+ * @returns {{ variation: string, theme: string, themeOverride: string | undefined, key: string, out: string, title: string, titleLines: string[], crumbs: string[], figure: string | undefined, knockoutWhite: boolean, knockoutMode: "background" | "all", magickFuzz: string }}
  */
 export const prepareItem = (item) => {
   const variation = item.variation
@@ -54,13 +54,18 @@ export const prepareItem = (item) => {
   const key = item.route != null ? routeKey(item.route) : ""
 
   // テーマは route から config.mjs で引く（variation と同じく「ルートの属性」）。
-  // item.theme が明示されていればそれを優先する（実験・単発の上書き用）。
-  const theme = item.theme ?? (item.route != null ? resolveTheme(item.route) : "light")
+  // item.theme が明示されていればそれを優先する（ライトのルートに暗地の図版を置く場合など）。
+  const configTheme = item.route != null ? resolveTheme(item.route) : "light"
+  const theme = item.theme ?? configTheme
   if (!THEME_NAMES.has(theme)) {
     throw new Error(
       `theme が不正です: ${JSON.stringify(theme)}（${[...THEME_NAMES].join("|")}, route=${item.route ?? "?"}）`
     )
   }
+  // config の既定と食い違うテーマを明示されたときだけ「上書き」として記録に残す
+  // （一括再生成が既定へ戻してしまわないように）。既定と同じなら記録に書かず、
+  // 規則を変えたときに全ページへ一貫して効く状態を保つ。
+  const themeOverride = theme !== configTheme ? theme : undefined
 
   // 出力先
   let out
@@ -146,6 +151,7 @@ export const prepareItem = (item) => {
   return {
     variation,
     theme,
+    themeOverride,
     key,
     out,
     title,
@@ -210,6 +216,7 @@ export const renderPrepared = (prepared, ctx) => {
       const record = { route: prepared.key, title: prepared.title, titleLines: prepared.titleLines }
       if (prepared.crumbs.length > 0) record.crumbs = prepared.crumbs
       if (figureRel) record.figure = figureRel
+      if (prepared.themeOverride) record.theme = prepared.themeOverride
       writeRecord(dataDir, prepared.key, record)
     }
 

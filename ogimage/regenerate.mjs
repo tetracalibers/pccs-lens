@@ -12,6 +12,8 @@
 //
 // バリエーションは記録に持たず、route から config.mjs の resolveVariation で毎回引き直す
 // （figure の有無で optional → nested-fig を昇格）。バリエーション規則の変更が全再生成に一貫して効く。
+// テーマも同じく route から引き直すが、記録に theme があるページ（＝既定と違うテーマを明示した
+// ページ）だけはそれを尊重する。上書きの無いページは規則の変更が一貫して効く。
 //
 // 頑健モード: per-page でエラーを握って続行し、最後に「成功 N 件 / 失敗 M 件 ＋ 失敗一覧」を報告する。
 // 1 ページの不備で全体を止めない（単発の render.mjs は逆に fail-fast）。
@@ -77,7 +79,10 @@ const main = () => {
         title: record.title,
         titleLines: record.titleLines,
         crumbs: record.crumbs ?? [],
-        figure: record.figure ? resolveFigureFromData(ctx.dataDir, record.figure) : undefined
+        figure: record.figure ? resolveFigureFromData(ctx.dataDir, record.figure) : undefined,
+        // テーマは通常 route から config.mjs で引くが、記録に上書きがあればそれを尊重する
+        // （ライトのルートに暗地の図版を置いたページなど）。無ければ undefined で既定に委ねる。
+        theme: record.theme
       })
       renderPrepared(prepared, ctx)
       succeeded.push({ key, title: prepared.title, variation })
