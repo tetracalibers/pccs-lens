@@ -716,13 +716,10 @@ const createPitDiagram = () => {
   const clampLabelX = (x: number, halfWidth: number) =>
     MathUtils.clamp(x, -DIAGRAM_MAX_LABEL_X + halfWidth, DIAGRAM_MAX_LABEL_X - halfWidth)
 
-  // 入射光は必ず右側から来る向きに収まるので、次数のラベルは空いている左上に固定で置く。
-  // 高さは次数の矢印がいちばん高く届く位置より上にして、矢印と重ならないようにする
-  labels.order.sprite.position.set(
-    -DIAGRAM_MAX_LABEL_X + labels.order.halfWidth,
-    PIT_APEX_Y + ORDER_RAY_LENGTH + LABEL_HEIGHT * 0.8,
-    0
-  )
+  // 次数の矢印は真ん中のピットを起点に扇状に広がるので、ラベルもその起点の真上、
+  // 真ん中のピットの中央（＝原点）にそろえる。高さは矢印がいちばん高く届く位置より
+  // 上にして、真上へ向かう次数と重ならないようにする
+  labels.order.sprite.position.set(0, PIT_APEX_Y + ORDER_RAY_LENGTH + LABEL_HEIGHT * 0.8, 0)
 
   /** ピットの中心の横位置。真ん中のピットが原点に来るように並べる */
   const pitCenterX = new Array<number>(DIAGRAM_PIT_COUNT).fill(0)
