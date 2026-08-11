@@ -46,6 +46,8 @@ export type CompactDiscDiffractionParams = {
   tiltDeg: number
   /** 光を当てる向き（度）。`0` で視点の側から、`90` で真横から当たる */
   lightAngleDeg: number
+  /** ピット（トラック）の間隔（nm）。回折格子としての周期 */
+  pitchNm: number
   /** 注目点での光路差。scene.ts が計算して書き戻す表示用の値 */
   opticalPathDifference: string
   /** 注目点でいちばん強め合っている波長。scene.ts が計算して書き戻す表示用の値 */
@@ -76,11 +78,22 @@ export const CAMERA_POSITION: [number, number, number] = [0, 1.2, 5.0]
 const CAMERA_DISTANCE = Math.hypot(...CAMERA_POSITION)
 
 /**
- * トラックの間隔（nm）。CD の規格値 1.6μm。
+ * CD のトラックの間隔（nm）。規格値 1.6μm。パネルの初期値がこれになる。
  * 記録面のピットは同心円状のトラックに沿って並ぶので、
  * 「溝が規則正しく並ぶ向き」＝半径方向の周期がこの値になる
  */
-const TRACK_PITCH_NM = 1600
+export const CD_PITCH_NM = 1600
+
+/**
+ * ピットの間隔として選べる範囲（nm）。
+ *
+ * 狭くしすぎると、光路差が可視域の波長に届かなくなって記録面が暗く沈む
+ * （間隔が波長より狭いと、1 次の回折そのものが可視域から外れる）。
+ * 広くしすぎると次数がいくつも重なり、混ざって色が濁る。
+ * どちらの手前も観察として意味があるので、その入り口までを範囲にしてある
+ */
+export const MIN_PITCH_NM = 700
+export const MAX_PITCH_NM = 2400
 
 /**
  * 同時に効くトラックの本数。
@@ -90,9 +103,14 @@ const TRACK_PITCH_NM = 1600
  */
 const COHERENT_TRACKS = 8
 
-/** 光路差ごとの色を引く表（LUT）が覆う範囲（nm）と、その分割数 */
-const MAX_OPD_NM = 2 * TRACK_PITCH_NM
-const LUT_SIZE = 2048
+/**
+ * 光路差ごとの色を引く表（LUT）が覆う範囲（nm）と、その分割数。
+ *
+ * 光路差は最も広い間隔のときに最大（間隔の 2 倍）になるので、そこまでを覆っておけば
+ * 間隔を変えても表を作り直さずに済む（表は光路差だけの関数で、間隔には依存しない）
+ */
+const MAX_OPD_NM = 2 * MAX_PITCH_NM
+const LUT_SIZE = 4096
 
 /**
  * 露出を合わせる基準にする光路差の範囲（nm）。
@@ -168,21 +186,24 @@ const DIAGRAM_SCALE = 1.3
 
 /** 拡大断面の寸法（ローカル座標。記録面が y = 0、真ん中のピットの中心が原点） */
 const DIAGRAM_HALF_WIDTH = 0.95
-const DIAGRAM_PITCH = 0.44
 const DIAGRAM_PIT_RADIUS = 0.075
 const DIAGRAM_SUBSTRATE_DEPTH = 0.2
 const DIAGRAM_RAY_LENGTH = 0.62
 const DIAGRAM_NORMAL_TOP = 0.5
 const DIAGRAM_NORMAL_BOTTOM = 0.05
 
+/**
+ * 断面の縮尺（ローカル座標の長さ ÷ nm）。
+ *
+ * CD の間隔（1.6μm）がちょうど `0.44` になる縮尺。**ピットの間隔を変えると、
+ * 断面のピットの間隔もこの縮尺どおりに広がる／狭まる。** ピット自体の大きさは
+ * 変えない（間隔だけを効かせて見せたいので、そこは固定した図として扱う）。
+ * 上限の間隔でも、外側のピットが断面の端に収まる縮尺にしてある
+ */
+const DIAGRAM_NM_SCALE = 0.44 / CD_PITCH_NM
+
 /** 断面に並べるピットの数。「規則正しく並んでいる」ことが読み取れる最小限 */
 const DIAGRAM_PIT_COUNT = 3
-
-/** ピットの中心の横位置。真ん中のピットが原点に来るように並べる */
-const PIT_CENTER_X = Array.from(
-  { length: DIAGRAM_PIT_COUNT },
-  (_, i) => (i - (DIAGRAM_PIT_COUNT - 1) / 2) * DIAGRAM_PITCH
-)
 
 /** 光線をつなぐ高さ（ピットの頂点） */
 const PIT_APEX_Y = DIAGRAM_PIT_RADIUS
@@ -250,10 +271,36 @@ const ARROW_RADIUS = 0.024
 const ARROW_HEIGHT = 0.08
 const ARROW_ALONG = 0.55
 
+/**
+ * 次数の矢印（視点以外の向きへ出ていく回折光）を描くときの基準の波長（nm）。
+ *
+ * 強め合う向きは波長ごとに違うので、1 つの波長を決めないと矢印が引けない。
+ * 可視域の真ん中あたりの緑を選び、間隔や入射の向きを変えたときに
+ * 「向きの本数と広がりがどう変わるか」を追えるようにしてある
+ */
+const ORDER_REFERENCE_NM = 550
+
+/** 次数の矢印として確保する本数。間隔が上限のとき可視域の緑で存在しうる本数（9）に余裕を持たせた値 */
+const MAX_ORDER_COUNT = 12
+
+/** 次数の矢印の長さと矢じりの大きさ。視点へ向かう回折光より控えめにして主役を譲る */
+const ORDER_RAY_LENGTH = DIAGRAM_RAY_LENGTH * 0.8
+const ORDER_ARROW_RADIUS = ARROW_RADIUS * 0.8
+const ORDER_ARROW_HEIGHT = ARROW_HEIGHT * 0.8
+
+/**
+ * 視点へ向かう回折光と次数の矢印が重なったとみなす角度差（度）。
+ * この範囲に入った次数は矢印を描かない（明るい 1 本がその次数そのものになる）
+ */
+const ORDER_MERGE_DEG = 5
+
 // 記事の SVG 図解と同じ役割分担で色を決める（--canvas-pen-* の値をリテラルで踏襲）。
 // 回折前の光をオレンジ、回折後の光をイエローにするのは、同じ記事の回折の図と揃えるため
 const INCIDENT_COLOR = "#ef8c00"
 const DIFFRACTED_COLOR = "#f6ce46"
+// 視点以外の向きへ出ていく回折光。回折光と同じ系統の色を落として、
+// 「同じ光の、眼に入らない向き」だと分かるようにする
+const OTHER_ORDER_COLOR = "#96803c"
 const DISC_COLOR = "#7d9cc9"
 const NORMAL_COLOR = "#bfbfbf"
 const FRAME_COLOR = "#8a8a92"
@@ -383,6 +430,7 @@ const vertexShader = /* glsl */ `
 const fragmentShader = /* glsl */ `
   uniform sampler2D uDiffractionColor;
   uniform vec3 uLightDirection;
+  uniform float uPitchNm;
 
   varying vec3 vWorldPosition;
   varying vec3 vWorldRadial;
@@ -401,7 +449,7 @@ const fragmentShader = /* glsl */ `
 
     // 隣り合うトラックで回折した光の光路差。
     // 溝が並ぶ向き（半径方向）に射影した分だけが差になるので、その成分だけを取る
-    float opd = ${glslFloat(TRACK_PITCH_NM)} * dot(radial, toEye + uLightDirection);
+    float opd = uPitchNm * dot(radial, toEye + uLightDirection);
 
     float lookup = clamp(abs(opd) / ${glslFloat(MAX_OPD_NM)}, 0.0, 1.0);
     gl_FragColor = vec4(texture2D(uDiffractionColor, vec2(lookup, 0.5)).rgb, 1.0);
@@ -479,24 +527,31 @@ const createRayLines = (count: number, color: string) => {
   }
 }
 
-/** 記録面の断面線。ピットのぶんだけ半円状に持ち上がった 1 本の折れ線として組み立てる */
-const buildSurfacePoints = () => {
-  const points = [new Vector3(-DIAGRAM_HALF_WIDTH, 0, 0)]
-  PIT_CENTER_X.forEach((centerX) => {
-    points.push(new Vector3(centerX - DIAGRAM_PIT_RADIUS, 0, 0))
+/**
+ * 記録面の断面線。ピットのぶんだけ半円状に持ち上がった 1 本の折れ線として書き込む。
+ *
+ * ピットの間隔は操作で変わるので、頂点の数だけ先に確保しておいて毎回書き直す
+ * （半円 1 つあたり「左の付け根 + 弧の分割数 + 1」点、両端に平らな面の端点が付く）
+ */
+const SURFACE_POINT_COUNT = 2 + DIAGRAM_PIT_COUNT * (PIT_ARC_SEGMENTS + 2)
+
+const writeSurfacePoints = (
+  position: Float32BufferAttribute,
+  pitCenterX: readonly number[]
+) => {
+  let index = 0
+  const put = (x: number, y: number) => position.setXYZ(index++, x, y, 0)
+
+  put(-DIAGRAM_HALF_WIDTH, 0)
+  pitCenterX.forEach((centerX) => {
+    put(centerX - DIAGRAM_PIT_RADIUS, 0)
     for (let i = 0; i <= PIT_ARC_SEGMENTS; i++) {
       const angle = Math.PI - (i / PIT_ARC_SEGMENTS) * Math.PI
-      points.push(
-        new Vector3(
-          centerX + DIAGRAM_PIT_RADIUS * Math.cos(angle),
-          DIAGRAM_PIT_RADIUS * Math.sin(angle),
-          0
-        )
-      )
+      put(centerX + DIAGRAM_PIT_RADIUS * Math.cos(angle), DIAGRAM_PIT_RADIUS * Math.sin(angle))
     }
   })
-  points.push(new Vector3(DIAGRAM_HALF_WIDTH, 0, 0))
-  return points
+  put(DIAGRAM_HALF_WIDTH, 0)
+  position.needsUpdate = true
 }
 
 /**
@@ -521,6 +576,30 @@ const layoutAngles = (incidentRad: number, diffractedRad: number): [number, numb
     MathUtils.clamp(center - half, -limit, limit),
     MathUtils.clamp(center + half, -limit, limit)
   ]
+}
+
+/**
+ * 回折光が出ていく向き（法線から測ったラジアン）を、次数ごとにすべて求める。
+ *
+ * 1 つのピットは光を四方へ広げるが、隣のピットから来た光と重なったときに残るのは、
+ * 道のりの差がちょうど波長の整数倍になる向きだけ。その向きが「次数」で、
+ * `間隔 × (出ていく向きの正弦 + 入る向きの正弦) = 次数 × 波長` を満たす。
+ *
+ * - 次数 `0` は出ていく向きが入射の反対側の同じ角度、つまり**正反射**（どの波長も同じ向き）
+ * - 正弦が ±1 を超える次数は面から出られないので存在しない。
+ *   **間隔が狭いほど次数の間隔が開き、存在できる本数が減る**
+ */
+const diffractionOrderAngles = (incidentRad: number, pitchNm: number) => {
+  const sinIncident = Math.sin(incidentRad)
+  // 次数が 1 つ上がるごとに、出ていく向きの正弦がこれだけずれる
+  const step = ORDER_REFERENCE_NM / pitchNm
+  const angles: number[] = []
+  for (let order = Math.ceil((sinIncident - 1) / step); angles.length < MAX_ORDER_COUNT; order++) {
+    const sinDiffracted = order * step - sinIncident
+    if (sinDiffracted > 1) break
+    angles.push(Math.asin(MathUtils.clamp(sinDiffracted, -1, 1)))
+  }
+  return angles
 }
 
 /**
@@ -552,21 +631,25 @@ const createPitDiagram = () => {
   substrate.position.set(0, -DIAGRAM_SUBSTRATE_DEPTH / 2, 0)
   group.add(substrate)
 
-  const surfaceGeometry = new BufferGeometry().setFromPoints(buildSurfacePoints())
+  // 記録面の断面線。間隔が変わると形も変わるので、頂点を確保しておいて毎回書き直す
+  const surfacePosition = new Float32BufferAttribute(
+    new Float32Array(SURFACE_POINT_COUNT * 3),
+    3
+  )
+  const surfaceGeometry = new BufferGeometry().setAttribute("position", surfacePosition)
   const surfaceMaterial = new LineBasicMaterial({ color: DISC_COLOR })
-  group.add(new Line(surfaceGeometry, surfaceMaterial))
+  const surface = new Line(surfaceGeometry, surfaceMaterial)
+  // 頂点を毎回書き直すので、最初に求めた境界球で視野外と判定されないようにする
+  surface.frustumCulled = false
+  group.add(surface)
 
-  // ピットの間隔を示す寸法線（両端に短い線を立てる）
-  const dimensionGeometry = new BufferGeometry().setFromPoints([
-    new Vector3(0, DIMENSION_Y, 0),
-    new Vector3(DIAGRAM_PITCH, DIMENSION_Y, 0),
-    new Vector3(0, DIMENSION_Y - DIMENSION_TICK, 0),
-    new Vector3(0, DIMENSION_Y + DIMENSION_TICK, 0),
-    new Vector3(DIAGRAM_PITCH, DIMENSION_Y - DIMENSION_TICK, 0),
-    new Vector3(DIAGRAM_PITCH, DIMENSION_Y + DIMENSION_TICK, 0)
-  ])
+  // ピットの間隔を示す寸法線（両端に短い線を立てる）。長さが操作で変わる
+  const dimensionPosition = new Float32BufferAttribute(new Float32Array(6 * 3), 3)
+  const dimensionGeometry = new BufferGeometry().setAttribute("position", dimensionPosition)
   const dimensionMaterial = new LineBasicMaterial({ color: NORMAL_COLOR })
-  group.add(new LineSegments(dimensionGeometry, dimensionMaterial))
+  const dimension = new LineSegments(dimensionGeometry, dimensionMaterial)
+  dimension.frustumCulled = false
+  group.add(dimension)
 
   // 法線。入射角・回折角がどこから測った角度かを示す
   const normalGeometry = new BufferGeometry().setFromPoints([
@@ -580,12 +663,30 @@ const createPitDiagram = () => {
   const diffractedRays = createRayLines(DIAGRAM_PIT_COUNT, DIFFRACTED_COLOR)
   group.add(incidentRays.object, diffractedRays.object)
 
+  // 視点以外の向きへ出ていく回折光。存在する次数の数が操作で変わるので、
+  // 上限ぶんの頂点を確保しておき、描く本数だけを毎回切り替える
+  const orderPosition = new Float32BufferAttribute(new Float32Array(MAX_ORDER_COUNT * 2 * 3), 3)
+  const orderGeometry = new BufferGeometry().setAttribute("position", orderPosition)
+  const orderMaterial = new LineBasicMaterial({ color: OTHER_ORDER_COLOR })
+  const orderLines = new LineSegments(orderGeometry, orderMaterial)
+  orderLines.frustumCulled = false
+  group.add(orderLines)
+
+  const orderArrowGeometry = new ConeGeometry(ORDER_ARROW_RADIUS, ORDER_ARROW_HEIGHT, 10)
+  const orderArrowMaterial = new MeshBasicMaterial({ color: OTHER_ORDER_COLOR })
+  const orderArrows = Array.from({ length: MAX_ORDER_COUNT }, () => {
+    const arrow = new Mesh(orderArrowGeometry, orderArrowMaterial)
+    arrow.visible = false
+    group.add(arrow)
+    return arrow
+  })
+
   const arrowGeometry = new ConeGeometry(ARROW_RADIUS, ARROW_HEIGHT, 12)
   const arrowMaterials = [INCIDENT_COLOR, DIFFRACTED_COLOR].map(
     (color) => new MeshBasicMaterial({ color })
   )
   const createArrows = (material: MeshBasicMaterial) =>
-    PIT_CENTER_X.map(() => {
+    Array.from({ length: DIAGRAM_PIT_COUNT }, () => {
       const arrow = new Mesh(arrowGeometry, material)
       group.add(arrow)
       return arrow
@@ -596,7 +697,9 @@ const createPitDiagram = () => {
   const labels = {
     incident: createLabel("入射光", INCIDENT_COLOR),
     diffracted: createLabel("回折光", DIFFRACTED_COLOR),
-    pitch: createLabel("ピットの間隔 1.6μm", NORMAL_COLOR)
+    // 間隔の数値はパネルのスライダーに出るので、ここでは寸法線が何の長さかだけを示す
+    pitch: createLabel("ピットの間隔", NORMAL_COLOR),
+    order: createLabel("他の向きの回折光", OTHER_ORDER_COLOR)
   }
   const labelList = Object.values(labels)
   group.add(...labelList.map(({ sprite }) => sprite))
@@ -605,11 +708,16 @@ const createPitDiagram = () => {
   const clampLabelX = (x: number, halfWidth: number) =>
     MathUtils.clamp(x, -DIAGRAM_MAX_LABEL_X + halfWidth, DIAGRAM_MAX_LABEL_X - halfWidth)
 
-  labels.pitch.sprite.position.set(
-    clampLabelX(DIAGRAM_PITCH / 2, labels.pitch.halfWidth),
-    DIMENSION_Y - DIMENSION_TICK - LABEL_HEIGHT,
+  // 入射光は必ず右側から来る向きに収まるので、次数のラベルは空いている左上に固定で置く。
+  // 高さは次数の矢印がいちばん高く届く位置より上にして、矢印と重ならないようにする
+  labels.order.sprite.position.set(
+    -DIAGRAM_MAX_LABEL_X + labels.order.halfWidth,
+    PIT_APEX_Y + ORDER_RAY_LENGTH + LABEL_HEIGHT * 0.8,
     0
   )
+
+  /** ピットの中心の横位置。真ん中のピットが原点に来るように並べる */
+  const pitCenterX = new Array<number>(DIAGRAM_PIT_COUNT).fill(0)
 
   /** 矢じりの向きを組み立てるのに使い回す */
   const arrowDirection = new Vector3()
@@ -622,15 +730,62 @@ const createPitDiagram = () => {
     group,
     /**
      * 入射光の来る向きと回折光の出ていく向き（どちらも法線から測ったラジアン。
-     * 符号が法線のどちら側かを表す）から描き直す
+     * 符号が法線のどちら側かを表す）と、ピットの間隔（nm）から描き直す
      */
-    setState: (incidentRad: number, diffractedRad: number) => {
+    setState: (incidentRad: number, diffractedRad: number, pitchNm: number) => {
       const inX = Math.sin(incidentRad)
       const inY = Math.cos(incidentRad)
       const outX = Math.sin(diffractedRad)
       const outY = Math.cos(diffractedRad)
 
-      PIT_CENTER_X.forEach((centerX, i) => {
+      // 間隔は実際の値を断面の縮尺で引き伸ばして描く
+      const pitch = pitchNm * DIAGRAM_NM_SCALE
+      for (let i = 0; i < DIAGRAM_PIT_COUNT; i++) {
+        pitCenterX[i] = (i - (DIAGRAM_PIT_COUNT - 1) / 2) * pitch
+      }
+      writeSurfacePoints(surfacePosition, pitCenterX)
+
+      dimensionPosition.setXYZ(0, 0, DIMENSION_Y, 0)
+      dimensionPosition.setXYZ(1, pitch, DIMENSION_Y, 0)
+      dimensionPosition.setXYZ(2, 0, DIMENSION_Y - DIMENSION_TICK, 0)
+      dimensionPosition.setXYZ(3, 0, DIMENSION_Y + DIMENSION_TICK, 0)
+      dimensionPosition.setXYZ(4, pitch, DIMENSION_Y - DIMENSION_TICK, 0)
+      dimensionPosition.setXYZ(5, pitch, DIMENSION_Y + DIMENSION_TICK, 0)
+      dimensionPosition.needsUpdate = true
+
+      labels.pitch.sprite.position.set(
+        clampLabelX(pitch / 2, labels.pitch.halfWidth),
+        DIMENSION_Y - DIMENSION_TICK - LABEL_HEIGHT,
+        0
+      )
+
+      // 回折光が出ていける向きを次数ごとに描く。真ん中のピットを起点にして扇状に並べる。
+      // 視点へ向かう向きと重なる次数は描かない（明るい 1 本がその次数そのものになる）
+      const orderAngles = diffractionOrderAngles(incidentRad, pitchNm)
+      const mergeRad = MathUtils.degToRad(ORDER_MERGE_DEG)
+      let drawn = 0
+      orderAngles.forEach((angle) => {
+        if (Math.abs(angle - diffractedRad) < mergeRad) return
+        const dirX = Math.sin(angle)
+        const dirY = Math.cos(angle)
+        orderPosition.setXYZ(drawn * 2, 0, PIT_APEX_Y, 0)
+        orderPosition.setXYZ(
+          drawn * 2 + 1,
+          dirX * ORDER_RAY_LENGTH,
+          PIT_APEX_Y + dirY * ORDER_RAY_LENGTH,
+          0
+        )
+        // 矢じりは線の先端に置く（円錐の先が線の終点に来るよう半分ぶん手前を中心にする）
+        const tip = ORDER_RAY_LENGTH - ORDER_ARROW_HEIGHT / 2
+        placeArrow(orderArrows[drawn], dirX * tip, PIT_APEX_Y + dirY * tip, dirX, dirY)
+        orderArrows[drawn].visible = true
+        drawn++
+      })
+      orderPosition.needsUpdate = true
+      orderGeometry.setDrawRange(0, drawn * 2)
+      for (let i = drawn; i < MAX_ORDER_COUNT; i++) orderArrows[i].visible = false
+
+      pitCenterX.forEach((centerX, i) => {
         // 入射光。どのピットにも同じ向きから平行に届く
         incidentRays.setPoint(
           i,
@@ -672,7 +827,7 @@ const createPitDiagram = () => {
 
       // ラベルは、それぞれの光線の束の外側の端に置く。
       // 入射光と回折光が同じ側に出たときも重ならないよう、高さをずらしてある
-      const incidentEnd = PIT_CENTER_X[inX < 0 ? 0 : DIAGRAM_PIT_COUNT - 1]
+      const incidentEnd = pitCenterX[inX < 0 ? 0 : DIAGRAM_PIT_COUNT - 1]
       labels.incident.sprite.position.set(
         clampLabelX(
           incidentEnd + inX * DIAGRAM_RAY_LENGTH + Math.sign(inX || 1) * labels.incident.halfWidth,
@@ -681,7 +836,7 @@ const createPitDiagram = () => {
         PIT_APEX_Y + inY * DIAGRAM_RAY_LENGTH + LABEL_HEIGHT * 0.8,
         0
       )
-      const diffractedEnd = PIT_CENTER_X[outX < 0 ? 0 : DIAGRAM_PIT_COUNT - 1]
+      const diffractedEnd = pitCenterX[outX < 0 ? 0 : DIAGRAM_PIT_COUNT - 1]
       labels.diffracted.sprite.position.set(
         clampLabelX(
           diffractedEnd +
@@ -709,6 +864,10 @@ const createPitDiagram = () => {
         surfaceMaterial,
         dimensionGeometry,
         dimensionMaterial,
+        orderGeometry,
+        orderMaterial,
+        orderArrowGeometry,
+        orderArrowMaterial,
         normalGeometry,
         normalMaterial,
         arrowGeometry
@@ -909,7 +1068,8 @@ export const createCompactDiscDiffractionScene = ({
   const discMaterial = new ShaderMaterial({
     uniforms: {
       uDiffractionColor: { value: texture },
-      uLightDirection: { value: new Vector3() }
+      uLightDirection: { value: new Vector3() },
+      uPitchNm: { value: params.pitchNm }
     },
     vertexShader,
     fragmentShader
@@ -966,6 +1126,9 @@ export const createCompactDiscDiffractionScene = ({
       lightDirection.set(Math.sin(lightAngle), 0, Math.cos(lightAngle))
       discMaterial.uniforms.uLightDirection.value.copy(lightDirection)
 
+      const { pitchNm } = params
+      discMaterial.uniforms.uPitchNm.value = pitchNm
+
       disc.updateMatrixWorld()
       camera.updateMatrixWorld()
 
@@ -978,7 +1141,7 @@ export const createCompactDiscDiffractionScene = ({
       // 隣のピットまでの道のりの差。半径方向へ射影した分だけが差になる
       const radialLight = radial.dot(lightDirection)
       const radialEye = radial.dot(toEye)
-      const opdNm = Math.abs(TRACK_PITCH_NM * (radialEye + radialLight))
+      const opdNm = Math.abs(pitchNm * (radialEye + radialLight))
 
       // 断面に描く角度。法線から測り、符号が法線のどちら側かを表す。
       // 溝の向きと法線の 2 成分だけを使うので、断面の平面へ射影した見かけの角度になる
@@ -986,7 +1149,7 @@ export const createCompactDiscDiffractionScene = ({
         Math.atan2(radialLight, Math.max(normal.dot(lightDirection), 0.001)),
         Math.atan2(radialEye, Math.max(normal.dot(toEye), 0.001))
       )
-      diagram.setState(incidentRad, diffractedRad)
+      diagram.setState(incidentRad, diffractedRad, pitchNm)
       graph.setOpticalPathDifference(opdNm)
       swatch.setColor(colorAt(opdNm))
 
