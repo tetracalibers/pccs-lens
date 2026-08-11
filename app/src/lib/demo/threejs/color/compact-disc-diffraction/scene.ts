@@ -188,9 +188,17 @@ const DIAGRAM_SCALE = 1.3
 const DIAGRAM_HALF_WIDTH = 0.95
 const DIAGRAM_PIT_RADIUS = 0.075
 const DIAGRAM_SUBSTRATE_DEPTH = 0.2
-const DIAGRAM_RAY_LENGTH = 0.62
 const DIAGRAM_NORMAL_TOP = 0.5
 const DIAGRAM_NORMAL_BOTTOM = 0.05
+
+/**
+ * 光線の長さの基準。
+ *
+ * 入射光と回折光は**同じ高さで止める**ので、実際の長さは角度によって変わる。
+ * 寝ている（法線から遠い）ほうの光線がこの長さになる高さで揃えるため、
+ * どちらの光線もこの長さを超えず、図からはみ出さない
+ */
+const DIAGRAM_RAY_LENGTH = 0.62
 
 /**
  * 断面の縮尺（ローカル座標の長さ ÷ nm）。
@@ -785,27 +793,24 @@ const createPitDiagram = () => {
       orderGeometry.setDrawRange(0, drawn * 2)
       for (let i = drawn; i < MAX_ORDER_COUNT; i++) orderArrows[i].visible = false
 
+      // 入射光と回折光は同じ高さで止める。記録面から同じ高さのところを両方の光線の
+      // 始まり／終わりにそろえることで、2 本の道のりを同じ基準で見比べられる。
+      // 高さは寝ているほうの光線に合わせ、どちらの長さも基準の長さを超えないようにする
+      const rayTopY = PIT_APEX_Y + DIAGRAM_RAY_LENGTH * Math.min(inY, outY)
+      const incidentLength = (rayTopY - PIT_APEX_Y) / inY
+      const diffractedLength = (rayTopY - PIT_APEX_Y) / outY
+
       pitCenterX.forEach((centerX, i) => {
         // 入射光。どのピットにも同じ向きから平行に届く
-        incidentRays.setPoint(
-          i,
-          0,
-          centerX + inX * DIAGRAM_RAY_LENGTH,
-          PIT_APEX_Y + inY * DIAGRAM_RAY_LENGTH
-        )
+        incidentRays.setPoint(i, 0, centerX + inX * incidentLength, rayTopY)
         incidentRays.setPoint(i, 1, centerX, PIT_APEX_Y)
 
         // 回折光。ピットは四方へ光を広げるが、そのうち視点へ向かう 1 本だけを描く
         diffractedRays.setPoint(i, 0, centerX, PIT_APEX_Y)
-        diffractedRays.setPoint(
-          i,
-          1,
-          centerX + outX * DIAGRAM_RAY_LENGTH,
-          PIT_APEX_Y + outY * DIAGRAM_RAY_LENGTH
-        )
+        diffractedRays.setPoint(i, 1, centerX + outX * diffractedLength, rayTopY)
 
         // 矢じりは光線の途中に置き、先端を進む向きへ合わせる
-        const inAlong = DIAGRAM_RAY_LENGTH * (1 - ARROW_ALONG)
+        const inAlong = incidentLength * (1 - ARROW_ALONG)
         placeArrow(
           incidentArrows[i],
           centerX + inX * inAlong,
@@ -813,7 +818,7 @@ const createPitDiagram = () => {
           -inX,
           -inY
         )
-        const outAlong = DIAGRAM_RAY_LENGTH * ARROW_ALONG
+        const outAlong = diffractedLength * ARROW_ALONG
         placeArrow(
           diffractedArrows[i],
           centerX + outX * outAlong,
@@ -830,21 +835,21 @@ const createPitDiagram = () => {
       const incidentEnd = pitCenterX[inX < 0 ? 0 : DIAGRAM_PIT_COUNT - 1]
       labels.incident.sprite.position.set(
         clampLabelX(
-          incidentEnd + inX * DIAGRAM_RAY_LENGTH + Math.sign(inX || 1) * labels.incident.halfWidth,
+          incidentEnd + inX * incidentLength + Math.sign(inX || 1) * labels.incident.halfWidth,
           labels.incident.halfWidth
         ),
-        PIT_APEX_Y + inY * DIAGRAM_RAY_LENGTH + LABEL_HEIGHT * 0.8,
+        rayTopY + LABEL_HEIGHT * 0.8,
         0
       )
       const diffractedEnd = pitCenterX[outX < 0 ? 0 : DIAGRAM_PIT_COUNT - 1]
       labels.diffracted.sprite.position.set(
         clampLabelX(
           diffractedEnd +
-            outX * DIAGRAM_RAY_LENGTH +
+            outX * diffractedLength +
             Math.sign(outX || 1) * labels.diffracted.halfWidth,
           labels.diffracted.halfWidth
         ),
-        PIT_APEX_Y + outY * DIAGRAM_RAY_LENGTH + LABEL_HEIGHT * 2.1,
+        rayTopY + LABEL_HEIGHT * 2.1,
         0
       )
     },
