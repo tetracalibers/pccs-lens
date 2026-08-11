@@ -14,6 +14,7 @@ draft: true
   import SmallSlitDiffraction from "$lib/demo/color/light-phenomena/SmallSlitDiffraction.svelte"
   import SmallBumpDiffraction from "$lib/demo/color/light-phenomena/SmallBumpDiffraction.svelte"
   import SoapBubbleInterferenceDemo from "$lib/demo/threejs/color/soap-bubble-interference/SoapBubbleInterferenceDemo.svelte"
+  import CompactDiscDiffractionDemo from "$lib/demo/threejs/color/compact-disc-diffraction/CompactDiscDiffractionDemo.svelte"
 </script>
 
 シャボン玉の表面やコンパクトディスクの記録面には、虹のような色が浮かんで見えます。
@@ -66,10 +67,17 @@ draft: true
 
 :Mark[コンパクトディスク]の表面も、虹のように色づいて見えます。
 
-:::Todo
-コンパクトディスク上の凸部で起こる回折のデモ（Three.jsで）
-「強め合う波長は光の向きによって異なるので、ディスクを傾けることで色が移り変わります。」という本文の内容を表現したい
+:::Action
+次の点に着目して、デモを観察してみよう
+
+- ディスクの傾きを動かすことで、記録面に浮かぶ虹の色がどう移り変わるか
+- 光を当てる向きを動かすことで、ディスクを傾けなくても色が変わること
+- どちらを動かしても、注目点（白い円）で強め合う波長が入れ替わり、それを混ぜた色が注目点に出ること
 :::
+
+<CanvasWrapper>
+  <CompactDiscDiffractionDemo />
+</CanvasWrapper>
 
 コンパクトディスクの記録面には、ピットと呼ばれる小さな凸部が規則正しく並んでいます。この凸部で:Anki[反射]した光が:Anki[回折]を起こし、その光が互いに:Anki[干渉]し合うのです。
 強め合う波長は光の:Anki[向き]によって異なるので、ディスクを傾けることで色が移り変わります。
