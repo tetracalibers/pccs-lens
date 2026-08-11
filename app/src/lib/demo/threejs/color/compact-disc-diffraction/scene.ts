@@ -253,6 +253,9 @@ const SWATCH_SIZE = 0.44
 /** ラベルの高さ（ワールド座標での大きさ）。幅は文字数に応じて決まる */
 const LABEL_HEIGHT = 0.115
 
+/** ラベルどうしが触れて見えないように空けておく間隔 */
+const LABEL_GAP = LABEL_HEIGHT * 0.3
+
 /** グラフまわりのラベルは、狭い画面でも読めるよう断面のラベルより大きくする */
 const GRAPH_TITLE_HEIGHT = 0.16
 /** 軸の意味と色の小片の見出し。タイトルと同じ大きさにそろえる */
@@ -718,7 +721,7 @@ const createPitDiagram = () => {
 
   // 次数の矢印は真ん中のピットを起点に扇状に広がるので、ラベルもその起点の真上、
   // 真ん中のピットの中央（＝原点）にそろえる。高さは矢印がいちばん高く届く位置より
-  // 上にして、真上へ向かう次数と重ならないようにする
+  // 上にして、真上へ向かう次数と重ならないようにする（高さは setState で調整する）
   labels.order.sprite.position.set(0, PIT_APEX_Y + ORDER_RAY_LENGTH + LABEL_HEIGHT * 0.8, 0)
 
   /** ピットの中心の横位置。真ん中のピットが原点に来るように並べる */
@@ -827,27 +830,34 @@ const createPitDiagram = () => {
       incidentRays.commit()
       diffractedRays.commit()
 
-      // ラベルは、それぞれの光線の束の外側の端に置く。
-      // 入射光と回折光が同じ側に出たときも重ならないよう、高さをずらしてある
+      // ラベルは 2 つとも、光線を止めた高さにそろえて置く。同じ高さから測った
+      // 2 本であることを、ラベルの並びでも読めるようにする。
+      // 入射光は束の外側の端（必ず右側）の横に、回折光はいちばん左の光線の真上に置く
+      const labelY = rayTopY + LABEL_HEIGHT * 0.8
       const incidentEnd = pitCenterX[inX < 0 ? 0 : DIAGRAM_PIT_COUNT - 1]
-      labels.incident.sprite.position.set(
-        clampLabelX(
-          incidentEnd + inX * incidentLength + Math.sign(inX || 1) * labels.incident.halfWidth,
-          labels.incident.halfWidth
+      const incidentLabelX = clampLabelX(
+        incidentEnd + inX * incidentLength + Math.sign(inX || 1) * labels.incident.halfWidth,
+        labels.incident.halfWidth
+      )
+      labels.incident.sprite.position.set(incidentLabelX, labelY, 0)
+
+      // 回折光がよく倒れて入射光の側まで来たときだけ、入射光のラベルに触れない位置で止める
+      labels.diffracted.sprite.position.set(
+        Math.min(
+          clampLabelX(pitCenterX[0] + outX * diffractedLength, labels.diffracted.halfWidth),
+          incidentLabelX - labels.incident.halfWidth - labels.diffracted.halfWidth - LABEL_GAP
         ),
-        rayTopY + LABEL_HEIGHT * 0.8,
+        labelY,
         0
       )
-      const diffractedEnd = pitCenterX[outX < 0 ? 0 : DIAGRAM_PIT_COUNT - 1]
-      labels.diffracted.sprite.position.set(
-        clampLabelX(
-          diffractedEnd +
-            outX * diffractedLength +
-            Math.sign(outX || 1) * labels.diffracted.halfWidth,
-          labels.diffracted.halfWidth
-        ),
-        rayTopY + LABEL_HEIGHT * 2.1,
-        0
+
+      // 次数のラベルは扇の真上に置くが、光線を止めた高さが上がると 2 つのラベルと
+      // 重なる高さに来る。そのときはラベル 1 つぶん上へ逃がす
+      labels.order.sprite.position.setY(
+        Math.max(
+          PIT_APEX_Y + ORDER_RAY_LENGTH + LABEL_HEIGHT * 0.8,
+          labelY + LABEL_HEIGHT + LABEL_GAP
+        )
       )
     },
     setResolution: (width: number, height: number) => {
