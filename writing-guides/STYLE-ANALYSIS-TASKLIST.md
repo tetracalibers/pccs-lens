@@ -59,7 +59,7 @@
 - [x] `/color-theory/light-components-and-reflectance`
 - [ ] `/color-theory/reflection-and-refraction`
 - [draft] `/color-theory/interference-and-diffraction`
-- [draft] `/color-theory/light-scattering`
+- [ ] `/color-theory/light-scattering`
 - [x] `/color-theory/eye-structure`
 - [x] `/color-theory/light-path-through-the-retina`
 - [x] `/color-theory/photoreceptor-types-and-distribution`
