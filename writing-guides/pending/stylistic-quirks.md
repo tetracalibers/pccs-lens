@@ -94,3 +94,9 @@
 - SQ-P079｜口語寄りの副詞・畳語（なんでもかんでも／まったく／一見）を動機づけ段落と記事の締めに差し込む：各記事1〜2例で、定義文・数式の説明には現れないという分布は確認できるが、意図的な文体操作か自然な語彙選択か数件では判別できない（本体 SQ-005 のオノマトペ・擬態語とは語種が別で、両記事にオノマトペは0件）｜支持: /cg/transformation/projective-transformation, /cg/transformation/projection-steps
 - SQ-P080｜処理の要件を「〜する必要があります」で明示する：3例が1記事に閉じ、もう1記事は0件。一般的な技術文書に広く見られる言い方で著者固有と判断できない｜支持: /cg/transformation/projection-steps
 - SQ-P081｜数式ブロックや箇条書きを文の途中に挟んで一文を跨がせる：1例のみで、同時に分析した記事は式の前で文を閉じており記事間で挙動が逆（配置は `writing-style.md` の守備範囲）｜支持: /cg/transformation/projection-steps
+- SQ-P082｜:Anki（暗記対象）と :Mark（デモの操作対象・図中の指示対象）を役割で書き分け、Action 内の操作名は :Mark で囲む：既存の強調ルールは :Anki の範囲を扱う SQ-054 だけで役割分担が未記載だが、:Mark は `de7b964b` でディレクティブを分割した際に導入された媒体側の記法で、文体上の選択と記法の仕様を切り分けられない｜支持: /color-theory/reflection-and-refraction, /cg/transformation/viewing-pipeline-transformations
+- SQ-P083｜デモが無い記事でも、場面のキーワード（昼間・朝焼け・距離）を :Mark で拾って注目点を作る：このラウンドで唯一デモを持たない記事1本のみの観察で、比較できる同種の記事がない｜支持: /color-theory/light-scattering
+- SQ-P084｜:::Action を「操作の指示＋観察すべき変化（または問い）」を一文に畳む定型で書く：4記事で型がそろうが、Action のレジスターと文末形は本体 SQ-003・SQ-072、配置と着眼点の個数は RS-038 が担当しており、残る「一文に畳む」部分が独立したルールとして立つか判断がつかない｜支持: /color-theory/reflection-and-refraction, /color-theory/interference-and-diffraction, /cg/transformation/viewing-pipeline-transformations, /cg/transformation/parallel-projection-types
+- SQ-P085｜単調な依存関係を「〜ほど…なります」の比較構文で述べる：3記事で確認できるが、量の共変を表す「〜ほど」は日本語の説明文で広く使われる基本構文で著者固有性を主張できない（二項の対比・対句は本体 SQ-063・SQ-064）｜支持: /color-theory/interference-and-diffraction, /color-theory/light-scattering, /cg/transformation/parallel-projection-types
+- SQ-P086｜デモのUIラベル・選択肢名をかぎ括弧「」で引用し、画面上の文字列そのままで本文から参照する：2記事各1〜2箇所で、デモを持つ記事に限られる。処理・概念の動詞句化の用法は本体 SQ-048 が担当｜支持: /color-theory/interference-and-diffraction, /cg/transformation/parallel-projection-types
+- SQ-P087｜図・デモ中の要素を丸括弧で見た目（破線・白い円）に言い換えて本文から指し示す：1記事2箇所のみで、用語と平易な説明を対にする括弧グロス（本体 SQ-047）との切り分けも用例が足りない｜支持: /color-theory/reflection-and-refraction

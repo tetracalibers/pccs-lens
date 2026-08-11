@@ -57,9 +57,9 @@
 - [x] `/color-theory/how-color-works`
 - [x] `/color-theory/electromagnetic-waves`
 - [x] `/color-theory/light-components-and-reflectance`
-- [ ] `/color-theory/reflection-and-refraction`
-- [ ] `/color-theory/interference-and-diffraction`
-- [ ] `/color-theory/light-scattering`
+- [x] `/color-theory/reflection-and-refraction`
+- [x] `/color-theory/interference-and-diffraction`
+- [x] `/color-theory/light-scattering`
 - [x] `/color-theory/eye-structure`
 - [x] `/color-theory/light-path-through-the-retina`
 - [x] `/color-theory/photoreceptor-types-and-distribution`
@@ -822,7 +822,7 @@
 
 ## CGと画像処理 — 変換と投影／ビューイングパイプライン（`cg/transformation.yaml` #viewing-pipeline）
 
-- [ ] `/cg/transformation/viewing-pipeline-transformations`
+- [x] `/cg/transformation/viewing-pipeline-transformations`
 - [draft] `/cg/transformation/hierarchical-modeling`
 
 ## CGと画像処理 — 変換と投影／投影とクリッピング（`cg/transformation.yaml` #projection-and-clipping）
@@ -833,7 +833,7 @@
 - [draft] `/cg/transformation/projection-calculation`
 - [draft] `/cg/transformation/clipping-algorithms`
 - [draft] `/cg/transformation/vanishing-points-and-n-point-perspective`
-- [ ] `/cg/transformation/parallel-projection-types`
+- [x] `/cg/transformation/parallel-projection-types`
 
 ## CGと画像処理 — 変換と投影／画像の幾何学的変換（`cg/transformation.yaml` #image-geometric-transform）
 
