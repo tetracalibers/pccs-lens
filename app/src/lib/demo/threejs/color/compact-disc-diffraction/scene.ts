@@ -294,6 +294,9 @@ const ORDER_REFERENCE_NM = 550
 /** 次数の矢印として確保する本数。間隔が上限のとき可視域の緑で存在しうる本数（9）に余裕を持たせた値 */
 const MAX_ORDER_COUNT = 12
 
+/** 次数の矢印はどのピットからも出るので、確保する本数はピットの数だけ要る */
+const MAX_ORDER_LINE_COUNT = MAX_ORDER_COUNT * DIAGRAM_PIT_COUNT
+
 /** 次数の矢印の長さと矢じりの大きさ。視点へ向かう回折光より控えめにして主役を譲る */
 const ORDER_RAY_LENGTH = DIAGRAM_RAY_LENGTH * 0.8
 const ORDER_ARROW_RADIUS = ARROW_RADIUS * 0.8
@@ -676,7 +679,10 @@ const createPitDiagram = () => {
 
   // 視点以外の向きへ出ていく回折光。存在する次数の数が操作で変わるので、
   // 上限ぶんの頂点を確保しておき、描く本数だけを毎回切り替える
-  const orderPosition = new Float32BufferAttribute(new Float32Array(MAX_ORDER_COUNT * 2 * 3), 3)
+  const orderPosition = new Float32BufferAttribute(
+    new Float32Array(MAX_ORDER_LINE_COUNT * 2 * 3),
+    3
+  )
   const orderGeometry = new BufferGeometry().setAttribute("position", orderPosition)
   const orderMaterial = new LineBasicMaterial({ color: OTHER_ORDER_COLOR })
   const orderLines = new LineSegments(orderGeometry, orderMaterial)
@@ -685,7 +691,7 @@ const createPitDiagram = () => {
 
   const orderArrowGeometry = new ConeGeometry(ORDER_ARROW_RADIUS, ORDER_ARROW_HEIGHT, 10)
   const orderArrowMaterial = new MeshBasicMaterial({ color: OTHER_ORDER_COLOR })
-  const orderArrows = Array.from({ length: MAX_ORDER_COUNT }, () => {
+  const orderArrows = Array.from({ length: MAX_ORDER_LINE_COUNT }, () => {
     const arrow = new Mesh(orderArrowGeometry, orderArrowMaterial)
     arrow.visible = false
     group.add(arrow)
@@ -767,31 +773,34 @@ const createPitDiagram = () => {
         0
       )
 
-      // 回折光が出ていける向きを次数ごとに描く。真ん中のピットを起点にして扇状に並べる。
-      // 視点へ向かう向きと重なる次数は描かない（明るい 1 本がその次数そのものになる）
+      // 回折光が出ていける向きを次数ごとに描く。どのピットも新しい波の出どころなので、
+      // 同じ向きの束がピットの数だけ並ぶ。視点へ向かう向きと重なる次数は描かない
+      // （明るい 1 本がその次数そのものになる）
       const orderAngles = diffractionOrderAngles(incidentRad, pitchNm)
       const mergeRad = MathUtils.degToRad(ORDER_MERGE_DEG)
+      // 矢じりは線の先端に置く（円錐の先が線の終点に来るよう半分ぶん手前を中心にする）
+      const tip = ORDER_RAY_LENGTH - ORDER_ARROW_HEIGHT / 2
       let drawn = 0
       orderAngles.forEach((angle) => {
         if (Math.abs(angle - diffractedRad) < mergeRad) return
         const dirX = Math.sin(angle)
         const dirY = Math.cos(angle)
-        orderPosition.setXYZ(drawn * 2, 0, PIT_APEX_Y, 0)
-        orderPosition.setXYZ(
-          drawn * 2 + 1,
-          dirX * ORDER_RAY_LENGTH,
-          PIT_APEX_Y + dirY * ORDER_RAY_LENGTH,
-          0
-        )
-        // 矢じりは線の先端に置く（円錐の先が線の終点に来るよう半分ぶん手前を中心にする）
-        const tip = ORDER_RAY_LENGTH - ORDER_ARROW_HEIGHT / 2
-        placeArrow(orderArrows[drawn], dirX * tip, PIT_APEX_Y + dirY * tip, dirX, dirY)
-        orderArrows[drawn].visible = true
-        drawn++
+        pitCenterX.forEach((centerX) => {
+          orderPosition.setXYZ(drawn * 2, centerX, PIT_APEX_Y, 0)
+          orderPosition.setXYZ(
+            drawn * 2 + 1,
+            centerX + dirX * ORDER_RAY_LENGTH,
+            PIT_APEX_Y + dirY * ORDER_RAY_LENGTH,
+            0
+          )
+          placeArrow(orderArrows[drawn], centerX + dirX * tip, PIT_APEX_Y + dirY * tip, dirX, dirY)
+          orderArrows[drawn].visible = true
+          drawn++
+        })
       })
       orderPosition.needsUpdate = true
       orderGeometry.setDrawRange(0, drawn * 2)
-      for (let i = drawn; i < MAX_ORDER_COUNT; i++) orderArrows[i].visible = false
+      for (let i = drawn; i < MAX_ORDER_LINE_COUNT; i++) orderArrows[i].visible = false
 
       // 入射光と回折光は同じ高さで止める。記録面から同じ高さのところを両方の光線の
       // 始まり／終わりにそろえることで、2 本の道のりを同じ基準で見比べられる。
