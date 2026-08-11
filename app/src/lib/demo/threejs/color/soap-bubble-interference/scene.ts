@@ -75,6 +75,9 @@ const MAX_THICKNESS_FACTOR = 1 + DRAIN_STRENGTH + SWIRL_STRENGTH
 const MAX_OPD_NM = 2 * FILM_IOR * MAX_THICKNESS_NM * MAX_THICKNESS_FACTOR
 const LUT_SIZE = 1024
 
+/** 球（シャボン玉）の半径。シーンの寸法はすべてこれを基準にしている */
+const SPHERE_RADIUS = 1
+
 /** 球の分割数。色は画素ごとに求めるので、輪郭が滑らかに見える程度あればよい */
 const SPHERE_SEGMENTS = 96
 const SPHERE_RINGS = 64
@@ -98,6 +101,13 @@ const MARKER_LIFT = 1.01
  * 球の中心までの距離と同じにして、球と同じ縮尺で並ぶようにする
  */
 const PANEL_DISTANCE = 5.2
+
+/**
+ * 解説パネルを置く平面での、球の見かけの半径。
+ * 輪郭は球の中心を通る断面ではなく、少し手前にある円として映るので、半径そのものより大きくなる
+ */
+const SPHERE_APPARENT_RADIUS =
+  SPHERE_RADIUS / Math.sqrt(1 - (SPHERE_RADIUS / PANEL_DISTANCE) ** 2)
 
 /**
  * 視錐台を横へずらす量（画面の幅に対する割合）。
@@ -153,9 +163,8 @@ const GRAPH_BOTTOM_GAP = 0.22
 const TICK_WAVELENGTHS = [400, 500, 600, 700]
 const TICK_LENGTH = 0.05
 
-/** 重なった光の色を出す小片の大きさと、グラフとの間隔 */
+/** 重なった光の色を出す小片の大きさ。横位置は拡大断面の法線にそろえる */
 const SWATCH_SIZE = 0.44
-const SWATCH_GAP = 0.88
 
 /** ラベルの高さ（ワールド座標での大きさ）。幅は文字数に応じて決まる */
 const LABEL_HEIGHT = 0.115
@@ -660,8 +669,6 @@ const createSpectrumGraph = () => {
 
   return {
     group,
-    /** 原点（描画領域の左下）から左へはみ出す幅。縦軸のラベルのぶん */
-    leftExtent: TICK_LENGTH + Math.max(topLabel.halfWidth, bottomLabel.halfWidth) * 2,
     /** 光路差から、波長ごとの強め合いの強さを曲線の高さに反映する */
     setOpticalPathDifference: (opdNm: number) => {
       wavelengths.forEach((nm, i) => {
@@ -715,8 +722,6 @@ const createResultSwatch = () => {
 
   return {
     group,
-    /** 原点（小片の左下）から右へ広がる幅。ラベルのほうが小片より広いこともある */
-    rightExtent: Math.max(SWATCH_SIZE, SWATCH_SIZE / 2 + title.halfWidth),
     setColor: ([r, g, b]: Tristimulus) => material.color.setRGB(r, g, b),
     dispose: () => {
       title.dispose()
@@ -756,7 +761,7 @@ export const createSoapBubbleInterferenceScene = ({
 }: ThreeSceneContext<SoapBubbleInterferenceParams>) => {
   const { texture, colorAt } = buildInterferenceColors()
 
-  const sphereGeometry = new SphereGeometry(1, SPHERE_SEGMENTS, SPHERE_RINGS)
+  const sphereGeometry = new SphereGeometry(SPHERE_RADIUS, SPHERE_SEGMENTS, SPHERE_RINGS)
   // 干渉で決まった色をそのまま画面に出したいので、ライトも陰影も使わない
   const sphereMaterial = new ShaderMaterial({
     uniforms: {
@@ -842,17 +847,15 @@ export const createSoapBubbleInterferenceScene = ({
       const halfHeight = Math.tan(MathUtils.degToRad(camera.fov / 2)) * PANEL_DISTANCE
       const halfWidth = halfHeight * camera.aspect
       const rightEdge = halfWidth + VIEW_SHIFT * 2 * halfWidth
-      const leftEdge = -halfWidth + VIEW_SHIFT * 2 * halfWidth
       const bottomEdge = -halfHeight - VIEW_SHIFT_Y * 2 * halfHeight
-      diagram.group.position.set(rightEdge - DIAGRAM_RIGHT_MARGIN, DIAGRAM_CENTER_Y, -PANEL_DISTANCE)
-      // グラフは原点が描画領域の左下。下端からは目盛りの数値ぶんと余白ぶんだけ持ち上げる。
-      // 横位置は、縦軸のラベルから色の小片までを 1 つのまとまりとして画面の中央にそろえる
-      const blockRight = GRAPH_WIDTH + SWATCH_GAP + swatch.rightExtent
-      const graphLeft = (leftEdge + rightEdge) / 2 - (blockRight - graph.leftExtent) / 2
+      const diagramX = rightEdge - DIAGRAM_RIGHT_MARGIN
+      diagram.group.position.set(diagramX, DIAGRAM_CENTER_Y, -PANEL_DISTANCE)
+      // グラフは原点が描画領域の左下。下端からは目盛りの数値ぶんと余白ぶんだけ持ち上げ、
+      // 左端（塗りの始まり）は球の左端にそろえる
       const graphBaseline = bottomEdge + GRAPH_BOTTOM_GAP + GRAPH_BELOW_ZONE
-      graph.group.position.set(graphLeft, graphBaseline, -PANEL_DISTANCE)
-      // 小片の下端は、グラフの塗り（波長ごとの山）の下端＝横軸にそろえる
-      swatch.group.position.set(graphLeft + GRAPH_WIDTH + SWATCH_GAP, graphBaseline, -PANEL_DISTANCE)
+      graph.group.position.set(-SPHERE_APPARENT_RADIUS, graphBaseline, -PANEL_DISTANCE)
+      // 小片は、中央を拡大断面の法線（光が膜に入る点）に、下端をグラフの塗りの下端にそろえる
+      swatch.group.position.set(diagramX - SWATCH_SIZE / 2, graphBaseline, -PANEL_DISTANCE)
 
       // 引き出し線は、球面上の注目点から拡大断面の左端まで引く
       markerInView.copy(MARKED_POINT).multiplyScalar(MARKER_LIFT)
