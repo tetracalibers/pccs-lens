@@ -4,46 +4,104 @@ title: 光の干渉と回折
 
 grades: ["3"]
 visual: true
-
-draft: true
 ---
 
 <script>
   import SVGWrapper from "$lib/demo/SVGWrapper.svelte"
+  import CanvasWrapper from "$lib/demo/CanvasWrapper.svelte"
   import SmallSlitDiffraction from "$lib/demo/color/light-phenomena/SmallSlitDiffraction.svelte"
   import SmallBumpDiffraction from "$lib/demo/color/light-phenomena/SmallBumpDiffraction.svelte"
+  import SoapBubbleInterferenceDemo from "$lib/demo/threejs/color/soap-bubble-interference/SoapBubbleInterferenceDemo.svelte"
+  import CompactDiscDiffractionDemo from "$lib/demo/threejs/color/compact-disc-diffraction/CompactDiscDiffractionDemo.svelte"
 </script>
+
+シャボン玉の表面やコンパクトディスクの記録面には、虹のような色が浮かんで見えます。
+この色を作り出しているのは、光が波であることから起こる:Anki[干渉]と:Anki[回折]です。
 
 ## :WithGradeTag[光の干渉]{grades="3"}
 
-- 複数の波が重なり合うことで、新しい波ができる現象を:Anki[干渉]という
-- 波が重なるときに、波の山どうし（谷どうし）が重なると、新しい波は山の高さが増幅して:Anki[明るく]見える。逆に、山と谷が重なってしまうと、打ち消しあって:Anki[暗く]見える
-- シャボン玉の表面で虹が流れるように見えるのは、光の:Anki[干渉]が起きているためである
+複数の波が重なり合って新しい波ができる現象を:Anki[干渉]といいます。
 
-:::Todo
-簡易的なシャボン玉で干渉を示すデモ？（Three.jsで）
+山どうし、あるいは谷どうしが重なったところでは、新しい波の山の高さが増幅して:Anki[明るく]見えます。
+逆に、山と谷が重なったところでは、打ち消しあって:Anki[暗く]見えます。
+
+## :WithGradeTag[シャボン玉と干渉]{grades="3"}
+
+:Mark[シャボン玉]の表面で虹が流れるように見えるのも、光の:Anki[干渉]によるものです。
+
+膜の外側の面で[反射](/color-theory/reflection-and-refraction/)した光と、膜を通り抜けて内側の面で反射した光とが重なり合い、[波長](/color-theory/electromagnetic-waves/)によって強め合うか打ち消しあうかが分かれます。
+
+:::Action
+シャボン玉の表面の:Mark[注目点]（白い円）をドラッグで動かし、見る角度を変えてみよう
+:Mark[膜の厚み]を変えることで、膜の中を往復する道のりが変わり、強め合う波長も変化することを観察してみよう
 :::
+
+<CanvasWrapper>
+  <SoapBubbleInterferenceDemo />
+</CanvasWrapper>
+
+「注目点に見える色」は、「注目点で強め合っている波長」の色を[加法混色](/color-theory/color-mixing-basics/)した色に大体近い色になっています。膜の厚みや見る角度が少し変わるだけで強め合う:Anki[波長]も変わるため、眼に届く色は次々と変化します。
 
 ## :WithGradeTag[光の回折]{grades="3"}
 
-- 波が物に当たったり、小さな隙間を通過した後、半円状に広がって進む現象を:Anki[回折]という
+波が小さな隙間を通り抜けたり、小さな物に当たったりした後、その先で半円状に広がって進む現象を:Anki[回折]といいます。
 
-:::Todo
-SVGではなく、Three.jsで書き換えを検討
-スリットの大きさによって光の回折が起こる／起こらないの図
-:::
-
-<SVGWrapper maxW="440">
+::::CardGrid
+:::TermCard{title="小さな隙間を通り抜けた場合" ankiTitle="show"}
+<SVGWrapper maxW="350">
   <SmallSlitDiffraction />
 </SVGWrapper>
-
-:::Todo
-SVGではなく、Three.jsで書き換えを検討
-コンパクトディスク上の凸部で起こる回折の図とか？
 :::
-
-<SVGWrapper maxW="560">
+:::TermCard{title="小さな凸部に当たった場合" verticalCentering ankiTitle="show"}
+<SVGWrapper maxW="350">
   <SmallBumpDiffraction />
 </SVGWrapper>
+:::
+::::
 
-- コンパクトディスクの表面が虹のように色づいて見えるのは、ビットと呼ばれる凸部で:Anki[反射]した光が:Anki[回折]を起こし、その光が互いに:Anki[干渉]し合うためである
+回折による波の広がりが大きくなるのは、隙間や物の大きさが光の:Anki[波長]と同じくらいか、それよりも小さいときです。小さな隙間や凸部そのものが、新しい波の出どころになったと捉えることができます。
+
+## :WithGradeTag[コンパクトディスクと回折]{grades="3"}
+
+:Mark[コンパクトディスク]の表面も、虹のように色づいて見えます。
+
+コンパクトディスクの記録面には、ピットと呼ばれる小さな凸部が規則正しく並んでいるため、この凸部で:Anki[反射]した光が:Anki[回折]を起こし、その光が互いに:Anki[干渉]し合って虹になるのです。
+
+:::Action
+ディスクをドラッグして見る向きを変えながら、記録面に浮かぶ虹を眺めてみよう
+:::
+
+<CanvasWrapper>
+  <CompactDiscDiffractionDemo />
+</CanvasWrapper>
+
+シャボン玉で重なり合っていたのは、膜の外側と内側で反射した`2`つの光でした。コンパクトディスクでは、どのピットも新しい波の出どころになるため、並んだピットから出たそれぞれの回折光は同じ向きへ進み、何本も重なり合います。
+
+重なり合う光が多いほど、弱め合う波長の組み合わせも多くなります。
+さまざまな波長が強め合う場合は、さまざまな色みが混ざって白っぽくなりますが、弱め合う波長の組み合わせが多くなると、限られた色みだけが残ります。記録面の色がシャボン玉の表面よりも:Anki[鮮やか]に見えるのは、このためです。
+
+:::Action
+:Mark[注目点で強め合っている波長]のグラフをシャボン玉のデモと見比べて、山の細さの違いに注目しよう
+:::
+
+### 光路差
+
+強め合う波長を決めているのは、重なり合う光が進んできた道のりの差（光路差）です。
+シャボン玉では膜の:Anki[厚み]によって、膜の外側の反射光と内側の反射光の道のりの差が変化しました。コンパクトディスクでは、ピットの:Anki[間隔]と光の:Anki[向き]が道のりの差を左右します。
+
+この道のりの差は、光が記録面へ入る向きと出ていく向きの両方で決まるため、ディスクを傾けたり、光を当てる向きを変えると、強め合う波長が変わり、色が移り変わります。
+
+:::Action
+ピットの間隔や光を当てる向きを動かして、:Mark[注目点の光路差]の値がどう変わるかを観察してみよう
+:::
+
+### 回折光の向き
+
+並んだピットから広がった光が互いに強め合うのは、道のりの差が:Anki[波長]のちょうど何個分かに収まる場合だけです。
+この条件を満たす向きは`1`つではなく、差が波長`1`個分になる向き、`2`個分になる向きというように、とびとびにいくつも現れます。:Anki[回折]は`1`つのピットから出た光をあらゆる方向へ広げますが、実際に記録面から反射する光は、並んだピットどうしで打ち消されなかった方向の光だけです。
+
+これらの光の方向がどれだけ離れるかは、:Mark[ピットの間隔]で決まります。間隔が狭いほど、波長`1`個分の差をつけるには向きを大きく変えなければならず、隣り合う光線の角度は大きく開きます。開きが大きくなるほど、記録面にぶつからずに反射する光線の数は減っていきます。
+
+:::Action
+:Mark[ピットの間隔]を狭めると、:Mark[他の向きの回折光]が互いに離れ、光線の数が減っていくのを確認しよう
+:::

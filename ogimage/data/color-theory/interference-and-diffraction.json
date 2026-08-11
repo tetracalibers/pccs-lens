@@ -1,0 +1,13 @@
+{
+  "route": "color-theory/interference-and-diffraction",
+  "title": "光の干渉と回折",
+  "titleLines": [
+    "光の干渉と回折"
+  ],
+  "crumbs": [
+    "色の理論",
+    "色が見えるしくみ"
+  ],
+  "figure": "assets/color-theory/interference-and-diffraction/figure.png",
+  "theme": "dark"
+}

@@ -54,6 +54,8 @@ export const meta = {
 //   gitAnalyzable: [{ title, draftCommit, editCommits: [string] }], // refine-style 用。空なら refine-style 系列を起動しない
 //   promotionCandidates: [{ id, key, reason, slugs }],  // pending の昇格候補（発見モードのみ。style-pending-promote.mjs --json）
 //   supportCounts: { '<ID>': number },        // ルールごとの支持記事数（発見モードのみ。style-evidence-tally.mjs --json）
+//   freezeConfidence: boolean,                // true なら既存ルールの確度欄を変更させない（昇格と保留の整理だけを行う）。
+//                                             // 移行由来の根拠が未展開なだけのルールを機械的に降格させたくない回に使う。
 //   existingGuides: { thinkingFlow, writingStyle, stylisticQuirks, refineStyle }, // ガイド本体の出力先パス
 //   pendingGuides: { ... },                   // 保留プールのパス（任意。省略時は guidesDir/pending/ から導出）
 //   evidenceDirs: { ... },                    // 根拠ディレクトリのパス（任意。省略時は guidesDir/evidence/<観点>/ から導出）
@@ -400,9 +402,14 @@ const ASPECTS = [
   },
 ]
 
+// 記事を1本も渡さない回（発見モードの棚卸しのみ）。分析・反証は流さず、統合と境界レビューだけを行う。
+const stocktakeOnly = m.targets.length === 0
+
 // gitAnalyzable が空の回は Revision Diff Analyst の系列を起動しない。旧版は Git 履歴が1本も
 // 無くても起動し、「確認できないと明記する」だけの仕事をさせていた。
-const activeAspects = ASPECTS.filter((a) => !a.git || gitAnalyzable.length > 0)
+// ただし棚卸しのみの回はどの Analyst も起動しないので、この除外は当てない
+// （当てると refine-style の保留プールだけが棚卸しから漏れる）。
+const activeAspects = ASPECTS.filter((a) => !a.git || stocktakeOnly || gitAnalyzable.length > 0)
 const skipped = ASPECTS.filter((a) => !activeAspects.includes(a)).map((a) => a.key)
 if (skipped.length) {
   log(`Git 履歴（AI草稿コミット）が無いため ${skipped.join(', ')} は対象外にします`)
@@ -524,9 +531,15 @@ if (MODE === 'evidence') {
 // 発見モード：分析 → 反証 → 統合（観点ごとのパイプライン）→ 境界レビュー（後段）
 // ===========================================================================
 
-const stocktakeOnly = m.targets.length === 0
 if (stocktakeOnly) {
   log('発見モード（棚卸しのみ）：記事を読まず、保留の昇格候補と支持記事数の集計だけを材料にします')
+}
+
+// 確度ラベルを凍結する回。移行で作られた根拠は意図的に不完全なので、支持記事数だけを見て
+// 機械的に降格させると、根拠が未展開なだけのルールまで弱い傾向へ落ちる。
+const FREEZE_CONFIDENCE = m.freezeConfidence === true
+if (FREEZE_CONFIDENCE) {
+  log('確度ラベルは凍結します（昇格と保留の整理のみ。既存ルールの確度欄は変更しません）')
 }
 
 const promotionBlock = (key) => {
@@ -543,7 +556,11 @@ const supportBlock = (key) => {
   return mine.length
     ? `## ルールごとの支持記事数（${key}。${evidenceDirOf(key)} を集計した導出値）\n\n${mine
         .map(([id, n]) => `- ${id}: ${n}記事`)
-        .join('\n')}\n\n確度ラベルを見直すときはこの値を使います。**支持記事数を数えるために ${evidenceDirOf(key)} を読み直す必要はありません。**`
+        .join('\n')}\n\n${
+        FREEZE_CONFIDENCE
+          ? `この値は昇格候補の裏取り（既存ルールとの重複確認）に使う参考値です。**この回は確度ラベルを変更しません。** 支持記事数が少ないルールを弱い傾向へ落とさないでください（移行で作られた根拠は意図的に不完全で、支持記事数の少なさは根拠の弱さを意味しません）。`
+          : '確度ラベルを見直すときはこの値を使います。'
+      }**支持記事数を数えるために ${evidenceDirOf(key)} を読み直す必要はありません。**`
     : ''
 }
 
@@ -612,7 +629,9 @@ const perAspect = await pipeline(
               null,
               2,
             )}`
-          : `今回は記事の分析を行っていません（棚卸しのみ）。昇格候補と支持記事数の集計だけを材料に、確度ラベルの見直しと保留の整理を行ってください。新しいルールを根拠なく足さないでください。`,
+          : FREEZE_CONFIDENCE
+            ? `今回は記事の分析を行っていません（棚卸しのみ）。昇格候補と支持記事数の集計だけを材料に、**昇格候補の採否の判断と保留プールの整理だけ**を行ってください。既存ルールの \`確度\` 欄は書き換えません（昇格で新しく本体へ加えるルールの確度は、支持記事数と記事タイプの幅から決めます）。記事を読んでいないので、新しいルールを根拠なく足さないでください。`
+            : `今回は記事の分析を行っていません（棚卸しのみ）。昇格候補と支持記事数の集計だけを材料に、確度ラベルの見直しと保留の整理を行ってください。新しいルールを根拠なく足さないでください。`,
         prev && prev.verdict
           ? `反証の判定（${a.key}）:\n\n${JSON.stringify(prev.verdict.verdicts || [], null, 2)}`
           : '',

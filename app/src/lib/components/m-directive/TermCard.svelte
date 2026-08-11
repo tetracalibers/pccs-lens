@@ -20,6 +20,8 @@
     children?: Snippet
     centering?: boolean
     textCentering?: boolean
+    /** カードの内容を縦方向に中央揃えする */
+    verticalCentering?: boolean
     title: string
     ankiTitle?: "hide" | "anki" | "show"
     icon?: keyof typeof iconMap
@@ -32,6 +34,7 @@
     children,
     centering = false,
     textCentering = false,
+    verticalCentering = false,
     title,
     ankiTitle = "hide",
     icon,
@@ -58,6 +61,7 @@
   class="term-card"
   class:centering
   class:text-centering={textCentering}
+  class:vertical-centering={verticalCentering}
   style={fontSize ? `--tc-font-size: ${fontSize}` : undefined}
 >
   {#if title}
@@ -70,7 +74,8 @@
       {/if}
     </Heading3>
   {/if}
-  {@render children?.()}
+  <!-- 縦中央揃え時のみ本文をまとめて中央に寄せる（見出しは上端に残す） -->
+  <div class="body">{@render children?.()}</div>
 </section>
 
 <style>
@@ -86,6 +91,27 @@
   }
 
   .term-card.centering {
+    justify-items: center;
+  }
+
+  /* 既定では本文ラッパーを透過させ、カードのグリッドに直接並べる */
+  .body {
+    display: contents;
+  }
+
+  .term-card.vertical-centering {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .term-card.vertical-centering > .body {
+    flex: 1;
+    display: grid;
+    align-content: center;
+    gap: inherit;
+  }
+
+  .term-card.centering.vertical-centering > .body {
     justify-items: center;
   }
 

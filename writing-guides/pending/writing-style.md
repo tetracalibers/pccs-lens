@@ -117,3 +117,5 @@
 - WS-P102｜`###` を持たない `##` を混ぜる基準：本文3段落＋`:::Note` で足りるからと読めるが、2記事では判断基準を確定できない（`###` の個数の上限は本体 WS-034 へ反映済み）｜支持: /cg/transformation/projection-steps
 - WS-P103｜節で導入する中心用語を第1段落の末尾で名づける：引用6箇所のうち3箇所が節冒頭から3段落目での命名で、「第1段落の末尾」という位置の固定が成り立たない（説明→命名の語順そのものは本体 WS-052）｜支持: /cg/transformation/projective-transformation, /cg/transformation/projection-steps
 - WS-P104｜対になる2ケースを同形式で並置しつつ、主要ケースを厚く・副ケースを2文で閉じる非対称配置：非対称がはっきり出るのは1記事1箇所のみで、もう1記事の対比はほぼ対称。カードでの対比も分量差がわずか（同形式の並置は本体 WS-049）｜支持: /cg/transformation/projection-steps
+- WS-P105｜原理を扱うH2節と、その原理で身近な事物を説明するH2節を対にして反復し、事例節の見出しを「〈身近な事物〉と〈現象名〉」の形にそろえる：2記事とも同じ「光の現象」セクションの姉妹記事で、1本の記事を分割して同時期に作られたため、著者の構成判断か分割時の機械的な揃えかを切り分けられない。原理節を先頭に置くこと自体は本体 WS-003 が担当｜支持: /color-theory/interference-and-diffraction, /color-theory/light-scattering
+- WS-P106｜デモの直後に :::Foldable でThree.jsの実装コードを畳んで置き、本文の説明はコードを挟まずその後ろで続ける：`add-threejs-demo` スキルがCG記事共通の掲載規約としてデモと実装コードの併載を定めており、著者が選び取った構成ではなくツール側のテンプレートに従った結果である可能性が高い｜支持: /cg/transformation/viewing-pipeline-transformations, /cg/transformation/parallel-projection-types
