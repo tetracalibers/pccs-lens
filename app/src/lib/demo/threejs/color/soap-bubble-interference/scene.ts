@@ -107,13 +107,15 @@ const PANEL_DISTANCE = 5.2
  */
 const VIEW_SHIFT = 0.2
 
+/**
+ * 視錐台を縦へずらす量（画面の高さに対する割合）。
+ * 球が上に寄り、下に置くグラフとの間、およびグラフと画面の下端との間に余白ができる
+ */
+const VIEW_SHIFT_Y = 0.11
+
 /** 拡大断面を画面の右端から離す量と、その中心の高さ */
 const DIAGRAM_RIGHT_MARGIN = 1.95
 const DIAGRAM_CENTER_Y = -0.1
-
-/** スペクトルの帯を画面の左端・下端から離す量 */
-const BAR_LEFT_MARGIN = 0.16
-const BAR_BOTTOM_MARGIN = 0.3
 
 /**
  * 拡大断面の表示倍率。狭い画面でも図が読めるよう、球と同じくらいの大きさまで拡大する。
@@ -139,17 +141,37 @@ const DIAGRAM_MIN_ANGLE_DEG = 8
 /** ラベルが断面からはみ出さないよう、横位置を止める値 */
 const DIAGRAM_MAX_LABEL_X = 1.15
 
-/** スペクトルの帯の寸法と、波長の刻み数 */
-const BAR_WIDTH = 3.6
-const BAR_HEIGHT = 0.24
-const BAR_BANDS = 140
+/** 波長ごとの強め合いのグラフ。描画領域の寸法と、波長の刻み数 */
+const GRAPH_WIDTH = 3.0
+const GRAPH_HEIGHT = 0.55
+const GRAPH_SAMPLES = 140
 
-/** 重なった光の色を出す小片の大きさと、帯との間隔 */
-const SWATCH_SIZE = 0.34
-const SWATCH_GAP = 0.22
+/** 横軸の下に置くもの（目盛りの数値・タイトル）の下端を、画面の下端から離す量 */
+const GRAPH_BOTTOM_GAP = 0.22
+
+/** 横軸の目盛りを付ける波長（nm）と、目盛り線の長さ */
+const TICK_WAVELENGTHS = [400, 500, 600, 700]
+const TICK_LENGTH = 0.05
+
+/** 重なった光の色を出す小片の大きさと、グラフとの間隔 */
+const SWATCH_SIZE = 0.44
+const SWATCH_GAP = 0.88
 
 /** ラベルの高さ（ワールド座標での大きさ）。幅は文字数に応じて決まる */
 const LABEL_HEIGHT = 0.115
+
+/** グラフまわりのラベルは、狭い画面でも読めるよう断面のラベルより大きくする */
+const GRAPH_TITLE_HEIGHT = 0.16
+/** 軸の意味と色の小片の見出し。タイトルと同じ大きさにそろえる */
+const AXIS_LABEL_HEIGHT = GRAPH_TITLE_HEIGHT
+const TICK_LABEL_HEIGHT = 0.13
+
+/** 目盛りの数値とタイトルの間隔 */
+const GRAPH_TITLE_GAP = 0.05
+
+/** 横軸の下に目盛り線・数値・タイトルが占める高さ。グラフを画面の下端からどれだけ上げるかに使う */
+const GRAPH_BELOW_ZONE =
+  TICK_LENGTH + TICK_LABEL_HEIGHT * 1.25 + GRAPH_TITLE_GAP + GRAPH_TITLE_HEIGHT
 
 /** ラベルの文字を描く canvas の高さ（テクスチャの解像度）と左右の余白、書体 */
 const LABEL_TEXTURE_HEIGHT = 128
@@ -172,6 +194,8 @@ const INNER_REFLECTION_COLOR = "#7fbcf0"
 const FILM_COLOR = "#7d9cc9"
 const NORMAL_COLOR = "#bfbfbf"
 const FRAME_COLOR = "#8a8a92"
+// グラフの曲線。色のついた塗りの上でも輪郭が追えるよう、明るい無彩色にする
+const CURVE_COLOR = "#dcdce2"
 
 /** 膜（半透明の塗り）の不透明度 */
 const FILM_OPACITY = 0.25
@@ -309,7 +333,7 @@ const fragmentShader = /* glsl */ `
  * 文字を描いた canvas をテクスチャにして、常にカメラを向く板（Sprite）にする。
  * 文字の幅を測って板の横幅を決めるので、文字数の違うラベルでも字の大きさがそろう
  */
-const createLabel = (text: string, color: string) => {
+const createLabel = (text: string, color: string, height = LABEL_HEIGHT) => {
   const canvas = document.createElement("canvas")
   const context = canvas.getContext("2d")
 
@@ -335,8 +359,8 @@ const createLabel = (text: string, color: string) => {
   texture.colorSpace = SRGBColorSpace
   const material = new SpriteMaterial({ map: texture, transparent: true, depthWrite: false })
   const sprite = new Sprite(material)
-  const width = (LABEL_HEIGHT * canvas.width) / canvas.height
-  sprite.scale.set(width, LABEL_HEIGHT, 1)
+  const width = (height * canvas.width) / canvas.height
+  sprite.scale.set(width, height, 1)
 
   return {
     sprite,
@@ -547,70 +571,119 @@ const createFilmDiagram = () => {
 }
 
 /**
- * 注目点で「いま強め合っている波長」を示す帯。
+ * 注目点での、波長ごとの強め合いの強さを表すグラフ。
  *
- * 可視域を細かく刻み、その波長の色を、干渉でどれだけ強め合っているかで明暗をつけて並べる。
- * 明るく残った波長を混ぜたものが、右の小片（＝注目点の色）になる
+ * 横軸が波長（nm の目盛りつき）、縦軸が強め合いの強さ。曲線の下はその波長の色で塗ってある。
+ * 山になっている波長は 2 つの反射光が強め合っていて、谷（高さ 0）の波長は打ち消し合っている。
+ * 山として残った波長を混ぜたものが、右の小片（＝注目点に見える色）になる。
+ *
+ * グループの原点は描画領域の左下（横軸と縦軸の交点）
  */
-const createSpectrumBar = () => {
+const createSpectrumGraph = () => {
   const group = new Group()
 
   const wavelengths = Array.from(
-    { length: BAR_BANDS },
-    (_, i) => VISIBLE_MIN_NM + ((i + 0.5) / BAR_BANDS) * (VISIBLE_MAX_NM - VISIBLE_MIN_NM)
+    { length: GRAPH_SAMPLES },
+    (_, i) => VISIBLE_MIN_NM + ((i + 0.5) / GRAPH_SAMPLES) * (VISIBLE_MAX_NM - VISIBLE_MIN_NM)
   )
+  // 塗りはその波長そのものの色にする。強さは高さで示すので、色の明るさは落とさない
   const baseColors = wavelengths.map(wavelengthToLinearSrgb)
 
-  const positions: number[] = []
-  const indices: number[] = []
+  const columnX = (index: number) => (index / GRAPH_SAMPLES) * GRAPH_WIDTH
+
+  const fillPosition = new Float32BufferAttribute(new Float32Array(GRAPH_SAMPLES * 4 * 3), 3)
+  const fillColor = new Float32BufferAttribute(new Float32Array(GRAPH_SAMPLES * 4 * 3), 3)
+  const fillIndex: number[] = []
   wavelengths.forEach((_, i) => {
-    const x0 = (i / BAR_BANDS) * BAR_WIDTH
-    const x1 = ((i + 1) / BAR_BANDS) * BAR_WIDTH
-    positions.push(x0, 0, 0, x1, 0, 0, x1, BAR_HEIGHT, 0, x0, BAR_HEIGHT, 0)
-    const base = i * 4
-    indices.push(base, base + 1, base + 2, base, base + 2, base + 3)
+    const [r, g, b] = baseColors[i]
+    // 下の 2 頂点は横軸の上に固定し、上の 2 頂点だけを強さに応じて上下させる
+    fillPosition.setXYZ(i * 4, columnX(i), 0, 0)
+    fillPosition.setXYZ(i * 4 + 1, columnX(i + 1), 0, 0)
+    for (let corner = 0; corner < 4; corner++) fillColor.setXYZ(i * 4 + corner, r, g, b)
+    fillIndex.push(i * 4, i * 4 + 1, i * 4 + 2, i * 4, i * 4 + 2, i * 4 + 3)
   })
+  const fillGeometry = new BufferGeometry()
+    .setAttribute("position", fillPosition)
+    .setAttribute("color", fillColor)
+  fillGeometry.setIndex(fillIndex)
+  const fillMaterial = new MeshBasicMaterial({ vertexColors: true, side: DoubleSide })
+  group.add(new Mesh(fillGeometry, fillMaterial))
 
-  const colorAttribute = new Float32BufferAttribute(new Float32Array(BAR_BANDS * 4 * 3), 3)
-  const geometry = new BufferGeometry()
-    .setAttribute("position", new Float32BufferAttribute(positions, 3))
-    .setAttribute("color", colorAttribute)
-  geometry.setIndex(indices)
-  const material = new MeshBasicMaterial({ vertexColors: true, side: DoubleSide })
-  group.add(new Mesh(geometry, material))
+  // 曲線。塗りが暗くなる紫や赤の端でも、山と谷の形を追えるようにする
+  const curvePosition = new Float32BufferAttribute(new Float32Array(GRAPH_SAMPLES * 3), 3)
+  const curveGeometry = new BufferGeometry().setAttribute("position", curvePosition)
+  const curveMaterial = new LineBasicMaterial({ color: CURVE_COLOR })
+  group.add(new Line(curveGeometry, curveMaterial))
 
-  // 打ち消された波長は真っ黒になって背景に沈むので、帯の範囲を枠線で示す
-  const frameGeometry = new BufferGeometry().setFromPoints([
-    new Vector3(0, 0, 0),
-    new Vector3(BAR_WIDTH, 0, 0),
-    new Vector3(BAR_WIDTH, BAR_HEIGHT, 0),
-    new Vector3(0, BAR_HEIGHT, 0),
-    new Vector3(0, 0, 0)
+  // 横軸と、波長の目盛り
+  const axisPoints = [new Vector3(0, 0, 0), new Vector3(GRAPH_WIDTH, 0, 0)]
+  const tickX = (nm: number) =>
+    ((nm - VISIBLE_MIN_NM) / (VISIBLE_MAX_NM - VISIBLE_MIN_NM)) * GRAPH_WIDTH
+  const tickPoints = TICK_WAVELENGTHS.flatMap((nm) => [
+    new Vector3(tickX(nm), 0, 0),
+    new Vector3(tickX(nm), -TICK_LENGTH, 0)
   ])
-  const frameMaterial = new LineBasicMaterial({ color: FRAME_COLOR })
-  group.add(new Line(frameGeometry, frameMaterial))
+  const axisGeometry = new BufferGeometry().setFromPoints(axisPoints)
+  const tickGeometry = new BufferGeometry().setFromPoints(tickPoints)
+  const axisMaterial = new LineBasicMaterial({ color: FRAME_COLOR })
+  group.add(new Line(axisGeometry, axisMaterial), new LineSegments(tickGeometry, axisMaterial))
 
-  // 球面全体ではなく注目点 1 つぶんの分布なので、ラベルでその範囲をはっきりさせる
-  const title = createLabel("注目点で強め合っている波長", NORMAL_COLOR)
-  title.sprite.position.set(title.halfWidth, BAR_HEIGHT + LABEL_HEIGHT, 0)
-  group.add(title.sprite)
+  const tickLabels = TICK_WAVELENGTHS.map((nm) => {
+    const label = createLabel(`${nm}`, NORMAL_COLOR, TICK_LABEL_HEIGHT)
+    label.sprite.position.set(tickX(nm), -TICK_LENGTH - TICK_LABEL_HEIGHT * 0.75, 0)
+    return label
+  })
+  const unitLabel = createLabel("nm", NORMAL_COLOR, TICK_LABEL_HEIGHT)
+  unitLabel.sprite.position.set(
+    GRAPH_WIDTH - unitLabel.halfWidth,
+    -TICK_LENGTH - TICK_LABEL_HEIGHT * 0.75,
+    0
+  )
+
+  // 縦軸の意味は目盛りではなく言葉で示す。上端が強め合い、下端（高さ 0）が打ち消し合い
+  const topLabel = createLabel("強め合う", NORMAL_COLOR, AXIS_LABEL_HEIGHT)
+  topLabel.sprite.position.set(-topLabel.halfWidth - TICK_LENGTH, GRAPH_HEIGHT, 0)
+  const bottomLabel = createLabel("打ち消し合う", NORMAL_COLOR, AXIS_LABEL_HEIGHT)
+  bottomLabel.sprite.position.set(-bottomLabel.halfWidth - TICK_LENGTH, 0, 0)
+
+  // 球面全体ではなく注目点 1 つぶんの分布なので、ラベルでその範囲をはっきりさせる。
+  // 目盛りの数値の下に、末尾が横軸の右端にそろう位置で置く
+  const title = createLabel("注目点で強め合っている波長", NORMAL_COLOR, GRAPH_TITLE_HEIGHT)
+  title.sprite.position.set(
+    GRAPH_WIDTH - title.halfWidth,
+    -(GRAPH_BELOW_ZONE - GRAPH_TITLE_HEIGHT / 2),
+    0
+  )
+
+  const labels = [...tickLabels, unitLabel, topLabel, bottomLabel, title]
+  group.add(...labels.map(({ sprite }) => sprite))
 
   return {
     group,
-    /** 光路差から、波長ごとの強め合い方を色の明暗に反映する */
+    /** 原点（描画領域の左下）から左へはみ出す幅。縦軸のラベルのぶん */
+    leftExtent: TICK_LENGTH + Math.max(topLabel.halfWidth, bottomLabel.halfWidth) * 2,
+    /** 光路差から、波長ごとの強め合いの強さを曲線の高さに反映する */
     setOpticalPathDifference: (opdNm: number) => {
       wavelengths.forEach((nm, i) => {
-        const intensity = interferenceIntensity(opdNm, nm)
-        const [r, g, b] = baseColors[i]
-        for (let corner = 0; corner < 4; corner++) {
-          colorAttribute.setXYZ(i * 4 + corner, r * intensity, g * intensity, b * intensity)
-        }
+        const height = interferenceIntensity(opdNm, nm) * GRAPH_HEIGHT
+        fillPosition.setXYZ(i * 4 + 2, columnX(i + 1), height, 0)
+        fillPosition.setXYZ(i * 4 + 3, columnX(i), height, 0)
+        curvePosition.setXYZ(i, (columnX(i) + columnX(i + 1)) / 2, height, 0)
       })
-      colorAttribute.needsUpdate = true
+      fillPosition.needsUpdate = true
+      curvePosition.needsUpdate = true
     },
     dispose: () => {
-      title.dispose()
-      const disposables = [geometry, material, frameGeometry, frameMaterial]
+      labels.forEach((label) => label.dispose())
+      const disposables = [
+        fillGeometry,
+        fillMaterial,
+        curveGeometry,
+        curveMaterial,
+        axisGeometry,
+        tickGeometry,
+        axisMaterial
+      ]
       disposables.forEach((disposable) => disposable.dispose())
     }
   }
@@ -636,12 +709,14 @@ const createResultSwatch = () => {
   const frameMaterial = new LineBasicMaterial({ color: FRAME_COLOR })
   group.add(new Line(frameGeometry, frameMaterial))
 
-  const title = createLabel("注目点に見える色", NORMAL_COLOR)
-  title.sprite.position.set(SWATCH_SIZE / 2, SWATCH_SIZE + LABEL_HEIGHT, 0)
+  const title = createLabel("注目点に見える色", NORMAL_COLOR, AXIS_LABEL_HEIGHT)
+  title.sprite.position.set(SWATCH_SIZE / 2, -AXIS_LABEL_HEIGHT * 0.75, 0)
   group.add(title.sprite)
 
   return {
     group,
+    /** 原点（小片の左下）から右へ広がる幅。ラベルのほうが小片より広いこともある */
+    rightExtent: Math.max(SWATCH_SIZE, SWATCH_SIZE / 2 + title.halfWidth),
     setColor: ([r, g, b]: Tristimulus) => material.color.setRGB(r, g, b),
     dispose: () => {
       title.dispose()
@@ -708,15 +783,15 @@ export const createSoapBubbleInterferenceScene = ({
   camera.add(panel)
   scene.add(camera)
 
-  // カメラの向きは変えず、視錐台だけを右へずらす。
-  // 球（視点を回す中心）が画面の左に寄り、右側が解説パネルの場所になる。
+  // カメラの向きは変えず、視錐台だけを右と上へずらす。
+  // 球（視点を回す中心）が画面の左上に寄り、右が拡大断面、下がグラフの場所になる。
   // 縦横は切り取らないので、視野の広さも図の歪みも変わらない
-  camera.setViewOffset(1, 1, VIEW_SHIFT, 0, 1, 1)
+  camera.setViewOffset(1, 1, VIEW_SHIFT, VIEW_SHIFT_Y, 1, 1)
 
   const diagram = createFilmDiagram()
-  const bar = createSpectrumBar()
+  const graph = createSpectrumGraph()
   const swatch = createResultSwatch()
-  panel.add(diagram.group, bar.group, swatch.group)
+  panel.add(diagram.group, graph.group, swatch.group)
 
   // 注目点と拡大断面を結ぶ引き出し線。球に隠れないよう、常に手前に描く
   const leaderPosition = new Float32BufferAttribute(new Float32Array(2 * 3), 3)
@@ -751,7 +826,7 @@ export const createSoapBubbleInterferenceScene = ({
         Math.acos(cosIncidence),
         MathUtils.clamp(thicknessAtPoint / MAX_THICKNESS_NM, 0, 1)
       )
-      bar.setOpticalPathDifference(opdNm)
+      graph.setOpticalPathDifference(opdNm)
       swatch.setColor(colorAt(opdNm))
 
       const reinforced = findReinforcedWavelength(opdNm)
@@ -766,20 +841,18 @@ export const createSoapBubbleInterferenceScene = ({
       // 視錐台を右へずらしてあるので、画面に映る範囲もそのぶん右へ寄っている
       const halfHeight = Math.tan(MathUtils.degToRad(camera.fov / 2)) * PANEL_DISTANCE
       const halfWidth = halfHeight * camera.aspect
-      const shift = VIEW_SHIFT * 2 * halfWidth
-      const rightEdge = halfWidth + shift
-      const leftEdge = -halfWidth + shift
+      const rightEdge = halfWidth + VIEW_SHIFT * 2 * halfWidth
+      const leftEdge = -halfWidth + VIEW_SHIFT * 2 * halfWidth
+      const bottomEdge = -halfHeight - VIEW_SHIFT_Y * 2 * halfHeight
       diagram.group.position.set(rightEdge - DIAGRAM_RIGHT_MARGIN, DIAGRAM_CENTER_Y, -PANEL_DISTANCE)
-      bar.group.position.set(
-        leftEdge + BAR_LEFT_MARGIN,
-        -halfHeight + BAR_BOTTOM_MARGIN,
-        -PANEL_DISTANCE
-      )
-      swatch.group.position.set(
-        leftEdge + BAR_LEFT_MARGIN + BAR_WIDTH + SWATCH_GAP,
-        -halfHeight + BAR_BOTTOM_MARGIN + (BAR_HEIGHT - SWATCH_SIZE) / 2,
-        -PANEL_DISTANCE
-      )
+      // グラフは原点が描画領域の左下。下端からは目盛りの数値ぶんと余白ぶんだけ持ち上げる。
+      // 横位置は、縦軸のラベルから色の小片までを 1 つのまとまりとして画面の中央にそろえる
+      const blockRight = GRAPH_WIDTH + SWATCH_GAP + swatch.rightExtent
+      const graphLeft = (leftEdge + rightEdge) / 2 - (blockRight - graph.leftExtent) / 2
+      const graphBaseline = bottomEdge + GRAPH_BOTTOM_GAP + GRAPH_BELOW_ZONE
+      graph.group.position.set(graphLeft, graphBaseline, -PANEL_DISTANCE)
+      // 小片の下端は、グラフの塗り（波長ごとの山）の下端＝横軸にそろえる
+      swatch.group.position.set(graphLeft + GRAPH_WIDTH + SWATCH_GAP, graphBaseline, -PANEL_DISTANCE)
 
       // 引き出し線は、球面上の注目点から拡大断面の左端まで引く
       markerInView.copy(MARKED_POINT).multiplyScalar(MARKER_LIFT)
@@ -797,7 +870,7 @@ export const createSoapBubbleInterferenceScene = ({
       camera.remove(panel)
       camera.clearViewOffset()
       diagram.dispose()
-      bar.dispose()
+      graph.dispose()
       swatch.dispose()
       const disposables = [
         sphereGeometry,
