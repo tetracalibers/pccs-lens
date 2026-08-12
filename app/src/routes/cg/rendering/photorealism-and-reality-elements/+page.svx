@@ -3,9 +3,15 @@ layout: guide-content
 title: 写実的表現とリアリティの要素 # CG 4-1-1, 4-1-2
 
 group: ["CG"]
+visual: true
 
 draft: true
 ---
+
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import DepthCueingDemo from '$lib/demo/threejs/rendering/photorealism-and-reality-elements/depth-cueing/DepthCueingDemo.svelte'
+</script>
 
 CGで生み出される画像には、形だけを線で示したものから、現実の景色を写した写真とほとんど区別がつかないものまであります。
 
@@ -58,8 +64,62 @@ CGで生み出される画像には、形だけを線で示したものから、
 
 視点から遠い稜線ほど:Anki[輝度]を落として描き、遠くのものが霞んで見える効果をもたらす:Anki[デプスキューイング]という表示法では、さらに奥行きを表現することができます。:Anki[デプスキュー]とは、奥行きを感じ取る手がかりのことです。
 
-:::Todo
-直方体を組み合わせた立体のワイヤフレーム表示を、すべての稜線を同じ輝度で描いた場合と、デプスキューイングで奥の稜線ほど輝度を落とした場合とで並べ、奥行きの伝わり方の違いを比べられる図
+:::Action
+次の点に着目して、デモを観察してみよう
+
+- 奥行きの効きを上げることで、右の立体の奥の稜線がどこまで背景に沈むか
+- ドラッグで回すことで、輝度の落ちる稜線がどう入れ替わるか
+- 奥行きの効きを`0`にすると、左右がまったく同じ絵になること
+:::
+
+<CanvasWrapper>
+  <DepthCueingDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+/** 霞ませる奥行きの半径（立体を包む球の半径） */
+const DEPTH_RADIUS = 1.45
+
+/** 線の太さ（ピクセル） */
+const LINE_WIDTH = 2.5
+
+/** デプスキューイングの効き。1 で立体のいちばん奥が背景に溶けきる */
+const STRENGTH = 1
+
+// 稜線 1 本を 1 本の線分として、両端の座標を並べたもの
+const positions = createEdgePositions()
+
+const geometry = new LineSegmentsGeometry()
+geometry.setPositions(positions)
+
+// 太さのある線。太さはピクセル単位なので canvas の大きさが要るが、
+// その受け渡しは LineSegments2 が描画の直前に引き受ける。
+// fog は既定で無効なので、霞ませる線では明示的に有効にする
+const material = new LineMaterial({ color: EDGE_COLOR, alphaToCoverage: true, fog: true })
+material.linewidth = LINE_WIDTH
+const wireframe = new LineSegments2(geometry, material)
+scene.add(wireframe)
+
+// 視点から遠い線ほど背景色へ近づける（デプスキューイング）。
+// 混ぜる割合は、シェーダがフラグメントごとに奥行きから計算する
+const fog = new Fog(BACKGROUND_COLOR, 0, 1)
+scene.fog = fog
+
+// 視点からの奥行きを測るための作業用ベクトル（毎フレーム使い回す）
+const forward = new Vector3()
+const point = new Vector3()
+
+// 霞ませる範囲を立体に合わせる。立体を包む球の手前側で霞み始め、
+// 効きが弱いほど、溶けきるまでの奥行きを遠くへ伸ばす。
+// 視線の向きが変わると奥行きも変わるので、視点が動くたびに計算し直す
+camera.getWorldDirection(forward)
+const centerDepth = point.copy(wireframe.position).sub(camera.position).dot(forward)
+fog.near = centerDepth - DEPTH_RADIUS
+fog.far = fog.near + (DEPTH_RADIUS * 2) / STRENGTH
+```
+
 :::
 
 線を引くだけの表示でも、輝度の付け方ひとつで奥行きの伝わり方は変わります。
