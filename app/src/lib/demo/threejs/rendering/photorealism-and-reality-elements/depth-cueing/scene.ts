@@ -81,7 +81,8 @@ const MIN_STRENGTH = 0.02
 
 const LABEL_COLOR = "#e8e8ee"
 const LABEL_HEIGHT = 0.26
-const LABEL_Y = -1.7
+/** ラベルの高さ。立体の上端（y = 1）から間を空けて置く */
+const LABEL_Y = 1.95
 const LABEL_TEXTURE_HEIGHT = 128
 const LABEL_TEXTURE_PADDING = 12
 const LABEL_FONT = "bold 92px sans-serif"
