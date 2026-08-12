@@ -13,6 +13,7 @@ draft: true
   import DepthCueingDemo from '$lib/demo/threejs/rendering/photorealism-and-reality-elements/depth-cueing/DepthCueingDemo.svelte'
   import HiddenLineAndVisibleSurfaceDemo from '$lib/demo/threejs/rendering/photorealism-and-reality-elements/hidden-line-and-visible-surface/HiddenLineAndVisibleSurfaceDemo.svelte'
   import ShadingAndShadowDemo from '$lib/demo/threejs/rendering/photorealism-and-reality-elements/shading-and-shadow/ShadingAndShadowDemo.svelte'
+  import SmoothShadingDemo from '$lib/demo/threejs/rendering/photorealism-and-reality-elements/smooth-shading/SmoothShadingDemo.svelte'
 </script>
 
 CGで生み出される画像には、形だけを線で示したものから、現実の景色を写した写真とほとんど区別がつかないものまであります。
@@ -286,8 +287,48 @@ scene.add(new AmbientLight(LIGHT_COLOR, 0.4))
 そこで、面の内部でも:Anki[濃淡]を連続的に変化させ、ポリゴンの境目を目立たなくする手法が:Anki[スムーズシェーディング]です。
 濃淡をどう補間するかによって、さまざまな[スムーズシェーディングの手法](/cg/rendering/smooth-shading/)が開発されいます。
 
-:::Todo
-ポリゴンで近似した球を、ポリゴンごとに明るさを一定にした場合と、スムーズシェーディングで濃淡を連続させた場合とで並べ、境目の段差が消えることを比べられる図
+:::Action
+次の点に着目して、デモを観察してみよう
+
+- 分割数を減らすことで、左のポリゴンの境目がどう段差として見えてくるか
+- 同じ分割数でも、右は濃淡が連続していること
+- 分割数を減らすと、右も輪郭は多角形のままであること
+:::
+
+<CanvasWrapper>
+  <SmoothShadingDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+/** 球の半径 */
+const RADIUS = 1.15
+
+// ポリゴンで近似した球。分割数を減らすほど 1 枚 1 枚のポリゴンが大きくなる。
+// 縦方向は横方向の半分にして、ポリゴンの形が細長くなりすぎないようにする
+const geometry = new SphereGeometry(RADIUS, SEGMENTS, Math.max(2, Math.round(SEGMENTS / 2)))
+
+// ポリゴンごとに明るさを一定にする。面の境目が段差として見える
+const flatMaterial = new MeshLambertMaterial({ color: SURFACE_COLOR, flatShading: true })
+const flat = new Mesh(geometry, flatMaterial)
+flat.position.x = -OFFSET_X
+scene.add(flat)
+
+// 頂点の法線を面の内部で補間する（既定の動き）。濃淡が連続する
+const smoothMaterial = new MeshLambertMaterial({ color: SURFACE_COLOR })
+const smooth = new Mesh(geometry, smoothMaterial)
+smooth.position.x = OFFSET_X
+scene.add(smooth)
+
+// 光源の向きは主題ではないので固定する。左右どちらの球にも同じ向きから当たる
+const light = new DirectionalLight(LIGHT_COLOR, 2.5)
+light.position.set(4, 5, 3)
+scene.add(light)
+
+scene.add(new AmbientLight(LIGHT_COLOR, 0.4))
+```
+
 :::
 
 分割するポリゴンの数を増やすほどカクカクした形状になりますが、スムーズシェーディングを用いて濃淡を連続させるだけで、表面の滑らかさを維持することができます。
