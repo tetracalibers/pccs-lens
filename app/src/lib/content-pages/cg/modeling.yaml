@@ -37,8 +37,7 @@ sections:
   - heading: ポリゴン
     id: polygon
     links:
-      - title: ポリゴン曲面 # CG 3-5-1
-        group: ["CG"]
+      - slug: polygon-surface
       - title: 細分割曲面 # CG 3-5-2
         group: ["CG"]
       - title: ポリゴン曲面の詳細度制御 # CG 3-5-3
