@@ -86,7 +86,7 @@ const DEPTH_RADIUS = 1.45
 const LINE_WIDTH = 2.5
 
 /** デプスキューイングの効き。1 で立体のいちばん奥が背景に溶けきる */
-const STRENGTH = 1
+const STRENGTH = 0.9
 
 // 稜線 1 本を 1 本の線分として、両端の座標を並べたもの
 const positions = createEdgePositions()

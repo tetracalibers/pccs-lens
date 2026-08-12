@@ -4,7 +4,7 @@
   import { createDepthCueingScene, type DepthCueingParams } from "./scene"
 
   // Tweakpane が直接書き換え、scene.ts が毎フレーム読む。$state ではなくプレーンオブジェクトにする
-  const params: DepthCueingParams = { strength: 1.0 }
+  const params: DepthCueingParams = { strength: 0.9 }
 
   // 左右に離して置いた立体は、画角が広いほど視点から見た角度が開き、画面の端ほど台形に歪む。
   // 引いた位置から狭い画角で写して、左右の歪み方の差を抑える
