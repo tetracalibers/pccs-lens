@@ -5,8 +5,6 @@ sections:
     id: photorealistic
     links:
       - slug: photorealism-and-reality-elements
-      - slug: modeling-for-photorealism
-      - slug: rendering-process
   - heading: 隠面消去
     id: hidden-surface
     links:
