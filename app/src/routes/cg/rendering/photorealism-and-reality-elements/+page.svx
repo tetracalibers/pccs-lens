@@ -11,6 +11,7 @@ draft: true
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import DepthCueingDemo from '$lib/demo/threejs/rendering/photorealism-and-reality-elements/depth-cueing/DepthCueingDemo.svelte'
+  import HiddenLineAndVisibleSurfaceDemo from '$lib/demo/threejs/rendering/photorealism-and-reality-elements/hidden-line-and-visible-surface/HiddenLineAndVisibleSurfaceDemo.svelte'
 </script>
 
 CGで生み出される画像には、形だけを線で示したものから、現実の景色を写した写真とほとんど区別がつかないものまであります。
@@ -136,8 +137,57 @@ fog.far = fog.near + (DEPTH_RADIUS * 2) / STRENGTH
 
 次の図は、同じ立体をワイヤフレーム表示・陰線消去のあと・可視面表示の順に並べたものです。
 
-:::Todo
-直方体を組み合わせた立体を、すべての稜線を描いたワイヤフレーム表示、陰線消去で隠れる稜線を消した線画、隠面消去して面を塗った可視面表示の`3`段階で並べ、どの稜線と面が消えるかを比べられる図
+:::Action
+次の点に着目して、デモを観察してみよう
+
+- 消えた稜線を薄く残すことで、陰線消去がどの稜線を取り除いたのか
+- ドラッグで回すことで、取り除かれる稜線が入れ替わること
+- 右は面をすべて同じ色で塗っているため、立体なのに平らな図形に見えること
+:::
+
+<CanvasWrapper>
+  <HiddenLineAndVisibleSurfaceDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+/** 線の太さ（ピクセル） */
+const LINE_WIDTH = 2.5
+
+// 面を三角形に分割して並べた座標と、稜線 1 本ずつの両端の座標
+const faceGeometry = new BufferGeometry()
+faceGeometry.setAttribute("position", new Float32BufferAttribute(createFacePositions(), 3))
+
+const edgeGeometry = new LineSegmentsGeometry()
+edgeGeometry.setPositions(createEdgePositions())
+
+// 陰線消去した線画。
+// 面は色を書かずに深度だけを書き、稜線はその深度に対する深度テストで隠れる。
+// polygonOffset で面をわずかに奥へずらし、面の縁にある稜線が z ファイティングしないようにする
+const occluderMaterial = new MeshBasicMaterial({
+  colorWrite: false,
+  polygonOffset: true,
+  polygonOffsetFactor: 1,
+  polygonOffsetUnits: 1
+})
+const occluder = new Mesh(faceGeometry, occluderMaterial)
+occluder.renderOrder = 0
+scene.add(occluder)
+
+const edgeMaterial = new LineMaterial({ color: EDGE_COLOR, alphaToCoverage: true })
+edgeMaterial.linewidth = LINE_WIDTH
+const edges = new LineSegments2(edgeGeometry, edgeMaterial)
+// 深度を書いた面より後に描く（描く順が入れ替わると稜線が隠れない）
+edges.renderOrder = 2
+scene.add(edges)
+
+// 可視面表示。隠面消去は深度バッファが行う。
+// 陰影を付けないので、見えている面はすべて同じ色になる
+const surfaceMaterial = new MeshBasicMaterial({ color: SURFACE_COLOR })
+scene.add(new Mesh(faceGeometry, surfaceMaterial))
+```
+
 :::
 
 ### シェーディングによる陰影
