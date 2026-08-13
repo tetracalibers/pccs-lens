@@ -619,7 +619,7 @@
 
 ## CGと画像処理 — レンダリング／写実的レンダリング（`cg/rendering.yaml` #photorealistic）
 
-- [draft] `/cg/rendering/photorealism-and-reality-elements`
+- [ ] `/cg/rendering/photorealism-and-reality-elements`
 
 ## CGと画像処理 — レンダリング／隠面消去（`cg/rendering.yaml` #hidden-surface）
 
