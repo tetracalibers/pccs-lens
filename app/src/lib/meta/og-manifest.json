@@ -105,6 +105,9 @@
     "cg/rendering": {
       "title": "レンダリング"
     },
+    "cg/rendering/photorealism-and-reality-elements": {
+      "title": "写実的表現とリアリティの要素"
+    },
     "cg/restoration": {
       "title": "画像の復元と生成"
     },

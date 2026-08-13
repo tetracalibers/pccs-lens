@@ -388,7 +388,7 @@
 
 ## CGと画像処理（nested） — 記事：レンダリング（`cg/rendering.yaml`）
 
-- [ ] `/cg/rendering/photorealism-and-reality-elements`
+- [x] `/cg/rendering/photorealism-and-reality-elements`
 - [ページ未作成] バックフェースカリング
 - [draft] `/cg/rendering/hidden-surface-removal-methods`
 - [ページ未作成] 優先順位アルゴリズム
