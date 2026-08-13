@@ -10,8 +10,9 @@
    - CG・画像処理：`/create-cg-page`
    - 色の理論：`/create-color-theory-page`
    - 色の活用分野：`/create-color-fields-page`
-2. **草稿の執筆**：`/author-style-writer <slug>` で、本文の草稿を著者らしい文体で執筆する（スキルの引数の詳細は後述）。
-3. **編集・手直し**：`/author-style-writer <slug> <編集指示>` で、すでに本文のあるページに編集を加える（スキルの引数の詳細は後述）。
+2. **リンク先の準備**（必要なら）：`/prepare-link-targets <キーワード一覧>` で、その記事から本文リンクを張りたい語のリンク先を洗い出す。既存ページで足りる語と、下書きリンクのままでルートが無い語（＝リンクできない語）を分類し、後者の雛形を起こす。
+3. **草稿の執筆**：`/author-style-writer <slug>` で、本文の草稿を著者らしい文体で執筆する（スキルの引数の詳細は後述）。
+4. **編集・手直し**：`/author-style-writer <slug> <編集指示>` で、すでに本文のあるページに編集を加える（スキルの引数の詳細は後述）。
 
 > [!IMPORTANT]
 > 執筆した記事は、次のコミットメッセージ規約に従ってコミットする。`author-style-analyzer` が Git 履歴から「AI草稿 → 人手編集」の差分（`refine-style.md`）を追跡するのに使うため、この規約を守る。
@@ -48,7 +49,7 @@ node scripts/sync-tasklists.mjs --write   # 差分を書き込む
 - 対象は `ogimage/OGP-TASKLIST.md` と `writing-guides/STYLE-ANALYSIS-TASKLIST.md`。見出しに `` （`<yaml>` #<id>）`` の参照を持つセクションだけを YAML 順に組み直す。トップ・ゲーム・慣用色名マップなど手書きのセクションには触れない。
 - **`[x]`（生成済み・分析済み）は作りも消しもしない。** 直すのは並び順・行の過不足・`[ページ未作成]` ↔ ``[draft] `/route` `` の変換まで。`draft: true` なのに `[x]` のような矛盾は警告として出るだけ。
 - YAML に想定外の記述があるとエラーで停止し、**1行も書き込まない**。
-- `/create-color-theory-page`・`/create-color-fields-page`・`/create-cg-page` は雛形作成の最後にこれを実行する。`/commit-this` も、コミット対象に YAML や `+page.svx` の frontmatter 変更が含まれていれば `--check` して差分を提示する。
+- `/create-color-theory-page`・`/create-color-fields-page`・`/create-cg-page` は雛形作成の最後にこれを実行する。`/prepare-link-targets` も、複数の雛形を起こし終えた最後に1回実行する。`/commit-this` も、コミット対象に YAML や `+page.svx` の frontmatter 変更が含まれていれば `--check` して差分を提示する。
 
 ### SVG図版の作成
 
@@ -142,6 +143,12 @@ npm run data:jis-update
   - `/create-color-theory-page <ページタイトル>`
 - **create-color-fields-page** — 色の活用分野の雛形ページを作成
   - `/create-color-fields-page <ページタイトル>`
+- **prepare-link-targets** — 記事のキーワードからリンク先ページを洗い出し、リンク先が無いものだけ雛形を作成
+  - `/prepare-link-targets <キーワード一覧>`（読点・カンマ・空白区切り）
+  - `/prepare-link-targets <記事slug／タイトル／ルート> <キーワード一覧>` — 対象記事を明示（所属ユニットと既存リンクを踏まえて分類する）
+  - キーワードを4種に分類する：**A** 本文で扱う概念（別ページにしない）／**B** 既存ページ（雛形ページも含む。ルートがあるのでリンクできる）／**C** 一覧に下書きリンクはあるがページ未作成（**雛形を作る**）／**D** 一覧に未登録（報告のみ。YAML へのエントリ新設はしない）
+  - 対応表の合意を得てから、C の項目を `create-cg-page` / `create-color-theory-page` / `create-color-fields-page` の手順で起こし、最後に `sync-tasklists.mjs --write` を1回実行する
+  - 記事本文は書き換えない（本文の執筆とリンクの差し込みは `author-style-writer`）
 
 ### 記事執筆・文体（author-style）
 
