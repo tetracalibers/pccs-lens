@@ -624,10 +624,10 @@
 ## CGと画像処理 — レンダリング／隠面消去（`cg/rendering.yaml` #hidden-surface）
 
 - [draft] `/cg/rendering/hidden-surface-removal-methods`
-- [ページ未作成] 優先順位アルゴリズム
-- [ページ未作成] スキャンライン法
-- [ページ未作成] Zバッファ法
-- [ページ未作成] レイトレーシング法
+- [draft] `/cg/rendering/priority-algorithm`
+- [draft] `/cg/rendering/scanline-algorithm`
+- [draft] `/cg/rendering/z-buffer-algorithm`
+- [draft] `/cg/rendering/ray-tracing-algorithm`
 
 ## CGと画像処理 — レンダリング／シェーディング（`cg/rendering.yaml` #shading）
 

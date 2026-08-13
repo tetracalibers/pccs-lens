@@ -390,10 +390,10 @@
 
 - [x] `/cg/rendering/photorealism-and-reality-elements`
 - [draft] `/cg/rendering/hidden-surface-removal-methods`
-- [ページ未作成] 優先順位アルゴリズム
-- [ページ未作成] スキャンライン法
-- [ページ未作成] Zバッファ法
-- [ページ未作成] レイトレーシング法
+- [draft] `/cg/rendering/priority-algorithm`
+- [draft] `/cg/rendering/scanline-algorithm`
+- [draft] `/cg/rendering/z-buffer-algorithm`
+- [draft] `/cg/rendering/ray-tracing-algorithm`
 - [draft] `/cg/rendering/shading-purpose`
 - [ページ未作成] 光を表す量
 - [ページ未作成] シェーディングモデル

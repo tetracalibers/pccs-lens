@@ -9,14 +9,10 @@ sections:
     id: hidden-surface
     links:
       - slug: hidden-surface-removal-methods
-      - title: 優先順位アルゴリズム # CG 4-2-3
-        group: ["CG"]
-      - title: スキャンライン法 # CG 4-2-4
-        group: ["CG"]
-      - title: Zバッファ法 # CG 4-2-5
-        group: ["CG"]
-      - title: レイトレーシング法 # CG 4-2-6
-        group: ["CG"]
+      - slug: priority-algorithm
+      - slug: scanline-algorithm
+      - slug: z-buffer-algorithm
+      - slug: ray-tracing-algorithm
   - heading: シェーディング
     id: shading
     links:
