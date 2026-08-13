@@ -623,7 +623,6 @@
 
 ## CGと画像処理 — レンダリング／隠面消去（`cg/rendering.yaml` #hidden-surface）
 
-- [ページ未作成] バックフェースカリング
 - [draft] `/cg/rendering/hidden-surface-removal-methods`
 - [ページ未作成] 優先順位アルゴリズム
 - [ページ未作成] スキャンライン法

@@ -8,8 +8,6 @@ sections:
   - heading: 隠面消去
     id: hidden-surface
     links:
-      - title: バックフェースカリング # CG 4-2-1
-        group: ["CG"]
       - slug: hidden-surface-removal-methods
       - title: 優先順位アルゴリズム # CG 4-2-3
         group: ["CG"]
