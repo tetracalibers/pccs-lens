@@ -370,7 +370,7 @@
 - [ページ未作成] 有理ベジェ曲線・曲面
 - [ページ未作成] NURBS曲線・曲面
 - [ページ未作成] パラメトリック曲線・曲面の微分幾何
-- [ページ未作成] ポリゴン曲面
+- [draft] `/cg/modeling/polygon-surface`
 - [ページ未作成] 細分割曲面
 - [ページ未作成] ポリゴン曲面の詳細度制御
 - [ページ未作成] ポリゴン曲面の平滑化処理
@@ -388,9 +388,7 @@
 
 ## CGと画像処理（nested） — 記事：レンダリング（`cg/rendering.yaml`）
 
-- [draft] `/cg/rendering/photorealism-and-reality-elements`
-- [draft] `/cg/rendering/modeling-for-photorealism`
-- [draft] `/cg/rendering/rendering-process`
+- [x] `/cg/rendering/photorealism-and-reality-elements`
 - [ページ未作成] バックフェースカリング
 - [draft] `/cg/rendering/hidden-surface-removal-methods`
 - [ページ未作成] 優先順位アルゴリズム

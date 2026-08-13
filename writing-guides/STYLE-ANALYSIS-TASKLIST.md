@@ -520,7 +520,7 @@
 
 ## CGと画像処理 — モデリング／ポリゴン（`cg/modeling.yaml` #polygon）
 
-- [ページ未作成] ポリゴン曲面
+- [draft] `/cg/modeling/polygon-surface`
 - [ページ未作成] 細分割曲面
 - [ページ未作成] ポリゴン曲面の詳細度制御
 - [ページ未作成] ポリゴン曲面の平滑化処理
@@ -619,9 +619,7 @@
 
 ## CGと画像処理 — レンダリング／写実的レンダリング（`cg/rendering.yaml` #photorealistic）
 
-- [draft] `/cg/rendering/photorealism-and-reality-elements`
-- [draft] `/cg/rendering/modeling-for-photorealism`
-- [draft] `/cg/rendering/rendering-process`
+- [ ] `/cg/rendering/photorealism-and-reality-elements`
 
 ## CGと画像処理 — レンダリング／隠面消去（`cg/rendering.yaml` #hidden-surface）
 

@@ -3,134 +3,370 @@ layout: guide-content
 title: 写実的表現とリアリティの要素 # CG 4-1-1, 4-1-2
 
 group: ["CG"]
-
-draft: true
+visual: true
 ---
 
-CGで生み出される画像には、形だけを線で示したものから、写真と区別がつかないものまであります。
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import DepthCueingDemo from '$lib/demo/threejs/rendering/photorealism-and-reality-elements/depth-cueing/DepthCueingDemo.svelte'
+  import HiddenLineAndVisibleSurfaceDemo from '$lib/demo/threejs/rendering/photorealism-and-reality-elements/hidden-line-and-visible-surface/HiddenLineAndVisibleSurfaceDemo.svelte'
+  import ShadingAndShadowDemo from '$lib/demo/threejs/rendering/photorealism-and-reality-elements/shading-and-shadow/ShadingAndShadowDemo.svelte'
+  import SmoothShadingDemo from '$lib/demo/threejs/rendering/photorealism-and-reality-elements/smooth-shading/SmoothShadingDemo.svelte'
+</script>
+
+CGで生み出される画像には、形だけを線で示したものから、現実の景色を写した写真とほとんど区別がつかないものまであります。
 
 ## :WithGroupTag[線画による表現]{group="{['CG']}"}
 
-線だけで立体を表す:Anki[線画]は、形を伝える手段として古くから使われてきました。なかでも[三面図](/cg/transformation/parallel-projection-types/)は、`3`方向から見た図を組にして立体を示す描き方で、:Anki[工業製図]では図の上で測った長さがそのまま寸法として読み取れます。
+線だけで立体を表す:Anki[線画]は、形を伝える手段として古くから使われてきました。
 
-ただし、線画から読み取れるのは形と寸法までです。表面が何色なのか、どんな材質でできているのか、どの向きから光が当たっているのかは、輪郭をなぞった線には現れません。
+### 三面図
+
+特に[三面図](/cg/transformation/parallel-projection-types/)は、`3`方向から見た図を組にして立体を示す描き方で、図の上で測った長さがそのまま寸法として読み取れるため、:Anki[工業製図]ではよく使われてきたものです。
+
+### 透視図
+
+三面図から形状を把握するには訓練が必要ですが、:Anki[透視図]であれば、目で見たときと近い表示ができるため、形状の把握が誰でも直感的にできます。
+
+:Anki[透視図]は、[透視投影](/cg/transformation/perspective-and-parallel-projection/)で描いた図であり、奥にあるものほど小さく写り、:Anki[遠近感]が生まれます。透視投影は、[ピンホールカメラ](/cg/transformation/pinhole-camera/)に像ができる仕組みをそのまま計算に置き換えたものなので、目で見たときと近い表示になるのです、
+
+しかし、線画から読み取れるのは形と寸法までです。表面が何色なのか、どんな材質でできているのか、どの向きから光が当たっているのかは、輪郭をなぞっただけの線画には現れません。
 
 ## :WithGroupTag[写実的表現]{group="{['CG']}"}
 
 線には現れないこうした情報まで含めて、実物を目にしたときの見え方を画像として作り出す表現を:Anki[写実的表現]といいます。
 
-写実的表現で計算するのは、:Anki[物体の色]と:Anki[照明効果]にとどまりません。光の当たり方でできる陰影、:Anki[材質]ごとに異なる反射特性、周囲の風景の映り込み、ガラスのような透明な物体での透過と屈折まで、見え方を左右するものはすべて対象になります。
+写実的表現を行うためにCGプログラムで計算するのは、物体の:Anki[色]や:Anki[照明]効果にとどまりません。光の当たり方でできる:Anki[陰影]、材質ごとに異なる:Anki[反射]特性、周囲の風景の:Anki[映り込み]、ガラスのような透明な物体での:Anki[透過]と:Anki[屈折]まで、見え方を左右するものはすべて対象になります。
 
-こうして作った画像は、実物ができあがる前に見え方を確かめる用途で使われます。[建築](/color-fields/housing-color-design-process/)では建てる前の完成予想図として、[照明設計](/color-theory/illuminance-and-lighting-design/)では器具の配置で室内がどう明るくなるかを見るために描かれます。
+こうした写実的な画像は、工業製品のデザインや建築、[照明設計](/color-theory/illuminance-and-lighting-design/)などの分野において、実物ができあがる前に見え方を確かめる用途で使われます。
 
 ## :WithGroupTag[モデリングとレンダリング]{group="{['CG']}"}
 
-写実的な画像は、`2`つの工程を経て作られます。立体の形状をコンピュータの中に作り上げる:Anki[モデリング]と、その形状が光の下でどう見えるかを計算して画像に落とす:Anki[レンダリング]です。
+写実的な画像は、`2`つの工程を経て作られます。
 
-[写実的表現のためのモデリング](/cg/rendering/modeling-for-photorealism/)では、形そのものだけでなく、表面が光をどう跳ね返すかという材質の情報もあわせて持たせます。この情報が欠けていると、[レンダリング](/cg/rendering/rendering-process/)の段階で金属と布を描き分けることができません。
+1. 立体の形状をコンピュータの中に作り上げる:Anki[モデリング]
+2. その形状が光の下でどう見えるかを計算して画像に落とし込む:Anki[レンダリング]
 
-実物と見分けがつかない画像を目標に置いたレンダリングを:Anki[フォトリアリスティックレンダリング]といいます。画像がどれだけ実物らしく見えるかを:Anki[リアリティ]といい、リアリティは要素を一度に揃えるものではなく、`1`つずつ積み上げて高めていきます。
+モデリングでは、形状だけでなく、表面が光をどう跳ね返すかといった材質の情報も合わせて持たせます。この情報が欠けていると、レンダリングの段階で金属と布を描き分けることができません。
 
-## :WithGroupTag[ワイヤフレーム表示]{group="{['CG']}"}
+実物と見分けがつかない画像の生成を目標としたレンダリングを:Anki[フォトリアリスティックレンダリング]といいます。画像がどれだけ実物らしく見えるかを:Anki[リアリティ]といい、リアリティの要素を`1`つずつ積み上げて写実性を高めていきます。
 
-もっとも要素の少ない表示は、面を塗らずに物体の:Anki[稜線]だけを線で描く:Anki[ワイヤフレーム表示]です。計算が軽く、形状を確かめるには十分ですが、線画である以上、実物らしさはほとんどありません。
+## :WithGroupTag[形状のリアリティ]{group="{['CG']}"}
 
-線だけの画像でも、[透視投影](/cg/transformation/perspective-and-parallel-projection/)で描けば、奥にあるものほど小さく写り、:Anki[遠近感]が生まれます。透視投影は[ピンホールカメラ](/cg/transformation/pinhole-camera/)に像ができるしくみをそのまま計算に置き換えたもので、こうして描いた図を:Anki[透視図]といいます。
+同じ形状モデルでも、それを表示する手法によって、リアリティは増していきます。:Mark[透視図]をベースに、表示法を発展させていく形で、リアリティの変化を解説します。
 
-奥行きを感じ取る手がかりを:Anki[デプスキュー]といいます。視点から遠い稜線ほど:Anki[輝度]を落として描き、遠くのものが暗く沈んで見える実際の見え方に近づける処理が:Anki[デプスキューイング]です。
+### ワイヤフレーム表示
 
-:::Todo
-同じワイヤフレーム表示を、すべての稜線を同じ輝度で描いた場合と、デプスキューイングで奥の稜線ほど輝度を落とした場合とで並べ、奥行きの伝わり方の違いを比べられる図
+立体は複数の面によってできていますが、面を塗らずに、物体の:Anki[稜線]（隣り合う面と面の境目）だけを線で描く表示が:Anki[ワイヤフレーム表示]です。計算が軽く、形状を確かめるには十分ですが、線画である以上、実物らしさはほとんどありません。
+
+### デプスキューイングによる奥行き
+
+視点から遠い稜線ほど:Anki[輝度]を落として描くことで、遠くのものが霞んで見える効果をもたらすことができます。
+
+:::Note
+[輝度](/color-theory/photometric-quantities/)は、面を見たときにどれくらい明るく見えるかを表す量です。ここでは、画面上で線が描かれた部分がどれくらい明るく光るかにあたります。
+:::
+
+この表示法を:Anki[デプスキューイング]といい、単なる透視図よりもさらに奥行きを表現することができます。:Anki[デプスキュー]とは、直訳すると「奥行きの手がかり」という言葉です。
+
+:::Action
+:Mark[奥行きの効き]によって、右図の遠くにある稜線がどこまで背景に沈むかを観察しよう
+奥行きの効きを`0`にすると、左右がまったく同じ図になることも確認してみよう
+:::
+
+<CanvasWrapper>
+  <DepthCueingDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+/** 霞ませる奥行きの半径（立体を包む球の半径） */
+const DEPTH_RADIUS = 1.45
+
+/** 線の太さ（ピクセル） */
+const LINE_WIDTH = 2.5
+
+/** デプスキューイングの効き。1 で立体のいちばん奥が背景に溶けきる */
+const STRENGTH = 0.9
+
+// 稜線 1 本を 1 本の線分として、両端の座標を並べたもの
+const positions = createEdgePositions()
+
+const geometry = new LineSegmentsGeometry()
+geometry.setPositions(positions)
+
+// 太さのある線。太さはピクセル単位なので canvas の大きさが要るが、
+// その受け渡しは LineSegments2 が描画の直前に引き受ける。
+// fog は既定で無効なので、霞ませる線では明示的に有効にする
+const material = new LineMaterial({ color: EDGE_COLOR, alphaToCoverage: true, fog: true })
+material.linewidth = LINE_WIDTH
+const wireframe = new LineSegments2(geometry, material)
+scene.add(wireframe)
+
+// 視点から遠い線ほど背景色へ近づける（デプスキューイング）。
+// 混ぜる割合は、シェーダがフラグメントごとに奥行きから計算する
+const fog = new Fog(BACKGROUND_COLOR, 0, 1)
+scene.fog = fog
+
+// 視点からの奥行きを測るための作業用ベクトル（毎フレーム使い回す）
+const forward = new Vector3()
+const point = new Vector3()
+
+// 霞ませる範囲を立体に合わせる。立体を包む球の手前側で霞み始め、
+// 効きが弱いほど、溶けきるまでの奥行きを遠くへ伸ばす。
+// 視線の向きが変わると奥行きも変わるので、視点が動くたびに計算し直す
+camera.getWorldDirection(forward)
+const centerDepth = point.copy(wireframe.position).sub(camera.position).dot(forward)
+fog.near = centerDepth - DEPTH_RADIUS
+fog.far = fog.near + (DEPTH_RADIUS * 2) / STRENGTH
+```
+
 :::
 
 線を引くだけの表示でも、輝度の付け方ひとつで奥行きの伝わり方は変わります。
 
-## :WithGroupTag[可視面表示]{group="{['CG']}"}
+### 見えない線の削除
 
 ワイヤフレーム表示では、手前の面に隠れているはずの稜線まで描かれるため、どちらが手前なのか判断できないことがあります。そこで、手前の面に隠れる稜線を取り除きます。この処理を:Anki[陰線消去]といいます。
 
-面を塗って表示する場合は、線ではなく面の単位で同じ判断が必要になります。手前の面に隠れて見えない面を取り除く処理が:Anki[隠面消去]で、見えている面だけを残して表示することを:Anki[可視面表示]といいます。
+### 可視面の表示
 
-[隠面消去](/cg/rendering/hidden-surface-removal-methods/)の方式は`1`つではなく、計算の重さや向いている場面がそれぞれ違います。
+面を塗って表示する場合は、線ではなく面に対して、陰線消去のような処理が必要になります。
 
-次の図は、同じ立体をワイヤフレーム表示・陰線消去のあと・可視面表示の順に並べたものです。
+手前の面に隠れて見えない面を取り除く処理を:Anki[隠面消去]といい、見えている面だけを残して表示することを:Anki[可視面表示]といいます。この[隠面消去](/cg/rendering/hidden-surface-removal-methods/)で使われる手法はさまざまあり、計算の重さや向き不向きが異なります。
 
-:::Todo
-直方体を組み合わせた立体を、すべての稜線を描いたワイヤフレーム表示、陰線消去で隠れる稜線を消した線画、隠面消去して面を塗った可視面表示の`3`段階で並べ、どの稜線と面が消えるかを比べられる図
+:::Action
+:Mark[消えた稜線を薄く残す]ことで、陰線消去がどの稜線を取り除いたのかを確認しよう
+ドラッグ操作で見える方向を変えると、取り除かれる稜線が変わることにも注目しよう
 :::
 
-隠面消去まで済ませてはじめて、それぞれの面がどれだけ明るく見えるかを決める段に進めます。
+<CanvasWrapper>
+  <HiddenLineAndVisibleSurfaceDemo />
+</CanvasWrapper>
 
-## :WithGroupTag[シェーディング]{group="{['CG']}"}
+:::Foldable{title="Three.jsによる実装概要"}
 
-面が見えているかどうかが決まっても、すべての面を同じ色で塗ったのでは、立体は平らな図形にしか見えません。面ごとの明るさを計算して塗り分ける処理を:Anki[シェーディング]といい、:Anki[陰付け]とも呼ばれます。
+```ts
+/** 線の太さ（ピクセル） */
+const LINE_WIDTH = 2.5
 
-[表面の明るさ](/cg/rendering/shading-purpose/)は、光源から届く光の強さと、その光に対する面の傾き、そして面の:Anki[反射率]で決まります。同じ白い壁でも、光を正面から受ける部分は明るく、斜めを向いた部分は暗くなります。この明暗の差が、立体の丸みや角を読み取る手がかりになります。
+// 面を三角形に分割して並べた座標と、稜線 1 本ずつの両端の座標
+const faceGeometry = new BufferGeometry()
+faceGeometry.setAttribute("position", new Float32BufferAttribute(createFacePositions(), 3))
 
-面が跳ね返す光の色は、当たっている光の成分と[反射率](/color-theory/light-components-and-reflectance/)の組み合わせで決まります。物体の色として目に入るのは、この跳ね返ったあとの光です。
+const edgeGeometry = new LineSegmentsGeometry()
+edgeGeometry.setPositions(createEdgePositions())
 
-## :WithGroupTag[影]{group="{['CG']}"}
+// 陰線消去した線画。
+// 面は色を書かずに深度だけを書き、稜線はその深度に対する深度テストで隠れる。
+// polygonOffset で面をわずかに奥へずらし、面の縁にある稜線が z ファイティングしないようにする
+const occluderMaterial = new MeshBasicMaterial({
+  colorWrite: false,
+  polygonOffset: true,
+  polygonOffsetFactor: 1,
+  polygonOffsetUnits: 1
+})
+const occluder = new Mesh(faceGeometry, occluderMaterial)
+occluder.renderOrder = 0
+scene.add(occluder)
 
-シェーディングが見ているのは、面が光にどう向いているかだけです。そのため、光源とのあいだに別の物体があっても、その面は明るいまま計算されてしまいます。
+const edgeMaterial = new LineMaterial({ color: EDGE_COLOR, alphaToCoverage: true })
+edgeMaterial.linewidth = LINE_WIDTH
+const edges = new LineSegments2(edgeGeometry, edgeMaterial)
+// 深度を書いた面より後に描く（描く順が入れ替わると稜線が隠れない）
+edges.renderOrder = 2
+scene.add(edges)
 
-光をさえぎる物体があるために暗くなる領域が:Anki[影]です。影が落ちていると、物体が床に接しているのか浮いているのか、光源がどの方向にあるのかまで読み取れるようになります。
+// 可視面表示。隠面消去は深度バッファが行う。
+// 陰影を付けないので、見えている面はすべて同じ色になる
+const surfaceMaterial = new MeshBasicMaterial({ color: SURFACE_COLOR })
+scene.add(new Mesh(faceGeometry, surfaceMaterial))
+```
 
-:::Note
-:Anki[陰]と影は、どちらも暗く見える部分を指しますが、できかたが違います。陰は面が光に対して傾いていることで暗くなる部分、影はほかの物体に光をさえぎられて暗くなる部分で、シェーディングが作るのは陰のほうです。
 :::
 
-影の輪郭がくっきりするかぼやけるかは光源の大きさで決まり、[平行光源・点光源による影](/cg/rendering/shadows-from-point-and-directional-lights/)では輪郭のはっきりした影ができます。
+### シェーディングによる陰影
 
-## :WithGroupTag[表面の滑らかさ]{group="{['CG']}"}
+面が見えているかどうかが決まっても、すべての面を同じ色で塗ったのでは、立体は平らな図形にしか見えません。そこで、面ごとの明るさを計算して塗り分けることで陰影を表現する:Anki[シェーディング]という処理を施します。
 
-陰と影がそろうと、物体がどこにどう置かれているかは伝わるようになります。ただし、球のような:Anki[曲面]を:Anki[ポリゴン]の集まりで近似していると、面ごとに明るさが一定になるため、境目が段差として見えてしまいます。
+表面の:Mark[明るさ]は、光源から届く光の:Anki[強さ]と、その光に対する面の:Anki[傾き]、そして面の:Anki[反射率]で決まります。同じ白い壁でも、光を正面から受ける部分は明るく、斜めを向いた部分は暗くなります。この明暗の差が、立体の丸みや角を読み取る手がかりになります。
 
-面の内部でも:Anki[濃淡]を連続的に変化させ、ポリゴンの境目を目立たなくする手法が:Anki[スムーズシェーディング]です。濃淡をどう補間するかによって、[スムーズシェーディングの手法](/cg/rendering/smooth-shading/)はいくつかに分かれます。
+面が跳ね返す光の色は、当たっている光の:Anki[成分]と物体の[反射率](/color-theory/light-components-and-reflectance/)の組み合わせで決まります。物体の色として目に入るのは、この跳ね返った後の光です。
 
-次の図は、ポリゴンごとに明るさを一定にした場合と、スムーズシェーディングを使った場合の違いです。
+### 影付け
 
-:::Todo
-ポリゴンで近似した球を、ポリゴンごとに明るさを一定にした場合と、スムーズシェーディングで濃淡を連続させた場合とで並べ、境目の段差が消えることを比べられる図
+シェーディングが考慮しているのは、面に当たる光の強さや方向だけです。そのため、光源との間に別の物体があって、物体に影が生じても、影を落とすはずの面は明るいまま計算されてしまいます。
+
+光を遮る物体があることで暗くなる領域が:Anki[影]です。影を表現することで、物体が床に接しているのか浮いているのか、光源がどの方向にあるのかまで読み取れるようになります。
+
+影の輪郭がどれくらいぼやけるかは光源の:Anki[大きさ]で決まり、[平行光源・点光源による影](/cg/rendering/shadows-from-point-and-directional-lights/)では、輪郭のはっきりした影ができます。
+
+:::Action
+:Mark[影付け]を行った右図では、階段の段差による影が描画されていることに注目しよう
 :::
 
-ポリゴンの数を増やさなくても、濃淡を連続させるだけで表面の滑らかさは表せます。
+<CanvasWrapper>
+  <ShadingAndShadowDemo />
+</CanvasWrapper>
 
-## :WithGroupTag[テクスチャ]{group="{['CG']}"}
+:::Foldable{title="Three.jsによる実装概要"}
 
-表面が滑らかに見えるようになっても、木目やタイルの目地といった模様は、形状の情報からは出てきません。表面に貼り付ける模様の画像を:Anki[テクスチャ]といい、これを形状の表面に対応づけて貼る手法を:Anki[テクスチャマッピング]といいます。
+```ts
+// 影を落とすには renderer 側で影の描画を有効にする
+renderer.shadowMap.enabled = true
 
-同じ考え方は凹凸にも使えます。面の向きを画像にしたがってずらし、平らな面に凹凸があるように見せる手法が:Anki[バンプマッピング]です。形状そのものは平らなままなので、輪郭に凹凸は現れません。
+// 面を三角形に分割して並べ、面ごとに独立した頂点から法線を求める
+const geometry = new BufferGeometry()
+geometry.setAttribute("position", new Float32BufferAttribute(createFacePositions(), 3))
+geometry.computeVertexNormals()
 
-[テクスチャマッピング](/cg/rendering/texture-mapping/)も[バンプマッピング](/cg/rendering/bump-mapping/)も、ポリゴンを増やさずに表面の情報を足せるため、計算量を抑えたまま見え方を大きく変えられます。
+// 面の明るさは、光の強さ・面の傾き・反射率だけで決まる（鏡面反射は考えない）
+const material = new MeshLambertMaterial({ color: SURFACE_COLOR })
+const solid = new Mesh(geometry, material)
+// 影を落とす側・影を受ける側の両方に指定する。同じ立体に両方を指定すると、
+// 段差が落とした影を、その下の段の面が受ける。指定しなければ陰影だけの表示になる
+solid.castShadow = true
+solid.receiveShadow = true
+scene.add(solid)
 
-## :WithGroupTag[材質の表現]{group="{['CG']}"}
+// 平行光源。影用のカメラは立体のまわりだけに絞り、輪郭のはっきりした影を得る
+const light = new DirectionalLight(LIGHT_COLOR, 2.5)
+light.castShadow = true
+light.shadow.mapSize.set(2048, 2048)
+light.shadow.camera.left = -4
+light.shadow.camera.right = 4
+light.shadow.camera.top = 4
+light.shadow.camera.bottom = -4
+light.shadow.camera.near = 0.5
+light.shadow.camera.far = 25
+// 写す範囲は、変えたあとに投影行列を作り直さないと反映されない
+light.shadow.camera.updateProjectionMatrix()
+// 面と影の境目に縞が出ないよう、面の向きに応じて影の判定をわずかにずらす
+light.shadow.normalBias = 0.02
+scene.add(light)
 
-模様や凹凸を足しても、金属の照り返しやガラスの透明感までは表せません。こうした違いは、面が光をどれだけ跳ね返し、どれだけ通すかという:Anki[反射特性]から生まれます。
+// 光源の向きは方位角と仰角から決める（平行光源なので距離は見え方に関わらない）
+const azimuth = MathUtils.degToRad(80)
+const elevation = MathUtils.degToRad(55)
+light.position.set(
+  LIGHT_DISTANCE * Math.cos(elevation) * Math.sin(azimuth),
+  LIGHT_DISTANCE * Math.sin(elevation),
+  LIGHT_DISTANCE * Math.cos(elevation) * Math.cos(azimuth)
+)
 
-よく磨かれた金属や水面のように、決まった向きへ強く反射する面には、光源だけでなく周囲の風景まで写り込みます。この:Anki[映り込み]があるかどうかで、同じ形状でも材質の印象は大きく変わります。
+// 光の届かない面も真っ暗にはならない。上を向いた面ほど明るい環境光を足すことで、
+// 影に入った段の面と、光を背にした段差の面が同じ明るさに溶けるのを防ぐ
+scene.add(new HemisphereLight(LIGHT_COLOR, GROUND_COLOR, 0.55))
+```
 
-ガラスや水のように光を通す物体では、面で跳ね返る光と、内部へ入っていく光に分かれます。内部へ入った光は:Anki[透過]し、境目で進む向きが変わる:Anki[屈折]を起こすため、向こう側の景色はゆがんで見えます。[屈折](/cg/rendering/reflection-transmission-refraction/)の度合いは材質ごとに決まっているため、ガラスと水では同じ厚みでもゆがみ方が違います。
+:::
 
-## :WithGroupTag[光の物理的性質]{group="{['CG']}"}
+### 細部にわたる形状表示
 
-表面での反射や透過を丁寧に計算しても、光源から直接届く光だけを追っていたのでは、実際の見え方には届きません。リアリティをさらに高める要素は、:Anki[光の物理的性質]の側にあります。光がほかの物体で跳ね返って回り込むこと、大気の中を進むあいだに散らされること、そして波として振る舞うことが、見え方に効いてきます。
+細かい部分が複雑な形状を表現するには、[曲面](/cg/modeling/curve-surface-equations/)として形状を計算することもあります。
+
+球のような滑らかな:Anki[曲面]は、小さな[ポリゴン](/cg/modeling/polygon-surface/)に分割して近似計算します。しかし、その境目が段差として見えてしまうことも多くあります。
+
+そこで、ポリゴンの内部でも:Anki[濃淡]を連続的に変化させ、ポリゴンの境目を目立たなくする手法が:Anki[スムーズシェーディング]です。
+濃淡をどう補間するかによって、さまざまな[スムーズシェーディングの手法](/cg/rendering/smooth-shading/)が開発されいます。
+
+:::Action
+段差が目立つ左図では、各ポリゴンが単色で塗られていることを確認しよう
+:::
+
+<CanvasWrapper>
+  <SmoothShadingDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+/** 球の半径 */
+const RADIUS = 1.15
+
+// ポリゴンで近似した球。分割数を減らすほど 1 枚 1 枚のポリゴンが大きくなる。
+// 縦方向は横方向の半分にして、ポリゴンの形が細長くなりすぎないようにする
+const geometry = new SphereGeometry(RADIUS, SEGMENTS, Math.max(2, Math.round(SEGMENTS / 2)))
+
+// ポリゴンごとに明るさを一定にする。面の境目が段差として見える
+const flatMaterial = new MeshLambertMaterial({ color: SURFACE_COLOR, flatShading: true })
+const flat = new Mesh(geometry, flatMaterial)
+flat.position.x = -OFFSET_X
+scene.add(flat)
+
+// 頂点の法線を面の内部で補間する（既定の動き）。濃淡が連続する
+const smoothMaterial = new MeshLambertMaterial({ color: SURFACE_COLOR })
+const smooth = new Mesh(geometry, smoothMaterial)
+smooth.position.x = OFFSET_X
+scene.add(smooth)
+
+// 光源の向きは主題ではないので固定する。左右どちらの球にも同じ向きから当たる
+const light = new DirectionalLight(LIGHT_COLOR, 2.5)
+light.position.set(4, 5, 3)
+scene.add(light)
+
+scene.add(new AmbientLight(LIGHT_COLOR, 0.4))
+```
+
+:::
+
+分割するポリゴンの数を増やすほどカクカクした形状になりますが、スムーズシェーディングを用いて濃淡を連続させるだけで、表面の滑らかさを維持することができます。
+
+## :WithGroupTag[物体表面のリアリティ]{group="{['CG']}"}
+
+3Dモデルの描き方を工夫するだけで、物体の形状自体にリアリティを持たせることができます。しかし、物体表面の材質による見え方の違いを表現するには、さらに工夫が必要です。
+
+### テクスチャの利用
+
+木目やタイルの目地といった模様は、形状の情報だけでは表せません。また、その模様を精密に描こうとすると、レンダリングでの計算がとても重く、複雑な実装になってしまいます。
+
+そこで、表面の模様については事前に画像を用意しておき、その画像を形状の表面に貼りつける手法がよく用いられます。表面に貼り付ける模様の画像を:Anki[テクスチャ]と呼び、テクスチャを形状の表面に対応づけて貼ることを[テクスチャマッピング](/cg/rendering/texture-mapping/)といいます。
+
+テクスチャマッピングでは、表面が滑らかな物体に模様をつけるだけでなく、表面の凹凸を表現することもできます。面の向きを画像内の座標によってずらし、平らな面に凹凸があるように見せる手法が[バンプマッピング](/cg/rendering/bump-mapping/)です。形状そのものは平らなままなので、輪郭に凹凸は現れませんが、擬似的に凹凸を表現できます。
+
+さまざまなテクスチャマッピングの手法を使うと、ポリゴンを増やさずに表面の質感の情報を加えられるため、計算量を抑えたまま見え方を大きく変えられます。
+
+## :WithGroupTag[光の進む方向]{group="{['CG']}"}
+
+模様や凹凸の表現を加えても、:Mark[金属]の照り返しや:Mark[ガラス]の透明感までは表現できません。こうした違いは、物体の面が光をどれだけ跳ね返し、どれだけ通すかという、物体の:Anki[反射特性]から生まれます。
+
+### 反射と透過
+
+よく磨かれた金属や水面のように、決まった向きへ強く[反射](/color-theory/reflection-and-refraction/)する面には、光源だけでなく周囲の風景まで写り込みます。この:Anki[映り込み]があるかどうかで、同じ形状でも材質の印象は大きく変わります。
+
+また、ガラスや水のように光を通す物体では、物体に当たった光が、:Anki[反射]する光（面で跳ね返る光）と:Anki[透過]する光（内部へ入っていく光）の`2`種類に分かれます。
+
+物体の内部へ入った:Anki[透過光]は、物体の境目で進む向きが変わる[屈折](/cg/rendering/reflection-transmission-refraction/)を起こすため、物体の向こう側は歪んで見えます。屈折の度合いも材質ごとに決まっているため、ガラスと水では同じ厚みでも歪み方が異なります。
+
+このように、写実的なレンダリングでは、[反射・透過・屈折の表現](/cg/rendering/reflection-transmission-refraction/)も重要となります。
 
 ### 間接光
 
-照明が直接当たっていない場所も、真っ暗にはなりません。壁や床で跳ね返った:Anki[反射光]が回り込んで、その場所を照らしているためです。
+光の反射や透過を計算しても、光源から直接届く光だけを追っていたのでは、リアリティとしては不十分な場合もあります。
 
-光源から直接届く光に対して、ほかの物体で反射してから届く光を:Anki[間接光]といいます。間接光まで計算に入れると、影の中がうっすらと明るくなり、赤い壁のそばに置いた白い物体がほんのり赤みを帯びる見え方まで再現できます。
+たとえば、照明が直接当たっていない場所も、真っ暗に見えることはありません。壁や床で跳ね返った:Anki[反射光]が回り込んで、その場所を照らしているためです。
+
+光源から直接届く光に対して、他の物体で反射してから届く光を:Anki[間接光]といいます。間接光まで計算に入れると、影の中がうっすらと明るくなり、たとえば赤い壁のそばに置いた白い物体がほんのり赤みを帯びる見え方まで再現できます。
+
+## :WithGroupTag[光の物理的性質]{group="{['CG']}"}
+
+光の波としての振る舞いも、さらにリアリティを向上させる要素となります。
+たとえば、光が他の物体を通り抜けきれずに回り込む[干渉](/color-theory/interference-and-diffraction/)や、光が大気の中を進む間に散らされる[散乱](/color-theory/light-scattering/)などです。
 
 ### 散乱と減衰
 
-遠くの山が白っぽく霞んで見えるのは、あいだにある:Anki[大気]のためです。空気中の分子や細かな粒子が光を:Anki[散乱]させ、遠くから届く光ほど途中で:Anki[減衰]します。
+遠くの山が白っぽく霞んで見えるのは、人間の眼と山との間にある:Anki[大気]が関係しています。
+大気中では、空気中の分子や細かな粒子が光を:Anki[散乱]させ、遠くから届く光ほど途中で:Anki[減衰]してしまいます。
 
-[散乱と減衰](/cg/rendering/scattering-and-attenuation/)を計算に入れると、霧や霞に包まれた風景、青く見える空、光を透かす雲まで扱えるようになります。ワイヤフレーム表示で使うデプスキューイングは、この見え方を線の輝度だけで簡略に真似たものといえます。
+[散乱・減衰の表現](/cg/rendering/scattering-and-attenuation/)についての処理を加えると、霧や霞に包まれた風景、青く見える空、光を透かす雲まで扱えるようになります。ワイヤフレーム表示で使われていた:Anki[デプスキューイング]は、この見え方を線の輝度だけで近似したものともいえます。
 
 ### 分散・干渉・回折
 
-:Anki[プリズム]に白色光を通すと、光が色ごとに分かれて出てきます。屈折の度合いが波長によって違うために起こる現象で、これを:Anki[分散]といいます。
+[プリズム](/color-theory/light-components-and-reflectance/)に白色光を通すと、光の波長ごとの色を分けて観察することができます。これは、:Anki[屈折]の度合いが波長によって違うために起こる現象で、光の:Anki[分散]と呼ばれます。
 
-:Anki[シャボン玉]の膜や、コンパクトディスクの記録面に浮かぶ虹色は、また別の理由で生まれます。薄い膜の表と裏で反射した光が重なり合う:Anki[干渉]や、細かい溝で光の進む向きが曲げられる:Anki[回折]が、見る角度によって色を変えているためです。
+[シャボン玉の膜や、CDの記録面に浮かぶ虹色](/color-theory/interference-and-diffraction/)は、また別の理由で生まれます。薄い膜の表と裏で反射した光が重なり合う:Anki[干渉]や、細かい溝で光の進む向きが曲げられる:Anki[回折]が、見る角度によって色を変えているためです。
 
-[分散](/color-theory/reflection-and-refraction/)も[干渉も回折](/color-theory/interference-and-diffraction/)も、光を`1`本の線として追うだけでは再現できません。写実的表現をどこまで進めるかは、こうした現象まで計算に含めるかどうかの選択でもあり、要素を積み上げるほど実物に近づく一方で、計算の量もそのぶん増えていきます。
+このように、分散・干渉・回折も、光を`1`本の線として追うだけでは再現できません。
+
+どこまでのリアリティを求めるかによって、こうした現象まで計算に含めるかどうかを判断する必要があります。リアリティに関わる要素を積み上げるほど実物に近づく一方で、計算の量もその分増えていきます。適切なモデリング手法とレンダリング手法を組み合わせて、処理を軽量化することも重要です。

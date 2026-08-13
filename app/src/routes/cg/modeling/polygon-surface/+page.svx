@@ -1,6 +1,6 @@
 ---
 layout: guide-content
-title: レンダリングにおける処理 # CG 4-1-4
+title: ポリゴン曲面 # CG 3-5-1
 
 group: ["CG"]
 
