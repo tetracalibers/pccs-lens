@@ -3,7 +3,6 @@ import {
   CanvasTexture,
   DirectionalLight,
   Float32BufferAttribute,
-  Group,
   HemisphereLight,
   MathUtils,
   Mesh,
@@ -89,7 +88,10 @@ const LIGHT_DISTANCE = 10
 /** 左右に並べる 2 体の間隔（原点からの距離） */
 const OFFSET_X = 1.9
 
-/** 段の面と段差の両方が見えるよう、階段が手前左へ下る向きに置く */
+/**
+ * 段の面と段差の両方が見えるよう、階段が手前左へ下る向きに置く。
+ * 左右とも同じ向きにする。光源はシーンに対して置くので、向きが同じなら光の当たり方も揃う。
+ */
 const YAW = Math.PI * 0.22
 
 const LABEL_COLOR = "#e8e8ee"
@@ -165,7 +167,7 @@ const createLabel = (text: string, height: number) => {
   return { sprite, texture, material }
 }
 
-export const createShadingAndShadowScene = ({ scene, camera, renderer, params }: SceneContext) => {
+export const createShadingAndShadowScene = ({ scene, renderer, params }: SceneContext) => {
   // 影を落とすには renderer 側で影の描画を有効にする（このデモに固有かつ必須の設定）
   renderer.shadowMap.enabled = true
 
@@ -175,20 +177,18 @@ export const createShadingAndShadowScene = ({ scene, camera, renderer, params }:
 
   // 左：シェーディングのみ。影を落とさず、影も受けない
   const shaded = new Mesh(solidGeometry, solidMaterial)
-  const shadedGroup = new Group()
-  shadedGroup.add(shaded)
-  shadedGroup.position.x = -OFFSET_X
-  scene.add(shadedGroup)
+  shaded.position.x = -OFFSET_X
+  shaded.rotation.y = YAW
+  scene.add(shaded)
 
   // 右：影付け。同じ立体に影を落とす側と受ける側の両方を指定すると、
   // 段差が落とした影を、その下の段の面が受ける
   const shadowed = new Mesh(solidGeometry, solidMaterial)
+  shadowed.position.x = OFFSET_X
+  shadowed.rotation.y = YAW
   shadowed.castShadow = true
   shadowed.receiveShadow = true
-  const shadowedGroup = new Group()
-  shadowedGroup.add(shadowed)
-  shadowedGroup.position.x = OFFSET_X
-  scene.add(shadowedGroup)
+  scene.add(shadowed)
 
   // 平行光源。影用のカメラは立体のまわりだけに絞り、輪郭のはっきりした影を得る
   const light = new DirectionalLight(LIGHT_COLOR, 2.5)
@@ -222,18 +222,6 @@ export const createShadingAndShadowScene = ({ scene, camera, renderer, params }:
     update: () => {
       // 光源の位置が変われば、影用のカメラは three が描画の直前に追従させる
       setLightDirection(light, params.azimuth, params.elevation)
-
-      // 左右は原点から離れた位置にあるため、透視投影では視点との角度が食い違い、
-      // 同じ立体でも違う向きに見えてしまう。その差のぶんだけ各立体を回して向きを揃える。
-      // 視点の回り込み（原点から見た方位）は打ち消さないので、ドラッグでの回転は効いたままになる
-      const centerAzimuth = Math.atan2(camera.position.x, camera.position.z)
-      for (const group of [shadedGroup, shadowedGroup]) {
-        const azimuth = Math.atan2(
-          camera.position.x - group.position.x,
-          camera.position.z - group.position.z
-        )
-        group.rotation.y = YAW + azimuth - centerAzimuth
-      }
     },
     dispose: () => {
       solidGeometry.dispose()

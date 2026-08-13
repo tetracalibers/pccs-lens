@@ -7,9 +7,10 @@
   const params: ShadingAndShadowParams = { azimuth: 80, elevation: 55 }
 
   // 左右に離して置いた立体は、画角が広いほど視点から見た角度が開き、画面の端ほど台形に歪む。
-  // 引いた位置から狭い画角で写して、左右の歪み方の差を抑える。
+  // ここでは左右を同じ向きに置いて光の当たり方まで揃えているので、その歪みを立体の向きで
+  // 補正することができない。かわりに大きく引いた位置から狭い画角で写して、歪み自体を抑える。
   // 段の上を向いた面に落ちる影を読み取れるよう、他のデモより見下ろす角度を強くしている
-  const CAMERA: CameraOptions = { fov: 22, position: [0, 7.7, 11.1] }
+  const CAMERA: CameraOptions = { fov: 11, position: [0, 15.4, 22] }
 </script>
 
 <ThreeDemoCanvas
