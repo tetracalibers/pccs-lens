@@ -212,9 +212,9 @@ scene.add(new Mesh(faceGeometry, surfaceMaterial))
 次の点に着目して、デモを観察してみよう
 
 - 光源の方位と高さを動かすことで、面ごとの明るさがどう入れ替わるか
-- 左は影が無いため、立体が床に接しているのか浮いているのか読み取れないこと
-- 右は影の伸びる向きと長さから、光源がどちらにあるか読み取れること
-- 左は切り欠きの奥まで明るいままだが、右はそこにも影が落ちること
+- 段の上を向いた3つの面は向きが同じなので、左ではどれも同じ明るさになること
+- 右では、そのうち段差に遮られた部分だけが暗くなること
+- 光源を低くするほど、暗くなる部分がどこまで広がるか
 :::
 
 <CanvasWrapper>
@@ -235,26 +235,20 @@ geometry.computeVertexNormals()
 // 面の明るさは、光の強さ・面の傾き・反射率だけで決まる（鏡面反射は考えない）
 const material = new MeshLambertMaterial({ color: SURFACE_COLOR })
 const solid = new Mesh(geometry, material)
-// 影を落とす側・影を受ける側の両方に指定する。指定しなければ陰影だけの表示になる
+// 影を落とす側・影を受ける側の両方に指定する。同じ立体に両方を指定すると、
+// 段差が落とした影を、その下の段の面が受ける。指定しなければ陰影だけの表示になる
 solid.castShadow = true
 solid.receiveShadow = true
 scene.add(solid)
-
-// 影の落ちる先。立体の底面と同じ高さに敷く
-const floor = new Mesh(new PlaneGeometry(20, 14), new MeshLambertMaterial({ color: FLOOR_COLOR }))
-floor.rotation.x = -Math.PI / 2
-floor.position.y = FLOOR_Y
-floor.receiveShadow = true
-scene.add(floor)
 
 // 平行光源。影用のカメラは立体のまわりだけに絞り、輪郭のはっきりした影を得る
 const light = new DirectionalLight(LIGHT_COLOR, 2.5)
 light.castShadow = true
 light.shadow.mapSize.set(2048, 2048)
-light.shadow.camera.left = -7
-light.shadow.camera.right = 7
-light.shadow.camera.top = 7
-light.shadow.camera.bottom = -7
+light.shadow.camera.left = -4
+light.shadow.camera.right = 4
+light.shadow.camera.top = 4
+light.shadow.camera.bottom = -4
 light.shadow.camera.near = 0.5
 light.shadow.camera.far = 25
 // 写す範囲は、変えたあとに投影行列を作り直さないと反映されない
@@ -264,16 +258,17 @@ light.shadow.normalBias = 0.02
 scene.add(light)
 
 // 光源の向きは方位角と仰角から決める（平行光源なので距離は見え方に関わらない）
-const azimuth = MathUtils.degToRad(35)
-const elevation = MathUtils.degToRad(45)
+const azimuth = MathUtils.degToRad(80)
+const elevation = MathUtils.degToRad(55)
 light.position.set(
   LIGHT_DISTANCE * Math.cos(elevation) * Math.sin(azimuth),
   LIGHT_DISTANCE * Math.sin(elevation),
   LIGHT_DISTANCE * Math.cos(elevation) * Math.cos(azimuth)
 )
 
-// 光の届かない場所も真っ暗にはならないので、弱い環境光を足す
-scene.add(new AmbientLight(LIGHT_COLOR, 0.4))
+// 光の届かない面も真っ暗にはならない。上を向いた面ほど明るい環境光を足すことで、
+// 影に入った段の面と、光を背にした段差の面が同じ明るさに溶けるのを防ぐ
+scene.add(new HemisphereLight(LIGHT_COLOR, GROUND_COLOR, 0.55))
 ```
 
 :::

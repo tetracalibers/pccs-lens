@@ -1,15 +1,14 @@
 import {
-  AmbientLight,
   BufferGeometry,
   CanvasTexture,
   DirectionalLight,
   Float32BufferAttribute,
   Group,
+  HemisphereLight,
   MathUtils,
   Mesh,
   MeshLambertMaterial,
   PerspectiveCamera,
-  PlaneGeometry,
   Scene,
   Sprite,
   SpriteMaterial,
@@ -34,63 +33,64 @@ type SceneContext = {
 }
 
 /**
- * 一角を欠いた直方体（L字ブロック）の頂点。さまざまな形状モデルのデモと同じ形。
- * 1 辺 2 の立方体から、1 辺 1 の角（x・y・z がいずれも正の側）を取り除いた形。
+ * 立体の断面（xy 平面）の輪郭。外（+z）から見て反時計回りに並べる。
+ * 1 辺 2 の立方体を、幅・高さとも 2/3 の段で 3 段に切り下げた階段の形。
+ * 段の上を向いた 3 つの面は向きが同じなので、シェーディングだけならすべて同じ明るさになる。
  */
+const PROFILE: [number, number][] = [
+  [-1, -1], // 0
+  [1, -1], // 1
+  [1, 1], // 2（最上段の上端）
+  [1 / 3, 1], // 3
+  [1 / 3, 1 / 3], // 4
+  [-1 / 3, 1 / 3], // 5
+  [-1 / 3, -1 / 3], // 6
+  [-1, -1 / 3] // 7
+]
+
+/** 断面を押し出す奥行き。断面を z = ±DEPTH に置く */
+const DEPTH = 1
+
+/** 断面の各点を、手前（0〜7）・奥（8〜15）の順に並べた頂点 */
 const VERTICES: [number, number, number][] = [
-  // 立方体の角のうち、取り除いた角 (1, 1, 1) を除いた 7 つ
-  [-1, -1, -1], // 0
-  [1, -1, -1], // 1
-  [1, 1, -1], // 2
-  [-1, 1, -1], // 3
-  [-1, -1, 1], // 4
-  [1, -1, 1], // 5
-  [-1, 1, 1], // 6
-  // 角を取り除いてできた 7 つ
-  [0, 0, 0], // 7（へこみの奥）
-  [1, 0, 0], // 8
-  [0, 1, 0], // 9
-  [0, 0, 1], // 10
-  [1, 1, 0], // 11
-  [1, 0, 1], // 12
-  [0, 1, 1] // 13
+  ...PROFILE.map(([x, y]): [number, number, number] => [x, y, DEPTH]),
+  ...PROFILE.map(([x, y]): [number, number, number] => [x, y, -DEPTH])
 ]
 
 /**
  * 面。外から見て反時計回りになる順に、面を囲む頂点の番号を並べる。
- * L 字の面は、切り欠きの反対側の角から始める（先頭の頂点から扇状に三角形へ分割するため）。
+ * 断面は凹んだ多角形なので、先頭の頂点から扇状に分割しても外へはみ出さない
+ * 角（最上段の真下）から始める。
  */
 const FACES: number[][] = [
-  [0, 3, 2, 1], // z = -1
-  [0, 1, 5, 4], // y = -1
-  [0, 4, 6, 3], // x = -1
-  [1, 2, 11, 8, 12, 5], // x = 1（L 字）
-  [4, 5, 12, 10, 13, 6], // z = 1（L 字）
-  [7, 9, 13, 10], // 切り欠きの壁 x = 0
-  [7, 10, 12, 8], // 切り欠きの壁 y = 0
-  [7, 8, 11, 9], // 切り欠きの壁 z = 0
-  [3, 6, 13, 9, 11, 2] // y = 1（L 字）
+  [1, 2, 3, 4, 5, 6, 7, 0], // 手前の断面 z = 1
+  [9, 8, 15, 14, 13, 12, 11, 10], // 奥の断面 z = -1
+  [1, 0, 8, 9], // 底面 y = -1
+  [2, 1, 9, 10], // 右の側面 x = 1
+  [3, 2, 10, 11], // 1 段目の上を向いた面 y = 1
+  [4, 3, 11, 12], // 段差 x = 1/3
+  [5, 4, 12, 13], // 2 段目の上を向いた面 y = 1/3
+  [6, 5, 13, 14], // 段差 x = -1/3
+  [7, 6, 14, 15], // 3 段目の上を向いた面 y = -1/3
+  [0, 7, 15, 8] // 左の側面 x = -1
 ]
 
 /** 立体の色。陰影の濃淡が読み取れる明るさにする */
 const SURFACE_COLOR = "#9db4d0"
 
-/** 床の色。影が落ちたときの明暗差が出るよう、背景より明るい無彩色にする */
-const FLOOR_COLOR = "#565e6c"
-
 const LIGHT_COLOR = "#ffffff"
+
+/** 環境光のうち、下から回り込む分の色。背景に近い暗さにする */
+const GROUND_COLOR = "#2a2c31"
 
 /** 光源までの距離。平行光源なので向きだけが意味を持つ */
 const LIGHT_DISTANCE = 10
 
-/** 床の高さ。立体の底面に合わせる */
-const FLOOR_Y = -1
-
 /** 左右に並べる 2 体の間隔（原点からの距離） */
 const OFFSET_X = 1.9
 
-/** 立体が 3 次元の形として読めるよう、正面から少しだけ回した向きで置く */
-const YAW = Math.PI * 0.13
+/** 段の面と段差の両方が見えるよう、階段が手前左へ下る向きに置く */
+const YAW = Math.PI * 0.22
 
 const LABEL_COLOR = "#e8e8ee"
 const LABEL_HEIGHT = 0.26
@@ -173,14 +173,15 @@ export const createShadingAndShadowScene = ({ scene, camera, renderer, params }:
   // 面の明るさは、光の強さ・面の傾き・反射率だけで決まる（鏡面反射は考えない）
   const solidMaterial = new MeshLambertMaterial({ color: SURFACE_COLOR })
 
-  // 左：シェーディングのみ。影を落とさず、自分自身にも影を受けない
+  // 左：シェーディングのみ。影を落とさず、影も受けない
   const shaded = new Mesh(solidGeometry, solidMaterial)
   const shadedGroup = new Group()
   shadedGroup.add(shaded)
   shadedGroup.position.x = -OFFSET_X
   scene.add(shadedGroup)
 
-  // 右：影付け。床と自分自身に影が落ちる
+  // 右：影付け。同じ立体に影を落とす側と受ける側の両方を指定すると、
+  // 段差が落とした影を、その下の段の面が受ける
   const shadowed = new Mesh(solidGeometry, solidMaterial)
   shadowed.castShadow = true
   shadowed.receiveShadow = true
@@ -189,23 +190,14 @@ export const createShadingAndShadowScene = ({ scene, camera, renderer, params }:
   shadowedGroup.position.x = OFFSET_X
   scene.add(shadowedGroup)
 
-  // 影の落ちる先。左右どちらの立体も同じ床の上に置く
-  const floorGeometry = new PlaneGeometry(20, 14)
-  const floorMaterial = new MeshLambertMaterial({ color: FLOOR_COLOR })
-  const floor = new Mesh(floorGeometry, floorMaterial)
-  floor.rotation.x = -Math.PI / 2
-  floor.position.y = FLOOR_Y
-  floor.receiveShadow = true
-  scene.add(floor)
-
   // 平行光源。影用のカメラは立体のまわりだけに絞り、輪郭のはっきりした影を得る
   const light = new DirectionalLight(LIGHT_COLOR, 2.5)
   light.castShadow = true
   light.shadow.mapSize.set(2048, 2048)
-  light.shadow.camera.left = -7
-  light.shadow.camera.right = 7
-  light.shadow.camera.top = 7
-  light.shadow.camera.bottom = -7
+  light.shadow.camera.left = -4
+  light.shadow.camera.right = 4
+  light.shadow.camera.top = 4
+  light.shadow.camera.bottom = -4
   light.shadow.camera.near = 0.5
   light.shadow.camera.far = 25
   // 影用のカメラの写す範囲は、変えたあとに投影行列を作り直さないと反映されない
@@ -214,7 +206,9 @@ export const createShadingAndShadowScene = ({ scene, camera, renderer, params }:
   light.shadow.normalBias = 0.02
   scene.add(light)
 
-  scene.add(new AmbientLight(LIGHT_COLOR, 0.4))
+  // 光の届かない面も真っ暗にはならない。上を向いた面ほど明るい環境光を足すことで、
+  // 影に入った段の面と、光を背にした段差の面が同じ明るさに溶けるのを防ぐ
+  scene.add(new HemisphereLight(LIGHT_COLOR, GROUND_COLOR, 0.55))
 
   const labels = [
     createLabel("シェーディングのみ", LABEL_HEIGHT),
@@ -244,8 +238,6 @@ export const createShadingAndShadowScene = ({ scene, camera, renderer, params }:
     dispose: () => {
       solidGeometry.dispose()
       solidMaterial.dispose()
-      floorGeometry.dispose()
-      floorMaterial.dispose()
       labels.forEach(({ texture, material }) => {
         texture.dispose()
         material.dispose()
