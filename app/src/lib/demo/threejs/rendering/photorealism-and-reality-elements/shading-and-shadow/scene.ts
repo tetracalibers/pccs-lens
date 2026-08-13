@@ -96,8 +96,8 @@ const YAW = Math.PI * 0.22
 
 const LABEL_COLOR = "#e8e8ee"
 const LABEL_HEIGHT = 0.26
-/** ラベルの高さ。立体の上端（y = 1）から間を空けて置く */
-const LABEL_Y = 1.95
+/** ラベルの高さ。立体の上端（y = 1）から十分に間を空けて置く */
+const LABEL_Y = 2.3
 const LABEL_TEXTURE_HEIGHT = 128
 const LABEL_TEXTURE_PADDING = 12
 const LABEL_FONT = "bold 92px sans-serif"
