@@ -12,7 +12,7 @@
 </script>
 
 <ThreeDemoCanvas
-  ariaLabel="一角を欠いた直方体のワイヤフレーム表示を、すべての稜線を同じ輝度で描いたものと、視点から遠い稜線ほど輝度を落としたもので並べた3次元表示（ドラッグで回転）"
+  ariaLabel="3段の階段状の立体のワイヤフレーム表示を、すべての稜線を同じ輝度で描いたものと、視点から遠い稜線ほど輝度を落としたもので並べた3次元表示（ドラッグで回転）"
   createScene={createDepthCueingScene}
   {params}
   aspectRatio="16 / 9"

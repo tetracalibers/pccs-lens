@@ -15,7 +15,7 @@
 </script>
 
 <ThreeDemoCanvas
-  ariaLabel="一角を欠いた直方体を、手前の面に隠れる稜線を消した線画と、見えている面だけを1色で塗った可視面表示で並べた3次元表示（ドラッグで回転）"
+  ariaLabel="3段の階段状の立体を、手前の面に隠れる稜線を消した線画と、見えている面だけを1色で塗った可視面表示で並べた3次元表示（ドラッグで回転）"
   createScene={createHiddenLineAndVisibleSurfaceScene}
   {params}
   aspectRatio="16 / 9"
