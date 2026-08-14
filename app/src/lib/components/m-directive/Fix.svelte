@@ -35,7 +35,7 @@
     padding: 0.5rem 0.8rem;
     padding-inline-start: calc(0.8rem + 1.25rem);
     border-radius: 0 2px 2px 0;
-    background: light-dark(#fff8c5, rgb(187 128 9 / 0.15));
+    background: light-dark(#fff8c5, rgb(210 153 34 / 0.24));
     font-size: 0.8rem;
     line-height: 1.7;
   }
