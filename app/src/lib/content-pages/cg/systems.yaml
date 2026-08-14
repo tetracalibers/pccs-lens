@@ -8,8 +8,7 @@ sections:
         group: ["CG"]
       - title: グラフィックス装置 # CG 8-1-2 [4],[5],[6]
         group: ["CG"]
-      - title: グラフィックスAPI # CG 8-2-3
-        group: ["CG"]
+      - slug: graphics-api
       - title: CGアプリケーションソフトウェア # CG 8-2-4
         group: ["CG"]
       - title: 3次元モデル記述言語・フォーマット # CG 8-2-5
