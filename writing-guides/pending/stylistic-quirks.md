@@ -99,3 +99,6 @@
 - SQ-P085｜単調な依存関係を「〜ほど…なります」の比較構文で述べる：3記事で確認できるが、量の共変を表す「〜ほど」は日本語の説明文で広く使われる基本構文で著者固有性を主張できない（二項の対比・対句は本体 SQ-063・SQ-064）｜支持: /color-theory/interference-and-diffraction, /color-theory/light-scattering, /cg/transformation/parallel-projection-types
 - SQ-P086｜デモのUIラベル・選択肢名をかぎ括弧「」で引用し、画面上の文字列そのままで本文から参照する：2記事各1〜2箇所で、デモを持つ記事に限られる。処理・概念の動詞句化の用法は本体 SQ-048 が担当｜支持: /color-theory/interference-and-diffraction, /cg/transformation/parallel-projection-types
 - SQ-P087｜図・デモ中の要素を丸括弧で見た目（破線・白い円）に言い換えて本文から指し示す：1記事2箇所のみで、用語と平易な説明を対にする括弧グロス（本体 SQ-047）との切り分けも用例が足りない｜支持: /color-theory/reflection-and-refraction
+- SQ-P088｜因果を名詞化して「〜ことから」（性質からの帰結）と「〜ことで」（条件成立の契機）で節をつなぎ、「〜ため（に）」と分担させる：2記事で分担が確認できるが、名詞化した節による接続は日本語の説明文で広く使われる基本構文で、本体 SQ-026 の「〜ため（に）」との使い分けを著者固有の選択として立証できない｜支持: /cg/modeling/shape-model-overview, /cg/rendering/photorealism-and-reality-elements
+- SQ-P089｜手法・情報を足したときの利得を「〜できるようになります／〜られるようになります」で締め、獲得された能力として書く：2記事に複数回現れるが、可能形＋「ようになる」は日本語一般の変化表現で、不能・困難側を扱う本体 SQ-045 の裏返し以上の固有性を示せない｜支持: /cg/modeling/shape-model-overview, /cg/rendering/photorealism-and-reality-elements
+- SQ-P090｜概念説明の着地を用途文（〜に向いています／〜に使われます／〜が用いられます）で結ぶ：2記事とも実務での使いどころへ着地する CG 記事で、着地させる判断自体は本体 TF-027 が扱う。文末定型として切り出せるかは、用途を述べない記事タイプでの分布を確認しないと判断できない｜支持: /cg/modeling/shape-model-overview, /cg/rendering/photorealism-and-reality-elements

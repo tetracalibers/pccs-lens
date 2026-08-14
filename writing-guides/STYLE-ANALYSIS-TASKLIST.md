@@ -498,7 +498,7 @@
 
 ## CGと画像処理 — モデリング／形状モデル（`cg/modeling.yaml` #shape-models）
 
-- [ ] `/cg/modeling/shape-model-overview`
+- [x] `/cg/modeling/shape-model-overview`
 - [draft] `/cg/modeling/csg-representation`
 - [draft] `/cg/modeling/boundary-representation`
 - [draft] `/cg/modeling/sweep-representation`
@@ -619,7 +619,7 @@
 
 ## CGと画像処理 — レンダリング／写実的レンダリング（`cg/rendering.yaml` #photorealistic）
 
-- [ ] `/cg/rendering/photorealism-and-reality-elements`
+- [x] `/cg/rendering/photorealism-and-reality-elements`
 
 ## CGと画像処理 — レンダリング／隠面消去（`cg/rendering.yaml` #hidden-surface）
 
