@@ -686,7 +686,7 @@
 - [ページ未作成] CGシステムの応用
 - [ページ未作成] グラフィックス装置
 - [draft] `/cg/systems/graphics-api`
-- [draft] `/cg/systems/cg-software`
+- [ ] `/cg/systems/cg-software`
 - [ページ未作成] 3次元モデル記述言語・フォーマット
 - [draft] `/cg/systems/parallel-processing`
 - [draft] `/cg/systems/rendering-pipeline`
