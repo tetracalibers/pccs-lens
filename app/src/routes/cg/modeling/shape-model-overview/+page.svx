@@ -84,7 +84,7 @@ scene.add(vertexPoints)
 :Mark[サーフェスモデル]は、稜線に加えて:Anki[面]の情報をもち、物体の表面を表せる形状モデルです。
 
 :::Action
-:Mark[上の面を外した]状態で、中身が空洞であることを確認しよう
+:Mark[欠片を離して]、中身が空洞であることを確認しよう
 :::
 
 <CanvasWrapper>
@@ -104,15 +104,42 @@ const createSurfaceGeometry = (vertices: [number, number, number][], faces: numb
   return geometry
 }
 
-// 面を外したときに内側が見えるよう、裏側も描く
-const material = new MeshStandardMaterial({
+// クリッピング（切り口の面の向こう側を描かない）を有効にする
+renderer.localClippingEnabled = true
+
+const geometry = createSurfaceGeometry(VERTICES, FACES)
+
+// 切り口の面。手前下の角を斜めに落とす位置に置き、
+// 奥側だけを残すと本体、手前側だけを残すと切り取った欠片になる
+const [p0, p1, p2] = SECTION.map((point) => new Vector3(...point))
+const bodyClip = new Plane().setFromCoplanarPoints(p0, p1, p2)
+const fragmentClip = bodyClip.clone().negate()
+
+// 本体。切り口から内側の面が見えるよう、裏側も描く
+const bodyMaterial = new MeshStandardMaterial({
   color: SURFACE_COLOR,
   roughness: 0.6,
-  side: DoubleSide
+  side: DoubleSide,
+  clippingPlanes: [bodyClip]
 })
-// 上の面（FACES の最後）を外した状態。面が 1 枚欠けていてもデータとしては成り立つ
-const mesh = new Mesh(createSurfaceGeometry(VERTICES, FACES.slice(0, -1)), material)
-scene.add(mesh)
+scene.add(new Mesh(geometry, bodyMaterial))
+
+// 欠片。同じ形状データを、逆向きの面で切り分ける
+const fragmentMaterial = new MeshStandardMaterial({
+  color: SURFACE_COLOR,
+  roughness: 0.6,
+  side: DoubleSide,
+  clippingPlanes: [fragmentClip]
+})
+const fragment = new Mesh(geometry, fragmentMaterial)
+scene.add(fragment)
+
+// 欠片を離す。切り口に垂直な向きだと、本体の切り口をちょうど隠してしまうので下へ逃がす
+const separationDirection = fragmentClip.normal.clone().add(new Vector3(0, -1, 0)).normalize()
+fragment.position.copy(separationDirection).multiplyScalar(0.7)
+// クリッピング面はワールド座標で効くので、欠片の移動に合わせて動かす
+fragment.updateMatrixWorld()
+fragmentClip.applyMatrix4(fragment.matrixWorld)
 
 // 面があるので、光の当たり方から陰影が決まる
 const light = new DirectionalLight(LIGHT_COLOR, 2.5)
@@ -132,38 +159,6 @@ scene.add(new AmbientLight(LIGHT_COLOR, 0.4))
 
 :Mark[ソリッドモデル]は、中身の詰まった物体を表すことができるモデルです。
 
-<CanvasWrapper>
-  <SolidModelDemo />
-</CanvasWrapper>
-
-:::Foldable{title="Three.jsによる実装概要"}
-
-```ts
-// クリッピング（面より上を描かない）を有効にする
-renderer.localClippingEnabled = true
-
-// 水平面で切る。法線が下向きなので、この面より下だけが残る。
-// 切り口と同じ高さに殻の面が残るとちらつくので、殻だけごくわずかに下で切る
-const plane = new Plane(new Vector3(0, -1, 0), 1 - 0.001)
-
-// 殻。切り口から内側の面が見えるよう、裏側も描く
-const shellMaterial = new MeshStandardMaterial({
-  color: SURFACE_COLOR,
-  roughness: 0.6,
-  side: DoubleSide,
-  clippingPlanes: [plane]
-})
-scene.add(new Mesh(createSurfaceGeometry(VERTICES, FACES), shellMaterial))
-
-// 切り口を塞ぐ面。これがあると、中身の詰まった立体として見える
-const capMaterial = new MeshStandardMaterial({ color: CAP_COLOR, roughness: 0.6 })
-const cap = new Mesh(createCapGeometry(SECTION_IN_NOTCH), capMaterial)
-cap.position.y = 1
-scene.add(cap)
-```
-
-:::
-
 サーフェスモデルとの違いは、面の内側と外側、つまり立体の内部と外部を区別している点にあります。
 
 内部と外部が区別されているため、空間のある点が立体の中にあるのか外にあるのかを判定できます。面のつながりに隙間や矛盾がないことも、データが満たすべき条件として保証されます。
@@ -172,8 +167,67 @@ scene.add(cap)
 
 中身が空洞か詰まっているかという違いは、立体を切ってみるとはっきりします。
 
-:::Todo
-サーフェスモデルとソリッドモデルの断面を比べる図。同じ球を切断したときに、サーフェスモデルでは薄い殻だけが現れ、ソリッドモデルでは中身の詰まった断面が現れることを、並べて示す。
+:::Action
+欠片を離してモデルを切り替え、切り口の見え方を見比べてみよう
+
+- ソリッドモデル：本体と欠片の両方に断面が現れ、合わせると元の立体に戻る
+- サーフェスモデル：断面が現れず、殻の内側が見える
+:::
+
+<CanvasWrapper>
+  <SolidModelDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// クリッピング（切り口の面の向こう側を描かない）を有効にする
+renderer.localClippingEnabled = true
+
+const geometry = createSurfaceGeometry(VERTICES, FACES)
+
+// 切り口の面。奥側だけを残すと本体、手前側だけを残すと切り取った欠片になる
+const [p0, p1, p2] = SECTION.map((point) => new Vector3(...point))
+const bodyClip = new Plane().setFromCoplanarPoints(p0, p1, p2)
+const fragmentClip = bodyClip.clone().negate()
+
+// 本体の殻と、欠片の殻。同じ形状データを、逆向きの面で切り分ける
+const bodyMaterial = new MeshStandardMaterial({
+  color: SURFACE_COLOR,
+  roughness: 0.6,
+  side: DoubleSide,
+  clippingPlanes: [bodyClip]
+})
+scene.add(new Mesh(geometry, bodyMaterial))
+
+const fragmentMaterial = new MeshStandardMaterial({
+  color: SURFACE_COLOR,
+  roughness: 0.6,
+  side: DoubleSide,
+  clippingPlanes: [fragmentClip]
+})
+const fragment = new Group()
+fragment.add(new Mesh(geometry, fragmentMaterial))
+scene.add(fragment)
+
+/** 切り口の輪郭から、断面を塞ぐ 1 枚の面を作る */
+const createCapGeometry = (outline: [number, number, number][]) =>
+  createSurfaceGeometry(outline, [outline.map((_, index) => index)])
+
+// 断面。これがあると、中身の詰まった立体として見える。
+// 本体側と欠片側で向きが逆になるので、同じ 1 枚を裏表とも描く
+const capGeometry = createCapGeometry(SECTION)
+const capMaterial = new MeshStandardMaterial({ color: CAP_COLOR, roughness: 0.6, side: DoubleSide })
+scene.add(new Mesh(capGeometry, capMaterial))
+fragment.add(new Mesh(capGeometry, capMaterial))
+
+// 欠片を、断面ごと下へ離す
+const separationDirection = fragmentClip.normal.clone().add(new Vector3(0, -1, 0)).normalize()
+fragment.position.copy(separationDirection).multiplyScalar(0.7)
+fragment.updateMatrixWorld()
+fragmentClip.applyMatrix4(fragment.matrixWorld)
+```
+
 :::
 
 ソリッドモデルをデータとしてどう表すかについては、次のようなさまざまな方法が考案されています。
