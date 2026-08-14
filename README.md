@@ -25,8 +25,9 @@
 
 ### 記事の公開（draft を外したとき）
 
-frontmatter から `draft: true`（と直前の空行）を削除して記事を公開状態にしたら、次の4つを**人手で**行う。自動化されていないため、公開のたびに確認する。
+frontmatter から `draft: true`（と直前の空行）を削除して記事を公開状態にしたら、**`/publish-article <slug>` で公開時タスクを回す**。手順の正典はこのスキルで、次の 0〜2 を実行し、3・4 は案内するだけにとどめる。
 
+0. **編集指示ディレクティブの残存チェック（ゲート）**：本文に `:::Todo` / `:::Add` / `:::Delete` / `:::Fix` が残っていないかを確認する。**1件でも残っていれば公開時タスクへ進まず**、対応に使うスキル呼び出しを**そのままコピペして実行できる形**で案内して止まる（`:::Todo` は `/svg-diagram-component` か `/add-threejs-demo`、`:::Add` / `:::Delete` / `:::Fix` はまとめて `/apply-edit-requests <slug>` の1行）。読者に見える形で公開されるのを防ぐためのゲートで、ブロックを外すか対応するかの判断は著者が行う（→ `writing-guides/syntax-guide.md` ルール4）。
 1. **`visual` フラグの追加**：`$lib/demo/` の図解コンポーネントを使っているページは、frontmatter の `grades:` の次の行に `visual: true` を足す。一覧のリンクに「図解」タグが付く。Mermaid 図だけのページには付けない運用。
 2. **OGP画像の生成**：`/generate-ogp-image <スラッグ>` で生成する。draft ページは glob・自然言語指定の展開から除外されるため、**公開してから**生成する。生成物（`app/static/ogp/**`・`ogimage/data/**`）・マニフェスト（`app/src/lib/meta/og-manifest.json`）・`ogimage/OGP-TASKLIST.md` はコミットに含める（コミットメッセージ規約は `CLAUDE.md` の「Git規約」を参照）。
 3. **文体スタイルガイドの更新**：`/author-style-analyzer <slug>` を実行し、その記事が既存ルールのどれを支持するか（「AI草稿 → 人手編集」の差分を含む）を記録する。人手修正のコミットを済ませてから実行する（Git履歴が根拠になるため）。複数記事を公開したときはカンマ区切りでまとめて1回実行できる（`/author-style-analyzer <slug1>,<slug2>`）。推奨 effort は `high`（後述「文体分析・執筆（author-style スキル）」節）。どの記事を分析済みかは `writing-guides/STYLE-ANALYSIS-TASKLIST.md` に記録され、スキルが実行のたびに更新する（更新後のリストはコミットに含める）。
@@ -35,7 +36,9 @@ frontmatter から `draft: true`（と直前の空行）を削除して記事を
 4. **PR説明文の更新**：ここまでを push したうえで `/update-pr-description` を実行する。公開した記事がカテゴリ別に列挙され、**記事ごとに 1〜3 の実施状況がチェックリストとして載る**（判定できた分は自動でチェック済みになる）。未チェックの項目が残っていれば、それが公開後にやり残した作業。
 
 > [!TIP]
-> 公開のコミットを `/commit-this` で作る場合、差分から `draft: true` の削除を検出して **1（`visual` フラグ）と 2（OGP画像）はスキルが自動実行する**（1 は記事コミットに含め、2 は生成後に別コミット）。あわせて `writing-guides/STYLE-ANALYSIS-TASKLIST.md` の該当行を `[draft]` から空チェックボックス（未分析）へ書き換え、記事コミットに含める。3・4 は自動実行しないので、コミット後に手動で行う。
+> 公開のコミットを `/commit-this` で作る場合、差分から `draft: true` の削除を検出して **`/publish-article` を自動で呼ぶ**ので、上のスキルを手で叩く必要はない。コミットを挟んでフェーズを分けて呼ばれる（`--before-commit` で 0〜1 ＋ `writing-guides/STYLE-ANALYSIS-TASKLIST.md` の `[draft]` 解除を記事コミットに含め、コミット後に `--ogp` で 2 を生成して別コミット）。3・4 は自動実行しないので、コミット後に手動で行う。
+>
+> **0 のゲートで止まった場合は、公開時タスク（1・2 とタスクリストの書き換え）は実行されず、コミットだけが進む。** 案内されたスキルでディレクティブに対応したあと、`/publish-article <slug>` を実行して、その変更を別コミットにする。
 
 ### コンテンツ一覧（YAML）を編集したとき
 
@@ -179,6 +182,18 @@ npm run data:jis-update
   - `:::Todo`（図版・デモの新規プレースホルダ）と `::ComingSoon` は対象外。読み飛ばし、消さない
   - `author-style-writer` の編集モードと同じく文体ガイドを使って書くため、**推奨 effort は `xhigh`**（→「author-style-writer の推奨 effort」）
   - コミットはしない（`/commit-this` に渡す。著者の指示に基づく修正なので `[ai-draft]` は付かない）
+
+### 記事の公開
+
+- **publish-article** — 記事を公開した（`draft: true` を外した）ときの公開時タスクを実行（手順の正典。→「記事の公開（draft を外したとき）」）
+  - `/publish-article <記事slug|ルート>` — 手順0〜4（ゲート → `visual` フラグ → 文体解析タスクリストの `[draft]` 解除 → OGP画像 → 残タスクの案内）
+  - `/publish-article <記事slug> --before-commit` — ゲート＋`visual`＋タスクリストまで（OGPは飛ばす）。`commit-this` がコミット前に呼ぶ
+  - `/publish-article <記事slug> --ogp` — OGP画像だけ。`commit-this` がコミット後に呼ぶ
+  - `/publish-article` — 引数なし。未コミットの差分から `draft: true` が消えた記事を探す（見つからなければ尋ねる）
+  - 記事は slug でもルート（`/cg/rendering/hidden-surface-removal-methods`）でも渡せる。カンマ・空白区切りで複数可
+  - **最初に `:::Todo` / `:::Add` / `:::Delete` / `:::Fix` の残存チェック（ゲート）を行い、1件でも残っていれば公開時タスクへ進まない。** コピペで実行できる担当スキルの呼び出しを案内して止まる（自分でブロックを消したり対応したりはしない）
+  - `draft: true` は外さない・戻さない（公開の判断は著者）。コミット・push もしない（`/commit-this` に渡す）
+  - `author-style-analyzer`（文体ガイドの更新）と `update-pr-description`（PR説明文）は自動実行せず、コマンドを添えて案内する
 
 ### 図版・コンポーネント
 
