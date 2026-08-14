@@ -72,6 +72,12 @@ const SECTOR_SEGMENTS = 36
  */
 const FACE_OPACITY = 0.5
 
+/**
+ * 扇の不透明度。
+ * 扇と法線ベクトルの矢印は同じ色なので、扇をわずかに透かして矢印と見分けられるようにする
+ */
+const SECTOR_OPACITY = 0.72
+
 /** ラベルを、矢印の先からさらに離す距離 */
 const LABEL_GAP = 0.16
 
@@ -91,7 +97,8 @@ const EDGE_COLOR = "#ccd3df"
 
 /**
  * 半透明なものの描画順。数が小さいほど先に描かれ、あとから描いたものが上に重なる。
- * 稜線・矢印・扇はいずれも不透明なので、半透明の面より先に描かれる。
+ * 稜線と矢印は不透明なので、半透明なものより先に描かれる。
+ * 扇は既定の 0 のままなので面より先に描かれ、立体の内部に入り込んだ部分も面越しに透ける。
  * ラベルは最後に描き、深度テストも外して必ず読めるようにする
  */
 const FACE_ORDER = 1
@@ -280,6 +287,8 @@ const createSector = (color: string) => {
   const material = new MeshBasicMaterial({
     color,
     side: DoubleSide,
+    transparent: true,
+    opacity: SECTOR_OPACITY,
     // 扇の縁は法線ベクトルの矢印と重なる。扇をわずかに奥へずらして z ファイティングを避ける
     polygonOffset: true,
     polygonOffsetFactor: 1,
