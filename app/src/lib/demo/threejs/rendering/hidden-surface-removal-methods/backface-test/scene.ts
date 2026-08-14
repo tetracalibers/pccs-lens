@@ -13,7 +13,6 @@ import {
   Mesh,
   MeshBasicMaterial,
   Scene,
-  SphereGeometry,
   Sprite,
   SpriteMaterial,
   SRGBColorSpace,
@@ -25,8 +24,8 @@ import { LineSegmentsGeometry } from "three/addons/lines/LineSegmentsGeometry.js
 
 /** Tweakpane で操作するパラメータ */
 export type BackfaceTestParams = {
-  /** 視点を置く方位（度）。物体の周りを水平に回る */
-  eyeAzimuth: number
+  /** 法線ベクトルと視点方向ベクトルを添える面。createCubeFaces が返す順の番号 */
+  targetFace: number
   /** 裏を向いた面を取り除く */
   cullBackFaces: boolean
   /** scene.ts が計算して書き戻す表示用の文字列 */
@@ -43,15 +42,17 @@ type SceneContext = {
 const CUBE_HALF = 0.9
 
 /**
- * 視点を置く高さと、中心軸からの距離。
- * 視点に高さを持たせると、上面が表・下面が裏に定まり、なす角も直角から離れる。
- * 法線ベクトルと視点方向ベクトルが真逆に並ぶこともなくなるので、なす角の扇が必ず開く
+ * 表裏を判定する視点の位置。**立方体の 6 面がちょうど表 3 枚・裏 3 枚に分かれる**位置に固定する。
+ * 立方体の対角の方向（方位 45 度）に置いたうえで高さを持たせると、
+ * 上面が表・下面が裏に定まり、どの面のなす角も直角から離れる。
+ * 法線ベクトルと視点方向ベクトルが真逆に並ぶこともなくなるので、なす角の扇が必ず開く。
+ *
+ * **`BackfaceTestDemo.svelte` の選択肢のラベル（表を向いた面／裏を向いた面）は、
+ * この位置から決まる表裏に依存している。** 動かすときは向こうも直す
  */
+const EYE_AZIMUTH = Math.PI / 4
 const EYE_HEIGHT = 1.5
 const EYE_DISTANCE = 3.4
-
-/** 視点を表す球の半径 */
-const EYE_RADIUS = 0.1
 
 /** 法線ベクトルの矢印の長さ。立方体の外へ十分に伸ばして、面から立つ向きを読みやすくする */
 const NORMAL_LENGTH = 1.35
@@ -66,16 +67,12 @@ const SECTOR_RADIUS = 0.45
 const SECTOR_SEGMENTS = 36
 
 /**
- * 面と扇の不透明度。
+ * 面の不透明度。
  * 立体の内部を貫く視点方向ベクトルが透けて見える程度に薄くする
  */
 const FACE_OPACITY = 0.5
-const SECTOR_OPACITY = 0.5
 
-/** e のラベルを、面の中心から視点までの何割の位置に置くか */
-const E_LABEL_RATIO = 0.55
-
-/** ラベルを、それが指す点から離す距離 */
+/** ラベルを、矢印の先からさらに離す距離 */
 const LABEL_GAP = 0.16
 
 const LABEL_HEIGHT = 0.26
@@ -94,19 +91,26 @@ const EDGE_COLOR = "#ccd3df"
 
 /**
  * 半透明なものの描画順。数が小さいほど先に描かれ、あとから描いたものが上に重なる。
- * 扇を面より先に描くと、立体の内部に入り込んだ部分も面越しに透けて見える。
+ * 稜線・矢印・扇はいずれも不透明なので、半透明の面より先に描かれる。
  * ラベルは最後に描き、深度テストも外して必ず読めるようにする
  */
-const SECTOR_ORDER = 1
-const FACE_ORDER = 2
-const LABEL_ORDER = 3
+const FACE_ORDER = 1
+const LABEL_ORDER = 2
 
 /** ConeGeometry が既定で向いている方向 */
 const CONE_UP = new Vector3(0, 1, 0)
 
+/** 表裏を判定する視点。観察するカメラとは別の点なので、回り込んで外側から眺められる */
+const EYE = new Vector3(
+  EYE_DISTANCE * Math.sin(EYE_AZIMUTH),
+  EYE_HEIGHT,
+  EYE_DISTANCE * Math.cos(EYE_AZIMUTH)
+)
+
 /**
  * 立方体の 6 面を、外から見て反時計回りに並べた頂点として返す。
- * 先頭は +z の面。この面だけに法線ベクトルと視点方向ベクトルを添える
+ * 並びは +z・−z・+x・−x・+y・−y の順。
+ * **この順番が `BackfaceTestDemo.svelte` の選択肢の番号になる**ので、入れ替えるときは向こうも直す
  */
 const createCubeFaces = () => {
   const h = CUBE_HALF
@@ -276,12 +280,12 @@ const createSector = (color: string) => {
   const material = new MeshBasicMaterial({
     color,
     side: DoubleSide,
-    transparent: true,
-    opacity: SECTOR_OPACITY,
-    depthWrite: false
+    // 扇の縁は法線ベクトルの矢印と重なる。扇をわずかに奥へずらして z ファイティングを避ける
+    polygonOffset: true,
+    polygonOffsetFactor: 1,
+    polygonOffsetUnits: 1
   })
   const mesh = new Mesh(geometry, material)
-  mesh.renderOrder = SECTOR_ORDER
 
   const axis = new Vector3()
   const current = new Vector3()
@@ -353,26 +357,12 @@ export const createBackfaceTestScene = ({ scene, params }: SceneContext) => {
   const edgeMaterial = new LineBasicMaterial({ color: EDGE_COLOR })
   scene.add(new LineSegments(edgeGeometry, edgeMaterial))
 
-  // 表裏を判定する視点。観察するカメラとは別の点なので、回り込んで外側から眺められる
-  const eyeGeometry = new SphereGeometry(EYE_RADIUS, 16, 12)
-  const eyeMaterial = new MeshBasicMaterial({ color: EYE_COLOR })
-  const eyeMarker = new Mesh(eyeGeometry, eyeMaterial)
-  const eyeLabel = createLabel("視点", EYE_COLOR)
-  scene.add(eyeMarker, eyeLabel.sprite)
-
-  // 注目する 1 面（+z の面）にだけ、法線ベクトル n・視点方向ベクトル e・なす角の扇を添える
-  const target = faces[0]
+  // 注目する 1 面にだけ、法線ベクトル n・視点方向ベクトル e・なす角の扇を添える。
+  // どの面に添えるかは操作で切り替わるので、位置は毎フレーム決め直す
   const normalArrow = createArrow(FRONT_ACCENT)
-  normalArrow.setEnds(
-    target.center,
-    target.center.clone().addScaledVector(target.normal, NORMAL_LENGTH)
-  )
   const eyeArrow = createArrow(EYE_COLOR)
   const sector = createSector(FRONT_ACCENT)
   const normalLabel = createLabel("n", FRONT_ACCENT)
-  normalLabel.sprite.position
-    .copy(target.center)
-    .addScaledVector(target.normal, NORMAL_LENGTH + LABEL_GAP)
   const eyeVectorLabel = createLabel("e", EYE_COLOR)
   scene.add(
     normalArrow.object,
@@ -382,25 +372,15 @@ export const createBackfaceTestScene = ({ scene, params }: SceneContext) => {
     eyeVectorLabel.sprite
   )
 
-  const eye = new Vector3()
   const toEye = new Vector3()
   const eyeDirection = new Vector3()
-  const arrowEnd = new Vector3()
+  const normalEnd = new Vector3()
 
   return {
     update: () => {
-      const azimuth = MathUtils.degToRad(params.eyeAzimuth)
-      eye.set(EYE_DISTANCE * Math.sin(azimuth), EYE_HEIGHT, EYE_DISTANCE * Math.cos(azimuth))
-      eyeMarker.position.copy(eye)
-      eyeLabel.sprite.position.set(
-        eye.x,
-        eye.y + EYE_RADIUS + LABEL_GAP + eyeLabel.sprite.scale.y / 2,
-        eye.z
-      )
-
       for (const face of faces) {
         // 面から視点へ向かう視点方向ベクトル e
-        toEye.subVectors(eye, face.center)
+        toEye.subVectors(EYE, face.center)
 
         // n と e の内積。負なら、なす角が鈍角＝裏を向いた面
         const isBack = face.normal.dot(toEye) < 0
@@ -409,19 +389,24 @@ export const createBackfaceTestScene = ({ scene, params }: SceneContext) => {
         face.mesh.visible = !(isBack && params.cullBackFaces)
       }
 
-      // 注目する面のなす角。裏を向いたときは e が立体の内部を貫く
-      toEye.subVectors(eye, target.center)
+      // 注目する面のなす角。裏を向いた面では e が立体の内部を貫く
+      const target = faces[params.targetFace]
+      toEye.subVectors(EYE, target.center)
       const dot = target.normal.dot(toEye)
       const accent = dot < 0 ? BACK_ACCENT : FRONT_ACCENT
+
+      normalEnd.copy(target.center).addScaledVector(target.normal, NORMAL_LENGTH)
+      normalArrow.setEnds(target.center, normalEnd)
       normalArrow.setColor(accent)
-      sector.setColor(accent)
+      normalLabel.sprite.position.copy(normalEnd).addScaledVector(target.normal, LABEL_GAP)
 
       eyeDirection.copy(toEye).normalize()
-      // 矢じりが視点の球に食い込まないよう、少し手前で止める
-      arrowEnd.copy(eye).addScaledVector(eyeDirection, -(EYE_RADIUS + 0.03))
-      eyeArrow.setEnds(target.center, arrowEnd)
+      // 矢印の先が視点そのもの。n と同じく、ラベルは矢じりの少し先に置く
+      eyeArrow.setEnds(target.center, EYE)
+      eyeVectorLabel.sprite.position.copy(EYE).addScaledVector(eyeDirection, LABEL_GAP)
+
       sector.setAngle(target.center, target.normal, eyeDirection)
-      eyeVectorLabel.sprite.position.copy(target.center).addScaledVector(toEye, E_LABEL_RATIO)
+      sector.setColor(accent)
 
       params.measure = formatMeasure(dot / toEye.length(), dot)
     },
@@ -432,12 +417,10 @@ export const createBackfaceTestScene = ({ scene, params }: SceneContext) => {
       }
       edgeGeometry.dispose()
       edgeMaterial.dispose()
-      eyeGeometry.dispose()
-      eyeMaterial.dispose()
       normalArrow.dispose()
       eyeArrow.dispose()
       sector.dispose()
-      for (const label of [eyeLabel, normalLabel, eyeVectorLabel]) {
+      for (const label of [normalLabel, eyeVectorLabel]) {
         label.texture.dispose()
         label.material.dispose()
       }

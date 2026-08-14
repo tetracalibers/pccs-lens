@@ -39,8 +39,8 @@ draft: true
 :::Action
 次の点に着目して、デモを観察してみよう
 
-- 視点の方位を動かすと、法線ベクトルと視点方向ベクトルのなす角を示す扇が、直角をまたいでどう広がるか
-- なす角が鈍角になったとき、視点方向ベクトルが立体の内部を貫くこと
+- 注目する面を切り替えると、同じ視点に対してでも、面によってなす角を示す扇が鋭角と鈍角に分かれること
+- 鈍角になる面では、視点方向ベクトルが立体の内部を貫くこと
 - 裏面を外すを切り替えると、閉じた物体からどれだけの面が取り除かれているか
 :::
 
@@ -63,16 +63,14 @@ const ARROW_HEIGHT = 0.28
 const SECTOR_RADIUS = 0.45
 const SECTOR_SEGMENTS = 36
 
-/** 面と扇の不透明度。立体の内部を貫く視点方向ベクトルが透けて見える程度に薄くする */
+/** 面の不透明度。立体の内部を貫く視点方向ベクトルが透けて見える程度に薄くする */
 const FACE_OPACITY = 0.5
-const SECTOR_OPACITY = 0.5
 
 /**
  * 半透明なものの描画順。数が小さいほど先に描かれ、あとから描いたものが上に重なる。
- * 扇を面より先に描くと、立体の内部に入り込んだ部分も面越しに透けて見える
+ * 稜線・矢印・扇はいずれも不透明なので、半透明の面より先に描かれる
  */
-const SECTOR_ORDER = 1
-const FACE_ORDER = 2
+const FACE_ORDER = 1
 
 /** ConeGeometry が既定で向いている方向 */
 const CONE_UP = new Vector3(0, 1, 0)
@@ -126,12 +124,12 @@ const createSector = (color: string) => {
   const material = new MeshBasicMaterial({
     color,
     side: DoubleSide,
-    transparent: true,
-    opacity: SECTOR_OPACITY,
-    depthWrite: false
+    // 扇の縁は法線ベクトルの矢印と重なる。扇をわずかに奥へずらして z ファイティングを避ける
+    polygonOffset: true,
+    polygonOffsetFactor: 1,
+    polygonOffsetUnits: 1
   })
   const mesh = new Mesh(geometry, material)
-  mesh.renderOrder = SECTOR_ORDER
 
   const axis = new Vector3()
   const current = new Vector3()
@@ -210,26 +208,15 @@ const edgeGeometry = new EdgesGeometry(boxGeometry)
 boxGeometry.dispose()
 scene.add(new LineSegments(edgeGeometry, new LineBasicMaterial({ color: EDGE_COLOR })))
 
-// 表裏を判定する視点。観察するカメラとは別の点として、物体の周りを水平に回す
-const eye = new Vector3(
-  EYE_DISTANCE * Math.sin(azimuth),
+// 表裏を判定する視点。観察するカメラとは別の点で、6 面が表 3 枚・裏 3 枚に分かれる位置に固定する
+const EYE = new Vector3(
+  EYE_DISTANCE * Math.sin(EYE_AZIMUTH),
   EYE_HEIGHT,
-  EYE_DISTANCE * Math.cos(azimuth)
+  EYE_DISTANCE * Math.cos(EYE_AZIMUTH)
 )
-const eyeMarker = new Mesh(
-  new SphereGeometry(EYE_RADIUS, 16, 12),
-  new MeshBasicMaterial({ color: EYE_COLOR })
-)
-eyeMarker.position.copy(eye)
-scene.add(eyeMarker)
 
-// 注目する 1 面（+z の面）にだけ、法線ベクトル n・視点方向ベクトル e・なす角の扇を添える
-const target = faces[0]
+// 注目する 1 面にだけ、法線ベクトル n・視点方向ベクトル e・なす角の扇を添える
 const normalArrow = createArrow(FRONT_ACCENT)
-normalArrow.setEnds(
-  target.center,
-  target.center.clone().addScaledVector(target.normal, NORMAL_LENGTH)
-)
 const eyeArrow = createArrow(EYE_COLOR)
 const sector = createSector(FRONT_ACCENT)
 scene.add(normalArrow.object, eyeArrow.object, sector.object)
@@ -237,7 +224,7 @@ scene.add(normalArrow.object, eyeArrow.object, sector.object)
 const toEye = new Vector3()
 for (const face of faces) {
   // 面から視点へ向かう視点方向ベクトル e
-  toEye.subVectors(eye, face.center)
+  toEye.subVectors(EYE, face.center)
 
   // n と e の内積。負なら、なす角が鈍角＝裏を向いた面
   const isBack = face.normal.dot(toEye) < 0
@@ -247,17 +234,19 @@ for (const face of faces) {
   face.mesh.visible = !(isBack && cullBackFaces)
 }
 
-// 注目する面のなす角。裏を向いたときは e が立体の内部を貫く
-toEye.subVectors(eye, target.center)
+// 注目する面のなす角。裏を向いた面では e が立体の内部を貫く
+const target = faces[targetFace]
+toEye.subVectors(EYE, target.center)
 const accent = target.normal.dot(toEye) < 0 ? BACK_ACCENT : FRONT_ACCENT
+
+const normalEnd = target.center.clone().addScaledVector(target.normal, NORMAL_LENGTH)
+normalArrow.setEnds(target.center, normalEnd)
 normalArrow.setColor(accent)
-sector.setColor(accent)
 
 const eyeDirection = toEye.clone().normalize()
-// 矢じりが視点の球に食い込まないよう、少し手前で止める
-const arrowEnd = eye.clone().addScaledVector(eyeDirection, -(EYE_RADIUS + 0.03))
-eyeArrow.setEnds(target.center, arrowEnd)
+eyeArrow.setEnds(target.center, EYE)
 sector.setAngle(target.center, target.normal, eyeDirection)
+sector.setColor(accent)
 ```
 
 :::
