@@ -15,8 +15,8 @@ import {
 
 /** Tweakpane で操作するパラメータ */
 export type SurfaceModelParams = {
-  /** 切り取った欠片を離す距離。0 で元の位置に戻り、切る前の立体になる */
-  separation: number
+  /** 手前下の角を切り落とすか。オフなら切る前の立体になる */
+  cut: boolean
 }
 
 // _shared の ThreeSceneContext と同じ形をローカルに宣言する（_shared を import しないため）
@@ -76,6 +76,9 @@ const SECTION: [number, number, number][] = [
   [1, -0.25, 1],
   [1, -1, 0.5]
 ]
+
+/** 切ったときに、欠片を切り口から離す距離 */
+const SEPARATION = 0.7
 
 // 背景（暗めのグレー）の上で、陰影の濃淡が分かる明るさの色にする
 const SURFACE_COLOR = "#9db4d0"
@@ -146,7 +149,7 @@ export const createSurfaceModelScene = ({ scene, renderer, params }: SceneContex
   return {
     update: () => {
       // 欠片を、切り口から離れる向きへずらす
-      fragment.position.copy(separationDirection).multiplyScalar(params.separation)
+      fragment.position.copy(separationDirection).multiplyScalar(params.cut ? SEPARATION : 0)
       // クリッピング面はワールド座標で効くので、欠片の移動に合わせて動かす
       fragment.updateMatrixWorld()
       fragmentClip.copy(baseFragmentClip).applyMatrix4(fragment.matrixWorld)

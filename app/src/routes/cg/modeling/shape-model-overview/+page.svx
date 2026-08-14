@@ -84,7 +84,7 @@ scene.add(vertexPoints)
 :Mark[サーフェスモデル]は、稜線に加えて:Anki[面]の情報をもち、物体の表面を表せる形状モデルです。
 
 :::Action
-:Mark[欠片を離して]、中身が空洞であることを確認しよう
+:Mark[「切断する」をオンにして]、中身が空洞であることを確認しよう
 :::
 
 <CanvasWrapper>
@@ -134,7 +134,8 @@ const fragmentMaterial = new MeshStandardMaterial({
 const fragment = new Mesh(geometry, fragmentMaterial)
 scene.add(fragment)
 
-// 欠片を離す。切り口に垂直な向きだと、本体の切り口をちょうど隠してしまうので下へ逃がす
+// 「切断する」をオンにしたとき、欠片を離す。
+// 切り口に垂直な向きだと、本体の切り口をちょうど隠してしまうので下へ逃がす
 const separationDirection = fragmentClip.normal.clone().add(new Vector3(0, -1, 0)).normalize()
 fragment.position.copy(separationDirection).multiplyScalar(0.7)
 // クリッピング面はワールド座標で効くので、欠片の移動に合わせて動かす
@@ -168,7 +169,7 @@ scene.add(new AmbientLight(LIGHT_COLOR, 0.4))
 中身が空洞か詰まっているかという違いは、立体を切ってみるとはっきりします。
 
 :::Action
-欠片を離して、本体と欠片の両方に断面が現れることを確かめよう
+「切断する」をオンにして、本体と欠片の両方に断面が現れることを確かめよう
 :::
 
 <CanvasWrapper>
@@ -218,7 +219,7 @@ const capMaterial = new MeshStandardMaterial({ color: SURFACE_COLOR, roughness: 
 scene.add(new Mesh(capGeometry, capMaterial))
 fragment.add(new Mesh(capGeometry, capMaterial))
 
-// 欠片を、断面ごと下へ離す
+// 「切断する」をオンにしたとき、欠片を断面ごと下へ離す
 const separationDirection = fragmentClip.normal.clone().add(new Vector3(0, -1, 0)).normalize()
 fragment.position.copy(separationDirection).multiplyScalar(0.7)
 fragment.updateMatrixWorld()

@@ -16,8 +16,8 @@ import {
 
 /** Tweakpane で操作するパラメータ */
 export type SolidModelParams = {
-  /** 切り取った欠片を離す距離。0 で元の位置に戻り、切る前の立体になる */
-  separation: number
+  /** 手前下の角を切り落とすか。オフなら切る前の立体になる */
+  cut: boolean
 }
 
 // _shared の ThreeSceneContext と同じ形をローカルに宣言する（_shared を import しないため）
@@ -78,8 +78,8 @@ const SECTION: [number, number, number][] = [
   [1, -1, 0.5]
 ]
 
-/** 切り離していないときは、2 枚の断面が重なるので描かない */
-const SEPARATION_EPSILON = 0.001
+/** 切ったときに、欠片を切り口から離す距離 */
+const SEPARATION = 0.7
 
 // 背景（暗めのグレー）の上で、陰影の濃淡が分かる明るさの色にする。
 // 断面も同じ色にして、中身の詰まった 1 つの立体として見えるようにする
@@ -167,15 +167,14 @@ export const createSolidModelScene = ({ scene, renderer, params }: SceneContext)
   return {
     update: () => {
       // 欠片を、断面ごと切り口から離れる向きへずらす
-      fragment.position.copy(separationDirection).multiplyScalar(params.separation)
+      fragment.position.copy(separationDirection).multiplyScalar(params.cut ? SEPARATION : 0)
       // クリッピング面はワールド座標で効くので、欠片の移動に合わせて動かす
       fragment.updateMatrixWorld()
       fragmentClip.copy(baseFragmentClip).applyMatrix4(fragment.matrixWorld)
 
-      // 切り離していないときは、断面が立体の内部にあるので描かない
-      const showCaps = params.separation > SEPARATION_EPSILON
-      bodyCap.visible = showCaps
-      fragmentCap.visible = showCaps
+      // 切っていないときは、断面が立体の内部にあるので描かない
+      bodyCap.visible = params.cut
+      fragmentCap.visible = params.cut
     },
     dispose: () => {
       geometry.dispose()
