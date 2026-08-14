@@ -451,7 +451,7 @@
 - [ページ未作成] 弾性体の物理シミュレーション
 - [ページ未作成] 衝突判定
 - [ページ未作成] リアルタイムアニメーションの手法
-- [ページ未作成] レンダーマンとリアルタイムシェーダ
+- [draft] `/cg/animation/renderman-and-realtime-shaders`
 - [ページ未作成] ゲーム物理
 - [ページ未作成] 実写映像との合成時の条件
 - [ページ未作成] カメラパラメータの整合
@@ -688,10 +688,10 @@
 - [draft] `/cg/systems/graphics-api`
 - [ページ未作成] CGアプリケーションソフトウェア
 - [ページ未作成] 3次元モデル記述言語・フォーマット
-- [ページ未作成] 並列処理
+- [draft] `/cg/systems/parallel-processing`
 - [ページ未作成] 3次元CGハードウェアの変遷
-- [ページ未作成] 描画処理の流れ
-- [ページ未作成] GPUを利用したCG処理
+- [draft] `/cg/systems/rendering-pipeline`
+- [draft] `/cg/systems/gpu-based-cg-processing`
 - [ページ未作成] CGハードウェアの性能評価
 - [ページ未作成] 3次元ディジタイザ
 - [ページ未作成] モーションキャプチャ装置

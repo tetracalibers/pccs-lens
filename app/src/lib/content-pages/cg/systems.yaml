@@ -16,14 +16,11 @@ sections:
   - heading: リアルタイム3次元CG
     id: real-time-3d
     links:
-      - title: 並列処理 # CG 8-3-1
-        group: ["CG"]
+      - slug: parallel-processing
       - title: 3次元CGハードウェアの変遷 # CG 8-3-2
         group: ["CG"]
-      - title: 描画処理の流れ # CG 8-3-3
-        group: ["CG"]
-      - title: GPUを利用したCG処理 # CG 8-3-4
-        group: ["CG"]
+      - slug: rendering-pipeline
+      - slug: gpu-based-cg-processing
       - title: CGハードウェアの性能評価 # CG 8-3-5
         group: ["CG"]
   - heading: 入力装置
