@@ -30,7 +30,6 @@
     inset-block-start: 0.5rem;
     inset-inline-start: 0.8rem;
     font-family: var(--font-mono-base), var(--font-ja-base);
-    font-size: 0.9rem;
     line-height: 1.3;
     color: light-dark(#1a7f37, #3fb950);
   }

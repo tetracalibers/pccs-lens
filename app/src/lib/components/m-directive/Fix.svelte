@@ -53,8 +53,8 @@
     position: absolute;
     inset-block-start: 0.5rem;
     inset-inline-start: 0.8rem;
-    font-size: 0.9rem;
-    line-height: 1.3;
+    font-size: 0.85rem;
+    line-height: 1.4;
   }
 
   .fix :global(p) {
