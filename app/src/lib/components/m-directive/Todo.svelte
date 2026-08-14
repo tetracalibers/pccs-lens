@@ -2,18 +2,18 @@
   import type { Snippet } from "svelte"
 
   interface Props {
-    /** `figure`: 図解・デモを入れたい箇所 / `text`: 文章を加筆したい箇所 / `fix`: 記述を直したい箇所 */
-    type?: "figure" | "text" | "fix"
+    /** `figure`: 図解・デモを入れたい箇所 / `fix`: 記述を直したい箇所（加筆したい箇所は `:::Add`） */
+    type?: "figure" | "fix"
     children?: Snippet
   }
 
   let { type = "figure", children }: Props = $props()
 
   /** ディレクティブの属性値は文字列で渡るため、既定の図解以外は明示された値のみ */
-  const isFigure = $derived(type !== "text" && type !== "fix")
+  const isFigure = $derived(type !== "fix")
 </script>
 
-<div class="todo" class:figure={isFigure} class:fix={type === "fix"}>
+<div class="todo" class:figure={isFigure}>
   {@render children?.()}
 </div>
 
@@ -29,16 +29,12 @@
   }
 
   .todo::before {
-    content: "TODO：追記";
+    content: "TODO：修正";
     display: block;
     font-size: 0.75rem;
     letter-spacing: 0.1em;
     color: light-dark(#6b7280, #a3a8b4);
     margin-bottom: 0.25rem;
-  }
-
-  .todo.fix::before {
-    content: "TODO：修正";
   }
 
   /** 図解のTODOだけを数えて、ページ内での通し番号をタイトルに出す */

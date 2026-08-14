@@ -53,6 +53,7 @@ const directives = {
     { name: "Action", replaceTo: "svelte-component" },
     { name: "Todo", replaceTo: "svelte-component" },
     { name: "Delete", replaceTo: "svelte-component" },
+    { name: "Add", replaceTo: "svelte-component" },
     { name: "CardGrid", replaceTo: "svelte-component" },
     { name: "TermCard", replaceTo: "svelte-component" },
     { name: "Foldable", replaceTo: "svelte-component" }

@@ -20,6 +20,7 @@
   import Action from "$lib/components/m-directive/Action.svelte"
   import Todo from "$lib/components/m-directive/Todo.svelte"
   import Delete from "$lib/components/m-directive/Delete.svelte"
+  import Add from "$lib/components/m-directive/Add.svelte"
   import CardGrid from "$lib/components/m-directive/CardGrid.svelte"
   import TermCard from "$lib/components/m-directive/TermCard.svelte"
   import Foldable from "$lib/components/m-directive/Foldable.svelte"
@@ -47,6 +48,7 @@
     Action,
     Todo,
     Delete,
+    Add,
     CardGrid,
     TermCard,
     Foldable,
