@@ -90,6 +90,9 @@
     "cg/modeling": {
       "title": "モデリング"
     },
+    "cg/modeling/shape-model-overview": {
+      "title": "さまざまな形状モデル"
+    },
     "cg/npr": {
       "title": "NPRと可視化"
     },

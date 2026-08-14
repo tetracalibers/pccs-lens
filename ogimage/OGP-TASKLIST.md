@@ -354,7 +354,7 @@
 
 ## CGと画像処理（nested） — 記事：モデリング（`cg/modeling.yaml`）
 
-- [draft] `/cg/modeling/shape-model-overview`
+- [x] `/cg/modeling/shape-model-overview`
 - [draft] `/cg/modeling/csg-representation`
 - [draft] `/cg/modeling/boundary-representation`
 - [draft] `/cg/modeling/sweep-representation`
