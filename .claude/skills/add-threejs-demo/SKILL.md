@@ -162,11 +162,12 @@ app/src/lib/demo/threejs/color/<デモ名>/
 
 守ること:
 
-- **記事に残っている `:::Todo` は案の材料にしてよいが、`:::Todo{type="text"}` は除外する。** `type="text"` は文章の加筆メモ（`author-style-writer` の担当）で、図解・デモの依頼ではない。デモ化の候補として拾うのは属性なし・`{type="figure"}` の `:::Todo` だけ（→ `writing-guides/syntax-guide.md` ルール4）
+- **記事に残っている `:::Todo` は案の材料にしてよいが、`:::Todo{type="fix"}` は除外する。** `type="fix"` は記述を直したいメモで、図解・デモの依頼ではない。デモ化の候補として拾うのは属性なし・`{type="figure"}` の `:::Todo` だけ（→ `writing-guides/syntax-guide.md` ルール4）
+- **`:::Add` / `:::Delete` のブロックも案の材料にしない。** `:::Add` は文章の加筆メモ、`:::Delete` は削除予定の記述で、どちらも `author-style-writer` の担当。図解・デモの依頼ではない
 
   ```bash
   # 記事から図解のTODO（属性なし・figure）だけを拾う
-  grep -n ':::Todo' <対象記事の +page.svx> | grep -v 'type="text"'
+  grep -n ':::Todo' <対象記事の +page.svx> | grep -v 'type="fix"'
   ```
 
 - **件数は記事次第。** 「1 つの視点に 1 デモ」に縛らない。片方の視点が 0 案でもよい
