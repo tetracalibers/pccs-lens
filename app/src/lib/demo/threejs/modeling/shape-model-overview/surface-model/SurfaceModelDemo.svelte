@@ -11,8 +11,8 @@
   createScene={createSurfaceModelScene}
   {params}
   aspectRatio="4 / 3"
-  camera={{ position: [4.35, 0.3, 4.35] }}
-  orbit={{ enableZoom: false }}
+  camera={{ position: [4.35, -0.2, 4.35] }}
+  orbit={{ target: [0, -0.5, 0], enableZoom: false }}
   buildPane={(pane, p) => {
     pane.addBinding(p, "separation", { min: 0, max: 1.2, step: 0.01, label: "欠片を離す" })
   }}

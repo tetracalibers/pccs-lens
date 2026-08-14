@@ -11,8 +11,8 @@
   createScene={createSolidModelScene}
   {params}
   aspectRatio="4 / 3"
-  camera={{ position: [4.35, 0.3, 4.35] }}
-  orbit={{ enableZoom: false }}
+  camera={{ position: [4.35, -0.2, 4.35] }}
+  orbit={{ target: [0, -0.5, 0], enableZoom: false }}
   buildPane={(pane, p) => {
     pane.addBinding(p, "model", {
       label: "モデル",
