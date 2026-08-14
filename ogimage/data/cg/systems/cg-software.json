@@ -1,0 +1,11 @@
+{
+  "route": "cg/systems/cg-software",
+  "title": "CG系ソフトウェア",
+  "titleLines": [
+    "CG系ソフトウェア"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "CGシステムとデバイス"
+  ]
+}
