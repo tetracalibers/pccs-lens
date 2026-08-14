@@ -1,6 +1,6 @@
 ---
 layout: guide-content
-title: バックフェースカリングと隠面消去法 # CG 4-2-1, 4-2-2
+title: バックフェースカリング # CG 4-2-1, 4-2-2
 
 group: ["CG"]
 
