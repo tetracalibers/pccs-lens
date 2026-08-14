@@ -747,10 +747,10 @@
 ## CGと画像処理 — CGシステムとデバイス／リアルタイム3次元CG（`cg/systems.yaml` #real-time-3d）
 
 - [draft] `/cg/systems/parallel-processing`
-- [ページ未作成] 3次元CGハードウェアの変遷
 - [draft] `/cg/systems/rendering-pipeline`
 - [draft] `/cg/systems/gpu-based-cg-processing`
 - [ページ未作成] CGハードウェアの性能評価
+- [ページ未作成] 3次元CGハードウェアの変遷
 
 ## CGと画像処理 — CGシステムとデバイス／入力装置（`cg/systems.yaml` #input-devices）
 

@@ -689,10 +689,10 @@
 - [draft] `/cg/systems/cg-software`
 - [ページ未作成] 3次元モデル記述言語・フォーマット
 - [draft] `/cg/systems/parallel-processing`
-- [ページ未作成] 3次元CGハードウェアの変遷
 - [draft] `/cg/systems/rendering-pipeline`
 - [draft] `/cg/systems/gpu-based-cg-processing`
 - [ページ未作成] CGハードウェアの性能評価
+- [ページ未作成] 3次元CGハードウェアの変遷
 - [ページ未作成] 3次元ディジタイザ
 - [ページ未作成] モーションキャプチャ装置
 - [ページ未作成] 3次元座標入力・フォースディスプレイ

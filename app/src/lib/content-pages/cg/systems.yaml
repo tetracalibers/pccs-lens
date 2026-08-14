@@ -16,11 +16,11 @@ sections:
     id: real-time-3d
     links:
       - slug: parallel-processing
-      - title: 3次元CGハードウェアの変遷 # CG 8-3-2
-        group: ["CG"]
       - slug: rendering-pipeline
       - slug: gpu-based-cg-processing
       - title: CGハードウェアの性能評価 # CG 8-3-5
+        group: ["CG"]
+      - title: 3次元CGハードウェアの変遷 # CG 8-3-2
         group: ["CG"]
   - heading: 入力装置
     id: input-devices
