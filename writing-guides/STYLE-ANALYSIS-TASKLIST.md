@@ -498,10 +498,10 @@
 
 ## CGと画像処理 — モデリング／形状モデル（`cg/modeling.yaml` #shape-models）
 
-- [draft] `/cg/modeling/shape-model-overview`
+- [ ] `/cg/modeling/shape-model-overview`
 - [draft] `/cg/modeling/csg-representation`
-- [ページ未作成] 境界表現
-- [ページ未作成] スイープ表現
+- [draft] `/cg/modeling/boundary-representation`
+- [draft] `/cg/modeling/sweep-representation`
 - [ページ未作成] 境界表現のデータ構造
 - [ページ未作成] オイラー表現
 
@@ -623,12 +623,11 @@
 
 ## CGと画像処理 — レンダリング／隠面消去（`cg/rendering.yaml` #hidden-surface）
 
-- [ページ未作成] バックフェースカリング
 - [draft] `/cg/rendering/hidden-surface-removal-methods`
-- [ページ未作成] 優先順位アルゴリズム
-- [ページ未作成] スキャンライン法
-- [ページ未作成] Zバッファ法
-- [ページ未作成] レイトレーシング法
+- [draft] `/cg/rendering/priority-algorithm`
+- [draft] `/cg/rendering/scanline-algorithm`
+- [draft] `/cg/rendering/z-buffer-algorithm`
+- [draft] `/cg/rendering/ray-tracing-algorithm`
 
 ## CGと画像処理 — レンダリング／シェーディング（`cg/rendering.yaml` #shading）
 

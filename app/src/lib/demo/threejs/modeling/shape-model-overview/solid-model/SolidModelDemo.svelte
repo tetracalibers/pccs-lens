@@ -3,21 +3,17 @@
   import { createSolidModelScene, type SolidModelParams } from "./scene"
 
   // Tweakpane が直接書き換え、scene.ts が毎フレーム読む。$state ではなくプレーンオブジェクトにする
-  const params: SolidModelParams = { model: "solid", cutY: 1 }
+  const params: SolidModelParams = { cut: false }
 </script>
 
 <ThreeDemoCanvas
-  ariaLabel="一角を欠いた直方体を水平面で切ったときの断面の3次元表示。サーフェスモデルとソリッドモデルを切り替えられる（ドラッグで回転）"
+  ariaLabel="一角を欠いた直方体の3次元表示。手前下の角を斜めに切ると、欠片が離れ、本体と欠片の両方に中身の詰まった断面が現れる（ドラッグで回転）"
   createScene={createSolidModelScene}
   {params}
   aspectRatio="4 / 3"
-  camera={{ position: [2.8, 2.8, 3.6] }}
-  orbit={{ enableZoom: false }}
+  camera={{ position: [4.35, -0.2, 4.35] }}
+  orbit={{ target: [0, -0.5, 0], enableZoom: false }}
   buildPane={(pane, p) => {
-    pane.addBinding(p, "model", {
-      label: "モデル",
-      options: { サーフェスモデル: "surface", ソリッドモデル: "solid" }
-    })
-    pane.addBinding(p, "cutY", { min: -0.9, max: 1, step: 0.01, label: "切る高さ" })
+    pane.addBinding(p, "cut", { label: "切断する" })
   }}
 />

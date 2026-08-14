@@ -7,19 +7,23 @@ import {
   Mesh,
   MeshStandardMaterial,
   PerspectiveCamera,
-  Scene
+  Plane,
+  Scene,
+  Vector3,
+  WebGLRenderer
 } from "three"
 
 /** Tweakpane で操作するパラメータ */
 export type SurfaceModelParams = {
-  /** 上の面を 1 枚外す */
-  openFace: boolean
+  /** 手前下の角を切り落とすか。オフなら切る前の立体になる */
+  cut: boolean
 }
 
 // _shared の ThreeSceneContext と同じ形をローカルに宣言する（_shared を import しないため）
 type SceneContext = {
   scene: Scene
   camera: PerspectiveCamera
+  renderer: WebGLRenderer
   params: SurfaceModelParams
 }
 
@@ -55,12 +59,26 @@ const FACES: number[][] = [
   [0, 1, 5, 4], // y = -1
   [0, 4, 6, 3], // x = -1
   [1, 2, 11, 8, 12, 5], // x = 1（L 字）
-  [4, 5, 12, 10, 13, 6], // z = 1（L 字）
+  [3, 6, 13, 9, 11, 2], // y = 1（L 字）
   [7, 9, 13, 10], // 切り欠きの壁 x = 0
   [7, 10, 12, 8], // 切り欠きの壁 y = 0
   [7, 8, 11, 9], // 切り欠きの壁 z = 0
-  [3, 6, 13, 9, 11, 2] // y = 1（L 字）。「面を 1 枚外す」で取り除く上の面
+  [4, 5, 12, 10, 13, 6] // z = 1（L 字）
 ]
+
+/**
+ * 切り口の三角形。手前下の角 (1, -1, 1) に集まる 3 本の稜線を、それぞれ少し戻った点を通る。
+ * どの面とも平行でない斜めの面になるため、立体がもともと持つ切り欠きと見分けがつく。
+ * y 方向に 1 まで戻すと切り欠き（y > 0）に届いて断面が複雑になるので、その手前で止める。
+ */
+const SECTION: [number, number, number][] = [
+  [0.5, -1, 1],
+  [1, -0.25, 1],
+  [1, -1, 0.5]
+]
+
+/** 切ったときに、欠片を切り口から離す距離 */
+const SEPARATION = 0.7
 
 // 背景（暗めのグレー）の上で、陰影の濃淡が分かる明るさの色にする
 const SURFACE_COLOR = "#9db4d0"
@@ -88,19 +106,39 @@ const createSurfaceGeometry = (vertices: [number, number, number][], faces: numb
   return geometry
 }
 
-export const createSurfaceModelScene = ({ scene, params }: SceneContext) => {
-  const closedGeometry = createSurfaceGeometry(VERTICES, FACES)
-  // 上の面を 1 枚外したもの。面と面のあいだに隙間が空いた状態
-  const openedGeometry = createSurfaceGeometry(VERTICES, FACES.slice(0, -1))
+export const createSurfaceModelScene = ({ scene, renderer, params }: SceneContext) => {
+  // クリッピング（切り口の面の向こう側を描かない）を有効にする
+  renderer.localClippingEnabled = true
 
-  // 面を外したときに内側が見えるよう、裏側も描く
-  const material = new MeshStandardMaterial({
+  const geometry = createSurfaceGeometry(VERTICES, FACES)
+
+  // 切り口の面。奥側だけを残すと本体、手前側だけを残すと切り取った欠片になる
+  const [p0, p1, p2] = SECTION.map((point) => new Vector3(...point))
+  const bodyClip = new Plane().setFromCoplanarPoints(p0, p1, p2)
+  const baseFragmentClip = bodyClip.clone().negate()
+  const fragmentClip = baseFragmentClip.clone()
+
+  // 欠片を離す向き。切り口に垂直な向きだと、本体の切り口をちょうど隠してしまうので下へ逃がす
+  const separationDirection = baseFragmentClip.normal.clone().add(new Vector3(0, -1, 0)).normalize()
+
+  // 切り口から内側の面が見えるよう、裏側も描く
+  const bodyMaterial = new MeshStandardMaterial({
     color: SURFACE_COLOR,
     roughness: 0.6,
-    side: DoubleSide
+    side: DoubleSide,
+    clippingPlanes: [bodyClip]
   })
-  const mesh = new Mesh(closedGeometry, material)
-  scene.add(mesh)
+  scene.add(new Mesh(geometry, bodyMaterial))
+
+  // 欠片。同じ形状データを、逆向きの面で切り分ける
+  const fragmentMaterial = new MeshStandardMaterial({
+    color: SURFACE_COLOR,
+    roughness: 0.6,
+    side: DoubleSide,
+    clippingPlanes: [fragmentClip]
+  })
+  const fragment = new Mesh(geometry, fragmentMaterial)
+  scene.add(fragment)
 
   // 面があるので、光の当たり方から陰影が決まる。向きは固定（切り欠きの 3 枚の壁に差がつく向き）
   const light = new DirectionalLight(LIGHT_COLOR, 2.5)
@@ -110,12 +148,16 @@ export const createSurfaceModelScene = ({ scene, params }: SceneContext) => {
 
   return {
     update: () => {
-      mesh.geometry = params.openFace ? openedGeometry : closedGeometry
+      // 欠片を、切り口から離れる向きへずらす
+      fragment.position.copy(separationDirection).multiplyScalar(params.cut ? SEPARATION : 0)
+      // クリッピング面はワールド座標で効くので、欠片の移動に合わせて動かす
+      fragment.updateMatrixWorld()
+      fragmentClip.copy(baseFragmentClip).applyMatrix4(fragment.matrixWorld)
     },
     dispose: () => {
-      closedGeometry.dispose()
-      openedGeometry.dispose()
-      material.dispose()
+      geometry.dispose()
+      bodyMaterial.dispose()
+      fragmentMaterial.dispose()
     }
   }
 }

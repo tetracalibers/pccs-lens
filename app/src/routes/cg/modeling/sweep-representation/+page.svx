@@ -1,0 +1,10 @@
+---
+layout: guide-content
+title: スイープ表現 # CG 3-2-3
+
+group: ["CG"]
+
+draft: true
+---
+
+## TODO

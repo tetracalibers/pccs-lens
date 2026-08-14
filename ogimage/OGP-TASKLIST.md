@@ -354,10 +354,10 @@
 
 ## CGと画像処理（nested） — 記事：モデリング（`cg/modeling.yaml`）
 
-- [draft] `/cg/modeling/shape-model-overview`
+- [x] `/cg/modeling/shape-model-overview`
 - [draft] `/cg/modeling/csg-representation`
-- [ページ未作成] 境界表現
-- [ページ未作成] スイープ表現
+- [draft] `/cg/modeling/boundary-representation`
+- [draft] `/cg/modeling/sweep-representation`
 - [ページ未作成] 境界表現のデータ構造
 - [ページ未作成] オイラー表現
 - [draft] `/cg/modeling/curve-surface-equations`
@@ -389,12 +389,11 @@
 ## CGと画像処理（nested） — 記事：レンダリング（`cg/rendering.yaml`）
 
 - [x] `/cg/rendering/photorealism-and-reality-elements`
-- [ページ未作成] バックフェースカリング
 - [draft] `/cg/rendering/hidden-surface-removal-methods`
-- [ページ未作成] 優先順位アルゴリズム
-- [ページ未作成] スキャンライン法
-- [ページ未作成] Zバッファ法
-- [ページ未作成] レイトレーシング法
+- [draft] `/cg/rendering/priority-algorithm`
+- [draft] `/cg/rendering/scanline-algorithm`
+- [draft] `/cg/rendering/z-buffer-algorithm`
+- [draft] `/cg/rendering/ray-tracing-algorithm`
 - [draft] `/cg/rendering/shading-purpose`
 - [ページ未作成] 光を表す量
 - [ページ未作成] シェーディングモデル

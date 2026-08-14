@@ -1,0 +1,12 @@
+{
+  "route": "cg/modeling/shape-model-overview",
+  "title": "さまざまな形状モデル",
+  "titleLines": [
+    "さまざまな形状モデル"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "モデリング"
+  ],
+  "figure": "assets/cg/modeling/shape-model-overview/figure.png"
+}

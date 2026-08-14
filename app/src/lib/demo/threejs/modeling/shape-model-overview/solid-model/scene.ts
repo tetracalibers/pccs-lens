@@ -4,6 +4,7 @@ import {
   DirectionalLight,
   DoubleSide,
   Float32BufferAttribute,
+  Group,
   Mesh,
   MeshStandardMaterial,
   PerspectiveCamera,
@@ -15,10 +16,8 @@ import {
 
 /** Tweakpane で操作するパラメータ */
 export type SolidModelParams = {
-  /** 切り口を面で塞ぐか（塞ぐ＝ソリッドモデル） */
-  model: "surface" | "solid"
-  /** 切る高さ */
-  cutY: number
+  /** 手前下の角を切り落とすか。オフなら切る前の立体になる */
+  cut: boolean
 }
 
 // _shared の ThreeSceneContext と同じ形をローカルに宣言する（_shared を import しないため）
@@ -68,36 +67,23 @@ const FACES: number[][] = [
   [4, 5, 12, 10, 13, 6] // z = 1（L 字）
 ]
 
-/** 切り欠きの底の高さ。ここを境に、水平に切ったときの断面の輪郭が変わる */
-const NOTCH_BOTTOM = 0
-
 /**
- * 殻を切る高さのわずかな下げ幅。
- * 切り口ちょうどに殻の面が残るとちらつくため（上端で切ったときの上面）、殻だけ少し下で切る。
+ * 切り口の三角形。手前下の角 (1, -1, 1) に集まる 3 本の稜線を、それぞれ少し戻った点を通る。
+ * どの面とも平行でない斜めの面になるため、立体がもともと持つ切り欠きと見分けがつく。
+ * y 方向に 1 まで戻すと切り欠き（y > 0）に届いて断面が複雑になるので、その手前で止める。
  */
-const CLIP_EPSILON = 0.001
-
-/** 切り欠きより下で切ったときの断面の輪郭（x, z）。正方形 */
-const SECTION_BELOW_NOTCH: [number, number][] = [
-  [-1, -1],
-  [-1, 1],
-  [1, 1],
-  [1, -1]
+const SECTION: [number, number, number][] = [
+  [0.5, -1, 1],
+  [1, -0.25, 1],
+  [1, -1, 0.5]
 ]
 
-/** 切り欠きの高さで切ったときの断面の輪郭（x, z）。角が欠けた L 字 */
-const SECTION_IN_NOTCH: [number, number][] = [
-  [-1, -1],
-  [-1, 1],
-  [0, 1],
-  [0, 0],
-  [1, 0],
-  [1, -1]
-]
+/** 切ったときに、欠片を切り口から離す距離 */
+const SEPARATION = 0.7
 
-// 背景（暗めのグレー）の上で、殻は寒色、切り口は暖色にして見分けられるようにする
+// 背景（暗めのグレー）の上で、陰影の濃淡が分かる明るさの色にする。
+// 断面も同じ色にして、中身の詰まった 1 つの立体として見えるようにする
 const SURFACE_COLOR = "#9db4d0"
-const CAP_COLOR = "#e0a061"
 const LIGHT_COLOR = "#ffffff"
 
 /** 多角形の面を三角形に分割し、頂点の座標を並べる */
@@ -122,35 +108,56 @@ const createSurfaceGeometry = (vertices: [number, number, number][], faces: numb
   return geometry
 }
 
-/** 断面の輪郭から、切り口を塞ぐ 1 枚の面を作る（高さは position で合わせる） */
-const createCapGeometry = (outline: [number, number][]) => {
-  const vertices = outline.map(([x, z]): [number, number, number] => [x, 0, z])
-  return createSurfaceGeometry(vertices, [vertices.map((_, index) => index)])
-}
+/** 切り口の輪郭から、断面を塞ぐ 1 枚の面を作る */
+const createCapGeometry = (outline: [number, number, number][]) =>
+  createSurfaceGeometry(outline, [outline.map((_, index) => index)])
 
 export const createSolidModelScene = ({ scene, renderer, params }: SceneContext) => {
-  // クリッピング（面より上を描かない）を有効にする
+  // クリッピング（切り口の面の向こう側を描かない）を有効にする
   renderer.localClippingEnabled = true
 
-  // 水平面で切る。法線が下向きなので、この面より下だけが残る
-  const plane = new Plane(new Vector3(0, -1, 0), params.cutY - CLIP_EPSILON)
+  const geometry = createSurfaceGeometry(VERTICES, FACES)
 
-  // 殻。切り口から内側の面が見えるよう、裏側も描く
-  const shellGeometry = createSurfaceGeometry(VERTICES, FACES)
-  const shellMaterial = new MeshStandardMaterial({
+  // 切り口の面。奥側だけを残すと本体、手前側だけを残すと切り取った欠片になる
+  const [p0, p1, p2] = SECTION.map((point) => new Vector3(...point))
+  const bodyClip = new Plane().setFromCoplanarPoints(p0, p1, p2)
+  const baseFragmentClip = bodyClip.clone().negate()
+  const fragmentClip = baseFragmentClip.clone()
+
+  // 欠片を離す向き。切り口に垂直な向きだと、本体の切り口をちょうど隠してしまうので下へ逃がす
+  const separationDirection = baseFragmentClip.normal.clone().add(new Vector3(0, -1, 0)).normalize()
+
+  // 本体の殻。切り口から内側の面が見えるよう、裏側も描く
+  const bodyMaterial = new MeshStandardMaterial({
     color: SURFACE_COLOR,
     roughness: 0.6,
     side: DoubleSide,
-    clippingPlanes: [plane]
+    clippingPlanes: [bodyClip]
   })
-  scene.add(new Mesh(shellGeometry, shellMaterial))
+  scene.add(new Mesh(geometry, bodyMaterial))
 
-  // 切り口を塞ぐ面。これがあると、中身の詰まった立体として見える
-  const belowNotchCap = createCapGeometry(SECTION_BELOW_NOTCH)
-  const inNotchCap = createCapGeometry(SECTION_IN_NOTCH)
-  const capMaterial = new MeshStandardMaterial({ color: CAP_COLOR, roughness: 0.6 })
-  const cap = new Mesh(inNotchCap, capMaterial)
-  scene.add(cap)
+  // 欠片の殻。同じ形状データを、逆向きの面で切り分ける
+  const fragmentMaterial = new MeshStandardMaterial({
+    color: SURFACE_COLOR,
+    roughness: 0.6,
+    side: DoubleSide,
+    clippingPlanes: [fragmentClip]
+  })
+  const fragment = new Group()
+  fragment.add(new Mesh(geometry, fragmentMaterial))
+  scene.add(fragment)
+
+  // 切り口を塞ぐ断面。本体側と欠片側で向きが逆になるので、同じ 1 枚を裏表とも描く
+  const capGeometry = createCapGeometry(SECTION)
+  const capMaterial = new MeshStandardMaterial({
+    color: SURFACE_COLOR,
+    roughness: 0.6,
+    side: DoubleSide
+  })
+  const bodyCap = new Mesh(capGeometry, capMaterial)
+  scene.add(bodyCap)
+  const fragmentCap = new Mesh(capGeometry, capMaterial)
+  fragment.add(fragmentCap)
 
   const light = new DirectionalLight(LIGHT_COLOR, 2.5)
   light.position.set(4, 5, 3)
@@ -159,16 +166,21 @@ export const createSolidModelScene = ({ scene, renderer, params }: SceneContext)
 
   return {
     update: () => {
-      plane.constant = params.cutY - CLIP_EPSILON
-      cap.position.y = params.cutY
-      cap.geometry = params.cutY < NOTCH_BOTTOM ? belowNotchCap : inNotchCap
-      cap.visible = params.model === "solid"
+      // 欠片を、断面ごと切り口から離れる向きへずらす
+      fragment.position.copy(separationDirection).multiplyScalar(params.cut ? SEPARATION : 0)
+      // クリッピング面はワールド座標で効くので、欠片の移動に合わせて動かす
+      fragment.updateMatrixWorld()
+      fragmentClip.copy(baseFragmentClip).applyMatrix4(fragment.matrixWorld)
+
+      // 切っていないときは、断面が立体の内部にあるので描かない
+      bodyCap.visible = params.cut
+      fragmentCap.visible = params.cut
     },
     dispose: () => {
-      shellGeometry.dispose()
-      belowNotchCap.dispose()
-      inNotchCap.dispose()
-      shellMaterial.dispose()
+      geometry.dispose()
+      capGeometry.dispose()
+      bodyMaterial.dispose()
+      fragmentMaterial.dispose()
       capMaterial.dispose()
     }
   }
