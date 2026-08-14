@@ -1,19 +1,10 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
 
-  interface Props {
-    /** `figure`: 図解・デモを入れたい箇所 / `fix`: 記述を直したい箇所（加筆したい箇所は `:::Add`） */
-    type?: "figure" | "fix"
-    children?: Snippet
-  }
-
-  let { type = "figure", children }: Props = $props()
-
-  /** ディレクティブの属性値は文字列で渡るため、既定の図解以外は明示された値のみ */
-  const isFigure = $derived(type !== "fix")
+  let { children }: { children?: Snippet } = $props()
 </script>
 
-<div class="todo" class:figure={isFigure}>
+<div class="todo">
   {@render children?.()}
 </div>
 
@@ -28,6 +19,8 @@
     background: light-dark(#e6ffec, rgb(63 185 80 / 0.15));
     font-size: 0.8rem;
     line-height: 1.7;
+    /** ページ内での図解の通し番号をラベルに出す */
+    counter-increment: todo-figure;
   }
 
   /* diff のガター相当の `+` を、「TODO：」の行頭に置く */
@@ -43,22 +36,13 @@
   }
 
   .todo::before {
-    content: "TODO：修正";
+    content: "TODO：図解." counter(todo-figure);
     display: block;
     font-family: var(--font-mono-base), var(--font-ja-base);
     color: light-dark(#1a7f37, #3fb950);
     font-size: 0.75rem;
     letter-spacing: 0.1em;
     margin-bottom: 0.25rem;
-  }
-
-  /** 図解のTODOだけを数えて、ページ内での通し番号をタイトルに出す */
-  .todo.figure {
-    counter-increment: todo-figure;
-  }
-
-  .todo.figure::before {
-    content: "TODO：図解." counter(todo-figure);
   }
 
   .todo :global(p) {
