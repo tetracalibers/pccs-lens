@@ -16,8 +16,6 @@ import {
 
 /** Tweakpane で操作するパラメータ */
 export type SolidModelParams = {
-  /** 切り口を断面で塞ぐか（塞ぐ＝ソリッドモデル） */
-  model: "surface" | "solid"
   /** 切り取った欠片を離す距離。0 で元の位置に戻り、切る前の立体になる */
   separation: number
 }
@@ -83,9 +81,9 @@ const SECTION: [number, number, number][] = [
 /** 切り離していないときは、2 枚の断面が重なるので描かない */
 const SEPARATION_EPSILON = 0.001
 
-// 背景（暗めのグレー）の上で、殻は寒色、断面は暖色にして見分けられるようにする
+// 背景（暗めのグレー）の上で、陰影の濃淡が分かる明るさの色にする。
+// 断面も同じ色にして、中身の詰まった 1 つの立体として見えるようにする
 const SURFACE_COLOR = "#9db4d0"
-const CAP_COLOR = "#e0a061"
 const LIGHT_COLOR = "#ffffff"
 
 /** 多角形の面を三角形に分割し、頂点の座標を並べる */
@@ -152,7 +150,7 @@ export const createSolidModelScene = ({ scene, renderer, params }: SceneContext)
   // 切り口を塞ぐ断面。本体側と欠片側で向きが逆になるので、同じ 1 枚を裏表とも描く
   const capGeometry = createCapGeometry(SECTION)
   const capMaterial = new MeshStandardMaterial({
-    color: CAP_COLOR,
+    color: SURFACE_COLOR,
     roughness: 0.6,
     side: DoubleSide
   })
@@ -174,8 +172,8 @@ export const createSolidModelScene = ({ scene, renderer, params }: SceneContext)
       fragment.updateMatrixWorld()
       fragmentClip.copy(baseFragmentClip).applyMatrix4(fragment.matrixWorld)
 
-      // サーフェスモデルには断面がない。切り離していないときも、断面は立体の内部にある
-      const showCaps = params.model === "solid" && params.separation > SEPARATION_EPSILON
+      // 切り離していないときは、断面が立体の内部にあるので描かない
+      const showCaps = params.separation > SEPARATION_EPSILON
       bodyCap.visible = showCaps
       fragmentCap.visible = showCaps
     },

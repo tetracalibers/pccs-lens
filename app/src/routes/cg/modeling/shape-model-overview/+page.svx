@@ -168,10 +168,7 @@ scene.add(new AmbientLight(LIGHT_COLOR, 0.4))
 中身が空洞か詰まっているかという違いは、立体を切ってみるとはっきりします。
 
 :::Action
-欠片を離してモデルを切り替え、切り口の見え方を見比べてみよう
-
-- ソリッドモデル：本体と欠片の両方に断面が現れ、合わせると元の立体に戻る
-- サーフェスモデル：断面が現れず、殻の内側が見える
+欠片を離して、本体と欠片の両方に断面が現れることを確かめよう
 :::
 
 <CanvasWrapper>
@@ -217,7 +214,7 @@ const createCapGeometry = (outline: [number, number, number][]) =>
 // 断面。これがあると、中身の詰まった立体として見える。
 // 本体側と欠片側で向きが逆になるので、同じ 1 枚を裏表とも描く
 const capGeometry = createCapGeometry(SECTION)
-const capMaterial = new MeshStandardMaterial({ color: CAP_COLOR, roughness: 0.6, side: DoubleSide })
+const capMaterial = new MeshStandardMaterial({ color: SURFACE_COLOR, roughness: 0.6, side: DoubleSide })
 scene.add(new Mesh(capGeometry, capMaterial))
 fragment.add(new Mesh(capGeometry, capMaterial))
 
