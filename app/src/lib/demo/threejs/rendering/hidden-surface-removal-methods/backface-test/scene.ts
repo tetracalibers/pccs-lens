@@ -19,6 +19,9 @@ import {
   SRGBColorSpace,
   Vector3
 } from "three"
+import { LineMaterial } from "three/addons/lines/LineMaterial.js"
+import { LineSegments2 } from "three/addons/lines/LineSegments2.js"
+import { LineSegmentsGeometry } from "three/addons/lines/LineSegmentsGeometry.js"
 
 /** Tweakpane で操作するパラメータ */
 export type BackfaceTestParams = {
@@ -28,7 +31,6 @@ export type BackfaceTestParams = {
   cullBackFaces: boolean
   /** scene.ts が計算して書き戻す表示用の文字列 */
   measure: string
-  remaining: string
 }
 
 // _shared の ThreeSceneContext と同じ形をローカルに宣言する（_shared を import しないため）
@@ -51,12 +53,13 @@ const EYE_DISTANCE = 3.4
 /** 視点を表す球の半径 */
 const EYE_RADIUS = 0.1
 
-/** 法線ベクトルの矢印の長さ */
-const NORMAL_LENGTH = 0.75
+/** 法線ベクトルの矢印の長さ。立方体の外へ十分に伸ばして、面から立つ向きを読みやすくする */
+const NORMAL_LENGTH = 1.35
 
-/** 矢印の先端（円錐）の大きさ */
-const ARROW_RADIUS = 0.055
-const ARROW_HEIGHT = 0.18
+/** 矢印の軸の太さ（ピクセル）と、先端（円錐）の大きさ */
+const LINE_WIDTH = 4
+const ARROW_RADIUS = 0.09
+const ARROW_HEIGHT = 0.28
 
 /** なす角を示す扇の半径と分割数。法線ベクトルの矢印より内側に収める */
 const SECTOR_RADIUS = 0.45
@@ -220,10 +223,12 @@ const createLabel = (text: string, color: string) => {
 
 /** 始点から終点へ向かう矢印。表裏で色を変えるので、色をあとから差し替えられるようにする */
 const createArrow = (color: string) => {
-  const shaftPosition = new Float32BufferAttribute(new Float32Array(6), 3)
-  const shaftGeometry = new BufferGeometry().setAttribute("position", shaftPosition)
-  const shaftMaterial = new LineBasicMaterial({ color })
-  const shaft = new LineSegments(shaftGeometry, shaftMaterial)
+  // 線の太さをピクセルで指定できるようにする。素の Line では太さが常に 1 px になる
+  const shaftPositions = new Float32Array(6)
+  const shaftGeometry = new LineSegmentsGeometry()
+  const shaftMaterial = new LineMaterial({ color, alphaToCoverage: true })
+  shaftMaterial.linewidth = LINE_WIDTH
+  const shaft = new LineSegments2(shaftGeometry, shaftMaterial)
 
   const headGeometry = new ConeGeometry(ARROW_RADIUS, ARROW_HEIGHT, 16)
   const headMaterial = new MeshBasicMaterial({ color })
@@ -242,9 +247,8 @@ const createArrow = (color: string) => {
 
       // 円錐の底面が線の先端に来るよう、矢印の高さのぶん手前で線を止める
       shaftEnd.copy(to).addScaledVector(direction, -ARROW_HEIGHT)
-      shaftPosition.setXYZ(0, from.x, from.y, from.z)
-      shaftPosition.setXYZ(1, shaftEnd.x, shaftEnd.y, shaftEnd.z)
-      shaftPosition.needsUpdate = true
+      shaftPositions.set([from.x, from.y, from.z, shaftEnd.x, shaftEnd.y, shaftEnd.z])
+      shaftGeometry.setPositions(shaftPositions)
 
       // ConeGeometry の原点は円錐の中心なので、半分ぶん戻した位置に置く
       head.position.copy(to).addScaledVector(direction, -ARROW_HEIGHT / 2)
@@ -394,14 +398,12 @@ export const createBackfaceTestScene = ({ scene, params }: SceneContext) => {
         eye.z
       )
 
-      let frontCount = 0
       for (const face of faces) {
         // 面から視点へ向かう視点方向ベクトル e
         toEye.subVectors(eye, face.center)
 
         // n と e の内積。負なら、なす角が鈍角＝裏を向いた面
         const isBack = face.normal.dot(toEye) < 0
-        if (!isBack) frontCount++
 
         face.material.color.set(isBack ? BACK_FACE_COLOR : FRONT_FACE_COLOR)
         face.mesh.visible = !(isBack && params.cullBackFaces)
@@ -419,12 +421,9 @@ export const createBackfaceTestScene = ({ scene, params }: SceneContext) => {
       arrowEnd.copy(eye).addScaledVector(eyeDirection, -(EYE_RADIUS + 0.03))
       eyeArrow.setEnds(target.center, arrowEnd)
       sector.setAngle(target.center, target.normal, eyeDirection)
-      eyeVectorLabel.sprite.position
-        .copy(target.center)
-        .addScaledVector(toEye, E_LABEL_RATIO)
+      eyeVectorLabel.sprite.position.copy(target.center).addScaledVector(toEye, E_LABEL_RATIO)
 
       params.measure = formatMeasure(dot / toEye.length(), dot)
-      params.remaining = `${frontCount} / ${faces.length}`
     },
     dispose: () => {
       for (const face of faces) {
