@@ -356,8 +356,8 @@
 
 - [draft] `/cg/modeling/shape-model-overview`
 - [draft] `/cg/modeling/csg-representation`
-- [ページ未作成] 境界表現
-- [ページ未作成] スイープ表現
+- [draft] `/cg/modeling/boundary-representation`
+- [draft] `/cg/modeling/sweep-representation`
 - [ページ未作成] 境界表現のデータ構造
 - [ページ未作成] オイラー表現
 - [draft] `/cg/modeling/curve-surface-equations`

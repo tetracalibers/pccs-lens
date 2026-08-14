@@ -6,10 +6,8 @@ sections:
     links:
       - slug: shape-model-overview
       - slug: csg-representation
-      - title: 境界表現 # CG 3-2-2
-        group: ["CG"]
-      - title: スイープ表現 # CG 3-2-3
-        group: ["CG"]
+      - slug: boundary-representation
+      - slug: sweep-representation
       - title: 境界表現のデータ構造 # CG 3-3-1
         group: ["CG"]
       - title: オイラー表現 # CG 3-3-2
