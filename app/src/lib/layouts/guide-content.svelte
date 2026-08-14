@@ -22,6 +22,7 @@
   import Delete from "$lib/components/m-directive/Delete.svelte"
   import Add from "$lib/components/m-directive/Add.svelte"
   import Fix from "$lib/components/m-directive/Fix.svelte"
+  import Pending from "$lib/components/m-directive/Pending.svelte"
   import CardGrid from "$lib/components/m-directive/CardGrid.svelte"
   import TermCard from "$lib/components/m-directive/TermCard.svelte"
   import Foldable from "$lib/components/m-directive/Foldable.svelte"
@@ -51,6 +52,7 @@
     Delete,
     Add,
     Fix,
+    Pending,
     CardGrid,
     TermCard,
     Foldable,

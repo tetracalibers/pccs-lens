@@ -55,6 +55,7 @@ const directives = {
     { name: "Delete", replaceTo: "svelte-component" },
     { name: "Add", replaceTo: "svelte-component" },
     { name: "Fix", replaceTo: "svelte-component" },
+    { name: "Pending", replaceTo: "svelte-component" },
     { name: "CardGrid", replaceTo: "svelte-component" },
     { name: "TermCard", replaceTo: "svelte-component" },
     { name: "Foldable", replaceTo: "svelte-component" }
