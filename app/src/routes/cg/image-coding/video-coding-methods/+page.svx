@@ -1,0 +1,11 @@
+---
+layout: guide-content
+title: 動画像の符号化方式 # ImgP 17-3-3
+
+group: ["ImgP"]
+
+draft: true
+---
+
+## TODO
+

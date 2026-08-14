@@ -290,7 +290,7 @@
 
 ## CGと画像処理 — アニメーション／物理ベースアニメーション（`cg/animation.yaml` #physics-based）
 
-- [ページ未作成] 剛体の物理シミュレーション
+- [draft] `/cg/animation/rigid-body-simulation`
 - [ページ未作成] 弾性体の物理シミュレーション
 - [ページ未作成] 衝突判定
 
@@ -447,7 +447,7 @@
 
 ## CGと画像処理 — 画像符号化／圧縮の基礎とファイル形式（`cg/image-coding.yaml` #basics）
 
-- [ページ未作成] 画像の圧縮とファイル形式
+- [draft] `/cg/image-coding/compression-and-file-formats`
 - [ページ未作成] 画像圧縮の原理
 - [ページ未作成] 画像符号化の分類
 - [ページ未作成] 画像ファイル形式一覧
@@ -469,7 +469,7 @@
 
 - [ページ未作成] カラー画像の符号化
 - [ページ未作成] 静止画像の符号化方式
-- [ページ未作成] 動画像の符号化方式
+- [draft] `/cg/image-coding/video-coding-methods`
 
 ## CGと画像処理 — 画像の性質と色／画像の性質（`cg/image-properties.yaml` #properties）
 
