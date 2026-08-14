@@ -162,12 +162,12 @@ app/src/lib/demo/threejs/color/<デモ名>/
 
 守ること:
 
-- **記事に残っている `:::Todo` は案の材料にしてよいが、`:::Todo{type="fix"}` は除外する。** `type="fix"` は記述を直したいメモで、図解・デモの依頼ではない。デモ化の候補として拾うのは属性なし・`{type="figure"}` の `:::Todo` だけ（→ `writing-guides/syntax-guide.md` ルール4）
-- **`:::Add` / `:::Delete` のブロックも案の材料にしない。** `:::Add` は文章の加筆メモ、`:::Delete` は削除予定の記述で、どちらも `author-style-writer` の担当。図解・デモの依頼ではない
+- **案の材料にするのは `:::Todo` のブロックだけ。** `:::Todo` は「まだ無い図版・デモが欲しい」プレースホルダで、属性を取らない（→ `writing-guides/syntax-guide.md` ルール4）
+- **`:::Add` / `:::Delete` / `:::Fix` のブロックは案の材料にしない。** `:::Add` は文章の加筆メモ、`:::Delete` は削除予定の記述（どちらも `author-style-writer` の担当）、`:::Fix` は**すでにあるもの**への修正指示で、いずれも新しいデモの依頼ではない。`:::Fix{target="demo"}` は既存デモの修正依頼なので、このスキル（新規デモの掲載）ではなく個別の修正作業として扱う
 
   ```bash
-  # 記事から図解のTODO（属性なし・figure）だけを拾う
-  grep -n ':::Todo' <対象記事の +page.svx> | grep -v 'type="fix"'
+  # 記事から図解・デモのTODOだけを拾う
+  grep -n ':::Todo' <対象記事の +page.svx>
   ```
 
 - **件数は記事次第。** 「1 つの視点に 1 デモ」に縛らない。片方の視点が 0 案でもよい
