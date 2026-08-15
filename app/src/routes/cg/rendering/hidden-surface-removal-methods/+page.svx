@@ -3,26 +3,263 @@ layout: guide-content
 title: バックフェースカリング # CG 4-2-1, 4-2-2
 
 group: ["CG"]
+visual: true
 
 draft: true
 ---
 
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import BackfaceTestDemo from '$lib/demo/threejs/rendering/hidden-surface-removal-methods/backface-test/BackfaceTestDemo.svelte'
+</script>
+
+面が隙間なく閉じた不透明な物体では、裏を向いた面は必ず手前側の面に隠れます。
+視点からは見えない、物体の裏面はそもそも表示されないため、わざわざレンダリングする必要はありません。このような不可視となる裏面（back face）をあらかじめ除外する処理が:Anki[バックフェースカリング]です。
+
+:::Pending
 [隠面消去](/cg/rendering/photorealism-and-reality-elements/)では、重なり合う面のどちらが手前にあるかを確かめて、隠れる面を落としていきます。稜線を対象にする陰線消去も同じで、扱う面や線が増えるほど、この判定は重くなります。
+:::
 
-## :WithGroupTag[バックフェースカリング]{group="{['CG']}"}
+## :WithGroupTag[裏面の判別]{group="{['CG']}"}
 
-:Anki[バックフェースカリング]は、視点から見て裏を向いている面を、前後関係を調べる前にまとめて取り除く処理です。
+:::Fix
+インライン数式の前後には空白を空ける
+:::
 
-面が隙間なく閉じた不透明な物体では、裏を向いた面は必ず手前側の面に隠れます。他の面と比べるまでもなく:Anki[不可視]と決まるため、判定の対象から外せます。
+面が裏を向いているかどうかは、面に:Anki[垂直]な向きと、その面から:Anki[視点]を見た向きを比べればわかります。
 
-### 裏面の判別
+面に垂直で表側を向くベクトルが、その面の:Anki[法線]です。この:Anki[法線ベクトル]を$$\vec{n}$$、面から視点へ向かう:Anki[視点方向ベクトル]を$$\vec{e}$$とします。
 
-面が裏を向いているかどうかは、面に垂直な向きと、その面から視点を見た向きを比べればわかります。
+:::Add
+:Anki[法線]とは何かについてNote形式で補足
+:::
 
-面に垂直で表側を向くベクトルが、その面の[法線](/cg/modeling/polygon-surface/)です。この:Anki[法線ベクトル]を$$\vec{n}$$、面から視点へ向かう:Anki[視点方向ベクトル]を$$\vec{e}$$とします。
+面が視点側を向いているなら、$$\vec{n}$$と$$\vec{e}$$は同じ側を指すため、なす角は:Anki[鋭角]（直角より小さい角）になります。逆に、裏を向いた面では、なす角が:Anki[鈍角]（直角より大きい角）になります。
 
-面が視点の側を向いているなら、$$\vec{n}$$と$$\vec{e}$$は同じ側を指すため、なす角は直角より小さくなります。
-逆に裏を向いた面では、なす角が:Anki[鈍角]になります。
+:::Action
+次の点に着目して、デモを観察してみよう
+
+- 注目する面を切り替えると、同じ視点に対してでも、面によってなす角を示す扇が鋭角と鈍角に分かれること
+- 鈍角になる面では、視点方向ベクトルが立体の内部を貫くこと
+- 裏面を外すを切り替えると、閉じた物体からどれだけの面が取り除かれているか
+:::
+
+:::Fix{target="demo"}
+モバイルだとベクトルが太すぎ、ラベルが小さすぎて読めないので、調整
+:::
+
+<CanvasWrapper>
+  <BackfaceTestDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+/** 法線ベクトルの矢印の長さ。立方体の外へ十分に伸ばして、面から立つ向きを読みやすくする */
+const NORMAL_LENGTH = 1.35
+
+/** 矢印の軸の太さ（ピクセル）と、先端（円錐）の大きさ */
+const LINE_WIDTH = 4
+const ARROW_RADIUS = 0.09
+const ARROW_HEIGHT = 0.28
+
+/** なす角を示す扇の半径と分割数。法線ベクトルの矢印より内側に収める */
+const SECTOR_RADIUS = 0.45
+const SECTOR_SEGMENTS = 36
+
+/** 面の不透明度。立体の内部を貫く視点方向ベクトルが透けて見える程度に薄くする */
+const FACE_OPACITY = 0.5
+
+/** 扇の不透明度。扇と法線ベクトルの矢印は同じ色なので、わずかに透かして見分けられるようにする */
+const SECTOR_OPACITY = 0.72
+
+/**
+ * 半透明なものの描画順。数が小さいほど先に描かれ、あとから描いたものが上に重なる。
+ * 稜線と矢印は不透明なので、半透明なものより先に描かれる。
+ * 扇は既定の 0 のままなので面より先に描かれ、立体の内部に入り込んだ部分も面越しに透ける
+ */
+const FACE_ORDER = 1
+
+/** ConeGeometry が既定で向いている方向 */
+const CONE_UP = new Vector3(0, 1, 0)
+
+// 始点から終点へ向かう矢印。表裏で色を変えるので、色をあとから差し替えられるようにする
+const createArrow = (color: string) => {
+  // 線の太さをピクセルで指定できるようにする。素の Line では太さが常に 1 px になる
+  const shaftPositions = new Float32Array(6)
+  const shaftGeometry = new LineSegmentsGeometry()
+  const shaftMaterial = new LineMaterial({ color, alphaToCoverage: true })
+  shaftMaterial.linewidth = LINE_WIDTH
+  const shaft = new LineSegments2(shaftGeometry, shaftMaterial)
+
+  const headGeometry = new ConeGeometry(ARROW_RADIUS, ARROW_HEIGHT, 16)
+  const headMaterial = new MeshBasicMaterial({ color })
+  const head = new Mesh(headGeometry, headMaterial)
+
+  const group = new Group()
+  group.add(shaft, head)
+
+  const direction = new Vector3()
+  const shaftEnd = new Vector3()
+
+  return {
+    object: group,
+    setEnds: (from: Vector3, to: Vector3) => {
+      direction.copy(to).sub(from).normalize()
+
+      // 円錐の底面が線の先端に来るよう、矢印の高さのぶん手前で線を止める
+      shaftEnd.copy(to).addScaledVector(direction, -ARROW_HEIGHT)
+      shaftPositions.set([from.x, from.y, from.z, shaftEnd.x, shaftEnd.y, shaftEnd.z])
+      shaftGeometry.setPositions(shaftPositions)
+
+      // ConeGeometry の原点は円錐の中心なので、半分ぶん戻した位置に置く
+      head.position.copy(to).addScaledVector(direction, -ARROW_HEIGHT / 2)
+      head.quaternion.setFromUnitVectors(CONE_UP, direction)
+    },
+    setColor: (next: string) => {
+      shaftMaterial.color.set(next)
+      headMaterial.color.set(next)
+    }
+  }
+}
+
+// 2 つの向きがなす角を、塗りつぶした扇で示す。
+// 角の大小がそのまま扇の広さになるので、鋭角か鈍角かを面積で読み取れる
+const createSector = (color: string) => {
+  // 要（かなめ）と弧の両端で 1 枚の三角形。それを分割数だけ並べて扇にする
+  const position = new Float32BufferAttribute(new Float32Array(SECTOR_SEGMENTS * 3 * 3), 3)
+  const geometry = new BufferGeometry().setAttribute("position", position)
+  const material = new MeshBasicMaterial({
+    color,
+    side: DoubleSide,
+    transparent: true,
+    opacity: SECTOR_OPACITY,
+    // 扇の縁は法線ベクトルの矢印と重なる。扇をわずかに奥へずらして z ファイティングを避ける
+    polygonOffset: true,
+    polygonOffsetFactor: 1,
+    polygonOffsetUnits: 1
+  })
+  const mesh = new Mesh(geometry, material)
+
+  const axis = new Vector3()
+  const current = new Vector3()
+  const next = new Vector3()
+
+  return {
+    object: mesh,
+    // from・to は単位ベクトル。from を to まで回した範囲が扇になる
+    setAngle: (center: Vector3, from: Vector3, to: Vector3) => {
+      // 2 つの向きが張る平面に垂直な向きが回転軸
+      axis.crossVectors(from, to).normalize()
+      const angle = Math.acos(MathUtils.clamp(from.dot(to), -1, 1))
+
+      for (let index = 0; index < SECTOR_SEGMENTS; index++) {
+        current
+          .copy(from)
+          .applyAxisAngle(axis, (angle * index) / SECTOR_SEGMENTS)
+          .multiplyScalar(SECTOR_RADIUS)
+          .add(center)
+        next
+          .copy(from)
+          .applyAxisAngle(axis, (angle * (index + 1)) / SECTOR_SEGMENTS)
+          .multiplyScalar(SECTOR_RADIUS)
+          .add(center)
+
+        position.setXYZ(index * 3, center.x, center.y, center.z)
+        position.setXYZ(index * 3 + 1, current.x, current.y, current.z)
+        position.setXYZ(index * 3 + 2, next.x, next.y, next.z)
+      }
+      position.needsUpdate = true
+    },
+    setColor: (nextColor: string) => material.color.set(nextColor)
+  }
+}
+
+// 面を囲む頂点から、面の中心と、外を向く法線ベクトル n を求める
+const measureFace = (vertices: Vector3[]) => {
+  const center = new Vector3()
+  for (const vertex of vertices) center.add(vertex)
+  center.divideScalar(vertices.length)
+
+  // 隣り合う 2 辺の外積は面に垂直になる。頂点を外から見て反時計回りに並べてあるので、
+  // 得られる向きは物体の外側、つまり面の表側を指す
+  const normal = new Vector3()
+    .subVectors(vertices[1], vertices[0])
+    .cross(new Vector3().subVectors(vertices[2], vertices[1]))
+    .normalize()
+
+  return { center, normal }
+}
+
+// 立方体の 6 面を、外から見て反時計回りに並べた頂点として得る。先頭は +z の面
+const faceVertices = createCubeFaces()
+
+// 面ごとに 1 つの Mesh を作る。表裏で色を変え、外した面だけを消すため、面ごとに独立させる。
+// 深度を書かない半透明にして、立体の内部を通るベクトルが透けて見えるようにする
+const faces = faceVertices.map((vertices) => {
+  const geometry = new BufferGeometry()
+  geometry.setAttribute("position", new Float32BufferAttribute(createFacePositions(vertices), 3))
+  const material = new MeshBasicMaterial({
+    side: DoubleSide,
+    transparent: true,
+    opacity: FACE_OPACITY,
+    depthWrite: false
+  })
+  const mesh = new Mesh(geometry, material)
+  mesh.renderOrder = FACE_ORDER
+  scene.add(mesh)
+
+  return { ...measureFace(vertices), material, mesh }
+})
+
+// 面を外しても立方体の形が読めるよう、稜線は常に残す
+const boxGeometry = new BoxGeometry(CUBE_HALF * 2, CUBE_HALF * 2, CUBE_HALF * 2)
+const edgeGeometry = new EdgesGeometry(boxGeometry)
+boxGeometry.dispose()
+scene.add(new LineSegments(edgeGeometry, new LineBasicMaterial({ color: EDGE_COLOR })))
+
+// 表裏を判定する視点。観察するカメラとは別の点で、6 面が表 3 枚・裏 3 枚に分かれる位置に固定する
+const EYE = new Vector3(
+  EYE_DISTANCE * Math.sin(EYE_AZIMUTH),
+  EYE_HEIGHT,
+  EYE_DISTANCE * Math.cos(EYE_AZIMUTH)
+)
+
+// 注目する 1 面にだけ、法線ベクトル n・視点方向ベクトル e・なす角の扇を添える
+const normalArrow = createArrow(FRONT_ACCENT)
+const eyeArrow = createArrow(EYE_COLOR)
+const sector = createSector(FRONT_ACCENT)
+scene.add(normalArrow.object, eyeArrow.object, sector.object)
+
+const toEye = new Vector3()
+for (const face of faces) {
+  // 面から視点へ向かう視点方向ベクトル e
+  toEye.subVectors(EYE, face.center)
+
+  // n と e の内積。負なら、なす角が鈍角＝裏を向いた面
+  const isBack = face.normal.dot(toEye) < 0
+
+  face.material.color.set(isBack ? BACK_FACE_COLOR : FRONT_FACE_COLOR)
+  // 裏面を外すと、裏を向いた面だけが消える
+  face.mesh.visible = !(isBack && cullBackFaces)
+}
+
+// 注目する面のなす角。裏を向いた面では e が立体の内部を貫く
+const target = faces[targetFace]
+toEye.subVectors(EYE, target.center)
+const accent = target.normal.dot(toEye) < 0 ? BACK_ACCENT : FRONT_ACCENT
+
+const normalEnd = target.center.clone().addScaledVector(target.normal, NORMAL_LENGTH)
+normalArrow.setEnds(target.center, normalEnd)
+normalArrow.setColor(accent)
+
+const eyeDirection = toEye.clone().normalize()
+eyeArrow.setEnds(target.center, EYE)
+sector.setAngle(target.center, target.normal, eyeDirection)
+sector.setColor(accent)
+```
+
+:::
 
 なす角が鈍角かどうかは、$$\vec{n}$$と$$\vec{e}$$の:Anki[内積]の符号で調べられます。裏面が満たす:Anki[判別式]は次のとおりです。
 
@@ -32,29 +269,40 @@ $$
 
 この式が成り立つ面を不可視として外し、残った面だけを次の処理へ渡します。
 
-:::Note
-内積は、`2`つのベクトルの長さと、なす角の余弦をかけ合わせた値です。長さは負にならないため、値の符号を決めているのは余弦だけで、なす角が直角を超えたところで負に転じます。
+:::Fix
+内積に関するNote内で、余弦とは何かについても触れる
 :::
 
-:::Todo
-法線ベクトルと視点方向ベクトルのなす角で表裏を判別する図。物体を横から見た断面に視点を`1`つ置き、表を向いた面と裏を向いた面のそれぞれについて法線ベクトルと視点方向ベクトルを描いて、なす角が鋭角になる場合と鈍角になる場合を対比する
+:::Note
+:Anki[内積]は、`2`つのベクトルの長さと、なす角の余弦をかけ合わせた値です。長さは負にならないため、値の符号を決めているのは余弦だけで、なす角が直角を超えたところで負に転じます。
+:::
+
+:::Add
+このような判定を面上の任意の点で行う場合は、面を構成する頂点を$$P_i$$、視点を$$P_{\epsilon}$$とすると、次の判別式が使える：$$ (P_{\epsilon} - P_i) \cdot N$$
 :::
 
 ### 凸形状と凹形状
 
+:::Pending
 裏面を外したあとに何が残るかは、物体の形で変わります。
+:::
 
-どこにも凹みのない:Anki[凸形状]なら、表を向いた面どうしが重なることはありません。バックフェースカリングを終えた時点で残っているのはすべて見えている面で、隠面消去はこれで完了します。
+どこにも凹みのない:Anki[凸形状]なら、表を向いた面どうしが重なることはありません。バックフェースカリングを終えた時点で残っているのはすべて見えている面で、[隠面消去](/cg/rendering/photorealism-and-reality-elements/)はこれで完了します。
 
-一方、へこんだ部分をもつ:Anki[凹形状]では、表を向いた面どうしでも一方が他方に隠れます。物体が`2`つ以上ある場面も同じで、別の物体に隠される面が残ります。
+一方、へこんだ部分をもつ:Anki[凹形状]では、表を向いた面どうしでも一方が他方に隠れます。
+つまり、バックフェースカリングだけでは、見えない面をすべて隠しきれないのです。
 
 :::Todo
 凸形状と凹形状で、バックフェースカリングのあとに残る隠れを比べる図。同じ視点から見た凸形状と凹形状を並べ、裏を向いた面を取り除いた状態を描いて、凸形状では残った面が互いに隠れず、凹形状では表を向いた面どうしに隠れが残ることを示す
 :::
 
-バックフェースカリングは隠面消去そのものではなく、その手前で面の数を減らす下ごしらえです。閉じた物体では面のおよそ半分が裏を向いているため、この一手で後段へ渡る面は半分ほどまで減ります。
+物体が`2`つ以上ある場面も同様に、別の物体に隠される面が残ってしまいます。
 
+このように、バックフェースカリングだけで隠面消去が完了するとは限りませんが、隠面消去の前に面の数を減らす下ごしらえとしては使えます。たとえば閉じた物体では面のおよそ半分が裏を向いているため、バックフェースカリングを適用すると、面のデータは半分ほどまで減ります。
+
+:::Pending
 残った面どうしの前後関係を決めるのが、隠面消去法の仕事です。
+:::
 
 ## :WithGroupTag[隠面消去法の分類]{group="{['CG']}"}
 

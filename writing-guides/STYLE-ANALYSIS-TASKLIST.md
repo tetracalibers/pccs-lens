@@ -290,14 +290,14 @@
 
 ## CGと画像処理 — アニメーション／物理ベースアニメーション（`cg/animation.yaml` #physics-based）
 
-- [ページ未作成] 剛体の物理シミュレーション
+- [draft] `/cg/animation/rigid-body-simulation`
 - [ページ未作成] 弾性体の物理シミュレーション
 - [ページ未作成] 衝突判定
 
 ## CGと画像処理 — アニメーション／リアルタイムアニメーション（`cg/animation.yaml` #real-time）
 
 - [ページ未作成] リアルタイムアニメーションの手法
-- [ページ未作成] レンダーマンとリアルタイムシェーダ
+- [draft] `/cg/animation/renderman-and-realtime-shaders`
 - [ページ未作成] ゲーム物理
 
 ## CGと画像処理 — アニメーション／実写映像との合成（`cg/animation.yaml` #live-action-compositing）
@@ -447,7 +447,7 @@
 
 ## CGと画像処理 — 画像符号化／圧縮の基礎とファイル形式（`cg/image-coding.yaml` #basics）
 
-- [ページ未作成] 画像の圧縮とファイル形式
+- [draft] `/cg/image-coding/compression-and-file-formats`
 - [ページ未作成] 画像圧縮の原理
 - [ページ未作成] 画像符号化の分類
 - [ページ未作成] 画像ファイル形式一覧
@@ -469,7 +469,7 @@
 
 - [ページ未作成] カラー画像の符号化
 - [ページ未作成] 静止画像の符号化方式
-- [ページ未作成] 動画像の符号化方式
+- [draft] `/cg/image-coding/video-coding-methods`
 
 ## CGと画像処理 — 画像の性質と色／画像の性質（`cg/image-properties.yaml` #properties）
 
@@ -498,7 +498,7 @@
 
 ## CGと画像処理 — モデリング／形状モデル（`cg/modeling.yaml` #shape-models）
 
-- [ ] `/cg/modeling/shape-model-overview`
+- [x] `/cg/modeling/shape-model-overview`
 - [draft] `/cg/modeling/csg-representation`
 - [draft] `/cg/modeling/boundary-representation`
 - [draft] `/cg/modeling/sweep-representation`
@@ -619,7 +619,7 @@
 
 ## CGと画像処理 — レンダリング／写実的レンダリング（`cg/rendering.yaml` #photorealistic）
 
-- [ ] `/cg/rendering/photorealism-and-reality-elements`
+- [x] `/cg/rendering/photorealism-and-reality-elements`
 
 ## CGと画像処理 — レンダリング／隠面消去（`cg/rendering.yaml` #hidden-surface）
 
@@ -738,21 +738,19 @@
 
 ## CGと画像処理 — CGシステムとデバイス／CGシステムとソフトウェア（`cg/systems.yaml` #systems-software）
 
-- [ページ未作成] CGシステムの構成
 - [ページ未作成] CGシステムの応用
-- [ページ未作成] コンピュータネットワーク
-- [ページ未作成] プログラム記述言語
-- [ページ未作成] グラフィックス用API
-- [ページ未作成] CGアプリケーションソフトウェア
+- [ページ未作成] グラフィックス装置
+- [draft] `/cg/systems/graphics-api`
+- [ ] `/cg/systems/cg-software`
 - [ページ未作成] 3次元モデル記述言語・フォーマット
 
 ## CGと画像処理 — CGシステムとデバイス／リアルタイム3次元CG（`cg/systems.yaml` #real-time-3d）
 
-- [ページ未作成] 並列処理
-- [ページ未作成] 3次元CGハードウェアの変遷
-- [ページ未作成] 描画処理の流れ
-- [ページ未作成] GPUを利用したCG処理
+- [draft] `/cg/systems/parallel-processing`
+- [draft] `/cg/systems/rendering-pipeline`
+- [draft] `/cg/systems/gpu-based-cg-processing`
 - [ページ未作成] CGハードウェアの性能評価
+- [ページ未作成] 3次元CGハードウェアの変遷
 
 ## CGと画像処理 — CGシステムとデバイス／入力装置（`cg/systems.yaml` #input-devices）
 

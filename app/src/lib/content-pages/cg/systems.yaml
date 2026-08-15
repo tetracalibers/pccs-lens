@@ -4,32 +4,23 @@ sections:
   - heading: CGシステムとソフトウェア
     id: systems-software
     links:
-      - title: CGシステムの構成 # CG 8-1-2
-        group: ["CG"]
       - title: CGシステムの応用 # CG 8-1-1
         group: ["CG"]
-      - title: コンピュータネットワーク # CG 8-1-3
+      - title: グラフィックス装置 # CG 8-1-2 [4],[5],[6]
         group: ["CG"]
-      - title: プログラム記述言語 # CG 8-2-2
-        group: ["CG"]
-      - title: グラフィックス用API # CG 8-2-3
-        group: ["CG"]
-      - title: CGアプリケーションソフトウェア # CG 8-2-4
-        group: ["CG"]
+      - slug: graphics-api
+      - slug: cg-software
       - title: 3次元モデル記述言語・フォーマット # CG 8-2-5
         group: ["CG"]
   - heading: リアルタイム3次元CG
     id: real-time-3d
     links:
-      - title: 並列処理 # CG 8-3-1
+      - slug: parallel-processing
+      - slug: rendering-pipeline
+      - slug: gpu-based-cg-processing
+      - title: CGハードウェアの性能評価 # CG 8-3-5
         group: ["CG"]
       - title: 3次元CGハードウェアの変遷 # CG 8-3-2
-        group: ["CG"]
-      - title: 描画処理の流れ # CG 8-3-3
-        group: ["CG"]
-      - title: GPUを利用したCG処理 # CG 8-3-4
-        group: ["CG"]
-      - title: CGハードウェアの性能評価 # CG 8-3-5
         group: ["CG"]
   - heading: 入力装置
     id: input-devices

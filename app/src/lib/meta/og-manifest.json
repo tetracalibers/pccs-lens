@@ -123,6 +123,9 @@
     "cg/systems": {
       "title": "CGシステムとデバイス"
     },
+    "cg/systems/cg-software": {
+      "title": "CG系ソフトウェア"
+    },
     "cg/tone-conversion": {
       "title": "画素ごとの濃淡・色変換"
     },
