@@ -3,9 +3,15 @@ layout: guide-content
 title: 2次曲線 # CG 3-4-2
 
 group: ["CG"]
+visual: true
 
 draft: true
 ---
+
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import ConicSectionDemo from '$lib/demo/threejs/modeling/quadratic-curve/conic-section/ConicSectionDemo.svelte'
+</script>
 
 [曲線・曲面の数式表現](/cg/modeling/curve-surface-equations/)では、次数が`2`の代数曲線を`2`次曲線と呼び、円・楕円・放物線・双曲線がこれにあたることを見ました。
 見た目の違うこの`4`つが`1`つの名前でくくられるのは、係数を変えるだけで同じ式に収まり、しかも同じ図形から切り出せるためです。
@@ -42,8 +48,159 @@ $$
 平面が頂点をちょうど通る場合は、切り口が`1`点になったり、`1`本または`2`本の直線になったりします。式は`2`次のままですが、こうしたものは退化した円錐曲線として区別されます。
 :::
 
-:::Todo
-円錐面を`3`通りの平面で切り、楕円・放物線・双曲線が現れるところを並べて示す図。切る平面の傾きを母線と比べられるよう、軸と母線もあわせて描く。
+:::Action
+平面の傾きを動かして、切り口に現れる曲線が母線の傾きを境にどう変わるかを見てみよう
+
+- 母線より緩いあいだは閉じた楕円で、母線の傾きに近づくほど長く伸びていく
+- 母線とちょうど同じ傾きになると、切り口は閉じずに放物線になる
+- 母線より急にすると、頂点の上下どちらの側とも交わり、双曲線の`2`本の枝が現れる
+- ドラッグで回すと、どの切り口も`1`枚の平面に乗った曲線であることが見える
+:::
+
+<CanvasWrapper>
+  <ConicSectionDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 円錐面。半頂角 α の母線を軸（y 軸）のまわりに回した面を、頂点を挟んで上下 2 つ置く。
+// ConeGeometry は頂点が +y 側なので、上側は反転させてどちらも頂点を原点に合わせる
+const coneGeometry = new ConeGeometry(CONE_RADIUS, CONE_EXTENT, 48, 1, true)
+const coneMaterial = new MeshBasicMaterial({
+  color: CONE_COLOR,
+  side: DoubleSide,
+  transparent: true,
+  opacity: CONE_OPACITY,
+  // 面の内側にある切り口を隠したくないので、深度は比較するが書かない
+  depthWrite: false
+})
+
+const upperCone = new Mesh(coneGeometry, coneMaterial)
+upperCone.rotation.x = Math.PI
+upperCone.position.y = CONE_EXTENT / 2
+scene.add(upperCone)
+
+const lowerCone = new Mesh(coneGeometry, coneMaterial)
+lowerCone.position.y = -CONE_EXTENT / 2
+scene.add(lowerCone)
+
+// 母線。頂点を挟んで上下に伸びる 1 本の直線を、軸のまわりに等間隔で並べる
+const generatrixPoints: Vector3[] = []
+for (let i = 0; i < GENERATRIX_COUNT; i++) {
+  const theta = (i / GENERATRIX_COUNT) * Math.PI * 2
+  const x = CONE_RADIUS * Math.cos(theta)
+  const z = CONE_RADIUS * Math.sin(theta)
+  generatrixPoints.push(new Vector3(-x, -CONE_EXTENT, -z), new Vector3(x, CONE_EXTENT, z))
+}
+const generatrixGeometry = new BufferGeometry().setFromPoints(generatrixPoints)
+const generatrixMaterial = new LineBasicMaterial({ color: CONE_COLOR })
+scene.add(new LineSegments(generatrixGeometry, generatrixMaterial))
+
+// 円錐面をどこまで描いたかを示す輪。切り口がここで途切れるのは、面の広がりを有限に描いているため
+const ringPoints: Vector3[] = []
+for (let i = 0; i < RING_SEGMENTS; i++) {
+  const theta = (i / RING_SEGMENTS) * Math.PI * 2
+  ringPoints.push(new Vector3(CONE_RADIUS * Math.cos(theta), 0, CONE_RADIUS * Math.sin(theta)))
+}
+const ringGeometry = new BufferGeometry().setFromPoints(ringPoints)
+const ringMaterial = new LineBasicMaterial({ color: CONE_COLOR })
+for (const y of [CONE_EXTENT, -CONE_EXTENT]) {
+  const ring = new LineLoop(ringGeometry, ringMaterial)
+  ring.position.y = y
+  scene.add(ring)
+}
+
+// 傾きを比べる母線。平面が倒れていく向き（+x 側）の 1 本だけ色を変える。
+// この母線と平面はどちらも xy 平面に乗るので、角度をそのまま見比べられる
+const markedGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(-CONE_RADIUS, -CONE_EXTENT, 0),
+  new Vector3(CONE_RADIUS, CONE_EXTENT, 0)
+])
+const markedMaterial = new LineBasicMaterial({ color: GENERATRIX_COLOR })
+scene.add(new LineSegments(markedGeometry, markedMaterial))
+
+// 母線を回すもとになった軸
+const axisGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(0, -AXIS_EXTENT, 0),
+  new Vector3(0, AXIS_EXTENT, 0)
+])
+const axisMaterial = new LineBasicMaterial({ color: AXIS_COLOR })
+scene.add(new LineSegments(axisGeometry, axisMaterial))
+
+// 切る平面。(0, PLANE_HEIGHT, 0) を通り、そこを中心に z 軸まわりへ傾ける
+const tilt = (TILT_DEG * Math.PI) / 180
+
+const planeGroup = new Group()
+planeGroup.position.y = PLANE_HEIGHT
+planeGroup.rotation.z = tilt
+scene.add(planeGroup)
+
+const planeGeometry = new PlaneGeometry(PLANE_SIZE, PLANE_SIZE)
+const planeMaterial = new MeshBasicMaterial({
+  color: PLANE_COLOR,
+  side: DoubleSide,
+  transparent: true,
+  opacity: PLANE_OPACITY,
+  depthWrite: false
+})
+const plane = new Mesh(planeGeometry, planeMaterial)
+// PlaneGeometry は xy 平面に作られるので、寝かせて法線を軸の向きに合わせる
+plane.rotation.x = -Math.PI / 2
+planeGroup.add(plane)
+
+// 切り口。線分の本数は刻み数までなので、その分の場所を先に確保しておく
+const sectionPositions = new Float32BufferAttribute(new Float32Array(SECTION_SEGMENTS * 2 * 3), 3)
+const sectionGeometry = new BufferGeometry().setAttribute("position", sectionPositions)
+const sectionMaterial = new LineBasicMaterial({ color: SECTION_COLOR })
+scene.add(new LineSegments(sectionGeometry, sectionMaterial))
+
+const cosTilt = Math.cos(tilt)
+const sinTilt = Math.sin(tilt)
+
+// θ ごとに求めた切り口の点と、それが円錐面を描いた範囲に入っているか
+const samples = new Float32Array((SECTION_SEGMENTS + 1) * 3)
+const insideCone = new Uint8Array(SECTION_SEGMENTS + 1)
+
+// 円錐面上の点 (t tanα cosθ, t, t tanα sinθ) を平面の式に入れると、θ ごとに t が 1 つ決まる
+for (let i = 0; i <= SECTION_SEGMENTS; i++) {
+  const theta = (i / SECTION_SEGMENTS) * Math.PI * 2
+  const denominator = cosTilt - sinTilt * TAN_HALF_ANGLE * Math.cos(theta)
+  const t = (cosTilt * PLANE_HEIGHT) / denominator
+  samples[i * 3] = t * TAN_HALF_ANGLE * Math.cos(theta)
+  samples[i * 3 + 1] = t
+  samples[i * 3 + 2] = t * TAN_HALF_ANGLE * Math.sin(theta)
+  // 分母が 0 に近いところは、切り口が無限の彼方へ逃げている
+  insideCone[i] = Math.abs(denominator) > DENOMINATOR_EPSILON && Math.abs(t) <= CONE_EXTENT ? 1 : 0
+}
+
+// 隣り合う点を結ぶ。分母の符号が変わったところは頂点を挟んで反対側の円錐へ飛んでいるので繋がない
+let segmentCount = 0
+for (let i = 0; i < SECTION_SEGMENTS; i++) {
+  const next = i + 1
+  if (!insideCone[i] || !insideCone[next]) continue
+  if (Math.sign(samples[i * 3 + 1]) !== Math.sign(samples[next * 3 + 1])) continue
+  sectionPositions.setXYZ(segmentCount * 2, samples[i * 3], samples[i * 3 + 1], samples[i * 3 + 2])
+  sectionPositions.setXYZ(
+    segmentCount * 2 + 1,
+    samples[next * 3],
+    samples[next * 3 + 1],
+    samples[next * 3 + 2]
+  )
+  segmentCount++
+}
+sectionPositions.needsUpdate = true
+sectionGeometry.setDrawRange(0, segmentCount * 2)
+
+// 切る平面の傾きを母線の傾きと比べて、現れる曲線の名前を決める
+const nameSection = (tiltDeg: number) => {
+  if (Math.abs(tiltDeg - GENERATRIX_TILT_DEG) < TILT_EPSILON) return "放物線"
+  if (tiltDeg > GENERATRIX_TILT_DEG) return "双曲線"
+  if (tiltDeg < TILT_EPSILON) return "円"
+  return "楕円"
+}
+```
+
 :::
 
 ## :WithGroupTag[標準形]{group="{['CG']}"}
