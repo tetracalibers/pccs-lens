@@ -94,6 +94,8 @@ function helpText() {
                         class       = どのタイルから生まれたか（カイト＆ダート版と同じ）
                         zone        = 核からの距離。境目の半径が φ で縮む成長痕
   --cleave=<0-5>        劈開線の粗さ（既定: 3）。1 増やすごとに線の間隔が φ 倍になる
+  --cleave-opacity=<0-1> 劈開線の濃さの倍率（既定: 1）。太さは変えずに淡くする。
+                        面を描かず劈開線だけを見るときに濃すぎるのを抑える
   --growth=<0-1>        結晶化の進み具合（既定: 1）。境目は 線 → 半透明 → 結晶面 と変わる
   --frames=<1-24>       growth を 0 から振ってコマを出す（既定: 1）
   --seeds=<1-8>         結晶核の数（既定: 1）。2 以上で多結晶になり、粒界が出る
@@ -136,6 +138,11 @@ export function run() {
     const frames = readNumber(opts.frames, 1, { min: 1, max: 24, integer: true, name: '--frames' })
     const growth = readNumber(opts.growth, 1, { min: 0, max: 1, name: '--growth' })
     const cleave = readNumber(opts.cleave, 3, { min: 0, max: 5, integer: true, name: '--cleave' })
+    const cleaveOpacity = readNumber(opts['cleave-opacity'], 1, {
+      min: 0,
+      max: 1,
+      name: '--cleave-opacity',
+    })
     const lightDeg = readNumber(opts.light, 135, { min: -360, max: 360, name: '--light' })
     const layers = readLayers(opts.layers, seeds)
     const colorBy = readColorBy(opts['color-by'])
@@ -208,6 +215,7 @@ export function run() {
             growth: stage,
             lightAngle,
             flat,
+            cleaveOpacity,
           })
 
           const suffix =
@@ -224,7 +232,9 @@ export function run() {
               unit,
               growth: stage,
               layers,
-              note: `color-by: ${colorBy} / seeds: ${seeds} / light: ${lightDeg} / cleave: ${cleave}`,
+              note:
+                `color-by: ${colorBy} / seeds: ${seeds} / light: ${lightDeg} / cleave: ${cleave}` +
+                ` / cleave-opacity: ${cleaveOpacity}`,
             }),
             'utf-8',
           )

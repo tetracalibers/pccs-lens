@@ -326,7 +326,7 @@ b は「内接円と外接円の比がいちばん 1 に近くなる（＝いち
 | --- | --- |
 | tile | タイルの面。向きから結晶面（ファセット）の法線を作り、斜めからの光で陰影をつける。光の当たった稜線は背景色で抜き、背いた稜線はインクで沈める |
 | edge | タイルの輪郭。タイリングの構造そのものを見たいときに足す |
-| cleave | 劈開線。頂点が乗る平行線族を φ のべきで粗くして引く。頂点の多い線は太く濃く |
+| cleave | 劈開線。頂点が乗る平行線族を φ のべきで粗くして引く。頂点の多い線は太く濃く（濃さは `--cleave-opacity` でまとめて落とせる） |
 | network | 頂点と辺のネットワーク。節点は集まるタイルの枚数で大きさを変え、5 回対称の頂点（太陽・星）だけ十角形にする |
 | diffraction | 頂点の点群の回折像。ピークの強さで円の大きさと濃さを決める |
 | grain | 粒界。ボロノイ領域の境目を、背景色の溝＋細い線の割れ目として描く |
@@ -437,6 +437,7 @@ node src/generate-crystal.js --growth=0.6              # 途中まで析出し�
 node src/generate-crystal.js --frames=8                # 成長のコマ送りを 8 枚
 node src/generate-crystal.js --seeds=4                 # 多結晶（粒界が出る）
 node src/generate-crystal.js --cleave=4 --light=40     # 劈開線をより粗く、光を別の向きから
+node src/generate-crystal.js --layers=cleave --cleave-opacity=0.5 # 劈開線だけを淡く引く
 node src/generate-crystal.js --help                    # ヘルプ
 ```
 
@@ -446,6 +447,7 @@ node src/generate-crystal.js --help                    # ヘルプ
 | `--layers` | `diffraction,tile,cleave,network` | 描く層。核が複数なら `grain` も既定に入る |
 | `--color-by` | `orientation` | `orientation` / `class` / `zone` |
 | `--cleave` | 3 | 劈開線の粗さ。1 増やすごとに間隔が φ 倍（0〜5） |
+| `--cleave-opacity` | 1 | 劈開線の濃さの倍率（0〜1）。太さは変えない |
 | `--growth` | 1 | 結晶化の進み具合（0〜1） |
 | `--frames` | 1 | growth を 0 から振って出すコマ数（1〜24） |
 | `--seeds` | 1 | 結晶核の数（1〜8） |

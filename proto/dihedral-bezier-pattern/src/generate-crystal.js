@@ -5,7 +5,8 @@
  * 重ね、色数 2〜6 で一括生成する。
  *
  *   node src/generate-crystal.js [--repeat=12] [--layers=tile,cleave,network,diffraction]
- *                               [--color-by=orientation] [--growth=1] [--frames=1]
+ *                               [--color-by=orientation] [--cleave=3] [--cleave-opacity=1]
+ *                               [--growth=1] [--frames=1]
  *                               [--seeds=1] [--light=135] [--flat] [--size=480]
  *                               [--seed=12345] [--count=1] [--color-count=4,5]
  *                               [--colors=#fff,#000]

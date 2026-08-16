@@ -81,6 +81,7 @@ function grouperFor(colorBy, colorCount, maxRadius) {
  * @param colors パレット
  * @param growth 結晶化の進み具合（0〜1）
  * @param lightAngle 光源の方位（ラジアン）
+ * @param cleaveOpacity 劈開線の濃さの倍率（0〜1）。太さは変えない
  * @returns `{ groups }` 描く順に並べた図形の束
  */
 export function buildCrystalMotif({
@@ -95,6 +96,7 @@ export function buildCrystalMotif({
   growth,
   lightAngle,
   flat,
+  cleaveOpacity = 1,
 }) {
   const half = size / 2
   const corner = half * Math.SQRT2
@@ -225,7 +227,7 @@ export function buildCrystalMotif({
   }
 
   if (wants('cleave')) {
-    groups.push(...cleaveLayer({ grains, nuclei, ink, half, radius, unit }))
+    groups.push(...cleaveLayer({ grains, nuclei, ink, half, radius, unit, alpha: cleaveOpacity }))
   }
 
   if (wants('network')) {
@@ -289,8 +291,13 @@ function diffractionLayer(peaks, ink, half) {
   return { kind: 'dot', name: 'diffraction', color: ink, items }
 }
 
-/** 劈開線。粒の領域と、結晶化が届いた範囲で切る */
-function cleaveLayer({ grains, nuclei, ink, half, radius, unit }) {
+/**
+ * 劈開線。粒の領域と、結晶化が届いた範囲で切る。
+ *
+ * `alpha` は濃さの倍率（`--cleave-opacity`）。太さは変えないので、頂点の多い線と
+ * 少ない線の太さの差はそのまま残り、全体だけが淡くなる。
+ */
+function cleaveLayer({ grains, nuclei, ink, half, radius, unit, alpha }) {
   const box = viewportHalfPlanes(half)
   const strong = []
   const faint = []
@@ -307,9 +314,9 @@ function cleaveLayer({ grains, nuclei, ink, half, radius, unit }) {
   }
 
   return [
-    { kind: 'stroke', name: 'cleave', stroke: ink, width: unit * 0.05, opacity: 0.42, segments: strong },
-    { kind: 'stroke', name: 'cleave-faint', stroke: ink, width: unit * 0.03, opacity: 0.22, segments: faint },
-  ].filter((g) => g.segments.length > 0)
+    { kind: 'stroke', name: 'cleave', stroke: ink, width: unit * 0.05, opacity: 0.42 * alpha, segments: strong },
+    { kind: 'stroke', name: 'cleave-faint', stroke: ink, width: unit * 0.03, opacity: 0.22 * alpha, segments: faint },
+  ].filter((g) => g.segments.length > 0 && g.opacity > 0)
 }
 
 /**
