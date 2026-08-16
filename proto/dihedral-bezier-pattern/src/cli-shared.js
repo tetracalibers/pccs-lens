@@ -61,6 +61,27 @@ function parseColorCounts(value) {
 }
 
 /**
+ * --exclude の解釈。描きたくない要素の名前をコンマ区切りで受ける。
+ * 並びは allowed にそろえるので、指定順が違っても同じ Set になる。
+ */
+export function readExcluded(value, allowed) {
+  if (value === undefined) return new Set()
+
+  const names = value
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
+  const unknown = names.filter((name) => !allowed.includes(name))
+  if (names.length === 0 || unknown.length > 0) {
+    throw new Error(
+      `--exclude には ${allowed.join(' / ')} をコンマ区切りで指定してください` +
+        `（指定: ${value}）`,
+    )
+  }
+  return new Set(allowed.filter((name) => names.includes(name)))
+}
+
+/**
  * 生成するパレット。
  * --colors があればその 1 つ、無ければ --color-count で選んだ色数の既定パレット。
  */

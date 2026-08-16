@@ -12,6 +12,7 @@ import {
   readSize,
   readCount,
   readPalettes,
+  readExcluded,
   resolveOutDir,
   finish,
 } from './cli-shared.js'
@@ -48,7 +49,7 @@ function parseNOption(value) {
   return Array.from({ length: to - from + 1 }, (_, i) => from + i)
 }
 
-function helpText(scriptName, title) {
+function helpText(scriptName, title, roles) {
   return `${title}
 
   node src/${scriptName} [options]
@@ -61,6 +62,11 @@ function helpText(scriptName, title) {
   --shape=polygon|circle 模様を収める形（既定: polygon）
   --color-count=<2-6>   生成する色数（既定: all = 2〜6。4,5 のようにコンマ区切りで複数可）
   --colors=#aaa,#bbb    パレット指定（2〜6色。指定時はその色数のみ生成）
+  --exclude=<要素>      描かない要素をコンマ区切りで指定する
+                        （${roles.join(' / ')}）
+                        乱数の引き方は変えないので、同じ seed の模様から
+                        その要素だけが消える。ただし色を使い切るための補いは
+                        除外できず、消した色を埋める環が代わりに出ることがある
   --out=<dir>           出力先ディレクトリ（既定: .generated/<pattern>/<timestamp>）
   --help                このヘルプ
 `
@@ -70,11 +76,11 @@ function helpText(scriptName, title) {
  * 色数 2〜6 のパターンを一括生成する（--color-count で絞れる）。
  * buildMotif が基本領域 1 枚ぶんの模様を作る関数で、ここが曲線版・直線版の違い。
  */
-export function run({ patternName, scriptName, title, buildMotif }) {
+export function run({ patternName, scriptName, title, buildMotif, roles }) {
   try {
     const opts = parseArgs(process.argv.slice(2))
     if (opts.help) {
-      console.log(helpText(scriptName, title))
+      console.log(helpText(scriptName, title, roles))
       return
     }
 
@@ -88,6 +94,7 @@ export function run({ patternName, scriptName, title, buildMotif }) {
 
     const fixedNs = parseNOption(opts.n)
     const palettes = readPalettes(opts.colors, opts['color-count'])
+    const exclude = readExcluded(opts.exclude, roles)
     const outDir = resolveOutDir(opts.out, patternName)
 
     const baseSeed = resolveSeed(opts.seed)
@@ -109,8 +116,13 @@ export function run({ patternName, scriptName, title, buildMotif }) {
           // 対称性の次数だけを比べられるようにするため。
           const seed = (baseSeed + variant * 7919 + colors.length * 104729) >>> 0
           const rng = createRandom(seed)
-          const motif = buildMotif({ domain, colorCount: colors.length, rng })
-          const svg = renderSVG({ domain, motif, colors, size, seed })
+          const motif = buildMotif({
+            domain,
+            colorCount: colors.length,
+            rng,
+            exclude,
+          })
+          const svg = renderSVG({ domain, motif, colors, size, seed, exclude })
 
           const suffix = count > 1 ? `-v${variant + 1}` : ''
           const filename = `d${n}-${colors.length}colors${suffix}.svg`

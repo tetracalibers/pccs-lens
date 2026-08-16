@@ -4,14 +4,16 @@
  *
  *   node src/generate-angular.js [--n=8] [--size=480] [--seed=12345] [--count=1]
  *                                [--shape=polygon|circle] [--color-count=4,5] [--colors=#fff,#000]
+ *                                [--exclude=spoke,dot]
  */
 
 import { run } from './cli.js'
-import { buildMotif } from './motif-angular.js'
+import { buildMotif, ROLES } from './motif-angular.js'
 
 run({
   patternName: 'angular',
   scriptName: 'generate-angular.js',
   title: '二面体群ベジェパターン（直線版）',
   buildMotif,
+  roles: ROLES,
 })

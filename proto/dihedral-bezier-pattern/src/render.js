@@ -27,8 +27,11 @@ export function renderElement(el, colors) {
   return `<path d="${el.d}" fill="${color}"${hairline}/>`
 }
 
-export function renderSVG({ domain, motif, colors, size, seed }) {
+export function renderSVG({ domain, motif, colors, size, seed, exclude }) {
   const center = size / 2
+
+  // 何を消した絵なのかを後から辿れるようにコメントに残す
+  const excluded = exclude?.size ? ` / exclude: ${[...exclude].join(',')}` : ''
 
   const motifBody = motif.elements
     .map((el) => `      ${renderElement(el, colors)}`)
@@ -45,7 +48,7 @@ export function renderSVG({ domain, motif, colors, size, seed }) {
     : ''
 
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-  <!-- dihedral group D${domain.n} / colors: ${colors.join(' ')} / seed: ${seed} -->
+  <!-- dihedral group D${domain.n} / colors: ${colors.join(' ')} / seed: ${seed}${excluded} -->
   <rect width="${size}" height="${size}" fill="${BACKGROUND}"/>
   <defs>
     <g id="motif">

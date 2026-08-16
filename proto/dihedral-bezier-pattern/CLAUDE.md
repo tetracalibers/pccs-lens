@@ -26,6 +26,7 @@ node src/generate-penrose.js         # ペンローズ版・色数 2〜6 を一�
 node src/generate-kite-dart.js       # カイト＆ダート版・色数 2〜6 を一括生成
 node src/generate.js --n=4,24        # n = 4〜24 も範囲で一括生成（1 ディレクトリ・1 HTML）
 node src/generate.js --color-count=4,5  # 生成する色数を絞る（6 つのスクリプトで共通）
+node src/generate-angular.js --exclude=spoke,dot  # 描かない要素を指定する（ロゼッタ版のみ）
 node src/generate-wallpaper.js --guide  # 対称性の要素（格子・基本領域・回転中心・鏡）を重ねる
 node src/generate-wallpaper.js --mark   # 非対称な印を置く（丸み版は既定であり、--no-mark で外す）
 node src/generate-penrose.js --repeat=16 --outline  # タイルを細かくし、輪郭を描く（カイト＆ダート版も同じ）
@@ -58,6 +59,7 @@ Output goes to `.generated/{curved|angular|wallpaper|wallpaper-round|penrose|kit
 ## Key invariants
 
 - **ランダム性は必ず `createRandom(seed)` 経由で引く。** `Math.random()` を直接使うと seed による再現ができなくなる
+- **`--exclude` で外した要素も組み立てまでは行う**（`motif*.js` の `push` ヘルパー）。作らずに飛ばすと rng の消費列がずれ、同じ seed でも別の模様になってしまう。要素を足すときは `elements.push` ではなく `push(role, ...)` を使い、`ROLES` にも名前を足す
 - **曲線版は鏡映線上の端点で接線を鏡映線に直交させる。** これを崩すと 2n 個のコピーの継ぎ目に折れ目が出る（`levelCurve` の両端の接線）
 - **基本領域からはみ出さないよう生成時に制約する。** クリップに頼るとコピー境界にアンチエイリアスの継ぎ目が出る
 - **鏡映線に重なる幅ゼロの図形を作らない。** 塗りには現れないのに、継ぎ目埋めのヘアラインだけが線として模様の外に見えてしまう

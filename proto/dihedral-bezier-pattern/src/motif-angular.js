@@ -61,10 +61,30 @@ function lineWobbles(rng, level, teeth, maxLevel) {
   return alternating(rng, teeth, Math.min(rng.float(0.04, 0.14), room))
 }
 
-export function buildMotif({ domain, colorCount, rng }) {
+/** --exclude で名指しできる要素（doc.md の「ロゼッタ版が基本領域に描く要素」の表と対応） */
+export const ROLES = [
+  'band',
+  'ribbon',
+  'spoke',
+  'petal',
+  'shard',
+  'blob',
+  'dot',
+  'center',
+]
+
+export function buildMotif({ domain, colorCount, rng, exclude = new Set() }) {
   const { alpha, pointAt, clearance } = domain
   const unit = domain.radius / 200 // 線幅・点の大きさのスケール
   const elements = []
+
+  /**
+   * 要素を積む。除外された要素も組み立てまでは今までどおり行うので、
+   * rng の消費列が変わらない（= 同じ seed の絵からその要素だけが消える）。
+   */
+  const push = (role, element) => {
+    if (!exclude.has(role)) elements.push(element)
+  }
 
   // --- 帯（面積を担う主要素） ---
   const levels = bandLevels(rng, colorCount)
@@ -87,7 +107,7 @@ export function buildMotif({ domain, colorCount, rng }) {
     Math.min(level, outerLimit / headroom)
 
   for (let j = 1; j < levels.length; j++) {
-    elements.push({
+    push('band', {
       kind: 'fill',
       d: bandPath(boundaries[j - 1], boundaries[j]),
       colorIndex: bandColors[j - 1],
@@ -105,7 +125,7 @@ export function buildMotif({ domain, colorCount, rng }) {
     const line = levelPolyline(domain, level, lineWobbles(rng, level, teeth, outerLimit), {
       step: rng.chance(0.3),
     })
-    elements.push({
+    push('ribbon', {
       kind: 'stroke',
       d: boundaryPath(line),
       colorIndex: accentColor(rng, colorCount, crossedColors(level)),
@@ -122,7 +142,7 @@ export function buildMotif({ domain, colorCount, rng }) {
     const theta = rng.float(0.18, 0.82) * alpha
     const fromLevel = rng.float(0.08, 0.4)
     const toLevel = capLevel(rng.float(0.6, 0.99))
-    elements.push({
+    push('spoke', {
       kind: 'stroke',
       d: `M${p(pointAt(fromLevel, theta))}L${p(pointAt(toLevel, theta))}`,
       colorIndex: accentColor(rng, colorCount, crossedColors(fromLevel, toLevel)),
@@ -139,7 +159,7 @@ export function buildMotif({ domain, colorCount, rng }) {
     const tip = pointAt(tipLevel, alpha * rng.float(0.42, 0.58))
     const left = pointAt(tipLevel * rng.float(0.25, 0.7), alpha * rng.float(0.05, 0.35))
     const right = pointAt(tipLevel * rng.float(0.25, 0.7), alpha * rng.float(0.65, 0.95))
-    elements.push({
+    push('petal', {
       kind: 'fill',
       d: polygonPath([[0, 0], left, tip, right]),
       colorIndex: accentColor(rng, colorCount, crossedColors(0, tipLevel)),
@@ -152,7 +172,7 @@ export function buildMotif({ domain, colorCount, rng }) {
   for (let i = 0; i < shardCount; i++) {
     const levelsOf = Array.from({ length: 3 }, () => capLevel(rng.float(0.12, 0.95)))
     const points = levelsOf.map((lv) => pointAt(lv, rng.float(0.05, 0.95) * alpha))
-    elements.push({
+    push('shard', {
       kind: 'fill',
       d: polygonPath(points),
       colorIndex: accentColor(
@@ -181,7 +201,7 @@ export function buildMotif({ domain, colorCount, rng }) {
       return [center[0] + r * Math.cos(a), center[1] + r * Math.sin(a)]
     })
     const spread = radius / domain.maxRadiusAt(theta)
-    elements.push({
+    push('blob', {
       kind: 'fill',
       d: polygonPath(points),
       colorIndex: accentColor(
@@ -205,7 +225,7 @@ export function buildMotif({ domain, colorCount, rng }) {
       const a = turn + (Math.PI / 2) * k
       return [center[0] + r * Math.cos(a), center[1] + r * Math.sin(a)]
     })
-    elements.push({
+    push('dot', {
       kind: 'fill',
       d: polygonPath(points),
       colorIndex: accentColor(rng, colorCount, crossedColors(level)),
@@ -214,7 +234,7 @@ export function buildMotif({ domain, colorCount, rng }) {
   }
 
   // --- 中心（不動点なのでコピーせず 1 個だけ描く。対称性に合わせた正 n 角形） ---
-  const center = rng.chance(0.7)
+  const centerElement = rng.chance(0.7)
     ? {
         kind: 'fill',
         d: regularPolygonPath(
@@ -226,6 +246,7 @@ export function buildMotif({ domain, colorCount, rng }) {
         join: 'miter',
       }
     : null
+  const center = exclude.has('center') ? null : centerElement
 
   // --- パレットの色をすべて使い切る ---
   ensureAllColorsUsed(elements, center, colorCount, (colorIndex) => {

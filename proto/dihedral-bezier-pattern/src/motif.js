@@ -36,10 +36,21 @@ function boundaryWobbles(rng, levels, j) {
   return rng.wobbles(SAMPLES, amount)
 }
 
-export function buildMotif({ domain, colorCount, rng }) {
+/** --exclude で名指しできる要素（doc.md の「ロゼッタ版が基本領域に描く要素」の表と対応） */
+export const ROLES = ['band', 'ribbon', 'spoke', 'petal', 'blob', 'dot', 'center']
+
+export function buildMotif({ domain, colorCount, rng, exclude = new Set() }) {
   const { alpha, pointAt, clearance } = domain
   const unit = domain.radius / 200 // 線幅・点の大きさのスケール
   const elements = []
+
+  /**
+   * 要素を積む。除外された要素も組み立てまでは今までどおり行うので、
+   * rng の消費列が変わらない（= 同じ seed の絵からその要素だけが消える）。
+   */
+  const push = (role, element) => {
+    if (!exclude.has(role)) elements.push(element)
+  }
 
   // --- 帯（面積を担う主要素） ---
   const levels = bandLevels(rng, colorCount)
@@ -59,7 +70,7 @@ export function buildMotif({ domain, colorCount, rng }) {
     Math.min(level, outerLimit / headroom)
 
   for (let j = 1; j < levels.length; j++) {
-    elements.push({
+    push('band', {
       kind: 'fill',
       d: bandPath(curves[j - 1], curves[j]),
       colorIndex: bandColors[j - 1],
@@ -79,7 +90,7 @@ export function buildMotif({ domain, colorCount, rng }) {
       level,
       rng.wobbles(SAMPLES, rng.float(0.01, 0.06)),
     )
-    elements.push({
+    push('ribbon', {
       kind: 'stroke',
       d: boundaryPath(curve),
       colorIndex: accentColor(rng, colorCount, crossedColors(level)),
@@ -104,7 +115,7 @@ export function buildMotif({ domain, colorCount, rng }) {
     const bend = rng.float(-maxBend, maxBend)
     const c1 = v.add(v.add(from, v.scale(dir, length / 3)), v.scale(normal, bend))
     const c2 = v.add(v.sub(to, v.scale(dir, length / 3)), v.scale(normal, bend))
-    elements.push({
+    push('spoke', {
       kind: 'stroke',
       d: `M${p(from)}C${p(c1)} ${p(c2)} ${p(to)}`,
       colorIndex: accentColor(rng, colorCount, crossedColors(fromLevel, toLevel)),
@@ -121,7 +132,7 @@ export function buildMotif({ domain, colorCount, rng }) {
     const c2 = pointAt(tipLevel * rng.float(0.6, 0.95), alpha * rng.float(0.1, 0.4))
     const c3 = pointAt(tipLevel * rng.float(0.6, 0.95), alpha * rng.float(0.6, 0.9))
     const c4 = pointAt(tipLevel * rng.float(0.2, 0.5), alpha * rng.float(0.7, 0.95))
-    elements.push({
+    push('petal', {
       kind: 'fill',
       d: `M0,0C${p(c1)} ${p(c2)} ${p(tip)}C${p(c3)} ${p(c4)} 0,0Z`,
       colorIndex: accentColor(rng, colorCount, crossedColors(0, tipLevel)),
@@ -144,7 +155,7 @@ export function buildMotif({ domain, colorCount, rng }) {
       return [center[0] + r * Math.cos(a), center[1] + r * Math.sin(a)]
     })
     const spread = radius / domain.maxRadiusAt(theta)
-    elements.push({
+    push('blob', {
       kind: 'fill',
       d: closedSpline(points),
       colorIndex: accentColor(
@@ -162,7 +173,7 @@ export function buildMotif({ domain, colorCount, rng }) {
     const center = pointAt(level, rng.float(0.2, 0.8) * alpha)
     const r = Math.min(clearance(center) * 0.8, rng.float(1.5, 5) * unit)
     if (r < 1) continue
-    elements.push({
+    push('dot', {
       kind: 'circle',
       cx: center[0],
       cy: center[1],
@@ -172,7 +183,7 @@ export function buildMotif({ domain, colorCount, rng }) {
   }
 
   // --- 中心（不動点なのでコピーせず 1 個だけ描く） ---
-  const center = rng.chance(0.7)
+  const centerElement = rng.chance(0.7)
     ? {
         kind: 'circle',
         cx: 0,
@@ -181,6 +192,7 @@ export function buildMotif({ domain, colorCount, rng }) {
         colorIndex: accentColor(rng, colorCount, crossedColors(0)),
       }
     : null
+  const center = exclude.has('center') ? null : centerElement
 
   // --- パレットの色をすべて使い切る ---
   ensureAllColorsUsed(elements, center, colorCount, (colorIndex) => ({
