@@ -11,6 +11,7 @@ draft: true
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import ConicSectionDemo from '$lib/demo/threejs/modeling/quadratic-curve/conic-section/ConicSectionDemo.svelte'
+  import StandardToGeneralDemo from '$lib/demo/threejs/modeling/quadratic-curve/standard-to-general/StandardToGeneralDemo.svelte'
 </script>
 
 [曲線・曲面の数式表現](/cg/modeling/curve-surface-equations/)では、次数が`2`の代数曲線を`2`次曲線と呼び、円・楕円・放物線・双曲線がこれにあたることを見ました。
@@ -211,8 +212,82 @@ const nameSection = (tiltDeg: number) => {
 
 ただし、放物線には中心にあたる点がありません。頂点を原点に合わせて軸を`x`軸に重ねても、`1`次の項が`1`つだけ残ります。
 
-:::Todo
-標準形の楕円を平行移動・回転させると、一般形の係数がどう変わるかを見せるデモ。平行移動量と回転角をスライダで動かし、曲線の位置・向きと`a`から`f`までの係数の値を並べて表示する。回転させたときだけ`xy`の項の係数`b`が`0`でなくなることを読み取れるようにする。
+:::Action
+平行移動量と回転角を動かして、`a`から`f`までの係数がどう変わるかを追ってみよう
+
+- 平行移動だけを与えると、`1`次の項の`d`と`e`が`0`でなくなり、`xy`の項の`b`は`0`のまま
+- 回転を与えると`b`が`0`でなくなり、`2`次の項の`a`と`c`も変わっていく
+- 回転角が`90`度になると`b`は`0`に戻る。楕円の対称軸がふたたび座標軸に重なるため
+:::
+
+<CanvasWrapper>
+  <StandardToGeneralDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 標準形の楕円。x 軸方向の半径が RADIUS_X、y 軸方向の半径が RADIUS_Y になる
+const ellipsePoints: Vector3[] = []
+for (let i = 0; i < ELLIPSE_SEGMENTS; i++) {
+  const t = (i / ELLIPSE_SEGMENTS) * Math.PI * 2
+  ellipsePoints.push(new Vector3(RADIUS_X * Math.cos(t), RADIUS_Y * Math.sin(t), 0))
+}
+const ellipseGeometry = new BufferGeometry().setFromPoints(ellipsePoints)
+
+// 移動前の位置。動かした楕円と同じ形であることが分かるよう、置いたまま淡く残す
+const standardMaterial = new LineBasicMaterial({ color: STANDARD_COLOR })
+const standardEllipse = new LineLoop(ellipseGeometry, standardMaterial)
+standardEllipse.position.z = STANDARD_Z
+scene.add(standardEllipse)
+
+// 移動後の楕円。同じ楕円をこのグループごと回して動かす
+const movedGroup = new Group()
+scene.add(movedGroup)
+
+const movedMaterial = new LineBasicMaterial({ color: MOVED_COLOR })
+movedGroup.add(new LineLoop(ellipseGeometry, movedMaterial))
+
+// 楕円の対称軸。座標軸に重なっているかどうかで、向きの違いが読み取れる
+const symmetryGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(-RADIUS_X, 0, 0),
+  new Vector3(RADIUS_X, 0, 0),
+  new Vector3(0, -RADIUS_Y, 0),
+  new Vector3(0, RADIUS_Y, 0)
+])
+const symmetryMaterial = new LineBasicMaterial({ color: SYMMETRY_COLOR })
+movedGroup.add(new LineSegments(symmetryGeometry, symmetryMaterial))
+
+const centerGeometry = new SphereGeometry(CENTER_RADIUS, 16, 12)
+const centerMaterial = new MeshBasicMaterial({ color: SYMMETRY_COLOR })
+movedGroup.add(new Mesh(centerGeometry, centerMaterial))
+
+// 標準形の楕円を、原点まわりに回してから (tx, ty) だけ動かす
+const tx = 0.6
+const ty = 0.4
+const angle = MathUtils.degToRad(0)
+
+movedGroup.rotation.z = angle
+movedGroup.position.set(tx, ty, MOVED_Z)
+
+// 標準形 x²/A² + y²/B² = 1 の両辺に A²B² を掛けた B²x² + A²y² - A²B² = 0 を出発点に、
+// 移動後の点を標準形の座標へ戻してから代入すると、一般形の 6 つの係数が求まる
+const cos = Math.cos(angle)
+const sin = Math.sin(angle)
+const squareX = RADIUS_X * RADIUS_X
+const squareY = RADIUS_Y * RADIUS_Y
+
+// 2 次の項の係数は回転だけで決まる。b は sin と cos の積なので、回転させたときだけ 0 でなくなる
+const a = squareY * cos * cos + squareX * sin * sin
+const b = 2 * cos * sin * (squareY - squareX)
+const c = squareY * sin * sin + squareX * cos * cos
+
+// 1 次の項と定数項には平行移動量が入る。動かさなければ d と e は 0 のまま
+const d = -2 * a * tx - b * ty
+const e = -2 * c * ty - b * tx
+const f = a * tx * tx + b * tx * ty + c * ty * ty - squareX * squareY
+```
+
 :::
 
 ::::CardGrid
