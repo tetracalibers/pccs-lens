@@ -12,6 +12,7 @@ draft: true
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import ExplicitFormLimitsDemo from '$lib/demo/threejs/modeling/curve-surface-equations/explicit-form-limits/ExplicitFormLimitsDemo.svelte'
   import ParametricCurveDemo from '$lib/demo/threejs/modeling/curve-surface-equations/parametric-curve/ParametricCurveDemo.svelte'
+  import ParametricSurfaceMappingDemo from '$lib/demo/threejs/modeling/curve-surface-equations/parametric-surface-mapping/ParametricSurfaceMappingDemo.svelte'
 </script>
 
 [さまざまな形状モデル](/cg/modeling/shape-model-overview/)では、立体を稜線・面・中身のどれで捉えるかによって形状モデルを分けましたが、その面や線にあたる曲線・曲面そのものをどう数式で表すかには触れていませんでした。
@@ -324,8 +325,123 @@ $$
 
 こうして表された曲面が:Anki[パラメトリック曲面]です。曲面は縦横`2`方向に広がりを持つため、その広がりに合わせてパラメータも`2`つ要ります。`u`と`v`の組を決めると空間中の点が`1`つ決まり、`u`と`v`を平面上の領域いっぱいに動かすと、その領域が空間中の曲面へ写し取られます。
 
-:::Todo
-パラメトリック曲面の対応図。左に`u`と`v`が張る平面上の矩形領域、右に空間中の曲面を描き、矩形に引いた格子が曲面上の格子へ写る様子を対応づけて示す。
+:::Action
+uとvを動かして、平面上の点が曲面上のどこへ写るかを追ってみよう
+
+- 左の領域で選んだ`1`点に、右の曲面上の`1`点が対応する
+- 左で選んだ縦横の`2`本の線が、曲面の上では曲がった`2`本の線になる
+- 左では等間隔に並んでいた線が、曲面の上では場所によって間隔が変わる
+:::
+
+<CanvasWrapper>
+  <ParametricSurfaceMappingDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 記事と同じ座標の書き方（z が高さ）をそのまま使えるよう、グループごと寝かせて z 軸を上に向ける
+const group = new Group()
+group.rotation.x = -Math.PI / 2
+scene.add(group)
+
+// (u, v) の組から、空間中の点を求める。
+// u は軸のまわりを回る角度に、v は上下へ振れる角度にあてて、球面の一部を切り取った曲面にする
+const evaluate = (u: number, v: number, target: Vector3) => {
+  const around = u * U_SWEEP
+  const upward = (v - 0.5) * V_SWEEP
+  const ring = RADIUS * Math.cos(upward)
+  return target.set(ring * Math.cos(around), ring * Math.sin(around), RADIUS * Math.sin(upward))
+}
+
+// (u, v) の格子を空間へ写して、曲面の頂点を並べる
+const positions: number[] = []
+const indices: number[] = []
+const point = new Vector3()
+
+for (let i = 0; i <= SURFACE_STEPS_U; i++) {
+  for (let j = 0; j <= SURFACE_STEPS_V; j++) {
+    evaluate(i / SURFACE_STEPS_U, j / SURFACE_STEPS_V, point)
+    positions.push(point.x, point.y, point.z)
+  }
+}
+
+// 格子の 1 マスを三角形 2 枚に割る。u 方向に 1 つ進むと、頂点の番号は v の分割数だけ飛ぶ
+for (let i = 0; i < SURFACE_STEPS_U; i++) {
+  for (let j = 0; j < SURFACE_STEPS_V; j++) {
+    const current = i * (SURFACE_STEPS_V + 1) + j
+    const next = current + SURFACE_STEPS_V + 1
+    indices.push(current, next, current + 1, next, next + 1, current + 1)
+  }
+}
+
+const surfaceGeometry = new BufferGeometry()
+surfaceGeometry.setAttribute("position", new Float32BufferAttribute(positions, 3))
+surfaceGeometry.setIndex(indices)
+surfaceGeometry.computeVertexNormals()
+
+const surfaceMaterial = new MeshStandardMaterial({
+  color: SURFACE_COLOR,
+  roughness: 0.6,
+  side: DoubleSide,
+  transparent: true,
+  opacity: SURFACE_OPACITY,
+  // 裏側を通る線が透けるよう、深度は比較するが書かない
+  depthWrite: false
+})
+group.add(new Mesh(surfaceGeometry, surfaceMaterial))
+
+// 曲面の上に引く線。u を一定にした線と v を一定にした線を、領域に引いた線と同じ本数だけ並べる。
+// 曲がった線なので、細かく刻んだ折れ線としてつなぐ
+const gridPoints: Vector3[] = []
+
+const pushCurve = (at: (t: number) => Vector3) => {
+  for (let k = 0; k < CURVE_SAMPLES; k++) {
+    gridPoints.push(at(k / CURVE_SAMPLES), at((k + 1) / CURVE_SAMPLES))
+  }
+}
+
+for (let i = 0; i <= GRID_DIVISIONS; i++) {
+  const line = i / GRID_DIVISIONS
+  pushCurve((t) => evaluate(line, t, new Vector3()))
+}
+for (let j = 0; j <= GRID_DIVISIONS; j++) {
+  const line = j / GRID_DIVISIONS
+  pushCurve((t) => evaluate(t, line, new Vector3()))
+}
+
+const gridGeometry = new BufferGeometry().setFromPoints(gridPoints)
+const gridMaterial = new LineBasicMaterial({ color: GRID_COLOR })
+group.add(new LineSegments(gridGeometry, gridMaterial))
+
+// 選んだ u・v に対応する 2 本の曲線。片方を固定して、もう片方を端から端まで動かす
+const u = 0.28
+const v = 0.62
+
+const createIsoCurve = (color: string, at: (t: number) => Vector3) => {
+  const curvePoints: Vector3[] = []
+  for (let i = 0; i <= CURVE_SAMPLES; i++) {
+    curvePoints.push(at(i / CURVE_SAMPLES))
+  }
+  return new Line(new BufferGeometry().setFromPoints(curvePoints), new LineBasicMaterial({ color }))
+}
+
+group.add(createIsoCurve(FIXED_U_COLOR, (t) => evaluate(u, t, new Vector3())))
+group.add(createIsoCurve(FIXED_V_COLOR, (t) => evaluate(t, v, new Vector3())))
+
+// u と v の組を決めると、空間中の点が 1 つ決まる
+const markerGeometry = new SphereGeometry(MARKER_RADIUS, 16, 12)
+const markerMaterial = new MeshBasicMaterial({ color: MARKER_COLOR })
+const marker = new Mesh(markerGeometry, markerMaterial)
+marker.position.copy(evaluate(u, v, point))
+group.add(marker)
+
+// 曲面のふくらみを陰影でも読み取れるようにする光。向きは固定
+const light = new DirectionalLight(LIGHT_COLOR, 2.5)
+light.position.set(4, 5, 3)
+scene.add(light, new AmbientLight(LIGHT_COLOR, 0.5))
+```
+
 :::
 
 CGで扱う自由な形の曲線・曲面が、ほとんどパラメータ形式で表されるのは、こうした扱いやすさがあるためです。制御点を動かして形を作るベジェ曲線やBスプライン曲面も、パラメータ形式で書かれた曲線・曲面の仲間です。
