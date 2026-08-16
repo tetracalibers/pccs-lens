@@ -107,7 +107,7 @@ b は「内接円と外接円の比がいちばん 1 に近くなる（＝いち
 
 - 正方形の SVG 画像として生成する（既定 480px 四方）
 - ランダム性は seed 付き PRNG（mulberry32）で制御し、同じ seed からは同じ模様が再現される
-- **色数 2〜6 のパターンを一度の実行で一括生成する**
+- **色数 2〜6 のパターンを一度の実行で一括生成する**（`--color-count=4,5` のように色数を絞れる）
 - **`--n` は範囲指定できる。** `--n=4,24` なら n = 4〜24 の全てを一度に生成し、出力先も一覧 HTML も 1 つにまとめる
 - n を範囲で生成するとき、**seed に n を混ぜない。** 同じ色数なら n が変わっても帯の構成と配色がそろい、対称性の次数だけを見比べられる（基本領域の広さで要素の採否が変わるため、細部のアクセントは多少ずれる）
 - **壁紙群版は 17 群を一度の実行で一括生成する**（`--group` で絞れる）
@@ -215,6 +215,7 @@ node src/generate.js --seed=12345          # 再現可能な生成
 node src/generate.js --count=3             # 色数ごとに 3 種類ずつ
 node src/generate.js --shape=circle        # 正 n 角形ではなく円形に収める
 node src/generate.js --size=800            # 出力サイズ
+node src/generate.js --color-count=4,5     # 生成する色数を絞る（既定は 2〜6 すべて）
 node src/generate.js --colors='#fff,#123'  # パレットを指定（その色数のみ生成）
 node src/generate.js --help                # ヘルプ
 ```
@@ -231,4 +232,4 @@ node src/generate-wallpaper.js --help             # ヘルプ
 node src/generate-wallpaper-round.js              # 丸み版（オプションは壁紙群版と共通）
 ```
 
-`--seed` `--count` `--size` `--colors` `--out` は 4 つのスクリプトで共通。
+`--seed` `--count` `--size` `--color-count` `--colors` `--out` は 4 つのスクリプトで共通。`--colors` はパレットで色数まで決まるので、`--color-count` とは同時に指定できない。

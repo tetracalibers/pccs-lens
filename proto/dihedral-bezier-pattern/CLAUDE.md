@@ -21,6 +21,7 @@ node src/generate-angular.js         # 直線版・色数 2〜6 を一括生成
 node src/generate-wallpaper.js       # 壁紙群版・17 群 × 色数 2〜6 を一括生成
 node src/generate-wallpaper-round.js # 壁紙群・丸み版（オプションは壁紙群版と共通）
 node src/generate.js --n=4,24        # n = 4〜24 も範囲で一括生成（1 ディレクトリ・1 HTML）
+node src/generate.js --color-count=4,5  # 生成する色数を絞る（4 つのスクリプトで共通）
 node src/generate-wallpaper.js --guide  # 対称性の要素（格子・基本領域・回転中心・鏡）を重ねる
 node src/generate.js --help          # オプション一覧（--help は 4 つのスクリプトで共通）
 ```

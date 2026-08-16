@@ -59,6 +59,7 @@ function helpText(scriptName, title) {
   --seed=<数値|文字列>   乱数シード（既定: ランダム）
   --count=<数>          色数ごとの生成数（既定: 1）
   --shape=polygon|circle 模様を収める形（既定: polygon）
+  --color-count=<2-6>   生成する色数（既定: all = 2〜6。4,5 のようにコンマ区切りで複数可）
   --colors=#aaa,#bbb    パレット指定（2〜6色。指定時はその色数のみ生成）
   --out=<dir>           出力先ディレクトリ（既定: .generated/<pattern>/<timestamp>）
   --help                このヘルプ
@@ -66,7 +67,7 @@ function helpText(scriptName, title) {
 }
 
 /**
- * 色数 2〜6 のパターンを一括生成する。
+ * 色数 2〜6 のパターンを一括生成する（--color-count で絞れる）。
  * buildMotif が基本領域 1 枚ぶんの模様を作る関数で、ここが曲線版・直線版の違い。
  */
 export function run({ patternName, scriptName, title, buildMotif }) {
@@ -86,7 +87,7 @@ export function run({ patternName, scriptName, title, buildMotif }) {
     }
 
     const fixedNs = parseNOption(opts.n)
-    const palettes = readPalettes(opts.colors)
+    const palettes = readPalettes(opts.colors, opts['color-count'])
     const outDir = resolveOutDir(opts.out, patternName)
 
     const baseSeed = resolveSeed(opts.seed)

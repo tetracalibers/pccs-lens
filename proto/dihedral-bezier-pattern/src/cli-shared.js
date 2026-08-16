@@ -41,9 +41,37 @@ export function readCount(value) {
   return count
 }
 
-/** --colors があればその 1 つ、無ければ既定の色数 2〜6 のパレット */
-export function readPalettes(value) {
-  return value ? [parsePalette(value)] : COLOR_COUNTS.map((k) => DEFAULT_PALETTES[k])
+/** --color-count の解釈。既定は 2〜6 すべて */
+function parseColorCounts(value) {
+  if (value === undefined || value === 'all') return COLOR_COUNTS
+
+  const counts = value
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map(Number)
+  if (counts.length === 0 || counts.some((k) => !COLOR_COUNTS.includes(k))) {
+    throw new Error(
+      `--color-count は ${COLOR_COUNTS[0]}〜${COLOR_COUNTS.at(-1)} の整数を` +
+        `コンマ区切りで指定してください（指定: ${value}）`,
+    )
+  }
+  // 並び順は COLOR_COUNTS にそろえる（一覧で色数の少ない順に並べるため）
+  return COLOR_COUNTS.filter((k) => counts.includes(k))
+}
+
+/**
+ * 生成するパレット。
+ * --colors があればその 1 つ、無ければ --color-count で選んだ色数の既定パレット。
+ */
+export function readPalettes(colors, colorCount) {
+  if (colors) {
+    if (colorCount !== undefined) {
+      throw new Error('--colors は色数まで決まるので、--color-count とは同時に指定できません')
+    }
+    return [parsePalette(colors)]
+  }
+  return parseColorCounts(colorCount).map((k) => DEFAULT_PALETTES[k])
 }
 
 function timestamp() {

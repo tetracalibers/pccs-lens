@@ -5,7 +5,7 @@
  *
  *   node src/generate-wallpaper.js [--group=p4m,p6m] [--repeat=5] [--guide]
  *                                  [--size=480] [--seed=12345] [--count=1]
- *                                  [--colors=#fff,#000]
+ *                                  [--color-count=4,5] [--colors=#fff,#000]
  */
 
 import { run } from './cli-wallpaper.js'

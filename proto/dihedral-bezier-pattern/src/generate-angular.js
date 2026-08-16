@@ -2,8 +2,8 @@
 /**
  * 直線版：二面体群 D_n の対称性をもつ角ばったパターンを SVG として一括生成する。
  *
- *   node src/generate-angular.js [--n=8] [--size=480] [--seed=12345]
- *                                [--count=1] [--shape=polygon|circle] [--colors=#fff,#000]
+ *   node src/generate-angular.js [--n=8] [--size=480] [--seed=12345] [--count=1]
+ *                                [--shape=polygon|circle] [--color-count=4,5] [--colors=#fff,#000]
  */
 
 import { run } from './cli.js'

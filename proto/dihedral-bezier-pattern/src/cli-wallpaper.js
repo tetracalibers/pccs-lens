@@ -59,16 +59,17 @@ function helpText(scriptName, title) {
   --size=<px>           出力サイズ（既定: 480）
   --seed=<数値|文字列>   乱数シード（既定: ランダム）
   --count=<数>          色数ごとの生成数（既定: 1）
+  --color-count=<2-6>   生成する色数（既定: all = 2〜6。4,5 のようにコンマ区切りで複数可）
   --colors=#aaa,#bbb    パレット指定（2〜6色。指定時はその色数のみ生成）
   --out=<dir>           出力先ディレクトリ（既定: .generated/<pattern>/<timestamp>）
   --help                このヘルプ
 
-  一覧 HTML は群ごとに節を分ける。節の中に色数 2〜6 が並ぶ。
+  一覧 HTML は群ごとに節を分ける。節の中に生成した色数が並ぶ。
 `
 }
 
 /**
- * 17 群 × 色数 2〜6 のパターンを一括生成する。
+ * 17 群 × 色数 2〜6 のパターンを一括生成する（--group・--color-count で絞れる）。
  * buildMotif が基本領域 1 枚ぶんの模様を作る関数。
  */
 export function run({ patternName, scriptName, title, buildMotif }) {
@@ -85,7 +86,7 @@ export function run({ patternName, scriptName, title, buildMotif }) {
     const repeat = readRepeat(opts.repeat)
     const guide = opts.guide === 'true'
 
-    const palettes = readPalettes(opts.colors)
+    const palettes = readPalettes(opts.colors, opts['color-count'])
     const outDir = resolveOutDir(opts.out, patternName)
 
     const baseSeed = resolveSeed(opts.seed)
@@ -117,7 +118,7 @@ export function run({ patternName, scriptName, title, buildMotif }) {
             renderWallpaperSVG({ domain, motif, colors, size, seed, guide }),
             'utf-8',
           )
-          // 群ごとに節を分ける。節の中に色数 2〜6 が並ぶので、
+          // 群ごとに節を分ける。節の中に色数が並ぶので、
           // 同じ群で色数を増やしたときの見え方を並べて比べられる
           entries.push({ filename, section: group, seed, colors })
         }
