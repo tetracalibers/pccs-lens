@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A prototype for generating SVG patterns with mirror symmetry — dihedral (D_n) rosettes, all 17 wallpaper groups side by side, and the aperiodic Penrose tilings (P1 and P2). Part of the `pccs-lens` monorepo, located under `proto/`. This is not the main app — it's an isolated algorithm prototype. See `doc.md` for the full spec.
 
-対称性と描き方が違う 6 つの版がある。構図・配色のルールは共通。
+対称性と描き方が違う 7 つの版がある。構図・配色のルールは共通。
 
 - **曲線版**（`src/generate.js` + `src/motif.js`）— 制御点がランダムな 3 次ベジェ曲線のロゼッタ
 - **直線版 / 角ばった版**（`src/generate-angular.js` + `src/motif-angular.js`）— 折れ線・多角形のみのロゼッタ
@@ -14,6 +14,7 @@ A prototype for generating SVG patterns with mirror symmetry — dihedral (D_n) 
 - **壁紙群・丸み版**（`src/generate-wallpaper-round.js` + `src/motif-wallpaper-round.js`）— 丸い図形の組み合わせで描く版。**17 の壁紙群を同じモチーフで見比べる**のが目的なので、非対称な印を既定で置く
 - **ペンローズ版**（`src/generate-penrose.js` + `src/motif-penrose.js`）— 五角形ペンローズタイリング（P1: 正五角形・星・舟・菱形）。**この版とカイト＆ダート版だけ基本領域を持たない。** 平行移動の周期がないので、群の変換でコピーせず、タイルを 1/φ² に縮めて置き換える置換規則で埋める
 - **カイト＆ダート版**（`src/generate-kite-dart.js` + `src/motif-kite-dart.js`）— カイト＆ダートタイリング（ペンローズ P2: 凧形と矢じり形の 2 種）。タイルを半分に切った二等辺三角形を 1/φ に縮んだ三角形へ切り分ける分割規則で埋める。P1 と違って**子は必ず親の内側**に生まれる
+- **準結晶版**（`src/generate-crystal.js` + `src/motif-crystal.js`）— カイト＆ダート版と**同じタイリングを結晶標本として描く**版。タイルの塗り分けだけでなく、結晶面（向きから作った法線＋斜めからの光）・劈開線・頂点ネットワーク・回折像・粒界を層として重ねる。結晶核を画面の中心に置くので、中心のまわりだけが正確な D5 対称になる
 
 ## Running
 
@@ -24,16 +25,20 @@ node src/generate-wallpaper.js       # 壁紙群版・17 群 × 色数 2〜6 を
 node src/generate-wallpaper-round.js # 壁紙群・丸み版（オプションは壁紙群版と共通）
 node src/generate-penrose.js         # ペンローズ版・色数 2〜6 を一括生成
 node src/generate-kite-dart.js       # カイト＆ダート版・色数 2〜6 を一括生成
+node src/generate-crystal.js         # 準結晶版・色数 2〜6 を一括生成
 node src/generate.js --n=4,24        # n = 4〜24 も範囲で一括生成（1 ディレクトリ・1 HTML）
-node src/generate.js --color-count=4,5  # 生成する色数を絞る（6 つのスクリプトで共通）
+node src/generate.js --color-count=4,5  # 生成する色数を絞る（7 つのスクリプトで共通）
 node src/generate-angular.js --exclude=spoke,dot  # 描かない要素を指定する（ロゼッタ版のみ）
 node src/generate-wallpaper.js --guide  # 対称性の要素（格子・基本領域・回転中心・鏡）を重ねる
 node src/generate-wallpaper.js --mark   # 非対称な印を置く（丸み版は既定であり、--no-mark で外す）
 node src/generate-penrose.js --repeat=16 --outline  # タイルを細かくし、輪郭を描く（カイト＆ダート版も同じ）
-node src/generate.js --help          # オプション一覧（--help は 6 つのスクリプトで共通）
+node src/generate-crystal.js --layers=cleave,network  # 面を描かず、結晶格子だけを残す
+node src/generate-crystal.js --color-by=zone --frames=8  # 成長痕の色分けで、析出のコマ送り
+node src/generate-crystal.js --seeds=4  # 多結晶（粒界が出る）
+node src/generate.js --help          # オプション一覧（--help は 7 つのスクリプトで共通）
 ```
 
-Output goes to `.generated/{curved|angular|wallpaper|wallpaper-round|penrose|kite-dart}/{YYYYMMDD-THHMMSSZ}/` (SVG + `index.html` の一覧ページ).
+Output goes to `.generated/{curved|angular|wallpaper|wallpaper-round|penrose|kite-dart|crystal}/{YYYYMMDD-THHMMSSZ}/` (SVG + `index.html` の一覧ページ).
 
 ## Architecture
 
@@ -48,13 +53,17 @@ Output goes to `.generated/{curved|angular|wallpaper|wallpaper-round|penrose|kit
 - `src/penrose-geometry.js` — ペンローズ P1 の 4 種のタイルの形と置換規則。向きは 36 度を 1 とする整数で持つ
 - `src/kite-dart-geometry.js` — ペンローズ P2 のタイルの形と分割規則。半タイル（ロビンソン三角形）で分割し、最後に軸の辺で 2 枚ずつ突き合わせてカイト・ダートに戻す
 - `src/render-penrose.js` — ペンローズ版とカイト＆ダート版で共通の SVG 組み立て（繰り返しがないので `<use>` は使えず、タイルを 1 枚ずつ書き出す）
+- `src/crystal-geometry.js` — 準結晶版の幾何。タイルの向き（36 度刻みの整数）・頂点ネットワーク・劈開線（頂点が乗る平行線族とその φ 倍への粗くし方）・結晶面の法線・成長・多結晶（ボロノイ領域と多角形の切り取り）
+- `src/crystal-diffraction.js` — 頂点の点群の構造因子 S(k) を数え、ピークを拾う
+- `src/render-crystal.js` — 準結晶版の SVG 組み立て。線が数千本になるので、同じ描き方の線は 1 本の `<path>` にまとめる
+- `src/color-utils.js` — 16 進の色を明るくする・暗くする・混ぜる。ファセットの陰影と、線に使うインク（パレットでいちばん暗い色から作る）
 - `src/cli-shared.js` — 引数解釈・シード・出力先・後始末（全版で共通）
-- `src/cli.js` / `src/cli-wallpaper.js` / `src/cli-penrose.js` / `src/cli-kite-dart.js` — 一括生成のループ（ロゼッタ用・壁紙群用・ペンローズ用・カイト＆ダート用）
-- `src/generate*.js` — エントリポイント（`run()` に buildMotif を渡すだけ。ペンローズ版とカイト＆ダート版は渡すものがないので `run()` だけ）
+- `src/cli.js` / `src/cli-wallpaper.js` / `src/cli-penrose.js` / `src/cli-kite-dart.js` / `src/cli-crystal.js` — 一括生成のループ（ロゼッタ用・壁紙群用・ペンローズ用・カイト＆ダート用・準結晶用）
+- `src/generate*.js` — エントリポイント（`run()` に buildMotif を渡すだけ。ペンローズ版・カイト＆ダート版・準結晶版は渡すものがないので `run()` だけ）
 - `src/palettes.js` — 背景色と、色数 2〜6 の既定パレット
 - `src/random.js` — seed 付き PRNG（mulberry32）
 
-新しい版を足すときは `motif-*.js` と 10 行程度のエントリポイントを追加すれば足りる。
+新しい版を足すときは `motif-*.js` と 10 行程度のエントリポイントを追加すれば足りる（準結晶版のように描き方そのものが違うときは、幾何とレンダラも版ごとに足す）。
 
 ## Key invariants
 
@@ -82,3 +91,7 @@ Output goes to `.generated/{curved|angular|wallpaper|wallpaper-round|penrose|kit
 - **半タイルの頂点は `[p0, p1, p2]` の並びで役割を持つ。** どちらの型でも `p2–p0` が軸（切った線）で、`p0–p1` と `p1–p2` がタイルの辺。この区別を崩すと、分割の向きも突き合わせもできなくなる
 - **ダートは 2 つの親にまたがってできる。** 半ダートは必ず親の長辺をまたいで生まれるので、親が 1 枚に定まるのはカイトだけ。色分けでダートを分けるときは「両側の親の種類の組」で分ける
 - **カイト＆ダート版の枝刈りはタイル 2 枚ぶんの余裕を残す。** 相方の半タイルまで捨てるとタイルを突き合わせられず、画面内に半分だけの図形が出る
+- **準結晶版の劈開線はタイルに描かず、タイリングから取り出す。** Ammann bar をタイルの装飾として自前で決めると、隣のタイルと線がつながるかを検算できない。頂点を法線方向へ射影して数えれば、頂点が乗る平行線族が誤差なく求まる（間隔が φ : 1 の 2 種類になることまで数値で確かめられる）
+- **準結晶版の劈開線を粗くするときは、フィボナッチ列の逆変換で間引く。** 「短いほうの間隔を始める線を落とす」と間隔が φ 倍に伸びた同じ形の列になる。割合で間引くと並びが崩れ、タイリングとの対応が切れる
+- **準結晶版の回折像はいちばん上に重ねる。** 背面に置くとタイルの面に隠れて 1 つも見えない。ピークは半径 kMax の円の中だけ・同じ |k| のリングごとに採る（四隅まで採ったり強さの順に N 個で切ったりすると、リングが欠けて 10 回対称が崩れる）
+- **多結晶は粒の境界でタイルを切る。** 重心でどちらの粒かを決めて捨てると、境目に隙間が空く（となりの粒は別のタイリングなので埋められない）。ただし向きや親子は切る前の形から取る（切った形からは軸が求まらないので、`points` と描画用の `draw` を分けて持つ）

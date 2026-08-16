@@ -17,8 +17,10 @@ const DARTS = ['dartBetweenKites', 'dartBetweenKiteDart', 'dartBetweenDarts']
 /**
  * 色数ごとのタイルの分け方。
  * 色数を 1 つ増やすと、前の分け方のどれかが 2 つに割れるだけにしてある。
+ *
+ * 準結晶版（`motif-crystal.js`）も `--color-by=class` のときにこの表を使う。
  */
-const GROUPS = {
+export const GROUPS = {
   2: [KITES, DARTS],
   3: [KITES_FROM_KITE, ['kiteFromDart'], DARTS],
   4: [
