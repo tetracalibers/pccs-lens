@@ -16,8 +16,7 @@ sections:
     id: curves-surfaces
     links:
       - slug: curve-surface-equations
-      - title: 2次曲線 # CG 3-4-2
-        group: ["CG"]
+      - slug: quadratic-curve
       - slug: parametric-curve-surface
       - slug: bezier-curve-surface
       - title: ファーガソン曲線 # CG 3-4-3

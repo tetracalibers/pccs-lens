@@ -1,0 +1,10 @@
+---
+layout: guide-content
+title: 2次曲線 # CG 3-4-2
+
+group: ["CG"]
+
+draft: true
+---
+
+## TODO

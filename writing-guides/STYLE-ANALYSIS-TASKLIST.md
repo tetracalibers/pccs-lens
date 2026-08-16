@@ -508,7 +508,7 @@
 ## CGと画像処理 — モデリング／曲線と曲面（`cg/modeling.yaml` #curves-surfaces）
 
 - [draft] `/cg/modeling/curve-surface-equations`
-- [ページ未作成] 2次曲線
+- [draft] `/cg/modeling/quadratic-curve`
 - [draft] `/cg/modeling/parametric-curve-surface`
 - [draft] `/cg/modeling/bezier-curve-surface`
 - [ページ未作成] ファーガソン曲線

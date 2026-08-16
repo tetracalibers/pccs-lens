@@ -361,7 +361,7 @@
 - [ページ未作成] 境界表現のデータ構造
 - [ページ未作成] オイラー表現
 - [draft] `/cg/modeling/curve-surface-equations`
-- [ページ未作成] 2次曲線
+- [draft] `/cg/modeling/quadratic-curve`
 - [draft] `/cg/modeling/parametric-curve-surface`
 - [draft] `/cg/modeling/bezier-curve-surface`
 - [ページ未作成] ファーガソン曲線
