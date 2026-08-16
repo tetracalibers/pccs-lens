@@ -112,9 +112,8 @@ const GROUND_OPACITY = 0.14
 /** 曲面の不透明度。せり出しの下に入った縦線と交点が透けて見える濃さにする */
 const SURFACE_OPACITY = 0.55
 
-/** 交点を示す球と、xy 平面上の位置を示す球の半径 */
+/** 交点を示す球の半径 */
 const HIT_RADIUS = 0.075
-const FOOT_RADIUS = 0.055
 
 const X_DIRECTION = new Vector3(1, 0, 0)
 const UP_DIRECTION = new Vector3(0, 1, 0)
@@ -379,12 +378,6 @@ const createSurfacePanel = () => {
   const probe = new LineSegments(probeGeometry, probeMaterial)
   group.add(probe)
 
-  // 縦線が立っている xy 平面上の位置
-  const footGeometry = new SphereGeometry(FOOT_RADIUS, 16, 12)
-  const footMaterial = new MeshBasicMaterial({ color: PROBE_COLOR })
-  const foot = new Mesh(footGeometry, footMaterial)
-  group.add(foot)
-
   const hits = createHitPoints(MAX_SURFACE_HITS)
   group.add(...hits.objects)
 
@@ -394,7 +387,6 @@ const createSurfacePanel = () => {
     setProbe: (x: number, y: number) => {
       // ワールドの奥行きが xy 平面の y にあたる
       probe.position.set(x, 0, y)
-      foot.position.set(x, 0, y)
 
       // 回転体なので、交わり方は z 軸からの距離だけで決まる
       const heights = findSurfaceHeights(Math.hypot(x, y))
@@ -410,9 +402,7 @@ const createSurfacePanel = () => {
         surfaceGeometry,
         surfaceMaterial,
         probeGeometry,
-        probeMaterial,
-        footGeometry,
-        footMaterial
+        probeMaterial
       ]
       disposables.forEach((disposable) => disposable.dispose())
     }
