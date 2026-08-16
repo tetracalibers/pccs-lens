@@ -11,6 +11,7 @@
  * 4. 中心には同心円を重ねる
  * 5. 向きのわかる非対称な印（巴形）を中心に置く。巻く向きを固定してあるので、
  *    となりのコピーが回転なのか鏡映なのかすべり鏡なのかが見て取れる
+ *    （群の見比べが目的の版なので既定で置く。--no-mark で外せる）
  *
  * 丸い図形も基本領域からはみ出せない（クリップするとコピーの継ぎ目に
  * アンチエイリアスの筋が出る）ので、半径はすべて領域の内側に収まる値で頭打ちにする。
@@ -270,7 +271,7 @@ function visibleAreas(elements, polygon, colorCount) {
 
 /* --- 本体 --- */
 
-export function buildMotif({ domain, colorCount, rng }) {
+export function buildMotif({ domain, colorCount, rng, mark = true }) {
   const { base, circumradius } = domain
   // 頂点の内角と辺の長さを使うので、長さがほぼ 0 の辺を均してから扱う
   const polygon = simplifyPolygon(domain.domain, circumradius * 1e-6)
@@ -362,14 +363,16 @@ export function buildMotif({ domain, colorCount, rng }) {
   }
 
   // --- 非対称な印（これが対称操作の見分けになる） ---
-  // 輪の中に収まりきると小さくなりすぎるので、内接円との中間の大きさにする
-  const markRadius =
-    inradius * rng.float(0.62, 0.88) * Math.sqrt(ringRadius / inradius)
-  elements.push({
-    kind: 'polygon',
-    points: commaOutline(base, markRadius, rng.float(0, TAU)),
-    colorIndex: accentColor(rng, colorCount, [...new Set(topColors)]),
-  })
+  if (mark) {
+    // 輪の中に収まりきると小さくなりすぎるので、内接円との中間の大きさにする
+    const markRadius =
+      inradius * rng.float(0.62, 0.88) * Math.sqrt(ringRadius / inradius)
+    elements.push({
+      kind: 'polygon',
+      points: commaOutline(base, markRadius, rng.float(0, TAU)),
+      colorIndex: accentColor(rng, colorCount, [...new Set(topColors)]),
+    })
+  }
 
   // --- 隠れて見えなくなった色を、点で補う ---
   let counts = visibleAreas(elements, polygon, colorCount)

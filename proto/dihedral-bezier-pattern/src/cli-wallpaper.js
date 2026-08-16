@@ -45,7 +45,20 @@ function readRepeat(value) {
   return repeat
 }
 
-function helpText(scriptName, title) {
+/**
+ * --mark / --no-mark の解釈。
+ * 既定は版ごとに違う（模様として見せる版は印なし、群を見比べる版は印あり）。
+ */
+function readMark(opts, markDefault) {
+  if (opts.mark !== undefined && opts['no-mark'] !== undefined) {
+    throw new Error('--mark と --no-mark は同時に指定できません')
+  }
+  if (opts['no-mark'] !== undefined) return false
+  if (opts.mark !== undefined) return opts.mark !== 'false'
+  return markDefault
+}
+
+function helpText(scriptName, title, markDefault) {
   return `${title}
 
   node src/${scriptName} [options]
@@ -56,6 +69,9 @@ function helpText(scriptName, title) {
                         群をまたいで基本領域の面積をそろえる基準になる
   --guide               すべての出力に対称性の要素（単位格子・基本領域・
                         回転中心・鏡・すべり鏡）を重ねる
+  --mark / --no-mark    中心に非対称な印を置くか（既定: ${markDefault ? 'あり' : 'なし'}）
+                        印があると、となりのコピーが回転・鏡映・すべり鏡の
+                        どれなのかが見分けられる
   --size=<px>           出力サイズ（既定: 480）
   --seed=<数値|文字列>   乱数シード（既定: ランダム）
   --count=<数>          色数ごとの生成数（既定: 1）
@@ -71,12 +87,13 @@ function helpText(scriptName, title) {
 /**
  * 17 群 × 色数 2〜6 のパターンを一括生成する（--group・--color-count で絞れる）。
  * buildMotif が基本領域 1 枚ぶんの模様を作る関数。
+ * markDefault は非対称な印を既定で置くかどうかで、版の目的によって変わる。
  */
-export function run({ patternName, scriptName, title, buildMotif }) {
+export function run({ patternName, scriptName, title, buildMotif, markDefault = true }) {
   try {
     const opts = parseArgs(process.argv.slice(2))
     if (opts.help) {
-      console.log(helpText(scriptName, title))
+      console.log(helpText(scriptName, title, markDefault))
       return
     }
 
@@ -85,6 +102,7 @@ export function run({ patternName, scriptName, title, buildMotif }) {
     const groups = parseGroups(opts.group)
     const repeat = readRepeat(opts.repeat)
     const guide = opts.guide === 'true'
+    const mark = readMark(opts, markDefault)
 
     const palettes = readPalettes(opts.colors, opts['color-count'])
     const outDir = resolveOutDir(opts.out, patternName)
@@ -109,7 +127,7 @@ export function run({ patternName, scriptName, title, buildMotif }) {
           // 対称性の違いだけを比べられるようにするため。
           const seed = (baseSeed + variant * 7919 + colors.length * 104729) >>> 0
           const rng = createRandom(seed)
-          const motif = buildMotif({ domain, colorCount: colors.length, rng })
+          const motif = buildMotif({ domain, colorCount: colors.length, rng, mark })
           const suffix = count > 1 ? `-v${variant + 1}` : ''
 
           const filename = `${group}-${colors.length}colors${suffix}.svg`

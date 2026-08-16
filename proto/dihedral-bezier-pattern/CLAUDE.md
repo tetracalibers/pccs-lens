@@ -10,8 +10,8 @@ A prototype for generating SVG patterns with mirror symmetry — dihedral (D_n) 
 
 - **曲線版**（`src/generate.js` + `src/motif.js`）— 制御点がランダムな 3 次ベジェ曲線のロゼッタ
 - **直線版 / 角ばった版**（`src/generate-angular.js` + `src/motif-angular.js`）— 折れ線・多角形のみのロゼッタ
-- **壁紙群版**（`src/generate-wallpaper.js` + `src/motif-wallpaper.js`）— 平面を埋めつくす繰り返し模様。**17 の壁紙群を同じモチーフで見比べる**のが目的
-- **壁紙群・丸み版**（`src/generate-wallpaper-round.js` + `src/motif-wallpaper-round.js`）— 同じ目的を、丸い図形の組み合わせで描く版
+- **壁紙群版**（`src/generate-wallpaper.js` + `src/motif-wallpaper.js`）— 平面を埋めつくす繰り返し模様。**直線的で美しい幾何模様そのもの**を作るのが目的（対称操作の見分けに使う非対称な印は `--mark` のときだけ置く）
+- **壁紙群・丸み版**（`src/generate-wallpaper-round.js` + `src/motif-wallpaper-round.js`）— 丸い図形の組み合わせで描く版。**17 の壁紙群を同じモチーフで見比べる**のが目的なので、非対称な印を既定で置く
 
 ## Running
 
@@ -23,6 +23,7 @@ node src/generate-wallpaper-round.js # 壁紙群・丸み版（オプション�
 node src/generate.js --n=4,24        # n = 4〜24 も範囲で一括生成（1 ディレクトリ・1 HTML）
 node src/generate.js --color-count=4,5  # 生成する色数を絞る（4 つのスクリプトで共通）
 node src/generate-wallpaper.js --guide  # 対称性の要素（格子・基本領域・回転中心・鏡）を重ねる
+node src/generate-wallpaper.js --mark   # 非対称な印を置く（丸み版は既定であり、--no-mark で外す）
 node src/generate.js --help          # オプション一覧（--help は 4 つのスクリプトで共通）
 ```
 
@@ -57,7 +58,7 @@ Output goes to `.generated/{curved|angular|wallpaper|wallpaper-round}/{YYYYMMDD-
 - **seed に n を混ぜない。** n を範囲で生成したとき、同じ色数どうしで帯の構成と配色がそろわないと見比べられない
 - **seed に壁紙群を混ぜない。** 同じ理由で、17 群は区画の構成と配色をそろえる
 - **壁紙群版は「基本領域」の面積を群でそろえる**（単位格子ではなく）。こうするとモチーフが同じ大きさで現れ、並べ方の違いだけを見比べられる
-- **壁紙群版のモチーフには必ず非対称な印を入れる。** 回転・鏡映・すべり鏡映を見分ける手がかりがなくなると、群を並べる意味が薄れる
+- **非対称な印を置くなら必ず非対称な形にする**（`--mark` / `--no-mark`）。回転・鏡映・すべり鏡映を見分ける手がかりになるのは印の非対称性だけ。既定は版の目的で分かれる：直線版（`generate-wallpaper.js`）は幾何模様そのものを作るのが目的なので印なし、丸み版は群の見比べが目的なので印あり
 - **壁紙群の変換は格子座標で定義する。** Cartesian で書くと 1/3 や √3 が入って誤差が出る。描画のときだけ `A = P·M·P⁻¹` で直す
 - **丸み版で地の切れ目を曲げるときは、となり合う区画で同じ曲線を共有する。** 区画ごとに曲線を作り直すと、隙間か重なりが出て基本領域を覆えなくなる
 - **丸み版の頂点・辺中点の扇形は、半径を領域内で 1 つに決める。** 頂点のまわりに集まるのが基本領域のどの頂点かは群によって違うので、頂点ごとに半径を変えると合わさった円の縁が欠ける

@@ -6,8 +6,9 @@
  * 1. 基本領域を中心から放射状に切り分けて塗る（地）。多角形を過不足なく覆うので、
  *    群の変換と平行移動でコピーすると平面が塗り残しなく埋まる
  * 2. ときどき中心に入れ子の輪を重ねる
- * 3. 向きのわかる非対称な印（F 字）を中心に置く。これがあると、
- *    となりのコピーが回転なのか鏡映なのかすべり鏡なのかが見て取れる
+ * 3. mark を指定したときだけ、向きのわかる非対称な印（F 字）を中心に置く。
+ *    これがあると、となりのコピーが回転なのか鏡映なのかすべり鏡なのかが見て取れる。
+ *    ただし文字に読めて模様から浮くので、この版は既定では置かない（--mark で置ける）
  *
  * 帯の分割・配色・アクセント色のルールはロゼッタ版と共通（composition.js）。
  * 使用面積はマス目版と同じく、最後に数えて色の順序を確定させる。
@@ -94,7 +95,7 @@ function visibleAreas(elements, polygon, colorCount) {
   return counts
 }
 
-export function buildMotif({ domain, colorCount, rng }) {
+export function buildMotif({ domain, colorCount, rng, mark = true }) {
   const { domain: polygon, base, inradius } = domain
   const elements = []
 
@@ -140,12 +141,16 @@ export function buildMotif({ domain, colorCount, rng }) {
   }
 
   // --- 非対称な印（これが対称操作の見分けになる） ---
-  const markRadius = inradius * rng.float(0.62, 0.88) * ringScale ** 0.35
-  elements.push({
-    kind: 'polygon',
-    points: markPolygon(base, markRadius, rng.float(0, tau)),
-    colorIndex: accentColor(rng, colorCount, [...new Set(topColors)]),
-  })
+  // 印を置くかどうかで乱数の引き方が変わるのは印より後だけなので、
+  // 同じ seed なら地の切り分けと配色はどちらでも同じになる
+  if (mark) {
+    const markRadius = inradius * rng.float(0.62, 0.88) * ringScale ** 0.35
+    elements.push({
+      kind: 'polygon',
+      points: markPolygon(base, markRadius, rng.float(0, tau)),
+      colorIndex: accentColor(rng, colorCount, [...new Set(topColors)]),
+    })
+  }
 
   // --- 隠れて見えなくなった色を、点で補う ---
   let counts = visibleAreas(elements, polygon, colorCount)
