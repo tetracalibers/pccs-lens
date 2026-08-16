@@ -1,16 +1,19 @@
 /**
- * 五角形ペンローズタイリングを SVG にする。
+ * ペンローズタイリング（P1・P2 の両方）を SVG にする。
  *
  * タイリングは繰り返さないので <use> は使えず、タイルを 1 枚ずつ書き出す。
  * タイリングの座標系（y は上向き）から SVG の座標系（y は下向き）へ、
  * 切り取り位置ぶんずらしながら写す。
+ *
+ * label は SVG のコメントに残す版の名前、side はタイルの辺の長さ
+ * （輪郭線の太さを決めるのに使う）。
  */
 
 import { BACKGROUND } from './palettes.js'
 
 const num = (x) => String(Math.round(x * 100) / 100)
 
-export function renderPenroseSVG({ motif, colors, size, seed, view, side, outline }) {
+export function renderPenroseSVG({ motif, colors, size, seed, view, side, outline, label }) {
   const half = size / 2
   const toPath = (points) =>
     'M' +
@@ -32,7 +35,7 @@ export function renderPenroseSVG({ motif, colors, size, seed, view, side, outlin
     .join('\n')
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-  <!-- Penrose P1 (pentagon/star/boat/diamond) / tiles: ${motif.elements.length} / side: ${num(side)} / colors: ${colors.join(' ')} / seed: ${seed} -->
+  <!-- ${label} / tiles: ${motif.elements.length} / side: ${num(side)} / colors: ${colors.join(' ')} / seed: ${seed} -->
   <rect width="${size}" height="${size}" fill="${BACKGROUND}"/>
 ${body}
 </svg>
