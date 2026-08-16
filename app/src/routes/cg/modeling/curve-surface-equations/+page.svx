@@ -11,6 +11,7 @@ draft: true
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import ExplicitFormLimitsDemo from '$lib/demo/threejs/modeling/curve-surface-equations/explicit-form-limits/ExplicitFormLimitsDemo.svelte'
+  import ParametricCurveDemo from '$lib/demo/threejs/modeling/curve-surface-equations/parametric-curve/ParametricCurveDemo.svelte'
 </script>
 
 [さまざまな形状モデル](/cg/modeling/shape-model-overview/)では、立体を稜線・面・中身のどれで捉えるかによって形状モデルを分けましたが、その面や線にあたる曲線・曲面そのものをどう数式で表すかには触れていませんでした。
@@ -245,6 +246,69 @@ $$
 
 $$\theta$$を`0`から$$2\pi$$まで動かすと、円周上の点が順に得られます。方程式を解かずに代入だけで点が並んでいくところが、陰関数形式との大きな違いです。
 パラメータの動く範囲を区切れば、曲線の一部だけを取り出すこともできます。
+
+:::Action
+tの下限と上限を動かして、曲線がどこからどこまで描かれるかを確かめよう
+
+- 上限を上げると、点が円周に沿って順に並んでいく
+- 下限を上げると、始まりの側の点が消えて、弧の一部だけが残る
+- 曲線をらせんに切り替えると、xとyはそのままで、tに合わせてzが増えていく
+:::
+
+<CanvasWrapper>
+  <ParametricCurveDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 記事と同じ座標の書き方（z が高さ）をそのまま使えるよう、グループごと寝かせて z 軸を上に向ける
+const group = new Group()
+group.rotation.x = -Math.PI / 2
+scene.add(group)
+
+// らせんは、円と同じ x・y に z を足したもの
+type CurveKind = "circle" | "helix"
+
+// パラメータ t を代入して、曲線上の点を求める
+const evaluate = (curve: CurveKind, t: number, target: Vector3) => {
+  const x = RADIUS * Math.cos(t)
+  const y = RADIUS * Math.sin(t)
+  const z = curve === "helix" ? HELIX_PITCH * t : 0
+  return target.set(x, y, z)
+}
+
+// t を等間隔に刻んで代入した点。曲線の種類が変わっても点の数は同じなので、座標だけ書き換える
+const positions = new Float32BufferAttribute(new Float32Array((SAMPLE_COUNT + 1) * 3), 3)
+const curveGeometry = new BufferGeometry().setAttribute("position", positions)
+const curveMaterial = new PointsMaterial({ color: CURVE_COLOR, size: POINT_SIZE })
+group.add(new Points(curveGeometry, curveMaterial))
+
+const curve = "circle"
+const point = new Vector3()
+
+for (let i = 0; i <= SAMPLE_COUNT; i++) {
+  evaluate(curve, (i / SAMPLE_COUNT) * TWO_PI, point)
+  positions.setXYZ(i, point.x, point.y, point.z)
+}
+positions.needsUpdate = true
+
+// 刻んだ点のうち、t の下限と上限の間に入るものだけを描く
+const tStart = 0
+const tEnd = Math.PI * 1.5
+const first = Math.ceil((tStart / TWO_PI) * SAMPLE_COUNT)
+const last = Math.floor((tEnd / TWO_PI) * SAMPLE_COUNT)
+curveGeometry.setDrawRange(first, Math.max(0, last - first + 1))
+
+// t の上限を代入して得られる点。刻みに乗っていない t でも、計算だけで求まる
+const markerGeometry = new SphereGeometry(MARKER_RADIUS, 16, 12)
+const markerMaterial = new MeshBasicMaterial({ color: MARKER_COLOR })
+const marker = new Mesh(markerGeometry, markerMaterial)
+marker.position.copy(evaluate(curve, tEnd, point))
+group.add(marker)
+```
+
+:::
 
 空間中の曲線を素直に表せることも、この形式の強みです。陽関数形式の`y = f(x)`は平面内の曲線しか表せず、陰関数形式の`f(x, y, z) = 0`は曲面になってしまうため、空間中の`1`本の曲線を表すには`2`つの曲面の交わりとして書くほかありません。
 
