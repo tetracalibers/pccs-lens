@@ -336,7 +336,7 @@ export const createTranslationScene = ({ scene, params }: SceneContext) => {
 | `ariaLabel` | ✓ | — | ラッパに付ける説明（何が描かれ、どう操作するか） |
 | `createScene` | ✓ | — | `scene.ts` の `create<デモ名>Scene` |
 | `params` | ✓ | — | Tweakpane と `scene.ts` が共有するプレーンオブジェクト |
-| `aspectRatio` | | `"1 / 1"` | canvas の `aspect-ratio`。**デモごとに変更可**（変換・投影は横長のほうが見やすいことがある） |
+| `aspectRatio` | | `"1 / 1"` | canvas の `aspect-ratio`。**デモごとに変更可**（変換・投影は横長のほうが見やすいことがある）。**Tweakpane パネルまで含めた見た目が縦長にならない値にする**（→「アスペクト比」） |
 | `background` | | `DEMO_BACKGROUND` | 背景色。ライト／ダーク共通の固定色 |
 | `camera` | | fov 45 / near 0.1 / far 100 / position `[3, 3, 5]` | `{ fov, near, far, position }` |
 | `orbit` | | 減衰つき回転・ズーム有効／パン無効 | `{ target, enablePan, enableZoom, enableRotate, minDistance, maxDistance, minPolarAngle, maxPolarAngle }`、または `false` で OrbitControls を付けない |
@@ -468,6 +468,17 @@ export const createTranslationScene = ({ scene, params }: SceneContext) => {
 - 枠線は `light-dark()` でライト／ダークに追従（枠はシーンではなくページ側の要素）
 - ラッパに `role="img"` ＋ `aria-label`、Tweakpane パネルはその外（兄弟要素）
 - アクセシビリティへの特別な配慮は要件としない（Tweakpane を素直に使う）
+
+### アスペクト比
+
+**デモ全体（canvas ＋ その下の Tweakpane パネル）が、幅に対して縦長にならないようにする。** パネルは canvas の外（下）に積まれるので、`aspectRatio` を `1 / 1` のままにするとパネルのぶんだけ全体が縦長になる。スクロールしながらでは図と操作が同時に見えず、狭い画面ほど破綻する。
+
+- **`aspectRatio` はパネルの高さを見込んで横長側に取る。** 操作パラメータがあるデモで `1 / 1` を選ばない
+- 目安（`buildPane` のバインディング数で決める）
+  - 操作なし（`buildPane` を省略） — `1 / 1` のままでよい
+  - 1〜2 個 — `16 / 10` 程度
+  - 3 個以上 — `16 / 9` 以上の横長にする（フォルダやボタンを足した場合も同様に広げる）
+- 縦方向に情報が伸びるデモ（色立体など）でも、`1 / 1` より縦長の値（`4 / 5` など）は使わない。縦に見せたいものはカメラ側（`position`・fov）で収める
 
 ### 背景色
 
