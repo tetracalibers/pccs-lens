@@ -7,8 +7,7 @@
   // （x 方向にも y 方向にも進む向きから始めることで、a を 0 にしたときの変化が読み取れる）。
   // point は scene.ts が計算して書き戻す表示用の値なので、初期値は使われない
   const params: LineParameterFormParams = {
-    p: -1.2,
-    q: -0.6,
+    pq: { x: -1.2, y: -0.6 },
     a: 1,
     b: 0.8,
     t: 1.4,
@@ -26,11 +25,16 @@
   camera={{ position: [0, 0, 7.6] }}
   orbit={{ enableRotate: false, minDistance: 3.5, maxDistance: 13 }}
   buildPane={(pane, p) => {
-    pane.addBinding(p, "p", { min: -2, max: 2, step: 0.1, label: "p" })
-    pane.addBinding(p, "q", { min: -2, max: 2, step: 0.1, label: "q" })
-    pane.addBinding(p, "a", { min: -1.5, max: 1.5, step: 0.1, label: "a" })
-    pane.addBinding(p, "b", { min: -1.5, max: 1.5, step: 0.1, label: "b" })
-    pane.addBinding(p, "t", { min: -3, max: 3, step: 0.01, label: "t" })
+    // 直線が通る点は 1 つの点として操作したいので、Point Binding でまとめる。
+    // 2 次元のパッドは既定だと下へ動かしたときに y が増えるので、図の y 軸と揃うよう反転させる
+    pane.addBinding(p, "pq", {
+      label: "(p, q)",
+      x: { min: -2, max: 2, step: 0.1 },
+      y: { min: -2, max: 2, step: 0.1, inverted: true }
+    })
+    pane.addBinding(p, "a", { min: -1.5, max: 1.5, step: 0.1, label: "a (x方向に進む量)" })
+    pane.addBinding(p, "b", { min: -1.5, max: 1.5, step: 0.1, label: "b (y方向に進む量)" })
+    pane.addBinding(p, "t", { min: -3, max: 3, step: 0.01, label: "t (パラメータ)" })
     pane.addBinding(p, "point", { readonly: true, label: "(x, y)" })
   }}
 />

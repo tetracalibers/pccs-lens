@@ -18,9 +18,8 @@ import {
 
 /** Tweakpane で操作するパラメータ */
 export type LineParameterFormParams = {
-  /** 直線が通る点。t = 0 のときの座標 */
-  p: number
-  q: number
+  /** 直線が通る点 (p, q)。t = 0 のときの座標。Tweakpane の Point Binding に合わせて x・y の組で持つ */
+  pq: { x: number; y: number }
   /** 進む向き。x 方向に a・y 方向に b */
   a: number
   b: number
@@ -378,7 +377,7 @@ export const createLineParameterFormScene = ({ scene, params }: SceneContext) =>
 
   /** パラメータ表示 x = p + at, y = q + bt。重ね順を決める z は呼び出し側で指定する */
   const pointAt = (t: number, z: number, target: Vector3) =>
-    target.set(params.p + params.a * t, params.q + params.b * t, z)
+    target.set(params.pq.x + params.a * t, params.pq.y + params.b * t, z)
 
   return {
     update: () => {
