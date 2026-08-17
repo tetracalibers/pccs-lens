@@ -11,6 +11,7 @@ draft: true
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import ExplicitFormLimitsDemo from '$lib/demo/threejs/modeling/curve-surface-equations/explicit-form-limits/ExplicitFormLimitsDemo.svelte'
+  import LineParameterFormDemo from '$lib/demo/threejs/modeling/curve-surface-equations/line-parameter-form/LineParameterFormDemo.svelte'
   import ParametricSurfaceMappingDemo from '$lib/demo/threejs/modeling/curve-surface-equations/parametric-surface-mapping/ParametricSurfaceMappingDemo.svelte'
 </script>
 
@@ -301,8 +302,71 @@ $$
 
 この形では`x`と`y`が対等に扱われ、どちらかをもう一方の関数として書く必要がありません。そのため、陽関数形式では表せなかった`y`軸に平行な直線も、`a`を`0`にするだけで表せます。
 
-:::Todo
-`t`を動かすと、`(x,y)`が直線上を動くデモ
+:::Action
+`t`を動かして、直線上の点`(x, y)`がどこへ動くかを追ってみよう
+
+- `t`が`0`のときの点が`(p, q)`で、`t`を増やすと`a`・`b`が指す向きへ、減らすと反対の向きへ進む
+- `t`が整数のところに並ぶ点は等間隔で、`1`つ進むごとに`x`方向へ`a`・`y`方向へ`b`だけずれる
+- `a`を`0`にすると、直線が`y`軸に平行になる
+:::
+
+<CanvasWrapper>
+  <LineParameterFormDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 直線を決める、通る点 (p, q) と進む向き (a, b)。t は直線上の点を 1 つ選ぶパラメータ
+const p = -1.2
+const q = -0.6
+const a = 1
+const b = 0.8
+const t = 1.4
+
+// パラメータ表示 x = p + at, y = q + bt。
+// xy 平面に重なる要素の前後を決める z も受け取る（直線全体と掃いた範囲は同じ直線上に重なるため）
+const pointAt = (t: number, z: number) => new Vector3(p + a * t, q + b * t, z)
+
+// t をすべての実数にわたって動かすと直線全体が得られる。
+// 基準点から、向きの正負どちらへも表示域の外まで伸ばす
+const direction = new Vector3(a, b, 0).normalize()
+const guideGeometry = new BufferGeometry().setFromPoints([
+  pointAt(0, LAYER_LINE).addScaledVector(direction, -LINE_REACH),
+  pointAt(0, LAYER_LINE).addScaledVector(direction, LINE_REACH)
+])
+const guideMaterial = new LineBasicMaterial({ color: LINE_COLOR })
+scene.add(new LineSegments(guideGeometry, guideMaterial))
+
+// t = 0 から今の t までに掃いた範囲。t の正負で伸びる向きが変わる
+const traceGeometry = new BufferGeometry().setFromPoints([
+  pointAt(0, LAYER_TRACE),
+  pointAt(t, LAYER_TRACE)
+])
+const traceMaterial = new LineBasicMaterial({ color: TRACE_COLOR })
+scene.add(new LineSegments(traceGeometry, traceMaterial))
+
+// t を 1 つ決めるごとに直線上の点が 1 つ決まる。整数の t に対応する点を並べる
+const tickGeometry = new SphereGeometry(TICK_RADIUS, 12, 8)
+const tickMaterial = new MeshBasicMaterial({ color: TICK_COLOR })
+
+for (let tick = -TICK_MAX; tick <= TICK_MAX; tick++) {
+  // t = 0 の点は基準点として別に描くので飛ばす
+  if (tick === 0) continue
+  const dot = new Mesh(tickGeometry, tickMaterial)
+  dot.position.copy(pointAt(tick, LAYER_POINT))
+  scene.add(dot)
+}
+
+// 直線が通る 1 点として与えた (p, q) と、今の t に対応する点 (x, y)
+const pointGeometry = new SphereGeometry(POINT_RADIUS, 16, 12)
+const basePoint = new Mesh(pointGeometry, new MeshBasicMaterial({ color: BASE_COLOR }))
+basePoint.position.copy(pointAt(0, LAYER_POINT))
+const marker = new Mesh(pointGeometry, new MeshBasicMaterial({ color: MARKER_COLOR }))
+marker.position.copy(pointAt(t, LAYER_POINT))
+scene.add(basePoint, marker)
+```
+
 :::
 
 ### 例：平面上の円のパラメータ表示
