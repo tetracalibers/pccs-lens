@@ -139,6 +139,21 @@ analyzer が生成し、writer が参照する中心的な成果物です。い�
 
 強調の記法については、**writer が使うのは `:Anki[]`（暗記モードで隠れる強調）だけ**という線引きがあります。同じ見た目で暗記モードでは隠れない `:Mark[]` も記法として存在しますが、どの語をそれにするかは著者（人間）の判断領域なので、writer は自分から `:Mark[]` を書きません（既存の `:Mark[]` は外さず `:Anki[]` へ変えもしません）。詳細は `syntax-guide.md` ルール1。
 
+#### 機械的に検査できるルール：`npm run lint:svx`
+
+`syntax-guide.md` のルールのうち4つは textlint で検査でき、writer は**どのモードでも本文の変更を終えたら `npm run lint:svx`（`app` ディレクトリ）を通してから報告します**。ルールの実装は `app/textlint/`（`rules/` と共通のマスク処理 `lib/svx.js`）、使い方と設計の詳細は `app/textlint/README.md` にあります。
+
+| ルール | 内容 |
+| --- | --- |
+| `svx-number-in-code` | 数字は必ずインラインコードにする |
+| `svx-math-function-in-code` | 数学で定義されている関数名（`sin`・`cos` など）もインラインコードにする |
+| `svx-no-space-around-code` | インラインコードの前後には空白を置かない |
+| `svx-inline-math-spacing` | インライン数式（`$$...$$`）の前後には半角スペースを置く |
+
+`npm run lint:svx:fix` で自動修正できますが、英字に隣接する数字（`600nm` など）と引数が続く関数名（`sin(x)`）は囲む範囲の判断を要するため報告だけが出ます。検査されるのはこの4ルールだけなので、ボールド体の禁止・`:Anki[]` の乱用・分類タグとフロントマターの整合などは `syntax-guide.md` の「仕上げチェックリスト」で writer が自分で確認します（**エラー0件は記法ルールを満たした証明にはなりません**）。
+
+なお、ルール導入時点で違反を含んでいた既存記事は `app/.textlintignore` にベースラインとして列挙されており、**新しく書く記事から適用**する運用です。ベースラインの記事を編集したときは検査されないため、writer は自分が書いた・直した箇所について記法ルールを守り、記事全体の既存の違反をついでに直そうとはしません。
+
 ## author-style-analyzer（分析側）
 
 ### 役割
@@ -336,6 +351,7 @@ manifest の `freezeConfidence: true` を渡すと、統合エージェントは
 5. 表現を調整する（`stylistic-quirks.md`、生成・推敲・編集モード。最終的な語り口の調整のみ）
 6. 推敲する（`refine-style.md`、全モード。AI草稿に対して著者が行いやすい修正を適用）
 7. スタイルレビューを行う（Thinking Flow / Writing Style / Stylistic Quirks / Refine Style の4観点。推敲・編集モードでは、そのモードで読んだガイドに対応する観点だけを使う）
+8. 記法チェックを通す（`npm run lint:svx` のエラーを解消し、textlint が見ない項目は `syntax-guide.md` の「仕上げチェックリスト」で確認する）
 
 ### 既存コンテンツの扱い
 
@@ -349,7 +365,7 @@ manifest の `freezeConfidence: true` を渡すと、統合エージェントは
 
 ### 記事ページの編集（編集モード）
 
-slug（＋編集指示）を渡すと、すでに本文のある記事ページ（`+page.svx`）に指示された編集を加える編集モードで動きます。読むガイドは `syntax-guide.md`＋`refine-style.md`＋`stylistic-quirks.md`（構成に触らない局所的な修正なら `refine-style.md` だけ、構成変更を伴う指示なら `writing-style.md`、説明の書き足しを伴う指示なら `thinking-flow.md` も追加）。slug で対象ファイルを特定し、`syntax-guide.md` と読み込んだ文体ガイド（特に `refine-style.md`）に沿って編集し、**指示の直接対象だけでなく前後の文章・セクションの流れも整えて**報告します。編集対象でない敬体の既存文章と見出し構成は変更しません。既存の `:Anki[]` / `:Mark[]` も、編集指示が明示的に求めない限り**絶対に勝手に外さず**、文を書き換える場合も落としません（対象語が動くなら一緒に動かす）。実際の文章変更の規律は「既存文章を推敲する場合」と共通です。
+slug（＋編集指示）を渡すと、すでに本文のある記事ページ（`+page.svx`）に指示された編集を加える編集モードで動きます。読むガイドは `syntax-guide.md`＋`refine-style.md`＋`stylistic-quirks.md`（構成に触らない局所的な修正なら `refine-style.md` だけ、構成変更を伴う指示なら `writing-style.md`、説明の書き足しを伴う指示なら `thinking-flow.md` も追加）。slug で対象ファイルを特定し、`syntax-guide.md` と読み込んだ文体ガイド（特に `refine-style.md`）に沿って編集し、**指示の直接対象だけでなく前後の文章・セクションの流れも整えて**報告します。編集対象でない敬体の既存文章と見出し構成は変更しません。既存の `:Anki[]` / `:Mark[]` も、編集指示が明示的に求めない限り**絶対に勝手に外さず**、文を書き換える場合も落としません（対象語が動くなら一緒に動かす）。実際の文章変更の規律は「既存文章を推敲する場合」と共通です。報告の前に `npm run lint:svx` を通します（→「機械的に検査できるルール」）。
 
 ### ガイドが空・不足している場合
 
@@ -406,6 +422,14 @@ writing-guides/
   │    └─ refine-style.md
   └─ STYLE-ANALYSIS-TASKLIST.md
                             … 記事ごとの分析済みチェックリスト（analyzer が読み書き / writer は読まない）
+
+app/
+  ├─ textlint/
+  │    ├─ README.md         … 記法チェックの使い方・対象外・ベースライン運用
+  │    ├─ rules/            … syntax-guide.md の4ルールの実装（writer が npm run lint:svx で通す）
+  │    └─ lib/svx.js        … ディレクティブ・数式などを検査対象から外す共通処理
+  ├─ .textlintrc.json       … Markdown プラグインの extensions に .svx を追加
+  └─ .textlintignore        … 既存記事のベースライン（ルール導入時点で違反を含む記事）
 ```
 
 ## 品質を担保する仕組み（output-contract）
