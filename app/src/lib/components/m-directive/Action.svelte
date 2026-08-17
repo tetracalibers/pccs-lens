@@ -30,16 +30,25 @@
     line-height: 1.7;
   }
 
-  /* AIが書いた下書き。赤いボーダーは残したまま、:::Fix と同じ琥珀で塗って要編集を示す */
+  /* AIが書いた下書き。ボーダーのグラデーションは残したまま、点線にして要編集を示す */
   .action.fixme {
-    padding-block: 0.5rem;
-    padding-inline-end: 0.8rem;
-    border-radius: 0 2px 2px 0;
-    background: light-dark(#fff8c5, rgb(210 153 34 / 0.24));
+    border-image: none;
+    border-left-color: transparent;
+  }
+  .action.fixme::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    left: -2px;
+    width: 2px;
+    background: linear-gradient(to top, #ff9a9e, #f953c6);
+    mask-image: repeating-linear-gradient(to bottom, #000 0 3px, transparent 3px 6px);
+  }
+  .action.fixme :global(*) {
+    font-size: 0.8rem;
   }
   .action.fixme .label {
     font-size: 0.75rem;
-    color: light-dark(#9a6700, #d29922);
     margin-bottom: 0.25rem;
   }
 
