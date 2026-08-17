@@ -39,7 +39,7 @@ const FUNCTION_NAMES = [
 
 const FUNCTION = new RegExp(`\\b(?:${FUNCTION_NAMES.join("|")})\\b`, "g")
 
-/** 引数が続く形（`sin(θ)`）は、どこまで囲むかが書き手の判断になる */
+/** 引数が続く形（`sin(x)`）は、どこまで囲むかが書き手の判断になる */
 const OPENING_PAREN = /^[(（]/
 
 const reporter = (context) => {
