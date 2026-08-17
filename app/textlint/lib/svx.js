@@ -78,7 +78,7 @@ const maskPattern = (text, pattern) =>
   text.replace(pattern, (matched) => matched.replace(/[^\n]/g, " "))
 
 /**
- * 数字ルールの検査対象だけを残したテキストを返す。
+ * 地の文だけを残したテキストを返す（数字ルール・関数名ルールが使う）。
  *
  * 対象外にするもの:
  * - フロントマター・コードブロック・インラインコード・HTML/Svelte（AST から）
@@ -91,7 +91,7 @@ const maskPattern = (text, pattern) =>
  * @param {object} documentNode
  * @returns {string}
  */
-export const maskForNumberRule = (text, documentNode) => {
+export const maskForProseRules = (text, documentNode) => {
   let masked = maskNodes(text, documentNode, MASKED_NODE_TYPES)
   masked = maskPattern(masked, TAG)
   masked = maskPattern(masked, MATH)

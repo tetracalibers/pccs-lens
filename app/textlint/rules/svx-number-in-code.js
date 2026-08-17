@@ -14,7 +14,7 @@
  * 扱いが分かれるため、報告はするが自動修正はしない。
  */
 
-import { maskForNumberRule } from "../lib/svx.js"
+import { maskForProseRules } from "../lib/svx.js"
 
 const DIGITS = /[0-9０-９]+/g
 const LATIN = /[A-Za-z]/
@@ -24,7 +24,7 @@ const reporter = (context) => {
   return {
     [Syntax.Document](node) {
       const text = getSource()
-      const masked = maskForNumberRule(text, node)
+      const masked = maskForProseRules(text, node)
 
       for (const matched of masked.matchAll(DIGITS)) {
         const digits = matched[0]
