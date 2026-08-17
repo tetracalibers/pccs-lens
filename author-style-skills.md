@@ -141,7 +141,7 @@ analyzer が生成し、writer が参照する中心的な成果物です。い�
 
 #### 機械的に検査できるルール：`npm run lint:svx`
 
-`syntax-guide.md` のルールのうち4つは textlint で検査でき、writer は**どのモードでも本文の変更を終えたら `npm run lint:svx`（`app` ディレクトリ）を通してから報告します**。ルールの実装は `app/textlint/`（`rules/` と共通のマスク処理 `lib/svx.js`）、使い方と設計の詳細は `app/textlint/README.md` にあります。
+`syntax-guide.md` のルールのうち4つと**表記揺れの統一**は textlint で検査でき、writer は**どのモードでも本文の変更を終えたら `npm run lint:svx`（`app` ディレクトリ）を通してから報告します**。ルールの実装は `app/textlint/`（`rules/` と共通のマスク処理 `lib/svx.js`）、表記揺れの辞書は `app/textlint/prh.yml`、使い方と設計の詳細は `app/textlint/README.md` にあります。
 
 | ルール | 内容 |
 | --- | --- |
@@ -150,9 +150,11 @@ analyzer が生成し、writer が参照する中心的な成果物です。い�
 | `svx-no-space-around-code` | インラインコードの前後には空白を置かない |
 | `svx-inline-math-spacing` | インライン数式（`$$...$$`）の前後には半角スペースを置く |
 
-`npm run lint:svx:fix` で自動修正できますが、英字に隣接する数字（`600nm` など）と引数が続く関数名（`sin(x)`）は囲む範囲の判断を要するため報告だけが出ます。検査されるのはこの4ルールだけなので、ボールド体の禁止・`:Anki[]` の乱用・分類タグとフロントマターの整合などは `syntax-guide.md` の「仕上げチェックリスト」で writer が自分で確認します（**エラー0件は記法ルールを満たした証明にはなりません**）。
+表記揺れは `prh.yml` の辞書（`textlint-rule-prh`）で統一します。現在の項目は `もともと`→`元々`、形式名詞の `ぶん`→`分`、`桿体`→`杆体` で、項目を増やすときは辞書に追記します。辞書には `specs`（置き換わってほしい例・**ほしくない**例）を書いておき、textlint の起動時に検証させます。writer は**指摘どおりに直し、辞書を書き換えて指摘を消すことはしません**（辞書に載せる表記を決めるのは著者）。
 
-なお、ルール導入時点で違反を含んでいた既存記事は `app/.textlintignore` にベースラインとして列挙されており、**新しく書く記事から適用**する運用です。ベースラインの記事を編集したときは検査されないため、writer は自分が書いた・直した箇所について記法ルールを守り、記事全体の既存の違反をついでに直そうとはしません。
+`npm run lint:svx:fix` で自動修正できますが、英字に隣接する数字（`600nm` など）と引数が続く関数名（`sin(x)`）は囲む範囲の判断を要するため報告だけが出ます。検査されるのは上の4ルールと表記揺れの辞書だけなので、ボールド体の禁止・`:Anki[]` の乱用・分類タグとフロントマターの整合などは `syntax-guide.md` の「仕上げチェックリスト」で writer が自分で確認します（**エラー0件は記法ルールを満たした証明にはなりません**）。
+
+検査は2つのパスに分かれています（`lint:svx` は両方を走らせます）。**記法ルール**（`lint:svx:syntax`）は、ルール導入時点で違反を含んでいた既存記事を `app/.textlintignore` にベースラインとして列挙し、**新しく書く記事から適用**する運用です。ベースラインの記事を編集したときは検査されないため、writer は自分が書いた・直した箇所について記法ルールを守り、記事全体の既存の違反をついでに直そうとはしません。一方**表記揺れ**（`lint:svx:notation`）はベースラインの対象外で、**常に全記事を検査します**（記事全体で表記が揃っていることに意味があり、直す手間も1語の置き換えで済むため）。
 
 ## author-style-analyzer（分析側）
 
@@ -351,7 +353,7 @@ manifest の `freezeConfidence: true` を渡すと、統合エージェントは
 5. 表現を調整する（`stylistic-quirks.md`、生成・推敲・編集モード。最終的な語り口の調整のみ）
 6. 推敲する（`refine-style.md`、全モード。AI草稿に対して著者が行いやすい修正を適用）
 7. スタイルレビューを行う（Thinking Flow / Writing Style / Stylistic Quirks / Refine Style の4観点。推敲・編集モードでは、そのモードで読んだガイドに対応する観点だけを使う）
-8. 記法チェックを通す（`npm run lint:svx` のエラーを解消し、textlint が見ない項目は `syntax-guide.md` の「仕上げチェックリスト」で確認する）
+8. 記法・表記チェックを通す（`npm run lint:svx` のエラーを解消し、textlint が見ない項目は `syntax-guide.md` の「仕上げチェックリスト」で確認する）
 
 ### 既存コンテンツの扱い
 
@@ -425,11 +427,14 @@ writing-guides/
 
 app/
   ├─ textlint/
-  │    ├─ README.md         … 記法チェックの使い方・対象外・ベースライン運用
+  │    ├─ README.md         … 記法・表記チェックの使い方・対象外・ベースライン運用
   │    ├─ rules/            … syntax-guide.md の4ルールの実装（writer が npm run lint:svx で通す）
-  │    └─ lib/svx.js        … ディレクティブ・数式などを検査対象から外す共通処理
-  ├─ .textlintrc.json       … Markdown プラグインの extensions に .svx を追加
-  └─ .textlintignore        … 既存記事のベースライン（ルール導入時点で違反を含む記事）
+  │    ├─ lib/svx.js        … ディレクティブ・数式などを検査対象から外す共通処理
+  │    └─ prh.yml           … 表記揺れの統一辞書（specs で自己テスト）
+  ├─ .textlintrc.json       … 記法パスの設定（Markdown プラグインの extensions に .svx を追加）
+  ├─ .textlintrc.notation.json
+  │                         … 表記揺れパスの設定（prh の辞書を読む）
+  └─ .textlintignore        … 記法パスのベースライン（ルール導入時点で違反を含む記事）
 ```
 
 ## 品質を担保する仕組み（output-contract）
