@@ -10,6 +10,7 @@ draft: true
 
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import CircleParameterFormDemo from '$lib/demo/threejs/modeling/curve-surface-equations/circle-parameter-form/CircleParameterFormDemo.svelte'
   import ExplicitFormLimitsDemo from '$lib/demo/threejs/modeling/curve-surface-equations/explicit-form-limits/ExplicitFormLimitsDemo.svelte'
   import LineParameterFormDemo from '$lib/demo/threejs/modeling/curve-surface-equations/line-parameter-form/LineParameterFormDemo.svelte'
   import ParametricSurfaceMappingDemo from '$lib/demo/threejs/modeling/curve-surface-equations/parametric-surface-mapping/ParametricSurfaceMappingDemo.svelte'
@@ -382,8 +383,76 @@ $$
 
 $$\theta$$ を $$0$$ から $$2\pi$$ まで動かすと、円周上の点が順に得られます。方程式を解かずに、代入だけで点列を求められることが、陰関数形式との大きな違いです。
 
-:::Todo
-$$\theta$$ を動かすことで、`(x,y)`の集まりが円を描いていくデモ
+:::Action
+`θ`を動かして、`(x, y)`の集まりが円周をどう描いていくかを見てみよう
+
+- `θ`を`0`から増やすと、刻んだ点が`x`軸の上から反時計回りに増えていく
+- `θ`を`360`度まで動かすと、点の集まりが円周をひと巡りする
+- `θ`を途中で止めると、円周の一部だけが描かれた状態になる
+- `r`を動かすと、点の並ぶ円の大きさだけが変わる
+:::
+
+<CanvasWrapper>
+  <CircleParameterFormDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 円を決める半径と、円周上の点を 1 つ選ぶパラメータ（操作しやすさのため度で持つ）
+const r = 2
+const thetaDeg = 225
+const theta = (thetaDeg * Math.PI) / 180
+
+// パラメータ表示 x = r cosθ, y = r sinθ。
+// xy 平面に重なる要素の前後を決める z も受け取る（円周と掃いた円弧は同じ曲線上に重なるため）
+const pointAt = (angle: number, z: number) =>
+  new Vector3(r * Math.cos(angle), r * Math.sin(angle), z)
+
+// θ を 0 から 2π まで動かすと、円周がひと巡りぶん得られる
+const circlePoints: Vector3[] = []
+for (let i = 0; i < CIRCLE_SEGMENTS; i++) {
+  circlePoints.push(pointAt((i / CIRCLE_SEGMENTS) * Math.PI * 2, LAYER_LINE))
+}
+const circleGeometry = new BufferGeometry().setFromPoints(circlePoints)
+const circleMaterial = new LineBasicMaterial({ color: LINE_COLOR })
+scene.add(new LineLoop(circleGeometry, circleMaterial))
+
+// θ = 0 から今の θ までに描かれた円弧
+const arcPoints: Vector3[] = []
+for (let i = 0; i <= ARC_SEGMENTS; i++) {
+  arcPoints.push(pointAt(theta * (i / ARC_SEGMENTS), LAYER_TRACE))
+}
+const arcGeometry = new BufferGeometry().setFromPoints(arcPoints)
+const arcMaterial = new LineBasicMaterial({ color: TRACE_COLOR })
+scene.add(new Line(arcGeometry, arcMaterial))
+
+// θ を一定の刻みで動かして得られる点。今の θ までに到達したぶんだけ並べる
+const dotGeometry = new SphereGeometry(DOT_RADIUS, 12, 8)
+const dotMaterial = new MeshBasicMaterial({ color: DOT_COLOR })
+
+for (let deg = 0; deg <= thetaDeg; deg += DOT_STEP_DEG) {
+  const dot = new Mesh(dotGeometry, dotMaterial)
+  dot.position.copy(pointAt((deg * Math.PI) / 180, LAYER_POINT))
+  scene.add(dot)
+}
+
+// 今の θ に対応する点
+const markerGeometry = new SphereGeometry(POINT_RADIUS, 16, 12)
+const markerMaterial = new MeshBasicMaterial({ color: MARKER_COLOR })
+const marker = new Mesh(markerGeometry, markerMaterial)
+marker.position.copy(pointAt(theta, LAYER_POINT))
+scene.add(marker)
+
+// 原点から今の点へ引いた半径
+const radiusGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(0, 0, LAYER_RADIUS),
+  pointAt(theta, LAYER_RADIUS)
+])
+const radiusMaterial = new LineBasicMaterial({ color: RADIUS_COLOR })
+scene.add(new LineSegments(radiusGeometry, radiusMaterial))
+```
+
 :::
 
 また、パラメータの動く範囲を制限することで、曲線の一部だけを表すこともできます。
