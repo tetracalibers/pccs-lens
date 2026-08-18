@@ -13,6 +13,7 @@ draft: true
   import ConicSectionDemo from '$lib/demo/threejs/modeling/quadratic-curve/conic-section/ConicSectionDemo.svelte'
   import EllipseFrameDemo from '$lib/demo/threejs/modeling/quadratic-curve/ellipse-frame/EllipseFrameDemo.svelte'
   import GeneratrixRevolutionDemo from '$lib/demo/threejs/modeling/quadratic-curve/generatrix-revolution/GeneratrixRevolutionDemo.svelte'
+  import ParabolaParameterFormDemo from '$lib/demo/threejs/modeling/quadratic-curve/parabola-parameter-form/ParabolaParameterFormDemo.svelte'
 </script>
 
 [曲線・曲面の数式表現](/cg/modeling/curve-surface-equations/)では、次数が`2`の代数曲線を:Anki[2次曲線]と呼び、:Anki[円]・:Anki[楕円]・:Anki[放物線]・:Anki[双曲線]がこれにあたることに触れました。
@@ -500,8 +501,84 @@ $$
 
 `y`を`t`の`1`次式にとれば、`x`はその`2`乗に比例します。`t`を実数全体で動かすと、頂点を通って両側へ伸びる放物線が得られます。
 
-:::Todo
-上の文章を視覚化するデモ
+:::Action{fixme}
+`t`を動かして、点が放物線のどこをどう進むかと、等間隔に刻んだ点の並び方を見てみよう
+
+- `t`を小さい側から大きくしていくと、点は下側の枝を上ってきて、`t`が`0`の頂点を通り、上側の枝へ抜けていく
+- 刻んだ点は`t`の間隔がどこも同じ。`y`は等間隔に並ぶ一方、`x`は頂点から離れるほど間隔が広がっていく
+- `p`を大きくすると開き方がゆるやかになり、同じ`t`でも`y`の伸びが大きくなる
+:::
+
+<CanvasWrapper>
+  <ParabolaParameterFormDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// パラメータ形式 x = pt², y = 2pt で、t を from から to まで動かした跡を張る。
+// 頂点数は固定して、t の刻み幅だけを変える
+const addCurve = (color: string, z: number, from: number, to: number) => {
+  const positions = new Float32BufferAttribute(new Float32Array((CURVE_SEGMENTS + 1) * 3), 3)
+  const geometry = new BufferGeometry().setAttribute("position", positions)
+  const material = new LineBasicMaterial({ color })
+  scene.add(new Line(geometry, material))
+
+  for (let i = 0; i <= CURVE_SEGMENTS; i++) {
+    const t = from + (to - from) * (i / CURVE_SEGMENTS)
+    positions.setXYZ(i, P * t * t, 2 * P * t, z)
+  }
+  positions.needsUpdate = true
+}
+
+// t を動かせる範囲いっぱいの放物線と、そのうち今の t までに描かれたぶん
+addCurve(CURVE_COLOR, LAYER_CURVE, T_MIN, T_MAX)
+addCurve(TRACE_COLOR, LAYER_TRACE, T_MIN, T_CURRENT)
+
+// t を一定の刻みで動かして得られる点。t の刻み幅は同じなので、
+// y は等間隔に並び、x は頂点から離れるほど間隔が広がる。
+// 頂点（t = 0）を刻みに含めたいので、そこから正負どちらへも同じ幅で数える
+const dotGeometry = new SphereGeometry(DOT_RADIUS, 12, 8)
+const dotMaterial = new MeshBasicMaterial({ color: DOT_COLOR })
+
+const addDot = (t: number) => {
+  // 今の t をまだ超えている点は、これから描かれるところなので置かない
+  if (t > T_CURRENT) return
+  const dot = new Mesh(dotGeometry, dotMaterial)
+  dot.position.set(P * t * t, 2 * P * t, LAYER_DOT)
+  scene.add(dot)
+}
+
+for (let i = 0; i <= DOT_COUNT; i++) {
+  const t = (i / DOT_COUNT) * T_MAX
+  addDot(t)
+  if (i === 0) continue
+  addDot(-t)
+}
+
+// 今の t に対応する点と、その x・y を軸の上で読むための線
+const x = P * T_CURRENT * T_CURRENT
+const y = 2 * P * T_CURRENT
+
+const markerGeometry = new SphereGeometry(POINT_RADIUS, 16, 12)
+const markerMaterial = new MeshBasicMaterial({ color: MARKER_COLOR })
+const marker = new Mesh(markerGeometry, markerMaterial)
+marker.position.set(x, y, LAYER_POINT)
+scene.add(marker)
+
+const addReadingLine = (color: string, toX: number, toY: number) => {
+  const geometry = new BufferGeometry().setFromPoints([
+    new Vector3(x, y, LAYER_READING),
+    new Vector3(toX, toY, LAYER_READING)
+  ])
+  const material = new LineBasicMaterial({ color, transparent: true, opacity: READING_OPACITY })
+  scene.add(new LineSegments(geometry, material))
+}
+
+addReadingLine(X_COLOR, x, 0)
+addReadingLine(Y_COLOR, 0, y)
+```
+
 :::
 
 ### 双曲線のパラメータ形式
