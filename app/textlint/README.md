@@ -99,5 +99,8 @@ textlint の Markdown パーサからは mdsvex のディレクティブも KaTe
 既存記事の記法を直したら、その記事の行を `.textlintignore` から削除してください。
 新しく作る記事は `.textlintignore` に追記せず、検査対象のままにします。
 
+数式・インラインコードの記法（`writing-guides/math-notation-guide.md`）については、
+`/format-math-notation <slug>` が違反の洗い出しから修正・ベースラインの解除までを行います。
+
 **表記揺れ（`lint:svx:notation`）はベースラインの対象外で、常に全記事を検査します。** 記事全体で
 表記が揃っていることに意味があり、直す手間も1語ずつの置き換えで済むためです。
