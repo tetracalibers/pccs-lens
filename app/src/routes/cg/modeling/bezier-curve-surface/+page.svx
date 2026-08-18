@@ -3,9 +3,15 @@ layout: guide-content
 title: 線形補間とベジェ曲線 # CG 3-4-3
 
 group: ["CG"]
+visual: true
 
 draft: true
 ---
+
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import LinearInterpolationDemo from '$lib/demo/threejs/modeling/bezier-curve-surface/linear-interpolation/LinearInterpolationDemo.svelte'
+</script>
 
 [パラメータ形式](/cg/modeling/curve-surface-equations/)は、パラメータを動かせば曲線上の点が次々と得られる、扱いやすい表し方でした。
 しかし、この扱いやすさは、式がすでにわかっている場合の話です。車体や翼の断面のように決まった式のない形を作りたいとき、その形になる関数を書き下す手がかりはどこにもありません。
@@ -29,8 +35,89 @@ $$
 
 `t`を動かすことで、点$$C(t)$$が線分上で制御点$$P_0, P_1$$のどちらに近づいていくが変化します。
 
-:::Todo
-上の文章を表すデモ
+:::Action{fixme}
+`t`を動かして、点$$C(t)$$が線分上のどこに来るかを見てみよう
+
+- `t`が`0`に近いほど$$P_0$$の側に、`1`に近いほど$$P_1$$の側に寄る
+- パネルの`C(t)`に出る`2`つの数が、$$P_0$$と$$P_1$$にかかる混合比
+:::
+
+:::Fix{target="demo"}
+- 白い点は要らない
+- 各点の直径が大きすぎる
+- `t`と`1 - t`の範囲がわかるように矢印で示す
+:::
+
+<CanvasWrapper>
+  <LinearInterpolationDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 2 つの制御点。この 2 点を結ぶ線分の上を C(t) が動く
+const P0 = new Vector3(-2.2, -1.25, 0)
+const P1 = new Vector3(2.2, 1.25, 0)
+
+// C(t) = (1 − t)P0 + tP1。座標値を 1 − t : t の割合で混ぜ合わせる
+const interpolate = (t: number, target: Vector3) =>
+  target
+    .copy(P0)
+    .multiplyScalar(1 - t)
+    .addScaledVector(P1, t)
+
+// 線分を等分する点。t を 1 つ決めるごとに線分上の点が 1 つ決まることを示す
+const tickGeometry = new SphereGeometry(TICK_RADIUS, 12, 8)
+const tickMaterial = new MeshBasicMaterial({ color: TICK_COLOR })
+for (let i = 1; i < TICK_COUNT; i++) {
+  const tick = new Mesh(tickGeometry, tickMaterial)
+  interpolate(i / TICK_COUNT, tick.position).setZ(LAYER_TICK)
+  scene.add(tick)
+}
+
+// 両端が t で動く線分。頂点を作り直さず、座標だけ書き換える
+const createSegment = (color: string) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(6), 3)
+  geometry.setAttribute("position", positions)
+  const material = new LineBasicMaterial({ color })
+  const line = new LineSegments(geometry, material)
+  // 端点が動くので、あらかじめ計算した範囲に頼らず常に描く
+  line.frustumCulled = false
+
+  return {
+    object: line,
+    set: (from: Vector3, to: Vector3) => {
+      positions.setXYZ(0, from.x, from.y, from.z)
+      positions.setXYZ(1, to.x, to.y, to.z)
+      positions.needsUpdate = true
+    }
+  }
+}
+
+// 線分は C(t) を境に 2 つに分かれる。P0 側の長さが t、P1 側の長さが 1 − t にあたる
+const t = 0.3
+const current = interpolate(t, new Vector3())
+const near = createSegment(NEAR_COLOR)
+const far = createSegment(FAR_COLOR)
+near.set(P0, current)
+far.set(current, P1)
+scene.add(near.object, far.object)
+
+// 自分で置いた 2 つの制御点と、t から計算で決まる点
+const controlGeometry = new SphereGeometry(CONTROL_RADIUS, 16, 12)
+const controlMaterial = new MeshBasicMaterial({ color: CONTROL_COLOR })
+const start = new Mesh(controlGeometry, controlMaterial)
+const end = new Mesh(controlGeometry, controlMaterial)
+start.position.set(P0.x, P0.y, LAYER_POINT)
+end.position.set(P1.x, P1.y, LAYER_POINT)
+const markerGeometry = new SphereGeometry(MARKER_RADIUS, 16, 12)
+const markerMaterial = new MeshBasicMaterial({ color: MARKER_COLOR })
+const marker = new Mesh(markerGeometry, markerMaterial)
+marker.position.set(current.x, current.y, LAYER_POINT)
+scene.add(start, end, marker)
+```
+
 :::
 
 $$P_0, P_1$$の間を点で埋めていくことは、$$P_0, P_1$$の間の足りない点を計算して滑らかに補うことにあたります。この補う操作を:Anki[補間]、直線の場合は特に:Anki[線形補間]（linear interpolation）と呼びます。
