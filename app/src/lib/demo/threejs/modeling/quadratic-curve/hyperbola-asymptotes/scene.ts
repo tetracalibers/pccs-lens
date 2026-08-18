@@ -123,11 +123,12 @@ const Y_DIRECTION = new Vector3(0, 1, 0)
 const CONE_UP = new Vector3(0, 1, 0)
 
 // 背景（暗めのグレー）の上で、それぞれの役割が見分けられる色にする。
-// 曲線が近づいていく先である漸近線は、放物線の焦点・準線と同じ「曲線を決めるもの」の色にする
-const CURVE_COLOR = "#8fa3bf"
+// 曲線が近づいていく先である漸近線は、放物線の焦点・準線と同じ「曲線を決めるもの」の色にする。
+// 曲線上で見ている点は双曲線そのものの一部なので、曲線も点と同じ色で描く
+const POINT_COLOR = "#f57fc4"
+const CURVE_COLOR = POINT_COLOR
 const ASYMPTOTE_COLOR = "#5ec8f2"
 const GAP_COLOR = "#ffc857"
-const POINT_COLOR = "#f57fc4"
 const AXIS_COLOR = "#b9c0cc"
 const HELPER_COLOR = "#c9d2de"
 const GRID_COLOR = "#9aa3b0"
