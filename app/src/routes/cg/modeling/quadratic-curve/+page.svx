@@ -11,6 +11,7 @@ draft: true
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import ConicSectionDemo from '$lib/demo/threejs/modeling/quadratic-curve/conic-section/ConicSectionDemo.svelte'
+  import EllipseFrameDemo from '$lib/demo/threejs/modeling/quadratic-curve/ellipse-frame/EllipseFrameDemo.svelte'
   import GeneratrixRevolutionDemo from '$lib/demo/threejs/modeling/quadratic-curve/generatrix-revolution/GeneratrixRevolutionDemo.svelte'
 </script>
 
@@ -187,6 +188,10 @@ addGeneratrix(rotation, 1)
 - ドラッグで回すと、どの切り口も`1`枚の平面に乗った曲線であることが見える
 :::
 
+:::Fix{target="demo"}
+最初から断面が見えるように、斜め上から覗くような初期表示にしたい
+:::
+
 <CanvasWrapper>
   <ConicSectionDemo />
 </CanvasWrapper>
@@ -325,8 +330,86 @@ const nameSection = (tiltDeg: number) => {
 
 たとえば、同じ形・同じ大きさの楕円でも、置かれた場所や向きが違えば、一般式の係数は別の値になります。原点を中心に置いた楕円を[平行移動](/cg/transformation/basic-transformations/)すると`1`次の項が現れ、[回転](/cg/transformation/basic-transformations/)させると`xy`の項が現れます。
 
-:::Todo
-原点を中心に置いた楕円を平行移動すると`1`次の項が現れ、回転させると`xy`の項が現れるのはなぜか？がわかるデモ
+:::Action{fixme}
+楕円に貼りついた`X`軸・`Y`軸と、画面の`x`軸・`y`軸を見比べながら、`X =`と`Y =`に出る式がどう変わるかを追ってみよう
+
+- 楕円の式は、対称軸にとった`X`と`Y`で書けば標準形のまま。画面の`x`と`y`で書くには、`X`と`Y`を`x`・`y`の式に直して代入することになる
+- 平行移動だけを与えると、`X`は`x`だけの式のままで、定数が付く。これを`2`乗すると`x`の`1`次の項が出る
+- 回転を与えると、`X`に`y`が混ざる。`x`と`y`が混ざった式を`2`乗するので、`xy`の項が出る
+- 回転角を`90`度にすると`X`から`x`が消え、対称軸がふたたび座標軸に重なる
+:::
+
+<CanvasWrapper>
+  <EllipseFrameDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 標準形の楕円。中心が原点、対称軸が座標軸に重なった置き方にあたる
+const ellipsePoints: Vector3[] = []
+for (let i = 0; i < ELLIPSE_SEGMENTS; i++) {
+  const angle = (i / ELLIPSE_SEGMENTS) * Math.PI * 2
+  ellipsePoints.push(new Vector3(RADIUS_X * Math.cos(angle), RADIUS_Y * Math.sin(angle), 0))
+}
+const ellipseGeometry = new BufferGeometry().setFromPoints(ellipsePoints)
+
+// 動かす前の置き方を薄く残して、どれだけずれたかを見比べられるようにする
+const startMaterial = new LineBasicMaterial({ color: START_COLOR })
+scene.add(new LineLoop(ellipseGeometry, startMaterial))
+
+// 楕円に貼りついた座標系。中心を原点、対称軸を軸にとると、この中では楕円は標準形のまま。
+// 平行移動と回転は、この座標系ごと動かすことにあたる
+const angle = (ANGLE_DEG * Math.PI) / 180
+const cos = Math.cos(angle)
+const sin = Math.sin(angle)
+
+const frame = new Group()
+frame.position.set(CENTER_X, CENTER_Y, 0)
+frame.rotation.z = angle
+scene.add(frame)
+
+const ellipseMaterial = new LineBasicMaterial({ color: ELLIPSE_COLOR })
+frame.add(new LineLoop(ellipseGeometry, ellipseMaterial))
+
+// 楕円上に選んだ 1 点。X・Y の読みは楕円と一緒に動くので、貼りついた座標系の中に置く
+const phi = (POINT_DEG * Math.PI) / 180
+const localX = RADIUS_X * Math.cos(phi)
+const localY = RADIUS_Y * Math.sin(phi)
+
+const pointGeometry = new SphereGeometry(POINT_RADIUS, 16, 12)
+const pointMaterial = new MeshBasicMaterial({ color: POINT_COLOR })
+const point = new Mesh(pointGeometry, pointMaterial)
+point.position.set(localX, localY, 0)
+frame.add(point)
+
+// 点から軸へ下ろす線
+const addReadingLine = (
+  parent: Object3D,
+  color: string,
+  fromX: number,
+  fromY: number,
+  toX: number,
+  toY: number
+) => {
+  const geometry = new BufferGeometry().setFromPoints([
+    new Vector3(fromX, fromY, 0),
+    new Vector3(toX, toY, 0)
+  ])
+  const material = new LineBasicMaterial({ color, transparent: true, opacity: READING_OPACITY })
+  parent.add(new LineSegments(geometry, material))
+}
+
+// 同じ 1 点を 2 通りに読む。X・Y は貼りついた座標系の中、x・y は画面の座標系の中で読む
+addReadingLine(frame, FRAME_X_COLOR, localX, localY, localX, 0)
+addReadingLine(frame, FRAME_Y_COLOR, localX, localY, 0, localY)
+
+const screenX = CENTER_X + localX * cos - localY * sin
+const screenY = CENTER_Y + localX * sin + localY * cos
+addReadingLine(scene, X_COLOR, screenX, screenY, screenX, 0)
+addReadingLine(scene, Y_COLOR, screenX, screenY, 0, screenY)
+```
+
 :::
 
 逆に、中心を原点に合わせ、対称軸を座標軸に重ねると、`xy`の項も`1`次の項も現れません。こうして位置と向きの違いを取り除いた式を:Anki[標準形]といいます。
