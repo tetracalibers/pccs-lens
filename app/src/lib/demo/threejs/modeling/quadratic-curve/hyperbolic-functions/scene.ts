@@ -75,7 +75,7 @@ const POINT_RADIUS = 0.075
 const VERTEX_LABEL_INSET = 0.2
 const VERTEX_LABEL_DROP = -0.26
 
-/** グラフの曲線に添える名前のラベルを、曲線の左端からずらす量 */
+/** グラフの曲線に添える名前のラベルを、曲線の端からずらす量 */
 const CURVE_LABEL_SHIFT_X = 0.15
 const CURVE_LABEL_GAP_Y = 0.22
 
@@ -471,9 +471,11 @@ export const createHyperbolicFunctionsScene = ({ scene, params }: SceneContext) 
       // 符号を逆転させると cosh t のグラフは -cosh t になるので、
       // 曲線・その名前・値 1 の線をまとめて反転させる
       coshCurve.set(-T_MAX, T_MAX)
+      // 曲線名は端に添えるが、左端に置いたままだと反転後に sinh t のラベルと重なるので、
+      // 反転させたときだけ右端へ回す
       coshLabel.set(
         params.flip,
-        -T_MAX * GRAPH_SCALE_T - CURVE_LABEL_SHIFT_X,
+        -sign * (T_MAX * GRAPH_SCALE_T + CURVE_LABEL_SHIFT_X),
         sign * (cosh(T_MAX) * GRAPH_SCALE_VALUE + CURVE_LABEL_GAP_Y)
       )
       coshFloor.set(-graphHalfT, sign * GRAPH_SCALE_VALUE, graphHalfT, sign * GRAPH_SCALE_VALUE)
