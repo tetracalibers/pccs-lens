@@ -11,7 +11,6 @@ draft: true
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import ConicSectionDemo from '$lib/demo/threejs/modeling/quadratic-curve/conic-section/ConicSectionDemo.svelte'
-  import EllipseFrameDemo from '$lib/demo/threejs/modeling/quadratic-curve/ellipse-frame/EllipseFrameDemo.svelte'
   import GeneratrixRevolutionDemo from '$lib/demo/threejs/modeling/quadratic-curve/generatrix-revolution/GeneratrixRevolutionDemo.svelte'
   import HyperbolicFunctionsDemo from '$lib/demo/threejs/modeling/quadratic-curve/hyperbolic-functions/HyperbolicFunctionsDemo.svelte'
 </script>
@@ -306,99 +305,9 @@ const nameSection = (tiltDeg: number) => {
 
 ## :WithGroupTag[標準形]{group="{['CG']}"}
 
-同じ形・同じ大きさの楕円でも、置かれた場所や向きが違えば、一般式の係数は別の値になります。たとえば、原点を中心に置いた楕円を[平行移動](/cg/transformation/basic-transformations/)すると、`1`次の項が現れます。
+同じ形・同じ大きさの楕円でも、置かれた場所や向きが違えば、一般式の係数は別の値になります。たとえば、原点を中心に置いた楕円を[平行移動や回転](/cg/transformation/basic-transformations/)すると、係数が`0`から変化し、新たな項が式に現れることがあります。
 
-:::Add
-平行移動によって`1`次の項が現れる例を、具体的な数式を示しながら解説
-:::
-
-:::Fix{target="demo"}
-次のデモは削除
-:::
-
-:::Action{fixme}
-移動後の楕円に貼りついた`X`軸・`Y`軸と、画面の`x`軸・`y`軸を見比べながら、`X =`と`Y =`に出る式がどう変わるかを追ってみよう
-
-- 楕円の式は、対称軸にとった`X`と`Y`で書けば標準形のまま。画面の`x`と`y`で書くには、`X`と`Y`を`x`・`y`の式に直して代入することになる
-- 平行移動だけを与えると、`X`は`x`だけの式のままで、定数が付く。これを`2`乗すると`x`の`1`次の項が出る
-- 回転を与えると、`X`は`x`と`y`を混ぜた式になる。この式を`2`乗すると、`x`の`2`乗・`y`の`2`乗のほかに`x`と`y`を掛け合わせた項が現れる。これが`xy`の項
-- 回転角を`90`度にすると`X`から`x`が消え、対称軸がふたたび座標軸に重なる
-:::
-
-<CanvasWrapper>
-  <EllipseFrameDemo />
-</CanvasWrapper>
-
-:::Foldable{title="Three.jsによる実装概要"}
-
-```ts
-// 標準形の楕円。中心が原点、対称軸が座標軸に重なった置き方にあたる
-const ellipsePoints: Vector3[] = []
-for (let i = 0; i < ELLIPSE_SEGMENTS; i++) {
-  const angle = (i / ELLIPSE_SEGMENTS) * Math.PI * 2
-  ellipsePoints.push(new Vector3(RADIUS_X * Math.cos(angle), RADIUS_Y * Math.sin(angle), 0))
-}
-const ellipseGeometry = new BufferGeometry().setFromPoints(ellipsePoints)
-
-// 動かす前の置き方を薄く残して、どれだけずれたかを見比べられるようにする
-const startMaterial = new LineBasicMaterial({ color: START_COLOR })
-scene.add(new LineLoop(ellipseGeometry, startMaterial))
-
-// 楕円に貼りついた座標系。中心を原点、対称軸を軸にとると、この中では楕円は標準形のまま。
-// 平行移動と回転は、この座標系ごと動かすことにあたる
-const angle = (ANGLE_DEG * Math.PI) / 180
-const cos = Math.cos(angle)
-const sin = Math.sin(angle)
-
-const frame = new Group()
-frame.position.set(CENTER_X, CENTER_Y, 0)
-frame.rotation.z = angle
-scene.add(frame)
-
-const ellipseMaterial = new LineBasicMaterial({ color: ELLIPSE_COLOR })
-frame.add(new LineLoop(ellipseGeometry, ellipseMaterial))
-
-// 楕円上に選んだ 1 点。X・Y の読みは楕円と一緒に動くので、貼りついた座標系の中に置く
-const phi = (POINT_DEG * Math.PI) / 180
-const localX = RADIUS_X * Math.cos(phi)
-const localY = RADIUS_Y * Math.sin(phi)
-
-const pointGeometry = new SphereGeometry(POINT_RADIUS, 16, 12)
-const pointMaterial = new MeshBasicMaterial({ color: POINT_COLOR })
-const point = new Mesh(pointGeometry, pointMaterial)
-point.position.set(localX, localY, 0)
-frame.add(point)
-
-// 点から軸へ下ろす線
-const addReadingLine = (
-  parent: Object3D,
-  color: string,
-  fromX: number,
-  fromY: number,
-  toX: number,
-  toY: number
-) => {
-  const geometry = new BufferGeometry().setFromPoints([
-    new Vector3(fromX, fromY, 0),
-    new Vector3(toX, toY, 0)
-  ])
-  const material = new LineBasicMaterial({ color, transparent: true, opacity: READING_OPACITY })
-  parent.add(new LineSegments(geometry, material))
-}
-
-// 同じ 1 点を 2 通りに読む。X・Y は貼りついた座標系の中、x・y は画面の座標系の中で読む
-addReadingLine(frame, FRAME_X_COLOR, localX, localY, localX, 0)
-addReadingLine(frame, FRAME_Y_COLOR, localX, localY, 0, localY)
-
-const screenX = CENTER_X + localX * cos - localY * sin
-const screenY = CENTER_Y + localX * sin + localY * cos
-addReadingLine(scene, X_COLOR, screenX, screenY, screenX, 0)
-addReadingLine(scene, Y_COLOR, screenX, screenY, 0, screenY)
-```
-
-:::
-
-平行移動や回転を取り消し、中心を原点に合わせて対称軸を座標軸に重ねると、よりシンプルな式で表すことができます。こうして位置と向きの違いを取り除いた式を:Anki[標準形]といいます。
+このような平行移動や回転を取り消し、中心を原点に合わせて対称軸を座標軸に重ねると、よりシンプルな式で表すことができます。こうして位置と向きの違いを取り除いた式を:Anki[標準形]といいます。
 
 平行移動や回転を取り消して標準形にするには、その逆方向への平行移動や回転を行えばよいのです。つまり、どんな位置・向きに置かれた`2`次曲線も、平行移動と回転によって:Anki[標準形]に変換できます。
 
@@ -408,8 +317,9 @@ addReadingLine(scene, Y_COLOR, screenX, screenY, 0, screenY)
 
 半径 $$a$$ の円の式 $$x^2 + y^2 = a^2$$ の両辺を $$a^2$$ で割ると、$$\left(\dfrac{x}{a}\right)^2 + \left(\dfrac{y}{a}\right)^2 = 1$$ となります。$$x$$ も $$y$$ も同じ $$a$$ で割ることで、縦にも横にも同じだけ拡大されます。
 
-:::Add
-$$x$$を$$\frac{x}{a}$$に置き換えることが、$$x$$方向への$$a$$倍を表すことを原理から説明（Note形式で）
+:::Note
+$$x$$ を $$\dfrac{x}{a}$$ に置き換えた式が成り立つのは、$$\dfrac{x}{a}$$ の値が元の式を満たすときです。
+元の図形上の点と同じ値を $$\dfrac{x}{a}$$ がとるのは $$x$$ がその点の $$a$$ 倍の位置にあるときなので、置き換えた式は、元の図形を $$x$$ 方向へ $$a$$ 倍に引き伸ばした図形を表します。
 :::
 
 楕円の式は、ここから $$y$$ 側の分母だけを $$b$$ に取り替えたものです。
@@ -443,8 +353,8 @@ $$
 
 $$y^2$$ は $$x$$ に:Anki[比例]する形になっています。比例定数は $$4p$$ であるため、$$p$$ が大きいほど同じ $$x$$ に対して $$y$$ が大きく広がり、開き方がゆるやかになります。
 
-:::Add
-なぜ`p`に`4`が付くのかをNoteで補足
+:::Note
+放物線は、`1`つの定点と`1`本の定直線から等しい距離にある点の集まりとしても定義できます。この定点を:Anki[焦点]、定直線を:Anki[準線]といい、頂点を原点に置いて焦点を $$(p, 0)$$ にとると、準線は $$x = -p$$ になります。この`2`つへの距離が等しいという条件を式にすると $$(x - p)^2 + y^2 = (x + p)^2$$ となり、$$x^2$$ と $$p^2$$ が打ち消し合って $$y^2 = 4px$$ が残ります。比例定数の`4`は、$$p$$ を焦点までの距離にとったことの現れです。
 :::
 
 ### 双曲線
@@ -463,11 +373,11 @@ $$
 
 $$\dfrac{x^2}{a^2} = 1 + \dfrac{y^2}{b^2}$$ と書き直すと、右辺は必ず`1`以上になります。
 
-:::Add
-「$$x^2$$ が $$a^2$$ より小さいと右辺が`0`未満の小数になってしまうため、$$x$$ の絶対値は $$a$$ より小さくなれず、」という流れにしたいので、`2`乗の大小を絶対値の大小に置き換えて考えられる補足説明が欲しい
+:::Note
+`2`乗の大小は、絶対値の大小と対応します。`2`乗すると符号が消えて原点からの距離だけが残り、その距離が大きいほど`2`乗も大きくなるためです。$$x^2$$ と $$a^2$$ の比較も、$$x$$ が原点のどちら側にあるかを問わず、$$x$$ の絶対値と $$a$$ の比較として読み替えられます。
 :::
 
-$$x$$ の絶対値は $$a$$ より小さくなれないため、直線 $$x = a$$ の右側と $$x = -a$$ の左側に曲線が分かれます。$$y$$ を大きくしていくと右辺の`1`が効かなくなり、曲線は $$y = \pm\dfrac{b}{a}x$$ という`2`本の直線に限りなく近づいていきます。
+$$x^2$$ が $$a^2$$ より小さいと左辺が`1`未満になってしまうため、$$x$$ の絶対値は $$a$$ より小さくなれず、直線 $$x = a$$ の右側と $$x = -a$$ の左側に曲線が分かれます。$$y$$ を大きくしていくと右辺の`1`が効かなくなり、曲線は $$y = \pm\dfrac{b}{a}x$$ という`2`本の直線に限りなく近づいていきます。
 
 :::Todo
 次の内容を描き、`a`と`y`を動かせるデモ
@@ -543,9 +453,9 @@ $$
 
 この式も標準形から導けます。$$y^2 = 4px$$ に $$y = 2pt$$ を代入すると左辺が $$4p^2t^2$$ になり、両辺を $$4p$$ で割ると $$x = pt^2$$ が残ります。$$y$$ の置き方に $$2p$$ 倍を選んでおくのは、$$x$$ の式に分数を出さないためです。
 
-:::Add
-式変形によって導くだけでなく、直感的な式の解釈を示したい
-:::
+この式は、$$t$$ を縦方向の位置を測る目盛りとして読むこともできます。$$y$$ は $$t$$ に比例して増える一方、$$x$$ は $$t$$ の`2`乗で増えるので、縦へ一定の割合で進む間に横へは`2`乗で離れていきます。頂点の近くではほとんど横に動かず、離れるほど横へ大きく開いていく放物線の形が、そのまま式に出ています。
+
+$$t$$ の符号を入れ替えると、$$x$$ は変わらないまま $$y$$ だけが符号を変えます。標準形で $$y$$ を`2`乗の形でしか使わなかった線対称性が、パラメータ形式では $$t$$ と $$-t$$ の対として現れます。
 
 ### 双曲線のパラメータ形式
 
@@ -591,15 +501,7 @@ $$
 - `cosh t`は`x`と、`sinh t`は`y`と同じ色にしてある。グラフでその値が上下すると、点の横位置・縦位置がそれぞれ動く
 - `t`を負の側から正の側まで動かすと、点は枝の下端から上端まで辿っていく
 - `cosh t`は`t`をどちらへ動かしても`1`より下へ来ない。そのため点も`a`の線より内側へは入らない
-- 「符号を逆転」を入れると、同じ`t`のまま点が左側の枝へ移る。`x`だけが反転して、`y`は動かない
-:::
-
-:::Fix{target="demo"}
-符号を反転させた時、
-
-- `a`ラベルは`-a`ラベルにする
-- `cosh t`のグラフではなく、`-cosh t`のグラフを描く
-- UI上の`cosh t`の値も負の値にする
+- 「符号を逆転」を入れると、左のグラフが`-cosh t`に反転し、同じ`t`のまま点が左側の枝へ移る。`x`だけが反転して、`y`は動かない
 :::
 
 <CanvasWrapper>
@@ -637,13 +539,17 @@ const addParametricCurve = (
   positions.needsUpdate = true
 }
 
+// 「符号を逆転」で切り替える、辿っている枝の向き。
+// 左のグラフの cosh t も同じ符号で反転させ、点の x に効いている値をそのまま見せる
+const sign = FLIP ? -1 : 1
+
 // 左：t を横軸にとった cosh t と sinh t のグラフ
 const graph = new Group()
 graph.position.x = GRAPH_CENTER_X
 scene.add(graph)
 
 addParametricCurve(graph, X_COLOR, LAYER_CURVE, -T_MAX, T_MAX, (t, target) =>
-  target.set(t * GRAPH_SCALE_T, cosh(t) * GRAPH_SCALE_VALUE, 0)
+  target.set(t * GRAPH_SCALE_T, sign * cosh(t) * GRAPH_SCALE_VALUE, 0)
 )
 addParametricCurve(graph, Y_COLOR, LAYER_CURVE, -T_MAX, T_MAX, (t, target) =>
   target.set(t * GRAPH_SCALE_T, sinh(t) * GRAPH_SCALE_VALUE, 0)
@@ -661,9 +567,6 @@ addParametricCurve(curve, CURVE_COLOR, LAYER_CURVE, -T_MAX, T_MAX, (t, target) =
 addParametricCurve(curve, CURVE_COLOR, LAYER_CURVE, -T_MAX, T_MAX, (t, target) =>
   target.set(-RADIUS_A * cosh(t) * CURVE_SCALE, RADIUS_B * sinh(t) * CURVE_SCALE, 0)
 )
-
-// 「符号を逆転」で切り替える、辿っている枝の向き
-const sign = FLIP ? -1 : 1
 
 // t をここまで動かしたぶんの跡
 addParametricCurve(curve, TRACE_COLOR, LAYER_TRACE, -T_MAX, T_CURRENT, (t, target) =>
@@ -689,8 +592,8 @@ const addSegment = (
 }
 
 // cosh がここより下へ来ないことを示す、値 1 の高さの線と、
-// そのため x が a より内側へ来ないことを示す縦の線
-addSegment(graph, HELPER_COLOR, HELPER_OPACITY, -GRAPH_HALF_T, GRAPH_SCALE_VALUE, GRAPH_HALF_T, GRAPH_SCALE_VALUE)
+// そのため x が a より内側へ来ないことを示す縦の線。どちらも符号を逆転させると反対側へ移る
+addSegment(graph, HELPER_COLOR, HELPER_OPACITY, -GRAPH_HALF_T, sign * GRAPH_SCALE_VALUE, GRAPH_HALF_T, sign * GRAPH_SCALE_VALUE)
 addSegment(curve, HELPER_COLOR, HELPER_OPACITY, sign * RADIUS_A * CURVE_SCALE, -CURVE_HALF_Y, sign * RADIUS_A * CURVE_SCALE, CURVE_HALF_Y)
 
 // 今の t を示す縦線と、その t での cosh・sinh の値
@@ -708,7 +611,7 @@ const addMarker = (parent: Object3D, color: string, x: number, y: number) => {
   parent.add(marker)
 }
 
-addMarker(graph, X_COLOR, graphX, coshValue * GRAPH_SCALE_VALUE)
+addMarker(graph, X_COLOR, graphX, sign * coshValue * GRAPH_SCALE_VALUE)
 addMarker(graph, Y_COLOR, graphX, sinhValue * GRAPH_SCALE_VALUE)
 
 // 右の図での、今の t に対応する点と、その座標を軸の上で読むための線

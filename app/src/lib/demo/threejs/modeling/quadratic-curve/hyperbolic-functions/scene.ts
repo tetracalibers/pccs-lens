@@ -75,6 +75,13 @@ const POINT_RADIUS = 0.075
 const VERTEX_LABEL_INSET = 0.2
 const VERTEX_LABEL_DROP = -0.26
 
+/** グラフの曲線に添える名前のラベルを、曲線の左端からずらす量 */
+const CURVE_LABEL_SHIFT_X = 0.15
+const CURVE_LABEL_GAP_Y = 0.22
+
+/** 値 1 の線に添えるラベルを、縦軸の左へずらす量 */
+const FLOOR_LABEL_SHIFT_X = 0.24
+
 /** 補助の線の薄さ。軸や曲線より控えめにする */
 const HELPER_OPACITY = 0.55
 
@@ -173,6 +180,30 @@ const createLabel = (text: string, color: string, height: number) => {
     dispose: () => {
       texture.dispose()
       material.dispose()
+    }
+  }
+}
+
+/**
+ * 符号の逆転で文字が変わるラベル。テクスチャは作ったあとに書き換えられないので、
+ * 反転前・反転後の 2 枚を同じ位置に置き、どちらを見せるかで切り替える
+ */
+const createSignedLabel = (positiveText: string, negativeText: string, color: string) => {
+  const positive = createLabel(positiveText, color, ANNOTATION_LABEL_HEIGHT)
+  const negative = createLabel(negativeText, color, ANNOTATION_LABEL_HEIGHT)
+  negative.sprite.visible = false
+
+  return {
+    objects: [positive.sprite, negative.sprite],
+    set: (flipped: boolean, x: number, y: number) => {
+      positive.sprite.visible = !flipped
+      negative.sprite.visible = flipped
+      positive.sprite.position.set(x, y, LAYER_LABEL)
+      negative.sprite.position.set(x, y, LAYER_LABEL)
+    },
+    dispose: () => {
+      positive.dispose()
+      negative.dispose()
     }
   }
 }
@@ -329,6 +360,10 @@ export const createHyperbolicFunctionsScene = ({ scene, params }: SceneContext) 
     return item
   }
 
+  // 辿っている枝の向き。x = -a cosh t の側へ移すと -1 になる。
+  // 左のグラフの cosh t も同じ符号で反転させ、点の x に効いている値をそのまま見せる
+  let sign = 1
+
   // 左：t を横軸にとった cosh t と sinh t のグラフ
   const graph = new Group()
   graph.position.x = GRAPH_CENTER_X
@@ -344,7 +379,7 @@ export const createHyperbolicFunctionsScene = ({ scene, params }: SceneContext) 
 
   const coshCurve = track(
     createParametricCurve(X_COLOR, LAYER_CURVE, (t, target) =>
-      target.set(t * GRAPH_SCALE_T, cosh(t) * GRAPH_SCALE_VALUE, 0)
+      target.set(t * GRAPH_SCALE_T, sign * cosh(t) * GRAPH_SCALE_VALUE, 0)
     )
   )
   const sinhCurve = track(
@@ -356,26 +391,20 @@ export const createHyperbolicFunctionsScene = ({ scene, params }: SceneContext) 
   sinhCurve.set(-T_MAX, T_MAX)
   graph.add(coshCurve.object, sinhCurve.object)
 
-  // cosh がここより下へ来ないことを示す、値 1 の高さの線
+  // cosh がここより下へ来ないことを示す、値 1 の高さの線。符号を逆転させると -1 の高さへ移る
   const coshFloor = track(createSegment(HELPER_COLOR, HELPER_OPACITY))
-  coshFloor.set(-graphHalfT, GRAPH_SCALE_VALUE, graphHalfT, GRAPH_SCALE_VALUE)
   graph.add(coshFloor.object)
 
-  const coshLabel = track(createLabel("cosh t", X_COLOR, ANNOTATION_LABEL_HEIGHT))
-  coshLabel.sprite.position.set(
-    -T_MAX * GRAPH_SCALE_T - 0.15,
-    cosh(T_MAX) * GRAPH_SCALE_VALUE + 0.22,
-    LAYER_LABEL
-  )
+  // cosh の曲線名と値 1 のラベルは、符号の逆転で -cosh t・-1 に入れ替わる
+  const coshLabel = track(createSignedLabel("cosh t", "-cosh t", X_COLOR))
+  const floorLabel = track(createSignedLabel("1", "-1", HELPER_COLOR))
   const sinhLabel = track(createLabel("sinh t", Y_COLOR, ANNOTATION_LABEL_HEIGHT))
   sinhLabel.sprite.position.set(
-    -T_MAX * GRAPH_SCALE_T - 0.15,
-    sinh(-T_MAX) * GRAPH_SCALE_VALUE - 0.22,
+    -T_MAX * GRAPH_SCALE_T - CURVE_LABEL_SHIFT_X,
+    sinh(-T_MAX) * GRAPH_SCALE_VALUE - CURVE_LABEL_GAP_Y,
     LAYER_LABEL
   )
-  const floorLabel = track(createLabel("1", HELPER_COLOR, ANNOTATION_LABEL_HEIGHT))
-  floorLabel.sprite.position.set(-0.24, GRAPH_SCALE_VALUE, LAYER_LABEL)
-  graph.add(coshLabel.sprite, sinhLabel.sprite, floorLabel.sprite)
+  graph.add(...coshLabel.objects, ...floorLabel.objects, sinhLabel.sprite)
 
   // 今の t の位置を示す縦線と、その t での cosh・sinh の値
   const tLine = track(createSegment(HELPER_COLOR, HELPER_OPACITY))
@@ -410,9 +439,6 @@ export const createHyperbolicFunctionsScene = ({ scene, params }: SceneContext) 
   leftBranch.set(-T_MAX, T_MAX)
   curve.add(rightBranch.object, leftBranch.object)
 
-  // 辿っている枝の向き。x = -a cosh t の側へ移すと -1 になる
-  let sign = 1
-
   // t をここまで動かしたぶんの跡
   const trace = track(
     createParametricCurve(TRACE_COLOR, LAYER_TRACE, (t, target) =>
@@ -425,8 +451,8 @@ export const createHyperbolicFunctionsScene = ({ scene, params }: SceneContext) 
   const vertexLine = track(createSegment(HELPER_COLOR, HELPER_OPACITY))
   curve.add(vertexLine.object)
 
-  const vertexLabel = track(createLabel("a", HELPER_COLOR, ANNOTATION_LABEL_HEIGHT))
-  curve.add(vertexLabel.sprite)
+  const vertexLabel = track(createSignedLabel("a", "-a", HELPER_COLOR))
+  curve.add(...vertexLabel.objects)
 
   // 今の t に対応する双曲線上の点と、その座標を軸の上で読むための線
   const pointMarker = track(createMarker(MARKER_COLOR))
@@ -441,10 +467,21 @@ export const createHyperbolicFunctionsScene = ({ scene, params }: SceneContext) 
       const sinhValue = sinh(t)
       sign = params.flip ? -1 : 1
 
-      // 左のグラフ。横軸の位置が t、縦軸の位置がその t での値
+      // 左のグラフ。横軸の位置が t、縦軸の位置がその t での値。
+      // 符号を逆転させると cosh t のグラフは -cosh t になるので、
+      // 曲線・その名前・値 1 の線をまとめて反転させる
+      coshCurve.set(-T_MAX, T_MAX)
+      coshLabel.set(
+        params.flip,
+        -T_MAX * GRAPH_SCALE_T - CURVE_LABEL_SHIFT_X,
+        sign * (cosh(T_MAX) * GRAPH_SCALE_VALUE + CURVE_LABEL_GAP_Y)
+      )
+      coshFloor.set(-graphHalfT, sign * GRAPH_SCALE_VALUE, graphHalfT, sign * GRAPH_SCALE_VALUE)
+      floorLabel.set(params.flip, -FLOOR_LABEL_SHIFT_X, sign * GRAPH_SCALE_VALUE)
+
       const graphX = t * GRAPH_SCALE_T
       tLine.set(graphX, -graphHalfValue, graphX, graphHalfValue)
-      coshMarker.object.position.set(graphX, coshValue * GRAPH_SCALE_VALUE, LAYER_POINT)
+      coshMarker.object.position.set(graphX, sign * coshValue * GRAPH_SCALE_VALUE, LAYER_POINT)
       sinhMarker.object.position.set(graphX, sinhValue * GRAPH_SCALE_VALUE, LAYER_POINT)
 
       // 右の双曲線。パラメータ形式 x = a cosh t, y = b sinh t（符号を逆転させると x = -a cosh t）
@@ -455,16 +492,13 @@ export const createHyperbolicFunctionsScene = ({ scene, params }: SceneContext) 
       readingX.set(x, y, x, 0)
       readingY.set(x, y, 0, y)
 
-      // 頂点の位置を示す線と、その脇の a のラベル
+      // 頂点の位置を示す線と、その脇の a（符号を逆転させると -a）のラベル
       const vertexX = sign * RADIUS_A * CURVE_SCALE
       vertexLine.set(vertexX, -curveHalfY, vertexX, curveHalfY)
-      vertexLabel.sprite.position.set(
-        vertexX - sign * VERTEX_LABEL_INSET,
-        VERTEX_LABEL_DROP,
-        LAYER_LABEL
-      )
+      vertexLabel.set(params.flip, vertexX - sign * VERTEX_LABEL_INSET, VERTEX_LABEL_DROP)
 
-      params.cosh = coshValue.toFixed(2)
+      // グラフに描いているのは符号を反転させたあとの値なので、表示もその値に合わせる
+      params.cosh = (sign * coshValue).toFixed(2)
       params.sinh = sinhValue.toFixed(2)
     },
     dispose: () => disposables.forEach((item) => item.dispose())
