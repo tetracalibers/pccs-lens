@@ -13,6 +13,7 @@ draft: true
   import ConicSectionDemo from '$lib/demo/threejs/modeling/quadratic-curve/conic-section/ConicSectionDemo.svelte'
   import EllipseFrameDemo from '$lib/demo/threejs/modeling/quadratic-curve/ellipse-frame/EllipseFrameDemo.svelte'
   import GeneratrixRevolutionDemo from '$lib/demo/threejs/modeling/quadratic-curve/generatrix-revolution/GeneratrixRevolutionDemo.svelte'
+  import HyperbolicFunctionsDemo from '$lib/demo/threejs/modeling/quadratic-curve/hyperbolic-functions/HyperbolicFunctionsDemo.svelte'
   import ParabolaParameterFormDemo from '$lib/demo/threejs/modeling/quadratic-curve/parabola-parameter-form/ParabolaParameterFormDemo.svelte'
 </script>
 
@@ -603,8 +604,133 @@ $$
 
 この`2`つのあいだには $$\cosh^2 t - \sinh^2 t = 1$$ という関係があり、標準形の左辺にそのまま当てはまります。三角関数が:Anki[単位円]上を巡るのに対して、これらは:Anki[双曲線]上を辿ることから、双曲線関数という名前がついています。
 
-:::Todo
-双曲線関数のグラフ
+:::Action{fixme}
+`t`を動かして、左のグラフに出る`2`つの値が、右の双曲線上の点のどこに効いているかを見てみよう
+
+- `cosh t`は`x`と、`sinh t`は`y`と同じ色にしてある。グラフでその値が上下すると、点の横位置・縦位置がそれぞれ動く
+- `t`を負の側から正の側まで動かすと、点は枝の下端から上端まで辿っていく
+- `cosh t`は`t`をどちらへ動かしても`1`より下へ来ない。そのため点も`a`の線より内側へは入らない
+:::
+
+:::Fix{target="demo"}
+初期表示で、右のグラフのx軸がキャンバスからはみ出して見切れているので、最初から全体が見えるように調整
+:::
+
+<CanvasWrapper>
+  <HyperbolicFunctionsDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// cosh t = (eᵗ + e⁻ᵗ) / 2
+const cosh = (t: number) => (Math.exp(t) + Math.exp(-t)) / 2
+
+// sinh t = (eᵗ − e⁻ᵗ) / 2
+const sinh = (t: number) => (Math.exp(t) - Math.exp(-t)) / 2
+
+// t を刻んで点を並べた折れ線。toPoint は t からその図での位置を返す
+const addParametricCurve = (
+  parent: Object3D,
+  color: string,
+  z: number,
+  from: number,
+  to: number,
+  toPoint: (t: number, target: Vector3) => Vector3
+) => {
+  const positions = new Float32BufferAttribute(new Float32Array((CURVE_SEGMENTS + 1) * 3), 3)
+  const geometry = new BufferGeometry().setAttribute("position", positions)
+  const material = new LineBasicMaterial({ color })
+  parent.add(new Line(geometry, material))
+
+  const point = new Vector3()
+  for (let i = 0; i <= CURVE_SEGMENTS; i++) {
+    toPoint(from + (to - from) * (i / CURVE_SEGMENTS), point)
+    positions.setXYZ(i, point.x, point.y, z)
+  }
+  positions.needsUpdate = true
+}
+
+// 左：t を横軸にとった cosh t と sinh t のグラフ
+const graph = new Group()
+graph.position.x = GRAPH_CENTER_X
+scene.add(graph)
+
+addParametricCurve(graph, X_COLOR, LAYER_CURVE, -T_MAX, T_MAX, (t, target) =>
+  target.set(t * GRAPH_SCALE_T, cosh(t) * GRAPH_SCALE_VALUE, 0)
+)
+addParametricCurve(graph, Y_COLOR, LAYER_CURVE, -T_MAX, T_MAX, (t, target) =>
+  target.set(t * GRAPH_SCALE_T, sinh(t) * GRAPH_SCALE_VALUE, 0)
+)
+
+// 右：cosh・sinh の値をそのまま座標にとった双曲線
+const curve = new Group()
+curve.position.x = CURVE_CENTER_X
+scene.add(curve)
+
+// x = a cosh t, y = b sinh t で辿れる枝と、符号を反転させないと得られないもう 1 本の枝
+addParametricCurve(curve, CURVE_COLOR, LAYER_CURVE, -T_MAX, T_MAX, (t, target) =>
+  target.set(RADIUS_A * cosh(t) * CURVE_SCALE, RADIUS_B * sinh(t) * CURVE_SCALE, 0)
+)
+addParametricCurve(curve, CURVE_COLOR, LAYER_CURVE, -T_MAX, T_MAX, (t, target) =>
+  target.set(-RADIUS_A * cosh(t) * CURVE_SCALE, RADIUS_B * sinh(t) * CURVE_SCALE, 0)
+)
+
+// t をここまで動かしたぶんの跡
+addParametricCurve(curve, TRACE_COLOR, LAYER_TRACE, -T_MAX, T_CURRENT, (t, target) =>
+  target.set(RADIUS_A * cosh(t) * CURVE_SCALE, RADIUS_B * sinh(t) * CURVE_SCALE, 0)
+)
+
+// 両端が動く 1 本の線分
+const addSegment = (
+  parent: Object3D,
+  color: string,
+  opacity: number,
+  fromX: number,
+  fromY: number,
+  toX: number,
+  toY: number
+) => {
+  const geometry = new BufferGeometry().setFromPoints([
+    new Vector3(fromX, fromY, LAYER_HELPER),
+    new Vector3(toX, toY, LAYER_HELPER)
+  ])
+  const material = new LineBasicMaterial({ color, transparent: opacity < 1, opacity })
+  parent.add(new LineSegments(geometry, material))
+}
+
+// cosh がここより下へ来ないことを示す、値 1 の高さの線と、
+// そのため x が a より内側へ来ないことを示す縦の線
+addSegment(graph, HELPER_COLOR, HELPER_OPACITY, -GRAPH_HALF_T, GRAPH_SCALE_VALUE, GRAPH_HALF_T, GRAPH_SCALE_VALUE)
+addSegment(curve, HELPER_COLOR, HELPER_OPACITY, RADIUS_A * CURVE_SCALE, -CURVE_HALF_Y, RADIUS_A * CURVE_SCALE, CURVE_HALF_Y)
+
+// 今の t を示す縦線と、その t での cosh・sinh の値
+const coshValue = cosh(T_CURRENT)
+const sinhValue = sinh(T_CURRENT)
+const graphX = T_CURRENT * GRAPH_SCALE_T
+
+addSegment(graph, HELPER_COLOR, HELPER_OPACITY, graphX, -GRAPH_HALF_VALUE, graphX, GRAPH_HALF_VALUE)
+
+const addMarker = (parent: Object3D, color: string, x: number, y: number) => {
+  const geometry = new SphereGeometry(POINT_RADIUS, 16, 12)
+  const material = new MeshBasicMaterial({ color })
+  const marker = new Mesh(geometry, material)
+  marker.position.set(x, y, LAYER_POINT)
+  parent.add(marker)
+}
+
+addMarker(graph, X_COLOR, graphX, coshValue * GRAPH_SCALE_VALUE)
+addMarker(graph, Y_COLOR, graphX, sinhValue * GRAPH_SCALE_VALUE)
+
+// 右の図での、今の t に対応する点と、その座標を軸の上で読むための線
+const x = RADIUS_A * coshValue * CURVE_SCALE
+const y = RADIUS_B * sinhValue * CURVE_SCALE
+
+addMarker(curve, MARKER_COLOR, x, y)
+addSegment(curve, X_COLOR, HELPER_OPACITY, x, y, x, 0)
+addSegment(curve, Y_COLOR, HELPER_OPACITY, x, y, 0, y)
+```
+
 :::
 
 ただし、$$\cosh$$ の値は常に`1`以上なので、この式でたどれるのは`x`が正の側の枝だけです。もう`1`本の枝は、$$x = -a\cosh t$$ と符号を反転させると得られます。
