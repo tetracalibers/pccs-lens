@@ -17,7 +17,6 @@ sections:
     links:
       - slug: curve-surface-equations
       - slug: quadratic-curve
-      - slug: parametric-curve-surface
       - slug: bezier-curve-surface
       - slug: bezier-curve-properties
       - title: ファーガソン曲線 # CG 3-4-3
@@ -29,6 +28,7 @@ sections:
         group: ["CG"]
       - title: NURBS曲線・曲面 # CG 3-4-3
         group: ["CG"]
+      - slug: parametric-curve-surface
       - title: パラメトリック曲線・曲面の微分幾何 # CG 3-4
         group: ["CG"]
   - heading: ポリゴン

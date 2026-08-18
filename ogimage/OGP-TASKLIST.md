@@ -362,7 +362,6 @@
 - [ページ未作成] オイラー表現
 - [x] `/cg/modeling/curve-surface-equations`
 - [x] `/cg/modeling/quadratic-curve`
-- [draft] `/cg/modeling/parametric-curve-surface`
 - [draft] `/cg/modeling/bezier-curve-surface`
 - [draft] `/cg/modeling/bezier-curve-properties`
 - [ページ未作成] ファーガソン曲線
@@ -370,6 +369,7 @@
 - [draft] `/cg/modeling/b-spline-curve-surface`
 - [ページ未作成] 有理ベジェ曲線・曲面
 - [ページ未作成] NURBS曲線・曲面
+- [draft] `/cg/modeling/parametric-curve-surface`
 - [ページ未作成] パラメトリック曲線・曲面の微分幾何
 - [draft] `/cg/modeling/polygon-surface`
 - [ページ未作成] 細分割曲面
