@@ -19,6 +19,7 @@ sections:
       - slug: quadratic-curve
       - slug: parametric-curve-surface
       - slug: bezier-curve-surface
+      - slug: bezier-curve-properties
       - title: ファーガソン曲線 # CG 3-4-3
         group: ["CG"]
       - title: 双3次クーンズ曲面 # CG 3-4-4
