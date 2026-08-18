@@ -11,7 +11,7 @@ grades: ["1"]
 
 ::::CardGrid
 :::TermCard{title="ヨハネス・ケプラー" ankiTitle="anki" icon="person"}
-彼の数学的な考え方が、光学的な学問の発展につながった
+彼の数学的な考え方が、光学的な学問の発展に繋がった
 :::
 :::TermCard{title="クリスティアーン・ホイヘンス" ankiTitle="anki" icon="person"}
 光の:Anki[波動説]を提唱した
