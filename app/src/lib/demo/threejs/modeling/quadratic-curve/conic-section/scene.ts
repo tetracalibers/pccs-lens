@@ -1,6 +1,5 @@
 import {
   BufferGeometry,
-  CanvasTexture,
   ConeGeometry,
   DoubleSide,
   Float32BufferAttribute,
@@ -12,9 +11,6 @@ import {
   MeshBasicMaterial,
   PlaneGeometry,
   Scene,
-  Sprite,
-  SpriteMaterial,
-  SRGBColorSpace,
   Vector3
 } from "three"
 
@@ -57,8 +53,7 @@ const PLANE_SIZE = 3.4
 /** 軸を、頂点から上下へ伸ばす長さ */
 const AXIS_EXTENT = 2.75
 
-/** 円錐面に描く母線の本数と、上下の端に描く輪の分割数 */
-const GENERATRIX_COUNT = 24
+/** 円錐面の上下の端に描く輪の分割数 */
 const RING_SEGMENTS = 64
 
 /** 切り口を求めるために θ を刻む数 */
@@ -70,65 +65,15 @@ const DENOMINATOR_EPSILON = 1e-3
 /** 平面の傾きが母線と一致したとみなす幅（度） */
 const TILT_EPSILON = 0.5
 
-/** ラベルの高さ（ワールド座標での大きさ）と、指す対象から離す距離 */
-const LABEL_HEIGHT = 0.26
-const LABEL_OFFSET = 0.3
-
-/** ラベルの文字を描く canvas の高さ（テクスチャの解像度）と左右の余白、書体 */
-const LABEL_TEXTURE_HEIGHT = 128
-const LABEL_TEXTURE_PADDING = 12
-const LABEL_FONT = "bold 92px sans-serif"
-
-// 背景（暗めのグレー）の上で、円錐面・母線・切る平面・切り口が互いに見分けられる色にする
+// 背景（暗めのグレー）の上で、円錐面・母線・切る平面・切り口が互いに見分けられる色にする。
+// 円錐面は線で下書きせず面だけで見せるので、不透明度は面の広がりが追える程度まで上げる
 const CONE_COLOR = "#8fa3bf"
-const CONE_OPACITY = 0.08
+const CONE_OPACITY = 0.18
 const GENERATRIX_COLOR = "#ffc857"
 const AXIS_COLOR = "#b9c0cc"
 const PLANE_COLOR = "#5ec8f2"
 const PLANE_OPACITY = 0.16
 const SECTION_COLOR = "#f57fc4"
-
-/**
- * 文字を描いた canvas をテクスチャにして、常にカメラを向く板（Sprite）にする。
- * 書体によって字幅が変わるので、文字の幅を測って板の横幅を決める
- */
-const createLabel = (text: string, color: string) => {
-  const canvas = document.createElement("canvas")
-  const context = canvas.getContext("2d")
-
-  let textWidth = LABEL_TEXTURE_HEIGHT
-  if (context) {
-    context.font = LABEL_FONT
-    textWidth = context.measureText(text).width
-  }
-
-  canvas.width = Math.ceil(textWidth + LABEL_TEXTURE_PADDING * 2)
-  canvas.height = LABEL_TEXTURE_HEIGHT
-
-  if (context) {
-    // canvas の大きさを変えると描画状態が初期化されるので、書体はここで指定し直す
-    context.font = LABEL_FONT
-    context.textAlign = "center"
-    context.textBaseline = "middle"
-    context.fillStyle = color
-    context.fillText(text, canvas.width / 2, canvas.height / 2)
-  }
-
-  const texture = new CanvasTexture(canvas)
-  texture.colorSpace = SRGBColorSpace
-  const material = new SpriteMaterial({
-    map: texture,
-    transparent: true,
-    // 文字のない透明な余白まで深度を書いてしまうと、あとから描かれる半透明の面や線が
-    // ラベルの矩形の形に欠け、文字に黒い下敷きが付いたように見える
-    depthWrite: false
-  })
-  const sprite = new Sprite(material)
-  // 高さを指定の値に揃え、幅は canvas の縦横比から決める
-  sprite.scale.set((LABEL_HEIGHT * canvas.width) / canvas.height, LABEL_HEIGHT, 1)
-
-  return { sprite, texture, material }
-}
 
 /** 切る平面の傾きを母線の傾きと比べて、現れる曲線の名前を決める */
 const nameSection = (tiltDeg: number) => {
@@ -160,18 +105,6 @@ export const createConicSectionScene = ({ scene, params }: SceneContext) => {
   lowerCone.position.y = -CONE_EXTENT / 2
   scene.add(lowerCone)
 
-  // 母線。頂点を挟んで上下に伸びる 1 本の直線を、軸のまわりに等間隔で並べる
-  const generatrixPoints: Vector3[] = []
-  for (let i = 0; i < GENERATRIX_COUNT; i++) {
-    const theta = (i / GENERATRIX_COUNT) * Math.PI * 2
-    const x = CONE_RADIUS * Math.cos(theta)
-    const z = CONE_RADIUS * Math.sin(theta)
-    generatrixPoints.push(new Vector3(-x, -CONE_EXTENT, -z), new Vector3(x, CONE_EXTENT, z))
-  }
-  const generatrixGeometry = new BufferGeometry().setFromPoints(generatrixPoints)
-  const generatrixMaterial = new LineBasicMaterial({ color: CONE_COLOR })
-  scene.add(new LineSegments(generatrixGeometry, generatrixMaterial))
-
   // 円錐面をどこまで描いたかを示す輪。切り口がここで途切れるのは、面の広がりを有限に描いているため
   const ringPoints: Vector3[] = []
   for (let i = 0; i < RING_SEGMENTS; i++) {
@@ -186,18 +119,14 @@ export const createConicSectionScene = ({ scene, params }: SceneContext) => {
     scene.add(ring)
   }
 
-  // 傾きを比べる母線。平面が倒れていく向き（+x 側）の 1 本だけ色を変える。
+  // 傾きを比べる母線。切り口を隠さないよう、平面が倒れていく向き（+x 側）の 1 本だけを描く。
   // この母線と平面はどちらも xy 平面に乗るので、角度をそのまま見比べられる
-  const markedGeometry = new BufferGeometry().setFromPoints([
+  const generatrixGeometry = new BufferGeometry().setFromPoints([
     new Vector3(-CONE_RADIUS, -CONE_EXTENT, 0),
     new Vector3(CONE_RADIUS, CONE_EXTENT, 0)
   ])
-  const markedMaterial = new LineBasicMaterial({ color: GENERATRIX_COLOR })
-  scene.add(new LineSegments(markedGeometry, markedMaterial))
-
-  const generatrixLabel = createLabel("母線", GENERATRIX_COLOR)
-  generatrixLabel.sprite.position.set(CONE_RADIUS + LABEL_OFFSET, CONE_EXTENT, 0)
-  scene.add(generatrixLabel.sprite)
+  const generatrixMaterial = new LineBasicMaterial({ color: GENERATRIX_COLOR })
+  scene.add(new LineSegments(generatrixGeometry, generatrixMaterial))
 
   // 母線を回すもとになった軸
   const axisGeometry = new BufferGeometry().setFromPoints([
@@ -206,10 +135,6 @@ export const createConicSectionScene = ({ scene, params }: SceneContext) => {
   ])
   const axisMaterial = new LineBasicMaterial({ color: AXIS_COLOR })
   scene.add(new LineSegments(axisGeometry, axisMaterial))
-
-  const axisLabel = createLabel("軸", AXIS_COLOR)
-  axisLabel.sprite.position.set(0, AXIS_EXTENT + LABEL_OFFSET, 0)
-  scene.add(axisLabel.sprite)
 
   // 切る平面。(0, PLANE_HEIGHT, 0) を通り、そこを中心に z 軸まわりへ傾ける
   const planeGroup = new Group()
@@ -305,12 +230,10 @@ export const createConicSectionScene = ({ scene, params }: SceneContext) => {
       const disposables = [
         coneGeometry,
         coneMaterial,
-        generatrixGeometry,
-        generatrixMaterial,
         ringGeometry,
         ringMaterial,
-        markedGeometry,
-        markedMaterial,
+        generatrixGeometry,
+        generatrixMaterial,
         axisGeometry,
         axisMaterial,
         planeGeometry,
@@ -318,11 +241,7 @@ export const createConicSectionScene = ({ scene, params }: SceneContext) => {
         planeEdgeGeometry,
         planeEdgeMaterial,
         sectionGeometry,
-        sectionMaterial,
-        generatrixLabel.texture,
-        generatrixLabel.material,
-        axisLabel.texture,
-        axisLabel.material
+        sectionMaterial
       ]
       disposables.forEach((disposable) => disposable.dispose())
     }

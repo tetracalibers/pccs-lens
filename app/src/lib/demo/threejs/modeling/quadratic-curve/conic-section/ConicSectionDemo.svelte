@@ -12,12 +12,13 @@
   }
 </script>
 
-<!-- 円錐面は上下に長いので、縦長の canvas にして、上下の端まで収まる距離にカメラを置く -->
+<!-- パネルを含めた全体が縦長にならないよう canvas は横長にし、
+     上下に長い円錐面が端まで収まる距離にカメラを置く -->
 <ThreeDemoCanvas
   ariaLabel="頂点を挟んで上下に広がる円錐面を、1枚の平面で切ったところの3次元表示。平面の傾きを動かすと切り口の曲線が変わり、母線より緩い傾きでは閉じた楕円、母線と同じ傾きでは放物線、それより急な傾きでは上下の円錐にまたがる2本の枝の双曲線になる（ドラッグで回転、ホイールで拡大縮小）"
   createScene={createConicSectionScene}
   {params}
-  aspectRatio="4 / 5"
+  aspectRatio="16 / 9"
   camera={{ position: [1.7, 1.5, 7.2] }}
   orbit={{ minDistance: 5, maxDistance: 18 }}
   buildPane={(pane, p) => {

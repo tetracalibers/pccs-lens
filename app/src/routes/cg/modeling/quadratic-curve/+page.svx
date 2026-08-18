@@ -11,7 +11,6 @@ draft: true
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import ConicSectionDemo from '$lib/demo/threejs/modeling/quadratic-curve/conic-section/ConicSectionDemo.svelte'
-  import StandardToGeneralDemo from '$lib/demo/threejs/modeling/quadratic-curve/standard-to-general/StandardToGeneralDemo.svelte'
 </script>
 
 [曲線・曲面の数式表現](/cg/modeling/curve-surface-equations/)では、次数が`2`の代数曲線を:Anki[2次曲線]と呼び、:Anki[円]・:Anki[楕円]・:Anki[放物線]・:Anki[双曲線]がこれにあたることに触れました。
@@ -64,12 +63,6 @@ $$
 - ドラッグで回すと、どの切り口も`1`枚の平面に乗った曲線であることが見える
 :::
 
-:::Fix{target="demo"}
-- add-threejs-demoスキルのaspect-ratioの規約に従って調整
-- デモの中の「母線」「軸」テキストは要らない
-- 断面をクリアに見せるため、母線を削除してもよさそう（母線については「母線を回すことで円錐面が描かれるデモ」でわかる）
-:::
-
 <CanvasWrapper>
   <ConicSectionDemo />
 </CanvasWrapper>
@@ -98,18 +91,6 @@ const lowerCone = new Mesh(coneGeometry, coneMaterial)
 lowerCone.position.y = -CONE_EXTENT / 2
 scene.add(lowerCone)
 
-// 母線。頂点を挟んで上下に伸びる 1 本の直線を、軸のまわりに等間隔で並べる
-const generatrixPoints: Vector3[] = []
-for (let i = 0; i < GENERATRIX_COUNT; i++) {
-  const theta = (i / GENERATRIX_COUNT) * Math.PI * 2
-  const x = CONE_RADIUS * Math.cos(theta)
-  const z = CONE_RADIUS * Math.sin(theta)
-  generatrixPoints.push(new Vector3(-x, -CONE_EXTENT, -z), new Vector3(x, CONE_EXTENT, z))
-}
-const generatrixGeometry = new BufferGeometry().setFromPoints(generatrixPoints)
-const generatrixMaterial = new LineBasicMaterial({ color: CONE_COLOR })
-scene.add(new LineSegments(generatrixGeometry, generatrixMaterial))
-
 // 円錐面をどこまで描いたかを示す輪。切り口がここで途切れるのは、面の広がりを有限に描いているため
 const ringPoints: Vector3[] = []
 for (let i = 0; i < RING_SEGMENTS; i++) {
@@ -124,14 +105,14 @@ for (const y of [CONE_EXTENT, -CONE_EXTENT]) {
   scene.add(ring)
 }
 
-// 傾きを比べる母線。平面が倒れていく向き（+x 側）の 1 本だけ色を変える。
+// 傾きを比べる母線。切り口を隠さないよう、平面が倒れていく向き（+x 側）の 1 本だけを描く。
 // この母線と平面はどちらも xy 平面に乗るので、角度をそのまま見比べられる
-const markedGeometry = new BufferGeometry().setFromPoints([
+const generatrixGeometry = new BufferGeometry().setFromPoints([
   new Vector3(-CONE_RADIUS, -CONE_EXTENT, 0),
   new Vector3(CONE_RADIUS, CONE_EXTENT, 0)
 ])
-const markedMaterial = new LineBasicMaterial({ color: GENERATRIX_COLOR })
-scene.add(new LineSegments(markedGeometry, markedMaterial))
+const generatrixMaterial = new LineBasicMaterial({ color: GENERATRIX_COLOR })
+scene.add(new LineSegments(generatrixGeometry, generatrixMaterial))
 
 // 母線を回すもとになった軸
 const axisGeometry = new BufferGeometry().setFromPoints([
@@ -228,88 +209,6 @@ const nameSection = (tiltDeg: number) => {
 
 ただし、:Mark[放物線]には中心にあたる点がないため、頂点を原点に合わせて軸を`x`軸に重ねても、`1`次の項が`1`つ残ります。
 
-:::Fix{target="demo"}
-- 次のデモは削除でよさそう
-:::
-
-:::Action{fixme}
-平行移動量と回転角を動かして、`a`から`f`までの係数がどう変わるかを追ってみよう
-
-- 平行移動だけを与えると、`1`次の項の`d`と`e`が`0`でなくなり、`xy`の項の`b`は`0`のまま
-- 回転を与えると`b`が`0`でなくなり、`2`次の項の`a`と`c`も変わっていく
-- 回転角が`90`度になると`b`は`0`に戻る。楕円の対称軸がふたたび座標軸に重なるため
-:::
-
-<CanvasWrapper>
-  <StandardToGeneralDemo />
-</CanvasWrapper>
-
-:::Foldable{title="Three.jsによる実装概要"}
-
-```ts
-// 標準形の楕円。x 軸方向の半径が RADIUS_X、y 軸方向の半径が RADIUS_Y になる
-const ellipsePoints: Vector3[] = []
-for (let i = 0; i < ELLIPSE_SEGMENTS; i++) {
-  const t = (i / ELLIPSE_SEGMENTS) * Math.PI * 2
-  ellipsePoints.push(new Vector3(RADIUS_X * Math.cos(t), RADIUS_Y * Math.sin(t), 0))
-}
-const ellipseGeometry = new BufferGeometry().setFromPoints(ellipsePoints)
-
-// 移動前の位置。動かした楕円と同じ形であることが分かるよう、置いたまま淡く残す
-const standardMaterial = new LineBasicMaterial({ color: STANDARD_COLOR })
-const standardEllipse = new LineLoop(ellipseGeometry, standardMaterial)
-standardEllipse.position.z = STANDARD_Z
-scene.add(standardEllipse)
-
-// 移動後の楕円。同じ楕円をこのグループごと回して動かす
-const movedGroup = new Group()
-scene.add(movedGroup)
-
-const movedMaterial = new LineBasicMaterial({ color: MOVED_COLOR })
-movedGroup.add(new LineLoop(ellipseGeometry, movedMaterial))
-
-// 楕円の対称軸。座標軸に重なっているかどうかで、向きの違いが読み取れる
-const symmetryGeometry = new BufferGeometry().setFromPoints([
-  new Vector3(-RADIUS_X, 0, 0),
-  new Vector3(RADIUS_X, 0, 0),
-  new Vector3(0, -RADIUS_Y, 0),
-  new Vector3(0, RADIUS_Y, 0)
-])
-const symmetryMaterial = new LineBasicMaterial({ color: SYMMETRY_COLOR })
-movedGroup.add(new LineSegments(symmetryGeometry, symmetryMaterial))
-
-const centerGeometry = new SphereGeometry(CENTER_RADIUS, 16, 12)
-const centerMaterial = new MeshBasicMaterial({ color: SYMMETRY_COLOR })
-movedGroup.add(new Mesh(centerGeometry, centerMaterial))
-
-// 標準形の楕円を、原点まわりに回してから (tx, ty) だけ動かす
-const tx = 0.6
-const ty = 0.4
-const angle = MathUtils.degToRad(0)
-
-movedGroup.rotation.z = angle
-movedGroup.position.set(tx, ty, MOVED_Z)
-
-// 標準形 x²/A² + y²/B² = 1 の両辺に A²B² を掛けた B²x² + A²y² - A²B² = 0 を出発点に、
-// 移動後の点を標準形の座標へ戻してから代入すると、一般形の 6 つの係数が求まる
-const cos = Math.cos(angle)
-const sin = Math.sin(angle)
-const squareX = RADIUS_X * RADIUS_X
-const squareY = RADIUS_Y * RADIUS_Y
-
-// 2 次の項の係数は回転だけで決まる。b は sin と cos の積なので、回転させたときだけ 0 でなくなる
-const a = squareY * cos * cos + squareX * sin * sin
-const b = 2 * cos * sin * (squareY - squareX)
-const c = squareY * sin * sin + squareX * cos * cos
-
-// 1 次の項と定数項には平行移動量が入る。動かさなければ d と e は 0 のまま
-const d = -2 * a * tx - b * ty
-const e = -2 * c * ty - b * tx
-const f = a * tx * tx + b * tx * ty + c * ty * ty - squareX * squareY
-```
-
-:::
-
 平面上の平行移動と回転によって得られる`2`次曲線の:Anki[標準形]は、それぞれ次のような式になります。
 
 ::::CardGrid
@@ -336,9 +235,17 @@ $$
 :::
 ::::
 
-:::Add
-それぞれ、なぜこの式になるのかを直感的に解説できる？
-:::
+### 楕円の標準形
+
+楕円の式は、円の式を軸ごとに引き伸ばしたものとして読めます。半径`a`の円 $$x^2 + y^2 = a^2$$ の両辺を $$a^2$$ で割ると $$(x/a)^2 + (y/a)^2 = 1$$ となり、`x`も`y`も同じ`a`で割られています。`y`側だけを`b`に取り替えれば、縦方向の広がりだけが変わった図形、すなわち楕円になります。
+
+### 放物線の標準形
+
+放物線の式は、対称軸のとり方から`2`乗の形になります。頂点を原点に置いて軸を`x`軸に重ねると、`y`の符号だけが違う`2`点が常に対になって現れるため、`y`は`2`乗の形でしか式に入りません。残るのは $$y^2$$ が`x`に比例する形で、比例の定数を`4p`と置いてあるので、`p`が大きいほど同じ`x`に対して`y`が大きく広がり、開き方がゆるやかになります。
+
+### 双曲線の標準形
+
+双曲線の式は、楕円の標準形の足し算を引き算に変えた形です。$$x^2/a^2 = 1 + y^2/b^2$$ と書き直すと右辺は必ず`1`以上になるので、`x`の絶対値は`a`より小さくなれず、原点を挟んで左右`2`本の枝に分かれます。`y`を大きくしていくと右辺の`1`が効かなくなり、曲線は $$y = \pm(b/a)x$$ という`2`本の直線に限りなく近づいていきます。
 
 ## :WithGroupTag[パラメータ形式]{group="{['CG']}"}
 
@@ -355,14 +262,18 @@ y &= b \sin\theta
 \end{align*}
 $$
 
-:::Add
-この式は、標準形の式から求められる？式の導出が欲しい
-:::
+この式は、標準形から次のようにたどれます。まず標準形の左辺を、`x`と`y`をそれぞれ`a`と`b`で割った量の`2`乗の和として書き直します。
+
+$$
+\left(\frac{x}{a}\right)^2 + \left(\frac{y}{b}\right)^2 = 1
+$$
+
+こうすると、`2`乗の和が`1`になる`2`つの量を当てはめればよいことになります。角度 $$\theta$$ に対する $$\cos\theta$$ と $$\sin\theta$$ がちょうどその組で、$$x/a$$ を $$\cos\theta$$ に、$$y/b$$ を $$\sin\theta$$ に対応させて分母を払うと、上のパラメータ形式が得られます。
 
 :Mark[標準形]に代入すると $$\cos^2\theta + \sin^2\theta = 1$$ が残るので、$$\theta$$ をどう選んでも式は成り立ちます。
 
-:::Add
-$$\cos^2\theta + \sin^2\theta = 1$$ が残るから$$\theta$$ をどう選んでも式は成り立つといえるのはなぜ？Note形式で補足
+:::Note
+$$\cos^2\theta + \sin^2\theta = 1$$ は、ある $$\theta$$ でだけ成り立つ方程式ではなく、どの $$\theta$$ でも成り立つ等式です。$$\cos\theta$$ と $$\sin\theta$$ は、半径`1`の円周上で角度 $$\theta$$ の位置にある点の`x`座標と`y`座標なので、`2`乗の和は原点からその点までの距離（半径）の`2`乗、つまり`1`になります。
 :::
 
 半径`1`の円周上の点の`x`と`y`を、それぞれ`a`倍・`b`倍したものと読むこともできます。
@@ -378,9 +289,7 @@ y &= 2pt
 \end{align*}
 $$
 
-:::Add
-この式は、標準形の式から求められる？式の導出が欲しい
-:::
+この式も標準形から導けます。$$y^2 = 4px$$ に $$y = 2pt$$ を代入すると左辺が $$4p^2t^2$$ になり、両辺を`4p`で割ると $$x = pt^2$$ が残ります。`y`の置き方に`2p`倍を選んでおくのは、`x`の式に分数を出さないためです。
 
 `y`を`t`の`1`次式にとれば、`x`はその`2`乗に比例します。`t`を実数全体で動かすと、頂点を通って両側へ伸びる放物線が得られます。
 
@@ -399,11 +308,7 @@ y &= b \sinh t
 \end{align*}
 $$
 
-:::Fix
-関数名はKaTeX記法で
-:::
-
-`cosh`と`sinh`は、指数関数を組み合わせて定義される関数です。
+$$\cosh$$ と $$\sinh$$ は、指数関数を組み合わせて定義される関数です。
 
 $$
 \begin{align*}
@@ -418,10 +323,6 @@ $$
 双曲線関数のグラフ
 :::
 
-:::Fix
-関数名・数式はKaTeX記法で
-:::
-
-ただし、`cosh`の値は常に`1`以上なので、この式でたどれるのは`x`が正の側の枝だけです。もう`1`本の枝は、`x = -a cosh t`と符号を反転させると得られます。
+ただし、$$\cosh$$ の値は常に`1`以上なので、この式でたどれるのは`x`が正の側の枝だけです。もう`1`本の枝は、$$x = -a\cosh t$$ と符号を反転させると得られます。
 
 これらの式を書き下せたのは、曲線の形が先に決まっていたからです。これとは逆に、作りたい曲線の形に合わせて式を組み立てる話は、[パラメトリック曲線・曲面](/cg/modeling/parametric-curve-surface/)へ続きます。
