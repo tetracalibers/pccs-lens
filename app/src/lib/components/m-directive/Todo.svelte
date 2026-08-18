@@ -22,6 +22,9 @@
     /** ページ内での図解の通し番号をラベルに出す */
     counter-increment: todo-figure;
   }
+  .todo :global(*) {
+    font-size: 0.8rem;
+  }
 
   /* diff のガター相当の `+` を、「TODO：」の行頭に置く */
   .todo::after {
