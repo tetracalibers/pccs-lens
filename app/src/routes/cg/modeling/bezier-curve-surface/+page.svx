@@ -9,6 +9,7 @@ draft: true
 ---
 
 <script>
+  import BernsteinBasisDemo from '$lib/demo/threejs/modeling/bezier-curve-surface/bernstein-basis/BernsteinBasisDemo.svelte'
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import ControlPolygonDemo from '$lib/demo/threejs/modeling/bezier-curve-surface/control-polygon/ControlPolygonDemo.svelte'
   import LinearInterpolationDemo from '$lib/demo/threejs/modeling/bezier-curve-surface/linear-interpolation/LinearInterpolationDemo.svelte'
@@ -486,8 +487,123 @@ $$
 P(t) = (1 - t)^3 P_0 + 3t(1 - t)^2 P_1 + 3t^2(1 - t) P_2 + t^3 P_3
 $$
 
-:::Todo
-`3`次のバーンスタイン基底関数のグラフ。横軸をパラメータ（`0`から`1`）、縦軸を重みとし、`4`本の基底関数を色分けして重ねる。両端では`1`本だけが`1`になって残りが`0`になること、途中では`4`本が山を分け合いながら重みの中心が左から右へ移っていくことが読み取れるようにする。
+:::Action{fixme}
+`t`を動かして、`4`本の重みがどう入れ替わるかを見てみよう
+
+- 両端では`1`本だけが`1`になり、残りの`3`本は`0`になる
+- 途中では`4`本が山を分け合い、重みの大きい曲線が左から右へ移っていく
+- 右の積み上げ棒は、どの`t`でも高さが変わらない
+:::
+
+:::Fix{target="demo"}
+- 各点の直径が大きすぎる
+- `t`ラベルと積み上げ棒が重なっているので、積み上げ棒をもっと右に
+- 「合計」ラベルが中途半端な位置にあるので、積み上げ棒と横中心が揃うようにきちんと配置する
+- 「重み」UIの値表示部分が見切れてしまっているので、Tweakpaneのmultiline optionで複数行表示にする
+- `B_0,3`、`B_3,3`ラベルをもう少しグラフの線に近づける
+:::
+
+<CanvasWrapper>
+  <BernsteinBasisDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 3 次のバーンスタイン基底関数の数と、二項係数 C(3, i)
+const BASIS_COUNT = 4
+const BINOMIALS = [1, 3, 3, 1]
+
+// 3 次のバーンスタイン基底関数 B(i, 3)(t) = C(3, i) t^i (1 − t)^(3 − i)
+const bernstein = (i: number, t: number) =>
+  BINOMIALS[i] * t ** i * (1 - t) ** (BASIS_COUNT - 1 - i)
+
+// グラフの座標（横軸 t・縦軸 重み）を、シーンの座標に移す
+const toScene = (t: number, weight: number, z: number, target: Vector3) =>
+  target.set(t * PLOT_WIDTH, weight * PLOT_HEIGHT, z)
+
+// グラフ全体を canvas の中央に寄せる
+const graph = new Group()
+graph.position.copy(GRAPH_OFFSET)
+scene.add(graph)
+
+// 軸と目盛り。横軸は t の 0〜1、縦軸は重みの 0〜1 を測る
+const axisPoints: Vector3[] = [
+  new Vector3(0, 0, LAYER_AXIS),
+  new Vector3(PLOT_WIDTH + AXIS_OVERSHOOT, 0, LAYER_AXIS),
+  new Vector3(0, 0, LAYER_AXIS),
+  new Vector3(0, PLOT_HEIGHT + AXIS_OVERSHOOT, LAYER_AXIS)
+]
+for (const value of [0.5, 1]) {
+  axisPoints.push(
+    new Vector3(value * PLOT_WIDTH, 0, LAYER_AXIS),
+    new Vector3(value * PLOT_WIDTH, -TICK_LENGTH, LAYER_AXIS),
+    new Vector3(0, value * PLOT_HEIGHT, LAYER_AXIS),
+    new Vector3(-TICK_LENGTH, value * PLOT_HEIGHT, LAYER_AXIS)
+  )
+}
+const axisGeometry = new BufferGeometry().setFromPoints(axisPoints)
+const axisMaterial = new LineBasicMaterial({ color: AXIS_COLOR })
+graph.add(new LineSegments(axisGeometry, axisMaterial))
+
+// 重みが 1 になる高さの補助線。積み上げ棒の先がここで止まり続けることを読み取らせる
+const guideGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(0, PLOT_HEIGHT, LAYER_GUIDE),
+  new Vector3(BAR_X + BAR_WIDTH / 2, PLOT_HEIGHT, LAYER_GUIDE)
+])
+const guideMaterial = new LineBasicMaterial({
+  color: AXIS_COLOR,
+  transparent: true,
+  opacity: GUIDE_OPACITY
+})
+graph.add(new LineSegments(guideGeometry, guideMaterial))
+
+// 4 本の基底関数。色は曲線・重みの点・積み上げ棒で共有する
+const basisMaterials = BASIS_COLORS.map((color) => new LineBasicMaterial({ color }))
+const fillMaterials = BASIS_COLORS.map((color) => new MeshBasicMaterial({ color }))
+basisMaterials.forEach((material, i) => {
+  const points: Vector3[] = []
+  for (let step = 0; step <= CURVE_SEGMENTS; step++) {
+    const t = step / CURVE_SEGMENTS
+    points.push(toScene(t, bernstein(i, t), LAYER_CURVE, new Vector3()))
+  }
+  graph.add(new Line(new BufferGeometry().setFromPoints(points), material))
+})
+
+// 今の t を示す縦線。長さは変わらないので、横へ動かすだけでよい
+const t = 0.35
+const readoutGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(0, 0, LAYER_READOUT),
+  new Vector3(0, PLOT_HEIGHT, LAYER_READOUT)
+])
+const readoutMaterial = new LineBasicMaterial({ color: READOUT_COLOR })
+const readoutLine = new LineSegments(readoutGeometry, readoutMaterial)
+readoutLine.position.x = t * PLOT_WIDTH
+graph.add(readoutLine)
+
+// 今の t で各基底関数が取る重み。点の高さと、積み上げ棒の 1 段ぶんになる
+const dotGeometry = new SphereGeometry(DOT_RADIUS, 16, 12)
+const barGeometry = new PlaneGeometry(1, 1)
+const scratch = new Vector3()
+let bottom = 0
+
+fillMaterials.forEach((material, i) => {
+  const weight = bernstein(i, t)
+
+  const dot = new Mesh(dotGeometry, material)
+  dot.position.copy(toScene(t, weight, LAYER_POINT, scratch))
+  graph.add(dot)
+
+  // 積み上げ棒。4 段の高さを足すとつねに重み 1 のぶんになる
+  const height = weight * PLOT_HEIGHT
+  const bar = new Mesh(barGeometry, material)
+  bar.scale.set(BAR_WIDTH, Math.max(height, MIN_BAR_HEIGHT), 1)
+  bar.position.set(BAR_X, bottom + height / 2, LAYER_BAR)
+  graph.add(bar)
+  bottom += height
+})
+```
+
 :::
 
 グラフから、この重みがどの $$t$$ でも負にならず、`4`本を足すと必ず`1`になることがわかります。この`2`つは`3`次に限らずどの次数でも成り立ち、式で書くと次のようになります。
