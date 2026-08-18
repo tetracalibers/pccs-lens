@@ -21,6 +21,8 @@ import {
 export type HyperbolicFunctionsParams = {
   /** 双曲線関数に渡すパラメータ */
   t: number
+  /** x の符号を反転させて、x が負となる側の枝を辿るかどうか */
+  flip: boolean
   /** scene.ts が計算して書き戻す表示用の文字列 */
   cosh: string
   sinh: string
@@ -68,6 +70,10 @@ const LABEL_OFFSET = 0.26
 
 /** 今の t に対応する点を示す球の半径 */
 const POINT_RADIUS = 0.075
+
+/** 頂点の位置を示す縦線に添える a のラベルを、線からずらす量 */
+const VERTEX_LABEL_INSET = 0.2
+const VERTEX_LABEL_DROP = -0.26
 
 /** 補助の線の薄さ。軸や曲線より控えめにする */
 const HELPER_OPACITY = 0.55
@@ -404,21 +410,22 @@ export const createHyperbolicFunctionsScene = ({ scene, params }: SceneContext) 
   leftBranch.set(-T_MAX, T_MAX)
   curve.add(rightBranch.object, leftBranch.object)
 
+  // 辿っている枝の向き。x = -a cosh t の側へ移すと -1 になる
+  let sign = 1
+
   // t をここまで動かしたぶんの跡
   const trace = track(
     createParametricCurve(TRACE_COLOR, LAYER_TRACE, (t, target) =>
-      target.set(RADIUS_A * cosh(t) * CURVE_SCALE, RADIUS_B * sinh(t) * CURVE_SCALE, 0)
+      target.set(sign * RADIUS_A * cosh(t) * CURVE_SCALE, RADIUS_B * sinh(t) * CURVE_SCALE, 0)
     )
   )
   curve.add(trace.object)
 
-  // cosh が 1 を下回らないので、x は a より内側へ来ない
+  // cosh が 1 を下回らないので、x は a より内側へ来ない。線とラベルは辿っている枝の側へ置く
   const vertexLine = track(createSegment(HELPER_COLOR, HELPER_OPACITY))
-  vertexLine.set(RADIUS_A * CURVE_SCALE, -curveHalfY, RADIUS_A * CURVE_SCALE, curveHalfY)
   curve.add(vertexLine.object)
 
   const vertexLabel = track(createLabel("a", HELPER_COLOR, ANNOTATION_LABEL_HEIGHT))
-  vertexLabel.sprite.position.set(RADIUS_A * CURVE_SCALE - 0.2, -0.26, LAYER_LABEL)
   curve.add(vertexLabel.sprite)
 
   // 今の t に対応する双曲線上の点と、その座標を軸の上で読むための線
@@ -432,6 +439,7 @@ export const createHyperbolicFunctionsScene = ({ scene, params }: SceneContext) 
       const { t } = params
       const coshValue = cosh(t)
       const sinhValue = sinh(t)
+      sign = params.flip ? -1 : 1
 
       // 左のグラフ。横軸の位置が t、縦軸の位置がその t での値
       const graphX = t * GRAPH_SCALE_T
@@ -439,13 +447,22 @@ export const createHyperbolicFunctionsScene = ({ scene, params }: SceneContext) 
       coshMarker.object.position.set(graphX, coshValue * GRAPH_SCALE_VALUE, LAYER_POINT)
       sinhMarker.object.position.set(graphX, sinhValue * GRAPH_SCALE_VALUE, LAYER_POINT)
 
-      // 右の双曲線。パラメータ形式 x = a cosh t, y = b sinh t
-      const x = RADIUS_A * coshValue * CURVE_SCALE
+      // 右の双曲線。パラメータ形式 x = a cosh t, y = b sinh t（符号を逆転させると x = -a cosh t）
+      const x = sign * RADIUS_A * coshValue * CURVE_SCALE
       const y = RADIUS_B * sinhValue * CURVE_SCALE
       trace.set(-T_MAX, t)
       pointMarker.object.position.set(x, y, LAYER_POINT)
       readingX.set(x, y, x, 0)
       readingY.set(x, y, 0, y)
+
+      // 頂点の位置を示す線と、その脇の a のラベル
+      const vertexX = sign * RADIUS_A * CURVE_SCALE
+      vertexLine.set(vertexX, -curveHalfY, vertexX, curveHalfY)
+      vertexLabel.sprite.position.set(
+        vertexX - sign * VERTEX_LABEL_INSET,
+        VERTEX_LABEL_DROP,
+        LAYER_LABEL
+      )
 
       params.cosh = coshValue.toFixed(2)
       params.sinh = sinhValue.toFixed(2)

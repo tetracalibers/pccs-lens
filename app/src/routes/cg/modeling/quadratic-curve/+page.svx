@@ -14,7 +14,6 @@ draft: true
   import EllipseFrameDemo from '$lib/demo/threejs/modeling/quadratic-curve/ellipse-frame/EllipseFrameDemo.svelte'
   import GeneratrixRevolutionDemo from '$lib/demo/threejs/modeling/quadratic-curve/generatrix-revolution/GeneratrixRevolutionDemo.svelte'
   import HyperbolicFunctionsDemo from '$lib/demo/threejs/modeling/quadratic-curve/hyperbolic-functions/HyperbolicFunctionsDemo.svelte'
-  import ParabolaParameterFormDemo from '$lib/demo/threejs/modeling/quadratic-curve/parabola-parameter-form/ParabolaParameterFormDemo.svelte'
 </script>
 
 [曲線・曲面の数式表現](/cg/modeling/curve-surface-equations/)では、次数が`2`の代数曲線を:Anki[2次曲線]と呼び、:Anki[円]・:Anki[楕円]・:Anki[放物線]・:Anki[双曲線]がこれにあたることに触れました。
@@ -44,12 +43,6 @@ $$
 
 :::Action
 :Mark[回転角]を動かして、`1`本の母線が動いた跡として円錐面が描かれていく様子を見てみよう
-:::
-
-:::Fix{target="demo"}
-- 初期拡大率だと「軸」ラベルがキャンバス外にはみ出して見切れてしまうので、初期拡大率を下げるなど調整が必要
-- 回転角の初期値は0に設定
-- 「頂点」ラベルは削除
 :::
 
 <CanvasWrapper>
@@ -181,11 +174,6 @@ addGeneratrix(rotation, 1)
 
 :::Action
 :Mark[平面の傾き]を動かして、切り口に現れる曲線が母線の傾きを境にどう変わるか見てみよう
-:::
-
-:::Fix{target="demo"}
-- 最初から断面が見えるように、斜め上から覗くような初期表示にしたい
-- 「母線」ラベルを追加
 :::
 
 <CanvasWrapper>
@@ -326,16 +314,12 @@ const nameSection = (tiltDeg: number) => {
 
 たとえば、同じ形・同じ大きさの楕円でも、置かれた場所や向きが違えば、一般式の係数は別の値になります。原点を中心に置いた楕円を[平行移動](/cg/transformation/basic-transformations/)すると`1`次の項が現れ、[回転](/cg/transformation/basic-transformations/)させると`xy`の項が現れます。
 
-:::Fix
-「`x`と`y`が混ざった式を`2`乗するので、`xy`の項が出る」がよくわからない
-:::
-
 :::Action{fixme}
 楕円に貼りついた`X`軸・`Y`軸と、画面の`x`軸・`y`軸を見比べながら、`X =`と`Y =`に出る式がどう変わるかを追ってみよう
 
 - 楕円の式は、対称軸にとった`X`と`Y`で書けば標準形のまま。画面の`x`と`y`で書くには、`X`と`Y`を`x`・`y`の式に直して代入することになる
 - 平行移動だけを与えると、`X`は`x`だけの式のままで、定数が付く。これを`2`乗すると`x`の`1`次の項が出る
-- 回転を与えると、`X`に`y`が混ざる。`x`と`y`が混ざった式を`2`乗するので、`xy`の項が出る
+- 回転を与えると、`X`は`x`と`y`を混ぜた式になる。この式を`2`乗すると、`x`の`2`乗・`y`の`2`乗のほかに`x`と`y`を掛け合わせた項が現れる。これが`xy`の項
 - 回転角を`90`度にすると`X`から`x`が消え、対称軸がふたたび座標軸に重なる
 :::
 
@@ -418,27 +402,23 @@ addReadingLine(scene, Y_COLOR, screenX, screenY, 0, screenY)
 
 平面上の平行移動と回転によって得られる`2`次曲線の:Anki[標準形]は、それぞれ次のような式になります。
 
-:::Fix
-ブロック数式内で登場する変数はコードブロックではなくインライン数式に
-:::
-
 ::::CardGrid
 :::TermCard{title="楕円"}
-`a`と`b`は、中心から曲線までの`x`軸方向・`y`軸方向の距離。等しいときが半径`a`の円
+$$a$$ と $$b$$ は、中心から曲線までの $$x$$ 軸方向・$$y$$ 軸方向の距離。等しいときが半径 $$a$$ の円
 
 $$
 \frac{x^2}{a^2} + \frac{y^2}{b^2} = 1
 $$
 :::
 :::TermCard{title="放物線"}
-原点が頂点で、`x`軸が対称軸。`p`が大きいほど開き方はゆるやか
+原点が頂点で、$$x$$ 軸が対称軸。$$p$$ が大きいほど開き方はゆるやか
 
 $$
 y^2 = 4px
 $$
 :::
 :::TermCard{title="双曲線"}
-`x`軸上で原点から`a`だけ離れた`2`点を頂点として、左右`2`本の枝に分かれる
+$$x$$ 軸上で原点から $$a$$ だけ離れた`2`点を頂点として、左右`2`本の枝に分かれる
 
 $$
 \frac{x^2}{a^2} - \frac{y^2}{b^2} = 1
@@ -448,35 +428,19 @@ $$
 
 ### 楕円の標準形
 
-:::Fix
-次の文章ではインライン数式で統一（インラインコードを使わない）
-:::
+楕円の式は、円の式を軸ごとに引き伸ばしたものとして読めます。半径 $$a$$ の円 $$x^2 + y^2 = a^2$$ の両辺を $$a^2$$ で割ると、$$\left(\dfrac{x}{a}\right)^2 + \left(\dfrac{y}{a}\right)^2 = 1$$ となります。
 
-:::Add
-「`x`も`y`も同じ`a`で割られている」ことが、「円を軸ごとに引き伸ばす」に結びつかないので加筆修正
-:::
-
-楕円の式は、円の式を軸ごとに引き伸ばしたものとして読めます。半径`a`の円 $$x^2 + y^2 = a^2$$ の両辺を $$a^2$$ で割ると $$(x/a)^2 + (y/a)^2 = 1$$ となり、`x`も`y`も同じ`a`で割られています。`y`側だけを`b`に取り替えれば、縦方向の広がりだけが変わった図形、すなわち楕円になります。
+分母の $$a$$ は、その向きに曲線がどこまで広がるかを表しています。$$x$$ も $$y$$ も同じ $$a$$ で割られているのは、縦にも横にも同じだけ広がっている、ということです。$$y$$ 側の分母だけを $$b$$ に取り替えれば、縦方向の広がりだけが $$b$$ になり、円を縦へ引き伸ばした形、すなわち楕円になります。
 
 ### 放物線の標準形
 
-:::Fix
-次の文章ではインライン数式で統一（インラインコードを使わない）
-:::
+放物線は対称軸に関して線対称な曲線です。頂点を原点に置いて対称軸を $$x$$ 軸に重ねると、同じ $$x$$ に対して $$y$$ と $$-y$$ が常に対になって現れます。
 
-:::Add
-「対称軸のとり方から`2`乗の形になります」の時点でついていけない
-:::
-
-放物線の式は、対称軸のとり方から`2`乗の形になります。頂点を原点に置いて軸を`x`軸に重ねると、`y`の符号だけが違う`2`点が常に対になって現れるため、`y`は`2`乗の形でしか式に入りません。残るのは $$y^2$$ が`x`に比例する形で、比例の定数を`4p`と置いてあるので、`p`が大きいほど同じ`x`に対して`y`が大きく広がり、開き方がゆるやかになります。
+符号を入れ替えても同じように成り立つ式でなければならないので、$$y$$ は`2`乗の形でしか式に入れません。残るのは $$y^2$$ が $$x$$ に比例する形で、比例の定数を $$4p$$ と置いてあるため、$$p$$ が大きいほど同じ $$x$$ に対して $$y$$ が大きく広がり、開き方がゆるやかになります。
 
 ### 双曲線の標準形
 
-:::Fix
-次の文章ではインライン数式で統一（インラインコードを使わない）
-:::
-
-双曲線の式は、楕円の標準形の足し算を引き算に変えた形です。$$x^2/a^2 = 1 + y^2/b^2$$ と書き直すと右辺は必ず`1`以上になるので、`x`の絶対値は`a`より小さくなれず、原点を挟んで左右`2`本の枝に分かれます。`y`を大きくしていくと右辺の`1`が効かなくなり、曲線は $$y = \pm(b/a)x$$ という`2`本の直線に限りなく近づいていきます。
+双曲線の式は、楕円の標準形の足し算を引き算に変えた形です。$$\dfrac{x^2}{a^2} = 1 + \dfrac{y^2}{b^2}$$ と書き直すと右辺は必ず`1`以上になるので、$$x$$ の絶対値は $$a$$ より小さくなれず、原点を挟んで左右`2`本の枝に分かれます。$$y$$ を大きくしていくと右辺の`1`が効かなくなり、曲線は $$y = \pm\dfrac{b}{a}x$$ という`2`本の直線に限りなく近づいていきます。
 
 ## :WithGroupTag[パラメータ形式]{group="{['CG']}"}
 
@@ -493,18 +457,12 @@ y &= b \sin\theta
 \end{align*}
 $$
 
-この式は、半径`1`の円周上の点の $$x$$ と $$y$$ を、それぞれ $$a$$ 倍・ $$b$$ 倍したものと読むこともできます。
+この式は、半径`1`の円周上の点の $$x$$ と $$y$$ を、それぞれ $$a$$ 倍・$$b$$ 倍したものと読むこともできます。
 
-:::Add
-「縦横で倍率が異なることで、正円ではなく引き伸ばされた楕円になる」という理解で合っていたら、追記
-:::
-
-:::Fix
-変数をインライン数式に
-:::
+縦横で倍率が違うので、得られるのは正円ではなく、引き伸ばされた楕円です。$$a$$ と $$b$$ が等しいときだけ倍率がそろい、半径 $$a$$ の円のままです。
 
 また、このパラメータ形式は、:Mark[標準形]の式と次のように繋がります。
-まず標準形の左辺を、`x`と`y`をそれぞれ`a`と`b`で割った量の`2`乗の和として書き直します。
+まず標準形の左辺を、$$x$$ と $$y$$ をそれぞれ $$a$$ と $$b$$ で割った量の`2`乗の和として書き直します。
 
 $$
 \left(\frac{x}{a}\right)^2 + \left(\frac{y}{b}\right)^2 = 1
@@ -516,7 +474,7 @@ $$
 \cos^2\theta + \sin^2\theta = 1
 $$
 
-この式は、どの $$\theta$$ であっても成り立つ、有名な三角関係の関係式です。
+この式は、どの $$\theta$$ であっても成り立つ、有名な三角関数の関係式です。
 
 :::Note
 $$\cos\theta$$ と $$\sin\theta$$ は、半径`1`の円周上で角度 $$\theta$$ の位置にある点の $$x$$ 座標と $$y$$ 座標なので、`2`乗の和は原点からその点までの距離（半径）の`2`乗、つまり`1`になる、と捉えることができます。
@@ -546,98 +504,10 @@ y &= 2pt
 \end{align*}
 $$
 
-:::Fix
-次の文章ではインライン数式で統一（インラインコードを使わない）
-:::
-
-この式も標準形から導けます。$$y^2 = 4px$$ に $$y = 2pt$$ を代入すると左辺が $$4p^2t^2$$ になり、両辺を`4p`で割ると $$x = pt^2$$ が残ります。`y`の置き方に`2p`倍を選んでおくのは、`x`の式に分数を出さないためです。
+この式も標準形から導けます。$$y^2 = 4px$$ に $$y = 2pt$$ を代入すると左辺が $$4p^2t^2$$ になり、両辺を $$4p$$ で割ると $$x = pt^2$$ が残ります。$$y$$ の置き方に $$2p$$ 倍を選んでおくのは、$$x$$ の式に分数を出さないためです。
 
 :::Pending
 `y`を`t`の`1`次式にとれば、`x`はその`2`乗に比例します。`t`を実数全体で動かすと、頂点を通って両側へ伸びる放物線が得られます。
-:::
-
-:::Fix{target="demo"}
-次のデモは削除
-:::
-
-:::Action{fixme}
-`t`を動かして、点が放物線のどこをどう進むかと、等間隔に刻んだ点の並び方を見てみよう
-
-- `t`を小さい側から大きくしていくと、点は下側の枝を上ってきて、`t`が`0`の頂点を通り、上側の枝へ抜けていく
-- 刻んだ点は`t`の間隔がどこも同じ。`y`は等間隔に並ぶ一方、`x`は頂点から離れるほど間隔が広がっていく
-- `p`を大きくすると開き方がゆるやかになり、同じ`t`でも`y`の伸びが大きくなる
-:::
-
-<CanvasWrapper>
-  <ParabolaParameterFormDemo />
-</CanvasWrapper>
-
-:::Foldable{title="Three.jsによる実装概要"}
-
-```ts
-// パラメータ形式 x = pt², y = 2pt で、t を from から to まで動かした跡を張る。
-// 頂点数は固定して、t の刻み幅だけを変える
-const addCurve = (color: string, z: number, from: number, to: number) => {
-  const positions = new Float32BufferAttribute(new Float32Array((CURVE_SEGMENTS + 1) * 3), 3)
-  const geometry = new BufferGeometry().setAttribute("position", positions)
-  const material = new LineBasicMaterial({ color })
-  scene.add(new Line(geometry, material))
-
-  for (let i = 0; i <= CURVE_SEGMENTS; i++) {
-    const t = from + (to - from) * (i / CURVE_SEGMENTS)
-    positions.setXYZ(i, P * t * t, 2 * P * t, z)
-  }
-  positions.needsUpdate = true
-}
-
-// t を動かせる範囲いっぱいの放物線と、そのうち今の t までに描かれたぶん
-addCurve(CURVE_COLOR, LAYER_CURVE, T_MIN, T_MAX)
-addCurve(TRACE_COLOR, LAYER_TRACE, T_MIN, T_CURRENT)
-
-// t を一定の刻みで動かして得られる点。t の刻み幅は同じなので、
-// y は等間隔に並び、x は頂点から離れるほど間隔が広がる。
-// 頂点（t = 0）を刻みに含めたいので、そこから正負どちらへも同じ幅で数える
-const dotGeometry = new SphereGeometry(DOT_RADIUS, 12, 8)
-const dotMaterial = new MeshBasicMaterial({ color: DOT_COLOR })
-
-const addDot = (t: number) => {
-  // 今の t をまだ超えている点は、これから描かれるところなので置かない
-  if (t > T_CURRENT) return
-  const dot = new Mesh(dotGeometry, dotMaterial)
-  dot.position.set(P * t * t, 2 * P * t, LAYER_DOT)
-  scene.add(dot)
-}
-
-for (let i = 0; i <= DOT_COUNT; i++) {
-  const t = (i / DOT_COUNT) * T_MAX
-  addDot(t)
-  if (i === 0) continue
-  addDot(-t)
-}
-
-// 今の t に対応する点と、その x・y を軸の上で読むための線
-const x = P * T_CURRENT * T_CURRENT
-const y = 2 * P * T_CURRENT
-
-const markerGeometry = new SphereGeometry(POINT_RADIUS, 16, 12)
-const markerMaterial = new MeshBasicMaterial({ color: MARKER_COLOR })
-const marker = new Mesh(markerGeometry, markerMaterial)
-marker.position.set(x, y, LAYER_POINT)
-scene.add(marker)
-
-const addReadingLine = (color: string, toX: number, toY: number) => {
-  const geometry = new BufferGeometry().setFromPoints([
-    new Vector3(x, y, LAYER_READING),
-    new Vector3(toX, toY, LAYER_READING)
-  ])
-  const material = new LineBasicMaterial({ color, transparent: true, opacity: READING_OPACITY })
-  scene.add(new LineSegments(geometry, material))
-}
-
-addReadingLine(X_COLOR, x, 0)
-addReadingLine(Y_COLOR, 0, y)
-```
-
 :::
 
 ### 双曲線のパラメータ形式
@@ -684,11 +554,7 @@ $$
 - `cosh t`は`x`と、`sinh t`は`y`と同じ色にしてある。グラフでその値が上下すると、点の横位置・縦位置がそれぞれ動く
 - `t`を負の側から正の側まで動かすと、点は枝の下端から上端まで辿っていく
 - `cosh t`は`t`をどちらへ動かしても`1`より下へ来ない。そのため点も`a`の線より内側へは入らない
-:::
-
-:::Fix{target="demo"}
-- 初期表示で、右のグラフのx軸がキャンバスからはみ出して見切れているので、最初から全体が見えるように調整
-- $$x$$ が負となる側の曲線を見るための「符号を逆転」UIを追加
+- 「符号を逆転」を入れると、同じ`t`のまま点が左側の枝へ移る。`x`だけが反転して、`y`は動かない
 :::
 
 <CanvasWrapper>
@@ -751,9 +617,12 @@ addParametricCurve(curve, CURVE_COLOR, LAYER_CURVE, -T_MAX, T_MAX, (t, target) =
   target.set(-RADIUS_A * cosh(t) * CURVE_SCALE, RADIUS_B * sinh(t) * CURVE_SCALE, 0)
 )
 
+// 「符号を逆転」で切り替える、辿っている枝の向き
+const sign = FLIP ? -1 : 1
+
 // t をここまで動かしたぶんの跡
 addParametricCurve(curve, TRACE_COLOR, LAYER_TRACE, -T_MAX, T_CURRENT, (t, target) =>
-  target.set(RADIUS_A * cosh(t) * CURVE_SCALE, RADIUS_B * sinh(t) * CURVE_SCALE, 0)
+  target.set(sign * RADIUS_A * cosh(t) * CURVE_SCALE, RADIUS_B * sinh(t) * CURVE_SCALE, 0)
 )
 
 // 両端が動く 1 本の線分
@@ -777,7 +646,7 @@ const addSegment = (
 // cosh がここより下へ来ないことを示す、値 1 の高さの線と、
 // そのため x が a より内側へ来ないことを示す縦の線
 addSegment(graph, HELPER_COLOR, HELPER_OPACITY, -GRAPH_HALF_T, GRAPH_SCALE_VALUE, GRAPH_HALF_T, GRAPH_SCALE_VALUE)
-addSegment(curve, HELPER_COLOR, HELPER_OPACITY, RADIUS_A * CURVE_SCALE, -CURVE_HALF_Y, RADIUS_A * CURVE_SCALE, CURVE_HALF_Y)
+addSegment(curve, HELPER_COLOR, HELPER_OPACITY, sign * RADIUS_A * CURVE_SCALE, -CURVE_HALF_Y, sign * RADIUS_A * CURVE_SCALE, CURVE_HALF_Y)
 
 // 今の t を示す縦線と、その t での cosh・sinh の値
 const coshValue = cosh(T_CURRENT)
@@ -798,7 +667,7 @@ addMarker(graph, X_COLOR, graphX, coshValue * GRAPH_SCALE_VALUE)
 addMarker(graph, Y_COLOR, graphX, sinhValue * GRAPH_SCALE_VALUE)
 
 // 右の図での、今の t に対応する点と、その座標を軸の上で読むための線
-const x = RADIUS_A * coshValue * CURVE_SCALE
+const x = sign * RADIUS_A * coshValue * CURVE_SCALE
 const y = RADIUS_B * sinhValue * CURVE_SCALE
 
 addMarker(curve, MARKER_COLOR, x, y)

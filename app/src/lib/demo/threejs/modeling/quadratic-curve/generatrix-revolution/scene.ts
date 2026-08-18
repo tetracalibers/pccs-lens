@@ -66,9 +66,8 @@ const LABEL_FONT = "bold 92px sans-serif"
 const GENERATRIX_LABEL_SPREAD = 1.24
 const GENERATRIX_LABEL_LIFT = 0.24
 
-/** 軸・頂点のラベルを、それぞれの位置からずらす量 */
+/** 軸のラベルを、軸の先からずらす量 */
 const AXIS_LABEL_OFFSET = 0.26
-const APEX_LABEL_OFFSET = new Vector3(-0.42, 0.2, 0)
 
 // 背景（暗めのグレー）の上で、軸・母線・掃かれた面・端の輪が見分けられる色にする。
 // 円錐面と母線の色は、切り口を見せるデモ（ConicSectionDemo）と揃える
@@ -275,10 +274,8 @@ export const createGeneratrixRevolutionScene = ({ scene, params }: SceneContext)
 
   const axisLabel = createLabel("軸", AXIS_COLOR)
   axisLabel.sprite.position.set(0, AXIS_EXTENT + AXIS_LABEL_OFFSET, 0)
-  const apexLabel = createLabel("頂点", APEX_COLOR)
-  apexLabel.sprite.position.copy(APEX_LABEL_OFFSET)
   const generatrixLabel = createLabel("母線", GENERATRIX_COLOR)
-  scene.add(axisLabel.sprite, apexLabel.sprite, generatrixLabel.sprite)
+  scene.add(axisLabel.sprite, generatrixLabel.sprite)
 
   const tip = new Vector3()
 
@@ -309,8 +306,6 @@ export const createGeneratrixRevolutionScene = ({ scene, params }: SceneContext)
         apexMaterial,
         axisLabel.texture,
         axisLabel.material,
-        apexLabel.texture,
-        apexLabel.material,
         generatrixLabel.texture,
         generatrixLabel.material
       ]

@@ -1,5 +1,6 @@
 import {
   BufferGeometry,
+  CanvasTexture,
   ConeGeometry,
   DoubleSide,
   Float32BufferAttribute,
@@ -11,6 +12,9 @@ import {
   MeshBasicMaterial,
   PlaneGeometry,
   Scene,
+  Sprite,
+  SpriteMaterial,
+  SRGBColorSpace,
   Vector3
 } from "three"
 
@@ -65,6 +69,20 @@ const DENOMINATOR_EPSILON = 1e-3
 /** 平面の傾きが母線と一致したとみなす幅（度） */
 const TILT_EPSILON = 0.5
 
+/** ラベルの高さ（ワールド座標での大きさ）。幅は文字数に応じて決まる */
+const LABEL_HEIGHT = 0.28
+
+/** ラベルの文字を描く canvas の高さ（テクスチャの解像度）と左右の余白 */
+const LABEL_TEXTURE_HEIGHT = 128
+const LABEL_TEXTURE_PADDING = 12
+
+/** ラベルの書体。canvas の高さに対して十分大きくとる */
+const LABEL_FONT = "bold 92px sans-serif"
+
+/** 母線のラベルを、母線の先から軸から遠ざかる向き・上向きへずらす量 */
+const GENERATRIX_LABEL_SPREAD = 1.24
+const GENERATRIX_LABEL_LIFT = 0.24
+
 // 背景（暗めのグレー）の上で、円錐面・母線・切る平面・切り口が互いに見分けられる色にする。
 // 円錐面は線で下書きせず面だけで見せるので、不透明度は面の広がりが追える程度まで上げる
 const CONE_COLOR = "#8fa3bf"
@@ -74,6 +92,47 @@ const AXIS_COLOR = "#b9c0cc"
 const PLANE_COLOR = "#5ec8f2"
 const PLANE_OPACITY = 0.16
 const SECTION_COLOR = "#f57fc4"
+
+/**
+ * 文字を描いた canvas をテクスチャにして、常にカメラを向く板（Sprite）にする。
+ * 文字数も書体による字幅も一定でないので、文字の幅を測って板の横幅を決める
+ */
+const createLabel = (text: string, color: string) => {
+  const canvas = document.createElement("canvas")
+  const context = canvas.getContext("2d")
+
+  let textWidth = LABEL_TEXTURE_HEIGHT
+  if (context) {
+    context.font = LABEL_FONT
+    textWidth = context.measureText(text).width
+  }
+
+  canvas.width = Math.ceil(textWidth + LABEL_TEXTURE_PADDING * 2)
+  canvas.height = LABEL_TEXTURE_HEIGHT
+
+  if (context) {
+    // canvas の大きさを変えると描画状態が初期化されるので、書体はここで指定し直す
+    context.font = LABEL_FONT
+    context.textAlign = "center"
+    context.textBaseline = "middle"
+    context.fillStyle = color
+    context.fillText(text, canvas.width / 2, canvas.height / 2)
+  }
+
+  const texture = new CanvasTexture(canvas)
+  texture.colorSpace = SRGBColorSpace
+  const material = new SpriteMaterial({
+    map: texture,
+    transparent: true,
+    // 文字のない透明な余白まで深度を書いてしまうと、あとから描かれる線がラベルの矩形の形に欠ける
+    depthWrite: false
+  })
+  const sprite = new Sprite(material)
+  // 高さを指定の値に揃え、幅は canvas の縦横比から決める
+  sprite.scale.set((LABEL_HEIGHT * canvas.width) / canvas.height, LABEL_HEIGHT, 1)
+
+  return { sprite, texture, material }
+}
 
 /** 切る平面の傾きを母線の傾きと比べて、現れる曲線の名前を決める */
 const nameSection = (tiltDeg: number) => {
@@ -127,6 +186,15 @@ export const createConicSectionScene = ({ scene, params }: SceneContext) => {
   ])
   const generatrixMaterial = new LineBasicMaterial({ color: GENERATRIX_COLOR })
   scene.add(new LineSegments(generatrixGeometry, generatrixMaterial))
+
+  // 母線の先に、軸から遠ざかる向きへずらして置くラベル
+  const generatrixLabel = createLabel("母線", GENERATRIX_COLOR)
+  generatrixLabel.sprite.position.set(
+    CONE_RADIUS * GENERATRIX_LABEL_SPREAD,
+    CONE_EXTENT + GENERATRIX_LABEL_LIFT,
+    0
+  )
+  scene.add(generatrixLabel.sprite)
 
   // 母線を回すもとになった軸
   const axisGeometry = new BufferGeometry().setFromPoints([
@@ -241,7 +309,9 @@ export const createConicSectionScene = ({ scene, params }: SceneContext) => {
         planeEdgeGeometry,
         planeEdgeMaterial,
         sectionGeometry,
-        sectionMaterial
+        sectionMaterial,
+        generatrixLabel.texture,
+        generatrixLabel.material
       ]
       disposables.forEach((disposable) => disposable.dispose())
     }
