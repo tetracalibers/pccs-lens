@@ -19,7 +19,6 @@ src/routes/cg/basics/shape-rasterization/+page.svx
 src/routes/cg/basics/vector-and-raster/+page.svx
 src/routes/cg/image-properties/dynamic-range-and-gradation/+page.svx
 src/routes/cg/image-properties/image-statistics/+page.svx
-src/routes/cg/modeling/bezier-curve-surface/+page.svx
 src/routes/cg/modeling/curve-surface-equations/+page.svx
 src/routes/cg/modeling/parametric-curve-surface/+page.svx
 src/routes/cg/modeling/shape-model-overview/+page.svx
