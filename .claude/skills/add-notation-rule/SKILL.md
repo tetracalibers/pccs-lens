@@ -139,7 +139,7 @@ npm run lint:svx:notation
   - `author-style-skills.md`（「機械的に検査できるルール」節）
 
   追記後の総項目数が**5件以下なら列挙に足す**。**6件以上になるなら列挙をやめ**、「主な項目は〜など（全項目は `app/textlint/README.md` の表）」の形に畳む。列挙の周りの記述（辞書を書き換えて指摘を消さない、という writer 側の約束など）は変えない。
-- `writing-guides/syntax-guide.md` は表記揺れの辞書を持たないので触らない。
+- `writing-guides/syntax-guide.md`・`writing-guides/math-notation-guide.md` は表記揺れの辞書を持たないので触らない。
 
 ### 9. 報告する
 

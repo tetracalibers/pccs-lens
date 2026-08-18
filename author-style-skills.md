@@ -28,13 +28,14 @@
                   ├─ pending/              … 各ガイドの保留プール（analyzer が読み書き）
                   └─ STYLE-ANALYSIS-TASKLIST.md
                                            … 記事ごとの分析済みチェックリスト（analyzer が読み書き）
-                        │ 参照（syntax-guide + モードに応じた本体ガイドのみ。
+                        │ 参照（syntax-guide・math-notation-guide +
+                        │        モードに応じた本体ガイドのみ。
                         │        evidence/ と pending/ は読まない）
                         ▼
             ┌───────────────────────────┐
             │    author-style-writer    │  + writing-guides/syntax-guide.md
-            │        （利用側）         │    （記法・書式の必須ルール）
-            └───────────────────────────┘
+            │        （利用側）         │  + writing-guides/math-notation-guide.md
+            └───────────────────────────┘    （どちらも記法・書式の必須ルール）
                         │
                         ▼
             著者らしい記事本文（生成 / 推敲 / レビュー）
@@ -66,7 +67,7 @@ analyzer が生成し、writer が参照する中心的な成果物です。い�
 
 かつては根拠と確度の判定理由をルール欄に散文で書いていたため、分析ラウンドごとに追記される台帳になり、4ガイドが計 313,714字（242ルール）まで膨らんでコンテキストを圧迫しました。実行可能な指示は全体の16%で、分析メタデータが66%を占める状態でした。根拠を `evidence/` へ、判定理由を確度ラベルへ畳んだ結果、4ガイド計は大幅に縮んでいます（経緯は `spec/writing-guides-compaction.md`、作業記録は `spec/COMPACTION-TASKLIST.md`）。
 
-**この「量の増え方」は、ラウンドごとに測って報告します。** analyzer は分析のたびにガイド本体へ追記し、その本体は writer が毎回全文を読むので、増えた分はそのまま執筆側のコンテキスト負荷になります。放置すると圧縮前と同じ経路で膨らむため、`scripts/style-guide-size.mjs` でファイルごとの文字数の増減%・ルール数の増減・合計・1ルールあたりの平均文字数を出し、**肥大化率を完了報告に必ず載せます**（測定対象は writer が読む5ファイル。`syntax-guide.md` は analyzer が触らないので `±0%` の参考値として合計に含めます）。**ルール数が増えていないのに本文が5%以上増えたファイルは警告になります**。ルールが増えて本文が増えるのは設計どおりですが、ルールが増えないまま太るのは根拠・確度の説明が本体へ漏れている兆候なので、報告の前に該当箇所を `evidence/`・`pending/` へ移します。1ルールあたりの平均文字数は、ルール数と本文量の比が崩れていないかを1つの数字で見るための指標です。
+**この「量の増え方」は、ラウンドごとに測って報告します。** analyzer は分析のたびにガイド本体へ追記し、その本体は writer が毎回全文を読むので、増えた分はそのまま執筆側のコンテキスト負荷になります。放置すると圧縮前と同じ経路で膨らむため、`scripts/style-guide-size.mjs` でファイルごとの文字数の増減%・ルール数の増減・合計・1ルールあたりの平均文字数を出し、**肥大化率を完了報告に必ず載せます**（測定対象は writer が読む6ファイル。`syntax-guide.md` と `math-notation-guide.md` は analyzer が触らないので `±0%` の参考値として合計に含めます）。**ルール数が増えていないのに本文が5%以上増えたファイルは警告になります**。ルールが増えて本文が増えるのは設計どおりですが、ルールが増えないまま太るのは根拠・確度の説明が本体へ漏れている兆候なので、報告の前に該当箇所を `evidence/`・`pending/` へ移します。1ルールあたりの平均文字数は、ルール数と本文量の比が崩れていないかを1つの数字で見るための指標です。
 
 ### ルールID
 
@@ -133,15 +134,17 @@ analyzer が生成し、writer が参照する中心的な成果物です。い�
 - 掲載対象は解説記事（`layout: guide-content` の `+page.svx`）のみ。トップ・一覧ページ、ゲーム、慣用色名マップ、配色シミュレータなど記事以外のページは分析対象ではないので載せない
 - analyzer は**スコープの解決**（未分析はどれか、指定範囲に分析済みが混ざっていないか）と、**分析後のチェック更新**にこれを使う。更新はメインセッションの後処理の責務で、Workflow のスクリプトや統合エージェントは触らない
 
-### 記法・書式の必須ガイド：`syntax-guide.md`
+### 記法・書式の必須ガイド：`syntax-guide.md`・`math-notation-guide.md`
 
-`writing-guides/syntax-guide.md` は上記4ガイドとは性質が異なり、**記事本文の記法・書式（独自ディレクティブ、`:Anki[]`、数式、コード、禁止事項など）を定めた必須ルール**です。著者の文体に関わらず常に従います。writer はこれを最優先級で参照します（後述の優先順位を参照）。
+`writing-guides/syntax-guide.md` と `writing-guides/math-notation-guide.md` は上記4ガイドとは性質が異なり、**記事本文の記法・書式（独自ディレクティブ、`:Anki[]`、数式、コード、禁止事項など）を定めた必須ルール**です。著者の文体に関わらず常に従います。writer はこれを最優先級で参照します（後述の優先順位を参照）。
+
+2ファイルの分担は、**数式（KaTeX）の記法が `math-notation-guide.md`、それ以外の記法（ディレクティブ、`:Anki[]`、インラインコード、見出しの分類タグ、リンク、コードブロック・擬似コード、禁止事項）が `syntax-guide.md`** です。仕上げチェックリストもそれぞれのファイルが持ちます。
 
 強調の記法については、**writer が使うのは `:Anki[]`（暗記モードで隠れる強調）だけ**という線引きがあります。同じ見た目で暗記モードでは隠れない `:Mark[]` も記法として存在しますが、どの語をそれにするかは著者（人間）の判断領域なので、writer は自分から `:Mark[]` を書きません（既存の `:Mark[]` は外さず `:Anki[]` へ変えもしません）。詳細は `syntax-guide.md` ルール1。
 
 #### 機械的に検査できるルール：`npm run lint:svx`
 
-`syntax-guide.md` のルールのうち4つと**表記揺れの統一**は textlint で検査でき、writer は**どのモードでも本文の変更を終えたら `npm run lint:svx`（`app` ディレクトリ）を通してから報告します**。ルールの実装は `app/textlint/`（`rules/` と共通のマスク処理 `lib/svx.js`）、表記揺れの辞書は `app/textlint/prh.yml`、使い方と設計の詳細は `app/textlint/README.md` にあります。
+`syntax-guide.md`・`math-notation-guide.md` のルールのうち4つと**表記揺れの統一**は textlint で検査でき、writer は**どのモードでも本文の変更を終えたら `npm run lint:svx`（`app` ディレクトリ）を通してから報告します**。ルールの実装は `app/textlint/`（`rules/` と共通のマスク処理 `lib/svx.js`）、表記揺れの辞書は `app/textlint/prh.yml`、使い方と設計の詳細は `app/textlint/README.md` にあります。
 
 | ルール | 内容 |
 | --- | --- |
@@ -152,7 +155,7 @@ analyzer が生成し、writer が参照する中心的な成果物です。い�
 
 表記揺れは `prh.yml` の辞書（`textlint-rule-prh`）で統一します。主な項目は `もともと`→`元々`、形式名詞の `ぶん`→`分`、`あいだ`→`間` などで（全項目は `app/textlint/README.md` の表）、項目を増やすときは辞書に追記します。辞書には `specs`（置き換わってほしい例・**ほしくない**例）を書いておき、textlint の起動時に検証させます。writer は**指摘どおりに直し、辞書を書き換えて指摘を消すことはしません**（辞書に載せる表記を決めるのは著者）。
 
-`npm run lint:svx:fix` で自動修正できますが、英字に隣接する数字（`600nm` など）と引数が続く関数名（`sin(x)`）は囲む範囲の判断を要するため報告だけが出ます。検査されるのは上の4ルールと表記揺れの辞書だけなので、ボールド体の禁止・`:Anki[]` の乱用・分類タグとフロントマターの整合などは `syntax-guide.md` の「仕上げチェックリスト」で writer が自分で確認します（**エラー0件は記法ルールを満たした証明にはなりません**）。
+`npm run lint:svx:fix` で自動修正できますが、英字に隣接する数字（`600nm` など）と引数が続く関数名（`sin(x)`）は囲む範囲の判断を要するため報告だけが出ます。検査されるのは上の4ルールと表記揺れの辞書だけなので、ボールド体の禁止・`:Anki[]` の乱用・分類タグとフロントマターの整合などは `syntax-guide.md`・`math-notation-guide.md` の「仕上げチェックリスト」で writer が自分で確認します（**エラー0件は記法ルールを満たした証明にはなりません**）。
 
 検査は2つのパスに分かれています（`lint:svx` は両方を走らせます）。**記法ルール**（`lint:svx:syntax`）は、ルール導入時点で違反を含んでいた既存記事を `app/.textlintignore` にベースラインとして列挙し、**新しく書く記事から適用**する運用です。ベースラインの記事を編集したときは検査されないため、writer は自分が書いた・直した箇所について記法ルールを守り、記事全体の既存の違反をついでに直そうとはしません。一方**表記揺れ**（`lint:svx:notation`）はベースラインの対象外で、**常に全記事を検査します**（記事全体で表記が揃っていることに意味があり、直す手間も1語の置き換えで済むため）。
 
@@ -311,9 +314,9 @@ manifest の `freezeConfidence: true` を渡すと、統合エージェントは
 
 ### モードと読み込み範囲
 
-依頼内容と引数から次のモードを判断し、モードに応じたガイドだけを読みます（4ガイドの合計が大きいため、必要な範囲に絞る）。`syntax-guide.md` は全モードで必須です。
+依頼内容と引数から次のモードを判断し、モードに応じたガイドだけを読みます（4ガイドの合計が大きいため、必要な範囲に絞る）。`syntax-guide.md` と `math-notation-guide.md` は全モードで必須です。
 
-| モード | 読むガイド（`syntax-guide.md` に加えて） | 用途 |
+| モード | 読むガイド（`syntax-guide.md`・`math-notation-guide.md` に加えて） | 用途 |
 | --- | --- | --- |
 | 生成 | 4ガイド全部 | 白紙・雛形・書きかけのファイルに本文を新しく書く |
 | 推敲 | `writing-style.md`・`stylistic-quirks.md`・`refine-style.md` | 既存文章を依頼された範囲で見直す |
@@ -326,11 +329,11 @@ manifest の `freezeConfidence: true` を渡すと、統合エージェントは
 
 ### 参照するガイドと優先順位
 
-本文を書く前に、まず `writing-guides/syntax-guide.md`（必須の記法・書式）を読み、そのうえでモードに応じた文体ガイドを読みます。ガイド同士が競合する場合は、次の順序で判断します。
+本文を書く前に、まず `writing-guides/syntax-guide.md` と `writing-guides/math-notation-guide.md`（必須の記法・書式）を読み、そのうえでモードに応じた文体ガイドを読みます。ガイド同士が競合する場合は、次の順序で判断します。
 
 1. ユーザーが今回明示した指示
 2. 記事の目的と技術的な正確さ
-3. `writing-guides/syntax-guide.md`（記法・書式の必須ルール）
+3. `writing-guides/syntax-guide.md`・`writing-guides/math-notation-guide.md`（記法・書式の必須ルール）
 4. `thinking-flow.md`
 5. `writing-style.md`
 6. `refine-style.md`
@@ -353,7 +356,7 @@ manifest の `freezeConfidence: true` を渡すと、統合エージェントは
 5. 表現を調整する（`stylistic-quirks.md`、生成・推敲・編集モード。最終的な語り口の調整のみ）
 6. 推敲する（`refine-style.md`、全モード。AI草稿に対して著者が行いやすい修正を適用）
 7. スタイルレビューを行う（Thinking Flow / Writing Style / Stylistic Quirks / Refine Style の4観点。推敲・編集モードでは、そのモードで読んだガイドに対応する観点だけを使う）
-8. 記法・表記チェックを通す（`npm run lint:svx` のエラーを解消し、textlint が見ない項目は `syntax-guide.md` の「仕上げチェックリスト」で確認する）
+8. 記法・表記チェックを通す（`npm run lint:svx` のエラーを解消し、textlint が見ない項目は `syntax-guide.md`・`math-notation-guide.md` の「仕上げチェックリスト」で確認する）
 
 ### 既存コンテンツの扱い
 
@@ -367,11 +370,11 @@ manifest の `freezeConfidence: true` を渡すと、統合エージェントは
 
 ### 記事ページの編集（編集モード）
 
-slug（＋編集指示）を渡すと、すでに本文のある記事ページ（`+page.svx`）に指示された編集を加える編集モードで動きます。読むガイドは `syntax-guide.md`＋`refine-style.md`＋`stylistic-quirks.md`（構成に触らない局所的な修正なら `refine-style.md` だけ、構成変更を伴う指示なら `writing-style.md`、説明の書き足しを伴う指示なら `thinking-flow.md` も追加）。slug で対象ファイルを特定し、`syntax-guide.md` と読み込んだ文体ガイド（特に `refine-style.md`）に沿って編集し、**指示の直接対象だけでなく前後の文章・セクションの流れも整えて**報告します。編集対象でない敬体の既存文章と見出し構成は変更しません。既存の `:Anki[]` / `:Mark[]` も、編集指示が明示的に求めない限り**絶対に勝手に外さず**、文を書き換える場合も落としません（対象語が動くなら一緒に動かす）。実際の文章変更の規律は「既存文章を推敲する場合」と共通です。報告の前に `npm run lint:svx` を通します（→「機械的に検査できるルール」）。
+slug（＋編集指示）を渡すと、すでに本文のある記事ページ（`+page.svx`）に指示された編集を加える編集モードで動きます。読むガイドは `syntax-guide.md`＋`math-notation-guide.md`＋`refine-style.md`＋`stylistic-quirks.md`（構成に触らない局所的な修正なら `refine-style.md` だけ、構成変更を伴う指示なら `writing-style.md`、説明の書き足しを伴う指示なら `thinking-flow.md` も追加）。slug で対象ファイルを特定し、`syntax-guide.md`・`math-notation-guide.md` と読み込んだ文体ガイド（特に `refine-style.md`）に沿って編集し、**指示の直接対象だけでなく前後の文章・セクションの流れも整えて**報告します。編集対象でない敬体の既存文章と見出し構成は変更しません。既存の `:Anki[]` / `:Mark[]` も、編集指示が明示的に求めない限り**絶対に勝手に外さず**、文を書き換える場合も落としません（対象語が動くなら一緒に動かす）。実際の文章変更の規律は「既存文章を推敲する場合」と共通です。報告の前に `npm run lint:svx` を通します（→「機械的に検査できるルール」）。
 
 ### ガイドが空・不足している場合
 
-ガイドが存在しない・内容が薄い・互いに矛盾している場合は、推測で著者の特徴を補いません。`evidence/` や個別記事を開いて埋め合わせることもしません。利用できるガイドの範囲だけを適用し、不明な点は一般的に自然な文章として処理し、強い模倣を避け、必要に応じて analyzer によるガイド更新が必要であることを示します。4つの文体ガイドが空の間も、`syntax-guide.md` の記法・書式ルールは常に適用されます。
+ガイドが存在しない・内容が薄い・互いに矛盾している場合は、推測で著者の特徴を補いません。`evidence/` や個別記事を開いて埋め合わせることもしません。利用できるガイドの範囲だけを適用し、不明な点は一般的に自然な文章として処理し、強い模倣を避け、必要に応じて analyzer によるガイド更新が必要であることを示します。4つの文体ガイドが空の間も、`syntax-guide.md`・`math-notation-guide.md` の記法・書式ルールは常に適用されます。
 
 なお、ルールに根拠が書かれていないのは「内容が薄い」ことではありません。根拠は分析専用の `evidence/` へ分離してあり、執筆に必要な情報はルール欄・適用条件欄・確度ラベルに揃っている前提です。
 
@@ -408,6 +411,7 @@ scripts/
 
 writing-guides/
   ├─ syntax-guide.md        … 記法・書式の必須ルール（writer が参照）
+  ├─ math-notation-guide.md … 数式の記法（syntax-guide.md から切り出し / writer が参照）
   ├─ thinking-flow.md       ┐ ルール見出しに [TF-001] 形式のIDが付く
   ├─ writing-style.md       │ analyzer が生成 / writer が参照
   ├─ stylistic-quirks.md    │ （主要ルールのみ）
@@ -428,7 +432,7 @@ writing-guides/
 app/
   ├─ textlint/
   │    ├─ README.md         … 記法・表記チェックの使い方・対象外・ベースライン運用
-  │    ├─ rules/            … syntax-guide.md の4ルールの実装（writer が npm run lint:svx で通す）
+  │    ├─ rules/            … 上記2ファイルの4ルールの実装（writer が npm run lint:svx で通す）
   │    ├─ lib/svx.js        … ディレクティブ・数式などを検査対象から外す共通処理
   │    └─ prh.yml           … 表記揺れの統一辞書（specs で自己テスト）
   ├─ .textlintrc.json       … 記法パスの設定（Markdown プラグインの extensions に .svx を追加）
@@ -462,4 +466,4 @@ app/
 - 4ガイド計は 162,604字（251ルール）。`spec/writing-guides-compaction.md` の受け入れ条件（132,231字以下）はまだ満たしていない。移行時点の 146,559字からの増加は、その後の分析ラウンドで追加されたルールとルールID の付与（約2,300字）による。ルール統合・補助項目の圧縮・上限値の見直しのいずれを採るかは判断待ち（`spec/COMPACTION-TASKLIST.md` フェーズ7）
 - `pending/` の1行化は**未着手**。523項目が旧形式の散文のまま残っており、`style-pending-promote.mjs` の昇格候補の抽出対象に入らない。それまでは発見モードで散文を読んで判断する（経緯と設計は `spec/analyzer-cost-reduction.md`）
 - `writing-guides/STYLE-ANALYSIS-TASKLIST.md` の初期状態は、これまでの analyzer 実行コミット（`writing-guides/` を触ったコミット）のスコープと、その時点で公開済み（非 draft）だった記事を突き合わせて復元したもの。以降は analyzer 実行のたびに更新する
-- `writing-guides/syntax-guide.md` が記法・書式の必須ルールの正典。かつて存在した `write-content-draft` / `edit-content-draft` スキルとその `style-guide.md` は author-style-writer へ統合済みで、記事の草稿執筆・編集は author-style-writer が担う
+- `writing-guides/syntax-guide.md` と `writing-guides/math-notation-guide.md`（数式の記法を切り出したもの）が記法・書式の必須ルールの正典。かつて存在した `write-content-draft` / `edit-content-draft` スキルとその `style-guide.md` は author-style-writer へ統合済みで、記事の草稿執筆・編集は author-style-writer が担う

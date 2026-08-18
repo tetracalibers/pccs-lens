@@ -41,8 +41,9 @@ if (refFlag >= 0 && !ref) {
 
 /**
  * 測定対象は writer が実際に読むファイル。
- * syntax-guide.md は記法の正典で analyzer は書き換えないが、writer が読む総量には効くので
- * 合計へ含める（ルール見出しの形式が本体4ファイルと違うため、ルール数は数えない）。
+ * syntax-guide.md と math-notation-guide.md（数式の記法を切り出したもの）は
+ * 記法の正典で analyzer は書き換えないが、writer が読む総量には効くので合計へ含める
+ * （ルール見出しの形式が本体4ファイルと違うため、ルール数は数えない）。
  */
 const TARGETS = [
   ...ASPECTS.map((a) => ({
@@ -56,6 +57,13 @@ const TARGETS = [
     name: "syntax-guide.md",
     label: "記法",
     file: path.join(GUIDES_DIR, "syntax-guide.md"),
+    countRules: false,
+    owned: false
+  },
+  {
+    name: "math-notation-guide.md",
+    label: "数式",
+    file: path.join(GUIDES_DIR, "math-notation-guide.md"),
     countRules: false,
     owned: false
   }
@@ -147,7 +155,7 @@ const ruleCol = (r) =>
       : `${r.beforeRules} → ${r.afterRules}`
 
 const line = (name, size, delta, growth, rules, suffix = "") =>
-  `  ${padEnd(name, 22)}${padStart(size, 20)}${padStart(delta, 11)}${padStart(growth, 10)}${padStart(rules, 12)}${suffix}`
+  `  ${padEnd(name, 24)}${padStart(size, 20)}${padStart(delta, 11)}${padStart(growth, 10)}${padStart(rules, 12)}${suffix}`
 
 console.log(
   `=== writer が読むガイドの肥大化（${ref} → ${ref === "HEAD" ? "作業ツリー" : "HEAD"}）\n`
@@ -155,7 +163,7 @@ console.log(
 console.log(line("ファイル", "文字数", "増減", "肥大化", "ルール数"))
 for (const r of rows) {
   if (r.missing) {
-    console.log(`  ${padEnd(r.name, 22)}（ファイルが見つかりません）`)
+    console.log(`  ${padEnd(r.name, 24)}（ファイルが見つかりません）`)
     continue
   }
   const size = r.isNew ? `${n(r.afterChars)}（新規）` : `${n(r.beforeChars)} → ${n(r.afterChars)}`

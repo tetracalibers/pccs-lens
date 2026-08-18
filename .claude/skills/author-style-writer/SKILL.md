@@ -1,6 +1,6 @@
 ---
 name: author-style-writer
-description: 記法・書式の必須ルール（syntax-guide.md）と、thinking-flow.md、writing-style.md、stylistic-quirks.md、refine-style.mdを参照し、著者の思考過程、文章構成、言い回し、修正傾向を反映した文章を生成・推敲・編集する。著者本人らしい技術記事や解説文を書きたい場合、AI生成文を著者らしく修正したい場合、既存の記事ページ（+page.svx）に指示された編集を加えたい場合、既存のスタイルガイドに沿って記事をレビューしたい場合に使用する。
+description: 記法・書式の必須ルール（syntax-guide.md・math-notation-guide.md）と、thinking-flow.md、writing-style.md、stylistic-quirks.md、refine-style.mdを参照し、著者の思考過程、文章構成、言い回し、修正傾向を反映した文章を生成・推敲・編集する。著者本人らしい技術記事や解説文を書きたい場合、AI生成文を著者らしく修正したい場合、既存の記事ページ（+page.svx）に指示された編集を加えたい場合、既存のスタイルガイドに沿って記事をレビューしたい場合に使用する。
 ---
 
 # Author Style Writer
@@ -29,7 +29,7 @@ description: 記法・書式の必須ルール（syntax-guide.md）と、thinkin
 
 ### 必須の記法・書式ルール
 
-本文を書く前に、リポジトリ直下の `writing-guides/syntax-guide.md` を必ず読み、そのすべてのルールに従う。これは記事本文の記法・書式（独自ディレクティブ、`:Anki[]`、数式、コード、禁止事項など）を定めた必須ガイドで、著者の文体に関わらず常に適用する。文体上の癖よりも、この記法・書式ルールを優先する。
+本文を書く前に、リポジトリ直下の `writing-guides/syntax-guide.md` と `writing-guides/math-notation-guide.md` を必ず読み、そのすべてのルールに従う。これらは記事本文の記法・書式（独自ディレクティブ、`:Anki[]`、数式、コード、禁止事項など）を定めた必須ガイドで、著者の文体に関わらず常に適用する。**数式（KaTeX）の記法は `math-notation-guide.md`、それ以外の記法は `syntax-guide.md` が持つ。** 文体上の癖よりも、この記法・書式ルールを優先する。
 
 **強調は `:Anki[]` に一本化し、`:Mark[]` は自分から使わない。** `:Mark[]` は暗記モードで隠れない強調で、どの語をそれにするかは著者（人間）が判断する領域なので、このスキルの側から選ばない。既存の `:Mark[]` は `:Anki[]` に変えずそのまま残す（→ `syntax-guide.md` ルール1）。
 
@@ -52,9 +52,9 @@ description: 記法・書式の必須ルール（syntax-guide.md）と、thinkin
 
 ### モード別の読み込み範囲
 
-4ガイドは合計で大きいため、**モードに応じて必要なガイドだけを読む。** `syntax-guide.md` は全モードで必須。
+4ガイドは合計で大きいため、**モードに応じて必要なガイドだけを読む。** `syntax-guide.md` と `math-notation-guide.md` は全モードで必須。
 
-| モード | 読むガイド（`syntax-guide.md` に加えて） | 読まないガイド |
+| モード | 読むガイド（`syntax-guide.md`・`math-notation-guide.md` に加えて） | 読まないガイド |
 | --- | --- | --- |
 | 生成 | `thinking-flow.md`・`writing-style.md`・`stylistic-quirks.md`・`refine-style.md`（全部） | — |
 | 推敲 | `writing-style.md`・`stylistic-quirks.md`・`refine-style.md` | `thinking-flow.md` |
@@ -105,7 +105,7 @@ description: 記法・書式の必須ルール（syntax-guide.md）と、thinkin
 
 1. ユーザーが今回明示した指示
 2. 記事の目的と技術的な正確さ
-3. `writing-guides/syntax-guide.md`（記法・書式の必須ルール）
+3. `writing-guides/syntax-guide.md`・`writing-guides/math-notation-guide.md`（記法・書式の必須ルール）
 4. `thinking-flow.md`
 5. `writing-style.md`
 6. `refine-style.md`
@@ -119,7 +119,7 @@ description: 記法・書式の必須ルール（syntax-guide.md）と、thinkin
 
 ## 記法・表記チェック
 
-`syntax-guide.md` の記法ルールのうち機械的に判定できる4つと、表記揺れの統一は textlint で検査できる。**生成・推敲・編集のどのモードでも、本文の変更を終えたら `app` ディレクトリで実行し、エラーを解消してから報告する。**
+`syntax-guide.md`・`math-notation-guide.md` の記法ルールのうち機械的に判定できる4つと、表記揺れの統一は textlint で検査できる。**生成・推敲・編集のどのモードでも、本文の変更を終えたら `app` ディレクトリで実行し、エラーを解消してから報告する。**
 
 ```bash
 npm run lint:svx        # 検査する（記法＋表記揺れ）
@@ -139,7 +139,7 @@ npm run lint:svx:fix    # 自動修正できるものを直す
 
 - **`npm run lint:svx:fix` に任せきりにしない。** 英字に隣接する数字（`600nm`・`3DCG` など）と、引数が続く関数名（`sin(x)`）は、どこまでを囲むかが判断を要するため自動修正されず報告だけが出る。書いた内容に照らして手で直す。
 - **`.svx` だけの変更なら `npm run check` は不要**（CLAUDE.md「品質チェック」）。代わりにこの記法・表記チェックを通す。
-- **textlint が見るのは上の4ルールと表記揺れの辞書だけ。** ボールド体の禁止・`:Anki[]` の乱用・分類タグとフロントマターの整合・ディレクティブの使い分けなどは検出されないので、`syntax-guide.md` の「仕上げチェックリスト」で自分で確認する。**エラー0件は記法ルールを満たした証明にはならない。**
+- **textlint が見るのは上の4ルールと表記揺れの辞書だけ。** ボールド体の禁止・`:Anki[]` の乱用・分類タグとフロントマターの整合・ディレクティブの使い分けなどは検出されないので、`syntax-guide.md`・`math-notation-guide.md` の「仕上げチェックリスト」で自分で確認する。**エラー0件は記法ルールを満たした証明にはならない。**
 - **既存記事は記法ルールのベースラインで対象外になっていることがある。** ルール導入時点で違反を含んでいた記事は `app/.textlintignore` に列挙されており、その記事を編集しても記法ルールは検査されない（`npm run lint:svx:syntax` のパスだけがこの影響を受ける）。その場合は、自分が書いた・直した箇所については記法ルールを守り、**記事全体の既存の違反をついでに直そうとしない**（依頼されていない変更になる）。ファイル単体で確認したいときは、ベースラインを無効にして次のように実行できる（記事の未修正部分のエラーも出るので、自分の変更箇所だけを見る）。
 
   ```bash
@@ -150,7 +150,7 @@ npm run lint:svx:fix    # 自動修正できるものを直す
 
 ## 基本ワークフロー（生成モード）
 
-このワークフローは生成モードの手順である。`syntax-guide.md` と4ガイド全部を読んで進める（→「モード別の読み込み範囲」）。推敲・編集の場合は「既存文章を推敲する場合」「記事ページを編集する場合」へ進み、読み込み範囲もそちらに従う。
+このワークフローは生成モードの手順である。`syntax-guide.md`・`math-notation-guide.md` と4ガイド全部を読んで進める（→「モード別の読み込み範囲」）。推敲・編集の場合は「既存文章を推敲する場合」「記事ページを編集する場合」へ進み、読み込み範囲もそちらに従う。
 
 ### 1. 執筆条件を整理する
 
@@ -290,7 +290,7 @@ npm run lint:svx:fix    # 自動修正できるものを直す
 
 ### 8. 記法・表記チェックを通す
 
-`npm run lint:svx` を実行し、検出されたエラーを解消する（→「記法・表記チェック」）。あわせて `syntax-guide.md` の「仕上げチェックリスト」のうち textlint が見ない項目を自分で確認する。
+`npm run lint:svx` を実行し、検出されたエラーを解消する（→「記法・表記チェック」）。あわせて `syntax-guide.md`・`math-notation-guide.md` の「仕上げチェックリスト」のうち textlint が見ない項目を自分で確認する。
 
 ## 既存コンテンツの扱い
 
@@ -357,8 +357,8 @@ npm run lint:svx:fix    # 自動修正できるものを直す
 
 ### E3. 編集する
 
-- **読むガイドは `syntax-guide.md`＋`refine-style.md`＋`stylistic-quirks.md`。** 語句の言い換え・文末の調整・表記の統一のように構成に触らない修正なら `refine-style.md` だけでよい。節の追加・並べ替え・見出し構成の変更に及ぶ指示なら `writing-style.md` を、新しい説明を書き足す指示なら `thinking-flow.md` も読む（→「モード別の読み込み範囲」）。
-- 実際の文章変更は「既存文章を推敲する場合」の原則に従う（全面改稿しない、依頼された範囲に限る、元の意味と有効な表現を保つ）。`writing-guides/syntax-guide.md` と読み込んだ文体ガイド（特に `refine-style.md`）を適用する。
+- **読むガイドは `syntax-guide.md`＋`math-notation-guide.md`＋`refine-style.md`＋`stylistic-quirks.md`。** 語句の言い換え・文末の調整・表記の統一のように構成に触らない修正なら `refine-style.md` だけでよい。節の追加・並べ替え・見出し構成の変更に及ぶ指示なら `writing-style.md` を、新しい説明を書き足す指示なら `thinking-flow.md` も読む（→「モード別の読み込み範囲」）。
+- 実際の文章変更は「既存文章を推敲する場合」の原則に従う（全面改稿しない、依頼された範囲に限る、元の意味と有効な表現を保つ）。`writing-guides/syntax-guide.md`・`writing-guides/math-notation-guide.md` と読み込んだ文体ガイド（特に `refine-style.md`）を適用する。
 - **指示の直接対象だけでなく、前後の文章・前後のセクションの「流れ」も整える**（接続の唐突さや重複が生じないようにする）。
 - 「既存コンテンツの扱い」の原則を守る。編集対象でない敬体の既存文章は、意味・表現・順序を変えない。見出し構成（テキスト・順序・分類タグ）は、編集指示が明示的に求めない限り変更しない。
 - **既存の `:Anki[]` / `:Mark[]` は絶対に勝手に外さない。** 編集指示が明示的に求めない限り、囲む語も範囲も保持する。編集対象の文を書き換える場合でも落とさず、対象語が動くなら一緒に動かす。`:Mark[]` を `:Anki[]` に変えることもしない（→「既存コンテンツの扱い」）。
@@ -378,7 +378,7 @@ npm run lint:svx:fix    # 自動修正できるものを直す
 
 ユーザーが既存文章の修正を求めた場合は、内容を最初から全面的に書き換えない。
 
-**読むガイドは `syntax-guide.md`＋`writing-style.md`＋`stylistic-quirks.md`＋`refine-style.md`。** `thinking-flow.md` は読まない。ただし依頼が「必要な説明が足りていないか見る」「構成から作り直す」に及ぶ場合は、`thinking-flow.md` も読んで生成モードと同じ範囲で扱う（→「モード別の読み込み範囲」）。
+**読むガイドは `syntax-guide.md`＋`math-notation-guide.md`＋`writing-style.md`＋`stylistic-quirks.md`＋`refine-style.md`。** `thinking-flow.md` は読まない。ただし依頼が「必要な説明が足りていないか見る」「構成から作り直す」に及ぶ場合は、`thinking-flow.md` も読んで生成モードと同じ範囲で扱う（→「モード別の読み込み範囲」）。
 
 次の順序で処理する。
 
@@ -434,7 +434,7 @@ npm run lint:svx:fix    # 自動修正できるものを直す
 
 - 記事の目的と読者に合っている
 - 技術的または論理的に正確である
-- 記法・書式が `writing-guides/syntax-guide.md` に従っている
+- 記法・書式が `writing-guides/syntax-guide.md`・`writing-guides/math-notation-guide.md` に従っている
 - `npm run lint:svx` が通っている（ベースラインで対象外の記事では、自分が書いた・直した箇所が記法ルールを満たしている）
 - 思考の流れが自然である
 - 構成が著者の傾向を反映している
