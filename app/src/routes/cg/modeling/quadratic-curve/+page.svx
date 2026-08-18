@@ -13,6 +13,7 @@ draft: true
   import ConicSectionDemo from '$lib/demo/threejs/modeling/quadratic-curve/conic-section/ConicSectionDemo.svelte'
   import FocusDirectrixDemo from '$lib/demo/threejs/modeling/quadratic-curve/focus-directrix/FocusDirectrixDemo.svelte'
   import GeneratrixRevolutionDemo from '$lib/demo/threejs/modeling/quadratic-curve/generatrix-revolution/GeneratrixRevolutionDemo.svelte'
+  import HyperbolaAsymptotesDemo from '$lib/demo/threejs/modeling/quadratic-curve/hyperbola-asymptotes/HyperbolaAsymptotesDemo.svelte'
   import HyperbolicFunctionsDemo from '$lib/demo/threejs/modeling/quadratic-curve/hyperbolic-functions/HyperbolicFunctionsDemo.svelte'
 </script>
 
@@ -455,11 +456,108 @@ $$\dfrac{x^2}{a^2} = 1 + \dfrac{y^2}{b^2}$$ と書き直すと、右辺は必ず
 
 $$x^2$$ が $$a^2$$ より小さいと左辺が`1`未満になってしまうため、$$x$$ の絶対値は $$a$$ より小さくなれず、直線 $$x = a$$ の右側と $$x = -a$$ の左側に曲線が分かれます。$$y$$ を大きくしていくと右辺の`1`が効かなくなり、曲線は $$y = \pm\dfrac{b}{a}x$$ という`2`本の直線に限りなく近づいていきます。
 
-:::Todo
-次の内容を描き、`a`と`y`を動かせるデモ
+:::Action{fixme}
+次の点に着目して、デモを観察してみよう
 
-- 直線 $$x = a$$ の右側と $$x = -a$$ の左側に分かれて現れる曲線
-- $$y$$ を大きくしていったときに曲線が限りなく近づく2本の直線
+- `a`を動かしたとき、曲線が入ってこられない帯の幅と、漸近線の傾きがどう変わるか
+- `y`を大きくしていったとき、曲線の`x`と漸近線の`x`の隔たりがどう変わるか
+:::
+
+<CanvasWrapper>
+  <HyperbolaAsymptotesDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 標準形 x²/a² - y²/b² = 1 の右側の枝で、高さ y にある点の x
+const hyperbolaX = (y: number) => A_CURRENT * Math.sqrt(1 + (y * y) / (RADIUS_B * RADIUS_B))
+
+// 漸近線 y = ±(b/a)x を x について解いた形。高さ y にある点の x
+const asymptoteX = (y: number) => (A_CURRENT * y) / RADIUS_B
+
+// y を刻んで、その高さでの x を並べた折れ線
+const addCurve = (color: string, z: number, toX: (y: number) => number) => {
+  const positions = new Float32BufferAttribute(new Float32Array((CURVE_SEGMENTS + 1) * 3), 3)
+  const geometry = new BufferGeometry().setAttribute("position", positions)
+  const material = new LineBasicMaterial({ color })
+  scene.add(new Line(geometry, material))
+
+  for (let i = 0; i <= CURVE_SEGMENTS; i++) {
+    const y = -CURVE_Y_MAX + 2 * CURVE_Y_MAX * (i / CURVE_SEGMENTS)
+    positions.setXYZ(i, toX(y), y, z)
+  }
+  positions.needsUpdate = true
+}
+
+// 両端を指定して引く 1 本の線分
+const addSegment = (
+  color: string,
+  z: number,
+  fromX: number,
+  fromY: number,
+  toX: number,
+  toY: number
+) => {
+  const geometry = new BufferGeometry().setFromPoints([
+    new Vector3(fromX, fromY, z),
+    new Vector3(toX, toY, z)
+  ])
+  const material = new LineBasicMaterial({ color })
+  scene.add(new LineSegments(geometry, material))
+}
+
+// 特定の位置を示す球
+const addMarker = (color: string, radius: number, x: number, y: number) => {
+  const geometry = new SphereGeometry(radius, 16, 12)
+  const material = new MeshBasicMaterial({ color })
+  const marker = new Mesh(geometry, material)
+  marker.position.set(x, y, LAYER_POINT)
+  scene.add(marker)
+}
+
+// x の絶対値が a より小さくなれない、すなわち曲線が入ってこられない帯とその境界
+const bandGeometry = new PlaneGeometry(A_CURRENT * 2, VERTICAL_HALF * 2)
+const bandMaterial = new MeshBasicMaterial({
+  color: HELPER_COLOR,
+  transparent: true,
+  opacity: BAND_OPACITY,
+  depthWrite: false
+})
+const band = new Mesh(bandGeometry, bandMaterial)
+band.position.z = LAYER_BAND
+scene.add(band)
+
+addSegment(HELPER_COLOR, LAYER_HELPER, A_CURRENT, -VERTICAL_HALF, A_CURRENT, VERTICAL_HALF)
+addSegment(HELPER_COLOR, LAYER_HELPER, -A_CURRENT, -VERTICAL_HALF, -A_CURRENT, VERTICAL_HALF)
+
+// y を大きくしていったときに曲線が限りなく近づく 2 本の直線。
+// どちらも原点を通る直線なので、上端と下端を結ぶだけでよい
+const asymptoteTop = asymptoteX(CURVE_Y_MAX)
+addSegment(ASYMPTOTE_COLOR, LAYER_ASYMPTOTE, -asymptoteTop, -CURVE_Y_MAX, asymptoteTop, CURVE_Y_MAX)
+addSegment(ASYMPTOTE_COLOR, LAYER_ASYMPTOTE, asymptoteTop, -CURVE_Y_MAX, -asymptoteTop, CURVE_Y_MAX)
+
+// 帯を挟んで右と左に分かれる 2 本の枝
+addCurve(CURVE_COLOR, LAYER_CURVE, hyperbolaX)
+addCurve(CURVE_COLOR, LAYER_CURVE, (y) => -hyperbolaX(y))
+
+// 曲線上の点と、同じ高さで漸近線の上にある点。
+// 高さが負のときに右の枝が近づく先は、傾きが負のほうの漸近線なので、絶対値で見る
+const curveX = hyperbolaX(Y_CURRENT)
+const footX = asymptoteX(Math.abs(Y_CURRENT))
+
+addMarker(POINT_COLOR, POINT_RADIUS, curveX, Y_CURRENT)
+addMarker(POINT_COLOR, POINT_RADIUS, -curveX, Y_CURRENT)
+addMarker(ASYMPTOTE_COLOR, ANCHOR_RADIUS, footX, Y_CURRENT)
+addMarker(ASYMPTOTE_COLOR, ANCHOR_RADIUS, -footX, Y_CURRENT)
+
+// その高さでの、曲線と漸近線の隔たり。y を大きくするほど 0 へ向かう
+addSegment(GAP_COLOR, LAYER_GAP, footX, Y_CURRENT, curveX, Y_CURRENT)
+addSegment(GAP_COLOR, LAYER_GAP, -footX, Y_CURRENT, -curveX, Y_CURRENT)
+
+const gap = curveX - footX
+```
+
 :::
 
 ## :WithGroupTag[パラメータ形式]{group="{['CG']}"}
