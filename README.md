@@ -232,6 +232,12 @@ npm run data:jis-update
   - `/design-doc-updater` — 引数なし。全観点を分析し `DESIGN.md` 全体を差分更新
   - `/design-doc-updater <コンポーネント名／ディレクトリ名／ブランチ名／観点>` — 指定範囲に限って分析・加筆修正
 - **repository-structure** — リポジトリ構造定義書を更新するためのガイドライン（引数なし）
+- **add-notation-rule** — 記事本文の表記揺れ辞書（`app/textlint/prh.yml`）に項目を追加
+  - `/add-notation-rule <直す前 -> 直した後>[, …]` — 矢印は `->` / `→` / `=>`、複数ペアはカンマ・読点・改行区切り（例: `この時 -> このとき, 例えば -> たとえば`）
+  - `/add-notation-rule` — 引数なし、または向きが読めない指定は尋ねる（どちらの表記に寄せるかを決めるのは著者）
+  - 既存記事での出現を `grep` で調べ、別語の一部になる誤検出（`この時` に対する `この時代` など）を否定先読みで絞ったパターンと `specs`（置き換わる例・**置き換わらない**例）を設計し、**承認を得てから**辞書に追記する
+  - **表記揺れの検査はベースライン（`.textlintignore`）の対象外で全記事に効く。** `npm run lint:svx:notation` で自己テストと検出件数を確認し、既存記事を一括修正するか辞書追加だけに留めるかを確認してから `--fix` する（修正後は `git diff` で属性・props への誤置換を確認）
+  - 辞書を列挙している `app/textlint/README.md` の表と、`author-style-writer` / `author-style-skills.md` の記述を追随させる（6件以上になる場合は列挙をやめて表を参照させる）
 - **update-pr-description** — PRのタイトルと説明文を変更内容に合わせて更新（引数任意）
   - `/update-pr-description <PRのURL>` — 指定したPRを対象にする
   - `/update-pr-description` — 引数なし。現在チェックアウト中のブランチに紐づくPRが対象（PRが無ければ促す）
