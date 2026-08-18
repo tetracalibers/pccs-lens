@@ -90,6 +90,9 @@
     "cg/modeling": {
       "title": "モデリング"
     },
+    "cg/modeling/curve-surface-equations": {
+      "title": "曲線・曲面の数式表現"
+    },
     "cg/modeling/shape-model-overview": {
       "title": "さまざまな形状モデル"
     },
