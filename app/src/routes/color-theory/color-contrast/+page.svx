@@ -69,7 +69,7 @@ graph LR
   <ContrastPreview figure="sf24" ground="dk24" figureLabel="図" groundLabel="地" />
 </SVGWrapper>
 
-例えば、背景色の上に文字が書かれている場合は、文字が:Anki[図]で背景色が:Anki[地]になります。
+たとえば、背景色の上に文字が書かれている場合は、文字が:Anki[図]で背景色が:Anki[地]になります。
 
 対比の具体例では、大きな面積の背景（:Anki[地]）に囲まれた:Anki[図]の色が、背景色の影響を受けて、どのように変化して見えるかを観察していきましょう。
 
