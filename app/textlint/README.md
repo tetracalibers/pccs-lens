@@ -1,6 +1,6 @@
 # 記事本文（`.svx`）の記法・表記チェック
 
-`writing-guides/syntax-guide.md` と `writing-guides/math-notation-guide.md` の記法ルールのうち
+`writing-guides/math-notation-guide.md`（数式・インラインコードの記法）のルールのうち
 機械的に判定できるものと、表記揺れの統一を textlint で検査します。
 
 ## 使い方

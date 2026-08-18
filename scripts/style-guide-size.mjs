@@ -41,7 +41,7 @@ if (refFlag >= 0 && !ref) {
 
 /**
  * 測定対象は writer が実際に読むファイル。
- * syntax-guide.md と math-notation-guide.md（数式の記法を切り出したもの）は
+ * syntax-guide.md と math-notation-guide.md（数式・インラインコードの記法を切り出したもの）は
  * 記法の正典で analyzer は書き換えないが、writer が読む総量には効くので合計へ含める
  * （ルール見出しの形式が本体4ファイルと違うため、ルール数は数えない）。
  */

@@ -29,7 +29,7 @@ description: 記法・書式の必須ルール（syntax-guide.md・math-notation
 
 ### 必須の記法・書式ルール
 
-本文を書く前に、リポジトリ直下の `writing-guides/syntax-guide.md` と `writing-guides/math-notation-guide.md` を必ず読み、そのすべてのルールに従う。これらは記事本文の記法・書式（独自ディレクティブ、`:Anki[]`、数式、コード、禁止事項など）を定めた必須ガイドで、著者の文体に関わらず常に適用する。**数式（KaTeX）の記法は `math-notation-guide.md`、それ以外の記法は `syntax-guide.md` が持つ。** 文体上の癖よりも、この記法・書式ルールを優先する。
+本文を書く前に、リポジトリ直下の `writing-guides/syntax-guide.md` と `writing-guides/math-notation-guide.md` を必ず読み、そのすべてのルールに従う。これらは記事本文の記法・書式（独自ディレクティブ、`:Anki[]`、数式、コード、禁止事項など）を定めた必須ガイドで、著者の文体に関わらず常に適用する。**数式（KaTeX）の記法と、その表記に関わるインラインコードの規約（数字のインラインコード化・前後の空白）は `math-notation-guide.md`、それ以外の記法は `syntax-guide.md` が持つ。** 文体上の癖よりも、この記法・書式ルールを優先する。
 
 **強調は `:Anki[]` に一本化し、`:Mark[]` は自分から使わない。** `:Mark[]` は暗記モードで隠れない強調で、どの語をそれにするかは著者（人間）が判断する領域なので、このスキルの側から選ばない。既存の `:Mark[]` は `:Anki[]` に変えずそのまま残す（→ `syntax-guide.md` ルール1）。
 
@@ -119,7 +119,7 @@ description: 記法・書式の必須ルール（syntax-guide.md・math-notation
 
 ## 記法・表記チェック
 
-`syntax-guide.md`・`math-notation-guide.md` の記法ルールのうち機械的に判定できる4つと、表記揺れの統一は textlint で検査できる。**生成・推敲・編集のどのモードでも、本文の変更を終えたら `app` ディレクトリで実行し、エラーを解消してから報告する。**
+`math-notation-guide.md` の記法ルールのうち機械的に判定できる4つと、表記揺れの統一は textlint で検査できる。**生成・推敲・編集のどのモードでも、本文の変更を終えたら `app` ディレクトリで実行し、エラーを解消してから報告する。**
 
 ```bash
 npm run lint:svx        # 検査する（記法＋表記揺れ）

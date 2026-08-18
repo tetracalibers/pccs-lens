@@ -138,13 +138,13 @@ analyzer が生成し、writer が参照する中心的な成果物です。い�
 
 `writing-guides/syntax-guide.md` と `writing-guides/math-notation-guide.md` は上記4ガイドとは性質が異なり、**記事本文の記法・書式（独自ディレクティブ、`:Anki[]`、数式、コード、禁止事項など）を定めた必須ルール**です。著者の文体に関わらず常に従います。writer はこれを最優先級で参照します（後述の優先順位を参照）。
 
-2ファイルの分担は、**数式（KaTeX）の記法が `math-notation-guide.md`、それ以外の記法（ディレクティブ、`:Anki[]`、インラインコード、見出しの分類タグ、リンク、コードブロック・擬似コード、禁止事項）が `syntax-guide.md`** です。仕上げチェックリストもそれぞれのファイルが持ちます。
+2ファイルの分担は、**数式（KaTeX）の記法と、その表記に関わるインラインコードの規約（数字のインラインコード化・前後の空白）が `math-notation-guide.md`、それ以外の記法（ディレクティブ、`:Anki[]`、見出しの分類タグ、リンク、コードブロック・擬似コード、禁止事項）が `syntax-guide.md`** です。仕上げチェックリストもそれぞれのファイルが持ちます。
 
 強調の記法については、**writer が使うのは `:Anki[]`（暗記モードで隠れる強調）だけ**という線引きがあります。同じ見た目で暗記モードでは隠れない `:Mark[]` も記法として存在しますが、どの語をそれにするかは著者（人間）の判断領域なので、writer は自分から `:Mark[]` を書きません（既存の `:Mark[]` は外さず `:Anki[]` へ変えもしません）。詳細は `syntax-guide.md` ルール1。
 
 #### 機械的に検査できるルール：`npm run lint:svx`
 
-`syntax-guide.md`・`math-notation-guide.md` のルールのうち4つと**表記揺れの統一**は textlint で検査でき、writer は**どのモードでも本文の変更を終えたら `npm run lint:svx`（`app` ディレクトリ）を通してから報告します**。ルールの実装は `app/textlint/`（`rules/` と共通のマスク処理 `lib/svx.js`）、表記揺れの辞書は `app/textlint/prh.yml`、使い方と設計の詳細は `app/textlint/README.md` にあります。
+`math-notation-guide.md` のルールのうち4つと**表記揺れの統一**は textlint で検査でき、writer は**どのモードでも本文の変更を終えたら `npm run lint:svx`（`app` ディレクトリ）を通してから報告します**。ルールの実装は `app/textlint/`（`rules/` と共通のマスク処理 `lib/svx.js`）、表記揺れの辞書は `app/textlint/prh.yml`、使い方と設計の詳細は `app/textlint/README.md` にあります。
 
 | ルール | 内容 |
 | --- | --- |
@@ -411,7 +411,7 @@ scripts/
 
 writing-guides/
   ├─ syntax-guide.md        … 記法・書式の必須ルール（writer が参照）
-  ├─ math-notation-guide.md … 数式の記法（syntax-guide.md から切り出し / writer が参照）
+  ├─ math-notation-guide.md … 数式・インラインコードの記法（syntax-guide.md から切り出し）
   ├─ thinking-flow.md       ┐ ルール見出しに [TF-001] 形式のIDが付く
   ├─ writing-style.md       │ analyzer が生成 / writer が参照
   ├─ stylistic-quirks.md    │ （主要ルールのみ）
@@ -432,7 +432,7 @@ writing-guides/
 app/
   ├─ textlint/
   │    ├─ README.md         … 記法・表記チェックの使い方・対象外・ベースライン運用
-  │    ├─ rules/            … 上記2ファイルの4ルールの実装（writer が npm run lint:svx で通す）
+  │    ├─ rules/            … math-notation-guide.md の4ルールの実装（writer が npm run lint:svx で通す）
   │    ├─ lib/svx.js        … ディレクティブ・数式などを検査対象から外す共通処理
   │    └─ prh.yml           … 表記揺れの統一辞書（specs で自己テスト）
   ├─ .textlintrc.json       … 記法パスの設定（Markdown プラグインの extensions に .svx を追加）

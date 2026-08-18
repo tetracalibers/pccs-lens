@@ -1,5 +1,5 @@
 /**
- * 「インラインコードの前後には空白を置かない」（writing-guides/syntax-guide.md）を検査する。
+ * 「インラインコードの前後には空白を置かない」（writing-guides/math-notation-guide.md）を検査する。
  *
  * textlint-rule-ja-space-around-code は隣が日本語のときだけ見るため、
  * `$$\times$$ `1`チャンネル` のような英字・数式との境界を取りこぼす。
