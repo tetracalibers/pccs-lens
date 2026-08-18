@@ -39,6 +39,9 @@
     font-size: 0.8rem;
     line-height: 1.7;
   }
+  .fix :global(*) {
+    font-size: 0.8rem;
+  }
 
   .label {
     font-family: var(--font-mono-base), var(--font-ja-base);
