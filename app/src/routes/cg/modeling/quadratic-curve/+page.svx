@@ -11,6 +11,7 @@ draft: true
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import ConicSectionDemo from '$lib/demo/threejs/modeling/quadratic-curve/conic-section/ConicSectionDemo.svelte'
+  import FocusDirectrixDemo from '$lib/demo/threejs/modeling/quadratic-curve/focus-directrix/FocusDirectrixDemo.svelte'
   import GeneratrixRevolutionDemo from '$lib/demo/threejs/modeling/quadratic-curve/generatrix-revolution/GeneratrixRevolutionDemo.svelte'
   import HyperbolicFunctionsDemo from '$lib/demo/threejs/modeling/quadratic-curve/hyperbolic-functions/HyperbolicFunctionsDemo.svelte'
 </script>
@@ -339,8 +340,81 @@ $$
 
 放物線は、`1`つの定点と`1`本の定直線から等しい距離にある点の集まりとしても定義できます。この定点を:Anki[焦点]、定直線を:Anki[準線]といい、頂点を原点に置いて焦点を $$(p, 0)$$ にとると、準線は $$x = -p$$ になります。
 
-:::Todo
-上の文章を表す放物線のデモ
+:::Action{fixme}
+次の点に着目して、デモを観察してみよう
+
+- `y`を動かして点を曲線上で動かしたとき、焦点までの距離と準線までの距離がどう変わるか
+- `p`を大きくして焦点と準線を原点から離したとき、放物線の開き方がどう変わるか
+:::
+
+<CanvasWrapper>
+  <FocusDirectrixDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 放物線 y² = 4px 上で、高さ y にある点の x
+const parabolaX = (y: number) => (y * y) / (4 * P_CURRENT)
+
+// 焦点と準線から等しい距離にある点の集まりとして現れる放物線。
+// y を刻んで、その高さでの x を並べた折れ線として描く
+const positions = new Float32BufferAttribute(new Float32Array((CURVE_SEGMENTS + 1) * 3), 3)
+const geometry = new BufferGeometry().setAttribute("position", positions)
+const material = new LineBasicMaterial({ color: CURVE_COLOR })
+scene.add(new Line(geometry, material))
+
+for (let i = 0; i <= CURVE_SEGMENTS; i++) {
+  const y = -CURVE_Y_MAX + 2 * CURVE_Y_MAX * (i / CURVE_SEGMENTS)
+  positions.setXYZ(i, parabolaX(y), y, LAYER_CURVE)
+}
+positions.needsUpdate = true
+
+// 両端を指定して引く 1 本の線分
+const addSegment = (
+  color: string,
+  z: number,
+  fromX: number,
+  fromY: number,
+  toX: number,
+  toY: number
+) => {
+  const geometry = new BufferGeometry().setFromPoints([
+    new Vector3(fromX, fromY, z),
+    new Vector3(toX, toY, z)
+  ])
+  const material = new LineBasicMaterial({ color })
+  scene.add(new LineSegments(geometry, material))
+}
+
+// 特定の位置を示す球
+const addMarker = (color: string, radius: number, x: number, y: number) => {
+  const geometry = new SphereGeometry(radius, 16, 12)
+  const material = new MeshBasicMaterial({ color })
+  const marker = new Mesh(geometry, material)
+  marker.position.set(x, y, LAYER_POINT)
+  scene.add(marker)
+}
+
+// 放物線を決める 1 組。定点である焦点 (p, 0) と、定直線である準線 x = -p
+addMarker(DEFINITION_COLOR, ANCHOR_RADIUS, P_CURRENT, 0)
+addSegment(DEFINITION_COLOR, LAYER_HELPER, -P_CURRENT, -AXIS_HALF_Y, -P_CURRENT, AXIS_HALF_Y)
+
+// 曲線上で見ている点と、準線の上でその点から下ろした垂線が当たる位置
+const x = parabolaX(Y_CURRENT)
+addMarker(POINT_COLOR, POINT_RADIUS, x, Y_CURRENT)
+addMarker(DEFINITION_COLOR, ANCHOR_RADIUS, -P_CURRENT, Y_CURRENT)
+
+// 点から焦点・準線へ引いた 2 本の線。長さが等しいことが主題なので、2 本は同じ色にする
+addSegment(DISTANCE_COLOR, LAYER_DISTANCE, x, Y_CURRENT, P_CURRENT, 0)
+addSegment(DISTANCE_COLOR, LAYER_DISTANCE, x, Y_CURRENT, -P_CURRENT, Y_CURRENT)
+
+// 焦点までは 2 点間の距離、準線までは x 方向の隔たり。
+// 別々に求めているが、放物線上の点ではこの 2 つが必ず一致する
+const focusDistance = Math.hypot(x - P_CURRENT, Y_CURRENT)
+const directrixDistance = x + P_CURRENT
+```
+
 :::
 
 この`2`つへの距離が等しいという条件を式にすると $$(x - p)^2 + y^2 = (x + p)^2$$ となり、$$x^2$$ と $$p^2$$ が打ち消し合って $$y^2 = 4px$$ が残ります。
