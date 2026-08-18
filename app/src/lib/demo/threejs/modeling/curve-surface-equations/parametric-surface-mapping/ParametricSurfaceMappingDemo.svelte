@@ -29,6 +29,6 @@
   buildPane={(pane, p) => {
     pane.addBinding(p, "u", { min: 0, max: 1, step: 0.01, label: "u" })
     pane.addBinding(p, "v", { min: 0, max: 1, step: 0.01, label: "v" })
-    pane.addBinding(p, "point", { readonly: true, label: "対応する空間の点" })
+    pane.addBinding(p, "point", { readonly: true, label: "対応する曲面上の点" })
   }}
 />
