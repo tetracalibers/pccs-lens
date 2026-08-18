@@ -1,0 +1,12 @@
+{
+  "route": "cg/modeling/curve-surface-equations",
+  "title": "曲線・曲面の数式表現",
+  "titleLines": [
+    "曲線・曲面の数式表現"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "モデリング"
+  ],
+  "figure": "assets/cg/modeling/curve-surface-equations/figure.png"
+}

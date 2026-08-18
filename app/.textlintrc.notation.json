@@ -1,0 +1,12 @@
+{
+  "plugins": {
+    "@textlint/markdown": {
+      "extensions": [".svx"]
+    }
+  },
+  "rules": {
+    "prh": {
+      "rulePaths": ["./textlint/prh.yml"]
+    }
+  }
+}

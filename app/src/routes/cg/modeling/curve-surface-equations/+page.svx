@@ -3,95 +3,373 @@ layout: guide-content
 title: 曲線・曲面の数式表現 # CG 3-4-1
 
 group: ["CG"]
-
-draft: true
+visual: true
 ---
 
-[さまざまな形状モデル](/cg/modeling/shape-model-overview/)では、立体を稜線・面・中身のどれで捉えるかによって形状モデルを分けましたが、その面や線にあたる曲線・曲面そのものをどう数式で表すかには触れていませんでした。
-表し方はひととおりではなく、どの形式を選ぶかで、表せる形も、曲線上の点の求めやすさも変わります。ここでは、その代表的な`3`つの形式を見ていきます。
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import CircleParameterFormDemo from '$lib/demo/threejs/modeling/curve-surface-equations/circle-parameter-form/CircleParameterFormDemo.svelte'
+  import ExplicitFormLimitsDemo from '$lib/demo/threejs/modeling/curve-surface-equations/explicit-form-limits/ExplicitFormLimitsDemo.svelte'
+  import LineParameterFormDemo from '$lib/demo/threejs/modeling/curve-surface-equations/line-parameter-form/LineParameterFormDemo.svelte'
+  import ParametricSurfaceMappingDemo from '$lib/demo/threejs/modeling/curve-surface-equations/parametric-surface-mapping/ParametricSurfaceMappingDemo.svelte'
+</script>
+
+[さまざまな形状モデル](/cg/modeling/shape-model-overview/)では、立体を稜線・面・中身のどれで捉えるかによって形状モデルを分類しました。ここからは、その面や線にあたる曲線・曲面の数式表現を見ていきます。
 
 ## :WithGroupTag[陽関数形式]{group="{['CG']}"}
 
-:Anki[陽関数形式]は、一方の座標を、もう一方の座標の関数として与える形式です。平面上の曲線であれば、次のように書けます。
+:Anki[陽関数形式]は、一方の座標を、もう一方の座標の関数として与える形式です。
+
+平面上の:Mark[曲線]であれば、次のように書けます。
 
 $$
 y = f(x)
 $$
 
-`x`を決めれば`y`が計算だけで求まるため、曲線上の点は簡単に並べられます。グラフを描くときに使い慣れた形です。
+`x`を決めれば`y`が計算だけで求められ、その座標`(x, y)`の点を並べることで曲線を描きます。グラフを描くときにも使い慣れた形です。
 
-曲面の場合は、高さにあたる座標を、残る`2`つの座標の関数として与えます。
+:Mark[曲面]の場合は、高さにあたる座標を、残る`2`つの座標の関数として与えます。
 
 $$
 z = f(x, y)
 $$
 
-この形は、平面上のどの点にも高さが`1`つずつ割り当てられたものと読めます。地形の起伏はこの形で表せるため、こうした曲面を:Anki[ハイトフィールド]（高さ場）といいます。
+この形は、平面上のどの点にも高さが`1`つずつ割り当てられたものと読めます。地形の起伏はこの形で表せるため、こうした曲面は:Anki[ハイトフィールド]（高さ場）と呼ばれることがあります。
+
+### 陽関数形式で表せる対象
 
 ただし、陽関数形式で表せる形は限られます。
-`x`を決めたときに`y`が`1`つに定まる形しか書けないため、たとえば円のように、`1`つの`x`に`2`つの`y`が対応する曲線は表せません。
+`x`を決めたときに`y`が`1`つに定まる形しか書けないため、たとえば円のような、`1`つの`x`に`2`つの`y`が対応する曲線は表せません。
 
-曲面でも事情は同じです。
-真横を向いた壁や、下へせり出した形は、平面上の同じ位置に複数の高さを必要とするため、ハイトフィールドの枠には収まりません。
+曲面でも同じ問題が起こります。真横を向いた壁や、下へせり出した形は、平面上の同じ位置に複数の高さを必要とするため、ハイトフィールドの枠には収まりません。
 
-:::Todo
-陽関数形式で表せない形の図。`1`つの`x`に`y`が`2`つ対応する円と、平面上の同じ位置に高さが`2`つ以上あるせり出した曲面を並べ、どちらも陽関数形式の枠に収まらないことを示す。
+:::Action
+`x`と`y`を動かして、`x`の位置を表す縦線が円・曲面と交わる点を数えてみよう
+
+- :Mark[円と交わる点]は、同じ`x`の位置に`2`つ現れることがある
+- :Mark[曲面と交わる点]は、同じ`x`の位置に`3`つ現れることがある
+:::
+
+<CanvasWrapper>
+  <ExplicitFormLimitsDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 左に円、右にせり出した曲面を並べる
+const curvePanel = new Group()
+curvePanel.position.x = -GROUP_OFFSET
+const surfacePanel = new Group()
+surfacePanel.position.set(GROUP_OFFSET, -GROUND_DROP, 0)
+scene.add(curvePanel, surfacePanel)
+
+// 円 x² + y² − r² = 0。xy 平面を立てて置き、x が右・y が上のまま読めるようにする
+const circlePoints: Vector3[] = []
+for (let i = 0; i < CIRCLE_SEGMENTS; i++) {
+  const angle = (i / CIRCLE_SEGMENTS) * Math.PI * 2
+  circlePoints.push(
+    new Vector3(CIRCLE_RADIUS * Math.cos(angle), CIRCLE_RADIUS * Math.sin(angle), 0)
+  )
+}
+const circleGeometry = new BufferGeometry().setFromPoints(circlePoints)
+const circleMaterial = new LineBasicMaterial({ color: CURVE_COLOR })
+curvePanel.add(new LineLoop(circleGeometry, circleMaterial))
+
+// せり出した曲面の輪郭。(z 軸からの距離, 高さ) を下から上へ並べる。
+// 胴がふくらんでから首でくびれ、口が外へ開くので、口の下では高さが 3 つになる
+const PROFILE: [number, number][] = [
+  [0.0, 0.0],
+  [0.3, 0.03],
+  [0.48, 0.16],
+  [0.58, 0.36],
+  [0.62, 0.58],
+  [0.58, 0.78],
+  [0.47, 0.96],
+  [0.37, 1.14],
+  [0.33, 1.3],
+  [0.36, 1.42],
+  [0.46, 1.54],
+  [0.6, 1.63]
+]
+
+// 輪郭を回してできる曲面。LatheGeometry は上向きの軸のまわりに回すので、高さがそのまま高さになる。
+// せり出しの下を通る縦線と交点が見えるよう、半透明にして深度は書かない
+const surfaceGeometry = new LatheGeometry(
+  PROFILE.map(([radius, height]) => new Vector2(radius, height)),
+  LATHE_SEGMENTS
+)
+const surfaceMaterial = new MeshStandardMaterial({
+  color: SURFACE_COLOR,
+  roughness: 0.6,
+  side: DoubleSide,
+  transparent: true,
+  opacity: SURFACE_OPACITY,
+  depthWrite: false
+})
+surfacePanel.add(new Mesh(surfaceGeometry, surfaceMaterial))
+
+// 縦線 x = 一定 が円と交わる y。半径の外では交点がない
+const findCircleHeights = (x: number) => {
+  const squared = CIRCLE_RADIUS * CIRCLE_RADIUS - x * x
+  if (squared < 0) return []
+  const y = Math.sqrt(squared)
+  // 円の左端・右端では上下の交点が重なって 1 つになる
+  return y === 0 ? [0] : [-y, y]
+}
+
+// z 軸から distance だけ離れたところで、輪郭が持つ高さをすべて求める
+const findSurfaceHeights = (distance: number) => {
+  const heights: number[] = []
+
+  for (let i = 0; i < PROFILE.length - 1; i++) {
+    const [r0, h0] = PROFILE[i]
+    const [r1, h1] = PROFILE[i + 1]
+    // この区間をまたいでいなければ、輪郭はこの距離を通らない
+    if (r0 === r1 || (distance - r0) * (distance - r1) > 0) continue
+    heights.push(h0 + ((distance - r0) / (r1 - r0)) * (h1 - h0))
+  }
+
+  // 区間の継ぎ目をちょうど通ったときは同じ高さが 2 度出るので、隣り合う重なりを落とす
+  return heights.filter(
+    (height, index) => index === 0 || Math.abs(height - heights[index - 1]) > 1e-4
+  )
+}
+
+// 縦線を立てる位置。円は x だけで決まり、曲面は xy 平面上の (x, y) で決まる
+const x = 0.4
+const y = 0.2
+
+const probeMaterial = new LineBasicMaterial({ color: PROBE_COLOR })
+
+// 円の図の縦線。y 軸と平行なまま、x 軸に沿って動く
+const curveProbe = new LineSegments(
+  new BufferGeometry().setFromPoints([
+    new Vector3(0, -CURVE_PROBE_HALF, 0),
+    new Vector3(0, CURVE_PROBE_HALF, 0)
+  ]),
+  probeMaterial
+)
+curveProbe.position.x = x
+curvePanel.add(curveProbe)
+
+// 曲面の図の縦線。xy 平面上の (x, y) から真上に立てる。ワールドの奥行きが xy 平面の y にあたる
+const surfaceProbe = new LineSegments(
+  new BufferGeometry().setFromPoints([
+    new Vector3(0, SURFACE_PROBE_BOTTOM, 0),
+    new Vector3(0, SURFACE_PROBE_TOP, 0)
+  ]),
+  probeMaterial
+)
+surfaceProbe.position.set(x, 0, y)
+surfacePanel.add(surfaceProbe)
+
+// 縦線とぶつかった点。曲面は回転体なので、交わり方は z 軸からの距離だけで決まる
+const hitGeometry = new SphereGeometry(HIT_RADIUS, 16, 12)
+const hitMaterial = new MeshBasicMaterial({ color: HIT_COLOR })
+
+for (const height of findCircleHeights(x)) {
+  const hit = new Mesh(hitGeometry, hitMaterial)
+  hit.position.set(x, height, 0)
+  curvePanel.add(hit)
+}
+
+for (const height of findSurfaceHeights(Math.hypot(x, y))) {
+  const hit = new Mesh(hitGeometry, hitMaterial)
+  hit.position.set(x, height, y)
+  surfacePanel.add(hit)
+}
+
+// 曲面のせり出しを陰影でも読み取れるようにする光。向きは固定
+const light = new DirectionalLight(LIGHT_COLOR, 2.5)
+light.position.set(4, 5, 3)
+scene.add(light, new AmbientLight(LIGHT_COLOR, 0.5))
+```
+
 :::
 
 ## :WithGroupTag[陰関数形式]{group="{['CG']}"}
 
-表せる形の幅を広げるには、`x`から`y`を計算するという枠組み自体を手放す必要があります。
-:Anki[陰関数形式]は、座標が満たすべき条件を方程式として与え、それを満たす点の集まりとして曲線・曲面を表す形式です。平面上であれば、次の式を満たす点が曲線になります。
+陽関数形式では表せない円などの図形は、別な数式の形で表す必要があります。
+
+`x`から`y`を計算するという考え方を手放し、:Anki[陰関数形式]では、座標が満たすべき条件を方程式として与え、それを満たす点の集まりとして曲線・曲面を表現することができます。
+
+平面上であれば、次の式を満たす点が:Mark[曲線]になり、この形の数式で表された曲線を:Anki[陰関数曲線]といいます。
 
 $$
 f(x, y) = 0
 $$
 
-この形で表された曲線を:Anki[陰関数曲線]といいます。曲面の場合は変数が`1`つ増え、次の式を満たす点の集まりが:Anki[陰関数曲面]です。
+:Mark[曲面]の場合は変数が`1`つ増え、次の式を満たす点の集まりが:Anki[陰関数曲面]です。
 
 $$
 f(x, y, z) = 0
 $$
 
-原点を中心とする半径`r`の円は、この形式では次のように書けます。
+原点を中心とする半径`r`の円は、陰関数形式では次のように書けます。
 
 $$
 x^2 + y^2 - r^2 = 0
 $$
 
-陽関数形式では上半分と下半分の`2`本に分けるほかなかった円が、`1`本の式に収まっています。`x`から`y`を計算する形ではなくなったぶん、`1`つの`x`に`y`が`2`つ対応していても差し支えありません。
+:::Note
+円は「原点からの距離が`r`である点の集まり」なので、その条件をそのまま式にすれば陰関数形式が得られます。点`(x, y)`と原点との距離は三平方の定理で求められるので、円周上の点が満たす条件は次のように書けます。
 
-陰関数形式には、もう`1`つ役に立つ性質があります。`f`の値は曲線・曲面の上でちょうど`0`になり、そこから外れた点では正か負のどちらかになります。球のように閉じた形状であれば、調べたい点の座標を`f`に代入して符号を見るだけで、その点が内側にあるか外側にあるかがわかります。
+$$
+\sqrt{x^2 + y^2} = r
+$$
 
-### 代数曲線と代数曲面
+両辺を`2`乗して右辺を移項すると、上に挙げた円の式になります。
+:::
 
-`f`にどのような関数を使うかは自由ですが、CGで扱う形状の多くは`f`が多項式で書けるものです。
-多項式で表される陰関数曲線を:Anki[代数曲線]、同じく多項式で表される陰関数曲面を:Anki[代数曲面]といいます。
+方程式の解は複数存在することもあります。そのため、陰関数形式では`1`つの`x`に複数の`y`が対応していても破綻しません。
 
-多項式で書けると、次数という物差しが使えるようになります。代数曲面を表す多項式の次数を:Anki[曲面の次数]といい、曲線についても同じように次数が決まります。次数が低いほど形は単純で、高くなるほど複雑な形を表せます。
+### 陰関数形式と内外判定
 
-次数が`2`の代数曲線が:Anki[2次曲線]で、円・楕円・放物線・双曲線がこれにあたります。いずれも円錐を平面で切った断面として現れるため、:Anki[円錐曲線]とも呼ばれます。
-同じように、次数が`2`の代数曲面が:Anki[2次曲面]です。こちらには球・楕円面・円柱・円錐などが含まれます。
+球のように閉じた形状を陰関数形式で表すと、調べたい点の座標を`f`に代入して符号を見るだけで、その点が内側にあるか外側にあるかを調べることができます。
+
+陰関数形式の`f(x, y) = 0`は、元々曲線の上の点が満たすべき条件として置いた式です。そのため、`f`の値は曲線・曲面の上でちょうど`0`になり、そこから外れた点では正か負のどちらかになります。
+
+たとえば、円でいえば`f`は次のような関数です。
+
+$$
+f(x, y) = x^2 + y^2 - r^2
+$$
+
+この`f`は、原点からの距離の`2`乗と、半径の`2`乗との差になっています。円周上の点は距離がちょうど`r`なので差は`0`になり、円の内側の点は距離が`r`より短いことから負に、外側の点は正になります。
+
+### 陰関数形式と交点計算
+
+交点を求めることは、`2`つの形状の式を同時に満たす点を探すことにあたります。陰関数形式では形状が方程式として与えられているので、それらを連立させて解けば交点の座標が得られます。
+
+原点を中心とする半径`r`の円と、直線`y = ax + b`の交点を求めてみます。円の式の`y`に直線の式を代入すると、次のように`x`だけの方程式になります。
+
+$$
+x^2 + (ax + b)^2 - r^2 = 0
+$$
+
+展開すれば`x`についての`2`次方程式なので、解の公式で解けます。解が`2`つあれば`2`点で交わり、重解なら接し、解がなければ交わりません。交点の座標も、そもそも交わるかどうかも、この方程式を解くだけでわかります。
+
+曲面でも同じで、視線を表す式と曲面の式を連立させれば、その視線が形状のどこに当たるかが求まります。視線を追って画像を作る[レイトレーシング法](/cg/rendering/ray-tracing-algorithm/)では、このような交点計算が繰り返し行われます。
+
+## :WithGroupTag[代数曲線と代数曲面]{group="{['CG']}"}
+
+陰関数形式の`f`にどのような関数を使うかは自由ですが、CGで扱う形状の多くは`f`が:Anki[多項式]で書けるものです。多項式で表される陰関数曲線を:Anki[代数曲線]、同じく多項式で表される陰関数曲面を:Anki[代数曲面]といいます。
+
+代数曲面を表す多項式の次数を:Anki[曲面の次数]といい、曲線についても同じように次数が決まります。次数が低いほど形は単純で、高くなるほど複雑な形を表せます。
+
+:::Note
+多項式では、各項で掛け合わされている変数の個数を:Anki[項の次数]といい、その中で最も大きいものを:Anki[多項式の次数]といいます。
+先ほどの円の式であれば、`x`の`2`乗と`y`の`2`乗がどちらも`2`次の項で、半径だけの項は`0`次です。いちばん大きい次数が`2`なので、この多項式の次数は`2`になります。
+:::
+
+### 2次の代数曲線・曲面
+
+次数が`2`の代数曲線は[2次曲線](/cg/modeling/quadratic-curve/)と呼ばれ、:Anki[円]・:Anki[楕円]・:Anki[放物線]・:Anki[双曲線]は`2`次曲線で表されます。これらはいずれも:Anki[円錐]を平面で切った断面として現れるため、:Anki[円錐曲線]とも呼ばれます。
+
+同じように、次数が`2`の代数曲面が:Anki[2次曲面]です。`2`次曲面では、:Anki[球]・:Anki[楕円面]・:Anki[円柱]・:Anki[円錐]などを表すことができます。
 
 ## :WithGroupTag[パラメータ形式]{group="{['CG']}"}
 
-陰関数形式は、与えられた点が形状の上にあるかを判定するには向いていますが、曲線を[ラスタ化](/cg/basics/shape-rasterization/)して画面に描くとなると勝手が違います。
-点の並びを得るには`f(x, y) = 0`を`y`について解かなければならず、形が複雑になるほどこの作業は難しくなります。
+陰関数形式は、与えられた点が形状の上にあるかを判定する用途には向いていますが、曲線を[ラスタ化](/cg/basics/shape-rasterization/)してレンダリングするには負荷が高い方法です。
+点の座標を得るには`f(x, y) = 0`を`y`について解かなければならず、`f`の形が複雑になるほど、この計算は高負荷なものになります。
 
-そこで、座標そのものを別の変数から作り出す形をとります。
-:Anki[パラメータ形式]は、各座標を、補助的な変数の関数として表す形式です。この変数を:Anki[パラメータ]（:Anki[媒介変数]）といいます。
+そこで、座標そのものを補助的な別の変数から計算できる、:Anki[パラメータ形式]がCGではよく使われます。
+この補助的な変数は:Anki[パラメータ]または:Anki[媒介変数]と呼ばれます。
 
-パラメータを`t`とすると、空間中の曲線は次のように表されます。
+パラメータを`t`とすると、`2`次元平面上の曲線の座標は次のように表されます。
 
 $$
 \begin{align*}
 x &= x(t) \\\\
-y &= y(t) \\\\
-z &= z(t)
+y &= y(t)
 \end{align*}
 $$
 
-この形で表された曲線を:Anki[パラメトリック曲線]といいます。先ほどの円であれば、角度をパラメータにとって次のように書けます。
+`3`次元空間内の曲線を表したいときは、さらに`t`を引数として`z`座標を表す関数を用意すればよいだけです。
+このようにパラメータを使って表された曲線を:Anki[パラメトリック曲線]といいます。
+
+### 例：平面上の直線のパラメータ表示
+
+直線は、通る点が`1`つと、進む向きが決まれば定まります。点`(p, q)`を通り、`x`方向に`a`・`y`方向に`b`進む向きの直線は、パラメータ`t`を使って次のように書けます。
+
+$$
+\begin{align*}
+x &= p + at \\\\
+y &= q + bt
+\end{align*}
+$$
+
+`t`が`0`のときの点が`(p, q)`で、`t`を増やすと特定の向きへ、`t`を減らすとその反対の向きへ進みます。`t`を`1`つ決めるごとに直線上の点が`1`つ得られ、`t`をすべての実数にわたって動かせば直線全体が得られます。
+
+この形では`x`と`y`が対等に扱われ、どちらかをもう一方の関数として書く必要がありません。そのため、陽関数形式では表せなかった`y`軸に平行な直線も、`a`を`0`にするだけで表せます。
+
+:::Action
+`t`を動かして、点`(x, y)`が直線上を動く様子を観察しよう
+:::
+
+<CanvasWrapper>
+  <LineParameterFormDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 直線を決める、通る点 (p, q) と進む向き (a, b)。t は直線上の点を 1 つ選ぶパラメータ
+const p = -1.2
+const q = -0.6
+const a = 1
+const b = 0.8
+const t = 1.4
+
+// パラメータ表示 x = p + at, y = q + bt。
+// xy 平面に重なる要素の前後を決める z も受け取る（直線全体と掃いた範囲は同じ直線上に重なるため）
+const pointAt = (t: number, z: number) => new Vector3(p + a * t, q + b * t, z)
+
+// t をすべての実数にわたって動かすと直線全体が得られる。
+// 基準点から、向きの正負どちらへも表示域の外まで伸ばす
+const direction = new Vector3(a, b, 0).normalize()
+const guideGeometry = new BufferGeometry().setFromPoints([
+  pointAt(0, LAYER_LINE).addScaledVector(direction, -LINE_REACH),
+  pointAt(0, LAYER_LINE).addScaledVector(direction, LINE_REACH)
+])
+const guideMaterial = new LineBasicMaterial({ color: LINE_COLOR })
+scene.add(new LineSegments(guideGeometry, guideMaterial))
+
+// t = 0 から今の t までに掃いた範囲。t の正負で伸びる向きが変わる
+const traceGeometry = new BufferGeometry().setFromPoints([
+  pointAt(0, LAYER_TRACE),
+  pointAt(t, LAYER_TRACE)
+])
+const traceMaterial = new LineBasicMaterial({ color: TRACE_COLOR })
+scene.add(new LineSegments(traceGeometry, traceMaterial))
+
+// t を 1 つ決めるごとに直線上の点が 1 つ決まる。整数の t に対応する点を並べる
+const tickGeometry = new SphereGeometry(TICK_RADIUS, 12, 8)
+const tickMaterial = new MeshBasicMaterial({ color: TICK_COLOR })
+
+for (let tick = -TICK_MAX; tick <= TICK_MAX; tick++) {
+  // t = 0 の点は基準点として別に描くので飛ばす
+  if (tick === 0) continue
+  const dot = new Mesh(tickGeometry, tickMaterial)
+  dot.position.copy(pointAt(tick, LAYER_POINT))
+  scene.add(dot)
+}
+
+// 直線が通る 1 点として与えた (p, q) と、今の t に対応する点 (x, y)
+const pointGeometry = new SphereGeometry(POINT_RADIUS, 16, 12)
+const basePoint = new Mesh(pointGeometry, new MeshBasicMaterial({ color: BASE_COLOR }))
+basePoint.position.copy(pointAt(0, LAYER_POINT))
+const marker = new Mesh(pointGeometry, new MeshBasicMaterial({ color: MARKER_COLOR }))
+marker.position.copy(pointAt(t, LAYER_POINT))
+scene.add(basePoint, marker)
+```
+
+:::
+
+### 例：平面上の円のパラメータ表示
+
+平面上の半径 $$r$$ の円であれば、角度 $$\theta$$ をパラメータとして、次のように書くことができます。
 
 $$
 \begin{align*}
@@ -100,10 +378,78 @@ y &= r \sin\theta
 \end{align*}
 $$
 
-$$\theta$$を`0`から$$2\pi$$まで動かすと、円周上の点が順に得られます。方程式を解かずに代入だけで点が並んでいくところが、陰関数形式との大きな違いです。
-パラメータの動く範囲を区切れば、曲線の一部だけを取り出すこともできます。
+$$\theta$$ を $$0$$ から $$2\pi$$ まで動かすと、円周上の点が順に得られます。方程式を解かずに、代入だけで点列を求められることが、陰関数形式との大きな違いです。
 
-空間中の曲線を素直に表せることも、この形式の強みです。陽関数形式の`y = f(x)`は平面内の曲線しか表せず、陰関数形式の`f(x, y, z) = 0`は曲面になってしまうため、空間中の`1`本の曲線を表すには`2`つの曲面の交わりとして書くほかありません。
+また、パラメータの動く範囲を制限することで、曲線の一部だけを表すこともできます。
+
+:::Action
+$$\theta$$ を動かして、点`(x, y)`の集まりが円周を描いていく様子を観察しよう
+:::
+
+<CanvasWrapper>
+  <CircleParameterFormDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 円を決める半径と、円周上の点を 1 つ選ぶパラメータ（操作しやすさのため度で持つ）
+const r = 2
+const thetaDeg = 225
+const theta = (thetaDeg * Math.PI) / 180
+
+// パラメータ表示 x = r cosθ, y = r sinθ。
+// xy 平面に重なる要素の前後を決める z も受け取る（円周と掃いた円弧は同じ曲線上に重なるため）
+const pointAt = (angle: number, z: number) =>
+  new Vector3(r * Math.cos(angle), r * Math.sin(angle), z)
+
+// θ を 0 から 2π まで動かすと、円周がひと巡りぶん得られる
+const circlePoints: Vector3[] = []
+for (let i = 0; i < CIRCLE_SEGMENTS; i++) {
+  circlePoints.push(pointAt((i / CIRCLE_SEGMENTS) * Math.PI * 2, LAYER_LINE))
+}
+const circleGeometry = new BufferGeometry().setFromPoints(circlePoints)
+const circleMaterial = new LineBasicMaterial({ color: LINE_COLOR })
+scene.add(new LineLoop(circleGeometry, circleMaterial))
+
+// θ = 0 から今の θ までに描かれた円弧
+const arcPoints: Vector3[] = []
+for (let i = 0; i <= ARC_SEGMENTS; i++) {
+  arcPoints.push(pointAt(theta * (i / ARC_SEGMENTS), LAYER_TRACE))
+}
+const arcGeometry = new BufferGeometry().setFromPoints(arcPoints)
+const arcMaterial = new LineBasicMaterial({ color: TRACE_COLOR })
+scene.add(new Line(arcGeometry, arcMaterial))
+
+// θ を一定の刻みで動かして得られる点。今の θ までに到達したぶんだけ並べる
+const dotGeometry = new SphereGeometry(DOT_RADIUS, 12, 8)
+const dotMaterial = new MeshBasicMaterial({ color: DOT_COLOR })
+
+for (let deg = 0; deg <= thetaDeg; deg += DOT_STEP_DEG) {
+  const dot = new Mesh(dotGeometry, dotMaterial)
+  dot.position.copy(pointAt((deg * Math.PI) / 180, LAYER_POINT))
+  scene.add(dot)
+}
+
+// 今の θ に対応する点
+const markerGeometry = new SphereGeometry(POINT_RADIUS, 16, 12)
+const markerMaterial = new MeshBasicMaterial({ color: MARKER_COLOR })
+const marker = new Mesh(markerGeometry, markerMaterial)
+marker.position.copy(pointAt(theta, LAYER_POINT))
+scene.add(marker)
+
+// 原点から今の点へ引いた半径
+const radiusGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(0, 0, LAYER_RADIUS),
+  pointAt(theta, LAYER_RADIUS)
+])
+const radiusMaterial = new LineBasicMaterial({ color: RADIUS_COLOR })
+scene.add(new LineSegments(radiusGeometry, radiusMaterial))
+```
+
+:::
+
+### 曲面のパラメータ表示
 
 曲面を表す場合は、パラメータを`2`つ使います。
 
@@ -115,12 +461,123 @@ z &= z(u, v)
 \end{align*}
 $$
 
-こうして表された曲面が:Anki[パラメトリック曲面]です。曲面は縦横`2`方向に広がりを持つため、その広がりに合わせてパラメータも`2`つ要ります。`u`と`v`の組を決めると空間中の点が`1`つ決まり、`u`と`v`を平面上の領域いっぱいに動かすと、その領域が空間中の曲面へ写し取られます。
+こうして表される曲面が:Anki[パラメトリック曲面]です。曲面は縦横`2`方向に広がりを持つため、その広がりに合わせてパラメータも`2`つ要ります。`u`と`v`の組を決めると空間中の点が`1`つ決まり、`u`と`v`を平面上の領域内で動かした点の集まりが、空間中の曲面として写されます。
 
-:::Todo
-パラメトリック曲面の対応図。左に`u`と`v`が張る平面上の矩形領域、右に空間中の曲面を描き、矩形に引いた格子が曲面上の格子へ写る様子を対応づけて示す。
+:::Action
+`u`と`v`を動かして、`uv`平面上の`1`点が曲面上のどこの`1`点に写るかを追ってみよう
 :::
 
-CGで扱う自由な形の曲線・曲面が、ほとんどパラメータ形式で表されるのは、こうした扱いやすさがあるためです。制御点を動かして形を作るベジェ曲線やBスプライン曲面も、パラメータ形式で書かれた曲線・曲面の仲間です。
+<CanvasWrapper>
+  <ParametricSurfaceMappingDemo />
+</CanvasWrapper>
 
-<!-- TODO: ベジェ曲線・Bスプライン曲線・NURBSの記事ができたら、上の段落からリンクする -->
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 記事と同じ座標の書き方（z が高さ）をそのまま使えるよう、グループごと寝かせて z 軸を上に向ける
+const group = new Group()
+group.rotation.x = -Math.PI / 2
+scene.add(group)
+
+// (u, v) の組から、空間中の点を求める。
+// u は軸のまわりを回る角度に、v は上下へ振れる角度にあてて、球面の一部を切り取った曲面にする
+const evaluate = (u: number, v: number, target: Vector3) => {
+  const around = u * U_SWEEP
+  const upward = (v - 0.5) * V_SWEEP
+  const ring = RADIUS * Math.cos(upward)
+  return target.set(ring * Math.cos(around), ring * Math.sin(around), RADIUS * Math.sin(upward))
+}
+
+// (u, v) の格子を空間へ写して、曲面の頂点を並べる
+const positions: number[] = []
+const indices: number[] = []
+const point = new Vector3()
+
+for (let i = 0; i <= SURFACE_STEPS_U; i++) {
+  for (let j = 0; j <= SURFACE_STEPS_V; j++) {
+    evaluate(i / SURFACE_STEPS_U, j / SURFACE_STEPS_V, point)
+    positions.push(point.x, point.y, point.z)
+  }
+}
+
+// 格子の 1 マスを三角形 2 枚に割る。u 方向に 1 つ進むと、頂点の番号は v の分割数だけ飛ぶ
+for (let i = 0; i < SURFACE_STEPS_U; i++) {
+  for (let j = 0; j < SURFACE_STEPS_V; j++) {
+    const current = i * (SURFACE_STEPS_V + 1) + j
+    const next = current + SURFACE_STEPS_V + 1
+    indices.push(current, next, current + 1, next, next + 1, current + 1)
+  }
+}
+
+const surfaceGeometry = new BufferGeometry()
+surfaceGeometry.setAttribute("position", new Float32BufferAttribute(positions, 3))
+surfaceGeometry.setIndex(indices)
+surfaceGeometry.computeVertexNormals()
+
+const surfaceMaterial = new MeshStandardMaterial({
+  color: SURFACE_COLOR,
+  roughness: 0.6,
+  side: DoubleSide,
+  transparent: true,
+  opacity: SURFACE_OPACITY,
+  // 裏側を通る線が透けるよう、深度は比較するが書かない
+  depthWrite: false
+})
+group.add(new Mesh(surfaceGeometry, surfaceMaterial))
+
+// 曲面の上に引く線。u を一定にした線と v を一定にした線を、領域に引いた線と同じ本数だけ並べる。
+// 曲がった線なので、細かく刻んだ折れ線としてつなぐ
+const gridPoints: Vector3[] = []
+
+const pushCurve = (at: (t: number) => Vector3) => {
+  for (let k = 0; k < CURVE_SAMPLES; k++) {
+    gridPoints.push(at(k / CURVE_SAMPLES), at((k + 1) / CURVE_SAMPLES))
+  }
+}
+
+for (let i = 0; i <= GRID_DIVISIONS; i++) {
+  const line = i / GRID_DIVISIONS
+  pushCurve((t) => evaluate(line, t, new Vector3()))
+}
+for (let j = 0; j <= GRID_DIVISIONS; j++) {
+  const line = j / GRID_DIVISIONS
+  pushCurve((t) => evaluate(t, line, new Vector3()))
+}
+
+const gridGeometry = new BufferGeometry().setFromPoints(gridPoints)
+const gridMaterial = new LineBasicMaterial({ color: GRID_COLOR })
+group.add(new LineSegments(gridGeometry, gridMaterial))
+
+// 選んだ u・v に対応する 2 本の曲線。片方を固定して、もう片方を端から端まで動かす
+const u = 0.28
+const v = 0.62
+
+const createIsoCurve = (color: string, at: (t: number) => Vector3) => {
+  const curvePoints: Vector3[] = []
+  for (let i = 0; i <= CURVE_SAMPLES; i++) {
+    curvePoints.push(at(i / CURVE_SAMPLES))
+  }
+  return new Line(new BufferGeometry().setFromPoints(curvePoints), new LineBasicMaterial({ color }))
+}
+
+group.add(createIsoCurve(FIXED_U_COLOR, (t) => evaluate(u, t, new Vector3())))
+group.add(createIsoCurve(FIXED_V_COLOR, (t) => evaluate(t, v, new Vector3())))
+
+// u と v の組を決めると、空間中の点が 1 つ決まる
+const markerGeometry = new SphereGeometry(MARKER_RADIUS, 16, 12)
+const markerMaterial = new MeshBasicMaterial({ color: MARKER_COLOR })
+const marker = new Mesh(markerGeometry, markerMaterial)
+marker.position.copy(evaluate(u, v, point))
+group.add(marker)
+
+// 曲面のふくらみを陰影でも読み取れるようにする光。向きは固定
+const light = new DirectionalLight(LIGHT_COLOR, 2.5)
+light.position.set(4, 5, 3)
+scene.add(light, new AmbientLight(LIGHT_COLOR, 0.5))
+```
+
+:::
+
+CGでは、曲線・曲面の多くがパラメータ形式、つまり[パラメトリック曲線（曲面）](/cg/modeling/parametric-curve-surface/)で表されます。
+
+制御点を動かして形を作る[ベジェ曲線](/cg/modeling/bezier-curve-surface/)や[Bスプライン曲面](/cg/modeling/b-spline-curve-surface/)も、パラメータ形式で曲線・曲面を表す手法の一つです。

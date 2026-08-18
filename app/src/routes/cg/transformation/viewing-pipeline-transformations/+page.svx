@@ -567,7 +567,7 @@ scene.add(new AmbientLight("#ffffff", AMBIENT_INTENSITY), keyLight)
 
 ### 切り取る前のz軸の反転
 
-z軸の反転は、z座標の符号を変えるだけの操作です。x座標とy座標はそのままなので、z方向の倍率だけを`-1`にした[拡大/縮小](/cg/transformation/basic-transformations/)にあたり、[同次座標](/cg/transformation/basic-transformations/)を使えばほかの変換と同じ`4`行`4`列の行列で書けます。
+z軸の反転は、z座標の符号を変えるだけの操作です。x座標とy座標はそのままなので、z方向の倍率だけを`-1`にした[拡大/縮小](/cg/transformation/basic-transformations/)にあたり、[同次座標](/cg/transformation/basic-transformations/)を使えば他の変換と同じ`4`行`4`列の行列で書けます。
 
 $$
 \begin{pmatrix} x^{\prime} \\\\ y^{\prime} \\\\ z^{\prime} \\\\ 1 \end{pmatrix} = \begin{pmatrix} 1 & 0 & 0 & 0 \\\\ 0 & 1 & 0 & 0 \\\\ 0 & 0 & -1 & 0 \\\\ 0 & 0 & 0 & 1 \end{pmatrix} \begin{pmatrix} x \\\\ y \\\\ z \\\\ 1 \end{pmatrix}
@@ -603,7 +603,7 @@ $$
 
 ## :WithGroupTag[ビューポート変換]{group="{['CG']}"}
 
-正規化デバイス座標系まで来ても、画面のどこに何画素で描かれるかはまだ決まっていません。装置に依らない形へそろえた分、装置の側の情報を最後に足すことになります。
+正規化デバイス座標系まで来ても、画面のどこに何画素で描かれるかはまだ決まっていません。装置に依らない形へ揃えた分、装置の側の情報を最後に足すことになります。
 
 描画範囲は必ずしも画面全体とは限りません。画面の一部だけを使うこともあれば、複数の描画結果を並べて置くこともあります。
 こうして画面上にとった、画像を描き出す範囲である長方形の領域を:Anki[ビューポート]といいます。

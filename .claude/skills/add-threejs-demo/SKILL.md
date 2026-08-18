@@ -336,7 +336,7 @@ export const createTranslationScene = ({ scene, params }: SceneContext) => {
 | `ariaLabel` | ✓ | — | ラッパに付ける説明（何が描かれ、どう操作するか） |
 | `createScene` | ✓ | — | `scene.ts` の `create<デモ名>Scene` |
 | `params` | ✓ | — | Tweakpane と `scene.ts` が共有するプレーンオブジェクト |
-| `aspectRatio` | | `"1 / 1"` | canvas の `aspect-ratio`。**デモごとに変更可**（変換・投影は横長のほうが見やすいことがある） |
+| `aspectRatio` | | `"1 / 1"` | canvas の `aspect-ratio`。**デモごとに変更可**（変換・投影は横長のほうが見やすいことがある）。**Tweakpane パネルまで含めた見た目が縦長にならない値にする**（→「アスペクト比」） |
 | `background` | | `DEMO_BACKGROUND` | 背景色。ライト／ダーク共通の固定色 |
 | `camera` | | fov 45 / near 0.1 / far 100 / position `[3, 3, 5]` | `{ fov, near, far, position }` |
 | `orbit` | | 減衰つき回転・ズーム有効／パン無効 | `{ target, enablePan, enableZoom, enableRotate, minDistance, maxDistance, minPolarAngle, maxPolarAngle }`、または `false` で OrbitControls を付けない |
@@ -370,7 +370,7 @@ export const createTranslationScene = ({ scene, params }: SceneContext) => {
 2. 合意した挿入位置に `<CanvasWrapper>` で包んで差し込み、**その直前に `:::Action` を置く**（文面は →「`:::Action` の書き方」）。**`:::Todo` を元にした場合（パターンA-1）は、その位置の `:::Todo` ブロック全体（開始行から閉じの `:::` まで）をこの差し込みで置き換える**
 
    ```svelte
-   :::Action
+   :::Action{fixme}
    txとtyを動かして、立方体が座標軸に沿ってどう動くかを観察してみよう
    :::
 
@@ -379,7 +379,7 @@ export const createTranslationScene = ({ scene, params }: SceneContext) => {
    </CanvasWrapper>
    ```
 
-   `:::Action` とデモの間には空行を 1 行だけ置く。デモの直前に既に `:::Action` があるときは、それを活かして重ねて足さない（内容が今回のデモと合っていなければ書き換える）。
+   `:::Action` とデモの間には空行を 1 行だけ置く。デモの直前に既に `:::Action` があるときは、それを活かして重ねて足さない（内容が今回のデモと合っていなければ書き換える。**書き換えたら `{fixme}` を付ける**）。
 
 3. **その直後に `:::Foldable` で包んだ ` ```ts ` のコードブロック**で掲載コードを置く（**色彩記事ではこの手順を丸ごと省く。** →「色彩記事のとき」）
 
@@ -414,6 +414,7 @@ export const createTranslationScene = ({ scene, params }: SceneContext) => {
 
 デモの直前に置く、**操作と着眼点を対にした短い誘導**。読者がパネルを触る前に「何を動かすと、どこに何が起きるか」を掴める文にする。
 
+- **必ず `:::Action{fixme}` と書く。** `{fixme}` は「AIが書いたまま人手が入っていない下書き」の印で、付けると `:::Fix` と同じ琥珀の背景＋`! ACTION：要編集` のラベルで表示され、公開時チェック（`/publish-article` のゲート）で引っかかる。**外すのは著者が文面を直したとき**で、このスキルが外すことはない（→ `writing-guides/syntax-guide.md` ルール4）
 - **「どのパラメータを動かすと何が起きるか」「どこに着目すれば記事の主題が読み取れるか」を必ず対で書く。** 「デモで確認してみよう」のように、動かす対象も読み取りの中身も無い文にしない
 - **パラメータ名は Tweakpane のラベルと一致させる。** 読者がパネル上で探せることを優先する（`buildPane` の `label` をそのまま使う）
 - **操作パラメータの無いデモ**（OrbitControls だけ）は、ドラッグ・ズームで何が見えるかを書く（例: 「ドラッグで回転させて、3 つの軸がどの向きに伸びているかを見てみよう」）
@@ -431,7 +432,7 @@ export const createTranslationScene = ({ scene, params }: SceneContext) => {
 - **文体は casual な意志形**（「〜してみよう」「〜に注目しよう」「〜を観察してみよう」「〜を確認しよう」）。本文の丁寧体（です・ます）にしない。`:::Action` の中だけ地の文とレジスターが変わるのがこのサイトの書き方（→ `writing-guides/stylistic-quirks.md`「本文とActionのレジスターの二層構造」）
 - **強調ディレクティブ（`:Anki[]`・`:Mark[]`）を自分から書かない。** 既存記事の Action にある `:Mark[]` は著者が付けたもので、AI 側から選ぶものではない（→ `writing-guides/syntax-guide.md`）
 - **記事の地の文で既に説明した語で書く。** Action で新しい用語を導入しない
-- **文面は下書きの扱い。** そのまま採用されるとは限らないので、完了報告に文面を載せて著者が直せるようにする
+- **文面は下書きの扱い。** そのまま採用されるとは限らないので、完了報告に文面を載せて著者が直せるようにする（記事の側でも `{fixme}` がその印になる）
 
 ### 本文には手を入れない
 
@@ -467,6 +468,17 @@ export const createTranslationScene = ({ scene, params }: SceneContext) => {
 - 枠線は `light-dark()` でライト／ダークに追従（枠はシーンではなくページ側の要素）
 - ラッパに `role="img"` ＋ `aria-label`、Tweakpane パネルはその外（兄弟要素）
 - アクセシビリティへの特別な配慮は要件としない（Tweakpane を素直に使う）
+
+### アスペクト比
+
+**デモ全体（canvas ＋ その下の Tweakpane パネル）が、幅に対して縦長にならないようにする。** パネルは canvas の外（下）に積まれるので、`aspectRatio` を `1 / 1` のままにするとパネルのぶんだけ全体が縦長になる。スクロールしながらでは図と操作が同時に見えず、狭い画面ほど破綻する。
+
+- **`aspectRatio` はパネルの高さを見込んで横長側に取る。** 操作パラメータがあるデモで `1 / 1` を選ばない
+- 目安（`buildPane` のバインディング数で決める）
+  - 操作なし（`buildPane` を省略） — `1 / 1` のままでよい
+  - 1〜2 個 — `16 / 10` 程度
+  - 3 個以上 — `16 / 9` 以上の横長にする（フォルダやボタンを足した場合も同様に広げる）
+- 縦方向に情報が伸びるデモ（色立体など）でも、`1 / 1` より縦長の値（`4 / 5` など）は使わない。縦に見せたいものはカメラ側（`position`・fov）で収める
 
 ### 背景色
 
@@ -510,7 +522,7 @@ export const createTranslationScene = ({ scene, params }: SceneContext) => {
 - 作成したファイル
 - 記事に載せたコード（元になった `scene.ts` の関数名と、外した部分）。**色彩記事ではこの項目を落とし、かわりに色データの出典と色を歪めない設定を書く**（→「完了報告の差分」）
 - `visual: true` を付与したかどうか
-- **書いた `:::Action` の文面**（そのまま引用する。著者が直す前提の下書きとして扱う）
+- **書いた `:::Action` の文面**（そのまま引用する。著者が直す前提の下書きとして扱う）。記事側には `{fixme}` を付けてあることと、**直したら `{fixme}` を外す**ことを添える
 - **このデモで何を操作でき、何が読み取れるか**（`:::Action` に書ききれなかったものを含む。著者が本文へ言及を書き足すときの材料になる）
 - 軸・グリッドを使った場合は、採用した色・スケール
 - `node_modules` に `tweakpane` が無い環境（クローン直後・worktree など）では `npm install` が必要である旨

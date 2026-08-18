@@ -27,7 +27,7 @@
 
 frontmatter から `draft: true`（と直前の空行）を削除して記事を公開状態にしたら、**`/publish-article <slug>` で公開時タスクを回す**。手順の正典はこのスキルで、次の 0〜2 を実行し、3・4 は案内するだけにとどめる。
 
-0. **編集指示ディレクティブの残存チェック（ゲート）**：本文に `:::Todo` / `:::Add` / `:::Delete` / `:::Fix` が残っていないかを確認する。**1件でも残っていれば公開時タスクへ進まず**、対応に使うスキル呼び出しを**そのままコピペして実行できる形**で案内して止まる（`:::Todo` は `/svg-diagram-component` か `/add-threejs-demo`、`:::Add` / `:::Delete` / `:::Fix` はまとめて `/apply-edit-requests <slug>` の1行）。読者に見える形で公開されるのを防ぐためのゲートで、ブロックを外すか対応するかの判断は著者が行う（→ `writing-guides/syntax-guide.md` ルール4）。
+0. **編集指示ディレクティブの残存チェック（ゲート）**：本文に `:::Todo` / `:::Add` / `:::Delete` / `:::Fix` と、`{fixme}` 付きの `:::Action`（AIが書いたまま人手が入っていないデモ誘導文）が残っていないかを確認する。**1件でも残っていれば公開時タスクへ進まず**、対応に使うスキル呼び出しを**そのままコピペして実行できる形**で案内して止まる（`:::Todo` は `/svg-diagram-component` か `/add-threejs-demo`、`:::Add` / `:::Delete` / `:::Fix` はまとめて `/apply-edit-requests <slug>` の1行）。読者に見える形で公開されるのを防ぐためのゲートで、ブロックを外すか対応するかの判断は著者が行う（`:::Action{fixme}` は文面を直して `{fixme}` を外す。→ `writing-guides/syntax-guide.md` ルール4）。
 1. **`visual` フラグの追加**：`$lib/demo/` の図解コンポーネントを使っているページは、frontmatter の `grades:` の次の行に `visual: true` を足す。一覧のリンクに「図解」タグが付く。Mermaid 図だけのページには付けない運用。
 2. **OGP画像の生成**：`/generate-ogp-image <スラッグ>` で生成する。draft ページは glob・自然言語指定の展開から除外されるため、**公開してから**生成する。生成物（`app/static/ogp/**`・`ogimage/data/**`）・マニフェスト（`app/src/lib/meta/og-manifest.json`）・`ogimage/OGP-TASKLIST.md` はコミットに含める（コミットメッセージ規約は `CLAUDE.md` の「Git規約」を参照）。
 3. **文体スタイルガイドの更新**：`/author-style-analyzer <slug>` を実行し、その記事が既存ルールのどれを支持するか（「AI草稿 → 人手編集」の差分を含む）を記録する。人手修正のコミットを済ませてから実行する（Git履歴が根拠になるため）。複数記事を公開したときはカンマ区切りでまとめて1回実行できる（`/author-style-analyzer <slug1>,<slug2>`）。推奨 effort は `high`（後述「文体分析・執筆（author-style スキル）」節）。どの記事を分析済みかは `writing-guides/STYLE-ANALYSIS-TASKLIST.md` に記録され、スキルが実行のたびに更新する（更新後のリストはコミットに含める）。
@@ -191,7 +191,7 @@ npm run data:jis-update
   - `/publish-article <記事slug> --ogp` — OGP画像だけ。`commit-this` がコミット後に呼ぶ
   - `/publish-article` — 引数なし。未コミットの差分から `draft: true` が消えた記事を探す（見つからなければ尋ねる）
   - 記事は slug でもルート（`/cg/rendering/hidden-surface-removal-methods`）でも渡せる。カンマ・空白区切りで複数可
-  - **最初に `:::Todo` / `:::Add` / `:::Delete` / `:::Fix` の残存チェック（ゲート）を行い、1件でも残っていれば公開時タスクへ進まない。** コピペで実行できる担当スキルの呼び出しを案内して止まる（自分でブロックを消したり対応したりはしない）
+  - **最初に `:::Todo` / `:::Add` / `:::Delete` / `:::Fix` と `:::Action{fixme}` の残存チェック（ゲート）を行い、1件でも残っていれば公開時タスクへ進まない。** コピペで実行できる担当スキルの呼び出しを案内して止まる（自分でブロックを消したり `{fixme}` を外したり対応したりはしない）
   - `draft: true` は外さない・戻さない（公開の判断は著者）。コミット・push もしない（`/commit-this` に渡す）
   - `author-style-analyzer`（文体ガイドの更新）と `update-pr-description`（PR説明文）は自動実行せず、コマンドを添えて案内する
 
@@ -209,7 +209,7 @@ npm run data:jis-update
   - `/add-threejs-demo <記事slug> <デモの内容>` — パターンB（提案フェーズを飛ばし、指定された内容のデモを実装。`:::Todo` があっても引数が優先）
   - `<記事slug>` は `app/src/routes/cg/` を検索して実体を解決する（0件・複数ヒットは確認して止める。slugが重複する場合のみ `transformation/basic-transformations` のようにユニット込みで渡す）
   - 実装先は `app/src/lib/demo/threejs/<ユニット>/<記事slug>/<デモ名>/`（`scene.ts` ＋ `<デモ名>Demo.svelte`）。renderer・描画ループ・リサイズ・Tweakpaneといった記事に載らない定型処理は `threejs/_shared/` が担う
-  - 記事に加えるのは import・`<CanvasWrapper>` での使用箇所・`scene.ts` からの**逐語抜粋**の ts コードブロック・`visual: true` だけ。**本文は書かない**（説明文・`:::Action` は author-style-writer の担当）
+  - 記事に加えるのは import・`<CanvasWrapper>` での使用箇所・**デモ直前の `:::Action{fixme}`**・`scene.ts` を元にした ts コードブロック（逐語一致は求めず、読者がそのまま書き下せる形に整える）・`visual: true` だけ。**地の文は書かない**（デモの説明文や本文からの言及は author-style-writer の担当。デモに触れるのは `:::Action` の中だけに閉じる）
 - **svelte-component-guideline** — Svelteコンポーネント実装時に参照するガイドライン（引数なし）
 - **css-styling-guideline** — CSS記述時に参照するガイドライン（引数なし）
 
@@ -232,6 +232,12 @@ npm run data:jis-update
   - `/design-doc-updater` — 引数なし。全観点を分析し `DESIGN.md` 全体を差分更新
   - `/design-doc-updater <コンポーネント名／ディレクトリ名／ブランチ名／観点>` — 指定範囲に限って分析・加筆修正
 - **repository-structure** — リポジトリ構造定義書を更新するためのガイドライン（引数なし）
+- **add-notation-rule** — 記事本文の表記揺れ辞書（`app/textlint/prh.yml`）に項目を追加
+  - `/add-notation-rule <直す前 -> 直した後>[, …]` — 矢印は `->` / `→` / `=>`、複数ペアはカンマ・読点・改行区切り（例: `この時 -> このとき, 例えば -> たとえば`）
+  - `/add-notation-rule` — 引数なし、または向きが読めない指定は尋ねる（どちらの表記に寄せるかを決めるのは著者）
+  - 既存記事での出現を `grep` で調べ、別語の一部になる誤検出（`この時` に対する `この時代` など）を否定先読みで絞ったパターンと `specs`（置き換わる例・**置き換わらない**例）を設計し、**承認を得てから**辞書に追記する
+  - **表記揺れの検査はベースライン（`.textlintignore`）の対象外で全記事に効く。** `npm run lint:svx:notation` で自己テストと検出件数を確認し、既存記事を一括修正するか辞書追加だけに留めるかを確認してから `--fix` する（修正後は `git diff` で属性・props への誤置換を確認）
+  - 辞書を列挙している `app/textlint/README.md` の表と、`author-style-writer` / `author-style-skills.md` の記述を追随させる（6件以上になる場合は列挙をやめて表を参照させる）
 - **update-pr-description** — PRのタイトルと説明文を変更内容に合わせて更新（引数任意）
   - `/update-pr-description <PRのURL>` — 指定したPRを対象にする
   - `/update-pr-description` — 引数なし。現在チェックアウト中のブランチに紐づくPRが対象（PRが無ければ促す）

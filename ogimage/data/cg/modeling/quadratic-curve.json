@@ -1,0 +1,12 @@
+{
+  "route": "cg/modeling/quadratic-curve",
+  "title": "2次曲線",
+  "titleLines": [
+    "2次曲線"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "モデリング"
+  ],
+  "figure": "assets/cg/modeling/quadratic-curve/figure.png"
+}

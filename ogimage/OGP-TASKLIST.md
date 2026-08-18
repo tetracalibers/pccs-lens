@@ -360,13 +360,13 @@
 - [draft] `/cg/modeling/sweep-representation`
 - [ページ未作成] 境界表現のデータ構造
 - [ページ未作成] オイラー表現
-- [draft] `/cg/modeling/curve-surface-equations`
-- [ページ未作成] 2次曲線
+- [x] `/cg/modeling/curve-surface-equations`
+- [x] `/cg/modeling/quadratic-curve`
 - [draft] `/cg/modeling/parametric-curve-surface`
 - [draft] `/cg/modeling/bezier-curve-surface`
 - [ページ未作成] ファーガソン曲線
 - [ページ未作成] 双3次クーンズ曲面
-- [ページ未作成] Bスプライン曲線・曲面
+- [draft] `/cg/modeling/b-spline-curve-surface`
 - [ページ未作成] 有理ベジェ曲線・曲面
 - [ページ未作成] NURBS曲線・曲面
 - [ページ未作成] パラメトリック曲線・曲面の微分幾何
