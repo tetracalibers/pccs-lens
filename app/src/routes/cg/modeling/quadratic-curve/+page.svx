@@ -11,6 +11,7 @@ draft: true
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import ConicSectionDemo from '$lib/demo/threejs/modeling/quadratic-curve/conic-section/ConicSectionDemo.svelte'
+  import GeneratrixRevolutionDemo from '$lib/demo/threejs/modeling/quadratic-curve/generatrix-revolution/GeneratrixRevolutionDemo.svelte'
 </script>
 
 [曲線・曲面の数式表現](/cg/modeling/curve-surface-equations/)では、次数が`2`の代数曲線を:Anki[2次曲線]と呼び、:Anki[円]・:Anki[楕円]・:Anki[放物線]・:Anki[双曲線]がこれにあたることに触れました。
@@ -38,8 +39,131 @@ $$
 
 円錐面は、:Anki[母線]と呼ばれる`1`本の直線を、それと`1`点で交わる軸のまわりに回すことでみられる図形です。底面を持つ立体の円錐とは異なり、円錐面は頂点を挟んで上下`2`つに分かれ、どちらの側にも限りなく広がっています。
 
-:::Todo
-母線を回すことで円錐面が描かれるデモ
+:::Action{fixme}
+回転角を動かして、`1`本の母線が動いた跡として円錐面が描かれていくのを見てみよう
+
+- 母線は頂点を挟んで上下へ伸びているので、回すと上下`2`つの面が同時に描かれる
+- 回しはじめの母線は薄く残してあるので、そこから今の母線までのあいだが掃かれた範囲になる
+- 端の輪は面をどこまで描いたかを示すもので、円錐面自体は輪の先へも限りなく広がっている
+:::
+
+:::Fix{target="demo"}
+初期拡大率だと「軸」ラベルがキャンバス外にはみ出して見切れてしまうので、初期拡大率を下げるなど調整が必要
+:::
+
+<CanvasWrapper>
+  <GeneratrixRevolutionDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 母線を軸のまわりに回した角度
+const rotation = (ROTATION_DEG * Math.PI) / 180
+
+// 半頂角 α の母線を軸（y 軸）のまわりに θ だけ回したときの、パラメータ t の点。
+// t は頂点からの軸方向の距離で、負にとると頂点を挟んで反対側の面になる
+const generatrixPoint = (theta: number, t: number, target: Vector3) =>
+  target.set(t * TAN_HALF_ANGLE * Math.cos(theta), t, t * TAN_HALF_ANGLE * Math.sin(theta))
+
+// 母線を回すもとになる軸
+const axisGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(0, -AXIS_EXTENT, 0),
+  new Vector3(0, AXIS_EXTENT, 0)
+])
+const axisMaterial = new LineBasicMaterial({ color: AXIS_COLOR })
+scene.add(new LineSegments(axisGeometry, axisMaterial))
+
+// 1 周まで回したときに母線の端が届く輪。掃かれた跡がどこへ向かっているかの目安になる
+const rimPoints: Vector3[] = []
+for (let i = 0; i < RIM_SEGMENTS; i++) {
+  const angle = (i / RIM_SEGMENTS) * Math.PI * 2
+  rimPoints.push(new Vector3(CONE_RADIUS * Math.cos(angle), 0, CONE_RADIUS * Math.sin(angle)))
+}
+const rimGeometry = new BufferGeometry().setFromPoints(rimPoints)
+const rimMaterial = new LineBasicMaterial({ color: RIM_COLOR })
+for (const y of [CONE_EXTENT, -CONE_EXTENT]) {
+  const rim = new LineLoop(rimGeometry, rimMaterial)
+  rim.position.y = y
+  scene.add(rim)
+}
+
+// 母線が通った跡としての円錐面。母線は直線なので、
+// 刻んだ角度ごとに両端（t = ±CONE_EXTENT）の 2 点を置き、隣り合う母線のあいだを四角形で張る
+const surfacePositions = new Float32BufferAttribute(
+  new Float32Array((SWEEP_SEGMENTS + 1) * 2 * 3),
+  3
+)
+const surfaceGeometry = new BufferGeometry().setAttribute("position", surfacePositions)
+
+const indices: number[] = []
+for (let i = 0; i < SWEEP_SEGMENTS; i++) {
+  const lower = i * 2
+  const upper = i * 2 + 1
+  indices.push(lower, upper, upper + 2, lower, upper + 2, lower + 2)
+}
+surfaceGeometry.setIndex(indices)
+
+const surfaceMaterial = new MeshBasicMaterial({
+  color: SURFACE_COLOR,
+  side: DoubleSide,
+  transparent: true,
+  opacity: SURFACE_OPACITY,
+  // 面の向こう側にある母線や軸を隠したくないので、深度は比較するが書かない
+  depthWrite: false
+})
+scene.add(new Mesh(surfaceGeometry, surfaceMaterial))
+
+// 0 から θ まで回したぶんの面を張る
+const point = new Vector3()
+for (let i = 0; i <= SWEEP_SEGMENTS; i++) {
+  const angle = (rotation * i) / SWEEP_SEGMENTS
+  generatrixPoint(angle, -CONE_EXTENT, point)
+  surfacePositions.setXYZ(i * 2, point.x, point.y, point.z)
+  generatrixPoint(angle, CONE_EXTENT, point)
+  surfacePositions.setXYZ(i * 2 + 1, point.x, point.y, point.z)
+}
+surfacePositions.needsUpdate = true
+
+// 母線の端（パラメータ t の位置）が通った跡の弧。掃かれた面の縁にあたる
+const addSweptArc = (t: number) => {
+  const positions = new Float32BufferAttribute(new Float32Array((RIM_SEGMENTS + 1) * 3), 3)
+  const geometry = new BufferGeometry().setAttribute("position", positions)
+  const material = new LineBasicMaterial({ color: SURFACE_COLOR })
+  scene.add(new Line(geometry, material))
+
+  for (let i = 0; i <= RIM_SEGMENTS; i++) {
+    generatrixPoint((rotation * i) / RIM_SEGMENTS, t, point)
+    positions.setXYZ(i, point.x, point.y, point.z)
+  }
+  positions.needsUpdate = true
+}
+addSweptArc(CONE_EXTENT)
+addSweptArc(-CONE_EXTENT)
+
+// 母線 1 本。頂点を通り、パラメータ t が ±CONE_EXTENT まで伸びる
+const addGeneratrix = (theta: number, opacity: number) => {
+  const positions = new Float32BufferAttribute(new Float32Array(6), 3)
+  const geometry = new BufferGeometry().setAttribute("position", positions)
+  const material = new LineBasicMaterial({
+    color: GENERATRIX_COLOR,
+    transparent: opacity < 1,
+    opacity
+  })
+  scene.add(new LineSegments(geometry, material))
+
+  generatrixPoint(theta, -CONE_EXTENT, point)
+  positions.setXYZ(0, point.x, point.y, point.z)
+  generatrixPoint(theta, CONE_EXTENT, point)
+  positions.setXYZ(1, point.x, point.y, point.z)
+  positions.needsUpdate = true
+}
+
+// 回しはじめ（θ = 0）の母線は薄く残し、今の母線と見比べられるようにする
+addGeneratrix(0, START_OPACITY)
+addGeneratrix(rotation, 1)
+```
+
 :::
 
 円錐面を平面で切ったときにどの曲線が現れるかは、母線の傾きと切る平面の傾きの関係で決まります。
