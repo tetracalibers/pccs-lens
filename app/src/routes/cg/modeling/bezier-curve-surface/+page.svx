@@ -11,6 +11,7 @@ draft: true
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import LinearInterpolationDemo from '$lib/demo/threejs/modeling/bezier-curve-surface/linear-interpolation/LinearInterpolationDemo.svelte'
+  import QuadraticBezierDemo from '$lib/demo/threejs/modeling/bezier-curve-surface/quadratic-bezier/QuadraticBezierDemo.svelte'
 </script>
 
 [パラメータ形式](/cg/modeling/curve-surface-equations/)は、パラメータを動かせば曲線上の点が次々と得られる、扱いやすい表し方でした。
@@ -132,11 +133,141 @@ $$P_0, P_1$$の間を点で埋めていくことは、$$P_0, P_1$$の間の足�
 
 `2`つの線分が$$P_1$$で繋がっているとし、$$P_0, P_1$$の間、$$P_1, P_2$$の間をそれぞれ線形補間した点を求め、それらを線分で結ぶことで、$$P_0, P_2$$の間を繋ぐ曲線が現れます。
 
-:::Todo
-線分$$P_0, P_1$$、$$P_1, P_2$$をそれぞれ10分割し、これらの点を線分で繋ぐことで、曲線が現れるデモ
+:::Action{fixme}
+`t`を動かして、`2`本の線分から曲線が浮かび上がるところを見てみよう
 
-- 複数の軌跡を描いたような見た目になる
-- `t`を動かせるUIを用意する
+- 束になっている線分は、どれも`2`本の線分を同じ割合で分けた点どうしを結んだもの
+- `t`が進むと、そのうちの`1`本の上を$$C(t)$$が動き、通った跡が曲線になる
+:::
+
+:::Fix{target="demo"}
+- 白い点は要らない
+- 各点の直径が大きすぎる
+- 10等分した分点どうしを結ぶ11本の束の色が薄すぎるかも？
+:::
+
+<CanvasWrapper>
+  <QuadraticBezierDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 3 つの制御点。P0 → P1 → P2 と辿る 2 本の線分の内側に曲線が現れる
+const P0 = new Vector3(-2.6, -1.1, 0)
+const P1 = new Vector3(0, 1.7, 0)
+const P2 = new Vector3(2.6, -1.1, 0)
+
+// 線形補間。2 点の座標値を 1 − t : t の割合で混ぜる
+const lerp = (from: Vector3, to: Vector3, t: number, target: Vector3) =>
+  target
+    .copy(from)
+    .multiplyScalar(1 - t)
+    .addScaledVector(to, t)
+
+// C(t) を求める途中の 2 点。毎フレーム何度も呼ばれるので、その都度は作らない
+const q0 = new Vector3()
+const q1 = new Vector3()
+
+// 2 次ベジェ曲線上の点 C(t)。
+// P0P1 上の点 Q0(t) と P1P2 上の点 Q1(t) を、同じ t でもう一度線形補間して求める
+const quadraticPoint = (t: number, target: Vector3) =>
+  lerp(lerp(P0, P1, t, q0), lerp(P1, P2, t, q1), t, target)
+
+// 両端が t で動く線分。頂点を作り直さず、座標だけ書き換える
+const createSegment = (color: string) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(6), 3)
+  geometry.setAttribute("position", positions)
+  const material = new LineBasicMaterial({ color })
+  const line = new LineSegments(geometry, material)
+  // 端点が動くので、あらかじめ計算した範囲に頼らず常に描く
+  line.frustumCulled = false
+
+  return {
+    object: line,
+    set: (from: Vector3, to: Vector3, z: number) => {
+      positions.setXYZ(0, from.x, from.y, z)
+      positions.setXYZ(1, to.x, to.y, z)
+      positions.needsUpdate = true
+    }
+  }
+}
+
+// 制御点を順に結んだ 2 本の線分
+const edgeGeometry = new BufferGeometry().setFromPoints(
+  [P0, P1, P2].map((point) => new Vector3(point.x, point.y, LAYER_EDGE))
+)
+const edgeMaterial = new LineBasicMaterial({ color: EDGE_COLOR })
+scene.add(new Line(edgeGeometry, edgeMaterial))
+
+// 2 本の線分を同じ数に分け、同じ番号の分点どうしを結ぶ。この束の縁に曲線が浮かび上がる
+const familyPoints: Vector3[] = []
+for (let i = 0; i <= DIVISION_COUNT; i++) {
+  const ratio = i / DIVISION_COUNT
+  familyPoints.push(lerp(P0, P1, ratio, new Vector3()), lerp(P1, P2, ratio, new Vector3()))
+}
+const familyGeometry = new BufferGeometry().setFromPoints(familyPoints)
+const familyMaterial = new LineBasicMaterial({
+  color: CHORD_COLOR,
+  transparent: true,
+  opacity: FAMILY_OPACITY
+})
+scene.add(new LineSegments(familyGeometry, familyMaterial))
+
+// 分点。2 本の線分がどこで分けられているかを示す
+const divisionGeometry = new SphereGeometry(DIVISION_RADIUS, 12, 8)
+const divisionMaterial = new MeshBasicMaterial({ color: DIVISION_COLOR })
+familyPoints.forEach((point) => {
+  const dot = new Mesh(divisionGeometry, divisionMaterial)
+  dot.position.set(point.x, point.y, LAYER_DIVISION)
+  scene.add(dot)
+})
+
+// 束のうち、今の t にあたる 1 本
+const t = 0.35
+const first = lerp(P0, P1, t, new Vector3())
+const second = lerp(P1, P2, t, new Vector3())
+const chord = createSegment(CHORD_COLOR)
+chord.set(first, second, LAYER_CHORD)
+scene.add(chord.object)
+
+// C が 0 から今の t までに通った跡。折れ線で近似する
+const sample = new Vector3()
+const traceGeometry = new BufferGeometry()
+const tracePositions = new Float32BufferAttribute(new Float32Array((TRACE_SEGMENTS + 1) * 3), 3)
+traceGeometry.setAttribute("position", tracePositions)
+for (let i = 0; i <= TRACE_SEGMENTS; i++) {
+  quadraticPoint((t * i) / TRACE_SEGMENTS, sample)
+  tracePositions.setXYZ(i, sample.x, sample.y, LAYER_TRACE)
+}
+const traceMaterial = new LineBasicMaterial({ color: TRACE_COLOR })
+scene.add(new Line(traceGeometry, traceMaterial))
+
+// 自分で置いた 3 つの制御点
+const controlGeometry = new SphereGeometry(CONTROL_RADIUS, 16, 12)
+const controlMaterial = new MeshBasicMaterial({ color: CONTROL_COLOR })
+for (const point of [P0, P1, P2]) {
+  const mesh = new Mesh(controlGeometry, controlMaterial)
+  mesh.position.set(point.x, point.y, LAYER_POINT)
+  scene.add(mesh)
+}
+
+// 今の t が 2 本の線分を分けている 2 点と、そのあいだをさらに同じ割合で分けた点 C(t)
+const knotGeometry = new SphereGeometry(KNOT_RADIUS, 16, 12)
+const knotMaterial = new MeshBasicMaterial({ color: CHORD_COLOR })
+const knot0 = new Mesh(knotGeometry, knotMaterial)
+const knot1 = new Mesh(knotGeometry, knotMaterial)
+knot0.position.set(first.x, first.y, LAYER_POINT)
+knot1.position.set(second.x, second.y, LAYER_POINT)
+const markerGeometry = new SphereGeometry(MARKER_RADIUS, 16, 12)
+const markerMaterial = new MeshBasicMaterial({ color: MARKER_COLOR })
+const marker = new Mesh(markerGeometry, markerMaterial)
+const current = lerp(first, second, t, new Vector3())
+marker.position.set(current.x, current.y, LAYER_POINT)
+scene.add(knot0, knot1, marker)
+```
+
 :::
 
 このベジェ曲線の制御点は、自分で置いた $$P_0, P_1, P_2$$ の`3`つです。線分の上に並ぶ点はどれも制御点ではなく、この`3`点から計算で求まります。
