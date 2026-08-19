@@ -3,7 +3,6 @@ import {
   CanvasTexture,
   DoubleSide,
   Float32BufferAttribute,
-  Group,
   Line,
   LineBasicMaterial,
   LineDashedMaterial,
@@ -36,35 +35,24 @@ type SceneContext = {
 }
 
 /**
- * 左のパネルの制御点。P₂ を残り 3 点が作る三角形の内側に置き、
+ * 制御点の初期位置。P₂ を残り 3 点が作る三角形の内側に置き、
  * 制御多角形にへこみができた配置にする（このとき凸包は三角形になり、P₂ はその内側に入る）
  */
-const CONCAVE_POINTS: [number, number][] = [
+const INITIAL_POINTS: [number, number][] = [
   [-1.5, -1.2],
   [-0.5, 1.4],
   [0.2, 0.1],
   [1.5, -1.2]
 ]
 
-/** 右のパネルの制御点。4 点がどれも凸包の頂点になる（へこみのない）配置にする */
-const CONVEX_POINTS: [number, number][] = [
-  [-1.5, -1.2],
-  [-0.7, 1.3],
-  [0.7, 1.3],
-  [1.5, -1.2]
-]
-
 /** 制御点に付ける名前。添字は 0 から順に振る */
 const CONTROL_LABELS = ["P₀", "P₁", "P₂", "P₃"]
 
-/** 2 つのパネルを左右に振り分ける距離 */
-const PANEL_OFFSET = 2.7
-
-/** 制御点を動かせる範囲（パネルの中での座標）。隣のパネルや見出しに重ならない範囲にとどめる */
-const DRAG_MIN_X = -2.05
-const DRAG_MAX_X = 2.05
-const DRAG_MIN_Y = -1.7
-const DRAG_MAX_Y = 1.85
+/** 制御点を動かせる範囲。ラベルまで画面に収まる範囲にとどめる */
+const DRAG_MIN_X = -2.4
+const DRAG_MAX_X = 2.4
+const DRAG_MIN_Y = -1.6
+const DRAG_MAX_Y = 1.6
 
 /** ポインタが制御点を掴んだとみなす距離。球の半径より広くとって掴みやすくする */
 const PICK_RADIUS = 0.3
@@ -87,12 +75,8 @@ const CONTROL_RADIUS = 0.07
 
 /** ラベルの高さ（ワールド座標での大きさ）。幅は文字数に応じて決まる */
 const LABEL_HEIGHT = 0.28
-const TITLE_HEIGHT = 0.3
 
-/** パネルの見出しを置く高さ */
-const TITLE_Y = 2.3
-
-/** 制御点のラベルを、その制御点の重心から見て外向きに逃がす距離 */
+/** 制御点のラベルを、制御点の重心から見て外向きに逃がす距離 */
 const CONTROL_LABEL_OFFSET = 0.36
 
 /** ラベルの文字を描く canvas の高さ（テクスチャの解像度）と左右の余白 */
@@ -118,7 +102,6 @@ const POLYGON_COLOR = "#9aa3b0"
 const CURVE_COLOR = "#ffc857"
 const CONTROL_COLOR = "#b79cf5"
 const ACTIVE_COLOR = "#f57fc4"
-const TITLE_COLOR = "#c9d2de"
 
 /**
  * 文字を描いた canvas をテクスチャにして、常にカメラを向く板（Sprite）にする。
@@ -283,17 +266,12 @@ const bezierPoint = (controls: Vector3[], t: number, target: Vector3) => {
   return target.copy(work[0])
 }
 
-/** 凸包の塗り・制御多角形（破線）・ベジェ曲線（実線）を重ねた 1 枚のパネル */
-const createPanel = (source: [number, number][], title: string, offsetX: number) => {
-  const group = new Group()
-  group.position.x = offsetX
-
-  const controls = source.map(([x, y]) => new Vector3(x, y, 0))
-  const sample = new Vector3()
+export const createConvexHullScene = ({ scene, camera, renderer, invalidate }: SceneContext) => {
+  const controls = INITIAL_POINTS.map(([x, y]) => new Vector3(x, y, 0))
 
   // 制御点の凸包。いちばん奥に敷き、曲線がこの範囲から出ないことを見せる
   const fill = createHullFill()
-  group.add(fill.object)
+  scene.add(fill.object)
 
   // 制御点を順に結んだ折れ線。曲線と描き分けるため破線にする
   const polygon = createPolyline(controls.length, LAYER_POLYGON)
@@ -304,14 +282,14 @@ const createPanel = (source: [number, number][], title: string, offsetX: number)
   })
   const polygonLine = new Line(polygon.geometry, polygonMaterial)
   polygonLine.frustumCulled = false
-  group.add(polygonLine)
+  scene.add(polygonLine)
 
   // 制御点から求めた曲線
   const curve = createPolyline(CURVE_SEGMENTS + 1, LAYER_CURVE)
   const curveMaterial = new LineBasicMaterial({ color: CURVE_COLOR })
   const curveLine = new Line(curve.geometry, curveMaterial)
   curveLine.frustumCulled = false
-  group.add(curveLine)
+  scene.add(curveLine)
 
   // 制御点。どれもドラッグで動かせるので同じ見た目にし、掴んでいる 1 つだけ色を変える
   const controlGeometry = new SphereGeometry(CONTROL_RADIUS, 16, 12)
@@ -319,21 +297,19 @@ const createPanel = (source: [number, number][], title: string, offsetX: number)
   const activeMaterial = new MeshBasicMaterial({ color: ACTIVE_COLOR })
   const meshes = controls.map(() => {
     const mesh = new Mesh(controlGeometry, controlMaterial)
-    group.add(mesh)
+    scene.add(mesh)
     return mesh
   })
 
   const labels = controls.map((_, i) => {
     const label = createLabel(CONTROL_LABELS[i], CONTROL_COLOR, LABEL_HEIGHT)
-    group.add(label.sprite)
+    scene.add(label.sprite)
     return label
   })
-  const titleLabel = createLabel(title, TITLE_COLOR, TITLE_HEIGHT)
-  titleLabel.sprite.position.set(0, TITLE_Y, LAYER_LABEL)
-  group.add(titleLabel.sprite)
 
   const centroid = new Vector3()
   const normal = new Vector3()
+  const sample = new Vector3()
 
   /** 制御点の今の位置から、凸包・制御多角形・曲線・ラベルを引き直す */
   const refresh = () => {
@@ -367,54 +343,6 @@ const createPanel = (source: [number, number][], title: string, offsetX: number)
 
   refresh()
 
-  return {
-    object: group,
-    offsetX,
-    controls,
-    /** 掴んでいる制御点だけ色を変える */
-    setActive: (index: number, active: boolean) => {
-      meshes[index].material = active ? activeMaterial : controlMaterial
-    },
-    /** ワールド座標で受け取った位置へ制御点を移し、図を引き直す */
-    move: (index: number, worldX: number, worldY: number) => {
-      const x = Math.min(Math.max(worldX - offsetX, DRAG_MIN_X), DRAG_MAX_X)
-      const y = Math.min(Math.max(worldY, DRAG_MIN_Y), DRAG_MAX_Y)
-      controls[index].set(x, y, 0)
-      refresh()
-    },
-    dispose: () => {
-      fill.dispose()
-      const disposables = [
-        polygon.geometry,
-        polygonMaterial,
-        curve.geometry,
-        curveMaterial,
-        controlGeometry,
-        controlMaterial,
-        activeMaterial,
-        titleLabel.texture,
-        titleLabel.material,
-        ...labels.flatMap((label) => [label.texture, label.material])
-      ]
-      disposables.forEach((disposable) => disposable.dispose())
-    }
-  }
-}
-
-type Panel = ReturnType<typeof createPanel>
-type Target = { panel: Panel; index: number }
-
-const isSame = (a: Target | null, b: Target | null) =>
-  a !== null && b !== null && a.panel === b.panel && a.index === b.index
-
-export const createConvexHullScene = ({ scene, camera, renderer, invalidate }: SceneContext) => {
-  // へこみのある配置とへこみのない配置を左右に並べ、どちらでも曲線が凸包に収まることを見せる
-  const panels = [
-    createPanel(CONCAVE_POINTS, "へこんだ配置", -PANEL_OFFSET),
-    createPanel(CONVEX_POINTS, "へこみのない配置", PANEL_OFFSET)
-  ]
-  panels.forEach((panel) => scene.add(panel.object))
-
   // 制御点は Tweakpane ではなく canvas の上で直接ドラッグして動かす。
   // ポインタの位置は、図がすべて載っている z = 0 の平面との交点として求める
   const canvas = renderer.domElement
@@ -432,28 +360,38 @@ export const createConvexHullScene = ({ scene, camera, renderer, invalidate }: S
     return raycaster.ray.intersectPlane(dragPlane, hit)
   }
 
-  /** ポインタに最も近い制御点。掴める距離に無ければ null */
-  const pick = (world: Vector3): Target | null => {
-    let target: Target | null = null
+  /** ポインタに最も近い制御点の番号。掴める距離に無ければ null */
+  const pick = (world: Vector3) => {
+    let target: number | null = null
     let nearest = PICK_RADIUS
 
-    for (const panel of panels) {
-      for (let index = 0; index < panel.controls.length; index++) {
-        const control = panel.controls[index]
-        const distance = Math.hypot(world.x - (control.x + panel.offsetX), world.y - control.y)
-        if (distance < nearest) {
-          nearest = distance
-          target = { panel, index }
-        }
+    for (let index = 0; index < controls.length; index++) {
+      const control = controls[index]
+      const distance = Math.hypot(world.x - control.x, world.y - control.y)
+      if (distance < nearest) {
+        nearest = distance
+        target = index
       }
     }
 
     return target
   }
 
+  /** ワールド座標で受け取った位置へ制御点を移し、図を引き直す */
+  const move = (index: number, worldX: number, worldY: number) => {
+    const x = Math.min(Math.max(worldX, DRAG_MIN_X), DRAG_MAX_X)
+    const y = Math.min(Math.max(worldY, DRAG_MIN_Y), DRAG_MAX_Y)
+    controls[index].set(x, y, 0)
+    refresh()
+  }
+
+  const setActive = (index: number, active: boolean) => {
+    meshes[index].material = active ? activeMaterial : controlMaterial
+  }
+
   let dragPointer: number | null = null
-  let dragging: Target | null = null
-  let hovered: Target | null = null
+  let dragging: number | null = null
+  let hovered: number | null = null
 
   const handlePointerDown = (event: PointerEvent) => {
     // 2 本目の指はピンチによるズーム。掴んでいる点は放して OrbitControls に任せる
@@ -462,11 +400,11 @@ export const createConvexHullScene = ({ scene, camera, renderer, invalidate }: S
     const world = toScenePoint(event)
     if (!world) return
     const target = pick(world)
-    if (!target) return
+    if (target === null) return
 
     dragPointer = event.pointerId
     dragging = target
-    target.panel.setActive(target.index, true)
+    setActive(target, true)
     // canvas の外まで指が出ても動かし続けられるようにする（pointerup で自動的に解ける）
     canvas.setPointerCapture(event.pointerId)
     invalidate()
@@ -476,8 +414,8 @@ export const createConvexHullScene = ({ scene, camera, renderer, invalidate }: S
     const world = toScenePoint(event)
     if (!world) return
 
-    if (dragging && event.pointerId === dragPointer) {
-      dragging.panel.move(dragging.index, world.x, world.y)
+    if (dragging !== null && event.pointerId === dragPointer) {
+      move(dragging, world.x, world.y)
       // 描画は要求されたときだけ走る。Tweakpane や OrbitControls を経由しない操作なので、
       // ここで次のフレームを頼む
       invalidate()
@@ -487,23 +425,23 @@ export const createConvexHullScene = ({ scene, camera, renderer, invalidate }: S
 
     // 掴める点の上に来たら色を変えて、ドラッグできることを示す
     const target = pick(world)
-    if (isSame(target, hovered)) return
-    if (hovered && !isSame(hovered, dragging)) hovered.panel.setActive(hovered.index, false)
+    if (target === hovered) return
+    if (hovered !== null && hovered !== dragging) setActive(hovered, false)
     hovered = target
-    if (hovered) hovered.panel.setActive(hovered.index, true)
+    if (hovered !== null) setActive(hovered, true)
     invalidate()
   }
 
   const handlePointerUp = (event: PointerEvent) => {
     if (event.pointerId !== dragPointer) return
-    if (dragging && !isSame(dragging, hovered)) dragging.panel.setActive(dragging.index, false)
+    if (dragging !== null && dragging !== hovered) setActive(dragging, false)
     dragging = null
     dragPointer = null
     invalidate()
   }
 
   const handlePointerLeave = () => {
-    if (hovered && !isSame(hovered, dragging)) hovered.panel.setActive(hovered.index, false)
+    if (hovered !== null && hovered !== dragging) setActive(hovered, false)
     hovered = null
     invalidate()
   }
@@ -521,7 +459,19 @@ export const createConvexHullScene = ({ scene, camera, renderer, invalidate }: S
       canvas.removeEventListener("pointerup", handlePointerUp)
       canvas.removeEventListener("pointercancel", handlePointerUp)
       canvas.removeEventListener("pointerleave", handlePointerLeave)
-      panels.forEach((panel) => panel.dispose())
+
+      fill.dispose()
+      const disposables = [
+        polygon.geometry,
+        polygonMaterial,
+        curve.geometry,
+        curveMaterial,
+        controlGeometry,
+        controlMaterial,
+        activeMaterial,
+        ...labels.flatMap((label) => [label.texture, label.material])
+      ]
+      disposables.forEach((disposable) => disposable.dispose())
     }
   }
 }

@@ -20,6 +20,8 @@ import {
 export type DeCasteljauParams = {
   /** 各段で隣り合う 2 点を内分する割合。0 で P₀、1 で P₃ に重なる */
   t: number
+  /** 点を描くところまでの段数。0 なら制御点だけ、3 なら最後に残る 1 点まで */
+  level: number
 }
 
 // _shared の ThreeSceneContext と同じ形をローカルに宣言する（_shared を import しないため）
@@ -270,6 +272,8 @@ export const createDeCasteljauScene = ({ scene, params }: SceneContext) => {
   return {
     update: () => {
       const t = params.t
+      // スライダーから来る段数を、点の並びがある範囲の整数へ丸める
+      const shown = Math.min(Math.max(Math.round(params.level), 0), levels.length - 1)
 
       // 0 段目は制御点そのもの
       CONTROL_POINTS.forEach((point, i) => levels[0][i].copy(point))
@@ -282,10 +286,16 @@ export const createDeCasteljauScene = ({ scene, params }: SceneContext) => {
         }
       }
 
-      // 各段の点と、その点どうしを結ぶ線分
+      // 各段の点と、その点どうしを結ぶ線分。選んだ段までを見せ、その先は隠す
       levels.forEach((points, level) => {
-        points.forEach((point, i) => markers[level][i].position.set(point.x, point.y, LAYER_POINT))
-        chords[level].forEach((chord, i) => chord.set(points[i], points[i + 1]))
+        points.forEach((point, i) => {
+          markers[level][i].position.set(point.x, point.y, LAYER_POINT)
+          markers[level][i].visible = level <= shown
+        })
+        chords[level].forEach((chord, i) => {
+          chord.set(points[i], points[i + 1])
+          chord.object.visible = level <= shown
+        })
       })
 
       // 最後の 1 点が通った跡。0 から今の t までを等分して求め、折れ線で結ぶ
@@ -294,7 +304,10 @@ export const createDeCasteljauScene = ({ scene, params }: SceneContext) => {
       }
       trace.commit()
 
-      // C(t) のラベルは、最後の線分に垂直な向きのうち制御多角形の上辺から遠い側へ逃がす。
+      // C(t) のラベルが指すのは最後に残る 1 点なので、その点を描く段のときだけ見せる
+      markerLabel.sprite.visible = shown === levels.length - 1
+
+      // ラベルは、最後の線分に垂直な向きのうち制御多角形の上辺から遠い側へ逃がす。
       // 曲線はこの線分に接して上辺の反対側にあるので、この側なら作図の線に重ならない
       const [last0, last1] = levels[levels.length - 2]
       const current = levels[levels.length - 1][0]

@@ -121,10 +121,6 @@ $$P_1 - P_0$$ は、 $$P_0$$ から $$P_1$$ へ向かうベクトルです。大
 - 曲線が、両端では最初の辺・最後の辺に接したまま出入りすること
 :::
 
-:::Fix{target="demo"}
-制御多角形がどこなのかを塗りで示す
-:::
-
 <CanvasWrapper>
   <EndpointTangentDemo />
 </CanvasWrapper>
@@ -167,6 +163,64 @@ const createPolyline = (count: number, z: number) => {
     geometry,
     set: (index: number, point: Vector3) => positions.setXYZ(index, point.x, point.y, z),
     commit: () => {
+      positions.needsUpdate = true
+      geometry.computeBoundingSphere()
+    }
+  }
+}
+
+// 折れ線に沿って一定の幅で伸びる帯。制御多角形がどこを通っているかを面として示す。
+// 頂点ごとに、その前後の辺に垂直な向きを足した向き（マイター）へ左右に振り分けることで、
+// 折れ目でも帯が途切れず、重なりもしないようにする
+const createBand = (count: number, z: number) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(count * 2 * 3), 3)
+  geometry.setAttribute("position", positions)
+
+  // 頂点 i の左右 2 点（2i・2i + 1）と、次の頂点の左右 2 点で 1 区間の四角形を作る
+  const index: number[] = []
+  for (let i = 0; i < count - 1; i++) {
+    index.push(2 * i, 2 * i + 1, 2 * i + 3, 2 * i, 2 * i + 3, 2 * i + 2)
+  }
+  geometry.setIndex(index)
+
+  const material = new MeshBasicMaterial({
+    color: BAND_COLOR,
+    // 頂点を動かすと表裏が入れ替わりうるので、どちらから見ても塗る
+    side: DoubleSide
+  })
+
+  const edge = new Vector3()
+  const perpBefore = new Vector3()
+  const perpAfter = new Vector3()
+  const offset = new Vector3()
+
+  // from → to の辺に垂直な単位ベクトル
+  const setPerpendicular = (target: Vector3, from: Vector3, to: Vector3) => {
+    edge.subVectors(to, from).normalize()
+
+    return target.set(-edge.y, edge.x, 0)
+  }
+
+  return {
+    object: new Mesh(geometry, material),
+    set: (points: Vector3[]) => {
+      const last = points.length - 1
+
+      points.forEach((point, i) => {
+        // 端の頂点には片側の辺しか無いので、ある側の辺の垂線を前後どちらにも使う
+        const before = points[Math.max(i - 1, 0)]
+        const after = points[Math.min(i + 1, last)]
+        setPerpendicular(perpBefore, before, i === 0 ? after : point)
+        setPerpendicular(perpAfter, i === last ? before : point, after)
+
+        // 2 本の垂線を足した向きへ、折れ角で細くならない長さだけ振る
+        const spread = Math.max(1 + perpBefore.dot(perpAfter), BAND_MITER_LIMIT)
+        offset.addVectors(perpBefore, perpAfter).multiplyScalar(BAND_HALF_WIDTH / spread)
+
+        positions.setXYZ(2 * i, point.x + offset.x, point.y + offset.y, z)
+        positions.setXYZ(2 * i + 1, point.x - offset.x, point.y - offset.y, z)
+      })
       positions.needsUpdate = true
       geometry.computeBoundingSphere()
     }
@@ -231,6 +285,10 @@ const controls = INITIAL_POINTS.map(([x, y]) => new Vector3(x, y, 0))
 // 次数。制御点が n + 1 個なら n 次で、接ベクトルは辺の n 倍になる
 const degree = controls.length - 1
 
+// 制御多角形の帯。いちばん奥に敷き、破線と両端の辺がその上に乗るようにする
+const band = createBand(controls.length, LAYER_BAND)
+scene.add(band.object)
+
 // 制御点を順に結んだ折れ線。曲線と描き分けるため破線にする
 const polygon = createPolyline(controls.length, LAYER_POLYGON)
 const polygonMaterial = new LineDashedMaterial({
@@ -272,13 +330,14 @@ const startTip = new Vector3()
 const endTip = new Vector3()
 const sample = new Vector3()
 
-// 制御点の今の位置から、制御多角形・曲線・接ベクトルを引き直す
+// 制御点の今の位置から、制御多角形（帯と破線）・曲線・接ベクトルを引き直す
 const refresh = () => {
   controls.forEach((control, i) => {
     polygon.set(i, control)
     meshes[i].position.set(control.x, control.y, LAYER_POINT)
   })
   polygon.commit()
+  band.set(controls)
   // 破線の刻みは頂点ごとの「線に沿った距離」で決まるため、頂点を動かすたびに測り直す
   polygonLine.computeLineDistances()
 
@@ -574,16 +633,9 @@ points.forEach((point, i) => {
 :::Action{fixme}
 制御点をドラッグして、次の点に着目してみよう
 
-- 薄く塗った領域が制御点の凸包で、左のパネルではへこんだ制御点がその内側に入っていること
-- どちらの配置でも、曲線が凸包からはみ出さないこと
+- 薄く塗った領域が制御点の凸包で、へこんだ位置にある制御点はその頂点から外れて内側に入ること
+- 曲線が凸包からはみ出さないこと
 - 制御点を動かして凸包の形が変わっても、曲線が内側に収まったままであること
-:::
-
-:::Fix{target="demo"}
-制御点を動かせばどちらも凹んだ配置にできるので、2つ用意する必要はない
-
-- 「へこんだ配置」「へこみのない配置」ラベルを削除
-- 現状の「へこんだ配置」の方だけを残す
 :::
 
 <CanvasWrapper>
@@ -593,20 +645,12 @@ points.forEach((point, i) => {
 :::Foldable{title="Three.jsによる実装概要"}
 
 ```ts
-// 左のパネルの制御点。P₂ を残り 3 点が作る三角形の内側に置き、
-// 制御多角形にへこみができた配置にする（このとき凸包は三角形になり、P₂ はその内側に入る）
-const CONCAVE_POINTS: [number, number][] = [
+// 制御点。P₂ を残り 3 点が作る三角形の内側に置き、制御多角形にへこみができた配置にする
+// （このとき凸包は三角形になり、P₂ はその内側に入る）
+const INITIAL_POINTS: [number, number][] = [
   [-1.5, -1.2],
   [-0.5, 1.4],
   [0.2, 0.1],
-  [1.5, -1.2]
-]
-
-// 右のパネルの制御点。4 点がどれも凸包の頂点になる（へこみのない）配置にする
-const CONVEX_POINTS: [number, number][] = [
-  [-1.5, -1.2],
-  [-0.7, 1.3],
-  [0.7, 1.3],
   [1.5, -1.2]
 ]
 
@@ -720,57 +764,46 @@ const bezierPoint = (controls: Vector3[], t: number, target: Vector3) => {
   return target.copy(work[0])
 }
 
-// 凸包の塗り・制御多角形（破線）・ベジェ曲線（実線）を重ねた 1 枚のパネル
-const createPanel = (source: [number, number][], offsetX: number) => {
-  const group = new Group()
-  group.position.x = offsetX
+const controls = INITIAL_POINTS.map(([x, y]) => new Vector3(x, y, 0))
+const sample = new Vector3()
 
-  const controls = source.map(([x, y]) => new Vector3(x, y, 0))
-  const sample = new Vector3()
+// 制御点の凸包。いちばん奥に敷き、曲線がこの範囲から出ないことを見せる。
+// 凸包は制御点の並び方だけで決まり、へこみのある配置では
+// へこんだ制御点が頂点から外れて凸包の内側に入る
+const fill = createHullFill()
+fill.set(convexHull(controls))
+scene.add(fill.object)
 
-  // 制御点の凸包。いちばん奥に敷き、曲線がこの範囲から出ないことを見せる。
-  // 凸包は制御点の並び方だけで決まり、へこみのある配置では
-  // へこんだ制御点が頂点から外れて凸包の内側に入る
-  const fill = createHullFill()
-  fill.set(convexHull(controls))
-  group.add(fill.object)
+// 制御点を順に結んだ折れ線。曲線と描き分けるため破線にする
+const polygon = createPolyline(controls.length, LAYER_POLYGON)
+const polygonMaterial = new LineDashedMaterial({
+  color: POLYGON_COLOR,
+  dashSize: DASH_SIZE,
+  gapSize: GAP_SIZE
+})
+const polygonLine = new Line(polygon.geometry, polygonMaterial)
+controls.forEach((control, i) => polygon.set(i, control))
+polygon.commit()
+// 破線の刻みは頂点ごとの「線に沿った距離」で決まるため、頂点を置いてから測る
+polygonLine.computeLineDistances()
+scene.add(polygonLine)
 
-  // 制御点を順に結んだ折れ線。曲線と描き分けるため破線にする
-  const polygon = createPolyline(controls.length, LAYER_POLYGON)
-  const polygonMaterial = new LineDashedMaterial({
-    color: POLYGON_COLOR,
-    dashSize: DASH_SIZE,
-    gapSize: GAP_SIZE
-  })
-  const polygonLine = new Line(polygon.geometry, polygonMaterial)
-  controls.forEach((control, i) => polygon.set(i, control))
-  polygon.commit()
-  // 破線の刻みは頂点ごとの「線に沿った距離」で決まるため、頂点を置いてから測る
-  polygonLine.computeLineDistances()
-  group.add(polygonLine)
-
-  // 制御点から求めた曲線
-  const curve = createPolyline(CURVE_SEGMENTS + 1, LAYER_CURVE)
-  for (let i = 0; i <= CURVE_SEGMENTS; i++) {
-    curve.set(i, bezierPoint(controls, i / CURVE_SEGMENTS, sample))
-  }
-  curve.commit()
-  group.add(new Line(curve.geometry, new LineBasicMaterial({ color: CURVE_COLOR })))
-
-  // 形を決めている 4 つの制御点
-  const controlGeometry = new SphereGeometry(CONTROL_RADIUS, 16, 12)
-  const controlMaterial = new MeshBasicMaterial({ color: CONTROL_COLOR })
-  controls.forEach((control) => {
-    const mesh = new Mesh(controlGeometry, controlMaterial)
-    mesh.position.set(control.x, control.y, LAYER_POINT)
-    group.add(mesh)
-  })
-
-  return group
+// 制御点から求めた曲線
+const curve = createPolyline(CURVE_SEGMENTS + 1, LAYER_CURVE)
+for (let i = 0; i <= CURVE_SEGMENTS; i++) {
+  curve.set(i, bezierPoint(controls, i / CURVE_SEGMENTS, sample))
 }
+curve.commit()
+scene.add(new Line(curve.geometry, new LineBasicMaterial({ color: CURVE_COLOR })))
 
-// へこみのある配置とへこみのない配置を左右に並べ、どちらでも曲線が凸包に収まることを見せる
-scene.add(createPanel(CONCAVE_POINTS, -PANEL_OFFSET), createPanel(CONVEX_POINTS, PANEL_OFFSET))
+// 形を決めている 4 つの制御点
+const controlGeometry = new SphereGeometry(CONTROL_RADIUS, 16, 12)
+const controlMaterial = new MeshBasicMaterial({ color: CONTROL_COLOR })
+controls.forEach((control) => {
+  const mesh = new Mesh(controlGeometry, controlMaterial)
+  mesh.position.set(control.x, control.y, LAYER_POINT)
+  scene.add(mesh)
+})
 ```
 
 :::
@@ -835,15 +868,11 @@ $$
 アルゴリズムで使うのは[線形補間](/cg/modeling/bezier-curve-surface/)だけです。隣り合う制御点を $$t : (1 - t)$$ の比で内分して新しい点を作ると、点の数が`1`つ減ります。得られた点の列に対して同じ内分を繰り返し、点が`1`つになったとき、その点が求める曲線上の点になります。
 
 :::Action{fixme}
-`t`を動かして、次の点に着目してみよう
+「段数」と`t`を動かして、次の点に着目してみよう
 
-- 制御多角形の`3`辺を内分した`3`点、それらを結んだ線分を内分した`2`点、さらにその線分を内分した`1`点と、段が進むごとに点が`1`つ減ること
+- 「段数」を上げると、制御多角形の`3`辺を内分した`3`点、それらを結んだ線分を内分した`2`点、さらにその線分を内分した`1`点と、`1`段ごとに点が`1`つ減っていくこと
 - 最後に残った`1`点が、いつも曲線の上にあること
 - `t`を`0`から`1`まで動かすと、その`1`点が通った跡が曲線を描くこと
-:::
-
-:::Fix{target="demo"}
-内分点の個数（アルゴリズムの進み具合）をUIで変えられるようにする
 :::
 
 <CanvasWrapper>
@@ -865,8 +894,9 @@ const CONTROL_POINTS = [
 // 段ごとの点の数。4 つの制御点から始めて、1 段進むごとに 1 つ減り、最後は 1 つになる
 const LEVEL_SIZES = [4, 3, 2, 1]
 
-// パネルのスライダーで動かす、各段で隣り合う 2 点を内分する割合
+// パネルのスライダーで動かす、各段で隣り合う 2 点を内分する割合と、点を描くところまでの段数
 const t = 0.35
+const shown = 3
 
 // 線形補間。2 点の座標値を 1 − t : t の割合で混ぜる
 const lerp = (from: Vector3, to: Vector3, t: number, target: Vector3) =>
@@ -949,10 +979,12 @@ const polygonLine = new Line(polygonGeometry, polygonMaterial)
 polygonLine.computeLineDistances()
 scene.add(polygonLine)
 
-// 段ごとの点。同じ段の点はジオメトリとマテリアルを共有する
+// 段ごとの点。同じ段の点はジオメトリとマテリアルを共有する。選んだ段までを描く
 const geometries = LEVEL_RADII.map((radius) => new SphereGeometry(radius, 16, 12))
 const materials = LEVEL_COLORS.map((color) => new MeshBasicMaterial({ color }))
 levels.forEach((points, level) => {
+  if (level > shown) return
+
   points.forEach((point) => {
     const mesh = new Mesh(geometries[level], materials[level])
     mesh.position.set(point.x, point.y, LAYER_POINT)
@@ -961,9 +993,9 @@ levels.forEach((points, level) => {
 })
 
 // 同じ段の点どうしを結ぶ線分。次の段の点はこの線分の上に乗る。
-// 0 段目は制御多角形として破線で描いてあるので、1 段目以降だけ作る
+// 0 段目は制御多角形として破線で描いてあるので、1 段目以降で選んだ段までを作る
 levels.forEach((points, level) => {
-  if (level === 0) return
+  if (level === 0 || level > shown) return
 
   for (let i = 0; i < points.length - 1; i++) {
     const chord = createSegment(LEVEL_COLORS[level], LAYER_CHORD)
@@ -994,31 +1026,18 @@ for r = 1 to n:
 // 残った p[0] が曲線上の点
 ```
 
-:::Fix
-- 「外側の繰り返しが内分の段数、内側の繰り返しがその段で作る点にあたります。」が少しわかりづらい。内側の繰り返し自体が点にあたるという表現は不自然なので、内側の繰り返しで何が繰り返し行われるのかを説明したい。外側の繰り返しについても同様。
-- 「`1`段」というのは、何の一段なのかを明言したい。画像の横列一段という意味で合っている？
-:::
+外側の繰り返しは、点の列から次の列を作る操作を、点が`1`つになるまで繰り返します。内側の繰り返しは、その`1`回の中で隣り合う`2`点を順に内分し、次の列の点を求めていきます。点の列が`1`つできるまでを`1`段と数えると、`1`段進むごとに点が`1`つずつ減るため、内側の繰り返しの回数も`1`つずつ少なくなっていきます。
 
-外側の繰り返しが内分の段数、内側の繰り返しがその段で作る点にあたります。`1`段進むごとに点が`1`つずつ減るため、内側の繰り返しの回数も`1`つずつ少なくなっていきます。
-
-:::Fix
-「内分によって現れる点も最後の点も」とあるが、「最後の点」って、何の最後？
-:::
-
-べき乗を使わずかけ算と足し算だけで済むこの手順は、計算誤差が積み重なりにくいという利点も持ちます。内分を繰り返しているだけなので、内分によって現れる点も最後の点も制御点の凸包から出ないことが、作図のデモからそのまま見て取れます。
+べき乗を使わずかけ算と足し算だけで済むこの手順は、計算誤差が積み重なりにくいという利点も持ちます。内分を繰り返しているだけなので、途中の段に現れる点も、最後に残る曲線上の`1`点も、制御点の凸包から出ないことが、作図のデモからそのまま見て取れます。
 
 ## :WithGroupTag[ベジェ曲面]{group="{['CG']}"}
 
-:::Fix
-ベジェ曲線の制御点を結ぶと折れ線になるので、「制御点も`1`列に並んだもの」という表現は混乱を招く
-:::
-
-ここまで見てきた:Mark[ベジェ曲線]は、パラメータが`1`つで、制御点も`1`列に並んだものでした。曲線から:Mark[曲面]に発展させるには、パラメータを追加する必要があります。
+ここまで見てきた:Mark[ベジェ曲線]は、パラメータが`1`つで、制御点も $$P_0$$ から $$P_n$$ へと番号`1`つで数えるものでした。曲線から:Mark[曲面]に発展させるには、パラメータを追加する必要があります。
 
 縦横に $$(m + 1) \times (n + 1)$$ 個の制御点 $$P_{ij}$$ を並べ、`2`つのパラメータそれぞれに[バーンスタイン基底関数](/cg/modeling/bezier-curve-surface/)をかけて足し合わせたものが:Anki[ベジェ曲面]です。
 
-:::Add
-なぜ$$m \times n$$ではなくそれぞれに`1`を加えてから掛け算しているのか、Noteで補足が欲しい
+:::Note
+$$n$$ 次のベジェ曲線には $$P_0$$ から $$P_n$$ までの $$n + 1$$ 個の制御点が必要でした。ベジェ曲面でも方向ごとに同じ関係が成り立つので、$$u$$ 方向が $$m$$ 次なら $$m + 1$$ 個、$$v$$ 方向が $$n$$ 次なら $$n + 1$$ 個の制御点が並び、かけ合わせた $$(m + 1) \times (n + 1)$$ 個が格子全体の制御点の数になります。
 :::
 
 ベジェ曲面上の点は次の式で表されます。
@@ -1249,11 +1268,7 @@ scene.add(light, new AmbientLight(LIGHT_COLOR, 0.5))
 
 ### ベジェ曲線（曲面）の繋ぎ合わせ
 
-:::Fix
-「縁の制御点だけを見れば」について、「見る」というより操作が必要なのであれば、「縁の制御点だけを動かせば」などの方がわかりやすいかも
-:::
-
-網の縁に並ぶ制御点は、ベジェ曲面の辺（外部との境界線）となるベジェ曲線を定めます。そのため、曲面どうしを繋ぐときには、縁の制御点だけを見れば済みます。
+網の縁に並ぶ制御点は、ベジェ曲面の辺（外部との境界線）となるベジェ曲線を定めます。そのため、曲面どうしを繋ぐときには、縁の制御点だけを動かせば済みます。
 
 一方で、細かく作り込もうとして制御点を増やすと、その分次数が上がって計算が重くなり、`1`つの制御点を動かしただけで曲線や曲面の全体が変わってしまいます。そのため実際には、次数を`3`程度に抑えたベジェ曲線・曲面をいくつも繋いで使います。
 

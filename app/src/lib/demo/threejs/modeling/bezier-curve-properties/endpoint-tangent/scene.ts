@@ -2,6 +2,7 @@ import {
   BufferGeometry,
   CanvasTexture,
   ConeGeometry,
+  DoubleSide,
   Float32BufferAttribute,
   Group,
   Line,
@@ -70,6 +71,15 @@ const CURVE_SEGMENTS = 64
 const DASH_SIZE = 0.12
 const GAP_SIZE = 0.08
 
+/** 制御多角形を塗る帯の、中心線から縁までの幅 */
+const BAND_HALF_WIDTH = 0.075
+
+/**
+ * 折れ目で帯を外へ伸ばす量の頭打ち。
+ * 折れ角が鋭いほど外側の角は遠くなるので、そのまま伸ばすと帯が尖って飛び出す
+ */
+const BAND_MITER_LIMIT = 0.3
+
 /** 制御点を示す球の半径 */
 const CONTROL_RADIUS = 0.07
 
@@ -100,6 +110,7 @@ const CONE_UP = new Vector3(0, 1, 0)
  * xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z。
  * 正面から見る構図に固定しているため、この厚みは絵には出ない
  */
+const LAYER_BAND = -0.01
 const LAYER_POLYGON = 0.01
 const LAYER_EDGE = 0.02
 const LAYER_TANGENT = 0.03
@@ -108,6 +119,7 @@ const LAYER_POINT = 0.05
 const LAYER_LABEL = 0.14
 
 // 背景（暗めのグレー）の上で、制御多角形・曲線・制御点・接ベクトルが見分けられる色にする
+const BAND_COLOR = "#3f4550"
 const POLYGON_COLOR = "#9aa3b0"
 const CURVE_COLOR = "#ffc857"
 const CONTROL_COLOR = "#b79cf5"
@@ -167,6 +179,72 @@ const createPolyline = (count: number, z: number) => {
     commit: () => {
       positions.needsUpdate = true
       geometry.computeBoundingSphere()
+    }
+  }
+}
+
+/**
+ * 折れ線に沿って一定の幅で伸びる帯。制御多角形がどこを通っているかを面として示す。
+ * 頂点ごとに、その前後の辺に垂直な向きを足した向き（マイター）へ左右に振り分けることで、
+ * 折れ目でも帯が途切れず、重なりもしないようにする
+ */
+const createBand = (count: number, z: number) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(count * 2 * 3), 3)
+  geometry.setAttribute("position", positions)
+
+  // 頂点 i の左右 2 点（2i・2i + 1）と、次の頂点の左右 2 点で 1 区間の四角形を作る
+  const index: number[] = []
+  for (let i = 0; i < count - 1; i++) {
+    index.push(2 * i, 2 * i + 1, 2 * i + 3, 2 * i, 2 * i + 3, 2 * i + 2)
+  }
+  geometry.setIndex(index)
+
+  const material = new MeshBasicMaterial({
+    color: BAND_COLOR,
+    // 頂点を動かすと表裏が入れ替わりうるので、どちらから見ても塗る
+    side: DoubleSide
+  })
+  const mesh = new Mesh(geometry, material)
+  mesh.frustumCulled = false
+
+  const edge = new Vector3()
+  const perpBefore = new Vector3()
+  const perpAfter = new Vector3()
+  const offset = new Vector3()
+
+  /** from → to の辺に垂直な単位ベクトル */
+  const setPerpendicular = (target: Vector3, from: Vector3, to: Vector3) => {
+    edge.subVectors(to, from).normalize()
+
+    return target.set(-edge.y, edge.x, 0)
+  }
+
+  return {
+    object: mesh,
+    set: (points: Vector3[]) => {
+      const last = points.length - 1
+
+      points.forEach((point, i) => {
+        // 端の頂点には片側の辺しか無いので、ある側の辺の垂線を前後どちらにも使う
+        const before = points[Math.max(i - 1, 0)]
+        const after = points[Math.min(i + 1, last)]
+        setPerpendicular(perpBefore, before, i === 0 ? after : point)
+        setPerpendicular(perpAfter, i === last ? before : point, after)
+
+        // 2 本の垂線を足した向きへ、折れ角で細くならない長さだけ振る
+        const spread = Math.max(1 + perpBefore.dot(perpAfter), BAND_MITER_LIMIT)
+        offset.addVectors(perpBefore, perpAfter).multiplyScalar(BAND_HALF_WIDTH / spread)
+
+        positions.setXYZ(2 * i, point.x + offset.x, point.y + offset.y, z)
+        positions.setXYZ(2 * i + 1, point.x - offset.x, point.y - offset.y, z)
+      })
+      positions.needsUpdate = true
+      geometry.computeBoundingSphere()
+    },
+    dispose: () => {
+      geometry.dispose()
+      material.dispose()
     }
   }
 }
@@ -272,6 +350,10 @@ export const createEndpointTangentScene = ({
   /** 次数。制御点が n + 1 個なら n 次で、接ベクトルは辺の n 倍になる */
   const degree = controls.length - 1
 
+  // 制御多角形の帯。いちばん奥に敷き、破線と両端の辺がその上に乗るようにする
+  const band = createBand(controls.length, LAYER_BAND)
+  scene.add(band.object)
+
   // 制御点を順に結んだ折れ線。曲線と描き分けるため破線にする
   const polygon = createPolyline(controls.length, LAYER_POLYGON)
   const polygonMaterial = new LineDashedMaterial({
@@ -337,7 +419,7 @@ export const createEndpointTangentScene = ({
     label.sprite.position.copy(tip).addScaledVector(normal, TANGENT_LABEL_OFFSET).setZ(LAYER_LABEL)
   }
 
-  /** 制御点の今の位置から、制御多角形・曲線・接ベクトル・ラベルを引き直す */
+  /** 制御点の今の位置から、制御多角形（帯と破線）・曲線・接ベクトル・ラベルを引き直す */
   const refresh = () => {
     centroid.set(0, 0, 0)
     controls.forEach((control) => centroid.add(control))
@@ -354,6 +436,7 @@ export const createEndpointTangentScene = ({
         .setZ(LAYER_LABEL)
     })
     polygon.commit()
+    band.set(controls)
     // 破線の刻みは頂点ごとの「線に沿った距離」で決まるため、頂点を動かすたびに測り直す
     polygonLine.computeLineDistances()
 
@@ -508,6 +591,7 @@ export const createEndpointTangentScene = ({
       canvas.removeEventListener("pointercancel", handlePointerUp)
       canvas.removeEventListener("pointerleave", handlePointerLeave)
 
+      band.dispose()
       firstEdge.dispose()
       lastEdge.dispose()
       startArrow.dispose()
