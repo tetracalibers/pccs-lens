@@ -70,9 +70,6 @@ const CURVE_SEGMENTS = 64
 const DASH_SIZE = 0.12
 const GAP_SIZE = 0.08
 
-/** 動かす前の曲線を薄く残す濃さ。今の曲線と見比べて、引き寄せられた量を読み取る */
-const GHOST_OPACITY = 0.3
-
 /** 制御多角形の内側を塗る濃さ。破線だけではどこが多角形なのか掴みにくいので、面でも示す */
 const POLYGON_FILL_OPACITY = 0.12
 
@@ -101,7 +98,6 @@ const LABEL_FONT = "bold 92px sans-serif"
  * 正面から見る構図に固定しているため、この厚みは絵には出ない
  */
 const LAYER_FILL = -0.01
-const LAYER_GHOST = 0
 const LAYER_POLYGON = 0.01
 const LAYER_CURVE = 0.02
 const LAYER_POINT = 0.03
@@ -226,10 +222,7 @@ const createPolygonFill = (count: number) => {
   }
 }
 
-/**
- * 制御多角形（破線）とベジェ曲線（実線）を重ねた 1 枚のパネル。
- * 動かす前の曲線を薄く残し、制御点を動かしたときの引き寄せられ方が読めるようにする
- */
+/** 制御多角形（破線）とベジェ曲線（実線）を重ねた 1 枚のパネル */
 const createPanel = (source: [number, number][], title: string, offsetX: number) => {
   const group = new Group()
   group.position.x = offsetX
@@ -240,20 +233,6 @@ const createPanel = (source: [number, number][], title: string, offsetX: number)
   // 制御多角形の内側。破線より奥に敷き、面としての広がりを示す
   const fill = createPolygonFill(controls.length)
   group.add(fill.object)
-
-  // 動かす前の曲線。制御点の初期位置から 1 度だけ求める
-  const ghostPoints: Vector3[] = []
-  for (let i = 0; i <= CURVE_SEGMENTS; i++) {
-    bezierPoint(controls, i / CURVE_SEGMENTS, sample)
-    ghostPoints.push(new Vector3(sample.x, sample.y, LAYER_GHOST))
-  }
-  const ghostGeometry = new BufferGeometry().setFromPoints(ghostPoints)
-  const ghostMaterial = new LineBasicMaterial({
-    color: CURVE_COLOR,
-    transparent: true,
-    opacity: GHOST_OPACITY
-  })
-  group.add(new Line(ghostGeometry, ghostMaterial))
 
   // 制御点を順に結んだ折れ線。曲線と描き分けるため破線にする
   const polygon = createPolyline(controls.length, LAYER_POLYGON)
@@ -341,8 +320,6 @@ const createPanel = (source: [number, number][], title: string, offsetX: number)
     dispose: () => {
       fill.dispose()
       const disposables = [
-        ghostGeometry,
-        ghostMaterial,
         polygon.geometry,
         polygonMaterial,
         curve.geometry,

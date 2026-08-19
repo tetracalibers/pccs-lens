@@ -51,7 +51,7 @@ const P1_LABEL_OFFSET = new Vector3(0.36, 0.24, 0)
 /** C(t) のラベルは、線分の下に置く長さのラベルとぶつからないよう上へ逃がす */
 const MARKER_LABEL_OFFSET = new Vector3(0, 0.34, 0)
 
-/** t と 1 − t の範囲を示す矢印を線分から下へ離す距離と、そのラベルをさらに離す距離 */
+/** 2 つの制御点にかかる重みを示す矢印を線分から下へ離す距離と、そのラベルをさらに離す距離 */
 const ARROW_OFFSET = 0.38
 const ARROW_LABEL_OFFSET = 0.7
 
@@ -217,7 +217,7 @@ const interpolate = (t: number, target: Vector3) =>
     .addScaledVector(P1, t)
 
 export const createLinearInterpolationScene = ({ scene, params }: SceneContext) => {
-  // 線分は C(t) を境に 2 つに分かれる。P0 側の長さが t、P1 側の長さが 1 − t にあたる
+  // 線分は C(t) を境に 2 つに分かれる。P0 側には P0 にかかる重み 1 − t、P1 側には P1 にかかる重み t を添える
   const near = createSegment(NEAR_COLOR)
   const far = createSegment(FAR_COLOR)
   scene.add(near.object, far.object)
@@ -237,8 +237,8 @@ export const createLinearInterpolationScene = ({ scene, params }: SceneContext) 
   const startLabel = createLabel("P₀", CONTROL_COLOR, LABEL_HEIGHT)
   const endLabel = createLabel("P₁", CONTROL_COLOR, LABEL_HEIGHT)
   const markerLabel = createLabel("C(t)", MARKER_COLOR, LABEL_HEIGHT)
-  const nearLabel = createLabel("t", NEAR_COLOR, LABEL_HEIGHT)
-  const farLabel = createLabel("1 − t", FAR_COLOR, LABEL_HEIGHT)
+  const nearLabel = createLabel("1 − t", NEAR_COLOR, LABEL_HEIGHT)
+  const farLabel = createLabel("t", FAR_COLOR, LABEL_HEIGHT)
   startLabel.sprite.position.copy(P0).add(P0_LABEL_OFFSET).setZ(LAYER_LABEL)
   endLabel.sprite.position.copy(P1).add(P1_LABEL_OFFSET).setZ(LAYER_LABEL)
   scene.add(
@@ -252,7 +252,7 @@ export const createLinearInterpolationScene = ({ scene, params }: SceneContext) 
   // 線分に対して下向きの単位ベクトル。矢印・引き出し線・ラベルを線分から逃がす向きに使う
   const below = new Vector3(P1.y - P0.y, P0.x - P1.x, 0).normalize()
 
-  // t と 1 − t の広がりを示す両矢印。線分と平行に、少し下へずらして並べる
+  // 2 つの制御点にかかる重みを示す両矢印。線分と平行に、少し下へずらして並べる
   const nearArrow = createMeasureArrow(NEAR_COLOR)
   const farArrow = createMeasureArrow(FAR_COLOR)
   scene.add(nearArrow.object, farArrow.object)
