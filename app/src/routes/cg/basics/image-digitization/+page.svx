@@ -4,8 +4,6 @@ title: 画像のデジタル化 # CG 1-2-1 / ImgP 2-4
 
 group: ["CG", "ImgP"]
 visual: true
-
-draft: true
 ---
 
 <script>
@@ -51,10 +49,6 @@ draft: true
 - :Mark[明るさの段階数]を減らすほど、滑らかだった濃淡（棒の高さ）が階段状になる
 - :Mark[連続的な明るさを重ねる]と、もとの明るさと、段階に丸めた後の画素の高さとのずれがわかる
 - ドラッグして真上から見下ろすと、左のアナログ画像と、右の画素の並びを比較できる
-:::
-
-:::Fix{target="demo"}
-連続的な明るさを表す曲面を青系の色にしたい
 :::
 
 <CanvasWrapper>
@@ -114,7 +108,7 @@ for (let i = 0; i < surfacePosition.count; i++) {
 }
 surfaceGeometry.computeVertexNormals()
 const surfaceMaterial = new MeshLambertMaterial({
-  color: "#ffc857",
+  color: "#5ec8f2",
   side: DoubleSide,
   transparent: true,
   opacity: 0.4
@@ -172,10 +166,6 @@ pixels.instanceMatrix.needsUpdate = true
 
 :::Action
 :Mark[解像度]を下げるほど、一つひとつの画素が大きくなり、図形の輪郭が階段状にがたついて見えることを確認しよう
-:::
-
-:::Fix{target="demo"}
-「画素の境目を表示」はデフォルトでfalseにする
 :::
 
 <CanvasWrapper>
