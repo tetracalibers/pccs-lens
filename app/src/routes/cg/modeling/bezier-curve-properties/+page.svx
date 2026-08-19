@@ -11,6 +11,7 @@ draft: true
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import ConvexHullDemo from '$lib/demo/threejs/modeling/bezier-curve-properties/convex-hull/ConvexHullDemo.svelte'
+  import DeCasteljauDemo from '$lib/demo/threejs/modeling/bezier-curve-properties/de-casteljau/DeCasteljauDemo.svelte'
   import EndpointTangentDemo from '$lib/demo/threejs/modeling/bezier-curve-properties/endpoint-tangent/EndpointTangentDemo.svelte'
   import SmoothJoinDemo from '$lib/demo/threejs/modeling/bezier-curve-properties/smooth-join/SmoothJoinDemo.svelte'
 </script>
@@ -821,8 +822,150 @@ $$
 
 使うのは[線形補間](/cg/modeling/bezier-curve-surface/)だけです。隣り合う制御点を $$t : (1 - t)$$ の比で内分して新しい点を作ると、点の数が`1`つ減ります。得られた点の列に対して同じ内分を繰り返し、点が`1`つになったとき、その点が求める曲線上の点になります。
 
-:::Todo
-`3`次ベジェ曲線に対するド・カステリョの作図。`4`つの制御点を結ぶ制御多角形の各辺に内分点を`3`つ、それらを結んだ線分の上に`2`つ、さらにその線分の上に`1`つと段階的に描き、最後に残った`1`点が曲線上にあることを示す。パラメータの値が小さい場合と大きい場合の作図を並べ、各段の点が制御点の間を移動する様子がわかるようにする。
+:::Action{fixme}
+`t`を動かして、次の点に着目してみよう
+
+- 制御多角形の`3`辺を内分した`3`点、それらを結んだ線分を内分した`2`点、さらにその線分を内分した`1`点と、段が進むごとに点が`1`つ減ること
+- 最後に残った`1`点が、いつも曲線の上にあること
+- `t`を`0`から`1`まで動かすと、その`1`点が通った跡が曲線を描くこと
+:::
+
+<CanvasWrapper>
+  <DeCasteljauDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 4 つの制御点。左右対称にすると各段の点も対称に並んでしまうので、
+// 高さと幅をずらした山形に置く
+const CONTROL_POINTS = [
+  new Vector3(-2.7, -1.2, 0),
+  new Vector3(-1.7, 1.35, 0),
+  new Vector3(1.2, 1.05, 0),
+  new Vector3(2.7, -0.75, 0)
+]
+
+// 段ごとの点の数。4 つの制御点から始めて、1 段進むごとに 1 つ減り、最後は 1 つになる
+const LEVEL_SIZES = [4, 3, 2, 1]
+
+// パネルのスライダーで動かす、各段で隣り合う 2 点を内分する割合
+const t = 0.35
+
+// 線形補間。2 点の座標値を 1 − t : t の割合で混ぜる
+const lerp = (from: Vector3, to: Vector3, t: number, target: Vector3) =>
+  target
+    .copy(from)
+    .multiplyScalar(1 - t)
+    .addScaledVector(to, t)
+
+// 両端が動く線分。頂点を作り直さず、座標だけ書き換える
+const createSegment = (color: string, z: number) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(6), 3)
+  geometry.setAttribute("position", positions)
+
+  return {
+    object: new LineSegments(geometry, new LineBasicMaterial({ color })),
+    set: (from: Vector3, to: Vector3) => {
+      positions.setXYZ(0, from.x, from.y, z)
+      positions.setXYZ(1, to.x, to.y, z)
+      positions.needsUpdate = true
+    }
+  }
+}
+
+// 頂点が動く折れ線。頂点を作り直さず、座標だけ書き換える
+const createPolyline = (count: number, z: number) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(count * 3), 3)
+  geometry.setAttribute("position", positions)
+
+  return {
+    geometry,
+    set: (index: number, point: Vector3) => positions.setXYZ(index, point.x, point.y, z),
+    commit: () => {
+      positions.needsUpdate = true
+      geometry.computeBoundingSphere()
+    }
+  }
+}
+
+// 軌跡を求めるときに使う作業用の点。何度も呼ばれるので、その都度は作らない
+const work = CONTROL_POINTS.map(() => new Vector3())
+
+// 軌跡用に、作図の途中を残さずベジェ曲線上の点だけを求める
+const bezierPoint = (t: number, target: Vector3) => {
+  CONTROL_POINTS.forEach((point, i) => work[i].copy(point))
+
+  for (let last = work.length - 1; last > 0; last--) {
+    for (let i = 0; i < last; i++) work[i].lerp(work[i + 1], t)
+  }
+
+  return target.copy(work[0])
+}
+
+// 段ごとの点。0 段目は制御点そのもので、1 段進むごとに 1 つ減る
+const levels = LEVEL_SIZES.map((size) => Array.from({ length: size }, () => new Vector3()))
+
+// 0 段目は制御点そのもの
+CONTROL_POINTS.forEach((point, i) => levels[0][i].copy(point))
+
+// 隣り合う 2 点を t : (1 − t) の比で内分して次の段の点を作る。
+// 段が進むごとに点が 1 つ減り、最後に残った 1 点が曲線上の点になる
+for (let level = 1; level < levels.length; level++) {
+  for (let i = 0; i < levels[level].length; i++) {
+    lerp(levels[level - 1][i], levels[level - 1][i + 1], t, levels[level][i])
+  }
+}
+
+// 制御点を順に結んだ制御多角形。各段で作る線分と描き分けるため破線にする
+const polygonGeometry = new BufferGeometry().setFromPoints(
+  CONTROL_POINTS.map((point) => new Vector3(point.x, point.y, LAYER_POLYGON))
+)
+const polygonMaterial = new LineDashedMaterial({
+  color: POLYGON_COLOR,
+  dashSize: DASH_SIZE,
+  gapSize: GAP_SIZE
+})
+const polygonLine = new Line(polygonGeometry, polygonMaterial)
+// 破線の刻みは頂点ごとの「線に沿った距離」で決まるので、置いたあとに測る
+polygonLine.computeLineDistances()
+scene.add(polygonLine)
+
+// 段ごとの点。同じ段の点はジオメトリとマテリアルを共有する
+const geometries = LEVEL_RADII.map((radius) => new SphereGeometry(radius, 16, 12))
+const materials = LEVEL_COLORS.map((color) => new MeshBasicMaterial({ color }))
+levels.forEach((points, level) => {
+  points.forEach((point) => {
+    const mesh = new Mesh(geometries[level], materials[level])
+    mesh.position.set(point.x, point.y, LAYER_POINT)
+    scene.add(mesh)
+  })
+})
+
+// 同じ段の点どうしを結ぶ線分。次の段の点はこの線分の上に乗る。
+// 0 段目は制御多角形として破線で描いてあるので、1 段目以降だけ作る
+levels.forEach((points, level) => {
+  if (level === 0) return
+
+  for (let i = 0; i < points.length - 1; i++) {
+    const chord = createSegment(LEVEL_COLORS[level], LAYER_CHORD)
+    chord.set(points[i], points[i + 1])
+    scene.add(chord.object)
+  }
+})
+
+// 最後に残る 1 点が 0 から今の t までに通った跡。折れ線で近似する
+const trace = createPolyline(TRACE_SEGMENTS + 1, LAYER_TRACE)
+const sample = new Vector3()
+for (let i = 0; i <= TRACE_SEGMENTS; i++) {
+  trace.set(i, bezierPoint((t * i) / TRACE_SEGMENTS, sample))
+}
+trace.commit()
+scene.add(new Line(trace.geometry, new LineBasicMaterial({ color: TRACE_COLOR })))
+```
+
 :::
 
 この手順を擬似コードで表すと、次のようになります。
