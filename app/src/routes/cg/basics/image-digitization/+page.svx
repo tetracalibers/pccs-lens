@@ -4,11 +4,14 @@ title: 画像のデジタル化 # CG 1-2-1 / ImgP 2-4
 
 group: ["CG", "ImgP"]
 visual: true
+
+draft: true
 ---
 
 <script>
   import BrightnessTerrainDemo from '$lib/demo/threejs/basics/image-digitization/brightness-terrain/BrightnessTerrainDemo.svelte'
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import ImageResolutionDemo from '$lib/demo/threejs/basics/image-digitization/image-resolution/ImageResolutionDemo.svelte'
 </script>
 
 [カメラでの撮影とCG](/cg/basics/camera-capture-and-cg/)では、撮像素子がアナログの光の像を読み取り、コンピュータが扱えるデジタル画像にする、という流れを見ました。
@@ -161,3 +164,64 @@ pixels.instanceMatrix.needsUpdate = true
 
 この画素の細かさ、すなわち画素がどれだけ密に詰まっているかを:Anki[解像度]といいます。
 同じ大きさの画像であれば、解像度が高いほど画素が小さく細かく並ぶため、像は滑らかで精細に見えます。逆に解像度が低いと、一つひとつの画素が目立ち、像は粗く見えます。
+
+:::Action{fixme}
+解像度を動かして、次の点に着目してみよう
+
+- 解像度を下げると、画像の大きさは変わらないまま、1つひとつの画素が大きくなって像が粗く見えること
+- 円や帯の輪郭が、解像度が低いほど階段状にがたついて見えること
+- 画素の境目を表示すると、画像がいくつのマスに区切られているかが分かり、パネルの画素数と対応すること
+:::
+
+<CanvasWrapper>
+  <ImageResolutionDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 1 辺あたりの画素数
+const RESOLUTION = 24
+
+// 指定した解像度で絵を標本化し、1 画素 1 テクセルのテクスチャに焼く
+const data = new Uint8Array(RESOLUTION * RESOLUTION * 4)
+for (let row = 0; row < RESOLUTION; row++) {
+  for (let column = 0; column < RESOLUTION; column++) {
+    // 画素 1 つ分の真ん中で明るさを読み取る
+    const x = -1 + (2 * (column + 0.5)) / RESOLUTION
+    const y = -1 + (2 * (row + 0.5)) / RESOLUTION
+    const level = Math.round(patternAt(x, y) * 255)
+    data.set([level, level, level, 255], (row * RESOLUTION + column) * 4)
+  }
+}
+
+// 拡大しても画素どうしが混ざらないよう、補間なし（NearestFilter）で貼る
+const texture = new DataTexture(data, RESOLUTION, RESOLUTION)
+texture.colorSpace = SRGBColorSpace
+texture.magFilter = NearestFilter
+texture.minFilter = NearestFilter
+texture.needsUpdate = true
+
+// 解像度を変えても、画像そのものの大きさは変えない
+const pictureGeometry = new PlaneGeometry(2, 2)
+const pictureMaterial = new MeshBasicMaterial({ map: texture, side: DoubleSide })
+scene.add(new Mesh(pictureGeometry, pictureMaterial))
+
+// 画素どうしの境目。画像の 1 辺を解像度で等分した位置に引く
+const pitch = 2 / RESOLUTION
+const gridPoints: number[] = []
+for (let i = 0; i <= RESOLUTION; i++) {
+  const offset = -1 + i * pitch
+  gridPoints.push(offset, -1, 0, offset, 1, 0)
+  gridPoints.push(-1, offset, 0, 1, offset, 0)
+}
+const gridGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute(gridPoints, 3)
+)
+const grid = new LineSegments(gridGeometry, new LineBasicMaterial({ color: "#7d8794" }))
+grid.position.z = 0.002
+scene.add(grid)
+```
+
+:::
