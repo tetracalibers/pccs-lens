@@ -29,7 +29,6 @@ src/routes/cg/transformation/basic-transformations/+page.svx
 src/routes/cg/transformation/perspective-and-parallel-projection/+page.svx
 src/routes/cg/transformation/pinhole-camera/+page.svx
 src/routes/cg/transformation/projection-calculation/+page.svx
-src/routes/cg/transformation/projective-transformation/+page.svx
 src/routes/cg/transformation/reflection-and-skew/+page.svx
 src/routes/cg/transformation/transformation-composition/+page.svx
 src/routes/cg/transformation/viewing-pipeline-transformations/+page.svx
