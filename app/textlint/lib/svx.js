@@ -12,6 +12,13 @@
 /** マスク対象のノード型（フロントマター・コードブロック・インラインコード・HTML/Svelte・見出し） */
 export const MASKED_NODE_TYPES = ["Yaml", "CodeBlock", "Code", "Html", "Header"]
 
+/**
+ * 地の文ルールでだけ追加でマスクするノード型。
+ * リンクはテキストごと対象外にする（リンクのラベルではインラインコードを使わない
+ * 規約のため。→ writing-guides/math-notation-guide.md「数字は必ずインラインコードにする」）。
+ */
+const PROSE_MASKED_NODE_TYPES = [...MASKED_NODE_TYPES, "Link"]
+
 /** 数式（インライン・ブロックとも）。数字ルール・コードルールの対象外 */
 const MATH = /\$\$[\s\S]*?\$\$/g
 
@@ -84,15 +91,15 @@ const maskPattern = (text, pattern) =>
  * - フロントマター・コードブロック・インラインコード・HTML/Svelte（AST から）
  * - 見出し（`## :WithGroupTag[2次元的な...]` や `### 2次元直交座標系`）
  * - 数式 `$$...$$`
- * - ディレクティブ名・ラベル・属性（`:Anki[10YR]`・`{grades="2,uc"}`・`::Heading2`）
- * - リンクの URL・Svelte コンポーネントの使用箇所・順序付きリストのマーカー
+ * - ディレクティブ名・ラベル・属性（`:Anki[10YR]`・`:Mark[2次曲線]`・`{grades="2,uc"}`・`::Heading2`）
+ * - リンク全体（テキストと URL）・Svelte コンポーネントの使用箇所・順序付きリストのマーカー
  *
  * @param {string} text
  * @param {object} documentNode
  * @returns {string}
  */
 export const maskForProseRules = (text, documentNode) => {
-  let masked = maskNodes(text, documentNode, MASKED_NODE_TYPES)
+  let masked = maskNodes(text, documentNode, PROSE_MASKED_NODE_TYPES)
   masked = maskPattern(masked, TAG)
   masked = maskPattern(masked, MATH)
   masked = maskPattern(masked, DIRECTIVE)
