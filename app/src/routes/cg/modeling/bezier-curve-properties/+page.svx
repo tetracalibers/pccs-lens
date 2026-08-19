@@ -9,6 +9,7 @@ draft: true
 ---
 
 <script>
+  import BicubicSurfaceDemo from '$lib/demo/threejs/modeling/bezier-curve-properties/bicubic-surface/BicubicSurfaceDemo.svelte'
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import ConvexHullDemo from '$lib/demo/threejs/modeling/bezier-curve-properties/convex-hull/ConvexHullDemo.svelte'
   import DeCasteljauDemo from '$lib/demo/threejs/modeling/bezier-curve-properties/de-casteljau/DeCasteljauDemo.svelte'
@@ -996,8 +997,210 @@ $$
 
 実際によく使われるのは、$$u$$ 方向にも $$v$$ 方向にも`3`次をとる:Anki[双3次ベジェ曲面]で、制御点は縦横`4`点ずつ、合わせて`16`個になります。
 
-:::Todo
-双`3`次ベジェ曲面の図。縦横`4`点ずつ、合わせて`16`個の制御点と、それらを縦横に結んだ制御点網を細い線で描き、そこから生成される曲面を重ねて示す。四隅の制御点が曲面の隅と一致していること、網の縁に並ぶ`4`点ずつが曲面の境界にあたるベジェ曲線を決めていることがわかるようにする。
+:::Action{fixme}
+ドラッグで回転させて、次の点に着目してみよう
+
+- 色を変えた四隅の制御点が、曲面の隅とぴったり重なっていること
+- 網の縁に並ぶ`4`点ずつが、曲面の`4`辺に重なるベジェ曲線を決めていること
+- 「四隅の高さ」を動かすと曲面の隅も一緒に動き、「内側`4`点の高さ」を動かすと`4`辺の曲線は動かないまま内側だけがふくらむこと
+:::
+
+<CanvasWrapper>
+  <BicubicSurfaceDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 縦横の制御点の数。双 3 次なので u 方向・v 方向にそれぞれ 4 点、合わせて 16 点
+const GRID = 4
+
+// 制御点を格子状に並べる間隔
+const SPACING = 1
+
+// 制御点の高さの基準値。
+// 平らな格子だと曲面がただの平面になるので、縁も内側も高さをずらしておく
+const BASE_HEIGHTS = [
+  [0.1, 0.55, 0.7, 0.15],
+  [0.45, 1.15, 1.3, 0.5],
+  [0.3, 0.95, 1.05, 0.25],
+  [-0.15, 0.3, 0.45, -0.2]
+]
+
+// 曲面を三角形に分ける細かさ（u 方向・v 方向とも）
+const SURFACE_STEPS = 24
+
+// 境界のベジェ曲線を折れ線で近似する分割数
+const CURVE_SEGMENTS = 32
+
+// 四隅の制御点の添字（u 方向・v 方向のどちらも端）
+const isCorner = (i: number, j: number) =>
+  (i === 0 || i === GRID - 1) && (j === 0 || j === GRID - 1)
+
+// 3 次のバーンスタイン基底関数の値を、4 つまとめて求める
+const bernstein = (t: number, target: number[]) => {
+  const s = 1 - t
+  target[0] = s * s * s
+  target[1] = 3 * s * s * t
+  target[2] = 3 * s * t * t
+  target[3] = t * t * t
+
+  return target
+}
+
+// 頂点が動く折れ線。頂点を作り直さず、座標だけ書き換える
+const createPolyline = (count: number, color: string) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(count * 3), 3)
+  geometry.setAttribute("position", positions)
+
+  return {
+    object: new Line(geometry, new LineBasicMaterial({ color })),
+    set: (index: number, point: Vector3) => positions.setXYZ(index, point.x, point.y, point.z),
+    commit: () => {
+      positions.needsUpdate = true
+    }
+  }
+}
+
+// 曲面。三角形の並び（インデックス）は 1 度組めば変わらないので、
+// 制御点が動いたときは頂点の座標だけを書き換える
+const createSurface = () => {
+  const side = SURFACE_STEPS + 1
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(side * side * 3), 3)
+  geometry.setAttribute("position", positions)
+
+  const index: number[] = []
+  for (let i = 0; i < SURFACE_STEPS; i++) {
+    for (let j = 0; j < SURFACE_STEPS; j++) {
+      const corner = i * side + j
+      index.push(corner, corner + side, corner + 1)
+      index.push(corner + 1, corner + side, corner + side + 1)
+    }
+  }
+  geometry.setIndex(index)
+
+  const material = new MeshStandardMaterial({
+    color: SURFACE_COLOR,
+    roughness: 0.6,
+    side: DoubleSide,
+    transparent: true,
+    opacity: SURFACE_OPACITY,
+    // 裏側を通る制御点網や、縁に重なる境界の曲線が透けるよう、深度は比較するが書かない
+    depthWrite: false
+  })
+
+  return {
+    object: new Mesh(geometry, material),
+    set: (i: number, j: number, point: Vector3) =>
+      positions.setXYZ(i * side + j, point.x, point.y, point.z),
+    commit: () => {
+      positions.needsUpdate = true
+      // 陰影が付くように、頂点を動かしたら法線を求め直す
+      geometry.computeVertexNormals()
+      geometry.computeBoundingSphere()
+    }
+  }
+}
+
+// 16 個の制御点。xz 平面に格子状に並べ、高さ（y）だけをパネルのスライダーで動かす
+const controls = Array.from({ length: GRID }, (_, i) =>
+  Array.from(
+    { length: GRID },
+    (_, j) =>
+      new Vector3(
+        (i - (GRID - 1) / 2) * SPACING,
+        BASE_HEIGHTS[i][j],
+        (j - (GRID - 1) / 2) * SPACING
+      )
+  )
+)
+
+const weightsU = [0, 0, 0, 0]
+const weightsV = [0, 0, 0, 0]
+
+// 曲面上の点。2 つのパラメータそれぞれのバーンスタイン基底関数をかけ合わせた重みで、
+// 16 個の制御点を混ぜ合わせる
+const surfacePoint = (u: number, v: number, target: Vector3) => {
+  bernstein(u, weightsU)
+  bernstein(v, weightsV)
+
+  target.set(0, 0, 0)
+  for (let i = 0; i < GRID; i++) {
+    for (let j = 0; j < GRID; j++) {
+      target.addScaledVector(controls[i][j], weightsU[i] * weightsV[j])
+    }
+  }
+
+  return target
+}
+
+const sample = new Vector3()
+
+// 曲面
+const surface = createSurface()
+for (let i = 0; i <= SURFACE_STEPS; i++) {
+  for (let j = 0; j <= SURFACE_STEPS; j++) {
+    surface.set(i, j, surfacePoint(i / SURFACE_STEPS, j / SURFACE_STEPS, sample))
+  }
+}
+surface.commit()
+scene.add(surface.object)
+
+// 制御点を縦横に結んだ制御点網。u 方向に並ぶ 4 本と、v 方向に並ぶ 4 本
+const netLines = Array.from({ length: GRID * 2 }, () => createPolyline(GRID, NET_COLOR))
+for (let i = 0; i < GRID; i++) {
+  for (let j = 0; j < GRID; j++) {
+    netLines[i].set(j, controls[i][j])
+    netLines[GRID + j].set(i, controls[i][j])
+  }
+}
+netLines.forEach((line) => {
+  line.commit()
+  scene.add(line.object)
+})
+
+// 網の縁に並ぶ 4 点ずつが決める、曲面の境界のベジェ曲線。
+// u = 0・u = 1・v = 0・v = 1 の 4 本で、曲面の 4 辺にそのまま重なる
+const boundaries = Array.from({ length: 4 }, () =>
+  createPolyline(CURVE_SEGMENTS + 1, BOUNDARY_COLOR)
+)
+for (let step = 0; step <= CURVE_SEGMENTS; step++) {
+  const t = step / CURVE_SEGMENTS
+  boundaries[0].set(step, surfacePoint(0, t, sample))
+  boundaries[1].set(step, surfacePoint(1, t, sample))
+  boundaries[2].set(step, surfacePoint(t, 0, sample))
+  boundaries[3].set(step, surfacePoint(t, 1, sample))
+}
+boundaries.forEach((line) => {
+  line.commit()
+  scene.add(line.object)
+})
+
+// 制御点。四隅は曲面の隅と一致する点なので、色と大きさを変えて示す
+const controlGeometry = new SphereGeometry(CONTROL_RADIUS, 16, 12)
+const cornerGeometry = new SphereGeometry(CORNER_RADIUS, 16, 12)
+const controlMaterial = new MeshBasicMaterial({ color: CONTROL_COLOR })
+const cornerMaterial = new MeshBasicMaterial({ color: CORNER_COLOR })
+controls.forEach((row, i) =>
+  row.forEach((control, j) => {
+    const corner = isCorner(i, j)
+    const mesh = new Mesh(
+      corner ? cornerGeometry : controlGeometry,
+      corner ? cornerMaterial : controlMaterial
+    )
+    mesh.position.copy(control)
+    scene.add(mesh)
+  })
+)
+
+// 曲面のふくらみを陰影でも読み取れるようにする光。向きは固定
+const light = new DirectionalLight(LIGHT_COLOR, 2.5)
+light.position.set(4, 5, 3)
+scene.add(light, new AmbientLight(LIGHT_COLOR, 0.5))
+```
+
 :::
 
 曲線で見た性質は、そのまま曲面にも引き継がれます。四隅の制御点 $$P_{00}$$・$$P_{0n}$$・$$P_{m0}$$・$$P_{mn}$$ は曲面の四隅に一致し、曲面は制御点の凸包に収まり、曲面を動かすには制御点を動かすだけで足ります。網の縁に並ぶ制御点は、そのまま境界のベジェ曲線を決めます。曲面どうしを繋ぐときに縁の制御点だけを見ればよいのは、このためです。
