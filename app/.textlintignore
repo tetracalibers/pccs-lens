@@ -31,7 +31,6 @@ src/routes/cg/transformation/pinhole-camera/+page.svx
 src/routes/cg/transformation/projection-calculation/+page.svx
 src/routes/cg/transformation/reflection-and-skew/+page.svx
 src/routes/cg/transformation/transformation-composition/+page.svx
-src/routes/cg/transformation/viewing-pipeline-transformations/+page.svx
 src/routes/color-fields/fashion-color-concepts/+page.svx
 src/routes/color-fields/fashion-image/+page.svx
 src/routes/color-fields/fashion-style-categories/+page.svx
