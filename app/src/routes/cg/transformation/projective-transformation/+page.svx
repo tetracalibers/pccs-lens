@@ -25,7 +25,7 @@ visual: true
 ### 定数倍しても同じ点を表す
 
 同次座標には、`1`つの点を表す書き方が`1`通りに定まらないという特徴があります。
-ある同次座標`(x, y, w)`に対して、`0`でない定数`k`を掛けた`(kx, ky, kw)`を考えてみます。これを通常の座標に戻すと、次のようになります。
+ある同次座標`(x, y, w)`に対して、`0`でない定数`k`をかけた`(kx, ky, kw)`を考えてみます。これを通常の座標に戻すと、次のようになります。
 
 $$
 \left( \frac{kx}{kw}, \frac{ky}{kw}, \frac{kw}{kw} \right) = \left( \frac{x}{w}, \frac{y}{w}, 1 \right)
@@ -312,7 +312,7 @@ $$
 \begin{pmatrix} x^{\prime} \\\\ y^{\prime} \\\\ w^{\prime} \end{pmatrix} = \begin{pmatrix} a & b & c \\\\ d & e & f \\\\ p & q & r \end{pmatrix} \begin{pmatrix} x \\\\ y \\\\ 1 \end{pmatrix}
 $$
 
-この掛け算を、最下行に注目して展開してみます。
+このかけ算を、最下行に注目して展開してみます。
 変換後の`w`成分、すなわち`w'`は、最下行と座標ベクトルの積から得られます。
 
 $$

@@ -83,7 +83,7 @@ $$
 :::
 ::::
 
-なぜ変換行列がこの形になるのかは、行列の掛け算の仕組みから読み解けます。
+なぜ変換行列がこの形になるのかは、行列のかけ算の仕組みから読み解けます。
 
 $$
 \begin{pmatrix} x^{\prime} \\\\ y^{\prime} \\\\ 1 \end{pmatrix} = \begin{pmatrix} u_1 & w_1 & 0 \\\\ w_2 & u_2 & 0 \\\\ 0 & 0 & 1 \end{pmatrix} \begin{pmatrix} x \\\\ y \\\\ 1 \end{pmatrix} = \begin{pmatrix} u_1 x + w_1 y \\\\ w_2 x + u_2 y \\\\ 1 \end{pmatrix}
