@@ -128,13 +128,13 @@ $$P_1 - P_0$$ は、 $$P_0$$ から $$P_1$$ へ向かうベクトルです。大
 :::Foldable{title="Three.jsによる実装概要"}
 
 ```ts
-// 3 次ベジェ曲線の制御点。最初の辺・最後の辺をどちらも横向きに寝かせておく
-// （接ベクトルは辺の 3 倍の長さで辺の延長に伸びるので、縦向きの辺だと画面からはみ出す）
+// 3 次ベジェ曲線の制御点。P₀ → P₃ を閉じた四角形がへこみのない形になり、
+// かつ両端の接ベクトルが画面に収まるように置く（接ベクトルは辺の 3 倍の長さで辺の延長に伸びる）
 const INITIAL_POINTS: [number, number][] = [
-  [-3, -1.25],
-  [-2.05, -0.95],
-  [-0.2, 1],
-  [0.8, 1.25]
+  [-3, -1.4],
+  [-2.6, -0.2],
+  [0.2, 0.25],
+  [0.9, 0.1]
 ]
 
 // ド・カステリョのアルゴリズムで使う作業用の点。何度も呼ばれるので、その都度は作らない
@@ -169,60 +169,31 @@ const createPolyline = (count: number, z: number) => {
   }
 }
 
-// 折れ線に沿って一定の幅で伸びる帯。制御多角形がどこを通っているかを面として示す。
-// 頂点ごとに、その前後の辺に垂直な向きを足した向き（マイター）へ左右に振り分けることで、
-// 折れ目でも帯が途切れず、重なりもしないようにする
-const createBand = (count: number, z: number) => {
+// 制御多角形の内側を塗る面。頂点を 1 番目の制御点から扇状に三角形へ分け、
+// 折れ線と同じ頂点をそのまま使う
+const createPolygonFill = (count: number) => {
   const geometry = new BufferGeometry()
-  const positions = new Float32BufferAttribute(new Float32Array(count * 2 * 3), 3)
+  const positions = new Float32BufferAttribute(new Float32Array(count * 3), 3)
   geometry.setAttribute("position", positions)
-
-  // 頂点 i の左右 2 点（2i・2i + 1）と、次の頂点の左右 2 点で 1 区間の四角形を作る
   const index: number[] = []
-  for (let i = 0; i < count - 1; i++) {
-    index.push(2 * i, 2 * i + 1, 2 * i + 3, 2 * i, 2 * i + 3, 2 * i + 2)
-  }
+  for (let i = 1; i < count - 1; i++) index.push(0, i, i + 1)
   geometry.setIndex(index)
 
   const material = new MeshBasicMaterial({
-    color: BAND_COLOR,
-    // 頂点を動かすと表裏が入れ替わりうるので、どちらから見ても塗る
-    side: DoubleSide
+    color: POLYGON_COLOR,
+    transparent: true,
+    opacity: POLYGON_FILL_OPACITY,
+    // 制御点を動かすと表裏が入れ替わりうるので、どちらから見ても塗る
+    side: DoubleSide,
+    // 手前に重なる曲線・破線が面の形に欠けないよう、深度は書かない
+    depthWrite: false
   })
-
-  const edge = new Vector3()
-  const perpBefore = new Vector3()
-  const perpAfter = new Vector3()
-  const offset = new Vector3()
-
-  // from → to の辺に垂直な単位ベクトル
-  const setPerpendicular = (target: Vector3, from: Vector3, to: Vector3) => {
-    edge.subVectors(to, from).normalize()
-
-    return target.set(-edge.y, edge.x, 0)
-  }
 
   return {
     object: new Mesh(geometry, material),
-    set: (points: Vector3[]) => {
-      const last = points.length - 1
-
-      points.forEach((point, i) => {
-        // 端の頂点には片側の辺しか無いので、ある側の辺の垂線を前後どちらにも使う
-        const before = points[Math.max(i - 1, 0)]
-        const after = points[Math.min(i + 1, last)]
-        setPerpendicular(perpBefore, before, i === 0 ? after : point)
-        setPerpendicular(perpAfter, i === last ? before : point, after)
-
-        // 2 本の垂線を足した向きへ、折れ角で細くならない長さだけ振る
-        const spread = Math.max(1 + perpBefore.dot(perpAfter), BAND_MITER_LIMIT)
-        offset.addVectors(perpBefore, perpAfter).multiplyScalar(BAND_HALF_WIDTH / spread)
-
-        positions.setXYZ(2 * i, point.x + offset.x, point.y + offset.y, z)
-        positions.setXYZ(2 * i + 1, point.x - offset.x, point.y - offset.y, z)
-      })
+    set: (i: number, point: Vector3) => positions.setXYZ(i, point.x, point.y, LAYER_FILL),
+    commit: () => {
       positions.needsUpdate = true
-      geometry.computeBoundingSphere()
     }
   }
 }
@@ -285,9 +256,9 @@ const controls = INITIAL_POINTS.map(([x, y]) => new Vector3(x, y, 0))
 // 次数。制御点が n + 1 個なら n 次で、接ベクトルは辺の n 倍になる
 const degree = controls.length - 1
 
-// 制御多角形の帯。いちばん奥に敷き、破線と両端の辺がその上に乗るようにする
-const band = createBand(controls.length, LAYER_BAND)
-scene.add(band.object)
+// 制御多角形の内側。破線より奥に敷き、面としての広がりを示す
+const fill = createPolygonFill(controls.length)
+scene.add(fill.object)
 
 // 制御点を順に結んだ折れ線。曲線と描き分けるため破線にする
 const polygon = createPolyline(controls.length, LAYER_POLYGON)
@@ -330,14 +301,15 @@ const startTip = new Vector3()
 const endTip = new Vector3()
 const sample = new Vector3()
 
-// 制御点の今の位置から、制御多角形（帯と破線）・曲線・接ベクトルを引き直す
+// 制御点の今の位置から、制御多角形（塗りと破線）・曲線・接ベクトルを引き直す
 const refresh = () => {
   controls.forEach((control, i) => {
     polygon.set(i, control)
+    fill.set(i, control)
     meshes[i].position.set(control.x, control.y, LAYER_POINT)
   })
   polygon.commit()
-  band.set(controls)
+  fill.commit()
   // 破線の刻みは頂点ごとの「線に沿った距離」で決まるため、頂点を動かすたびに測り直す
   polygonLine.computeLineDistances()
 
