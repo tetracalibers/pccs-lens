@@ -67,8 +67,8 @@ const SURFACE_SEGMENTS = 96
 /** 1 辺あたりの標本点の数の上限。この数だけ画素をあらかじめ作っておく */
 const MAX_SAMPLE_COUNT = 32
 
-// 画素はグレースケールで塗るので、標本化する前の連続的な明るさは混ざらない暖色にする
-const SURFACE_COLOR = "#ffc857"
+// 画素はグレースケールで塗るので、標本化する前の連続的な明るさは混ざらない青にする
+const SURFACE_COLOR = "#5ec8f2"
 const FRAME_COLOR = "#5a6472"
 
 /**

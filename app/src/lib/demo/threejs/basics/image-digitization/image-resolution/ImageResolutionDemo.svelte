@@ -6,7 +6,7 @@
   // pixelCount は scene.ts が組み立てて書き戻す表示用の値なので、初期値は使われない
   const params: ImageResolutionParams = {
     resolution: 24,
-    showGrid: true,
+    showGrid: false,
     pixelCount: ""
   }
 </script>
