@@ -11,6 +11,7 @@ draft: true
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import EndpointTangentDemo from '$lib/demo/threejs/modeling/bezier-curve-properties/endpoint-tangent/EndpointTangentDemo.svelte'
+  import SmoothJoinDemo from '$lib/demo/threejs/modeling/bezier-curve-properties/smooth-join/SmoothJoinDemo.svelte'
 </script>
 
 [ベジェ曲線](/cg/modeling/bezier-curve-surface/)には、曲線上の点が制御点の:Anki[重み付き平均]になるという重要な性質がありました。ここから、ベジェ曲線のさまざまな性質が導かれます。
@@ -373,8 +374,186 @@ canvas.addEventListener("pointerup", () => {
 
 `2`本のベジェ曲線を滑らかに繋ぎたいときは、この接する向きを揃えればよいのです。
 
-:::Todo
-接する向きを揃えることで、`2`本のベジェ曲線を滑らかに繋げるデモ
+:::Action{fixme}
+制御点をドラッグして、次の点に着目してみよう
+
+- 繋ぎ目から伸びる`2`本の水色の矢印が、どう動かしても一直線に並んだままであること
+- 向きが揃っているために、繋ぎ目には角ができず、`2`本の曲線が`1`本のように繋がること
+- 繋ぎ目の隣の制御点は、向きの延長上へ付いていくように動くこと
+:::
+
+<CanvasWrapper>
+  <SmoothJoinDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 2 本の 3 次ベジェ曲線の制御点。4 番目（添字 3）が 2 本の繋ぎ目で、
+// 1 本目の終点と 2 本目の始点を兼ねる
+const INITIAL_POINTS: [number, number][] = [
+  [-3.2, -0.4],
+  [-2.4, 1.1],
+  [-1.3, 1.1],
+  [-0.2, 0.15],
+  [0.78, -0.7],
+  [2.1, -0.75],
+  [3.2, 0.5]
+]
+
+// 繋ぎ目の制御点の添字。1 本目の P₃ と 2 本目の Q₀ が同じ点になる
+const JOINT_INDEX = 3
+
+// ド・カステリョのアルゴリズムで使う作業用の点。何度も呼ばれるので、その都度は作らない
+const work: Vector3[] = []
+
+// 制御点が何個でも使えるベジェ曲線上の点。
+// 隣り合う点どうしを t で線形補間する操作を、点が 1 つになるまで繰り返す
+const bezierPoint = (controls: Vector3[], t: number, target: Vector3) => {
+  while (work.length < controls.length) work.push(new Vector3())
+  controls.forEach((control, i) => work[i].copy(control))
+
+  for (let last = controls.length - 1; last > 0; last--) {
+    for (let i = 0; i < last; i++) work[i].lerp(work[i + 1], t)
+  }
+
+  return target.copy(work[0])
+}
+
+// 頂点が動く折れ線。頂点を作り直さず、座標だけ書き換える
+const createPolyline = (count: number, z: number) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(count * 3), 3)
+  geometry.setAttribute("position", positions)
+
+  return {
+    geometry,
+    set: (index: number, point: Vector3) => positions.setXYZ(index, point.x, point.y, z),
+    commit: () => {
+      positions.needsUpdate = true
+      geometry.computeBoundingSphere()
+    }
+  }
+}
+
+// 始点から終点へ向かう矢印。両端が動くので、線と円錐の位置を毎回書き換える
+const createArrow = (color: string) => {
+  const shaftPositions = new Float32BufferAttribute(new Float32Array(6), 3)
+  const shaftGeometry = new BufferGeometry().setAttribute("position", shaftPositions)
+  const shaft = new LineSegments(shaftGeometry, new LineBasicMaterial({ color }))
+
+  const headGeometry = new ConeGeometry(ARROW_RADIUS, ARROW_HEIGHT, 16)
+  const head = new Mesh(headGeometry, new MeshBasicMaterial({ color }))
+
+  const group = new Group()
+  group.add(shaft, head)
+
+  const direction = new Vector3()
+  const shaftEnd = new Vector3()
+
+  return {
+    object: group,
+    setEnds: (from: Vector3, to: Vector3) => {
+      const length = direction.subVectors(to, from).length()
+      // 制御点が重なると向きが決まらないので、そのときは矢印を出さない
+      group.visible = length > ARROW_HEIGHT
+      if (!group.visible) return
+      direction.divideScalar(length)
+
+      // 円錐の底面が線の先端に来るよう、矢印の頭の高さのぶん手前で線を止める
+      shaftEnd.copy(to).addScaledVector(direction, -ARROW_HEIGHT)
+      shaftPositions.setXYZ(0, from.x, from.y, LAYER_DIRECTION)
+      shaftPositions.setXYZ(1, shaftEnd.x, shaftEnd.y, LAYER_DIRECTION)
+      shaftPositions.needsUpdate = true
+
+      // ConeGeometry の原点は円錐の中心なので、半分ぶん戻した位置に置く
+      head.position.set(to.x, to.y, LAYER_DIRECTION).addScaledVector(direction, -ARROW_HEIGHT / 2)
+      head.quaternion.setFromUnitVectors(CONE_UP, direction)
+    }
+  }
+}
+
+// 制御多角形（破線）とベジェ曲線（実線）を組にした 1 本ぶん
+const createStrand = (controls: Vector3[], color: string) => {
+  const polygon = createPolyline(controls.length, LAYER_POLYGON)
+  const polygonMaterial = new LineDashedMaterial({
+    color: POLYGON_COLOR,
+    dashSize: DASH_SIZE,
+    gapSize: GAP_SIZE
+  })
+  const polygonLine = new Line(polygon.geometry, polygonMaterial)
+
+  const curve = createPolyline(CURVE_SEGMENTS + 1, LAYER_CURVE)
+  const curveLine = new Line(curve.geometry, new LineBasicMaterial({ color }))
+
+  const group = new Group()
+  group.add(polygonLine, curveLine)
+
+  const sample = new Vector3()
+
+  return {
+    object: group,
+    // 制御点の今の位置から、制御多角形と曲線を引き直す
+    refresh: () => {
+      controls.forEach((control, i) => polygon.set(i, control))
+      polygon.commit()
+      // 破線の刻みは頂点ごとの「線に沿った距離」で決まるため、頂点を動かすたびに測り直す
+      polygonLine.computeLineDistances()
+
+      for (let i = 0; i <= CURVE_SEGMENTS; i++) {
+        curve.set(i, bezierPoint(controls, i / CURVE_SEGMENTS, sample))
+      }
+      curve.commit()
+    }
+  }
+}
+
+const points = INITIAL_POINTS.map(([x, y]) => new Vector3(x, y, 0))
+
+// 繋ぎ目の点は 1 本目の終点と 2 本目の始点で共有する（同じ Vector3 を両方に入れる）
+const joint = points[JOINT_INDEX]
+
+// 繋ぎ目に入ってくる向き（P₂ から繋ぎ目へ）と、出ていく向き（繋ぎ目から Q₁ へ）。
+// 接ベクトルはこの辺を次数倍したものなので、揃えるべきなのはこの 2 本の向き
+const incoming = new Vector3().subVectors(joint, points[JOINT_INDEX - 1])
+const outgoing = new Vector3().subVectors(points[JOINT_INDEX + 1], joint)
+
+// 2 つの向きを揃える。Q₁ を繋ぎ目から入ってくる向きの延長上へ、今の距離のまま置き直す。
+// 制御点を動かすたびにこれを通すので、繋ぎ目は常に滑らかなままになる
+const distance = Math.max(outgoing.length(), MIN_HANDLE)
+points[JOINT_INDEX + 1].copy(joint).addScaledVector(incoming.normalize(), distance)
+// 置き直した Q₁ で向きを取り直す（2 つの向きのなす角は 0 になる）
+incoming.subVectors(joint, points[JOINT_INDEX - 1])
+outgoing.subVectors(points[JOINT_INDEX + 1], joint)
+
+// 制御多角形と曲線を 2 本ぶん。繋ぎ目の点を境に、制御点を 4 つずつに分けて渡す
+const strands = [
+  createStrand(points.slice(0, JOINT_INDEX + 1), FIRST_CURVE_COLOR),
+  createStrand(points.slice(JOINT_INDEX), SECOND_CURVE_COLOR)
+]
+strands.forEach((strand) => {
+  strand.refresh()
+  scene.add(strand.object)
+})
+
+// 繋ぎ目の前後の向きを示す 2 本の矢印。向きが揃っていれば一直線に並ぶ
+const incomingArrow = createArrow(DIRECTION_COLOR)
+incomingArrow.setEnds(points[JOINT_INDEX - 1], joint)
+const outgoingArrow = createArrow(DIRECTION_COLOR)
+outgoingArrow.setEnds(joint, points[JOINT_INDEX + 1])
+scene.add(incomingArrow.object, outgoingArrow.object)
+
+// 制御点。繋ぎ目は 2 本で共有する点なので少し大きくする
+const controlGeometry = new SphereGeometry(CONTROL_RADIUS, 16, 12)
+const jointGeometry = new SphereGeometry(JOINT_RADIUS, 16, 12)
+const controlMaterial = new MeshBasicMaterial({ color: CONTROL_COLOR })
+points.forEach((point, i) => {
+  const mesh = new Mesh(i === JOINT_INDEX ? jointGeometry : controlGeometry, controlMaterial)
+  mesh.position.set(point.x, point.y, LAYER_POINT)
+  scene.add(mesh)
+})
+```
+
 :::
 
 ## :WithGroupTag[ベジェ曲線の凸包性]{group="{['CG']}"}
