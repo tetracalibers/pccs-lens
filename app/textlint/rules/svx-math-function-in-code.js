@@ -1,5 +1,5 @@
 /**
- * 「数学で定義されている関数名もインラインコードにする」（writing-guides/syntax-guide.md
+ * 「数学で定義されている関数名もインラインコードにする」（writing-guides/math-notation-guide.md
  * 「数字は必ずインラインコードにする」節）を検査する。
  *
  * 地の文に裸の関数名（`sin`・`cos`・`log` など）が現れたら報告する。

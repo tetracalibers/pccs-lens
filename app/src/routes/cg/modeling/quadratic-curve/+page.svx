@@ -829,5 +829,3 @@ addSegment(curve, Y_COLOR, HELPER_OPACITY, x, y, 0, y)
 ```
 
 :::
-
-このように`2`次曲線の式を書き下せたのは、曲線の形が先に決まっていたからです。これとは逆に、作りたい曲線の形に合わせて式を組み立てる話は、[パラメトリック曲線・曲面](/cg/modeling/parametric-curve-surface/)へ続きます。

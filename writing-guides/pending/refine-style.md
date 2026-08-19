@@ -55,7 +55,7 @@
 - RS-P036｜既出記事への参照を節の冒頭へ移す並べ替え：1記事1例で、統計→機序→症状という別の並べ替え意図とも解釈できる｜支持: /color-theory/age-related-eye-diseases
 - RS-P037｜検定で問われる用語・結論を `:::Note` から本文の主役へ格上げする：明確なのは1記事1事例で、もう1記事の根拠は同一節内という程度の対応でしかない。同記事の別コミットでは逆に留保を `:::Note` へ置いており一方向の格上げにならない｜支持: /color-theory/color-rendering
 - RS-P038｜対になる2図を CardGrid + TermCard の横並びへ組み替える：1記事1回のみで、もう1記事の図はいずれも単独配置。図が3つ以上の場合の挙動も未検証（RS-007 は数式限定の別根拠）｜支持: /color-theory/color-rendering
-- RS-P039｜覚える数値と参照値で `:Anki` とインラインコードを書き分ける基準：同一文にコードと `:Anki` が混在する例があり、どちらにもならない数値もある。切り分けは推測で、記法規約（`syntax-guide.md`）由来の可能性も排除できない（RS-033 の反例としては記録済み）｜支持: /color-theory/age-related-vision-changes, /color-theory/color-rendering
+- RS-P039｜覚える数値と参照値で `:Anki` とインラインコードを書き分ける基準：同一文にコードと `:Anki` が混在する例があり、どちらにもならない数値もある。切り分けは推測で、記法規約（`syntax-guide.md`・`math-notation-guide.md`）由来の可能性も排除できない（RS-033 の反例としては記録済み）｜支持: /color-theory/age-related-vision-changes, /color-theory/color-rendering
 - RS-P040｜括弧内の補足を「つまり、〜」の独立文へ出す：同じバッチで逆に独立した説明を括弧へ入れる操作も起きており、方向を決められない｜支持: /color-theory/age-related-vision-changes
 - RS-P041｜草稿が落とした前提用語を括弧併記で本文へ戻し、記事全体の前提語は導入直後の `:::Note` で定義する：前者は草稿のメモに元から含まれておりメモ回帰（RS-011）で説明がつき、後者は1箇所のみ。第2節では逆に術語を避けて平易語へ寄せており、性質の異なる根拠が同居する｜支持: /color-theory/color-difference-and-uniform-color-space
 - RS-P042｜変化をつけるための類義語を排し、記事のキーワード・同語の反復へ寄せる：専門用語の同語反復はテクニカルライティング一般の作法と重なり、支持3記事の差分でも一般技法と区別できない。置換先も一語に収束せず、指示語で受けて語ごと削る箇所もある。前出の具体例を呼び戻す言い方は温存され反復一辺倒でもない（用語統一は RS-014、主語の明示は RS-008 が担当）｜支持: /color-theory/color-difference-and-uniform-color-space, /color-theory/photometric-quantities, /color-fields/media-design-concepts

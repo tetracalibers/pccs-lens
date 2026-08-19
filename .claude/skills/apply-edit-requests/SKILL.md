@@ -143,7 +143,7 @@ grep -nE '^:{3,}(Add|Delete|Fix)' <対象ファイル>
 ### 文章（`:::Add` / `:::Delete` / `:::Fix{target="text"}`）
 
 - **`author-style-writer` を読み込み、「記事ページを編集する場合（編集モード）」の E3 以降に従う。** 対象ファイルの特定（E1）と編集指示の確定（E2）は手順1〜3で済んでいるので繰り返さない
-- 読むガイドは編集モードの範囲（`syntax-guide.md`＋`refine-style.md`＋`stylistic-quirks.md`。構成に及ぶ指示なら `writing-style.md`、新しい説明を書き足す指示なら `thinking-flow.md` も）。**指示の集合全体で必要な範囲を判断し、最初に1回だけ読む。** ブロックごとに読み直さない
+- 読むガイドは編集モードの範囲（`syntax-guide.md`＋`math-notation-guide.md`＋`refine-style.md`＋`stylistic-quirks.md`。構成に及ぶ指示なら `writing-style.md`、新しい説明を書き足す指示なら `thinking-flow.md` も）。**指示の集合全体で必要な範囲を判断し、最初に1回だけ読む。** ブロックごとに読み直さない
 - **指示の直接対象だけでなく、前後の文章・節の流れも整える**（接続の唐突さや重複を残さない）。ただし調整は接続と重複の解消までにとどめ、指示の無い箇所を書き換えない
 - `:::Delete` で記述が消えた跡は、前後がつながるように整える。消した記述が担っていた説明を、指示なく別の場所に書き足さない
 
@@ -188,7 +188,7 @@ grep -nE '^:{3,}(Add|Delete|Fix)' <対象ファイル>
 
 - 承認された全ブロックに対応が入り、そのブロックが本文から消えている
 - 見送ったブロックだけが本文に残り、報告に理由が載っている
-- 記法・書式が `writing-guides/syntax-guide.md` に従っている
+- 記法・書式が `writing-guides/syntax-guide.md`・`writing-guides/math-notation-guide.md` に従っている
 - 文章系の修正が、指示の範囲と前後の流れの調整にとどまっている
 - 図版・デモの修正が、担当スキルのコンポーネント規約に従っている
 - CG記事でデモを直した場合、記事の ts コードブロックがデモの実装と一致している
