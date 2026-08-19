@@ -10,6 +10,7 @@ draft: true
 
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import ConvexHullDemo from '$lib/demo/threejs/modeling/bezier-curve-properties/convex-hull/ConvexHullDemo.svelte'
   import EndpointTangentDemo from '$lib/demo/threejs/modeling/bezier-curve-properties/endpoint-tangent/EndpointTangentDemo.svelte'
   import SmoothJoinDemo from '$lib/demo/threejs/modeling/bezier-curve-properties/smooth-join/SmoothJoinDemo.svelte'
 </script>
@@ -566,8 +567,201 @@ points.forEach((point, i) => {
 
 [線形補間とベジェ曲線](/cg/modeling/bezier-curve-surface/)では、ベジェ曲線が:Anki[制御多角形]の角には届かず、その内側で丸まることについて触れました。:Anki[凸包]という概念によって、この「内側」がどこまでの範囲を指すのかを表すことができます。制御多角形にへこみがあるときは、そのへこみを埋めた凸包までが、ベジェ曲線がはみ出さないといえる範囲になります。
 
-:::Todo
-凸包性の図。`4`つの制御点と、それを結んだ制御多角形、制御点の凸包を薄く塗った領域、その内側を通る`3`次ベジェ曲線を重ねて描く。制御多角形がへこんだ配置と、へこみのない配置の`2`例を並べ、どちらでも曲線が凸包の内側に収まることを示す。
+:::Action{fixme}
+制御点をドラッグして、次の点に着目してみよう
+
+- 薄く塗った領域が制御点の凸包で、左のパネルではへこんだ制御点がその内側に入っていること
+- どちらの配置でも、曲線が凸包からはみ出さないこと
+- 制御点を動かして凸包の形が変わっても、曲線が内側に収まったままであること
+:::
+
+<CanvasWrapper>
+  <ConvexHullDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 左のパネルの制御点。P₂ を残り 3 点が作る三角形の内側に置き、
+// 制御多角形にへこみができた配置にする（このとき凸包は三角形になり、P₂ はその内側に入る）
+const CONCAVE_POINTS: [number, number][] = [
+  [-1.5, -1.2],
+  [-0.5, 1.4],
+  [0.2, 0.1],
+  [1.5, -1.2]
+]
+
+// 右のパネルの制御点。4 点がどれも凸包の頂点になる（へこみのない）配置にする
+const CONVEX_POINTS: [number, number][] = [
+  [-1.5, -1.2],
+  [-0.7, 1.3],
+  [0.7, 1.3],
+  [1.5, -1.2]
+]
+
+// 凸包を求める途中で使う配列。何度も呼ばれるので、その都度は作らない
+const sorted: Vector3[] = []
+const hull: Vector3[] = []
+
+// o → a → b と辿ったときの曲がり方。正なら左（反時計回り）へ、負なら右へ折れている
+const turn = (o: Vector3, a: Vector3, b: Vector3) =>
+  (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x)
+
+// 制御点をすべて囲む最小の凸多角形（凸包）の頂点を、反時計回りに並べて返す。
+// x が小さい順に点を並べ、下側の境界・上側の境界を順に辿りながら、
+// 右へ折れる点（＝へこみになる点）を取り除いていく（アンドリューの単調鎖法）
+const convexHull = (points: Vector3[]) => {
+  sorted.length = 0
+  for (const point of points) sorted.push(point)
+  sorted.sort((a, b) => a.x - b.x || a.y - b.y)
+
+  hull.length = 0
+
+  // 下側の境界。左端から右端へ向かって辿る
+  for (const point of sorted) {
+    while (hull.length >= 2 && turn(hull[hull.length - 2], hull[hull.length - 1], point) <= 0) {
+      hull.pop()
+    }
+    hull.push(point)
+  }
+
+  // 上側の境界。右端から左端へ戻りながら、下側で残した点は消さないようにする
+  const lowerCount = hull.length + 1
+  for (let i = sorted.length - 2; i >= 0; i--) {
+    const point = sorted[i]
+    while (
+      hull.length >= lowerCount &&
+      turn(hull[hull.length - 2], hull[hull.length - 1], point) <= 0
+    ) {
+      hull.pop()
+    }
+    hull.push(point)
+  }
+
+  // 最後に足した点は左端の点（始点）と同じなので落とす
+  hull.pop()
+
+  return hull
+}
+
+// 凸包の内側を塗る面。頂点を 1 つ目から扇状に三角形へ分ける。
+// 頂点の数は制御点の並び方で 3 つにも 4 つにも変わるので、器は 4 頂点ぶん用意し、
+// 足りないぶんは最後の頂点を繰り返して埋める（面積 0 の三角形は絵に出ない）
+const createHullFill = () => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(HULL_CAPACITY * 3), 3)
+  geometry.setAttribute("position", positions)
+  const index: number[] = []
+  for (let i = 1; i < HULL_CAPACITY - 1; i++) index.push(0, i, i + 1)
+  geometry.setIndex(index)
+
+  const material = new MeshBasicMaterial({
+    color: HULL_COLOR,
+    transparent: true,
+    opacity: HULL_FILL_OPACITY,
+    // 制御点を動かすと表裏が入れ替わりうるので、どちらから見ても塗る
+    side: DoubleSide,
+    // 手前に重なる曲線・破線が面の形に欠けないよう、深度は書かない
+    depthWrite: false
+  })
+
+  return {
+    object: new Mesh(geometry, material),
+    set: (vertices: Vector3[]) => {
+      for (let i = 0; i < HULL_CAPACITY; i++) {
+        const vertex = vertices[Math.min(i, vertices.length - 1)]
+        positions.setXYZ(i, vertex.x, vertex.y, LAYER_HULL)
+      }
+      positions.needsUpdate = true
+    }
+  }
+}
+
+// 頂点が動く折れ線。頂点を作り直さず、座標だけ書き換える
+const createPolyline = (count: number, z: number) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(count * 3), 3)
+  geometry.setAttribute("position", positions)
+
+  return {
+    geometry,
+    set: (index: number, point: Vector3) => positions.setXYZ(index, point.x, point.y, z),
+    commit: () => {
+      positions.needsUpdate = true
+      geometry.computeBoundingSphere()
+    }
+  }
+}
+
+// ド・カステリョのアルゴリズムで使う作業用の点。何度も呼ばれるので、その都度は作らない
+const work: Vector3[] = []
+
+// 制御点が何個でも使えるベジェ曲線上の点。
+// 隣り合う点どうしを t で線形補間する操作を、点が 1 つになるまで繰り返す
+const bezierPoint = (controls: Vector3[], t: number, target: Vector3) => {
+  while (work.length < controls.length) work.push(new Vector3())
+  controls.forEach((control, i) => work[i].copy(control))
+
+  for (let last = controls.length - 1; last > 0; last--) {
+    for (let i = 0; i < last; i++) work[i].lerp(work[i + 1], t)
+  }
+
+  return target.copy(work[0])
+}
+
+// 凸包の塗り・制御多角形（破線）・ベジェ曲線（実線）を重ねた 1 枚のパネル
+const createPanel = (source: [number, number][], offsetX: number) => {
+  const group = new Group()
+  group.position.x = offsetX
+
+  const controls = source.map(([x, y]) => new Vector3(x, y, 0))
+  const sample = new Vector3()
+
+  // 制御点の凸包。いちばん奥に敷き、曲線がこの範囲から出ないことを見せる。
+  // 凸包は制御点の並び方だけで決まり、へこみのある配置では
+  // へこんだ制御点が頂点から外れて凸包の内側に入る
+  const fill = createHullFill()
+  fill.set(convexHull(controls))
+  group.add(fill.object)
+
+  // 制御点を順に結んだ折れ線。曲線と描き分けるため破線にする
+  const polygon = createPolyline(controls.length, LAYER_POLYGON)
+  const polygonMaterial = new LineDashedMaterial({
+    color: POLYGON_COLOR,
+    dashSize: DASH_SIZE,
+    gapSize: GAP_SIZE
+  })
+  const polygonLine = new Line(polygon.geometry, polygonMaterial)
+  controls.forEach((control, i) => polygon.set(i, control))
+  polygon.commit()
+  // 破線の刻みは頂点ごとの「線に沿った距離」で決まるため、頂点を置いてから測る
+  polygonLine.computeLineDistances()
+  group.add(polygonLine)
+
+  // 制御点から求めた曲線
+  const curve = createPolyline(CURVE_SEGMENTS + 1, LAYER_CURVE)
+  for (let i = 0; i <= CURVE_SEGMENTS; i++) {
+    curve.set(i, bezierPoint(controls, i / CURVE_SEGMENTS, sample))
+  }
+  curve.commit()
+  group.add(new Line(curve.geometry, new LineBasicMaterial({ color: CURVE_COLOR })))
+
+  // 形を決めている 4 つの制御点
+  const controlGeometry = new SphereGeometry(CONTROL_RADIUS, 16, 12)
+  const controlMaterial = new MeshBasicMaterial({ color: CONTROL_COLOR })
+  controls.forEach((control) => {
+    const mesh = new Mesh(controlGeometry, controlMaterial)
+    mesh.position.set(control.x, control.y, LAYER_POINT)
+    group.add(mesh)
+  })
+
+  return group
+}
+
+// へこみのある配置とへこみのない配置を左右に並べ、どちらでも曲線が凸包に収まることを見せる
+scene.add(createPanel(CONCAVE_POINTS, -PANEL_OFFSET), createPanel(CONVEX_POINTS, PANEL_OFFSET))
+```
+
 :::
 
 ### 凸包性とバーンスタイン基底関数
