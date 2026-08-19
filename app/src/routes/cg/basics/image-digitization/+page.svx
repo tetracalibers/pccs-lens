@@ -3,7 +3,13 @@ layout: guide-content
 title: 画像のデジタル化 # CG 1-2-1 / ImgP 2-4
 
 group: ["CG", "ImgP"]
+visual: true
 ---
+
+<script>
+  import BrightnessTerrainDemo from '$lib/demo/threejs/basics/image-digitization/brightness-terrain/BrightnessTerrainDemo.svelte'
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+</script>
 
 [カメラでの撮影とCG](/cg/basics/camera-capture-and-cg/)では、撮像素子がアナログの光の像を読み取り、コンピュータが扱えるデジタル画像にする、という流れを見ました。
 では、その「デジタル画像にする」とは、具体的にどのようなことなのでしょうか。
@@ -33,6 +39,121 @@ group: ["CG", "ImgP"]
 
 これら3つのステップを経ることで、画像は格子状に区切られた小さな単位の集まりになります。この最小単位を:Anki[画素]（:Anki[ピクセル]）といいます。
 画素は、デジタル画像を形づくる一番小さな部品です。
+
+:::Action{fixme}
+明るさを高さに置き換えた右の図を、左のアナログ画像と見比べながら、次の点に着目してみよう
+
+- 格子の分割数を減らすと、切れ目なく続いていた濃淡が、格子状に区切られた画素の集まりに置き換わること
+- 明るさの段階数を減らすと、画素の高さが決まった段にそろい、なめらかだった濃淡が階段状になること
+- 連続的な明るさを重ねると、もとの明るさと、段階に丸めたあとの画素の高さとの間にずれが生まれていること
+- ドラッグして真上から見下ろすと、左のアナログ画像と、右の画素の並びを同じ向きで見比べられること
+:::
+
+<CanvasWrapper>
+  <BrightnessTerrainDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 明るさ（0〜1）を高さに変換する。曲面と画素で同じ対応を使う
+const heightOf = (brightness: number) => 0.05 + brightness * 1.1
+
+// 環境光と真上寄りの平行光。Lambert の反射では放射照度を π で割った値が明るさになるので、
+// 上を向いた面に届く放射照度がちょうど π になるようにとる。
+// こうすると画素の上面が、その画素の値そのままの灰色で見える
+const keyLight = new DirectionalLight("#ffffff", Math.PI * 0.35)
+keyLight.position.set(2, 6, 3)
+scene.add(new AmbientLight("#ffffff", Math.PI * 0.7), keyLight)
+
+// 左：もとのアナログ画像。連続的な明るさを、そのまま灰色の濃淡として 1 枚の絵に焼く。
+// 上下は、テクスチャの行が増える向きと z 軸の向きが逆になることに合わせる
+const RESOLUTION = 256
+const pictureData = new Uint8Array(RESOLUTION * RESOLUTION * 4)
+for (let row = 0; row < RESOLUTION; row++) {
+  for (let column = 0; column < RESOLUTION; column++) {
+    const x = -1 + (2 * (column + 0.5)) / RESOLUTION
+    const z = 1 - (2 * (row + 0.5)) / RESOLUTION
+    const level = Math.round(brightnessAt(x, z) * 255)
+    pictureData.set([level, level, level, 255], (row * RESOLUTION + column) * 4)
+  }
+}
+const pictureTexture = new DataTexture(pictureData, RESOLUTION, RESOLUTION)
+pictureTexture.colorSpace = SRGBColorSpace
+pictureTexture.magFilter = LinearFilter
+pictureTexture.minFilter = LinearFilter
+pictureTexture.needsUpdate = true
+
+// 明るさをそのままの濃さで見せたいので、陰影の付かない材質で貼る
+const pictureGeometry = new PlaneGeometry(2, 2)
+pictureGeometry.rotateX(-Math.PI / 2)
+const pictureMaterial = new MeshBasicMaterial({ map: pictureTexture, side: DoubleSide })
+const picture = new Mesh(pictureGeometry, pictureMaterial)
+picture.position.set(-1.35, 0, 0)
+scene.add(picture)
+
+// 右：デジタル化した結果。左のアナログ画像と同じ大きさの枠に、同じ向きで並べる
+const terrain = new Group()
+terrain.position.set(1.35, 0, 0)
+scene.add(terrain)
+
+// 連続的な明るさの曲面。細かく分割した平面の頂点を、その位置の明るさのぶんだけ持ち上げる
+const surfaceGeometry = new PlaneGeometry(2, 2, 96, 96)
+surfaceGeometry.rotateX(-Math.PI / 2)
+const surfacePosition = surfaceGeometry.getAttribute("position")
+for (let i = 0; i < surfacePosition.count; i++) {
+  surfacePosition.setY(i, heightOf(brightnessAt(surfacePosition.getX(i), surfacePosition.getZ(i))))
+}
+surfaceGeometry.computeVertexNormals()
+const surfaceMaterial = new MeshLambertMaterial({
+  color: "#ffc857",
+  side: DoubleSide,
+  transparent: true,
+  opacity: 0.4
+})
+terrain.add(new Mesh(surfaceGeometry, surfaceMaterial))
+
+// 格子の分割数と、明るさの段階数（量子化レベル数）
+const SAMPLE_COUNT = 16
+const LEVEL_COUNT = 4
+
+// 画素。1 辺 1 の立方体を、底面が y = 0 に来るようずらしておき、
+// 大きさ・位置・色を 1 つずつ与えて格子状に並べる
+const pixelGeometry = new BoxGeometry(1, 1, 1).translate(0, 0.5, 0)
+const pixels = new InstancedMesh(pixelGeometry, new MeshLambertMaterial(), SAMPLE_COUNT ** 2)
+terrain.add(pixels)
+
+const matrix = new Matrix4()
+const color = new Color()
+
+// 標本化間隔。画像の 1 辺を格子の分割数で割ったものが、そのまま 1 画素の大きさになる
+const pitch = 2 / SAMPLE_COUNT
+
+// 量子化レベル数が n なら、明るさは 0 と 1 を含む n 段階、すなわち n - 1 等分に丸める
+const steps = LEVEL_COUNT - 1
+
+for (let row = 0; row < SAMPLE_COUNT; row++) {
+  for (let column = 0; column < SAMPLE_COUNT; column++) {
+    // 標本化：格子の 1 マスごとに、その中心での明るさを読み取る
+    const x = -1 + (column + 0.5) * pitch
+    const z = -1 + (row + 0.5) * pitch
+    const sampled = brightnessAt(x, z)
+
+    // 量子化：読み取った明るさを、決められた段階のうちいちばん近い値に丸める
+    const value = Math.round(sampled * steps) / steps
+
+    // 画素の値を、高さと灰色の濃さの両方で表す
+    const index = row * SAMPLE_COUNT + column
+    matrix.makeScale(pitch * 0.88, heightOf(value), pitch * 0.88)
+    matrix.setPosition(x, 0, z)
+    pixels.setMatrixAt(index, matrix)
+    pixels.setColorAt(index, color.setRGB(value, value, value, SRGBColorSpace))
+  }
+}
+pixels.instanceMatrix.needsUpdate = true
+```
+
+:::
 
 ## :WithGroupTag[画素と解像度]{group="{['CG', 'ImgP']}"}
 
