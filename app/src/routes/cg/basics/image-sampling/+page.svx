@@ -10,6 +10,7 @@ draft: true
 
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import MoirePatternDemo from '$lib/demo/threejs/basics/image-sampling/moire-pattern/MoirePatternDemo.svelte'
   import SamplingTheoremDemo from '$lib/demo/threejs/basics/image-sampling/sampling-theorem/SamplingTheoremDemo.svelte'
 </script>
 
@@ -72,6 +73,111 @@ $$
 
 エイリアシングは、:Anki[斜め]の線や輪郭を画素に置き換えるときにも現れます。
 滑らかな斜め線が標本化によって階段状にギザギザに見える:Anki[ジャギー]も、細かい形状を粗い標本点で表現しきれないために起こる、エイリアシングの一種です。
+
+:::Action{fixme}
+縞の細かさと標本点の数を動かして、次の点に着目して観察してみよう
+
+- 標本点の数が縞の細かさに足りないとき、右の標本化した結果に、もとの縞模様には無い太い縞が浮かび上がること
+- 標本点の数を増やしていくと、あるところでモアレが消え、もとの縞模様と同じ見え方に戻ること
+- 縞を傾けると、モアレの縞の太さや向きも変わること
+:::
+
+<CanvasWrapper>
+  <MoirePatternDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 縞の細かさ（画像の幅あたりに入る縞の本数）と傾き（度）、1 辺あたりの標本点の数
+const FREQUENCY = 15
+const ANGLE = 2
+const SAMPLE_COUNT = 26
+
+// もとの縞模様を焼く格子の細かさ。標本化の格子よりずっと細かくとり、連続的な明暗として見せる
+const REFERENCE_RESOLUTION = 384
+
+// 画像として扱う正方形の 1 辺と、左右に並べた 2 枚の間隔
+const IMAGE_SIZE = 2
+const IMAGE_GAP = 0.45
+const HALF_IMAGE = IMAGE_SIZE / 2
+const OFFSET_X = HALF_IMAGE + IMAGE_GAP / 2
+
+// もとの連続的な縞模様。位置 (x, y)（ともに 0〜1）での明るさ（0〜1）を返す。
+// 縞に垂直な向きへ進むほど明暗が繰り返すので、傾けた向きの成分で位相を決める
+const patternAt = (x: number, y: number) => {
+  const radians = (ANGLE * Math.PI) / 180
+  const across = x * Math.cos(radians) + y * Math.sin(radians)
+  return 0.5 + 0.5 * Math.sin(2 * Math.PI * FREQUENCY * across)
+}
+
+// 指定した細かさの格子で明るさを読み取り、1 格子 1 テクセルとして焼く
+const bakePattern = (resolution: number) => {
+  const data = new Uint8Array(resolution * resolution * 4)
+  for (let row = 0; row < resolution; row++) {
+    for (let column = 0; column < resolution; column++) {
+      // 格子 1 つ分の真ん中で明るさを読み取る
+      const x = (column + 0.5) / resolution
+      const y = (row + 0.5) / resolution
+      const level = Math.round(patternAt(x, y) * 255)
+      data.set([level, level, level, 255], (row * resolution + column) * 4)
+    }
+  }
+
+  const texture = new DataTexture(data, resolution, resolution)
+  texture.colorSpace = SRGBColorSpace
+  texture.needsUpdate = true
+  return texture
+}
+
+// 左：もとの連続的な縞模様。テクセルどうしを滑らかに繋いで、明暗の切れ目を見せない
+const referenceTexture = bakePattern(REFERENCE_RESOLUTION)
+referenceTexture.magFilter = LinearFilter
+referenceTexture.minFilter = LinearFilter
+
+// 右：標本化した結果。標本値を 1 画素 1 テクセルに焼き、
+// 拡大しても画素どうしが混ざらないよう補間なし（NearestFilter）で貼る
+const sampledTexture = bakePattern(SAMPLE_COUNT)
+sampledTexture.magFilter = NearestFilter
+sampledTexture.minFilter = NearestFilter
+
+// 明るさをそのままの濃さで見せたいので、2 枚とも陰影の付かない材質で貼る
+const imageGeometry = new PlaneGeometry(IMAGE_SIZE, IMAGE_SIZE)
+
+const reference = new Mesh(
+  imageGeometry,
+  new MeshBasicMaterial({ map: referenceTexture, side: DoubleSide })
+)
+reference.position.x = -OFFSET_X
+scene.add(reference)
+
+const sampled = new Mesh(
+  imageGeometry,
+  new MeshBasicMaterial({ map: sampledTexture, side: DoubleSide })
+)
+sampled.position.x = OFFSET_X
+scene.add(sampled)
+
+// 画像の外周。背景と明るさが近い部分でも、画像の範囲が分かるようにする
+const frameGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(-HALF_IMAGE, -HALF_IMAGE, 0.002),
+  new Vector3(HALF_IMAGE, -HALF_IMAGE, 0.002),
+  new Vector3(HALF_IMAGE, -HALF_IMAGE, 0.002),
+  new Vector3(HALF_IMAGE, HALF_IMAGE, 0.002),
+  new Vector3(HALF_IMAGE, HALF_IMAGE, 0.002),
+  new Vector3(-HALF_IMAGE, HALF_IMAGE, 0.002),
+  new Vector3(-HALF_IMAGE, HALF_IMAGE, 0.002),
+  new Vector3(-HALF_IMAGE, -HALF_IMAGE, 0.002)
+])
+const frameMaterial = new LineBasicMaterial({ color: "#c8ccd4" })
+for (const x of [-OFFSET_X, OFFSET_X]) {
+  const frame = new LineSegments(frameGeometry, frameMaterial)
+  frame.position.x = x
+  scene.add(frame)
+}
+```
+
+:::
 
 ## :WithGroupTag[補間による信号の復元]{group="{['ImgP']}"}
 
