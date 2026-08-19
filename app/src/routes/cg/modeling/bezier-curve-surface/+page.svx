@@ -4,8 +4,6 @@ title: 線形補間とベジェ曲線 # CG 3-4-3
 
 group: ["CG"]
 visual: true
-
-draft: true
 ---
 
 <script>
