@@ -382,7 +382,7 @@
 - [draft] `/cg/modeling/voxel-and-volume-data`
 - [ページ未作成] 四分木と八分木
 - [ページ未作成] メタボール
-- [ページ未作成] 等値面抽出
+- [draft] `/cg/modeling/isosurface-extraction`
 - [ページ未作成] パーティクル
 - [ページ未作成] ポイントベースドモデリング
 - [ページ未作成] フラクタル

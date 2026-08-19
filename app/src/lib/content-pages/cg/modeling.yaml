@@ -57,8 +57,7 @@ sections:
         group: ["CG"]
       - title: メタボール # CG 3-6-3
         group: ["CG"]
-      - title: 等値面抽出 # CG 3-6-5
-        group: ["CG"]
+      - slug: isosurface-extraction
   - heading: 特殊な形状表現
     id: special-shapes
     links:
