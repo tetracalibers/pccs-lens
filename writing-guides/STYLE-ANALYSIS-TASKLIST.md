@@ -532,7 +532,7 @@
 
 ## CGと画像処理 — モデリング／ボリューム（`cg/modeling.yaml` #volume）
 
-- [ページ未作成] ボクセルとボリュームデータ
+- [draft] `/cg/modeling/voxel-and-volume-data`
 - [ページ未作成] 四分木と八分木
 - [ページ未作成] メタボール
 - [ページ未作成] 等値面抽出

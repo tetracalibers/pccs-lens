@@ -1,0 +1,11 @@
+---
+layout: guide-content
+title: ボクセルとボリュームデータ # CG 3-6-1
+
+group: ["CG"]
+
+draft: true
+---
+
+## TODO
+

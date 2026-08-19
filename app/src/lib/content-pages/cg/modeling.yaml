@@ -52,8 +52,7 @@ sections:
   - heading: ボリューム
     id: volume
     links:
-      - title: ボクセルとボリュームデータ # CG 3-6-1
-        group: ["CG"]
+      - slug: voxel-and-volume-data
       - title: 四分木と八分木 # CG 3-6-2
         group: ["CG"]
       - title: メタボール # CG 3-6-3
