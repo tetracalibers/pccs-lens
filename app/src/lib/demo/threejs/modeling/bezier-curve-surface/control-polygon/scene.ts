@@ -5,6 +5,7 @@ import {
   Group,
   Line,
   LineBasicMaterial,
+  DoubleSide,
   LineDashedMaterial,
   Mesh,
   MeshBasicMaterial,
@@ -57,9 +58,12 @@ const GAP_SIZE = 0.08
 /** 動かす前の曲線を薄く残す濃さ。今の曲線と見比べて、引き寄せられた量を読み取る */
 const GHOST_OPACITY = 0.3
 
+/** 制御多角形の内側を塗る濃さ。破線だけではどこが多角形なのか掴みにくいので、面でも示す */
+const POLYGON_FILL_OPACITY = 0.12
+
 /** 制御点と、動かす制御点を示す球の半径 */
-const CONTROL_RADIUS = 0.1
-const MOVABLE_RADIUS = 0.12
+const CONTROL_RADIUS = 0.07
+const MOVABLE_RADIUS = 0.085
 
 /** ラベルの高さ（ワールド座標での大きさ）。幅は文字数に応じて決まる */
 const LABEL_HEIGHT = 0.28
@@ -82,6 +86,7 @@ const LABEL_FONT = "bold 92px sans-serif"
  * xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z。
  * 正面から見る構図に固定しているため、この厚みは絵には出ない
  */
+const LAYER_FILL = -0.01
 const LAYER_GHOST = 0
 const LAYER_POLYGON = 0.01
 const LAYER_CURVE = 0.02
@@ -171,6 +176,43 @@ const createPolyline = (count: number, z: number) => {
 }
 
 /**
+ * 制御多角形の内側を塗る面。頂点を 1 番目の制御点から扇状に三角形へ分け、
+ * 折れ線と同じ頂点をそのまま使う（頂点が動いても座標を書き換えるだけで済む）
+ */
+const createPolygonFill = (count: number) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(count * 3), 3)
+  geometry.setAttribute("position", positions)
+  const index: number[] = []
+  for (let i = 1; i < count - 1; i++) index.push(0, i, i + 1)
+  geometry.setIndex(index)
+
+  const material = new MeshBasicMaterial({
+    color: POLYGON_COLOR,
+    transparent: true,
+    opacity: POLYGON_FILL_OPACITY,
+    // 制御点を動かすと表裏が入れ替わりうるので、どちらから見ても塗る
+    side: DoubleSide,
+    // 手前に重なる曲線・破線が面の形に欠けないよう、深度は書かない
+    depthWrite: false
+  })
+  const mesh = new Mesh(geometry, material)
+  mesh.frustumCulled = false
+
+  return {
+    object: mesh,
+    set: (i: number, point: Vector3) => positions.setXYZ(i, point.x, point.y, LAYER_FILL),
+    commit: () => {
+      positions.needsUpdate = true
+    },
+    dispose: () => {
+      geometry.dispose()
+      material.dispose()
+    }
+  }
+}
+
+/**
  * 制御多角形（破線）とベジェ曲線（実線）を重ねた 1 枚のパネル。
  * 動かす前の曲線を薄く残し、制御点を動かしたときの引き寄せられ方が読めるようにする
  */
@@ -180,6 +222,10 @@ const createPanel = (source: [number, number][], title: string, offsetX: number)
 
   const controls = source.map(([x, y]) => new Vector3(x, y, 0))
   const sample = new Vector3()
+
+  // 制御多角形の内側。破線より奥に敷き、面としての広がりを示す
+  const fill = createPolygonFill(controls.length)
+  group.add(fill.object)
 
   // 動かす前の曲線。制御点の初期位置から 1 度だけ求める
   const ghostPoints: Vector3[] = []
@@ -240,8 +286,12 @@ const createPanel = (source: [number, number][], title: string, offsetX: number)
         .add(MOVABLE_LABEL_OFFSET)
         .setZ(LAYER_LABEL)
 
-      controls.forEach((control, i) => polygon.set(i, control))
+      controls.forEach((control, i) => {
+        polygon.set(i, control)
+        fill.set(i, control)
+      })
       polygon.commit()
+      fill.commit()
       // 破線の刻みは頂点ごとの「線に沿った距離」で決まるため、頂点を動かすたびに測り直す
       polygonLine.computeLineDistances()
 
@@ -251,6 +301,7 @@ const createPanel = (source: [number, number][], title: string, offsetX: number)
       curve.commit()
     },
     dispose: () => {
+      fill.dispose()
       const disposables = [
         ghostGeometry,
         ghostMaterial,

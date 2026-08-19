@@ -45,12 +45,6 @@ $$
 - パネルの`C(t)`に出る`2`つの数が、$$P_0$$と$$P_1$$にかかる混合比
 :::
 
-:::Fix{target="demo"}
-- 白い点は要らない
-- 各点の直径が大きすぎる
-- `t`と`1 - t`の範囲がわかるように矢印で示す
-:::
-
 <CanvasWrapper>
   <LinearInterpolationDemo />
 </CanvasWrapper>
@@ -68,15 +62,6 @@ const interpolate = (t: number, target: Vector3) =>
     .copy(P0)
     .multiplyScalar(1 - t)
     .addScaledVector(P1, t)
-
-// 線分を等分する点。t を 1 つ決めるごとに線分上の点が 1 つ決まることを示す
-const tickGeometry = new SphereGeometry(TICK_RADIUS, 12, 8)
-const tickMaterial = new MeshBasicMaterial({ color: TICK_COLOR })
-for (let i = 1; i < TICK_COUNT; i++) {
-  const tick = new Mesh(tickGeometry, tickMaterial)
-  interpolate(i / TICK_COUNT, tick.position).setZ(LAYER_TICK)
-  scene.add(tick)
-}
 
 // 両端が t で動く線分。頂点を作り直さず、座標だけ書き換える
 const createSegment = (color: string) => {
@@ -98,6 +83,34 @@ const createSegment = (color: string) => {
   }
 }
 
+// 区間の広がりを示す両矢印。矢じりの円錐は既定で +y を向いているので、
+// 線分の向きへ回してから先端を端点に合わせる
+const createMeasureArrow = (color: string) => {
+  const group = new Group()
+  const shaft = createSegment(color)
+  group.add(shaft.object)
+
+  const headGeometry = new ConeGeometry(ARROW_HEAD_RADIUS, ARROW_HEAD_LENGTH, 12)
+  const headMaterial = new MeshBasicMaterial({ color })
+  const heads = [new Mesh(headGeometry, headMaterial), new Mesh(headGeometry, headMaterial)]
+  group.add(heads[0], heads[1])
+
+  const direction = new Vector3()
+
+  return {
+    object: group,
+    set: (from: Vector3, to: Vector3) => {
+      shaft.set(from, to)
+      direction.subVectors(to, from).normalize()
+      const angle = Math.atan2(direction.y, direction.x)
+      heads[0].rotation.z = angle + Math.PI / 2
+      heads[0].position.copy(from).addScaledVector(direction, ARROW_HEAD_LENGTH / 2)
+      heads[1].rotation.z = angle - Math.PI / 2
+      heads[1].position.copy(to).addScaledVector(direction, -ARROW_HEAD_LENGTH / 2)
+    }
+  }
+}
+
 // 線分は C(t) を境に 2 つに分かれる。P0 側の長さが t、P1 側の長さが 1 − t にあたる
 const t = 0.3
 const current = interpolate(t, new Vector3())
@@ -106,6 +119,22 @@ const far = createSegment(FAR_COLOR)
 near.set(P0, current)
 far.set(current, P1)
 scene.add(near.object, far.object)
+
+// 線分に対して下向きの単位ベクトル。矢印を線分から逃がす向きに使う
+const below = new Vector3(P1.y - P0.y, P0.x - P1.x, 0).normalize()
+
+// t と 1 − t の広がりを示す 2 本の矢印。線分と平行に、少し下へずらして並べる
+const nearArrow = createMeasureArrow(NEAR_COLOR)
+const farArrow = createMeasureArrow(FAR_COLOR)
+nearArrow.set(
+  P0.clone().addScaledVector(below, ARROW_OFFSET),
+  current.clone().addScaledVector(below, ARROW_OFFSET)
+)
+farArrow.set(
+  current.clone().addScaledVector(below, ARROW_OFFSET),
+  P1.clone().addScaledVector(below, ARROW_OFFSET)
+)
+scene.add(nearArrow.object, farArrow.object)
 
 // 自分で置いた 2 つの制御点と、t から計算で決まる点
 const controlGeometry = new SphereGeometry(CONTROL_RADIUS, 16, 12)
@@ -136,18 +165,12 @@ $$P_0, P_1$$の間を点で埋めていくことは、$$P_0, P_1$$の間の足�
 `2`つの線分が$$P_1$$で繋がっているとし、$$P_0, P_1$$の間、$$P_1, P_2$$の間をそれぞれ線形補間した点を求め、それらを線分で結ぶことで、$$P_0, P_2$$の間を繋ぐ曲線が現れます。
 
 :::Action{fixme}
-`t`を動かして、`2`本の線分から曲線が浮かび上がるところを見てみよう
+`t`と制御点を動かして、`2`本の線分から曲線が浮かび上がるところを見てみよう
 
 - 束になっている線分は、どれも`2`本の線分を同じ割合で分けた点どうしを結んだもの
 - `t`が進むと、そのうちの`1`本の上を$$C(t)$$が動き、通った跡が曲線になる
-:::
-
-:::Fix{target="demo"}
-- 白い点は要らない
-- 各点の直径が大きすぎる
-- 10等分した分点どうしを結ぶ11本の束の色が薄すぎるかも？
-- 制御点を動かせるようにし、制御点による曲線の形状の変化を体験できるようにする
-- `P_0, P_1`の間は`1-t : t`、`P_1, P_2`の間は`t: 1-t`の比率で内分されていることがわかる矢印を追加（これに合わせて、`t`の表示値を`Q_0, P_1`間の距離に関わる値にする必要があるかも？）
+- 線分の外に添えた矢印は、$$Q_0$$ と $$Q_1$$ がそれぞれの線分を分けている比率
+- $$P_0, P_1, P_2$$ を動かすと、束の張り方ごと変わって曲線の形も変わる
 :::
 
 <CanvasWrapper>
@@ -157,10 +180,10 @@ $$P_0, P_1$$の間を点で埋めていくことは、$$P_0, P_1$$の間の足�
 :::Foldable{title="Three.jsによる実装概要"}
 
 ```ts
-// 3 つの制御点。P0 → P1 → P2 と辿る 2 本の線分の内側に曲線が現れる
-const P0 = new Vector3(-2.6, -1.1, 0)
-const P1 = new Vector3(0, 1.7, 0)
-const P2 = new Vector3(2.6, -1.1, 0)
+// 3 つの制御点。Tweakpane で動かせるので、毎フレーム params の値を写して使う
+const p0 = new Vector3(params.p0.x, params.p0.y, 0)
+const p1 = new Vector3(params.p1.x, params.p1.y, 0)
+const p2 = new Vector3(params.p2.x, params.p2.y, 0)
 
 // 線形補間。2 点の座標値を 1 − t : t の割合で混ぜる
 const lerp = (from: Vector3, to: Vector3, t: number, target: Vector3) =>
@@ -169,89 +192,97 @@ const lerp = (from: Vector3, to: Vector3, t: number, target: Vector3) =>
     .multiplyScalar(1 - t)
     .addScaledVector(to, t)
 
-// C(t) を求める途中の 2 点。毎フレーム何度も呼ばれるので、その都度は作らない
-const q0 = new Vector3()
-const q1 = new Vector3()
-
 // 2 次ベジェ曲線上の点 C(t)。
 // P0P1 上の点 Q0(t) と P1P2 上の点 Q1(t) を、同じ t でもう一度線形補間して求める
 const quadraticPoint = (t: number, target: Vector3) =>
-  lerp(lerp(P0, P1, t, q0), lerp(P1, P2, t, q1), t, target)
+  lerp(lerp(p0, p1, t, qa), lerp(p1, p2, t, qb), t, target)
 
-// 両端が t で動く線分。頂点を作り直さず、座標だけ書き換える
-const createSegment = (color: string) => {
+// 頂点が t と制御点で動く折れ線・線分の束。頂点を作り直さず、座標だけ書き換える
+const createPolyline = (count: number, z: number) => {
   const geometry = new BufferGeometry()
-  const positions = new Float32BufferAttribute(new Float32Array(6), 3)
+  const positions = new Float32BufferAttribute(new Float32Array(count * 3), 3)
   geometry.setAttribute("position", positions)
-  const material = new LineBasicMaterial({ color })
-  const line = new LineSegments(geometry, material)
-  // 端点が動くので、あらかじめ計算した範囲に頼らず常に描く
-  line.frustumCulled = false
 
   return {
-    object: line,
-    set: (from: Vector3, to: Vector3, z: number) => {
-      positions.setXYZ(0, from.x, from.y, z)
-      positions.setXYZ(1, to.x, to.y, z)
+    geometry,
+    set: (index: number, point: Vector3) => positions.setXYZ(index, point.x, point.y, z),
+    commit: () => {
       positions.needsUpdate = true
     }
   }
 }
 
 // 制御点を順に結んだ 2 本の線分
-const edgeGeometry = new BufferGeometry().setFromPoints(
-  [P0, P1, P2].map((point) => new Vector3(point.x, point.y, LAYER_EDGE))
-)
-const edgeMaterial = new LineBasicMaterial({ color: EDGE_COLOR })
-scene.add(new Line(edgeGeometry, edgeMaterial))
+const edge = createPolyline(3, LAYER_EDGE)
+edge.set(0, p0)
+edge.set(1, p1)
+edge.set(2, p2)
+edge.commit()
+scene.add(new Line(edge.geometry, new LineBasicMaterial({ color: EDGE_COLOR })))
 
 // 2 本の線分を同じ数に分け、同じ番号の分点どうしを結ぶ。この束の縁に曲線が浮かび上がる
-const familyPoints: Vector3[] = []
+const family = createPolyline((DIVISION_COUNT + 1) * 2, 0)
 for (let i = 0; i <= DIVISION_COUNT; i++) {
   const ratio = i / DIVISION_COUNT
-  familyPoints.push(lerp(P0, P1, ratio, new Vector3()), lerp(P1, P2, ratio, new Vector3()))
+  family.set(i * 2, lerp(p0, p1, ratio, sample))
+  family.set(i * 2 + 1, lerp(p1, p2, ratio, sample))
 }
-const familyGeometry = new BufferGeometry().setFromPoints(familyPoints)
+family.commit()
 const familyMaterial = new LineBasicMaterial({
   color: CHORD_COLOR,
   transparent: true,
   opacity: FAMILY_OPACITY
 })
-scene.add(new LineSegments(familyGeometry, familyMaterial))
-
-// 分点。2 本の線分がどこで分けられているかを示す
-const divisionGeometry = new SphereGeometry(DIVISION_RADIUS, 12, 8)
-const divisionMaterial = new MeshBasicMaterial({ color: DIVISION_COLOR })
-familyPoints.forEach((point) => {
-  const dot = new Mesh(divisionGeometry, divisionMaterial)
-  dot.position.set(point.x, point.y, LAYER_DIVISION)
-  scene.add(dot)
-})
+scene.add(new LineSegments(family.geometry, familyMaterial))
 
 // 束のうち、今の t にあたる 1 本
 const t = 0.35
-const first = lerp(P0, P1, t, new Vector3())
-const second = lerp(P1, P2, t, new Vector3())
-const chord = createSegment(CHORD_COLOR)
-chord.set(first, second, LAYER_CHORD)
+const first = lerp(p0, p1, t, new Vector3())
+const second = lerp(p1, p2, t, new Vector3())
+const chord = createSegment(CHORD_COLOR, LAYER_CHORD)
+chord.set(first, second)
 scene.add(chord.object)
 
 // C が 0 から今の t までに通った跡。折れ線で近似する
-const sample = new Vector3()
-const traceGeometry = new BufferGeometry()
-const tracePositions = new Float32BufferAttribute(new Float32Array((TRACE_SEGMENTS + 1) * 3), 3)
-traceGeometry.setAttribute("position", tracePositions)
+const trace = createPolyline(TRACE_SEGMENTS + 1, LAYER_TRACE)
 for (let i = 0; i <= TRACE_SEGMENTS; i++) {
-  quadraticPoint((t * i) / TRACE_SEGMENTS, sample)
-  tracePositions.setXYZ(i, sample.x, sample.y, LAYER_TRACE)
+  trace.set(i, quadraticPoint((t * i) / TRACE_SEGMENTS, sample))
 }
-const traceMaterial = new LineBasicMaterial({ color: TRACE_COLOR })
-scene.add(new Line(traceGeometry, traceMaterial))
+trace.commit()
+scene.add(new Line(trace.geometry, new LineBasicMaterial({ color: TRACE_COLOR })))
+
+// 線分に垂直な単位ベクトルのうち、束が張られていない外側のもの
+const outwardNormal = (from: Vector3, to: Vector3, reference: Vector3, target: Vector3) => {
+  target.set(to.y - from.y, from.x - to.x, 0).normalize()
+
+  // 中点から reference へ向かうベクトルと同じ側を向いていたら、反対側へ返す
+  const towardX = reference.x - (from.x + to.x) / 2
+  const towardY = reference.y - (from.y + to.y) / 2
+
+  return target.x * towardX + target.y * towardY > 0 ? target.negate() : target
+}
+
+// 内分の比率を示す矢印。作り方は線形補間のデモと同じ createMeasureArrow を使い、
+// どちらの線分にも先頭の制御点の側から t : 1 − t の順で 2 本ずつ、外側へ並べる
+const arrows = [0, 1, 2, 3].map(() => createMeasureArrow(EDGE_COLOR))
+arrows.forEach((arrow) => scene.add(arrow.object))
+const outward = new Vector3()
+const setArrow = (index: number, start: Vector3, end: Vector3) =>
+  arrows[index].set(
+    start.clone().addScaledVector(outward, ARROW_OFFSET),
+    end.clone().addScaledVector(outward, ARROW_OFFSET)
+  )
+outwardNormal(p0, p1, p2, outward)
+setArrow(0, p0, first)
+setArrow(1, first, p1)
+outwardNormal(p1, p2, p0, outward)
+setArrow(2, p1, second)
+setArrow(3, second, p2)
 
 // 自分で置いた 3 つの制御点
 const controlGeometry = new SphereGeometry(CONTROL_RADIUS, 16, 12)
 const controlMaterial = new MeshBasicMaterial({ color: CONTROL_COLOR })
-for (const point of [P0, P1, P2]) {
+for (const point of [p0, p1, p2]) {
   const mesh = new Mesh(controlGeometry, controlMaterial)
   mesh.position.set(point.x, point.y, LAYER_POINT)
   scene.add(mesh)
@@ -276,7 +307,7 @@ scene.add(knot0, knot1, marker)
 
 このベジェ曲線の制御点は、$$P_0, P_1, P_2$$ の`3`つです。制御点を結ぶ線分上に並ぶ点は、この`3`点から計算で求まります。
 
-$$P_0, P_1$$ の間を`1 - t : t`の比率で内分した点を $$Q_0(t)$$、同様に$$P_1, P_2$$ の間を`t : 1 - t`の比率で内分した点を $$Q_1(t)$$ と書くことにしましょう。制御点を結ぶ`2`本の線分は直線なので、どちらも:Anki[線形補間]の式で表せます。
+$$P_0, P_1$$ の間を`t : t - 1`の比率で内分した点を $$Q_0(t)$$、$$P_1, P_2$$ の間も同様に内分した点を $$Q_1(t)$$ と書くことにしましょう。制御点を結ぶ`2`本の線分は直線なので、どちらも:Anki[線形補間]の式で表せます。
 
 $$
 \begin{align*}
@@ -315,11 +346,6 @@ $$t$$ を`0`から`1`まで動かすと、$$Q_0(t)$$ と $$Q_1(t)$$ を結ぶ線
 
 - 曲線は制御多角形の角には届かず、その内側を通る
 - 薄く残った動かす前の曲線と見比べると、動かした向きへ引き寄せられているのがわかる
-:::
-
-:::Fix{target="demo"}
-- 各点の直径が大きすぎる
-- 結局、制御多角形がどこなのかがわからない。制御多角形を薄く塗りつぶすとか？
 :::
 
 <CanvasWrapper>
@@ -375,13 +401,48 @@ const createPolyline = (count: number, z: number) => {
   }
 }
 
-// 制御多角形（破線）とベジェ曲線（実線）を重ねた 1 枚のパネル
+// 制御多角形の内側を塗る面。頂点を 1 番目の制御点から扇状に三角形へ分け、
+// 折れ線と同じ頂点をそのまま使う
+const createPolygonFill = (count: number) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(count * 3), 3)
+  geometry.setAttribute("position", positions)
+  const index: number[] = []
+  for (let i = 1; i < count - 1; i++) index.push(0, i, i + 1)
+  geometry.setIndex(index)
+
+  const material = new MeshBasicMaterial({
+    color: POLYGON_COLOR,
+    transparent: true,
+    opacity: POLYGON_FILL_OPACITY,
+    // 制御点を動かすと表裏が入れ替わりうるので、どちらから見ても塗る
+    side: DoubleSide,
+    // 手前に重なる曲線・破線が面の形に欠けないよう、深度は書かない
+    depthWrite: false
+  })
+
+  return {
+    object: new Mesh(geometry, material),
+    set: (i: number, point: Vector3) => positions.setXYZ(i, point.x, point.y, LAYER_FILL),
+    commit: () => {
+      positions.needsUpdate = true
+    }
+  }
+}
+
+// 制御多角形（破線と塗り）とベジェ曲線（実線）を重ねた 1 枚のパネル
 const createPanel = (source: [number, number][], offsetX: number) => {
   const group = new Group()
   group.position.x = offsetX
 
   const controls = source.map(([x, y]) => new Vector3(x, y, 0))
   const sample = new Vector3()
+
+  // 制御多角形の内側。破線より奥に敷き、面としての広がりを示す
+  const fill = createPolygonFill(controls.length)
+  controls.forEach((control, i) => fill.set(i, control))
+  fill.commit()
+  group.add(fill.object)
 
   // 制御点を順に結んだ折れ線。曲線と描き分けるため破線にする
   const polygon = createPolyline(controls.length, LAYER_POLYGON)
@@ -504,11 +565,13 @@ $$
 :::
 ::::
 
-:::Add
-なぜここで組み合わせが出てくるのかを説明
-:::
-
 $$\binom{n}{i}$$ は $$n$$ 個から $$i$$ 個を選ぶ組み合わせの数です。$$t$$ のべき乗と $$1 - t$$ のべき乗を掛け合わせた形になっていて、$$i$$ が小さい制御点ほど $$1 - t$$ 側の指数が大きくなります。
+
+組み合わせの数が付くのは、同じ形の項がいくつも現れて足し合わさるためです。`2`次ベジェ曲線の式で $$P_1$$ に $$2t(1 - t)$$ がかかっていたのは、展開の途中で $$Q_0(t)$$ 側から $$(1 - t) \cdot t$$ が、$$Q_1(t)$$ 側から $$t \cdot (1 - t)$$ が出てきて、この`2`つが同じ形だったためです。
+
+`2`次ベジェ曲線では、`3`つの制御点を線形補間で`2`点に減らし、それをもう`1`度線形補間して`1`点に絞りました。次数が上がっても手続きは同じで、$$n + 1$$ 個の制御点が`1`点になるまで、線形補間を $$n$$ 回繰り返すことになります。`1`回の線形補間では、それぞれの点に $$1 - t$$ か $$t$$ のどちらかがかかります。そのため、$$n$$ 回のうち $$t$$ の側を $$i$$ 回選んだ道すじをたどると、$$t^i (1 - t)^{n - i}$$ という係数が残ります。
+
+$$P_i$$ にたどり着く道すじは`1`本ではありません。$$n$$ 回のうちどの回で $$t$$ の側を選ぶかを取り替えても、行き着く先は同じ $$P_i$$ です。この道すじの本数が $$\binom{n}{i}$$ にあたります。
 
 CGで最もよく使われるのは、制御点を`4`つ置く`3`次のベジェ曲線です。これは$$n = 3$$の場合であり、`4`つの基底関数は次のようになります。
 
@@ -540,14 +603,6 @@ $$
 - 両端では`1`本だけが`1`になり、残りの`3`本は`0`になる
 - 途中では`4`本が山を分け合い、重みの大きい曲線が左から右へ移っていく
 - 右の積み上げ棒は、どの`t`でも高さが変わらない
-:::
-
-:::Fix{target="demo"}
-- 各点の直径が大きすぎる
-- `t`ラベルと積み上げ棒が重なっているので、積み上げ棒をもっと右に
-- 「合計」ラベルが中途半端な位置にあるので、積み上げ棒と横中心が揃うようにきちんと配置する
-- 「重み」UIの値表示部分が見切れてしまっているので、Tweakpaneのmultiline optionで複数行表示にする
-- `B_0,3`、`B_3,3`ラベルをもう少しグラフの線に近づける
 :::
 
 <CanvasWrapper>
@@ -667,8 +722,8 @@ $$
 
 負にならない重みを足して`1`になるということは、曲線上の点が制御点の:Anki[重み付き平均]になっている、ということです。
 
-:::Add
-重みつき平均とは何かをNoteで補足
+:::Note
+重み付き平均とは、値ごとに重んじる度合いを変えて求める平均のことです。すべての値を同じだけ重んじて足し合わせ、個数で割るのがふつうの平均で、そこに値ごとの重みをかけたものが重み付き平均にあたります。重みの合計が`1`に揃っていれば、個数で割る操作は要りません。線分の上の点を表した $$C(t) = (1 - t)P_0 + tP_1$$ も、$$P_0$$ と $$P_1$$ を $$1 - t$$ と $$t$$ の重みで平均したものでした。
 :::
 
 この性質は、ベジェ曲線の振る舞いにおいて非常に重要になります。具体的にベジェ曲線のどんな振る舞いに繋がるのかは、[ベジェ曲線の数学的性質](/cg/modeling/bezier-curve-properties/)で見ていきます。

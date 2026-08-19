@@ -47,15 +47,15 @@ const CURVE_SEGMENTS = 96
 const AXIS_OVERSHOOT = 0.3
 const TICK_LENGTH = 0.1
 
-/** 合計を示す積み上げ棒の位置（横軸の右）と幅 */
-const BAR_X = PLOT_WIDTH + 0.7
+/** 合計を示す積み上げ棒の位置（横軸の右）と幅。横軸の名前と重ならない位置まで離す */
+const BAR_X = PLOT_WIDTH + 1.15
 const BAR_WIDTH = 0.4
 
 /** 重みが 0 のときも板が潰れないようにする最小の高さ */
 const MIN_BAR_HEIGHT = 1e-4
 
 /** 今の t での重みを示す点の半径 */
-const DOT_RADIUS = 0.07
+const DOT_RADIUS = 0.05
 
 /** 補助線の薄さ。重みが 1 になる高さの目安 */
 const GUIDE_OPACITY = 0.35
@@ -64,8 +64,17 @@ const GUIDE_OPACITY = 0.35
 const LABEL_HEIGHT = 0.24
 const TICK_LABEL_HEIGHT = 0.2
 
+/** 基底関数の名前を曲線から上へ逃がす距離 */
+const BASIS_LABEL_OFFSET = 0.26
+
+/**
+ * 両端の基底関数の山は縦軸・補助線に重なるので、名前は山そのものではなく、
+ * この t だけ内側へ入った曲線上の点に添える
+ */
+const END_LABEL_T = 0.12
+
 /** グラフ全体を canvas の中央に寄せる位置 */
-const GRAPH_OFFSET = new Vector3(-2.3, -1.425, 0)
+const GRAPH_OFFSET = new Vector3(-2.6, -1.425, 0)
 
 /** ラベルの文字を描く canvas の高さ（テクスチャの解像度）と左右の余白 */
 const LABEL_TEXTURE_HEIGHT = 128
@@ -221,10 +230,9 @@ export const createBernsteinBasisScene = ({ scene, params }: SceneContext) => {
   const basisLabels = BASIS_LABELS.map((text, i) => {
     const label = createLabel(text, BASIS_COLORS[i], LABEL_HEIGHT)
     const peak = i / (BASIS_COUNT - 1)
-    toScene(peak, bernstein(i, peak), LAYER_LABEL, label.sprite.position)
-    // 両端の山は縦軸・補助線と重なるので、内側へ寄せて上に逃がす
-    label.sprite.position.x += peak === 0 ? 0.34 : peak === 1 ? -0.34 : 0
-    label.sprite.position.y += 0.26
+    const anchor = peak === 0 ? END_LABEL_T : peak === 1 ? 1 - END_LABEL_T : peak
+    toScene(anchor, bernstein(i, anchor), LAYER_LABEL, label.sprite.position)
+    label.sprite.position.y += BASIS_LABEL_OFFSET
     graph.add(label.sprite)
     return label
   })
@@ -249,6 +257,7 @@ export const createBernsteinBasisScene = ({ scene, params }: SceneContext) => {
       y: 0
     },
     { text: "重み", color: AXIS_COLOR, height: LABEL_HEIGHT, x: 0.1, y: PLOT_HEIGHT + 0.46 },
+    // 積み上げ棒の横中心（BAR_X）に揃えて、どの棒の名前かを取り違えないようにする
     { text: "合計", color: AXIS_COLOR, height: LABEL_HEIGHT, x: BAR_X, y: PLOT_HEIGHT + 0.46 }
   ].map(({ text, color, height, x, y }) => {
     const label = createLabel(text, color, height)
