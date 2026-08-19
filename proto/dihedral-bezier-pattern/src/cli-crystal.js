@@ -99,8 +99,6 @@ function helpText() {
   --growth=<0-1>        結晶化の進み具合（既定: 1）。境目は 線 → 半透明 → 結晶面 と変わる
   --frames=<1-24>       growth を 0 から振ってコマを出す（既定: 1）
   --seeds=<1-8>         結晶核の数（既定: 1）。2 以上で多結晶になり、粒界が出る
-  --light=<度>          光源の方位（既定: 135）
-  --flat                ファセットの陰影と稜線を切って、平らに塗る
   --size=<px>           出力サイズ（既定: 480）
   --seed=<数値|文字列>   乱数シード（既定: ランダム）
                         seed が決めるのは全体の向きと結晶核の位置だけ。
@@ -143,10 +141,8 @@ export function run() {
       max: 1,
       name: '--cleave-opacity',
     })
-    const lightDeg = readNumber(opts.light, 135, { min: -360, max: 360, name: '--light' })
     const layers = readLayers(opts.layers, seeds)
     const colorBy = readColorBy(opts['color-by'])
-    const flat = opts.flat === 'true'
 
     const palettes = readPalettes(opts.colors, opts['color-count'])
     const outDir = resolveOutDir(opts.out, 'crystal')
@@ -157,7 +153,6 @@ export function run() {
 
     const unit = size / (repeat * KITE_WIDTH)
     const radius = (size * Math.SQRT2) / 2
-    const lightAngle = (lightDeg * Math.PI) / 180
     const entries = []
 
     for (let variant = 0; variant < count; variant++) {
@@ -213,8 +208,6 @@ export function run() {
             unit,
             size,
             growth: stage,
-            lightAngle,
-            flat,
             cleaveOpacity,
           })
 
@@ -233,7 +226,7 @@ export function run() {
               growth: stage,
               layers,
               note:
-                `color-by: ${colorBy} / seeds: ${seeds} / light: ${lightDeg} / cleave: ${cleave}` +
+                `color-by: ${colorBy} / seeds: ${seeds} / cleave: ${cleave}` +
                 ` / cleave-opacity: ${cleaveOpacity}`,
             }),
             'utf-8',

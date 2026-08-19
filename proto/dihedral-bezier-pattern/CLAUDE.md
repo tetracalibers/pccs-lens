@@ -14,7 +14,7 @@ A prototype for generating SVG patterns with mirror symmetry — dihedral (D_n) 
 - **壁紙群・丸み版**（`src/generate-wallpaper-round.js` + `src/motif-wallpaper-round.js`）— 丸い図形の組み合わせで描く版。**17 の壁紙群を同じモチーフで見比べる**のが目的なので、非対称な印を既定で置く
 - **ペンローズ版**（`src/generate-penrose.js` + `src/motif-penrose.js`）— 五角形ペンローズタイリング（P1: 正五角形・星・舟・菱形）。**この版とカイト＆ダート版だけ基本領域を持たない。** 平行移動の周期がないので、群の変換でコピーせず、タイルを 1/φ² に縮めて置き換える置換規則で埋める
 - **カイト＆ダート版**（`src/generate-kite-dart.js` + `src/motif-kite-dart.js`）— カイト＆ダートタイリング（ペンローズ P2: 凧形と矢じり形の 2 種）。タイルを半分に切った二等辺三角形を 1/φ に縮んだ三角形へ切り分ける分割規則で埋める。P1 と違って**子は必ず親の内側**に生まれる
-- **準結晶版**（`src/generate-crystal.js` + `src/motif-crystal.js`）— カイト＆ダート版と**同じタイリングを結晶標本として描く**版。タイルの塗り分けだけでなく、結晶面（向きから作った法線＋斜めからの光）・劈開線・頂点ネットワーク・回折像・粒界を層として重ねる。結晶核を画面の中心に置くので、中心のまわりだけが正確な D5 対称になる
+- **準結晶版**（`src/generate-crystal.js` + `src/motif-crystal.js`）— カイト＆ダート版と**同じタイリングを結晶標本として描く**版。タイルの塗り分けだけでなく、結晶面・劈開線・頂点ネットワーク・回折像・粒界を層として重ねる。結晶核を画面の中心に置くので、中心のまわりだけが正確な D5 対称になる
 
 ## Running
 
@@ -53,10 +53,10 @@ Output goes to `.generated/{curved|angular|wallpaper|wallpaper-round|penrose|kit
 - `src/penrose-geometry.js` — ペンローズ P1 の 4 種のタイルの形と置換規則。向きは 36 度を 1 とする整数で持つ
 - `src/kite-dart-geometry.js` — ペンローズ P2 のタイルの形と分割規則。半タイル（ロビンソン三角形）で分割し、最後に軸の辺で 2 枚ずつ突き合わせてカイト・ダートに戻す
 - `src/render-penrose.js` — ペンローズ版とカイト＆ダート版で共通の SVG 組み立て（繰り返しがないので `<use>` は使えず、タイルを 1 枚ずつ書き出す）
-- `src/crystal-geometry.js` — 準結晶版の幾何。タイルの向き（36 度刻みの整数）・頂点ネットワーク・劈開線（頂点が乗る平行線族とその φ 倍への粗くし方）・結晶面の法線・成長・多結晶（ボロノイ領域と多角形の切り取り）
+- `src/crystal-geometry.js` — 準結晶版の幾何。タイルの向き（36 度刻みの整数）・頂点ネットワーク・劈開線（頂点が乗る平行線族とその φ 倍への粗くし方）・成長・多結晶（ボロノイ領域と多角形の切り取り）
 - `src/crystal-diffraction.js` — 頂点の点群の構造因子 S(k) を数え、ピークを拾う
 - `src/render-crystal.js` — 準結晶版の SVG 組み立て。線が数千本になるので、同じ描き方の線は 1 本の `<path>` にまとめる
-- `src/color-utils.js` — 16 進の色を明るくする・暗くする・混ぜる。ファセットの陰影と、線に使うインク（パレットでいちばん暗い色から作る）
+- `src/color-utils.js` — 16 進の色を明るくする・暗くする・混ぜる。粒界にかかったタイルを沈めるのと、線に使うインク（パレットでいちばん暗い色から作る）
 - `src/cli-shared.js` — 引数解釈・シード・出力先・後始末（全版で共通）
 - `src/cli.js` / `src/cli-wallpaper.js` / `src/cli-penrose.js` / `src/cli-kite-dart.js` / `src/cli-crystal.js` — 一括生成のループ（ロゼッタ用・壁紙群用・ペンローズ用・カイト＆ダート用・準結晶用）
 - `src/generate*.js` — エントリポイント（`run()` に buildMotif を渡すだけ。ペンローズ版・カイト＆ダート版・準結晶版は渡すものがないので `run()` だけ）

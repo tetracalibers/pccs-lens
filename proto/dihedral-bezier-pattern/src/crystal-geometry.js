@@ -262,33 +262,6 @@ export function viewportHalfPlanes(half) {
   ]
 }
 
-/* --- ファセットの陰影 --- */
-
-/**
- * タイルを結晶の面（ファセット）と見なしたときの法線。
- *
- * 向きが 36 度ずつ違う 10 系統あるので、軸の向きへ同じ角度だけ倒した面を作る。
- * 傾きはタイルの種類でも変えて、カイトとダートが別の面として光るようにする。
- */
-export function facetNormal({ orientation, type, baseAngle, tilt }) {
-  const angle = baseAngle + orientation * STEP
-  const lean = type === 'dart' ? tilt * 1.45 : tilt
-  const s = Math.sin(lean)
-  return [s * Math.cos(angle), s * Math.sin(angle), Math.cos(lean)]
-}
-
-/** 光源の向き（方位角 azimuth・仰角 elevation はラジアン） */
-export function lightVector(azimuth, elevation) {
-  const c = Math.cos(elevation)
-  return [c * Math.cos(azimuth), c * Math.sin(azimuth), Math.sin(elevation)]
-}
-
-/** ランバート反射。-1〜1 の明るさのずれとして返す（0 が素のパレット色） */
-export function facetShade(normal, light, strength) {
-  const dot = normal[0] * light[0] + normal[1] * light[1] + normal[2] * light[2]
-  return Math.max(-1, Math.min(1, (dot - Math.SQRT1_2) * strength))
-}
-
 /* --- 成長 --- */
 
 /**

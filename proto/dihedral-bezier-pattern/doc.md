@@ -324,7 +324,7 @@ b は「内接円と外接円の比がいちばん 1 に近くなる（＝いち
 
 | 層 | 内容 |
 | --- | --- |
-| tile | タイルの面。向きから結晶面（ファセット）の法線を作り、斜めからの光で陰影をつける。光の当たった稜線は背景色で抜き、背いた稜線はインクで沈める |
+| tile | タイルの面。色分けにしたがって平らに塗る（析出しかけの縁だけは面を持たず、輪郭の線で見せる） |
 | edge | タイルの輪郭。タイリングの構造そのものを見たいときに足す |
 | cleave | 劈開線。頂点が乗る平行線族を φ のべきで粗くして引く。頂点の多い線は太く濃く（濃さは `--cleave-opacity` でまとめて落とせる） |
 | network | 頂点と辺のネットワーク。節点は集まるタイルの枚数で大きさを変え、5 回対称の頂点（太陽・星）だけ十角形にする |
@@ -430,13 +430,13 @@ node src/generate-kite-dart.js --help             # ヘルプ
 node src/generate-crystal.js                          # 色数 2〜6 を一括生成（既定の重ね方）
 node src/generate-crystal.js --layers=tile,cleave      # 面と劈開線だけ（頂点と回折を外す）
 node src/generate-crystal.js --layers=cleave,network   # 面を描かず、結晶格子だけを残す
-node src/generate-crystal.js --layers=tile,edge --flat # 陰影なしで、タイリングの構造を見る
+node src/generate-crystal.js --layers=tile,edge        # 面に輪郭を足して、タイリングの構造を見る
 node src/generate-crystal.js --color-by=zone           # 成長痕のような同心の色分け
 node src/generate-crystal.js --color-by=class          # 中心の 5 回対称が見える色分け
 node src/generate-crystal.js --growth=0.6              # 途中まで析出した結晶
 node src/generate-crystal.js --frames=8                # 成長のコマ送りを 8 枚
 node src/generate-crystal.js --seeds=4                 # 多結晶（粒界が出る）
-node src/generate-crystal.js --cleave=4 --light=40     # 劈開線をより粗く、光を別の向きから
+node src/generate-crystal.js --cleave=4                # 劈開線をより粗く
 node src/generate-crystal.js --layers=cleave --cleave-opacity=0.5 # 劈開線だけを淡く引く
 node src/generate-crystal.js --help                    # ヘルプ
 ```
@@ -451,7 +451,5 @@ node src/generate-crystal.js --help                    # ヘルプ
 | `--growth` | 1 | 結晶化の進み具合（0〜1） |
 | `--frames` | 1 | growth を 0 から振って出すコマ数（1〜24） |
 | `--seeds` | 1 | 結晶核の数（1〜8） |
-| `--light` | 135 | 光源の方位（度） |
-| `--flat` | なし | ファセットの陰影と稜線を切る |
 
 `--seed` `--count` `--size` `--color-count` `--colors` `--out` は 7 つのスクリプトで共通。`--colors` はパレットで色数まで決まるので、`--color-count` とは同時に指定できない。

@@ -7,7 +7,7 @@
  * | 層 | 何を描くか |
  * | --- | --- |
  * | diffraction | 頂点の点群のフーリエ変換。10 回対称のピークを薄く敷く |
- * | tile | タイルの面。向きから結晶面の法線を作り、斜めからの光で陰影をつける |
+ * | tile | タイルの面。色分けにしたがって平らに塗る |
  * | edge | タイルの輪郭（構造そのものを見たいとき） |
  * | cleave | 頂点が乗る平行線族。結晶の劈開線・層として引く |
  * | network | 頂点と辺のネットワーク。節点は集まるタイルの内訳で大きさを変える |
@@ -25,9 +25,6 @@ import {
   crystallinity,
   stageOf,
   positionNoise,
-  facetNormal,
-  lightVector,
-  facetShade,
   assignGrain,
   grainHalfPlanes,
   viewportHalfPlanes,
@@ -39,12 +36,6 @@ import { BACKGROUND } from './palettes.js'
 
 export const LAYERS = ['diffraction', 'tile', 'edge', 'cleave', 'network', 'grain']
 export const COLOR_BY = ['orientation', 'class', 'zone']
-
-/** 結晶面の傾き（カイト。ダートはこの 1.45 倍傾ける）と、光の仰角 */
-const FACET_TILT = (26 * Math.PI) / 180
-const LIGHT_ELEVATION = (38 * Math.PI) / 180
-/** 陰影の強さ。1 で「真正面の面が真っ白、背いた面が真っ黒」になる */
-const SHADE_STRENGTH = 1.15
 
 /**
  * タイルの色分けの群。色数を k としたとき 0〜k-1 を返す。
@@ -80,7 +71,6 @@ function grouperFor(colorBy, colorCount, maxRadius) {
  * @param peaks 回折のピーク（点群は核をまたいで 1 つにまとめたもの）
  * @param colors パレット
  * @param growth 結晶化の進み具合（0〜1）
- * @param lightAngle 光源の方位（ラジアン）
  * @param cleaveOpacity 劈開線の濃さの倍率（0〜1）。太さは変えない
  * @returns `{ groups }` 描く順に並べた図形の束
  */
@@ -94,15 +84,12 @@ export function buildCrystalMotif({
   unit,
   size,
   growth,
-  lightAngle,
-  flat,
   cleaveOpacity = 1,
 }) {
   const half = size / 2
   const corner = half * Math.SQRT2
   const band = unit * 4
   const radius = growth * (corner + band)
-  const light = lightVector(lightAngle, LIGHT_ELEVATION)
   const ink = inkOf(colors)
   const group = grouperFor(colorBy, colors.length, corner)
   const shown = (p) => Math.abs(p[0]) < half && Math.abs(p[1]) < half
@@ -129,7 +116,7 @@ export function buildCrystalMotif({
       // 描くのは粒の領域で切った形。向きや親子はもとの形から取る
       const shape = tile.draw ?? tile.points
       if (shown(center) && stage === 3) areas[index] += polygonArea(shape)
-      placed.push({ tile, shape, grain, center, orientation, index, stage })
+      placed.push({ shape, center, index, stage })
     }
   }
 
@@ -150,24 +137,10 @@ export function buildCrystalMotif({
 
   if (wants('tile')) {
     const fills = []
-    const lit = []
-    const shadowed = []
+    const nascent = []
 
     for (const item of placed) {
-      const base = colors[colorOf[item.index]]
-      const shade = flat
-        ? 0
-        : facetShade(
-            facetNormal({
-              orientation: item.orientation,
-              type: item.tile.type,
-              baseAngle: item.grain.nucleus.angle,
-              tilt: FACET_TILT,
-            }),
-            light,
-            SHADE_STRENGTH,
-          )
-      let color = shadeHex(base, shade * 0.7)
+      let color = colors[colorOf[item.index]]
 
       // 粒界にかかったタイルは沈める。割れ目の線だけより、境目に厚みが出る
       const margin = nuclei.length > 1 ? assignGrain(item.center, nuclei).margin : Infinity
@@ -176,7 +149,7 @@ export function buildCrystalMotif({
 
       if (item.stage === 1) {
         // 析出しかけの縁は面を持たず、輪郭だけが見える
-        pushSegments(shadowed, item.shape)
+        pushSegments(nascent, item.shape)
         continue
       }
       fills.push({
@@ -184,31 +157,17 @@ export function buildCrystalMotif({
         color,
         opacity: item.stage === 2 ? 0.45 : 1,
       })
-      if (item.stage === 3 && !flat) {
-        collectBevel(item.shape, light, lit, shadowed)
-      }
     }
 
     groups.push({ kind: 'fill', name: 'tile', items: fills })
-    if (lit.length > 0) {
-      // 光の当たった稜線は背景色で抜く。白い割れ目が入って結晶の面が立つ
+    if (nascent.length > 0) {
       groups.push({
         kind: 'stroke',
-        name: 'bevel-lit',
-        stroke: BACKGROUND,
-        width: Math.max(0.6, unit * 0.035),
-        opacity: 0.85,
-        segments: lit,
-      })
-    }
-    if (shadowed.length > 0) {
-      groups.push({
-        kind: 'stroke',
-        name: 'bevel-shadow',
+        name: 'nascent',
         stroke: ink,
         width: Math.max(0.5, unit * 0.022),
         opacity: 0.35,
-        segments: shadowed,
+        segments: nascent,
       })
     }
   }
@@ -399,24 +358,3 @@ function pushSegments(out, points) {
   }
 }
 
-/**
- * 稜線の光り方を決める。辺の外向き法線が光の側を向いていれば明るい線、
- * 背いていれば影の線。低ポリゴンの結晶のように面が立って見える。
- */
-function collectBevel(points, light, lit, shadowed) {
-  const n = points.length
-  const cx = points.reduce((s, p) => s + p[0], 0) / n
-  const cy = points.reduce((s, p) => s + p[1], 0) / n
-
-  for (let i = 0; i < n; i++) {
-    const a = points[i]
-    const b = points[(i + 1) % n]
-    const mx = (a[0] + b[0]) / 2
-    const my = (a[1] + b[1]) / 2
-    const len = Math.hypot(mx - cx, my - cy)
-    if (len < 1e-9) continue
-    const dot = ((mx - cx) * light[0] + (my - cy) * light[1]) / len
-    if (dot > 0.45) lit.push([a, b])
-    else if (dot < -0.45) shadowed.push([a, b])
-  }
-}
