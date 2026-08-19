@@ -1,0 +1,12 @@
+{
+  "route": "cg/modeling/bezier-curve-surface",
+  "title": "線形補間とベジェ曲線",
+  "titleLines": [
+    "線形補間とベジェ曲線"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "モデリング"
+  ],
+  "figure": "assets/cg/modeling/bezier-curve-surface/figure.png"
+}
