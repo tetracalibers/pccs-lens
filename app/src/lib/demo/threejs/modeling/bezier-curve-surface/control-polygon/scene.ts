@@ -9,29 +9,33 @@ import {
   LineDashedMaterial,
   Mesh,
   MeshBasicMaterial,
+  Plane,
+  Raycaster,
   Scene,
   SphereGeometry,
   Sprite,
   SpriteMaterial,
   SRGBColorSpace,
+  Vector2,
   Vector3
 } from "three"
+import type { PerspectiveCamera, WebGLRenderer } from "three"
 
-/** Tweakpane で操作するパラメータ。どちらも動かす制御点 P1 の位置（パネルの中での座標） */
-export type ControlPolygonParams = {
-  /** 制御点が 3 つの側の P1 */
-  quadratic: { x: number; y: number }
-  /** 制御点が 4 つの側の P1 */
-  cubic: { x: number; y: number }
-}
+/**
+ * このデモは Tweakpane を持たない（制御点は canvas の上で直接ドラッグして動かす）ため、
+ * パネルと共有するパラメータは無い
+ */
+export type ControlPolygonParams = Record<string, never>
 
 // _shared の ThreeSceneContext と同じ形をローカルに宣言する（_shared を import しないため）
 type SceneContext = {
   scene: Scene
-  params: ControlPolygonParams
+  camera: PerspectiveCamera
+  renderer: WebGLRenderer
+  invalidate: () => void
 }
 
-/** 制御点が 3 つの側と 4 つの側。動かすのはどちらも P1（添字 1 の点） */
+/** 制御点が 3 つの側と 4 つの側。どちらもすべての点をドラッグで動かせる */
 const QUADRATIC_POINTS: [number, number][] = [
   [-1.6, -1],
   [0, 1.4],
@@ -43,10 +47,21 @@ const CUBIC_POINTS: [number, number][] = [
   [0.7, 1.4],
   [1.7, -1]
 ]
-const MOVABLE_INDEX = 1
+
+/** 制御点に付ける名前。添字は 0 から順に振る */
+const CONTROL_LABELS = ["P₀", "P₁", "P₂", "P₃"]
 
 /** 2 つのパネルを左右に振り分ける距離 */
 const PANEL_OFFSET = 2.6
+
+/** 制御点を動かせる範囲（パネルの中での座標）。隣のパネルや見出しに重ならない範囲にとどめる */
+const DRAG_MIN_X = -2
+const DRAG_MAX_X = 2
+const DRAG_MIN_Y = -1.6
+const DRAG_MAX_Y = 2.1
+
+/** ポインタが制御点を掴んだとみなす距離。球の半径より広くとって掴みやすくする */
+const PICK_RADIUS = 0.3
 
 /** 曲線を折れ線で近似する分割数 */
 const CURVE_SEGMENTS = 64
@@ -61,9 +76,8 @@ const GHOST_OPACITY = 0.3
 /** 制御多角形の内側を塗る濃さ。破線だけではどこが多角形なのか掴みにくいので、面でも示す */
 const POLYGON_FILL_OPACITY = 0.12
 
-/** 制御点と、動かす制御点を示す球の半径 */
+/** 制御点を示す球の半径 */
 const CONTROL_RADIUS = 0.07
-const MOVABLE_RADIUS = 0.085
 
 /** ラベルの高さ（ワールド座標での大きさ）。幅は文字数に応じて決まる */
 const LABEL_HEIGHT = 0.28
@@ -72,8 +86,8 @@ const TITLE_HEIGHT = 0.32
 /** パネルの見出しを置く高さ */
 const TITLE_Y = 2.55
 
-/** 動かす制御点のラベルを、点そのものから離す向き */
-const MOVABLE_LABEL_OFFSET = new Vector3(0.34, 0.24, 0)
+/** 制御点のラベルを、その多角形の重心から見て外向きに逃がす距離 */
+const CONTROL_LABEL_OFFSET = 0.36
 
 /** ラベルの文字を描く canvas の高さ（テクスチャの解像度）と左右の余白 */
 const LABEL_TEXTURE_HEIGHT = 128
@@ -97,7 +111,7 @@ const LAYER_LABEL = 0.14
 const POLYGON_COLOR = "#9aa3b0"
 const CURVE_COLOR = "#ffc857"
 const CONTROL_COLOR = "#b79cf5"
-const MOVABLE_COLOR = "#f57fc4"
+const ACTIVE_COLOR = "#f57fc4"
 const TITLE_COLOR = "#c9d2de"
 
 /**
@@ -141,7 +155,7 @@ const createLabel = (text: string, color: string, height: number) => {
   return { sprite, texture, material }
 }
 
-// ド・カステリョのアルゴリズムで使う作業用の点。毎フレーム何度も呼ばれるので、その都度は作らない
+// ド・カステリョのアルゴリズムで使う作業用の点。何度も呼ばれるので、その都度は作らない
 const work: Vector3[] = []
 
 /**
@@ -256,49 +270,73 @@ const createPanel = (source: [number, number][], title: string, offsetX: number)
   const curveMaterial = new LineBasicMaterial({ color: CURVE_COLOR })
   group.add(new Line(curve.geometry, curveMaterial))
 
-  // 制御点。動かす 1 つだけ、色と大きさを変えて見分けられるようにする
+  // 制御点。どれもドラッグで動かせるので同じ見た目にし、
+  // 掴んでいる（掴める）1 つだけ色を変えて示す
   const controlGeometry = new SphereGeometry(CONTROL_RADIUS, 16, 12)
   const controlMaterial = new MeshBasicMaterial({ color: CONTROL_COLOR })
-  controls.forEach((control, i) => {
-    if (i === MOVABLE_INDEX) return
+  const activeMaterial = new MeshBasicMaterial({ color: ACTIVE_COLOR })
+  const meshes = controls.map(() => {
     const mesh = new Mesh(controlGeometry, controlMaterial)
-    mesh.position.set(control.x, control.y, LAYER_POINT)
     group.add(mesh)
+    return mesh
   })
-  const movableGeometry = new SphereGeometry(MOVABLE_RADIUS, 16, 12)
-  const movableMaterial = new MeshBasicMaterial({ color: MOVABLE_COLOR })
-  const movable = new Mesh(movableGeometry, movableMaterial)
-  group.add(movable)
 
-  const movableLabel = createLabel("P₁", MOVABLE_COLOR, LABEL_HEIGHT)
+  const labels = controls.map((_, i) => {
+    const label = createLabel(CONTROL_LABELS[i], CONTROL_COLOR, LABEL_HEIGHT)
+    group.add(label.sprite)
+    return label
+  })
   const titleLabel = createLabel(title, TITLE_COLOR, TITLE_HEIGHT)
   titleLabel.sprite.position.set(0, TITLE_Y, LAYER_LABEL)
-  group.add(movableLabel.sprite, titleLabel.sprite)
+  group.add(titleLabel.sprite)
+
+  const centroid = new Vector3()
+  const normal = new Vector3()
+
+  /** 制御点の今の位置から、制御多角形・曲線・ラベルを引き直す */
+  const refresh = () => {
+    centroid.set(0, 0, 0)
+    controls.forEach((control) => centroid.add(control))
+    centroid.multiplyScalar(1 / controls.length)
+
+    controls.forEach((control, i) => {
+      polygon.set(i, control)
+      fill.set(i, control)
+      meshes[i].position.set(control.x, control.y, LAYER_POINT)
+      // ラベルは多角形の重心から見て外向きへ逃がし、破線や曲線に重ならないようにする
+      normal.subVectors(control, centroid).normalize()
+      labels[i].sprite.position
+        .copy(control)
+        .addScaledVector(normal, CONTROL_LABEL_OFFSET)
+        .setZ(LAYER_LABEL)
+    })
+    polygon.commit()
+    fill.commit()
+    // 破線の刻みは頂点ごとの「線に沿った距離」で決まるため、頂点を動かすたびに測り直す
+    polygonLine.computeLineDistances()
+
+    for (let i = 0; i <= CURVE_SEGMENTS; i++) {
+      curve.set(i, bezierPoint(controls, i / CURVE_SEGMENTS, sample))
+    }
+    curve.commit()
+  }
+
+  refresh()
 
   return {
     object: group,
-    /** 動かす制御点を置き直し、制御多角形と曲線を引き直す */
-    update: (position: { x: number; y: number }) => {
-      controls[MOVABLE_INDEX].set(position.x, position.y, 0)
-      movable.position.set(position.x, position.y, LAYER_POINT)
-      movableLabel.sprite.position
-        .copy(controls[MOVABLE_INDEX])
-        .add(MOVABLE_LABEL_OFFSET)
-        .setZ(LAYER_LABEL)
-
-      controls.forEach((control, i) => {
-        polygon.set(i, control)
-        fill.set(i, control)
-      })
-      polygon.commit()
-      fill.commit()
-      // 破線の刻みは頂点ごとの「線に沿った距離」で決まるため、頂点を動かすたびに測り直す
-      polygonLine.computeLineDistances()
-
-      for (let i = 0; i <= CURVE_SEGMENTS; i++) {
-        curve.set(i, bezierPoint(controls, i / CURVE_SEGMENTS, sample))
-      }
-      curve.commit()
+    offsetX,
+    controls,
+    /** 掴んでいる制御点だけ色を変える */
+    setActive: (index: number, active: boolean) => {
+      meshes[index].material = active ? activeMaterial : controlMaterial
+    },
+    /** ワールド座標で受け取った位置へ制御点を移し、多角形と曲線を引き直す */
+    move: (index: number, worldX: number, worldY: number) => {
+      const x = Math.min(Math.max(worldX - offsetX, DRAG_MIN_X), DRAG_MAX_X)
+      const y = Math.min(Math.max(worldY, DRAG_MIN_Y), DRAG_MAX_Y)
+      controls[index].set(x, y, 0)
+      refresh()
     },
     dispose: () => {
       fill.dispose()
@@ -311,32 +349,142 @@ const createPanel = (source: [number, number][], title: string, offsetX: number)
         curveMaterial,
         controlGeometry,
         controlMaterial,
-        movableGeometry,
-        movableMaterial,
-        movableLabel.texture,
-        movableLabel.material,
+        activeMaterial,
         titleLabel.texture,
-        titleLabel.material
+        titleLabel.material,
+        ...labels.flatMap((label) => [label.texture, label.material])
       ]
       disposables.forEach((disposable) => disposable.dispose())
     }
   }
 }
 
-export const createControlPolygonScene = ({ scene, params }: SceneContext) => {
+type Panel = ReturnType<typeof createPanel>
+type Target = { panel: Panel; index: number }
+
+const isSame = (a: Target | null, b: Target | null) =>
+  a !== null && b !== null && a.panel === b.panel && a.index === b.index
+
+export const createControlPolygonScene = ({
+  scene,
+  camera,
+  renderer,
+  invalidate
+}: SceneContext) => {
   // 制御点の数だけを変えた 2 枚を左右に並べ、同じ操作での違いを見比べられるようにする
-  const quadratic = createPanel(QUADRATIC_POINTS, "制御点3つ", -PANEL_OFFSET)
-  const cubic = createPanel(CUBIC_POINTS, "制御点4つ", PANEL_OFFSET)
-  scene.add(quadratic.object, cubic.object)
+  const panels = [
+    createPanel(QUADRATIC_POINTS, "制御点3つ", -PANEL_OFFSET),
+    createPanel(CUBIC_POINTS, "制御点4つ", PANEL_OFFSET)
+  ]
+  panels.forEach((panel) => scene.add(panel.object))
+
+  // 制御点は Tweakpane ではなく canvas の上で直接ドラッグして動かす。
+  // ポインタの位置は、図がすべて載っている z = 0 の平面との交点として求める
+  const canvas = renderer.domElement
+  const raycaster = new Raycaster()
+  const pointer = new Vector2()
+  const dragPlane = new Plane(new Vector3(0, 0, 1), 0)
+  const hit = new Vector3()
+
+  const toScenePoint = (event: PointerEvent) => {
+    const bounds = canvas.getBoundingClientRect()
+    pointer.x = ((event.clientX - bounds.left) / bounds.width) * 2 - 1
+    pointer.y = -((event.clientY - bounds.top) / bounds.height) * 2 + 1
+    raycaster.setFromCamera(pointer, camera)
+
+    return raycaster.ray.intersectPlane(dragPlane, hit)
+  }
+
+  /** ポインタに最も近い制御点。掴める距離に無ければ null */
+  const pick = (world: Vector3): Target | null => {
+    let target: Target | null = null
+    let nearest = PICK_RADIUS
+
+    for (const panel of panels) {
+      for (let index = 0; index < panel.controls.length; index++) {
+        const control = panel.controls[index]
+        const distance = Math.hypot(world.x - (control.x + panel.offsetX), world.y - control.y)
+        if (distance < nearest) {
+          nearest = distance
+          target = { panel, index }
+        }
+      }
+    }
+
+    return target
+  }
+
+  let dragPointer: number | null = null
+  let dragging: Target | null = null
+  let hovered: Target | null = null
+
+  const handlePointerDown = (event: PointerEvent) => {
+    // 2 本目の指はピンチによるズーム。掴んでいる点は放して OrbitControls に任せる
+    if (dragPointer !== null) return
+
+    const world = toScenePoint(event)
+    if (!world) return
+    const target = pick(world)
+    if (!target) return
+
+    dragPointer = event.pointerId
+    dragging = target
+    target.panel.setActive(target.index, true)
+    // canvas の外まで指が出ても動かし続けられるようにする（pointerup で自動的に解ける）
+    canvas.setPointerCapture(event.pointerId)
+    invalidate()
+  }
+
+  const handlePointerMove = (event: PointerEvent) => {
+    const world = toScenePoint(event)
+    if (!world) return
+
+    if (dragging && event.pointerId === dragPointer) {
+      dragging.panel.move(dragging.index, world.x, world.y)
+      // 描画は要求されたときだけ走る。Tweakpane や OrbitControls を経由しない操作なので、
+      // ここで次のフレームを頼む
+      invalidate()
+
+      return
+    }
+
+    // 掴める点の上に来たら色を変えて、ドラッグできることを示す
+    const target = pick(world)
+    if (isSame(target, hovered)) return
+    if (hovered && !isSame(hovered, dragging)) hovered.panel.setActive(hovered.index, false)
+    hovered = target
+    if (hovered) hovered.panel.setActive(hovered.index, true)
+    invalidate()
+  }
+
+  const handlePointerUp = (event: PointerEvent) => {
+    if (event.pointerId !== dragPointer) return
+    if (dragging && !isSame(dragging, hovered)) dragging.panel.setActive(dragging.index, false)
+    dragging = null
+    dragPointer = null
+    invalidate()
+  }
+
+  const handlePointerLeave = () => {
+    if (hovered && !isSame(hovered, dragging)) hovered.panel.setActive(hovered.index, false)
+    hovered = null
+    invalidate()
+  }
+
+  canvas.addEventListener("pointerdown", handlePointerDown)
+  canvas.addEventListener("pointermove", handlePointerMove)
+  canvas.addEventListener("pointerup", handlePointerUp)
+  canvas.addEventListener("pointercancel", handlePointerUp)
+  canvas.addEventListener("pointerleave", handlePointerLeave)
 
   return {
-    update: () => {
-      quadratic.update(params.quadratic)
-      cubic.update(params.cubic)
-    },
     dispose: () => {
-      quadratic.dispose()
-      cubic.dispose()
+      canvas.removeEventListener("pointerdown", handlePointerDown)
+      canvas.removeEventListener("pointermove", handlePointerMove)
+      canvas.removeEventListener("pointerup", handlePointerUp)
+      canvas.removeEventListener("pointercancel", handlePointerUp)
+      canvas.removeEventListener("pointerleave", handlePointerLeave)
+      panels.forEach((panel) => panel.dispose())
     }
   }
 }

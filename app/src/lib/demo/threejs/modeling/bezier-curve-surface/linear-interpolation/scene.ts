@@ -56,8 +56,11 @@ const ARROW_OFFSET = 0.38
 const ARROW_LABEL_OFFSET = 0.7
 
 /** 矢じりの長さと太さ */
-const ARROW_HEAD_LENGTH = 0.16
-const ARROW_HEAD_RADIUS = 0.055
+const ARROW_HEAD_LENGTH = 0.13
+const ARROW_HEAD_RADIUS = 0.045
+
+/** 矢印の濃さ。区間の広がりは添え物なので、線分より沈ませて描く */
+const ARROW_OPACITY = 0.45
 
 /** 引き出し線を線分の上の点から離す距離と、矢印の外側へはみ出させる長さ */
 const LEADER_GAP = 0.12
@@ -155,7 +158,8 @@ const createSegment = (color: string) => {
 
 /**
  * 区間の広がりを示す両矢印。両端が毎フレーム動くので、頂点も矢じりの向きも都度書き換える。
- * 矢じりの円錐は既定で +y を向いているため、線分の向きへ回してから先端を端点に合わせる
+ * 矢じりの円錐は既定で +y を向いているため、線分の向きへ回してから先端を端点に合わせる。
+ * 線分と同じ色を使いつつ、軸も矢じりも半透明にして控えめに見せる
  */
 const createMeasureArrow = (color: string) => {
   const group = new Group()
@@ -163,13 +167,13 @@ const createMeasureArrow = (color: string) => {
   const shaftGeometry = new BufferGeometry()
   const shaftPositions = new Float32BufferAttribute(new Float32Array(6), 3)
   shaftGeometry.setAttribute("position", shaftPositions)
-  const material = new LineBasicMaterial({ color })
+  const material = new LineBasicMaterial({ color, transparent: true, opacity: ARROW_OPACITY })
   const shaft = new LineSegments(shaftGeometry, material)
   shaft.frustumCulled = false
   group.add(shaft)
 
   const headGeometry = new ConeGeometry(ARROW_HEAD_RADIUS, ARROW_HEAD_LENGTH, 12)
-  const headMaterial = new MeshBasicMaterial({ color })
+  const headMaterial = new MeshBasicMaterial({ color, transparent: true, opacity: ARROW_OPACITY })
   const heads = [new Mesh(headGeometry, headMaterial), new Mesh(headGeometry, headMaterial)]
   group.add(heads[0], heads[1])
 

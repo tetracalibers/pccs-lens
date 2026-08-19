@@ -97,6 +97,7 @@
   <div
     class="three-demo-frame"
     class:is-failed={errorMessage !== null}
+    class:is-standalone={!buildPane}
     style:aspect-ratio={aspectRatio}
     role="img"
     aria-label={ariaLabel}
@@ -133,6 +134,11 @@
     /* ドラッグの起点は canvas なので、枠側の指定に頼らず canvas 自体にも効かせる */
     touch-action: none;
     user-select: none;
+  }
+
+  /* パネルを持たないデモは canvas の上に地続きの面が無いので、四隅とも丸める */
+  .three-demo-frame.is-standalone canvas {
+    border-radius: 4px;
   }
 
   .three-demo-fallback {

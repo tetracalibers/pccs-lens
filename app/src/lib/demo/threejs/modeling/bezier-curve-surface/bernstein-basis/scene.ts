@@ -51,6 +51,9 @@ const TICK_LENGTH = 0.1
 const BAR_X = PLOT_WIDTH + 1.15
 const BAR_WIDTH = 0.4
 
+/** 「合計」の名前を積み上げ棒の中心に見せるための横方向の微調整。中央揃えのままだと右へ寄って見える */
+const TOTAL_LABEL_SHIFT_X = -0.12
+
 /** 重みが 0 のときも板が潰れないようにする最小の高さ */
 const MIN_BAR_HEIGHT = 1e-4
 
@@ -258,7 +261,13 @@ export const createBernsteinBasisScene = ({ scene, params }: SceneContext) => {
     },
     { text: "重み", color: AXIS_COLOR, height: LABEL_HEIGHT, x: 0.1, y: PLOT_HEIGHT + 0.46 },
     // 積み上げ棒の横中心（BAR_X）に揃えて、どの棒の名前かを取り違えないようにする
-    { text: "合計", color: AXIS_COLOR, height: LABEL_HEIGHT, x: BAR_X, y: PLOT_HEIGHT + 0.46 }
+    {
+      text: "合計",
+      color: AXIS_COLOR,
+      height: LABEL_HEIGHT,
+      x: BAR_X + TOTAL_LABEL_SHIFT_X,
+      y: PLOT_HEIGHT + 0.46
+    }
   ].map(({ text, color, height, x, y }) => {
     const label = createLabel(text, color, height)
     label.sprite.position.set(x, y, LAYER_LABEL)
@@ -288,8 +297,11 @@ export const createBernsteinBasisScene = ({ scene, params }: SceneContext) => {
         bottom += height
       })
 
-      // Tweakpane 側に読み取り専用で出す、4 つの重みとその合計
-      params.weights = weights.map((weight) => weight.toFixed(2)).join(" / ")
+      // Tweakpane 側に読み取り専用で出す、4 つの重みとその合計。
+      // multiline のモニターは折り返さない（white-space: pre）ので、1 行 1 つに改行して渡す
+      params.weights = weights
+        .map((weight, i) => `${BASIS_LABELS[i]} = ${weight.toFixed(2)}`)
+        .join("\n")
       params.total = weights.reduce((sum, weight) => sum + weight, 0).toFixed(2)
     },
     dispose: () => {

@@ -19,12 +19,13 @@
   orbit={{ enableRotate: false, minDistance: 3, maxDistance: 9 }}
   buildPane={(pane, p) => {
     pane.addBinding(p, "t", { min: 0, max: 1, step: 0.01, label: "t (パラメータ)" })
-    // 4 つぶんの値は 1 行に収まらないので、複数行のモニターにして折り返す
+    // 4 つぶんの値は 1 行に収まらないので、複数行のモニターにして 1 行 1 つで並べる
+    // （scene.ts が改行で区切った文字列を書き戻す）
     pane.addBinding(p, "weights", {
       readonly: true,
       multiline: true,
-      rows: 2,
-      label: "重み (B₀,₃ → B₃,₃)"
+      rows: 4,
+      label: "重み"
     })
     pane.addBinding(p, "total", { readonly: true, label: "合計" })
   }}
