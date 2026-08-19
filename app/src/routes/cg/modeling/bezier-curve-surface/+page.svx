@@ -664,10 +664,6 @@ $$t$$ を動かして、`4`本の重みがどう入れ替わるかを見てみ�
 - 右の積み上げ棒は、どの $$t$$ でも高さが変わらない
 :::
 
-:::Fix{target="demo"}
-「合計」ラベルを削除
-:::
-
 <CanvasWrapper>
   <BernsteinBasisDemo />
 </CanvasWrapper>
