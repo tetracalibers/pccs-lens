@@ -26,7 +26,6 @@ src/routes/cg/rendering/photorealism-and-reality-elements/+page.svx
 src/routes/cg/systems/graphics-api/+page.svx
 src/routes/cg/transformation/affine-transformation/+page.svx
 src/routes/cg/transformation/basic-transformations/+page.svx
-src/routes/cg/transformation/coordinate-systems/+page.svx
 src/routes/cg/transformation/perspective-and-parallel-projection/+page.svx
 src/routes/cg/transformation/pinhole-camera/+page.svx
 src/routes/cg/transformation/projection-calculation/+page.svx
