@@ -1,7 +1,7 @@
 title: デジタル画像の基本
 summary: デジタル画像の仕組みとデジタルカメラモデル
 sections:
-  - heading: デジタルカメラモデル
+  - heading: CGと画像の関係
     id: camera-model
     links:
       - slug: camera-capture-and-cg
