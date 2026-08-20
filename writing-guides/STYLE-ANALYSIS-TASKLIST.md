@@ -260,7 +260,7 @@
 
 - [draft] `/cg/animation/apparent-motion-and-stop-motion`
 - [ページ未作成] アニメーション技法
-- [ページ未作成] カメラワーク
+- [draft] `/cg/animation/camera-work`
 
 ## CGと画像処理 — アニメーション／キーフレームアニメーション（`cg/animation.yaml` #keyframe）
 

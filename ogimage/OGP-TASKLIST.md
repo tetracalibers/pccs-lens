@@ -431,7 +431,7 @@
 
 - [draft] `/cg/animation/apparent-motion-and-stop-motion`
 - [ページ未作成] アニメーション技法
-- [ページ未作成] カメラワーク
+- [draft] `/cg/animation/camera-work`
 - [ページ未作成] キーフレーム法とスケルトン法
 - [ページ未作成] キーフレームの補間
 - [ページ未作成] 形状変形アニメーション
