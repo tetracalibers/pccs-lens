@@ -10,6 +10,7 @@ draft: true
 
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import IncrementalMethodDemo from '$lib/demo/threejs/basics/shape-rasterization/incremental-method/IncrementalMethodDemo.svelte'
   import ScanConversionGridDemo from '$lib/demo/threejs/basics/shape-rasterization/scan-conversion-grid/ScanConversionGridDemo.svelte'
 </script>
 
@@ -161,8 +162,85 @@ $$
 つまり、前の画素のyの値に$$a$$を足すだけで次のyが求まり、毎回のかけ算を省けます。
 この「前の結果に増分を加える」というアイデアは、線分だけでなく、このあと見る円やポリゴンのラスタ化にも共通して使われる、走査変換の土台となる考え方です。
 
-:::Todo
-増分法のデモ
+:::Action{fixme}
+「進めたステップ」を1つずつ進めて、次の点に着目してみよう
+
+- xが1進むごとにyが傾きaだけ増え、階段の縦の長さがどのステップでも変わらないこと
+- 増分を足した結果と、式から計算した結果が一致すること
+- 傾きaを変えると、1ステップで増えるyの量がどう変わるか
+:::
+
+<CanvasWrapper>
+  <IncrementalMethodDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 画素の格子と画素の大きさ、描きたい直線の傾き a、x をいくつ進めたか
+const COLUMNS = 13
+const ROWS = 9
+const PITCH = 0.28
+const SLOPE = 0.35
+const STEP = 4
+
+// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z
+const LAYER_PATH = 0.05
+const LAYER_DOT = 0.06
+
+// 切片 b（x = 0 のときの y）。直線は格子の中心を通るようにとる
+const INTERCEPT = (ROWS - 1) / 2 - (SLOPE * (COLUMNS - 1)) / 2
+
+// x（画素の列）と y（画素の行を単位とした小数）の位置。
+// 画像座標系は画像の左上を原点とし、x 軸を右向き、y 軸を下向きにとる
+const worldXOf = (x: number) => (-COLUMNS / 2 + x + 0.5) * PITCH
+const worldYOf = (y: number) => (ROWS / 2 - y - 0.5) * PITCH
+
+// 増分をたどる階段（x 方向へ 1、y 方向へ a）と、求めた y を示す点
+const bars = new InstancedMesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#f2766a" }),
+  (COLUMNS - 1) * 2
+)
+const dots = new InstancedMesh(
+  new CircleGeometry(0.045, 16),
+  new MeshBasicMaterial({ color: "#ffc857" }),
+  COLUMNS
+)
+scene.add(bars, dots)
+
+const matrix = new Matrix4()
+
+// 増分法。はじめに 1 回だけ式から y を求め、あとは前の y に傾き a を足していく
+let y = INTERCEPT
+matrix.identity()
+matrix.setPosition(worldXOf(0), worldYOf(y), LAYER_DOT)
+dots.setMatrixAt(0, matrix)
+
+let bar = 0
+for (let x = 1; x <= STEP; x++) {
+  const previousY = y
+  y += SLOPE
+
+  // x を 1 進める分。どのステップでも 1 列ぶんの長さになる
+  matrix.makeScale(PITCH, 0.026, 1)
+  matrix.setPosition((worldXOf(x - 1) + worldXOf(x)) / 2, worldYOf(previousY), LAYER_PATH)
+  bars.setMatrixAt(bar++, matrix)
+
+  // y が a だけ増える分。傾きが急なほど長くなる
+  matrix.makeScale(0.026, Math.abs(SLOPE) * PITCH, 1)
+  matrix.setPosition(worldXOf(x), (worldYOf(previousY) + worldYOf(y)) / 2, LAYER_PATH)
+  bars.setMatrixAt(bar++, matrix)
+
+  // 求めた y。小数のまま、直線の上に乗る
+  matrix.identity()
+  matrix.setPosition(worldXOf(x), worldYOf(y), LAYER_DOT)
+  dots.setMatrixAt(x, matrix)
+}
+bars.count = bar
+dots.count = STEP + 1
+```
+
 :::
 
 ただし、こうして求まるyは一般に小数になるため、実際にどの画素を塗るかを決めるには、毎回yの値を四捨五入して整数の画素に対応づける必要があります。
