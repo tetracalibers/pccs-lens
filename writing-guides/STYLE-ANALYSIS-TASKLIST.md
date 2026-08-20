@@ -508,10 +508,10 @@
 
 ## CGと画像処理 — モデリング／曲線と曲面（`cg/modeling.yaml` #curves-surfaces）
 
-- [ ] `/cg/modeling/curve-surface-equations`
-- [ ] `/cg/modeling/quadratic-curve`
-- [ ] `/cg/modeling/bezier-curve-surface`
-- [ ] `/cg/modeling/bezier-curve-properties`
+- [x] `/cg/modeling/curve-surface-equations`
+- [x] `/cg/modeling/quadratic-curve`
+- [x] `/cg/modeling/bezier-curve-surface`
+- [x] `/cg/modeling/bezier-curve-properties`
 - [ページ未作成] ファーガソン曲線
 - [ページ未作成] 双3次クーンズ曲面
 - [draft] `/cg/modeling/b-spline-curve-surface`
@@ -743,7 +743,7 @@
 - [ページ未作成] CGシステムの応用
 - [ページ未作成] グラフィックス装置
 - [draft] `/cg/systems/graphics-api`
-- [ ] `/cg/systems/cg-software`
+- [x] `/cg/systems/cg-software`
 - [ページ未作成] 3次元モデル記述言語・フォーマット
 
 ## CGと画像処理 — CGシステムとデバイス／リアルタイム3次元CG（`cg/systems.yaml` #real-time-3d）
