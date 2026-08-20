@@ -77,6 +77,9 @@ const NOTE_LABEL_HEIGHT = 0.2
 /** 注記を、注記が指す線分や点から逃がす距離 */
 const NOTE_MARGIN = 0.18
 
+/** 注記をスキャンラインの上へ持ち上げる距離。太さのある走査線と重ならないようにする */
+const NOTE_LIFT = 0.15
+
 /** ラベルの文字を描く canvas の高さ（テクスチャの解像度）と左右の余白、書体 */
 const LABEL_TEXTURE_HEIGHT = 128
 const LABEL_TEXTURE_PADDING = 12
@@ -381,15 +384,16 @@ export const createScanlineSpanScene = ({ scene, params }: SceneContext) => {
         dots[0].position.set(worldXOf(left), worldYOf(scanRow), LAYER_DOT)
         dots[1].position.set(worldXOf(right), worldYOf(scanRow), LAYER_DOT)
 
-        // 注記はスキャンラインと同じ高さで、スパンの外側（塗る画素と輪郭を避ける側）へ逃がす
+        // 注記はスパンの外側（塗る画素と輪郭を避ける側）へ逃がし、
+        // さらにスキャンラインの上へ持ち上げて走査線と重ならないようにする
         intersectionLabel.sprite.position.set(
           worldXOf(left) - NOTE_MARGIN - intersectionLabel.sprite.scale.x / 2,
-          worldYOf(scanRow),
+          worldYOf(scanRow) + NOTE_LIFT,
           LAYER_LABEL
         )
         spanLabel.sprite.position.set(
           worldXOf(right) + NOTE_MARGIN + spanLabel.sprite.scale.x / 2,
-          worldYOf(scanRow),
+          worldYOf(scanRow) + NOTE_LIFT,
           LAYER_LABEL
         )
       }
