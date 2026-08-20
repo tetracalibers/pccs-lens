@@ -10,6 +10,7 @@ draft: true
 
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import ErrorIncrementDemo from '$lib/demo/threejs/basics/shape-rasterization/error-increment/ErrorIncrementDemo.svelte'
   import IncrementalMethodDemo from '$lib/demo/threejs/basics/shape-rasterization/incremental-method/IncrementalMethodDemo.svelte'
   import ScanConversionGridDemo from '$lib/demo/threejs/basics/shape-rasterization/scan-conversion-grid/ScanConversionGridDemo.svelte'
 </script>
@@ -270,8 +271,105 @@ for x = x_start to x_end:
         e <- e - 1
 ```
 
-:::Todo
-誤差による増分法のデモ
+:::Action{fixme}
+「進めたステップ」を1つずつ進めて、次の点に着目してみよう
+
+- 誤差eが、1つ前に塗った画素の中心から直線までの隔たりとして伸びていくこと
+- しきい値の0.5が、画素の中心から境目までの距離に重なっていること
+- e + aが0.5を越えた列では塗る画素が1行進み、誤差から1が引かれてまた小さな値に戻ること
+:::
+
+<CanvasWrapper>
+  <ErrorIncrementDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 画素の格子と画素の大きさ、描きたい直線の傾き a、x をいくつ進めたか
+const COLUMNS = 9
+const ROWS = 6
+const PITCH = 0.4
+const SLOPE = 0.35
+const STEP = 2
+
+// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z
+const LAYER_PIXEL = 0.01
+const LAYER_CURRENT_PIXEL = 0.015
+const LAYER_THRESHOLD = 0.05
+const LAYER_ERROR = 0.07
+
+// x（画素の列）と y（画素の行を単位とした小数）の位置。
+// 画像座標系は画像の左上を原点とし、x 軸を右向き、y 軸を下向きにとる
+const worldXOf = (x: number) => (-COLUMNS / 2 + x + 0.5) * PITCH
+const worldYOf = (y: number) => (ROWS / 2 - y - 0.5) * PITCH
+
+// 塗った画素。いま決めた画素と見分けられるよう、通り過ぎた画素は控えめな濃さにする
+const pixels = new InstancedMesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#ffc857", transparent: true, opacity: 0.45 }),
+  COLUMNS
+)
+scene.add(pixels)
+
+const matrix = new Matrix4()
+matrix.makeScale(PITCH, PITCH, 1)
+matrix.setPosition(worldXOf(0), worldYOf(0), LAYER_PIXEL)
+pixels.setMatrixAt(0, matrix)
+
+// 誤差による増分法。誤差に傾きを足し、0.5 を超えたら
+// 塗る画素を 1 行進めて誤差から 1 を引く
+let row = 0
+let error = 0
+let previousRow = 0
+let errorBefore = 0
+
+for (let x = 1; x <= STEP; x++) {
+  previousRow = row
+  errorBefore = error
+
+  error += SLOPE
+  if (error > 0.5) {
+    row += 1
+    error -= 1
+  }
+
+  matrix.makeScale(PITCH, PITCH, 1)
+  matrix.setPosition(worldXOf(x), worldYOf(row), LAYER_PIXEL)
+  pixels.setMatrixAt(x, matrix)
+}
+pixels.count = STEP + 1
+
+// いま誤差の判定で決めた画素を、濃い色で重ねる
+const currentPixel = new Mesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#ffc857" })
+)
+currentPixel.scale.set(PITCH, PITCH, 1)
+currentPixel.position.set(worldXOf(STEP), worldYOf(row), LAYER_CURRENT_PIXEL)
+scene.add(currentPixel)
+
+// 誤差。1 つ前に塗った画素の中心から、直線までの y 方向の隔たり
+const baseY = worldYOf(previousRow)
+const tipY = worldYOf(previousRow + errorBefore + SLOPE)
+const errorBar = new Mesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#f2766a" })
+)
+errorBar.scale.set(0.032, Math.abs(baseY - tipY), 1)
+errorBar.position.set(worldXOf(STEP), (baseY + tipY) / 2, LAYER_ERROR)
+scene.add(errorBar)
+
+// 誤差と比べるしきい値 0.5。1 つ前に塗った画素の、下側の境目に重なる
+const threshold = new Mesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#aeb6c2" })
+)
+threshold.scale.set(PITCH, 0.03, 1)
+threshold.position.set(worldXOf(STEP), worldYOf(previousRow + 0.5), LAYER_THRESHOLD)
+scene.add(threshold)
+```
+
 :::
 
 ### ブレゼンハムのアルゴリズム
