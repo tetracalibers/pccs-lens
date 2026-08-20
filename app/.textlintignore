@@ -8,27 +8,6 @@
 # 数式・インラインコードの記法は `/format-math-notation <slug>` がこの解消まで行います。
 # 新しく作る記事は、ここに追記せず検査対象のままにします。
 
-src/routes/cg/basics/anti-aliasing/+page.svx
-src/routes/cg/basics/camera-capture-and-cg/+page.svx
-src/routes/cg/basics/cg-and-image-processing/+page.svx
-src/routes/cg/basics/grayscale-and-color-images/+page.svx
-src/routes/cg/basics/image-digitization/+page.svx
-src/routes/cg/basics/image-quantization/+page.svx
-src/routes/cg/basics/image-sampling/+page.svx
-src/routes/cg/basics/shape-rasterization/+page.svx
-src/routes/cg/basics/vector-and-raster/+page.svx
-src/routes/cg/image-properties/dynamic-range-and-gradation/+page.svx
-src/routes/cg/image-properties/image-statistics/+page.svx
-src/routes/cg/modeling/shape-model-overview/+page.svx
-src/routes/cg/rendering/hidden-surface-removal-methods/+page.svx
-src/routes/cg/rendering/photorealism-and-reality-elements/+page.svx
-src/routes/cg/systems/graphics-api/+page.svx
-src/routes/cg/transformation/affine-transformation/+page.svx
-src/routes/cg/transformation/perspective-and-parallel-projection/+page.svx
-src/routes/cg/transformation/pinhole-camera/+page.svx
-src/routes/cg/transformation/projection-calculation/+page.svx
-src/routes/cg/transformation/reflection-and-skew/+page.svx
-src/routes/cg/transformation/transformation-composition/+page.svx
 src/routes/color-fields/fashion-color-concepts/+page.svx
 src/routes/color-fields/fashion-image/+page.svx
 src/routes/color-fields/fashion-style-categories/+page.svx

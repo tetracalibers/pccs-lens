@@ -15,7 +15,7 @@ visual: true
   import PerspectiveDemo from '$lib/demo/threejs/transformation/pinhole-camera/perspective/PerspectiveDemo.svelte'
 </script>
 
-カメラで撮影された画像も、CG作品も、3次元の光景や物体を2次元平面上に写しとったものです。CGでは、このように平面に落とし込むための変換を:Anki[投影]といいます。
+カメラで撮影された画像も、CG作品も、`3`次元の光景や物体を`2`次元平面上に写しとったものです。CGでは、このように平面に落とし込むための変換を:Anki[投影]といいます。
 
 [カメラでの撮影とCG](/cg/basics/camera-capture-and-cg/)で学んだように、カメラでの撮影過程はCGの制作過程に応用されるため、CGの学習ではカメラの仕組みをある程度知っておくと有用です。
 
