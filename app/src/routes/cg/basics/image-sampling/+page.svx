@@ -12,6 +12,7 @@ draft: true
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import MoirePatternDemo from '$lib/demo/threejs/basics/image-sampling/moire-pattern/MoirePatternDemo.svelte'
   import SamplingTheoremDemo from '$lib/demo/threejs/basics/image-sampling/sampling-theorem/SamplingTheoremDemo.svelte'
+  import SincInterpolationDemo from '$lib/demo/threejs/basics/image-sampling/sinc-interpolation/SincInterpolationDemo.svelte'
 </script>
 
 [画像のデジタル化](/cg/basics/image-digitization/)では、連続的なアナログ画像は:Anki[標本化]・:Anki[量子化]・:Anki[符号化]という3つの工程でデジタル画像に変換されることを解説しました。
@@ -187,8 +188,162 @@ for (const x of [-OFFSET_X, OFFSET_X]) {
 
 この理想的な補間には、:Anki[sinc関数]と呼ばれる波形を各標本値に重ね合わせる方法が用いられます。
 
-:::Todo
-sinc関数のグラフと、その波形を各標本値に重ね合わせるイメージがつくようなデモ
+:::Action{fixme}
+次の点に着目して、デモを観察してみよう
+
+- `sinc`関数を`1`本ずつ表示した状態で、`1`本の波が自分の標本点では標本値の高さに届き、ほかのすべての標本点ではちょうど`0`を通ること
+- 重ね合わせる標本点の数を増やしていくと、重ね合わせた波が中央から順にもとの波へ重なっていくこと
+:::
+
+<CanvasWrapper>
+  <SincInterpolationDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 標本点の数（中央の1点を決められるよう奇数にする）と、標本値のもとにする波の山と谷の数
+const SAMPLE_COUNT = 13
+const CENTER_INDEX = (SAMPLE_COUNT - 1) / 2
+const WAVE_CYCLES = 2.5
+
+// 重ね合わせる標本点の数。中央の 1 本から始める
+const TERM_COUNT = 1
+
+// 位置の 0〜1 を PLOT_WIDTH、明るさのふれの -1〜1 を ±WAVE_HEIGHT に対応させる
+const PLOT_WIDTH = 5.2
+const WAVE_HEIGHT = 1
+const CURVE_SEGMENTS = 720
+const SINC_SEGMENTS = 360
+
+// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z。
+// 正面から見る構図に固定しているため、この厚みは絵には出ない
+const LAYER_SINC = 0
+const LAYER_AXIS = 0.01
+const LAYER_SOURCE = 0.02
+const LAYER_SUM = 0.03
+const LAYER_STEM = 0.04
+const LAYER_DOT = 0.05
+
+// sinc 関数。sin(πt) / πt の t = 0 での値は 1 とする
+const sinc = (t: number) => (t === 0 ? 1 : Math.sin(Math.PI * t) / (Math.PI * t))
+
+// k 番目の標本点の位置と、標本点の間隔。sinc 関数の山の幅は、この間隔に合わせる
+const samplePosition = (k: number) => (k + 0.5) / SAMPLE_COUNT
+const SAMPLE_INTERVAL = 1 / SAMPLE_COUNT
+
+// k 番目の標本値。両端で 0 になる重みを掛けた波から読み取る。描画域の外に標本点が残らないので、
+// 描画域の中の標本値だけで、もとの波を過不足なく組み立てられる
+const sampleValueAt = (k: number) => {
+  const t = k / (SAMPLE_COUNT - 1)
+  const fade = 0.5 * (1 - Math.cos(2 * Math.PI * t))
+  return Math.sin(2 * Math.PI * WAVE_CYCLES * t) * fade
+}
+const SAMPLE_VALUES = Array.from({ length: SAMPLE_COUNT }, (_, k) => sampleValueAt(k))
+
+// k 番目の標本値に重ねる sinc 関数の、位置 u での値
+const sincTermAt = (u: number, k: number) =>
+  SAMPLE_VALUES[k] * sinc((u - samplePosition(k)) / SAMPLE_INTERVAL)
+
+// 重ね合わせる順序。中央の標本点から左右へ交互に広げていく。
+// 端から順に足すと、まだ足していない側の食い違いが描画域の中央にまで残る
+const ADD_ORDER = Array.from({ length: SAMPLE_COUNT }, (_, k) => k).sort(
+  (a, b) => Math.abs(a - CENTER_INDEX) - Math.abs(b - CENTER_INDEX) || a - b
+)
+const added = ADD_ORDER.slice(0, TERM_COUNT)
+
+// グラフ全体を canvas の中央に寄せる
+const graph = new Group()
+graph.position.set(-PLOT_WIDTH / 2, -0.18, 0)
+scene.add(graph)
+
+// 明るさの中間を通る横軸（位置）と、明るさを測る縦軸。縦軸には明・暗の目盛りを付ける
+const axisGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(-0.2, 0, LAYER_AXIS),
+  new Vector3(PLOT_WIDTH + 0.2, 0, LAYER_AXIS),
+  new Vector3(0, -WAVE_HEIGHT - 0.2, LAYER_AXIS),
+  new Vector3(0, WAVE_HEIGHT + 0.2, LAYER_AXIS),
+  new Vector3(-0.08, WAVE_HEIGHT, LAYER_AXIS),
+  new Vector3(0, WAVE_HEIGHT, LAYER_AXIS),
+  new Vector3(-0.08, -WAVE_HEIGHT, LAYER_AXIS),
+  new Vector3(0, -WAVE_HEIGHT, LAYER_AXIS)
+])
+graph.add(new LineSegments(axisGeometry, new LineBasicMaterial({ color: "#9aa3b0" })))
+
+// もとの波。すべての標本値の sinc 関数を足し合わせたもので、標本点の位置を必ず通る
+const sourcePoints: Vector3[] = []
+for (let step = 0; step <= CURVE_SEGMENTS; step++) {
+  const u = step / CURVE_SEGMENTS
+  let level = 0
+  for (let k = 0; k < SAMPLE_COUNT; k++) {
+    level += sincTermAt(u, k)
+  }
+  sourcePoints.push(new Vector3(u * PLOT_WIDTH, level * WAVE_HEIGHT, LAYER_SOURCE))
+}
+const sourceGeometry = new BufferGeometry().setFromPoints(sourcePoints)
+graph.add(new Line(sourceGeometry, new LineBasicMaterial({ color: "#5ec8f2" })))
+
+// ここまでに重ね合わせた波。対象の標本値の sinc 関数だけを足し合わせる。
+// もとの波と重なったときに下が透けるよう、破線で描く
+const sumPoints: Vector3[] = []
+for (let step = 0; step <= CURVE_SEGMENTS; step++) {
+  const u = step / CURVE_SEGMENTS
+  let level = 0
+  for (const k of added) {
+    level += sincTermAt(u, k)
+  }
+  sumPoints.push(new Vector3(u * PLOT_WIDTH, level * WAVE_HEIGHT, LAYER_SUM))
+}
+const sumGeometry = new BufferGeometry().setFromPoints(sumPoints)
+const sum = new Line(
+  sumGeometry,
+  new LineDashedMaterial({ color: "#f2766a", dashSize: 0.08, gapSize: 0.06 })
+)
+// 破線の刻みは頂点間の距離から決まるので、頂点を置いたら測る
+sum.computeLineDistances()
+graph.add(sum)
+
+// 標本点から横軸へ下ろした垂線。どの位置で明るさを読み取ったかを示す
+const stemPoints: Vector3[] = []
+for (let k = 0; k < SAMPLE_COUNT; k++) {
+  const x = samplePosition(k) * PLOT_WIDTH
+  const y = SAMPLE_VALUES[k] * WAVE_HEIGHT
+  stemPoints.push(new Vector3(x, 0, LAYER_STEM), new Vector3(x, y, LAYER_STEM))
+}
+const stemGeometry = new BufferGeometry().setFromPoints(stemPoints)
+const stemMaterial = new LineBasicMaterial({ color: "#ffc857", transparent: true, opacity: 0.55 })
+graph.add(new LineSegments(stemGeometry, stemMaterial))
+
+// 標本点。重ね合わせが済んだ点だけを濃く塗り、まだの点は沈ませる
+const dots = new InstancedMesh(
+  new SphereGeometry(0.045, 12, 8),
+  new MeshBasicMaterial(),
+  SAMPLE_COUNT
+)
+const matrix = new Matrix4()
+const addedColor = new Color("#ffc857")
+const pendingColor = new Color("#6b7280")
+for (let k = 0; k < SAMPLE_COUNT; k++) {
+  const x = samplePosition(k) * PLOT_WIDTH
+  const y = SAMPLE_VALUES[k] * WAVE_HEIGHT
+  dots.setMatrixAt(k, matrix.setPosition(x, y, LAYER_DOT))
+  dots.setColorAt(k, added.includes(k) ? addedColor : pendingColor)
+}
+dots.instanceMatrix.needsUpdate = true
+graph.add(dots)
+
+// 足し合わせる前の sinc 関数。標本値の大きさだけ縦に伸縮し、標本点の位置に山がくる
+for (const k of added) {
+  const sincPoints: Vector3[] = []
+  for (let step = 0; step <= SINC_SEGMENTS; step++) {
+    const u = step / SINC_SEGMENTS
+    sincPoints.push(new Vector3(u * PLOT_WIDTH, sincTermAt(u, k) * WAVE_HEIGHT, LAYER_SINC))
+  }
+  const sincGeometry = new BufferGeometry().setFromPoints(sincPoints)
+  graph.add(new Line(sincGeometry, new LineBasicMaterial({ color: "#ffc857" })))
+}
+```
+
 :::
 
 `sinc`関数による補間は、標本化定理が保証するもとの信号の完全な復元を数学的に実現するものですが、実際の画像処理では計算量の都合から、より単純な補間で近似することがほとんどです。
