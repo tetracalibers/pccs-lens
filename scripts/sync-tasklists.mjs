@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * タスクリスト（OGP 生成 / 文体解析）を、コンテンツ YAML の構成に追随させる。
+ * タスクリスト（OGP 生成 / 文体解析 / 記法整備）を、コンテンツ YAML の構成に追随させる。
  *
  *   node scripts/sync-tasklists.mjs           # --check と同じ（差分を報告するだけ）
  *   node scripts/sync-tasklists.mjs --check   # 差分があれば報告して exit 1
@@ -8,7 +8,7 @@
  *
  * 依存（yaml）は scripts/package.json にある。未インストールなら scripts/ で npm install。
  *
- * 両タスクリストは冒頭に「各セクション内の並びはコンテンツ YAML の並び順に忠実に従う」と
+ * どのタスクリストも冒頭に「各セクション内の並びはコンテンツ YAML の並び順に忠実に従う」と
  * 明記されている YAML の写像。このスクリプトはその不変条件だけを機械的に維持する。
  *
  * 触るもの（構造）:
@@ -22,6 +22,10 @@
  *     draft のページが `[x]` になっているなど矛盾する場合は警告するだけで書き換えない。
  *   - 見出しに YAML 参照が無いセクション（トップ・ゲーム・慣用色名マップなど手書きの一覧）
  *   - セクション見出しそのものと、その並び順
+ *
+ * **記法整備タスクリスト（NOTATION-TASKLIST.md）だけは `[x]` の扱いが例外。** 記法整備の
+ * 完了状態は `app/.textlintignore`（記法パスのベースライン）という機械可読な正典が既にあるので、
+ * `[x]` はそこから導出する（生成も削除もする）。手記録を併置すると二重管理のドリフトが起きる。
  */
 
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs"
@@ -39,7 +43,28 @@ const ROUTE_BASE = {
   "color-fields.yaml": "/color-fields"
 }
 
-const TASKLISTS = ["ogimage/OGP-TASKLIST.md", "writing-guides/STYLE-ANALYSIS-TASKLIST.md"]
+/**
+ * 追随させるタスクリスト。
+ * - `state` … 状態マーカーの決め方を差し替える（既定は resolveState）
+ * - `scope` … 見出しが無い YAML を警告する範囲（既定は全部）
+ */
+const TASKLISTS = [
+  { file: "ogimage/OGP-TASKLIST.md" },
+  { file: "writing-guides/STYLE-ANALYSIS-TASKLIST.md" },
+  {
+    file: "writing-guides/NOTATION-TASKLIST.md",
+    state: (previous, route, listFile) => notationState(previous, route, listFile),
+    scope: (yamlRef) => yamlRef.startsWith("cg/")
+  }
+]
+
+/** 記法パスのベースライン（`app/.textlintignore` に載っている記事のパス） */
+const baseline = new Set(
+  readFileSync(path.join(ROOT, "app/.textlintignore"), "utf8")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.startsWith("src/routes/"))
+)
 
 /** 見出し行の末尾 `（`<yaml>` #<id>）` を拾う。`（nested）` などの前置きは無視される */
 const HEADER_REF_RE = /（`([^`]+)`(?:\s+#([A-Za-z0-9_-]+))?）\s*$/
@@ -194,6 +219,20 @@ const resolveState = (previous, route, listFile) => {
   return previous === "draft" ? " " : previous
 }
 
+/**
+ * 記法整備タスクリストの状態。`[x]` は `app/.textlintignore` から導出する
+ * （＝「`lint:svx:syntax` の検査対象に入っている」）。advisory の指摘が残っていても `[x]` になる。
+ */
+const notationState = (previous, route, listFile) => {
+  const { exists, draft } = pageInfo(route)
+  if (!exists) {
+    warn(`${listFile}: ${route} は YAML に slug があるが +page.svx が無い`)
+    return previous ?? " "
+  }
+  if (draft) return "draft"
+  return baseline.has(`src/routes${route}/+page.svx`) ? " " : "x"
+}
+
 // ---------------------------------------------------------------------------
 // タスクリストの照合
 // ---------------------------------------------------------------------------
@@ -203,7 +242,7 @@ const renderItem = (item) =>
 
 const keyOf = (item) => (item.kind === "page" ? item.route : `title:${item.title}`)
 
-const syncTasklist = (listFile) => {
+const syncTasklist = ({ file: listFile, state = resolveState, scope = () => true }) => {
   const absolute = path.join(ROOT, listFile)
   const original = readFileSync(absolute, "utf8")
   const lines = original.split("\n")
@@ -259,7 +298,7 @@ const syncTasklist = (listFile) => {
         ? {
             kind: "page",
             route: link.route,
-            state: resolveState(previousState.get(link.route), link.route, listFile)
+            state: state(previousState.get(link.route), link.route, listFile)
           }
         : { kind: "draft", title: link.title, state: "ページ未作成" }
     )
@@ -293,7 +332,7 @@ const syncTasklist = (listFile) => {
   }
 
   // YAML にあるのに、そもそも見出しが無いグループを検出する（大分類やユニットの新設に気づくため）
-  for (const yamlRef of allYamlFiles()) {
+  for (const yamlRef of allYamlFiles().filter(scope)) {
     const usesId = [...seenGroups].some((key) => key.startsWith(`${yamlRef}#`))
     if (usesId) {
       for (const group of readYaml(yamlRef)) {
