@@ -833,8 +833,8 @@ $$
 アルゴリズムで使うのは[線形補間](/cg/modeling/bezier-curve-surface/)だけです。隣り合う制御点を $$t : (1 - t)$$ の比で内分して新しい点を作ると、点の数が`1`つ減ります。得られた点の列に対して同じ内分を繰り返し、点が`1`つになったとき、その点が求める曲線上の点になります。
 
 :::Action{fixme}
-`t`を動かして、`1`段ごとに点が`1`つ減り、最後に残った`1`点が曲線の上をたどることを見てみよう
-また、「段数」を上げると制御点が`1`つ増え、内分を繰り返す段も`1`つ増えることを確認しよう
+`t`を動かして、最後に残った`1`点`C(t)`が曲線の上をたどることを見てみよう
+また、「次数」を上げると制御点が`1`つ増え、内分を繰り返す回数も`1`回増えることを確認しよう
 :::
 
 <CanvasWrapper>
@@ -849,14 +849,14 @@ const ARC_RADIUS_X = 2.7
 const ARC_RADIUS_Y = 2.6
 const ARC_CENTER_Y = -1.2
 
-// 弧を左右非対称にする傾き。対称に並べると各段の点も対称に並んでしまう
+// 弧を左右非対称にする傾き。対称に並べると内分で作る点も対称に並んでしまう
 const TILT_Y = 0.45
 
-// 段数から制御点の並びを作る。弧の上に等間隔に置くので、点をいくつ並べても
-// 隣り合う辺が一直線には並ばない（並ぶと、各段で作る線分が制御多角形に重なって読めなくなる）
-const createControlPoints = (level: number) =>
-  Array.from({ length: level + 1 }, (_, i) => {
-    const u = i / level
+// 次数から制御点の並びを作る。弧の上に等間隔に置くので、点をいくつ並べても
+// 隣り合う辺が一直線には並ばない（並ぶと、内分で作る線分が制御多角形に重なって読めなくなる）
+const createControlPoints = (degree: number) =>
+  Array.from({ length: degree + 1 }, (_, i) => {
+    const u = i / degree
     const angle = Math.PI * (1 - u)
 
     return new Vector3(
@@ -866,12 +866,12 @@ const createControlPoints = (level: number) =>
     )
   })
 
-// パネルのスライダーで動かす、各段で隣り合う 2 点を内分する割合と、作図全体の段数。
-// 制御点の数は段数より 1 つ多くなる
+// パネルのスライダーで動かす、隣り合う 2 点を内分する割合と、ベジェ曲線の次数。
+// 制御点の数は次数より 1 つ多くなる
 const t = 0.35
-const level = 3
+const degree = 3
 
-const controlPoints = createControlPoints(level)
+const controlPoints = createControlPoints(degree)
 
 // 線形補間。2 点の座標値を 1 − t : t の割合で混ぜる
 const lerp = (from: Vector3, to: Vector3, t: number, target: Vector3) =>
@@ -926,23 +926,23 @@ const bezierPoint = (t: number, target: Vector3) => {
   return target.copy(work[0])
 }
 
-// 段ごとの点。0 段目は制御点そのもので、1 段進むごとに 1 つ減る
-const levels = Array.from({ length: level + 1 }, (_, step) =>
-  Array.from({ length: level + 1 - step }, () => new Vector3())
+// 内分のたびに作られる点の列。はじめの列は制御点そのもので、内分するごとに 1 つ減る
+const pointRows = Array.from({ length: degree + 1 }, (_, round) =>
+  Array.from({ length: degree + 1 - round }, () => new Vector3())
 )
 
-// 0 段目は制御点そのもの
-controlPoints.forEach((point, i) => levels[0][i].copy(point))
+// はじめの列は制御点そのもの
+controlPoints.forEach((point, i) => pointRows[0][i].copy(point))
 
-// 隣り合う 2 点を t : (1 − t) の比で内分して次の段の点を作る。
-// 段が進むごとに点が 1 つ減り、最後に残った 1 点が曲線上の点になる
-for (let step = 1; step <= level; step++) {
-  for (let i = 0; i <= level - step; i++) {
-    lerp(levels[step - 1][i], levels[step - 1][i + 1], t, levels[step][i])
+// 隣り合う 2 点を t : (1 − t) の比で内分して次の列の点を作る。
+// 内分を繰り返すごとに点が 1 つ減り、最後に残った 1 点が曲線上の点になる
+for (let round = 1; round <= degree; round++) {
+  for (let i = 0; i <= degree - round; i++) {
+    lerp(pointRows[round - 1][i], pointRows[round - 1][i + 1], t, pointRows[round][i])
   }
 }
 
-// 制御点を順に結んだ制御多角形。各段で作る線分と描き分けるため破線にする
+// 制御点を順に結んだ制御多角形。内分で作る線分と描き分けるため破線にする
 const polygonGeometry = new BufferGeometry().setFromPoints(
   controlPoints.map((point) => new Vector3(point.x, point.y, LAYER_POLYGON))
 )
@@ -956,31 +956,31 @@ const polygonLine = new Line(polygonGeometry, polygonMaterial)
 polygonLine.computeLineDistances()
 scene.add(polygonLine)
 
-// 段ごとの点。制御点・間の段・最後に残る 1 点で、大きさと色を変える
+// 点は、制御点・途中で作る点・最後に残る 1 点で、大きさと色を変える
 const controlGeometry = new SphereGeometry(CONTROL_RADIUS, 16, 12)
 const innerGeometry = new SphereGeometry(INNER_RADIUS, 16, 12)
 const finalGeometry = new SphereGeometry(FINAL_RADIUS, 16, 12)
 const controlMaterial = new MeshBasicMaterial({ color: CONTROL_COLOR })
 const innerMaterials = INNER_COLORS.map((color) => new MeshBasicMaterial({ color }))
 const finalMaterial = new MeshBasicMaterial({ color: FINAL_COLOR })
-levels.forEach((points, step) => {
+pointRows.forEach((points, round) => {
   points.forEach((point) => {
     const mesh = new Mesh(
-      step === 0 ? controlGeometry : step === level ? finalGeometry : innerGeometry,
-      step === 0 ? controlMaterial : step === level ? finalMaterial : innerMaterials[step - 1]
+      round === 0 ? controlGeometry : round === degree ? finalGeometry : innerGeometry,
+      round === 0 ? controlMaterial : round === degree ? finalMaterial : innerMaterials[round - 1]
     )
     mesh.position.set(point.x, point.y, LAYER_POINT)
     scene.add(mesh)
   })
 })
 
-// 同じ段の点どうしを結ぶ線分。次の段の点はこの線分の上に乗る。
-// 0 段目は制御多角形として破線で描いてあるので、1 段目以降で作る
-levels.forEach((points, step) => {
-  if (step === 0) return
+// 同じ列の点どうしを結ぶ線分。次の列の点はこの線分の上に乗る。
+// はじめの列は制御多角形として破線で描いてあるので、内分 1 回目以降で作る
+pointRows.forEach((points, round) => {
+  if (round === 0) return
 
   for (let i = 0; i < points.length - 1; i++) {
-    const chord = createSegment(INNER_COLORS[step - 1], LAYER_CHORD)
+    const chord = createSegment(INNER_COLORS[round - 1], LAYER_CHORD)
     chord.set(points[i], points[i + 1])
     scene.add(chord.object)
   }
@@ -1008,9 +1008,9 @@ for r = 1 to n:
 // 残った p[0] が曲線上の点
 ```
 
-外側の繰り返しは、点の列から次の列を作る操作を、点が`1`つになるまで繰り返します。内側の繰り返しは、その`1`回の中で隣り合う`2`点を順に内分し、次の列の点を求めていきます。点の列が`1`つできるまでを`1`段と数えると、`1`段進むごとに点が`1`つずつ減るため、内側の繰り返しの回数も`1`つずつ少なくなっていきます。
+外側の繰り返しは、点の列から次の列を作る操作を、点が`1`つになるまで繰り返します。内側の繰り返しは、その`1`回の中で隣り合う`2`点を順に内分し、次の列の点を求めていきます。新しい点の列ができるごとに点が`1`つずつ減るため、内側の繰り返しの回数も`1`つずつ少なくなっていきます。
 
-べき乗を使わずかけ算と足し算だけで済むこの手順は、計算誤差が積み重なりにくいという利点も持ちます。内分を繰り返しているだけなので、途中の段に現れる点も、最後に残る曲線上の`1`点も、制御点の凸包から出ないことが、作図のデモからそのまま見て取れます。
+べき乗を使わずかけ算と足し算だけで済むこの手順は、計算誤差が積み重なりにくいという利点も持ちます。内分を繰り返しているだけなので、途中に現れる点も、最後に残る曲線上の`1`点も、制御点の凸包から出ないことが、作図のデモからそのまま見て取れます。
 
 ## :WithGroupTag[ベジェ曲面]{group="{['CG']}"}
 
