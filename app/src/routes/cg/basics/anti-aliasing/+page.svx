@@ -10,6 +10,7 @@ draft: true
 
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import AlphaBlendingDemo from '$lib/demo/threejs/basics/anti-aliasing/alpha-blending/AlphaBlendingDemo.svelte'
   import PixelCoverageDemo from '$lib/demo/threejs/basics/anti-aliasing/pixel-coverage/PixelCoverageDemo.svelte'
 </script>
 
@@ -235,8 +236,122 @@ $$
 
 このように画素値を決めると、寄与率$$\alpha$$が`1`に近い画素ほど図形の色が、`0`に近い画素ほど背景の色が強く出るようになります。
 
-:::Todo
-アルファブレンディングを試すデモ
+:::Action{fixme}
+次の点に着目して、デモを観察してみよう
+
+- 寄与率 α を動かすと、左の画素で図形が覆う面積と、右の画素の色が一緒に変わること
+- α が`1`に近いほど図形の色が、`0`に近いほど背景の色が強く出ること（下の帯で連続的に見比べられる）
+- 図形の色と背景の色を変えても、混ぜた色`C`が必ず図形の色と背景の色の間に収まること
+- 画素の色`C`が、`R`・`G`・`B`のチャンネルごとに同じ割合で混ぜられていること
+:::
+
+<CanvasWrapper>
+  <AlphaBlendingDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 画素 1 つを表す正方形の 1 辺と、2 つ並べる位置
+const SQUARE = 1.1
+const SQUARE_X = (SQUARE + 1.0) / 2
+const SQUARE_Y = 0.34
+
+// 寄与率（α 値）と、図形の色・背景の色。色は各チャンネルを 0 から 255 の整数で持つ
+const ALPHA = 0.7
+const FIGURE = { r: 255, g: 200, b: 87 }
+const BACKGROUND = { r: 61, g: 111, b: 168 }
+
+// α を 0 から 1 まで動かしたときの色を並べた帯と、並べる色の数
+const RAMP_WIDTH = 3.2
+const RAMP_HEIGHT = 0.3
+const RAMP_Y = -0.95
+const RAMP_STEPS = 21
+
+type Rgb = { r: number; g: number; b: number }
+
+// 寄与率 α で図形の色と背景の色を混ぜる（アルファブレンディング）。
+// C = α C_fg + (1 - α) C_bg を、R・G・B のチャンネルごとに当てる
+const blendChannel = (figure: number, background: number, alpha: number) =>
+  Math.round(alpha * figure + (1 - alpha) * background)
+
+// 0 から 255 の色で材質を作る。指定した色をそのままの濃さで見せたいので、陰影の付かない材質にする。
+// setRGB の第 4 引数を省くと three は値を作業色空間（リニア）として扱うため、sRGB の値であることを明示する
+const materialOf = ({ r, g, b }: Rgb) => {
+  const material = new MeshBasicMaterial()
+  material.color.setRGB(r / 255, g / 255, b / 255, SRGBColorSpace)
+  return material
+}
+
+// 左の画素：図形が覆う面積の割合が α になるよう、45 度の境界で正方形を分ける。
+// α が半分以下なら図形が三角形、半分を超えたら覆われていない背景が三角形になる
+const coversMost = ALPHA > 0.5
+const leg = SQUARE * Math.sqrt(2 * (coversMost ? 1 - ALPHA : ALPHA))
+
+const squareGeometry = new PlaneGeometry(SQUARE, SQUARE)
+const base = new Mesh(squareGeometry, materialOf(coversMost ? FIGURE : BACKGROUND))
+base.position.set(-SQUARE_X, SQUARE_Y, 0)
+scene.add(base)
+
+// 境界で残る側の直角二等辺三角形。ALPHA が 0.5 を超えるこの例では、背景が右上の角に残る
+const left = -SQUARE_X - SQUARE / 2
+const right = -SQUARE_X + SQUARE / 2
+const bottom = SQUARE_Y - SQUARE / 2
+const top = SQUARE_Y + SQUARE / 2
+const triangleGeometry = new BufferGeometry().setFromPoints(
+  coversMost
+    ? [
+        new Vector3(right, top, 0),
+        new Vector3(right - leg, top, 0),
+        new Vector3(right, top - leg, 0)
+      ]
+    : [
+        new Vector3(left, bottom, 0),
+        new Vector3(left + leg, bottom, 0),
+        new Vector3(left, bottom + leg, 0)
+      ]
+)
+const triangle = new Mesh(triangleGeometry, materialOf(coversMost ? BACKGROUND : FIGURE))
+triangle.position.z = 0.01
+scene.add(triangle)
+
+// 右の画素：寄与率の分だけ図形の色を、残りだけ背景の色を混ぜた色で塗る
+const blended = new Mesh(
+  squareGeometry,
+  materialOf({
+    r: blendChannel(FIGURE.r, BACKGROUND.r, ALPHA),
+    g: blendChannel(FIGURE.g, BACKGROUND.g, ALPHA),
+    b: blendChannel(FIGURE.b, BACKGROUND.b, ALPHA)
+  })
+)
+blended.position.set(SQUARE_X, SQUARE_Y, 0)
+scene.add(blended)
+
+// 同じ混ぜ方を、α を 0 から 1 まで刻んだすべての値について行い、1 色 1 テクセルのテクスチャに焼く
+const rampData = new Uint8Array(RAMP_STEPS * 4)
+for (let step = 0; step < RAMP_STEPS; step++) {
+  const alpha = step / (RAMP_STEPS - 1)
+  rampData[step * 4] = blendChannel(FIGURE.r, BACKGROUND.r, alpha)
+  rampData[step * 4 + 1] = blendChannel(FIGURE.g, BACKGROUND.g, alpha)
+  rampData[step * 4 + 2] = blendChannel(FIGURE.b, BACKGROUND.b, alpha)
+  rampData[step * 4 + 3] = 255
+}
+
+// 色が混ざらないよう、補間なし（NearestFilter）で貼る
+const rampTexture = new DataTexture(rampData, RAMP_STEPS, 1)
+rampTexture.colorSpace = SRGBColorSpace
+rampTexture.magFilter = NearestFilter
+rampTexture.minFilter = NearestFilter
+rampTexture.needsUpdate = true
+
+const ramp = new Mesh(
+  new PlaneGeometry(RAMP_WIDTH, RAMP_HEIGHT),
+  new MeshBasicMaterial({ map: rampTexture })
+)
+ramp.position.set(0, RAMP_Y, 0)
+scene.add(ramp)
+```
+
 :::
 
 ## :WithGroupTag[スーパーサンプリング法]{group="{['CG']}"}
