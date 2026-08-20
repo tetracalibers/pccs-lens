@@ -9,6 +9,7 @@ draft: true
 ---
 
 <script>
+  import BresenhamSelectionDemo from '$lib/demo/threejs/basics/shape-rasterization/bresenham-selection/BresenhamSelectionDemo.svelte'
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import ErrorIncrementDemo from '$lib/demo/threejs/basics/shape-rasterization/error-increment/ErrorIncrementDemo.svelte'
   import IncrementalMethodDemo from '$lib/demo/threejs/basics/shape-rasterization/incremental-method/IncrementalMethodDemo.svelte'
@@ -438,8 +439,116 @@ x座標を`1`進めると誤差には傾き`a = dy / dx`が加わりますが、
 傾きが急で縦に長い線分には、x軸とy軸の役割を入れ替えて同じ手順を適用します。こうすることで、どんな向きの線分も同じ考え方で扱えます。
 :::
 
-:::Todo
-ブレゼンハムの画素選択の図解（判定変数の符号で上下どちらの画素を選ぶか）
+:::Action{fixme}
+線分の高さdyを変えたり、ステップを進めたりして、次の点に着目してみよう
+
+- 次の列の候補が、いまと同じ行と`1`つ下の行の`2`つだけであること
+- 判定変数dが正なら下の行、`0`以下なら同じ行が選ばれること
+- dの初期値も更新も、かけ算とわり算の結果ではなく整数の足し算だけで済んでいること
+:::
+
+<CanvasWrapper>
+  <BresenhamSelectionDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 画素の格子と画素の大きさ。線分の始点と終点は、両端の列の画素の中心にとる
+const COLUMNS = 9
+const ROWS = 6
+const PITCH = 0.4
+const DX = COLUMNS - 1
+const DY = 3
+const STEP = 2
+
+// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z
+const LAYER_PIXEL = 0.01
+const LAYER_CURRENT_PIXEL = 0.015
+const LAYER_CANDIDATE_FILL = 0.045
+const LAYER_CANDIDATE = 0.05
+
+// x（画素の列）と y（画素の行）の位置。
+// 画像座標系は画像の左上を原点とし、x 軸を右向き、y 軸を下向きにとる
+const worldXOf = (x: number) => (-COLUMNS / 2 + x + 0.5) * PITCH
+const worldYOf = (y: number) => (ROWS / 2 - y - 0.5) * PITCH
+
+// 塗った画素。いま塗っている画素と見分けられるよう、通り過ぎた画素は控えめな濃さにする
+const pixels = new InstancedMesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#ffc857", transparent: true, opacity: 0.45 }),
+  COLUMNS
+)
+scene.add(pixels)
+
+const matrix = new Matrix4()
+matrix.makeScale(PITCH, PITCH, 1)
+matrix.setPosition(worldXOf(0), worldYOf(0), LAYER_PIXEL)
+pixels.setMatrixAt(0, matrix)
+
+// ブレゼンハムのアルゴリズム。判定変数 d の符号だけで次の画素を決め、
+// d の更新も整数の加算だけで済む
+let y = 0
+let d = 2 * DY - DX
+
+for (let x = 0; x < STEP; x++) {
+  if (d > 0) {
+    y += 1
+    d += 2 * (DY - DX)
+  } else {
+    d += 2 * DY
+  }
+
+  matrix.makeScale(PITCH, PITCH, 1)
+  matrix.setPosition(worldXOf(x + 1), worldYOf(y), LAYER_PIXEL)
+  pixels.setMatrixAt(x + 1, matrix)
+}
+pixels.count = STEP + 1
+
+// いま塗っている画素を、濃い色で重ねる
+const currentPixel = new Mesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#ffc857" })
+)
+currentPixel.scale.set(PITCH, PITCH, 1)
+currentPixel.position.set(worldXOf(STEP), worldYOf(y), LAYER_CURRENT_PIXEL)
+scene.add(currentPixel)
+
+// 次の列の候補は、いまと同じ行と、その 1 つ下の行の 2 つだけ。
+// 選ばれた側は塗る色で囲み、選ばれなかった側は控えめな色で囲む
+const outlineGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(-0.5, -0.5, 0),
+  new Vector3(0.5, -0.5, 0),
+  new Vector3(0.5, 0.5, 0),
+  new Vector3(-0.5, 0.5, 0),
+  new Vector3(-0.5, -0.5, 0)
+])
+const goesDown = d > 0
+
+for (const index of [0, 1]) {
+  const outline = new Line(
+    outlineGeometry,
+    new LineBasicMaterial({ color: goesDown === (index === 1) ? "#ffc857" : "#aeb6c2" })
+  )
+  outline.scale.set(PITCH, PITCH, 1)
+  outline.position.set(worldXOf(STEP + 1), worldYOf(y + index), LAYER_CANDIDATE)
+  scene.add(outline)
+}
+
+// 判定変数の符号で選ばれた側を、次に塗る画素として薄く塗る
+const chosenFill = new Mesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#ffc857", transparent: true, opacity: 0.3 })
+)
+chosenFill.scale.set(PITCH, PITCH, 1)
+chosenFill.position.set(
+  worldXOf(STEP + 1),
+  worldYOf(goesDown ? y + 1 : y),
+  LAYER_CANDIDATE_FILL
+)
+scene.add(chosenFill)
+```
+
 :::
 
 ## :WithGroupTag[円のラスタ化]{group="{['CG']}"}
