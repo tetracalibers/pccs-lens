@@ -843,10 +843,6 @@ $$
 `t`を動かして、最後に残った`1`点`C(t)`が曲線を描く様子を見てみよう
 :::
 
-:::Fix{target="demo"}
-次数を3で固定し、水色の点に$$Q_0, Q_1, Q_2$$ラベル、緑色の点に$$R_0, R_1$$ラベルを表示する
-:::
-
 <CanvasWrapper>
   <DeCasteljauDemo />
 </CanvasWrapper>
@@ -862,26 +858,24 @@ const ARC_CENTER_Y = -1.2
 // 弧を左右非対称にする傾き。対称に並べると内分で作る点も対称に並んでしまう
 const TILT_Y = 0.45
 
-// 次数から制御点の並びを作る。弧の上に等間隔に置くので、点をいくつ並べても
-// 隣り合う辺が一直線には並ばない（並ぶと、内分で作る線分が制御多角形に重なって読めなくなる）
-const createControlPoints = (degree: number) =>
-  Array.from({ length: degree + 1 }, (_, i) => {
-    const u = i / degree
-    const angle = Math.PI * (1 - u)
+// ベジェ曲線の次数。制御点は次数より 1 つ多い 4 つになる
+const DEGREE = 3
 
-    return new Vector3(
-      ARC_RADIUS_X * Math.cos(angle),
-      ARC_CENTER_Y + ARC_RADIUS_Y * Math.sin(angle) + TILT_Y * u,
-      0
-    )
-  })
+// 制御点。弧の上に等間隔に置くので、隣り合う辺が一直線には並ばない
+// （並ぶと、内分で作る線分が制御多角形に重なって読めなくなる）
+const controlPoints = Array.from({ length: DEGREE + 1 }, (_, i) => {
+  const u = i / DEGREE
+  const angle = Math.PI * (1 - u)
 
-// パネルのスライダーで動かす、隣り合う 2 点を内分する割合と、ベジェ曲線の次数。
-// 制御点の数は次数より 1 つ多くなる
+  return new Vector3(
+    ARC_RADIUS_X * Math.cos(angle),
+    ARC_CENTER_Y + ARC_RADIUS_Y * Math.sin(angle) + TILT_Y * u,
+    0
+  )
+})
+
+// パネルのスライダーで動かす、隣り合う 2 点を内分する割合
 const t = 0.35
-const degree = 3
-
-const controlPoints = createControlPoints(degree)
 
 // 線形補間。2 点の座標値を 1 − t : t の割合で混ぜる
 const lerp = (from: Vector3, to: Vector3, t: number, target: Vector3) =>
@@ -937,8 +931,8 @@ const bezierPoint = (t: number, target: Vector3) => {
 }
 
 // 内分のたびに作られる点の列。はじめの列は制御点そのもので、内分するごとに 1 つ減る
-const pointRows = Array.from({ length: degree + 1 }, (_, round) =>
-  Array.from({ length: degree + 1 - round }, () => new Vector3())
+const pointRows = Array.from({ length: DEGREE + 1 }, (_, round) =>
+  Array.from({ length: DEGREE + 1 - round }, () => new Vector3())
 )
 
 // はじめの列は制御点そのもの
@@ -946,8 +940,8 @@ controlPoints.forEach((point, i) => pointRows[0][i].copy(point))
 
 // 隣り合う 2 点を t : (1 − t) の比で内分して次の列の点を作る。
 // 内分を繰り返すごとに点が 1 つ減り、最後に残った 1 点が曲線上の点になる
-for (let round = 1; round <= degree; round++) {
-  for (let i = 0; i <= degree - round; i++) {
+for (let round = 1; round <= DEGREE; round++) {
+  for (let i = 0; i <= DEGREE - round; i++) {
     lerp(pointRows[round - 1][i], pointRows[round - 1][i + 1], t, pointRows[round][i])
   }
 }
@@ -976,8 +970,8 @@ const finalMaterial = new MeshBasicMaterial({ color: FINAL_COLOR })
 pointRows.forEach((points, round) => {
   points.forEach((point) => {
     const mesh = new Mesh(
-      round === 0 ? controlGeometry : round === degree ? finalGeometry : innerGeometry,
-      round === 0 ? controlMaterial : round === degree ? finalMaterial : innerMaterials[round - 1]
+      round === 0 ? controlGeometry : round === DEGREE ? finalGeometry : innerGeometry,
+      round === 0 ? controlMaterial : round === DEGREE ? finalMaterial : innerMaterials[round - 1]
     )
     mesh.position.set(point.x, point.y, LAYER_POINT)
     scene.add(mesh)
@@ -1010,10 +1004,8 @@ scene.add(new Line(trace.geometry, new LineBasicMaterial({ color: TRACE_COLOR })
 
 この手順を擬似コードで表すと、次のようになります。
 
-:::Add
-コード中の変数`n`と`r`は何を表している？
-なぜ最終的に`p[0]`が残る？
-:::
+`n`はベジェ曲線の次数で、制御点は`p[0]`から`p[n]`までの`n + 1`個です。`r`は内分を何回繰り返したかを表し、`r`回目の内分では`p[0]`から`p[n - r]`までが新しい点に書き換わります。
+内分を繰り返すごとに書き換わる範囲は`1`つ分狭まるため、`n`回目に書き換わるのは`p[0]`だけになり、そこに残った点が曲線上の点です。
 
 ```js
 // p[0] から p[n] に制御点を入れておく
