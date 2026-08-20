@@ -4,8 +4,6 @@ title: ベジェ曲線の数学的性質 # CG 3-4-3, 3-4-4
 
 group: ["CG"]
 visual: true
-
-draft: true
 ---
 
 <script>

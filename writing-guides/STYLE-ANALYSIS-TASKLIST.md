@@ -511,7 +511,7 @@
 - [ ] `/cg/modeling/curve-surface-equations`
 - [ ] `/cg/modeling/quadratic-curve`
 - [ ] `/cg/modeling/bezier-curve-surface`
-- [draft] `/cg/modeling/bezier-curve-properties`
+- [ ] `/cg/modeling/bezier-curve-properties`
 - [ページ未作成] ファーガソン曲線
 - [ページ未作成] 双3次クーンズ曲面
 - [draft] `/cg/modeling/b-spline-curve-surface`
