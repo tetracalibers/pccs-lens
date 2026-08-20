@@ -10,6 +10,7 @@ draft: true
 
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import SupersamplingDemo from '$lib/demo/threejs/basics/anti-aliasing/supersampling/SupersamplingDemo.svelte'
   import AlphaBlendingDemo from '$lib/demo/threejs/basics/anti-aliasing/alpha-blending/AlphaBlendingDemo.svelte'
   import PixelCoverageDemo from '$lib/demo/threejs/basics/anti-aliasing/pixel-coverage/PixelCoverageDemo.svelte'
 </script>
@@ -362,8 +363,141 @@ scene.add(ramp)
 
 具体的には、`1`つの画素を細かく分けて複数の:Anki[サンプリング点]を取り、それぞれの点を新たな画素とみなして画像をレンダリング（各画素の色を計算）します。そして、元の画素から取ったサンプリング点の色の:Anki[平均値]を、元の画素の色とします。
 
-:::Todo
-上の文章を説明する図（要相談）
+:::Action{fixme}
+次の点に着目して、デモを観察してみよう
+
+- サンプリング点（縦横）を増やすと、点による推定が面積比（寄与率）に近づいていくこと
+- 点を`1`つに減らすと、平均した色が図形の色か背景の色のどちらかにしかならず、中間色が現れないこと
+- 輪郭の向きや位置を変えると点による推定がずれるが、点を増やせばずれが小さくなること
+- 平均した色が、図形側に落ちた点の割合どおりの中間色になっていること
+:::
+
+<CanvasWrapper>
+  <SupersamplingDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 拡大して見せる画素 1 つの 1 辺と、2 つ並べる位置
+const PIXEL = 1.5
+const PIXEL_X = (PIXEL + 0.8) / 2
+const PIXEL_Y = -0.15
+
+// 1 辺あたりのサンプリング点の数と、画素にかかる図形の輪郭。
+// 輪郭の向きは度、位置は画素の 1 辺を 1 として中心からどれだけずれた所を通るか
+const SAMPLES = 3
+const ANGLE = 60
+const OFFSET = 0.12
+
+// 図形の色と背景の色。サンプリング点は、落ちた位置にあるこのどちらかの色を取る
+const FIGURE = { r: 255, g: 200, b: 87 }
+const BACKGROUND = { r: 61, g: 111, b: 168 }
+
+// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z
+const LAYER_FIGURE = 0.01
+const LAYER_GRID = 0.02
+const LAYER_DOT = 0.04
+
+type Rgb = { r: number; g: number; b: number }
+
+// 0 から 255 の色で材質を作る。指定した色をそのままの濃さで見せたいので、陰影の付かない材質にする。
+// setRGB の第 4 引数を省くと three は値を作業色空間（リニア）として扱うため、sRGB の値であることを明示する
+const materialOf = ({ r, g, b }: Rgb) => {
+  const material = new MeshBasicMaterial()
+  material.color.setRGB(r / 255, g / 255, b / 255, SRGBColorSpace)
+  return material
+}
+
+// 輪郭に立てた法線。図形は「法線方向にはかった座標が OFFSET 以下」の側にある
+const radians = (ANGLE * Math.PI) / 180
+const normalX = Math.cos(radians)
+const normalY = Math.sin(radians)
+
+// 左の画素の地。図形が覆っていない部分は背景の色になる
+const pixelGeometry = new PlaneGeometry(PIXEL, PIXEL)
+const backgroundMaterial = materialOf(BACKGROUND)
+const backgroundPixel = new Mesh(pixelGeometry, backgroundMaterial)
+backgroundPixel.position.set(-PIXEL_X, PIXEL_Y, 0)
+scene.add(backgroundPixel)
+
+// 画素にかかった図形。画素と同じ大きさの板を輪郭の直線でクリッピングし、図形側だけを残す。
+// クリッピング面はワールド座標で効くので、板の中心を原点とした条件を置き直して渡す
+renderer.localClippingEnabled = true
+const figurePlane = new Plane(
+  new Vector3(-normalX, -normalY, 0),
+  OFFSET * PIXEL + normalX * -PIXEL_X + normalY * PIXEL_Y
+)
+const figureMaterial = materialOf(FIGURE)
+figureMaterial.clippingPlanes = [figurePlane]
+const figurePixel = new Mesh(pixelGeometry, figureMaterial)
+figurePixel.position.set(-PIXEL_X, PIXEL_Y, LAYER_FIGURE)
+scene.add(figurePixel)
+
+// 区画の境目。画素の 1 辺を点の数で等分した位置に引く
+const gridPoints: Vector3[] = []
+for (let index = 0; index <= SAMPLES; index++) {
+  const shift = -PIXEL / 2 + (index * PIXEL) / SAMPLES
+  gridPoints.push(
+    new Vector3(-PIXEL_X + shift, PIXEL_Y - PIXEL / 2, LAYER_GRID),
+    new Vector3(-PIXEL_X + shift, PIXEL_Y + PIXEL / 2, LAYER_GRID),
+    new Vector3(-PIXEL_X - PIXEL / 2, PIXEL_Y + shift, LAYER_GRID),
+    new Vector3(-PIXEL_X + PIXEL / 2, PIXEL_Y + shift, LAYER_GRID)
+  )
+}
+const gridGeometry = new BufferGeometry().setFromPoints(gridPoints)
+scene.add(new LineSegments(gridGeometry, new LineBasicMaterial({ color: "#7d8794" })))
+
+// 画素を SAMPLES × SAMPLES の区画に分け、それぞれの中心を 1 点として色を求める。
+// 点の色は、図形側なら図形の色、そうでなければ背景の色になる。
+// 点は図形の板と同じ色だが、クリッピングを受けないよう材質を分けて持つ
+const dotRadius = Math.min((PIXEL / SAMPLES) * 0.22, 0.075)
+const dotGeometry = new CircleGeometry(dotRadius, 16)
+const figureDots = new InstancedMesh(dotGeometry, materialOf(FIGURE), SAMPLES * SAMPLES)
+const backgroundDots = new InstancedMesh(dotGeometry, backgroundMaterial, SAMPLES * SAMPLES)
+
+const matrix = new Matrix4()
+let insideCount = 0
+let outsideCount = 0
+let sumRed = 0
+let sumGreen = 0
+let sumBlue = 0
+
+for (let row = 0; row < SAMPLES; row++) {
+  for (let column = 0; column < SAMPLES; column++) {
+    // 画素の中を -0.5 から 0.5 で表した、区画の中心の位置
+    const x = (column + 0.5) / SAMPLES - 0.5
+    const y = (row + 0.5) / SAMPLES - 0.5
+    const inside = normalX * x + normalY * y <= OFFSET
+    const color = inside ? FIGURE : BACKGROUND
+
+    sumRed += color.r
+    sumGreen += color.g
+    sumBlue += color.b
+
+    matrix.setPosition(-PIXEL_X + x * PIXEL, PIXEL_Y + y * PIXEL, LAYER_DOT)
+    if (inside) figureDots.setMatrixAt(insideCount++, matrix)
+    else backgroundDots.setMatrixAt(outsideCount++, matrix)
+  }
+}
+figureDots.count = insideCount
+backgroundDots.count = outsideCount
+scene.add(figureDots, backgroundDots)
+
+// 右の画素。点の色の平均が、元の画素の色になる
+const total = SAMPLES * SAMPLES
+const averagePixel = new Mesh(
+  pixelGeometry,
+  materialOf({
+    r: Math.round(sumRed / total),
+    g: Math.round(sumGreen / total),
+    b: Math.round(sumBlue / total)
+  })
+)
+averagePixel.position.set(PIXEL_X, PIXEL_Y, 0)
+scene.add(averagePixel)
+```
+
 :::
 
 このように、高い解像度で細かく色を求めてから平均することで、輪郭付近には図形と背景の中間色が自然に現れ、ジャギーの目立たない画像が得られます。
