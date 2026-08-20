@@ -18,9 +18,9 @@ import {
 
 /** Tweakpane で操作するパラメータ */
 export type DeCasteljauParams = {
-  /** 各段で隣り合う 2 点を内分する割合。0 で P₀、1 で P₃ に重なる */
+  /** 各段で隣り合う 2 点を内分する割合。0 で P₀、1 で最後の制御点に重なる */
   t: number
-  /** 点を描くところまでの段数。0 なら制御点だけ、3 なら最後に残る 1 点まで */
+  /** 作図全体の段数。制御点はこれより 1 つ多く、点が 1 つに減りきるまで内分を繰り返す */
   level: number
 }
 
@@ -30,22 +30,44 @@ type SceneContext = {
   params: DeCasteljauParams
 }
 
-/**
- * 4 つの制御点。左右対称にすると各段の点も対称に並んでしまうので、
- * 高さと幅をずらした山形に置く。z は 0 のままにし、この平面に図を重ねていく
- */
-const CONTROL_POINTS = [
-  new Vector3(-2.7, -1.2, 0),
-  new Vector3(-1.7, 1.35, 0),
-  new Vector3(1.2, 1.05, 0),
-  new Vector3(2.7, -0.75, 0)
-]
+/** 段数の下限と上限。下限の 3 が 3 次ベジェ曲線（制御点 4 つ）にあたる */
+export const MIN_LEVEL = 3
+export const MAX_LEVEL = 6
 
-/** 段ごとの点の数。4 つの制御点から始めて、1 段進むごとに 1 つ減り、最後は 1 つになる */
-const LEVEL_SIZES = [4, 3, 2, 1]
+/**
+ * 制御点を並べる弧（左下から山なりに回って右下へ向かう）の半径と中心の高さ。
+ * z は 0 のままにし、この平面に図を重ねていく
+ */
+const ARC_RADIUS_X = 2.7
+const ARC_RADIUS_Y = 2.6
+const ARC_CENTER_Y = -1.2
+
+/** 弧を左右非対称にする傾き。対称に並べると各段の点も対称に並んでしまう */
+const TILT_Y = 0.45
+
+/**
+ * 段数から制御点の並びを作る。弧の上に等間隔に置くので、点をいくつ並べても
+ * 隣り合う辺が一直線には並ばない（並ぶと、各段で作る線分が制御多角形に重なって読めなくなる）
+ */
+const createControlPoints = (level: number) =>
+  Array.from({ length: level + 1 }, (_, i) => {
+    const u = i / level
+    const angle = Math.PI * (1 - u)
+
+    return new Vector3(
+      ARC_RADIUS_X * Math.cos(angle),
+      ARC_CENTER_Y + ARC_RADIUS_Y * Math.sin(angle) + TILT_Y * u,
+      0
+    )
+  })
+
+/** 段数ごとの制御点。毎フレーム作り直さないよう、下限から上限までを先に用意しておく */
+const CONTROL_POINT_SETS = Array.from({ length: MAX_LEVEL - MIN_LEVEL + 1 }, (_, i) =>
+  createControlPoints(MIN_LEVEL + i)
+)
 
 /** 制御点に付ける名前。添字は 0 から順に振る */
-const CONTROL_LABELS = ["P₀", "P₁", "P₂", "P₃"]
+const CONTROL_LABELS = ["P₀", "P₁", "P₂", "P₃", "P₄", "P₅", "P₆"]
 
 /** C(t) の軌跡を折れ線で近似する分割数 */
 const TRACE_SEGMENTS = 64
@@ -55,7 +77,9 @@ const DASH_SIZE = 0.12
 const GAP_SIZE = 0.08
 
 /** 段ごとの点を示す球の半径。制御点と最後の 1 点は、間の段より少し大きくする */
-const LEVEL_RADII = [0.075, 0.055, 0.055, 0.065]
+const CONTROL_RADIUS = 0.075
+const INNER_RADIUS = 0.055
+const FINAL_RADIUS = 0.065
 
 /** ラベルの高さ（ワールド座標での大きさ）。幅は文字数に応じて決まる */
 const LABEL_HEIGHT = 0.28
@@ -63,7 +87,7 @@ const LABEL_HEIGHT = 0.28
 /** 制御点のラベルを、制御点の重心から見て外向きに逃がす距離 */
 const CONTROL_LABEL_OFFSET = 0.36
 
-/** C(t) のラベルを、最後の線分から曲線の外側へ逃がす距離 */
+/** C(t) のラベルを、その点の真下へ逃がす距離 */
 const MARKER_LABEL_OFFSET = 0.36
 
 /** ラベルの文字を描く canvas の高さ（テクスチャの解像度）と左右の余白 */
@@ -84,10 +108,15 @@ const LAYER_POINT = 0.05
 const LAYER_LABEL = 0.14
 
 // 背景（暗めのグレー）の上で、制御多角形・各段の点・軌跡が見分けられる色にする。
-// 段ごとに色を変え、点とその点どうしを結ぶ線分は同じ色にする
+// 段ごとに色を変え、点とその点どうしを結ぶ線分は同じ色にする。
+// 制御点と最後に残る 1 点の色は、段数を変えても動かさない
 const POLYGON_COLOR = "#9aa3b0"
 const TRACE_COLOR = "#ffc857"
-const LEVEL_COLORS = ["#b79cf5", "#5ec8f2", "#7fd88f", "#f57fc4"]
+const CONTROL_COLOR = "#b79cf5"
+const FINAL_COLOR = "#f57fc4"
+
+/** 間の段の色。1 段目から順に使うので、上限の段数より 1 つ少ない数だけ並べる */
+const INNER_COLORS = ["#5ec8f2", "#7fd88f", "#6f9ff5", "#b0d95e", "#5ed8c4"]
 
 /**
  * 文字を描いた canvas をテクスチャにして、常にカメラを向く板（Sprite）にする。
@@ -178,13 +207,13 @@ const lerp = (from: Vector3, to: Vector3, t: number, target: Vector3) =>
     .addScaledVector(to, t)
 
 // 軌跡を求めるときに使う作業用の点。何度も呼ばれるので、その都度は作らない
-const work = CONTROL_POINTS.map(() => new Vector3())
+const work = Array.from({ length: MAX_LEVEL + 1 }, () => new Vector3())
 
 /** 軌跡用に、作図の途中を残さずベジェ曲線上の点だけを求める */
-const bezierPoint = (t: number, target: Vector3) => {
-  CONTROL_POINTS.forEach((point, i) => work[i].copy(point))
+const bezierPoint = (controlPoints: Vector3[], t: number, target: Vector3) => {
+  controlPoints.forEach((point, i) => work[i].copy(point))
 
-  for (let last = work.length - 1; last > 0; last--) {
+  for (let last = controlPoints.length - 1; last > 0; last--) {
     for (let i = 0; i < last; i++) work[i].lerp(work[i + 1], t)
   }
 
@@ -192,30 +221,40 @@ const bezierPoint = (t: number, target: Vector3) => {
 }
 
 export const createDeCasteljauScene = ({ scene, params }: SceneContext) => {
-  /** 段ごとの点。0 段目は制御点そのもので、1 段進むごとに 1 つ減る */
-  const levels = LEVEL_SIZES.map((size) => Array.from({ length: size }, () => new Vector3()))
-
-  // 制御点を順に結んだ制御多角形。制御点は動かないので 1 度組めばよい。
-  // 各段で作る線分と描き分けるため破線にする
-  const polygonGeometry = new BufferGeometry().setFromPoints(
-    CONTROL_POINTS.map((point) => new Vector3(point.x, point.y, LAYER_POLYGON))
+  /**
+   * 段ごとの点を入れておく場所。上限の段数で用意し、
+   * 段数が小さいときは各段の前のほうだけを使う
+   */
+  const levels = Array.from({ length: MAX_LEVEL + 1 }, (_, step) =>
+    Array.from({ length: MAX_LEVEL + 1 - step }, () => new Vector3())
   )
+
+  // 制御点を順に結んだ制御多角形。段数で頂点の数が変わるので、上限の数だけ用意して
+  // 座標と描く範囲を書き換える。各段で作る線分と描き分けるため破線にする
+  const polygonGeometry = new BufferGeometry()
+  const polygonPositions = new Float32BufferAttribute(new Float32Array((MAX_LEVEL + 1) * 3), 3)
+  polygonGeometry.setAttribute("position", polygonPositions)
   const polygonMaterial = new LineDashedMaterial({
     color: POLYGON_COLOR,
     dashSize: DASH_SIZE,
     gapSize: GAP_SIZE
   })
   const polygonLine = new Line(polygonGeometry, polygonMaterial)
-  // 破線の刻みは頂点ごとの「線に沿った距離」で決まるので、置いたあとに測る
-  polygonLine.computeLineDistances()
+  // 頂点が動くので、あらかじめ計算した範囲に頼らず常に描く
+  polygonLine.frustumCulled = false
   scene.add(polygonLine)
 
-  // 段ごとの点。同じ段の点はジオメトリとマテリアルを共有する
-  const geometries = LEVEL_RADII.map((radius) => new SphereGeometry(radius, 16, 12))
-  const materials = LEVEL_COLORS.map((color) => new MeshBasicMaterial({ color }))
-  const markers = LEVEL_SIZES.map((size, level) =>
-    Array.from({ length: size }, () => {
-      const mesh = new Mesh(geometries[level], materials[level])
+  // 段ごとの点。制御点・間の段・最後の 1 点で大きさと色が変わり、
+  // どの段が最後になるかは段数で変わるので、ジオメトリとマテリアルは種類ごとに 1 つ作って共有する
+  const controlGeometry = new SphereGeometry(CONTROL_RADIUS, 16, 12)
+  const innerGeometry = new SphereGeometry(INNER_RADIUS, 16, 12)
+  const finalGeometry = new SphereGeometry(FINAL_RADIUS, 16, 12)
+  const controlMaterial = new MeshBasicMaterial({ color: CONTROL_COLOR })
+  const innerMaterials = INNER_COLORS.map((color) => new MeshBasicMaterial({ color }))
+  const finalMaterial = new MeshBasicMaterial({ color: FINAL_COLOR })
+  const markers = levels.map((points) =>
+    points.map(() => {
+      const mesh = new Mesh(innerGeometry, innerMaterials[0])
       scene.add(mesh)
       return mesh
     })
@@ -223,13 +262,14 @@ export const createDeCasteljauScene = ({ scene, params }: SceneContext) => {
 
   /**
    * 同じ段の点どうしを結ぶ線分。次の段の点はこの線分の上に乗る。
-   * 0 段目は制御多角形として破線で描いてあるので、1 段目以降だけ作る
+   * 0 段目は制御多角形として破線で描いてあるので、1 段目以降だけ作る。
+   * 最後の 1 点だけが残る段には線分が無いので、色は間の段のぶんで足りる
    */
-  const chords = LEVEL_SIZES.map((size, level) =>
-    level === 0
+  const chords = levels.map((points, step) =>
+    step === 0
       ? []
-      : Array.from({ length: size - 1 }, () => {
-          const chord = createSegment(LEVEL_COLORS[level], LAYER_CHORD)
+      : Array.from({ length: points.length - 1 }, () => {
+          const chord = createSegment(INNER_COLORS[step - 1], LAYER_CHORD)
           scene.add(chord.object)
           return chord
         })
@@ -242,81 +282,105 @@ export const createDeCasteljauScene = ({ scene, params }: SceneContext) => {
   traceLine.frustumCulled = false
   scene.add(traceLine)
 
-  // 制御点のラベル。重心から見て外向きへ逃がし、破線や曲線に重ならないようにする
-  const centroid = new Vector3()
-  CONTROL_POINTS.forEach((point) => centroid.add(point))
-  centroid.multiplyScalar(1 / CONTROL_POINTS.length)
-
-  const normal = new Vector3()
-  const labels = CONTROL_POINTS.map((point, i) => {
-    const label = createLabel(CONTROL_LABELS[i], LEVEL_COLORS[0], LABEL_HEIGHT)
-    normal.subVectors(point, centroid).normalize()
-    label.sprite.position
-      .copy(point)
-      .addScaledVector(normal, CONTROL_LABEL_OFFSET)
-      .setZ(LAYER_LABEL)
+  // 制御点のラベル。制御点の位置は段数で変わるので、置き直しは段数が変わったときに行う
+  const labels = CONTROL_LABELS.map((text) => {
+    const label = createLabel(text, CONTROL_COLOR, LABEL_HEIGHT)
     scene.add(label.sprite)
     return label
   })
 
   // 最後に残る 1 点は曲線上の点なので、C(t) と名前を付ける
-  const markerLabel = createLabel("C(t)", LEVEL_COLORS[LEVEL_COLORS.length - 1], LABEL_HEIGHT)
+  const markerLabel = createLabel("C(t)", FINAL_COLOR, LABEL_HEIGHT)
   scene.add(markerLabel.sprite)
 
-  /** 制御多角形の上辺の中点。C(t) のラベルを曲線の側へ逃がすための目印にする */
-  const apex = new Vector3().addVectors(CONTROL_POINTS[1], CONTROL_POINTS[2]).multiplyScalar(0.5)
-
+  const centroid = new Vector3()
+  const normal = new Vector3()
   const sample = new Vector3()
-  const toApex = new Vector3()
+
+  /** 制御多角形と制御点のラベルを組み直した段数。これが変わったときだけ組み直す */
+  let drawnLevel = -1
 
   return {
     update: () => {
       const t = params.t
-      // スライダーから来る段数を、点の並びがある範囲の整数へ丸める
-      const shown = Math.min(Math.max(Math.round(params.level), 0), levels.length - 1)
+      // スライダーから来る段数を、制御点を用意してある範囲の整数へ丸める
+      const level = Math.min(Math.max(Math.round(params.level), MIN_LEVEL), MAX_LEVEL)
+      const controlPoints = CONTROL_POINT_SETS[level - MIN_LEVEL]
 
       // 0 段目は制御点そのもの
-      CONTROL_POINTS.forEach((point, i) => levels[0][i].copy(point))
+      controlPoints.forEach((point, i) => levels[0][i].copy(point))
 
       // 隣り合う 2 点を t : (1 − t) の比で内分して次の段の点を作る。
       // 段が進むごとに点が 1 つ減り、最後に残った 1 点が曲線上の点になる
-      for (let level = 1; level < levels.length; level++) {
-        for (let i = 0; i < levels[level].length; i++) {
-          lerp(levels[level - 1][i], levels[level - 1][i + 1], t, levels[level][i])
+      for (let step = 1; step <= level; step++) {
+        for (let i = 0; i <= level - step; i++) {
+          lerp(levels[step - 1][i], levels[step - 1][i + 1], t, levels[step][i])
         }
       }
 
-      // 各段の点と、その点どうしを結ぶ線分。選んだ段までを見せ、その先は隠す
-      levels.forEach((points, level) => {
-        points.forEach((point, i) => {
-          markers[level][i].position.set(point.x, point.y, LAYER_POINT)
-          markers[level][i].visible = level <= shown
+      // 制御多角形と制御点のラベルは t では動かないので、段数が変わったときだけ組み直す
+      if (level !== drawnLevel) {
+        drawnLevel = level
+
+        // 段数で変わる頂点の数に合わせて、描く範囲も書き換える
+        // （余った頂点は描く範囲の外に置いたままにする）
+        controlPoints.forEach((point, i) =>
+          polygonPositions.setXYZ(i, point.x, point.y, LAYER_POLYGON)
+        )
+        polygonPositions.needsUpdate = true
+        polygonGeometry.setDrawRange(0, level + 1)
+        // 破線の刻みは頂点ごとの「線に沿った距離」で決まるので、座標を変えたら測り直す
+        polygonLine.computeLineDistances()
+
+        // 制御点のラベル。重心から見て外向きへ逃がし、破線や曲線に重ならないようにする
+        centroid.set(0, 0, 0)
+        controlPoints.forEach((point) => centroid.add(point))
+        centroid.multiplyScalar(1 / controlPoints.length)
+
+        labels.forEach((label, i) => {
+          label.sprite.visible = i <= level
+          if (!label.sprite.visible) return
+
+          normal.subVectors(controlPoints[i], centroid).normalize()
+          label.sprite.position
+            .copy(controlPoints[i])
+            .addScaledVector(normal, CONTROL_LABEL_OFFSET)
+            .setZ(LAYER_LABEL)
         })
-        chords[level].forEach((chord, i) => {
-          chord.set(points[i], points[i + 1])
-          chord.object.visible = level <= shown
+      }
+
+      // 各段の点。段数によって最後の 1 点になる段が変わるので、大きさと色はここで割り当てる
+      markers.forEach((meshes, step) => {
+        meshes.forEach((mesh, i) => {
+          mesh.visible = step <= level && i <= level - step
+          if (!mesh.visible) return
+
+          const point = levels[step][i]
+          mesh.position.set(point.x, point.y, LAYER_POINT)
+          mesh.geometry =
+            step === 0 ? controlGeometry : step === level ? finalGeometry : innerGeometry
+          mesh.material =
+            step === 0 ? controlMaterial : step === level ? finalMaterial : innerMaterials[step - 1]
+        })
+      })
+
+      // 同じ段の点どうしを結ぶ線分。最後の 1 点だけが残る段には線分が無い
+      chords.forEach((segments, step) => {
+        segments.forEach((chord, i) => {
+          chord.object.visible = step < level && i < level - step
+          if (chord.object.visible) chord.set(levels[step][i], levels[step][i + 1])
         })
       })
 
       // 最後の 1 点が通った跡。0 から今の t までを等分して求め、折れ線で結ぶ
       for (let i = 0; i <= TRACE_SEGMENTS; i++) {
-        trace.set(i, bezierPoint((t * i) / TRACE_SEGMENTS, sample))
+        trace.set(i, bezierPoint(controlPoints, (t * i) / TRACE_SEGMENTS, sample))
       }
       trace.commit()
 
-      // C(t) のラベルが指すのは最後に残る 1 点なので、その点を描く段のときだけ見せる
-      markerLabel.sprite.visible = shown === levels.length - 1
-
-      // ラベルは、最後の線分に垂直な向きのうち制御多角形の上辺から遠い側へ逃がす。
-      // 曲線はこの線分に接して上辺の反対側にあるので、この側なら作図の線に重ならない
-      const [last0, last1] = levels[levels.length - 2]
-      const current = levels[levels.length - 1][0]
-      normal.set(last1.y - last0.y, last0.x - last1.x, 0).normalize()
-      if (normal.dot(toApex.subVectors(apex, current)) > 0) normal.negate()
-      markerLabel.sprite.position
-        .copy(current)
-        .addScaledVector(normal, MARKER_LABEL_OFFSET)
-        .setZ(LAYER_LABEL)
+      // C(t) のラベルは、その点の真下に置く。作図の線は曲線より上側にあるので重ならない
+      const current = levels[level][0]
+      markerLabel.sprite.position.set(current.x, current.y - MARKER_LABEL_OFFSET, LAYER_LABEL)
     },
     dispose: () => {
       chords.flat().forEach((chord) => chord.dispose())
@@ -325,8 +389,12 @@ export const createDeCasteljauScene = ({ scene, params }: SceneContext) => {
         polygonMaterial,
         trace.geometry,
         traceMaterial,
-        ...geometries,
-        ...materials,
+        controlGeometry,
+        innerGeometry,
+        finalGeometry,
+        controlMaterial,
+        finalMaterial,
+        ...innerMaterials,
         markerLabel.texture,
         markerLabel.material,
         ...labels.flatMap((label) => [label.texture, label.material])

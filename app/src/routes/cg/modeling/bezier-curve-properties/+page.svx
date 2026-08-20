@@ -833,15 +833,8 @@ $$
 アルゴリズムで使うのは[線形補間](/cg/modeling/bezier-curve-surface/)だけです。隣り合う制御点を $$t : (1 - t)$$ の比で内分して新しい点を作ると、点の数が`1`つ減ります。得られた点の列に対して同じ内分を繰り返し、点が`1`つになったとき、その点が求める曲線上の点になります。
 
 :::Action{fixme}
-「段数」と`t`を動かして、次の点に着目してみよう
-
-- 「段数」を上げると、制御多角形の`3`辺を内分した`3`点、それらを結んだ線分を内分した`2`点、さらにその線分を内分した`1`点と、`1`段ごとに点が`1`つ減っていくこと
-- 最後に残った`1`点が、いつも曲線の上にあること
-- `t`を`0`から`1`まで動かすと、その`1`点が通った跡が曲線を描くこと
-:::
-
-:::Fix{target="demo"}
-段数の最低値を3とし、最大値をもっと上げられるようにしたい
+`t`を動かして、`1`段ごとに点が`1`つ減り、最後に残った`1`点が曲線の上をたどることを見てみよう
+また、「段数」を上げると制御点が`1`つ増え、内分を繰り返す段も`1`つ増えることを確認しよう
 :::
 
 <CanvasWrapper>
@@ -851,21 +844,34 @@ $$
 :::Foldable{title="Three.jsによる実装概要"}
 
 ```ts
-// 4 つの制御点。左右対称にすると各段の点も対称に並んでしまうので、
-// 高さと幅をずらした山形に置く
-const CONTROL_POINTS = [
-  new Vector3(-2.7, -1.2, 0),
-  new Vector3(-1.7, 1.35, 0),
-  new Vector3(1.2, 1.05, 0),
-  new Vector3(2.7, -0.75, 0)
-]
+// 制御点を並べる弧（左下から山なりに回って右下へ向かう）の半径と中心の高さ
+const ARC_RADIUS_X = 2.7
+const ARC_RADIUS_Y = 2.6
+const ARC_CENTER_Y = -1.2
 
-// 段ごとの点の数。4 つの制御点から始めて、1 段進むごとに 1 つ減り、最後は 1 つになる
-const LEVEL_SIZES = [4, 3, 2, 1]
+// 弧を左右非対称にする傾き。対称に並べると各段の点も対称に並んでしまう
+const TILT_Y = 0.45
 
-// パネルのスライダーで動かす、各段で隣り合う 2 点を内分する割合と、点を描くところまでの段数
+// 段数から制御点の並びを作る。弧の上に等間隔に置くので、点をいくつ並べても
+// 隣り合う辺が一直線には並ばない（並ぶと、各段で作る線分が制御多角形に重なって読めなくなる）
+const createControlPoints = (level: number) =>
+  Array.from({ length: level + 1 }, (_, i) => {
+    const u = i / level
+    const angle = Math.PI * (1 - u)
+
+    return new Vector3(
+      ARC_RADIUS_X * Math.cos(angle),
+      ARC_CENTER_Y + ARC_RADIUS_Y * Math.sin(angle) + TILT_Y * u,
+      0
+    )
+  })
+
+// パネルのスライダーで動かす、各段で隣り合う 2 点を内分する割合と、作図全体の段数。
+// 制御点の数は段数より 1 つ多くなる
 const t = 0.35
-const shown = 3
+const level = 3
+
+const controlPoints = createControlPoints(level)
 
 // 線形補間。2 点の座標値を 1 − t : t の割合で混ぜる
 const lerp = (from: Vector3, to: Vector3, t: number, target: Vector3) =>
@@ -907,11 +913,11 @@ const createPolyline = (count: number, z: number) => {
 }
 
 // 軌跡を求めるときに使う作業用の点。何度も呼ばれるので、その都度は作らない
-const work = CONTROL_POINTS.map(() => new Vector3())
+const work = controlPoints.map(() => new Vector3())
 
 // 軌跡用に、作図の途中を残さずベジェ曲線上の点だけを求める
 const bezierPoint = (t: number, target: Vector3) => {
-  CONTROL_POINTS.forEach((point, i) => work[i].copy(point))
+  controlPoints.forEach((point, i) => work[i].copy(point))
 
   for (let last = work.length - 1; last > 0; last--) {
     for (let i = 0; i < last; i++) work[i].lerp(work[i + 1], t)
@@ -921,22 +927,24 @@ const bezierPoint = (t: number, target: Vector3) => {
 }
 
 // 段ごとの点。0 段目は制御点そのもので、1 段進むごとに 1 つ減る
-const levels = LEVEL_SIZES.map((size) => Array.from({ length: size }, () => new Vector3()))
+const levels = Array.from({ length: level + 1 }, (_, step) =>
+  Array.from({ length: level + 1 - step }, () => new Vector3())
+)
 
 // 0 段目は制御点そのもの
-CONTROL_POINTS.forEach((point, i) => levels[0][i].copy(point))
+controlPoints.forEach((point, i) => levels[0][i].copy(point))
 
 // 隣り合う 2 点を t : (1 − t) の比で内分して次の段の点を作る。
 // 段が進むごとに点が 1 つ減り、最後に残った 1 点が曲線上の点になる
-for (let level = 1; level < levels.length; level++) {
-  for (let i = 0; i < levels[level].length; i++) {
-    lerp(levels[level - 1][i], levels[level - 1][i + 1], t, levels[level][i])
+for (let step = 1; step <= level; step++) {
+  for (let i = 0; i <= level - step; i++) {
+    lerp(levels[step - 1][i], levels[step - 1][i + 1], t, levels[step][i])
   }
 }
 
 // 制御点を順に結んだ制御多角形。各段で作る線分と描き分けるため破線にする
 const polygonGeometry = new BufferGeometry().setFromPoints(
-  CONTROL_POINTS.map((point) => new Vector3(point.x, point.y, LAYER_POLYGON))
+  controlPoints.map((point) => new Vector3(point.x, point.y, LAYER_POLYGON))
 )
 const polygonMaterial = new LineDashedMaterial({
   color: POLYGON_COLOR,
@@ -948,26 +956,31 @@ const polygonLine = new Line(polygonGeometry, polygonMaterial)
 polygonLine.computeLineDistances()
 scene.add(polygonLine)
 
-// 段ごとの点。同じ段の点はジオメトリとマテリアルを共有する。選んだ段までを描く
-const geometries = LEVEL_RADII.map((radius) => new SphereGeometry(radius, 16, 12))
-const materials = LEVEL_COLORS.map((color) => new MeshBasicMaterial({ color }))
-levels.forEach((points, level) => {
-  if (level > shown) return
-
+// 段ごとの点。制御点・間の段・最後に残る 1 点で、大きさと色を変える
+const controlGeometry = new SphereGeometry(CONTROL_RADIUS, 16, 12)
+const innerGeometry = new SphereGeometry(INNER_RADIUS, 16, 12)
+const finalGeometry = new SphereGeometry(FINAL_RADIUS, 16, 12)
+const controlMaterial = new MeshBasicMaterial({ color: CONTROL_COLOR })
+const innerMaterials = INNER_COLORS.map((color) => new MeshBasicMaterial({ color }))
+const finalMaterial = new MeshBasicMaterial({ color: FINAL_COLOR })
+levels.forEach((points, step) => {
   points.forEach((point) => {
-    const mesh = new Mesh(geometries[level], materials[level])
+    const mesh = new Mesh(
+      step === 0 ? controlGeometry : step === level ? finalGeometry : innerGeometry,
+      step === 0 ? controlMaterial : step === level ? finalMaterial : innerMaterials[step - 1]
+    )
     mesh.position.set(point.x, point.y, LAYER_POINT)
     scene.add(mesh)
   })
 })
 
 // 同じ段の点どうしを結ぶ線分。次の段の点はこの線分の上に乗る。
-// 0 段目は制御多角形として破線で描いてあるので、1 段目以降で選んだ段までを作る
-levels.forEach((points, level) => {
-  if (level === 0 || level > shown) return
+// 0 段目は制御多角形として破線で描いてあるので、1 段目以降で作る
+levels.forEach((points, step) => {
+  if (step === 0) return
 
   for (let i = 0; i < points.length - 1; i++) {
-    const chord = createSegment(LEVEL_COLORS[level], LAYER_CHORD)
+    const chord = createSegment(INNER_COLORS[step - 1], LAYER_CHORD)
     chord.set(points[i], points[i + 1])
     scene.add(chord.object)
   }
