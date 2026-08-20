@@ -3,103 +3,1254 @@ layout: guide-content
 title: ベジェ曲線の数学的性質 # CG 3-4-3, 3-4-4
 
 group: ["CG"]
-
-draft: true
+visual: true
 ---
 
-[線形補間とベジェ曲線](/cg/modeling/bezier-curve-surface/)では、曲線上の点が制御点の重み付き平均になることを見ました。
-ここからは、その作りから導かれる性質と、それを使った曲線上の点の求め方、そして同じ考え方を曲面へ広げる方法を見ていきます。
+<script>
+  import BicubicSurfaceDemo from '$lib/demo/threejs/modeling/bezier-curve-properties/bicubic-surface/BicubicSurfaceDemo.svelte'
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import ConvexHullDemo from '$lib/demo/threejs/modeling/bezier-curve-properties/convex-hull/ConvexHullDemo.svelte'
+  import DeCasteljauDemo from '$lib/demo/threejs/modeling/bezier-curve-properties/de-casteljau/DeCasteljauDemo.svelte'
+  import EndpointTangentDemo from '$lib/demo/threejs/modeling/bezier-curve-properties/endpoint-tangent/EndpointTangentDemo.svelte'
+  import SmoothJoinDemo from '$lib/demo/threejs/modeling/bezier-curve-properties/smooth-join/SmoothJoinDemo.svelte'
+</script>
 
-## :WithGroupTag[ベジェ曲線の数学的性質]{group="{['CG']}"}
+[ベジェ曲線](/cg/modeling/bezier-curve-surface/)には、曲線上の点が制御点の:Anki[重み付き平均]になるという重要な特徴がありました。ここから、ベジェ曲線の有用性を支えるさまざまな性質が導かれます。
 
-制御点を置くだけで形を作れるのは、制御点の配置と曲線の形の間に、予想のつく関係があるからです。重み付き平均という作りから、次の`4`つが導かれます。
+## :WithGroupTag[ベジェ曲線の性質]{group="{['CG']}"}
 
-- 端点一致性：曲線の両端が、両端の制御点と一致する
-- 端点での接ベクトル：両端で曲線が向く方向が、隣の制御点への方向と一致する
-- 凸包性：曲線が制御点の囲む範囲からはみ出さない
-- アフィン不変性：曲線を変換した結果と、制御点を変換してから曲線を引いた結果が一致する
+制御点の配置と曲線の形の間にさまざまな関係性があることで、ベジェ曲線では制御点を置くだけで曲線の形を作ることができます。
+
+- :Anki[端点一致性]：曲線の両端が、両端の制御点と一致する
+- 端点での:Anki[接ベクトル]：両端で曲線が向く方向が、隣の制御点への方向と一致する
+- :Anki[凸包性]：曲線が制御点の囲む範囲からはみ出さない
+- :Anki[アフィン不変性]：曲線を変換した結果と、制御点を変換してから曲線を引いた結果が一致する
 
 いずれも、制御点をどう動かせば曲線がどう変わるかを見通すための手がかりになります。
+そして、これらの性質は、ベジェ曲線を重み付き平均という視点で捉えることで解釈できます。
 
-### 端点一致性
+## :WithGroupTag[ベジェ曲線の端点一致性]{group="{['CG']}"}
 
-$$t$$ を`0`にすると、先頭の重み $$B_{0,n}$$ だけが`1`になり、残りはすべて`0`になります。式に残るのは $$P_0$$ だけなので、曲線の始点は $$P_0$$ そのものです。$$t$$ を`1`にしたときも同じで、終点は $$P_n$$ に一致します。この性質を:Anki[端点一致性]といいます。
+[n次ベジェ曲線](/cg/modeling/bezier-curve-surface/)を表す式は、次のような形をしていました。
 
-間の制御点 $$P_1$$ から $$P_{n-1}$$ までは、どの $$t$$ でも重みが`1`にならないため、曲線が通るとは限りません。制御点は曲線を引き寄せる目印であって、通過点ではないわけです。
+::::CardGrid
+:::TermCard{title="n次ベジェ曲線の式"}
+$$t$$ をパラメータとし、曲線上の点 $$C(t)$$ は、全制御点 $$P_0, \ldots, P_n$$ の:Anki[重み付き平均]となる
 
-### 端点での接ベクトル
+$$
+C(t) = \sum_{i=0}^{n} B_{i,n}(t) P_i \quad (0 \leq t \leq 1)
+$$
+:::
+::::
 
-端点では、曲線が進む向きも制御点から決まります。パラメータの変化に対して曲線上の点がどちらへどれだけ動くかを表すベクトルを:Anki[接ベクトル]といい、ベジェ曲線の両端では次のようになります。
+$$t$$ は`0`から`1`の範囲で動くので、曲線の始点は $$t = 0$$ の場合の $$C(0)$$、終点は $$t = 1$$ の場合の $$C(1)$$ となります。
+
+ここで、曲線の両端の点 $$C(0), C(1)$$ は、最初と最後の制御点 $$P_0, P_n$$ だけを必ず通るという、:Anki[端点一致性]と呼ばれる性質があります。
+
+### 重み付き平均から考える点の一致
+
+ベジェ曲線上の点がある制御点と重なるのは、その制御点の重み（係数）が`1`になり、他の重みがすべて`0`になるときです。他の制御点の項はすべて係数`0`によって消えてしまい、残った制御点の項にも余計な係数が残っていない必要があります。
+
+たとえば、次のような式になれば、曲線の始点 $$C(0)$$ が最初の制御点 $$P_0$$ に一致することがいえます。
 
 $$
 \begin{align*}
-P^{\prime}(0) &= n(P_1 - P_0) \\\\
-P^{\prime}(1) &= n(P_n - P_{n-1})
+C(0) &= B_{0,n}(0)P_0 + B_{1,n}(0)P_1 + \cdots + B_{n,n}(0)P_n \\\\
+&= 1 \cdot P_0 + 0 \cdot P_1 + \cdots + 0 \cdot P_n \\\\
+&= P_0
 \end{align*}
 $$
 
-$$P_1 - P_0$$ は $$P_0$$ から $$P_1$$ へ向かうベクトルですから、大きさこそ $$n$$ 倍になるものの、向きは制御多角形の最初の辺と同じです。曲線は始点で最初の辺に接し、終点で最後の辺に接することになります。`2`本のベジェ曲線をなめらかに繋ぎたいときは、この接する向きを揃えます。
+実際に、$$t=0$$ の場合の各係数 $$B_{i,n}(0)$$ がどうなるのかを計算してみましょう。
 
-### 凸包性
+係数 $$B_{i,n}(t)$$ は、[バーンスタイン基底関数](/cg/modeling/bezier-curve-surface/)の式 $$\binom{n}{i} t^i (1 - t)^{n - i}$$ で決まります。この式の $$t$$ に`0`を代入すると、次のようになります。
 
-重みが負にならず、合計が`1`になるということは、曲線上の点が常に制御点の内側に収まることを意味します。いくつかの点を囲む最小の凸多角形（空間中であれば凸多面体）を:Anki[凸包]といい、ベジェ曲線は制御点の凸包から外へ出ません。この性質が:Anki[凸包性]です。
+$$
+B_{i,n}(0) = \binom{n}{i} \cdot 0^i \cdot (1 - 0)^{n - i} = \binom{n}{i} \cdot 0^i
+$$
 
-:::Todo
-凸包性の図。`4`つの制御点と、それを結んだ制御多角形、制御点の凸包を薄く塗った領域、その内側を通る`3`次ベジェ曲線を重ねて描く。制御多角形がへこんだ配置と、へこみのない配置の`2`例を並べ、どちらでも曲線が凸包の内側に収まることを示す。
+`0`のべき乗は、指数が`1`以上のときは`0`、指数が`0`のときだけ`1`になります。そのため $$i$$ が`1`以上の係数はすべて`0`となり消え、$$i = 0$$ の係数だけが $$\binom{n}{0} = 1$$ として残ります。
+
+:::Note
+$$\binom{n}{i}$$ は、$$n$$ 個から $$i$$ 個を選ぶ組み合わせの数です。$$i = 0$$ の場合は`1`つも選ばないということなので、選び方は「どれも選ばない」の`1`通りしかありません。そのため $$\binom{n}{0}$$ は`1`になります。
 :::
 
-曲線が画面の外にあるかどうかや、`2`本の曲線が交わる可能性があるかどうかを、曲線上の点を求めずに制御点だけで判定できるのは、この性質があるためです。
+$$t$$ が`1`の場合も同様に、曲線の終点は $$P_n$$ に一致します。係数を計算すると、次のようになります。
 
-### アフィン不変性
+$$
+B_{i,n}(1) = \binom{n}{i} \cdot 1^i \cdot (1 - 1)^{n - i} = \binom{n}{i} \cdot 0^{n - i}
+$$
 
-ベジェ曲線を回転させたり平行移動させたりしたいとき、曲線上の点をすべて求め直す必要はありません。制御点に[アフィン変換](/cg/transformation/affine-transformation/)をかけてから曲線を引き直せば、曲線全体を変換したものと同じ結果が得られます。この性質を:Anki[アフィン不変性]といいます。
+ここで現れる`0`のべき乗では、$$i$$ が $$n$$ より小さい係数はすべて`0`となり消え、$$i = n$$ の係数だけが $$\binom{n}{n} = 1$$ として残ります。
 
-ここで効いてくるのが、重みの合計が`1`だという条件です。合計が`1`の重み付き平均であれば、平行移動を含む変換をかけても、変換してから平均をとった結果と平均をとってから変換した結果が食い違いません。曲線を動かす計算が制御点の個数だけで済むため、対話的に形を編集する場面でも軽く扱えます。
+:::Note
+$$\binom{n}{n}$$ では、$$n$$ 個すべてを選ぶ場合の組み合わせを考えます。こちらも「すべて選ぶ」の`1`通りしかないため、$$\binom{n}{n}$$ は`1`になります。
+:::
+
+これらの端点の間にある制御点 $$P_1, \ldots, P_{n-1}$$ では、どの $$t$$ でも重みが`1`にはなりません。
+そのため、始点と終点の間にあるベジェ曲線上の点は、複数の制御点を混ぜた位置に決まります。中間の制御点は曲線を引き寄せる目印であって、通過点にはなりません。
+
+この:Mark[端点一致性]があることで、ベジェ曲線では形状の制御がしやすくなっています。曲線の始点と終点を狙った位置に合わせたいときは、最初と最後の制御点をそこへ置けばよいのです。
+
+### 端点での接ベクトル
+
+ベジェ曲線の端点では、曲線が進む向きも制御点から決まります。
+
+パラメータの変化に対して曲線上の点がどちらへどれだけ動くかを表すベクトルを:Anki[接ベクトル]といい、ベジェ曲線の両端での接ベクトルは、両端の制御点とそれぞれその隣の制御点を結んだ向きになります。
+
+$$
+\begin{align*}
+C^{\prime}(0) &= n(P_1 - P_0) \\\\
+C^{\prime}(1) &= n(P_n - P_{n-1})
+\end{align*}
+$$
+
+:::Note
+式に現れる $$C^{\prime}(t)$$ は、$$C(t)$$ を $$t$$ について微分したものです。曲線上の点の位置は $$t$$ の関数として与えられているため、$$t$$ をわずかに進めたときに点がどちらへどれだけ動くかは、その関数の変化の割合として求まります。接ベクトルが表すのはこの変化の割合そのものなので、端点で曲線が向く方向は $$t$$ についての微分から得られます。
+:::
+
+$$P_1 - P_0$$ は、 $$P_0$$ から $$P_1$$ へ向かうベクトルです。大きさが $$n$$ 倍になっても、その向きは[制御多角形](/cg/modeling/bezier-curve-surface/)の最初の辺と同じ向きに保たれます。このことから、ベジェ曲線は始点で最初の辺に接し、終点で最後の辺に接することになります。
+
+:::Action
+制御点をドラッグして、始点・終点から伸びる接ベクトルが、常に制御多角形の最初の辺・最後の辺と同じ向きであることを確認しよう
+:::
+
+<CanvasWrapper>
+  <EndpointTangentDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 3 次ベジェ曲線の制御点。P₀ → P₃ を閉じた四角形がへこみのない形になり、
+// かつ両端の接ベクトルが画面に収まるように置く（接ベクトルは辺の 3 倍の長さで辺の延長に伸びる）
+const INITIAL_POINTS: [number, number][] = [
+  [-3, -1.4],
+  [-2.6, -0.2],
+  [0.2, 0.25],
+  [0.9, 0.1]
+]
+
+// ド・カステリョのアルゴリズムで使う作業用の点。何度も呼ばれるので、その都度は作らない
+const work: Vector3[] = []
+
+// 制御点が何個でも使えるベジェ曲線上の点。
+// 隣り合う点どうしを t で線形補間する操作を、点が 1 つになるまで繰り返す
+const bezierPoint = (controls: Vector3[], t: number, target: Vector3) => {
+  while (work.length < controls.length) work.push(new Vector3())
+  controls.forEach((control, i) => work[i].copy(control))
+
+  for (let last = controls.length - 1; last > 0; last--) {
+    for (let i = 0; i < last; i++) work[i].lerp(work[i + 1], t)
+  }
+
+  return target.copy(work[0])
+}
+
+// 頂点が動く折れ線。頂点を作り直さず、座標だけ書き換える
+const createPolyline = (count: number, z: number) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(count * 3), 3)
+  geometry.setAttribute("position", positions)
+
+  return {
+    geometry,
+    set: (index: number, point: Vector3) => positions.setXYZ(index, point.x, point.y, z),
+    commit: () => {
+      positions.needsUpdate = true
+      geometry.computeBoundingSphere()
+    }
+  }
+}
+
+// 制御多角形の内側を塗る面。頂点を 1 番目の制御点から扇状に三角形へ分け、
+// 折れ線と同じ頂点をそのまま使う
+const createPolygonFill = (count: number) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(count * 3), 3)
+  geometry.setAttribute("position", positions)
+  const index: number[] = []
+  for (let i = 1; i < count - 1; i++) index.push(0, i, i + 1)
+  geometry.setIndex(index)
+
+  const material = new MeshBasicMaterial({
+    color: POLYGON_COLOR,
+    transparent: true,
+    opacity: POLYGON_FILL_OPACITY,
+    // 制御点を動かすと表裏が入れ替わりうるので、どちらから見ても塗る
+    side: DoubleSide,
+    // 手前に重なる曲線・破線が面の形に欠けないよう、深度は書かない
+    depthWrite: false
+  })
+
+  return {
+    object: new Mesh(geometry, material),
+    set: (i: number, point: Vector3) => positions.setXYZ(i, point.x, point.y, LAYER_FILL),
+    commit: () => {
+      positions.needsUpdate = true
+    }
+  }
+}
+
+// 両端が動く線分。頂点を作り直さず、座標だけ書き換える
+const createSegment = (color: string, z: number) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(6), 3)
+  geometry.setAttribute("position", positions)
+
+  return {
+    object: new LineSegments(geometry, new LineBasicMaterial({ color })),
+    set: (from: Vector3, to: Vector3) => {
+      positions.setXYZ(0, from.x, from.y, z)
+      positions.setXYZ(1, to.x, to.y, z)
+      positions.needsUpdate = true
+    }
+  }
+}
+
+// 始点から終点へ向かう矢印。両端が動くので、線と円錐の位置を毎回書き換える
+const createArrow = (color: string) => {
+  const shaftPositions = new Float32BufferAttribute(new Float32Array(6), 3)
+  const shaftGeometry = new BufferGeometry().setAttribute("position", shaftPositions)
+  const shaft = new LineSegments(shaftGeometry, new LineBasicMaterial({ color }))
+
+  const headGeometry = new ConeGeometry(ARROW_RADIUS, ARROW_HEIGHT, 16)
+  const head = new Mesh(headGeometry, new MeshBasicMaterial({ color }))
+
+  const group = new Group()
+  group.add(shaft, head)
+
+  const direction = new Vector3()
+  const shaftEnd = new Vector3()
+
+  return {
+    object: group,
+    setEnds: (from: Vector3, to: Vector3) => {
+      const length = direction.subVectors(to, from).length()
+      // 制御点が重なると向きが決まらないので、そのときは矢印を出さない
+      group.visible = length > ARROW_HEIGHT
+      if (!group.visible) return
+      direction.divideScalar(length)
+
+      // 円錐の底面が線の先端に来るよう、矢印の頭の高さのぶん手前で線を止める
+      shaftEnd.copy(to).addScaledVector(direction, -ARROW_HEIGHT)
+      shaftPositions.setXYZ(0, from.x, from.y, LAYER_TANGENT)
+      shaftPositions.setXYZ(1, shaftEnd.x, shaftEnd.y, LAYER_TANGENT)
+      shaftPositions.needsUpdate = true
+
+      // ConeGeometry の原点は円錐の中心なので、半分ぶん戻した位置に置く
+      head.position.set(to.x, to.y, LAYER_TANGENT).addScaledVector(direction, -ARROW_HEIGHT / 2)
+      head.quaternion.setFromUnitVectors(CONE_UP, direction)
+    }
+  }
+}
+
+const controls = INITIAL_POINTS.map(([x, y]) => new Vector3(x, y, 0))
+
+// 次数。制御点が n + 1 個なら n 次で、接ベクトルは辺の n 倍になる
+const degree = controls.length - 1
+
+// 制御多角形の内側。破線より奥に敷き、面としての広がりを示す
+const fill = createPolygonFill(controls.length)
+scene.add(fill.object)
+
+// 制御点を順に結んだ折れ線。曲線と描き分けるため破線にする
+const polygon = createPolyline(controls.length, LAYER_POLYGON)
+const polygonMaterial = new LineDashedMaterial({
+  color: POLYGON_COLOR,
+  dashSize: DASH_SIZE,
+  gapSize: GAP_SIZE
+})
+const polygonLine = new Line(polygon.geometry, polygonMaterial)
+scene.add(polygonLine)
+
+// 接ベクトルの向きを決めている最初の辺と最後の辺。破線の上に実線で重ねて示す
+const firstEdge = createSegment(TANGENT_COLOR, LAYER_EDGE)
+const lastEdge = createSegment(TANGENT_COLOR, LAYER_EDGE)
+scene.add(firstEdge.object, lastEdge.object)
+
+// 両端の接ベクトル。辺の延長に、辺の n 倍の長さで伸びる
+const startArrow = createArrow(TANGENT_COLOR)
+const endArrow = createArrow(TANGENT_COLOR)
+scene.add(startArrow.object, endArrow.object)
+
+// 制御点から求めた曲線。矢印より手前に置き、接している様子が隠れないようにする
+const curve = createPolyline(CURVE_SEGMENTS + 1, LAYER_CURVE)
+scene.add(new Line(curve.geometry, new LineBasicMaterial({ color: CURVE_COLOR })))
+
+// 制御点。どれもドラッグで動かせるので同じ見た目にする
+const controlGeometry = new SphereGeometry(CONTROL_RADIUS, 16, 12)
+const controlMaterial = new MeshBasicMaterial({ color: CONTROL_COLOR })
+const meshes = controls.map(() => {
+  const mesh = new Mesh(controlGeometry, controlMaterial)
+  scene.add(mesh)
+  return mesh
+})
+
+const startEdge = new Vector3()
+const endEdge = new Vector3()
+const startTangent = new Vector3()
+const endTangent = new Vector3()
+const startTip = new Vector3()
+const endTip = new Vector3()
+const sample = new Vector3()
+
+// 制御点の今の位置から、制御多角形（塗りと破線）・曲線・接ベクトルを引き直す
+const refresh = () => {
+  controls.forEach((control, i) => {
+    polygon.set(i, control)
+    fill.set(i, control)
+    meshes[i].position.set(control.x, control.y, LAYER_POINT)
+  })
+  polygon.commit()
+  fill.commit()
+  // 破線の刻みは頂点ごとの「線に沿った距離」で決まるため、頂点を動かすたびに測り直す
+  polygonLine.computeLineDistances()
+
+  const first = controls[0]
+  const second = controls[1]
+  const beforeLast = controls[degree - 1]
+  const last = controls[degree]
+  firstEdge.set(first, second)
+  lastEdge.set(beforeLast, last)
+
+  // C′(0) = n(P₁ − P₀)、C′(1) = n(Pₙ − Pₙ₋₁)。
+  // 辺のベクトルを n 倍しただけなので、向きは辺のまま変わらない
+  startEdge.subVectors(second, first)
+  endEdge.subVectors(last, beforeLast)
+  startTangent.copy(startEdge).multiplyScalar(degree)
+  endTangent.copy(endEdge).multiplyScalar(degree)
+
+  // 接ベクトルは、始点では P₀ から、終点では Pₙ から生やす
+  startTip.copy(first).add(startTangent)
+  endTip.copy(last).add(endTangent)
+  startArrow.setEnds(first, startTip)
+  endArrow.setEnds(last, endTip)
+
+  for (let i = 0; i <= CURVE_SEGMENTS; i++) {
+    curve.set(i, bezierPoint(controls, i / CURVE_SEGMENTS, sample))
+  }
+  curve.commit()
+}
+
+refresh()
+
+// 制御点はドラッグで動かす。ポインタの位置は、図がすべて載っている z = 0 の平面との交点として求める
+const canvas = renderer.domElement
+const raycaster = new Raycaster()
+const pointer = new Vector2()
+const dragPlane = new Plane(new Vector3(0, 0, 1), 0)
+const hit = new Vector3()
+
+const toScenePoint = (event: PointerEvent) => {
+  const bounds = canvas.getBoundingClientRect()
+  pointer.x = ((event.clientX - bounds.left) / bounds.width) * 2 - 1
+  pointer.y = -((event.clientY - bounds.top) / bounds.height) * 2 + 1
+  raycaster.setFromCamera(pointer, camera)
+
+  return raycaster.ray.intersectPlane(dragPlane, hit)
+}
+
+// ポインタに最も近い制御点の番号。掴める距離に無ければ null
+const pick = (world: Vector3) => {
+  let target: number | null = null
+  let nearest = PICK_RADIUS
+
+  for (let index = 0; index < controls.length; index++) {
+    const control = controls[index]
+    const distance = Math.hypot(world.x - control.x, world.y - control.y)
+    if (distance < nearest) {
+      nearest = distance
+      target = index
+    }
+  }
+
+  return target
+}
+
+let dragging: number | null = null
+
+canvas.addEventListener("pointerdown", (event) => {
+  const world = toScenePoint(event)
+  if (!world) return
+  dragging = pick(world)
+  if (dragging === null) return
+
+  // canvas の外まで指が出ても動かし続けられるようにする（pointerup で自動的に解ける）
+  canvas.setPointerCapture(event.pointerId)
+  invalidate()
+})
+
+canvas.addEventListener("pointermove", (event) => {
+  if (dragging === null) return
+  const world = toScenePoint(event)
+  if (!world) return
+
+  // 動かせる範囲に収めて置き直し、図を引き直す
+  controls[dragging].set(
+    Math.min(Math.max(world.x, DRAG_MIN_X), DRAG_MAX_X),
+    Math.min(Math.max(world.y, DRAG_MIN_Y), DRAG_MAX_Y),
+    0
+  )
+  refresh()
+  // 描画は要求されたときだけ走る。Tweakpane や OrbitControls を経由しない操作なので、
+  // ここで次のフレームを頼む
+  invalidate()
+})
+
+canvas.addEventListener("pointerup", () => {
+  dragging = null
+})
+```
+
+:::
+
+`2`本のベジェ曲線を滑らかに繋ぎたいときは、この接する向きを揃えればよいのです。
+
+:::Action
+接ベクトルの向きが揃っていることで、繋ぎ目には角ができず、`2`本の曲線が`1`本のように繋がる様子を眺めよう
+制御点をドラッグして、さまざまな形状を試してみよう
+:::
+
+<CanvasWrapper>
+  <SmoothJoinDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 2 本の 3 次ベジェ曲線の制御点。4 番目（添字 3）が 2 本の繋ぎ目で、
+// 1 本目の終点と 2 本目の始点を兼ねる
+const INITIAL_POINTS: [number, number][] = [
+  [-3.2, -0.4],
+  [-2.4, 1.1],
+  [-1.3, 1.1],
+  [-0.2, 0.15],
+  [0.78, -0.7],
+  [2.1, -0.75],
+  [3.2, 0.5]
+]
+
+// 繋ぎ目の制御点の添字。1 本目の P₃ と 2 本目の Q₀ が同じ点になる
+const JOINT_INDEX = 3
+
+// ド・カステリョのアルゴリズムで使う作業用の点。何度も呼ばれるので、その都度は作らない
+const work: Vector3[] = []
+
+// 制御点が何個でも使えるベジェ曲線上の点。
+// 隣り合う点どうしを t で線形補間する操作を、点が 1 つになるまで繰り返す
+const bezierPoint = (controls: Vector3[], t: number, target: Vector3) => {
+  while (work.length < controls.length) work.push(new Vector3())
+  controls.forEach((control, i) => work[i].copy(control))
+
+  for (let last = controls.length - 1; last > 0; last--) {
+    for (let i = 0; i < last; i++) work[i].lerp(work[i + 1], t)
+  }
+
+  return target.copy(work[0])
+}
+
+// 頂点が動く折れ線。頂点を作り直さず、座標だけ書き換える
+const createPolyline = (count: number, z: number) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(count * 3), 3)
+  geometry.setAttribute("position", positions)
+
+  return {
+    geometry,
+    set: (index: number, point: Vector3) => positions.setXYZ(index, point.x, point.y, z),
+    commit: () => {
+      positions.needsUpdate = true
+      geometry.computeBoundingSphere()
+    }
+  }
+}
+
+// 始点から終点へ向かう矢印。両端が動くので、線と円錐の位置を毎回書き換える
+const createArrow = (color: string) => {
+  const shaftPositions = new Float32BufferAttribute(new Float32Array(6), 3)
+  const shaftGeometry = new BufferGeometry().setAttribute("position", shaftPositions)
+  const shaft = new LineSegments(shaftGeometry, new LineBasicMaterial({ color }))
+
+  const headGeometry = new ConeGeometry(ARROW_RADIUS, ARROW_HEIGHT, 16)
+  const head = new Mesh(headGeometry, new MeshBasicMaterial({ color }))
+
+  const group = new Group()
+  group.add(shaft, head)
+
+  const direction = new Vector3()
+  const shaftEnd = new Vector3()
+
+  return {
+    object: group,
+    setEnds: (from: Vector3, to: Vector3) => {
+      const length = direction.subVectors(to, from).length()
+      // 制御点が重なると向きが決まらないので、そのときは矢印を出さない
+      group.visible = length > ARROW_HEIGHT
+      if (!group.visible) return
+      direction.divideScalar(length)
+
+      // 円錐の底面が線の先端に来るよう、矢印の頭の高さのぶん手前で線を止める
+      shaftEnd.copy(to).addScaledVector(direction, -ARROW_HEIGHT)
+      shaftPositions.setXYZ(0, from.x, from.y, LAYER_DIRECTION)
+      shaftPositions.setXYZ(1, shaftEnd.x, shaftEnd.y, LAYER_DIRECTION)
+      shaftPositions.needsUpdate = true
+
+      // ConeGeometry の原点は円錐の中心なので、半分ぶん戻した位置に置く
+      head.position.set(to.x, to.y, LAYER_DIRECTION).addScaledVector(direction, -ARROW_HEIGHT / 2)
+      head.quaternion.setFromUnitVectors(CONE_UP, direction)
+    }
+  }
+}
+
+// 制御多角形（破線）とベジェ曲線（実線）を組にした 1 本ぶん
+const createStrand = (controls: Vector3[], color: string) => {
+  const polygon = createPolyline(controls.length, LAYER_POLYGON)
+  const polygonMaterial = new LineDashedMaterial({
+    color: POLYGON_COLOR,
+    dashSize: DASH_SIZE,
+    gapSize: GAP_SIZE
+  })
+  const polygonLine = new Line(polygon.geometry, polygonMaterial)
+
+  const curve = createPolyline(CURVE_SEGMENTS + 1, LAYER_CURVE)
+  const curveLine = new Line(curve.geometry, new LineBasicMaterial({ color }))
+
+  const group = new Group()
+  group.add(polygonLine, curveLine)
+
+  const sample = new Vector3()
+
+  return {
+    object: group,
+    // 制御点の今の位置から、制御多角形と曲線を引き直す
+    refresh: () => {
+      controls.forEach((control, i) => polygon.set(i, control))
+      polygon.commit()
+      // 破線の刻みは頂点ごとの「線に沿った距離」で決まるため、頂点を動かすたびに測り直す
+      polygonLine.computeLineDistances()
+
+      for (let i = 0; i <= CURVE_SEGMENTS; i++) {
+        curve.set(i, bezierPoint(controls, i / CURVE_SEGMENTS, sample))
+      }
+      curve.commit()
+    }
+  }
+}
+
+const points = INITIAL_POINTS.map(([x, y]) => new Vector3(x, y, 0))
+
+// 繋ぎ目の点は 1 本目の終点と 2 本目の始点で共有する（同じ Vector3 を両方に入れる）
+const joint = points[JOINT_INDEX]
+
+// 繋ぎ目に入ってくる向き（P₂ から繋ぎ目へ）と、出ていく向き（繋ぎ目から Q₁ へ）。
+// 接ベクトルはこの辺を次数倍したものなので、揃えるべきなのはこの 2 本の向き
+const incoming = new Vector3().subVectors(joint, points[JOINT_INDEX - 1])
+const outgoing = new Vector3().subVectors(points[JOINT_INDEX + 1], joint)
+
+// 2 つの向きを揃える。Q₁ を繋ぎ目から入ってくる向きの延長上へ、今の距離のまま置き直す。
+// 制御点を動かすたびにこれを通すので、繋ぎ目は常に滑らかなままになる
+const distance = Math.max(outgoing.length(), MIN_HANDLE)
+points[JOINT_INDEX + 1].copy(joint).addScaledVector(incoming.normalize(), distance)
+// 置き直した Q₁ で向きを取り直す（2 つの向きのなす角は 0 になる）
+incoming.subVectors(joint, points[JOINT_INDEX - 1])
+outgoing.subVectors(points[JOINT_INDEX + 1], joint)
+
+// 制御多角形と曲線を 2 本ぶん。繋ぎ目の点を境に、制御点を 4 つずつに分けて渡す
+const strands = [
+  createStrand(points.slice(0, JOINT_INDEX + 1), FIRST_CURVE_COLOR),
+  createStrand(points.slice(JOINT_INDEX), SECOND_CURVE_COLOR)
+]
+strands.forEach((strand) => {
+  strand.refresh()
+  scene.add(strand.object)
+})
+
+// 繋ぎ目の前後の向きを示す 2 本の矢印。向きが揃っていれば一直線に並ぶ
+const incomingArrow = createArrow(DIRECTION_COLOR)
+incomingArrow.setEnds(points[JOINT_INDEX - 1], joint)
+const outgoingArrow = createArrow(DIRECTION_COLOR)
+outgoingArrow.setEnds(joint, points[JOINT_INDEX + 1])
+scene.add(incomingArrow.object, outgoingArrow.object)
+
+// 制御点。繋ぎ目は 2 本で共有する点なので少し大きくする
+const controlGeometry = new SphereGeometry(CONTROL_RADIUS, 16, 12)
+const jointGeometry = new SphereGeometry(JOINT_RADIUS, 16, 12)
+const controlMaterial = new MeshBasicMaterial({ color: CONTROL_COLOR })
+points.forEach((point, i) => {
+  const mesh = new Mesh(i === JOINT_INDEX ? jointGeometry : controlGeometry, controlMaterial)
+  mesh.position.set(point.x, point.y, LAYER_POINT)
+  scene.add(mesh)
+})
+```
+
+:::
+
+## :WithGroupTag[ベジェ曲線の凸包性]{group="{['CG']}"}
+
+いくつかの点を囲む最小の凸多角形（空間中であれば凸多面体）を:Anki[凸包]といい、ベジェ曲線は制御点が作る凸包の中に収まります。この性質が:Anki[凸包性]です。
+
+:::Note
+:Anki[凸多角形]とは、どこにもへこみのない多角形のことです。
+:::
+
+[線形補間とベジェ曲線](/cg/modeling/bezier-curve-surface/)では、ベジェ曲線が:Anki[制御多角形]の角には届かず、その内側で丸まることについて触れました。:Anki[凸包]という概念によって、この「内側」がどこまでの範囲を指すのかを表すことができます。制御多角形にへこみがあるときは、そのへこみを埋めた凸包までが、ベジェ曲線がはみ出さないといえる範囲になります。
+
+:::Action
+制御点がへこんだ位置にあっても、そのへこみが凸包に包まれる様子を見てみよう
+また、制御点をドラッグして、ベジェ曲線が凸包からはみ出さないことも確認しよう
+:::
+
+<CanvasWrapper>
+  <ConvexHullDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 制御点。P₂ を残り 3 点が作る三角形の内側に置き、制御多角形にへこみができた配置にする
+// （このとき凸包は三角形になり、P₂ はその内側に入る）
+const INITIAL_POINTS: [number, number][] = [
+  [-1.5, -1.2],
+  [-0.5, 1.4],
+  [0.2, 0.1],
+  [1.5, -1.2]
+]
+
+// 凸包を求める途中で使う配列。何度も呼ばれるので、その都度は作らない
+const sorted: Vector3[] = []
+const hull: Vector3[] = []
+
+// o → a → b と辿ったときの曲がり方。正なら左（反時計回り）へ、負なら右へ折れている
+const turn = (o: Vector3, a: Vector3, b: Vector3) =>
+  (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x)
+
+// 制御点をすべて囲む最小の凸多角形（凸包）の頂点を、反時計回りに並べて返す。
+// x が小さい順に点を並べ、下側の境界・上側の境界を順に辿りながら、
+// 右へ折れる点（＝へこみになる点）を取り除いていく（アンドリューの単調鎖法）
+const convexHull = (points: Vector3[]) => {
+  sorted.length = 0
+  for (const point of points) sorted.push(point)
+  sorted.sort((a, b) => a.x - b.x || a.y - b.y)
+
+  hull.length = 0
+
+  // 下側の境界。左端から右端へ向かって辿る
+  for (const point of sorted) {
+    while (hull.length >= 2 && turn(hull[hull.length - 2], hull[hull.length - 1], point) <= 0) {
+      hull.pop()
+    }
+    hull.push(point)
+  }
+
+  // 上側の境界。右端から左端へ戻りながら、下側で残した点は消さないようにする
+  const lowerCount = hull.length + 1
+  for (let i = sorted.length - 2; i >= 0; i--) {
+    const point = sorted[i]
+    while (
+      hull.length >= lowerCount &&
+      turn(hull[hull.length - 2], hull[hull.length - 1], point) <= 0
+    ) {
+      hull.pop()
+    }
+    hull.push(point)
+  }
+
+  // 最後に足した点は左端の点（始点）と同じなので落とす
+  hull.pop()
+
+  return hull
+}
+
+// 凸包の内側を塗る面。頂点を 1 つ目から扇状に三角形へ分ける。
+// 頂点の数は制御点の並び方で 3 つにも 4 つにも変わるので、器は 4 頂点ぶん用意し、
+// 足りないぶんは最後の頂点を繰り返して埋める（面積 0 の三角形は絵に出ない）
+const createHullFill = () => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(HULL_CAPACITY * 3), 3)
+  geometry.setAttribute("position", positions)
+  const index: number[] = []
+  for (let i = 1; i < HULL_CAPACITY - 1; i++) index.push(0, i, i + 1)
+  geometry.setIndex(index)
+
+  const material = new MeshBasicMaterial({
+    color: HULL_COLOR,
+    transparent: true,
+    opacity: HULL_FILL_OPACITY,
+    // 制御点を動かすと表裏が入れ替わりうるので、どちらから見ても塗る
+    side: DoubleSide,
+    // 手前に重なる曲線・破線が面の形に欠けないよう、深度は書かない
+    depthWrite: false
+  })
+
+  return {
+    object: new Mesh(geometry, material),
+    set: (vertices: Vector3[]) => {
+      for (let i = 0; i < HULL_CAPACITY; i++) {
+        const vertex = vertices[Math.min(i, vertices.length - 1)]
+        positions.setXYZ(i, vertex.x, vertex.y, LAYER_HULL)
+      }
+      positions.needsUpdate = true
+    }
+  }
+}
+
+// 頂点が動く折れ線。頂点を作り直さず、座標だけ書き換える
+const createPolyline = (count: number, z: number) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(count * 3), 3)
+  geometry.setAttribute("position", positions)
+
+  return {
+    geometry,
+    set: (index: number, point: Vector3) => positions.setXYZ(index, point.x, point.y, z),
+    commit: () => {
+      positions.needsUpdate = true
+      geometry.computeBoundingSphere()
+    }
+  }
+}
+
+// ド・カステリョのアルゴリズムで使う作業用の点。何度も呼ばれるので、その都度は作らない
+const work: Vector3[] = []
+
+// 制御点が何個でも使えるベジェ曲線上の点。
+// 隣り合う点どうしを t で線形補間する操作を、点が 1 つになるまで繰り返す
+const bezierPoint = (controls: Vector3[], t: number, target: Vector3) => {
+  while (work.length < controls.length) work.push(new Vector3())
+  controls.forEach((control, i) => work[i].copy(control))
+
+  for (let last = controls.length - 1; last > 0; last--) {
+    for (let i = 0; i < last; i++) work[i].lerp(work[i + 1], t)
+  }
+
+  return target.copy(work[0])
+}
+
+const controls = INITIAL_POINTS.map(([x, y]) => new Vector3(x, y, 0))
+const sample = new Vector3()
+
+// 制御点の凸包。いちばん奥に敷き、曲線がこの範囲から出ないことを見せる。
+// 凸包は制御点の並び方だけで決まり、へこみのある配置では
+// へこんだ制御点が頂点から外れて凸包の内側に入る
+const fill = createHullFill()
+fill.set(convexHull(controls))
+scene.add(fill.object)
+
+// 制御点を順に結んだ折れ線。曲線と描き分けるため破線にする
+const polygon = createPolyline(controls.length, LAYER_POLYGON)
+const polygonMaterial = new LineDashedMaterial({
+  color: POLYGON_COLOR,
+  dashSize: DASH_SIZE,
+  gapSize: GAP_SIZE
+})
+const polygonLine = new Line(polygon.geometry, polygonMaterial)
+controls.forEach((control, i) => polygon.set(i, control))
+polygon.commit()
+// 破線の刻みは頂点ごとの「線に沿った距離」で決まるため、頂点を置いてから測る
+polygonLine.computeLineDistances()
+scene.add(polygonLine)
+
+// 制御点から求めた曲線
+const curve = createPolyline(CURVE_SEGMENTS + 1, LAYER_CURVE)
+for (let i = 0; i <= CURVE_SEGMENTS; i++) {
+  curve.set(i, bezierPoint(controls, i / CURVE_SEGMENTS, sample))
+}
+curve.commit()
+scene.add(new Line(curve.geometry, new LineBasicMaterial({ color: CURVE_COLOR })))
+
+// 形を決めている 4 つの制御点
+const controlGeometry = new SphereGeometry(CONTROL_RADIUS, 16, 12)
+const controlMaterial = new MeshBasicMaterial({ color: CONTROL_COLOR })
+controls.forEach((control) => {
+  const mesh = new Mesh(controlGeometry, controlMaterial)
+  mesh.position.set(control.x, control.y, LAYER_POINT)
+  scene.add(mesh)
+})
+```
+
+:::
+
+### 凸包性とバーンスタイン基底関数
+
+曲線上の点が常に制御点の内側に収まることも、重み付き平均の性質から説明できます。
+
+バーンスタイン基底関数で表される重みは、その[グラフ](/cg/modeling/bezier-curve-surface/)で見たように、負の値をとることはなく、すべての重みの合計は`1`になっていました。
+
+$$
+B_{i,n}(t) \geq 0, \quad \sum_{i=0}^{n} B_{i,n}(t) = 1 \quad (0 \leq t \leq 1)
+$$
+
+重みの合計が`1`であることから、重みをかけて足した結果がそのまま制御点の重み付き平均になります。
+
+:::Note
+[重み付き平均](/cg/modeling/bezier-curve-surface/)は本来、さらに重みの合計で割って求めるものですが、重みの合計が`1`の場合は割る必要がないからです。
+:::
+
+そして常に`0`以上であることは、どの制御点も引き算されることはない、つまり他の制御点から遠ざかる向きへ点が押し出されないことを意味します。
+
+:Mark[重み付き平均]は、制御点それぞれに重さを置いたときの:Anki[重心]と同じものです。重さがどれも`0`以上である限り、制御点をすべて囲む凸な範囲（へこみのない範囲）をどこに引いても、重心がその境界を越えて外へ出ることはありません。
+`0`以上の重みによる重み付き平均で表されるベジェ曲線上の点が、すべて凸包に収まることは、このようなイメージで説明できます。
+
+この:Mark[凸包性]により、ベジェ曲線が画面の外にあるかどうかや、`2`本のベジェ曲線が交わる可能性があるかどうかを、曲線上の点を求めずに制御点だけで判定できるようになります。
+
+## :WithGroupTag[ベジェ曲線のアフィン不変性]{group="{['CG']}"}
+
+ベジェ曲線を回転させたり平行移動させたりしたいとき、曲線上の点をすべて求め直す必要はありません。制御点に[アフィン変換](/cg/transformation/affine-transformation/)をかけてから曲線を引き直せば、曲線全体を変換したものと同じ結果が得られるからです。
+曲線にアフィン変換を適用した結果と、アフィン変換を適用した制御点から作られる曲線が一致する性質を、:Anki[アフィン不変性]といいます。
+
+### ベジェ曲線のアフィン変換
+
+アフィン変換は、回転や拡大などの[線形変換](/cg/transformation/basic-transformations/)と、平行移動を組み合わせたものです。
+
+:Mark[線形変換]は、変換を行ってから定数倍や足し算をしても、定数倍や足し算をしてから変換を行っても、結果が変わらない:Anki[線形性]という性質を持ちます。そのため、ベジェ曲線を線形変換するときも、制御点を変換してから重みをかけて足しても、足してから変換しても結果は変わりません。
+
+では、ベジェ曲線の平行移動はどうでしょうか。制御点をすべて同じベクトル $$d$$ だけずらしてから重みをかけて足すと、次のようになります。
+
+$$
+\sum_{i=0}^{n} B_{i,n}(t)(P_i + d) = \sum_{i=0}^{n} B_{i,n}(t)P_i + \left(\sum_{i=0}^{n} B_{i,n}(t)\right)d
+$$
+
+$$d$$ にかかっているのは重みの合計で、その値は`1`です。そのため、右辺はさらに簡単な形にできます。
+
+$$
+\sum_{i=0}^{n} B_{i,n}(t)P_i + d = C(t) + d
+$$
+
+ここで現れた最終的な右辺は、ベジェ曲線 $$C(t)$$ をそのまま $$d$$ だけ平行移動した式になっています。
+制御点をすべて同じだけずらしてから引いたベジェ曲線の式は、ベジェ曲線全体を平行移動した式と一致するのです。
+
+この:Mark[アフィン不変性]により、ベジェ曲線を動かすときの計算は、曲線上の点すべてではなく、制御点の個数だけで済みます。リアルタイムで曲線の形を編集する場面でも、動作が重くなりません。
 
 ## :WithGroupTag[ド・カステリョのアルゴリズム]{group="{['CG']}"}
 
-曲線上の点は定義式に $$t$$ を代入すれば求められますが、次数が上がるほどべき乗の計算がかさみます。同じ点を、内分の繰り返しだけで求める手順が:Anki[ド・カステリョのアルゴリズム]です。同じころ別の自動車メーカーで独立にこの曲線へたどり着いていた、ポール・ド・カステリョの名が付いています。
+ベジェ曲線上の点は定義式に $$t$$ を代入すれば求められますが、次数が上がるほど、べき乗の計算がかさみます。そこで、同じ点を内分の繰り返しだけで求めるアルゴリズムが:Anki[ド・カステリョのアルゴリズム]です。
 
-使うのは[線形補間](/cg/basics/gradient-generation/)だけです。隣り合う制御点を $$t : (1 - t)$$ の比で内分して新しい点を作ると、点の数が`1`つ減ります。得られた点の列に対して同じ内分を繰り返し、点が`1`つになったとき、その点が求める曲線上の点になります。
+ベジェ曲線は、任意のパラメータの値を使って、新たな`2`つのベジェ曲線に分割することができます。ド・カステリョのアルゴリズムは、その分割をどう効率的に行うかを示しています。
 
-:::Todo
-`3`次ベジェ曲線に対するド・カステリョの作図。`4`つの制御点を結ぶ制御多角形の各辺に内分点を`3`つ、それらを結んだ線分の上に`2`つ、さらにその線分の上に`1`つと段階的に描き、最後に残った`1`点が曲線上にあることを示す。パラメータの値が小さい場合と大きい場合の作図を並べ、各段の点が制御点の間を移動する様子がわかるようにする。
+このアルゴリズムでは、ベジェ曲線上の点を[線形補間](/cg/modeling/bezier-curve-surface/)だけを使って求めていきます。
+隣り合う制御点を $$t : (1 - t)$$ の比で内分（線形補間）して新しい点を作り、できた点どうしを線形補間することを繰り返すことで、最終的に曲線上の`1`点を突き止められます。
+
+たとえば、`4`つの制御点 $$P_0, P_1, P_2, P_3$$ で決まる`3`次ベジェ曲線であれば、次のような手順です。
+
+1. 線分 $$P_0 P_1$$、線分 $$P_1 P_2$$、線分 $$P_2 P_3$$ を内分した点を $$Q_0, Q_1, Q_2$$ とする
+2. 線分 $$Q_0 Q_1$$、線分 $$Q_1 Q_2$$ を内分した点を $$R_0, R_1$$ とする
+3. 線分 $$R_0 R_1$$ を内分した点を $$C$$ とする（$$C$$ はベジェ曲線上にある）
+
+:::Action
+`t`を動かして、最後に残った`1`点`C(t)`が曲線を描く様子を見てみよう
+:::
+
+<CanvasWrapper>
+  <DeCasteljauDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 制御点を並べる弧（左下から山なりに回って右下へ向かう）の半径と中心の高さ
+const ARC_RADIUS_X = 2.7
+const ARC_RADIUS_Y = 2.6
+const ARC_CENTER_Y = -1.2
+
+// 弧を左右非対称にする傾き。対称に並べると内分で作る点も対称に並んでしまう
+const TILT_Y = 0.45
+
+// ベジェ曲線の次数。制御点は次数より 1 つ多い 4 つになる
+const DEGREE = 3
+
+// 制御点。弧の上に等間隔に置くので、隣り合う辺が一直線には並ばない
+// （並ぶと、内分で作る線分が制御多角形に重なって読めなくなる）
+const controlPoints = Array.from({ length: DEGREE + 1 }, (_, i) => {
+  const u = i / DEGREE
+  const angle = Math.PI * (1 - u)
+
+  return new Vector3(
+    ARC_RADIUS_X * Math.cos(angle),
+    ARC_CENTER_Y + ARC_RADIUS_Y * Math.sin(angle) + TILT_Y * u,
+    0
+  )
+})
+
+// パネルのスライダーで動かす、隣り合う 2 点を内分する割合
+const t = 0.35
+
+// 線形補間。2 点の座標値を 1 − t : t の割合で混ぜる
+const lerp = (from: Vector3, to: Vector3, t: number, target: Vector3) =>
+  target
+    .copy(from)
+    .multiplyScalar(1 - t)
+    .addScaledVector(to, t)
+
+// 両端が動く線分。頂点を作り直さず、座標だけ書き換える
+const createSegment = (color: string, z: number) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(6), 3)
+  geometry.setAttribute("position", positions)
+
+  return {
+    object: new LineSegments(geometry, new LineBasicMaterial({ color })),
+    set: (from: Vector3, to: Vector3) => {
+      positions.setXYZ(0, from.x, from.y, z)
+      positions.setXYZ(1, to.x, to.y, z)
+      positions.needsUpdate = true
+    }
+  }
+}
+
+// 頂点が動く折れ線。頂点を作り直さず、座標だけ書き換える
+const createPolyline = (count: number, z: number) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(count * 3), 3)
+  geometry.setAttribute("position", positions)
+
+  return {
+    geometry,
+    set: (index: number, point: Vector3) => positions.setXYZ(index, point.x, point.y, z),
+    commit: () => {
+      positions.needsUpdate = true
+      geometry.computeBoundingSphere()
+    }
+  }
+}
+
+// 軌跡を求めるときに使う作業用の点。何度も呼ばれるので、その都度は作らない
+const work = controlPoints.map(() => new Vector3())
+
+// 軌跡用に、作図の途中を残さずベジェ曲線上の点だけを求める
+const bezierPoint = (t: number, target: Vector3) => {
+  controlPoints.forEach((point, i) => work[i].copy(point))
+
+  for (let last = work.length - 1; last > 0; last--) {
+    for (let i = 0; i < last; i++) work[i].lerp(work[i + 1], t)
+  }
+
+  return target.copy(work[0])
+}
+
+// 内分のたびに作られる点の列。はじめの列は制御点そのもので、内分するごとに 1 つ減る
+const pointRows = Array.from({ length: DEGREE + 1 }, (_, round) =>
+  Array.from({ length: DEGREE + 1 - round }, () => new Vector3())
+)
+
+// はじめの列は制御点そのもの
+controlPoints.forEach((point, i) => pointRows[0][i].copy(point))
+
+// 隣り合う 2 点を t : (1 − t) の比で内分して次の列の点を作る。
+// 内分を繰り返すごとに点が 1 つ減り、最後に残った 1 点が曲線上の点になる
+for (let round = 1; round <= DEGREE; round++) {
+  for (let i = 0; i <= DEGREE - round; i++) {
+    lerp(pointRows[round - 1][i], pointRows[round - 1][i + 1], t, pointRows[round][i])
+  }
+}
+
+// 制御点を順に結んだ制御多角形。内分で作る線分と描き分けるため破線にする
+const polygonGeometry = new BufferGeometry().setFromPoints(
+  controlPoints.map((point) => new Vector3(point.x, point.y, LAYER_POLYGON))
+)
+const polygonMaterial = new LineDashedMaterial({
+  color: POLYGON_COLOR,
+  dashSize: DASH_SIZE,
+  gapSize: GAP_SIZE
+})
+const polygonLine = new Line(polygonGeometry, polygonMaterial)
+// 破線の刻みは頂点ごとの「線に沿った距離」で決まるので、置いたあとに測る
+polygonLine.computeLineDistances()
+scene.add(polygonLine)
+
+// 点は、制御点・途中で作る点・最後に残る 1 点で、大きさと色を変える
+const controlGeometry = new SphereGeometry(CONTROL_RADIUS, 16, 12)
+const innerGeometry = new SphereGeometry(INNER_RADIUS, 16, 12)
+const finalGeometry = new SphereGeometry(FINAL_RADIUS, 16, 12)
+const controlMaterial = new MeshBasicMaterial({ color: CONTROL_COLOR })
+const innerMaterials = INNER_COLORS.map((color) => new MeshBasicMaterial({ color }))
+const finalMaterial = new MeshBasicMaterial({ color: FINAL_COLOR })
+pointRows.forEach((points, round) => {
+  points.forEach((point) => {
+    const mesh = new Mesh(
+      round === 0 ? controlGeometry : round === DEGREE ? finalGeometry : innerGeometry,
+      round === 0 ? controlMaterial : round === DEGREE ? finalMaterial : innerMaterials[round - 1]
+    )
+    mesh.position.set(point.x, point.y, LAYER_POINT)
+    scene.add(mesh)
+  })
+})
+
+// 同じ列の点どうしを結ぶ線分。次の列の点はこの線分の上に乗る。
+// はじめの列は制御多角形として破線で描いてあるので、内分 1 回目以降で作る
+pointRows.forEach((points, round) => {
+  if (round === 0) return
+
+  for (let i = 0; i < points.length - 1; i++) {
+    const chord = createSegment(INNER_COLORS[round - 1], LAYER_CHORD)
+    chord.set(points[i], points[i + 1])
+    scene.add(chord.object)
+  }
+})
+
+// 最後に残る 1 点が 0 から今の t までに通った跡。折れ線で近似する
+const trace = createPolyline(TRACE_SEGMENTS + 1, LAYER_TRACE)
+const sample = new Vector3()
+for (let i = 0; i <= TRACE_SEGMENTS; i++) {
+  trace.set(i, bezierPoint((t * i) / TRACE_SEGMENTS, sample))
+}
+trace.commit()
+scene.add(new Line(trace.geometry, new LineBasicMaterial({ color: TRACE_COLOR })))
+```
+
 :::
 
 この手順を擬似コードで表すと、次のようになります。
 
 ```js
-// p[0] から p[n] に制御点を入れておく
+// p[0] の列に制御点を入れておく（p[0][0] から p[0][n]）
 for r = 1 to n:
     for i = 0 to n - r:
-        p[i] <- (1 - t) * p[i] + t * p[i + 1]  // 隣り合う2点を内分する
-// 残った p[0] が曲線上の点
+        p[r][i] <- (1 - t) * p[r - 1][i] + t * p[r - 1][i + 1]
+// 最後の列に 1 つだけ残った p[n][0] が曲線上の点
 ```
 
-外側の繰り返しが内分の段数、内側の繰り返しがその段で作る点にあたります。`1`段進むごとに点が`1`つずつ減るため、内側の繰り返しの回数も`1`つずつ短くなっていきます。
+`n`はベジェ曲線の次数で、最初の列`p[0]`に入れる制御点は`p[0][0]`から`p[0][n]`までの`n + 1`個です。`r`は何回目の内分でできた点列かを、`i`はその列の中で何番目の点かを表します。
+`r`回目の内分でできる列は`p[r][0]`から`p[r][n - r]`までで、列が進むごとに点が`1`つずつ減ります。`r = n`の場合、すなわち`n`回目の列は`p[n][0]`の`1`点だけになります。こうして残った点がベジェ曲線上の点です。
 
-べき乗を使わずかけ算と足し算だけで済むこの手順は、計算誤差が積み重なりにくいという利点も持ちます。内分を繰り返しているだけなので、途中に現れる点も最後の点も制御点の凸包から出ないことが、作図からそのまま見て取れます。
+べき乗を使わずかけ算と足し算だけで済むこのアルゴリズムは、計算誤差が積み重なりにくいという利点も持ちます。内分を繰り返しているだけなので、途中に現れる点も、最後に残る曲線上の`1`点も、制御点の凸包から出ないことが、作図のデモからそのまま見て取れます。
 
 ## :WithGroupTag[ベジェ曲面]{group="{['CG']}"}
 
-ここまでのベジェ曲線は、パラメータが`1`つで、制御点も`1`列に並んだものでした。曲面はパラメータを`2`つ持つため、制御点の並べ方も`1`列から格子状へ広がります。
+ここまで見てきた:Mark[ベジェ曲線]は、パラメータが`1`つで、制御点も $$P_0$$ から $$P_n$$ へと番号`1`つで数えるものでした。曲線から:Mark[曲面]に発展させるには、パラメータを追加する必要があります。
 
-縦横に $$(m + 1) \times (n + 1)$$ 個の制御点 $$P_{ij}$$ を並べ、`2`つのパラメータそれぞれにバーンスタイン基底関数をかけて足し合わせたものが:Anki[ベジェ曲面]です。曲面上の点は次の式で表されます。
+縦横に $$(m + 1) \times (n + 1)$$ 個の制御点 $$P_{ij}$$ を並べ、`2`つのパラメータそれぞれに[バーンスタイン基底関数](/cg/modeling/bezier-curve-surface/)をかけて足し合わせたものが:Anki[ベジェ曲面]です。
 
+:::Note
+$$n$$ 次のベジェ曲線には $$P_0$$ から $$P_n$$ までの $$n + 1$$ 個の制御点が必要でした。ベジェ曲面でも方向ごとに同じ関係が成り立つので、$$u$$ 方向が $$m$$ 次なら $$m + 1$$ 個、$$v$$ 方向が $$n$$ 次なら $$n + 1$$ 個の制御点が並び、かけ合わせた $$(m + 1) \times (n + 1)$$ 個が格子全体の制御点の数になります。
+:::
+
+ベジェ曲面上の点は次の式で表されます。
+
+::::CardGrid
+:::TermCard{title="ベジェ曲面の式"}
 $$
 S(u, v) = \sum_{i=0}^{m} \sum_{j=0}^{n} B_{i,m}(u) B_{j,n}(v) P_{ij}
 $$
+:::
+::::
 
-制御点を格子状に結んだ網を:Anki[制御点網]といいます。曲線のときの制御多角形にあたるもので、曲面はこの網をなぞるようにふくらみます。
+ベジェ曲面では、制御点の並び方も格子状へ広がります。制御点を格子状に結んだ網を:Anki[制御点網]といい、これは曲線のときの:Anki[制御多角形]にあたるもので、ベジェ曲面はこの網をなぞるように膨らみます。
 
-実際によく使われるのは、$$u$$ 方向にも $$v$$ 方向にも`3`次をとる:Anki[双3次ベジェ曲面]で、制御点は縦横`4`点ずつ、合わせて`16`個になります。
+実際によく使われるのは、$$u$$ 方向にも $$v$$ 方向にも`3`次をとる:Anki[双3次ベジェ曲面]です。制御点は縦横`4`点ずつ、合わせて`16`個になります。
 
-:::Todo
-双`3`次ベジェ曲面の図。縦横`4`点ずつ、合わせて`16`個の制御点と、それらを縦横に結んだ制御点網を細い線で描き、そこから生成される曲面を重ねて示す。四隅の制御点が曲面の隅と一致していること、網の縁に並ぶ`4`点ずつが曲面の境界にあたるベジェ曲線を決めていることがわかるようにする。
+:::Action
+ドラッグで回転させながら、:Mark[四隅の高さ]を動かすと曲面の`4`辺のベジェ曲線が変化し、:Mark[内側4点の高さ]を動かすと内側だけが膨らむことを観察しよう
 :::
 
-曲線で見た性質は、そのまま曲面にも引き継がれます。四隅の制御点 $$P_{00}$$・$$P_{0n}$$・$$P_{m0}$$・$$P_{mn}$$ は曲面の四隅に一致し、曲面は制御点の凸包に収まり、曲面を動かすには制御点を動かすだけで足ります。網の縁に並ぶ制御点は、そのまま境界のベジェ曲線を決めます。曲面どうしを繋ぐときに縁の制御点だけを見ればよいのは、このためです。
+<CanvasWrapper>
+  <BicubicSurfaceDemo />
+</CanvasWrapper>
 
-一方で、細かく作り込もうとして制御点を増やすと、その分次数が上がって計算が重くなり、`1`つの制御点を動かしただけで曲線や曲面の全体が変わってしまいます。そのため実際には、次数を`3`程度に抑えたベジェ曲線・曲面をいくつも繋いで使います。Bスプライン曲線・曲面は、`1`つの制御点が影響する範囲を局所に限ることで、次数を上げずに多くの制御点を扱えるようにしたものです。
+:::Foldable{title="Three.jsによる実装概要"}
 
-<!-- TODO: Bスプライン曲線・曲面の記事ができたら、上の段落からリンクする -->
+```ts
+// 縦横の制御点の数。双 3 次なので u 方向・v 方向にそれぞれ 4 点、合わせて 16 点
+const GRID = 4
+
+// 制御点を格子状に並べる間隔
+const SPACING = 1
+
+// 制御点の高さの基準値。
+// 平らな格子だと曲面がただの平面になるので、縁も内側も高さをずらしておく
+const BASE_HEIGHTS = [
+  [0.1, 0.55, 0.7, 0.15],
+  [0.45, 1.15, 1.3, 0.5],
+  [0.3, 0.95, 1.05, 0.25],
+  [-0.15, 0.3, 0.45, -0.2]
+]
+
+// 曲面を三角形に分ける細かさ（u 方向・v 方向とも）
+const SURFACE_STEPS = 24
+
+// 境界のベジェ曲線を折れ線で近似する分割数
+const CURVE_SEGMENTS = 32
+
+// 四隅の制御点の添字（u 方向・v 方向のどちらも端）
+const isCorner = (i: number, j: number) =>
+  (i === 0 || i === GRID - 1) && (j === 0 || j === GRID - 1)
+
+// 3 次のバーンスタイン基底関数の値を、4 つまとめて求める
+const bernstein = (t: number, target: number[]) => {
+  const s = 1 - t
+  target[0] = s * s * s
+  target[1] = 3 * s * s * t
+  target[2] = 3 * s * t * t
+  target[3] = t * t * t
+
+  return target
+}
+
+// 頂点が動く折れ線。頂点を作り直さず、座標だけ書き換える
+const createPolyline = (count: number, color: string) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(count * 3), 3)
+  geometry.setAttribute("position", positions)
+
+  return {
+    object: new Line(geometry, new LineBasicMaterial({ color })),
+    set: (index: number, point: Vector3) => positions.setXYZ(index, point.x, point.y, point.z),
+    commit: () => {
+      positions.needsUpdate = true
+    }
+  }
+}
+
+// 曲面。三角形の並び（インデックス）は 1 度組めば変わらないので、
+// 制御点が動いたときは頂点の座標だけを書き換える
+const createSurface = () => {
+  const side = SURFACE_STEPS + 1
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(side * side * 3), 3)
+  geometry.setAttribute("position", positions)
+
+  const index: number[] = []
+  for (let i = 0; i < SURFACE_STEPS; i++) {
+    for (let j = 0; j < SURFACE_STEPS; j++) {
+      const corner = i * side + j
+      index.push(corner, corner + side, corner + 1)
+      index.push(corner + 1, corner + side, corner + side + 1)
+    }
+  }
+  geometry.setIndex(index)
+
+  const material = new MeshStandardMaterial({
+    color: SURFACE_COLOR,
+    roughness: 0.6,
+    side: DoubleSide,
+    transparent: true,
+    opacity: SURFACE_OPACITY,
+    // 裏側を通る制御点網や、縁に重なる境界の曲線が透けるよう、深度は比較するが書かない
+    depthWrite: false
+  })
+
+  return {
+    object: new Mesh(geometry, material),
+    set: (i: number, j: number, point: Vector3) =>
+      positions.setXYZ(i * side + j, point.x, point.y, point.z),
+    commit: () => {
+      positions.needsUpdate = true
+      // 陰影が付くように、頂点を動かしたら法線を求め直す
+      geometry.computeVertexNormals()
+      geometry.computeBoundingSphere()
+    }
+  }
+}
+
+// 16 個の制御点。xz 平面に格子状に並べ、高さ（y）だけをパネルのスライダーで動かす
+const controls = Array.from({ length: GRID }, (_, i) =>
+  Array.from(
+    { length: GRID },
+    (_, j) =>
+      new Vector3(
+        (i - (GRID - 1) / 2) * SPACING,
+        BASE_HEIGHTS[i][j],
+        (j - (GRID - 1) / 2) * SPACING
+      )
+  )
+)
+
+const weightsU = [0, 0, 0, 0]
+const weightsV = [0, 0, 0, 0]
+
+// 曲面上の点。2 つのパラメータそれぞれのバーンスタイン基底関数をかけ合わせた重みで、
+// 16 個の制御点を混ぜ合わせる
+const surfacePoint = (u: number, v: number, target: Vector3) => {
+  bernstein(u, weightsU)
+  bernstein(v, weightsV)
+
+  target.set(0, 0, 0)
+  for (let i = 0; i < GRID; i++) {
+    for (let j = 0; j < GRID; j++) {
+      target.addScaledVector(controls[i][j], weightsU[i] * weightsV[j])
+    }
+  }
+
+  return target
+}
+
+const sample = new Vector3()
+
+// 曲面
+const surface = createSurface()
+for (let i = 0; i <= SURFACE_STEPS; i++) {
+  for (let j = 0; j <= SURFACE_STEPS; j++) {
+    surface.set(i, j, surfacePoint(i / SURFACE_STEPS, j / SURFACE_STEPS, sample))
+  }
+}
+surface.commit()
+scene.add(surface.object)
+
+// 制御点を縦横に結んだ制御点網。u 方向に並ぶ 4 本と、v 方向に並ぶ 4 本
+const netLines = Array.from({ length: GRID * 2 }, () => createPolyline(GRID, NET_COLOR))
+for (let i = 0; i < GRID; i++) {
+  for (let j = 0; j < GRID; j++) {
+    netLines[i].set(j, controls[i][j])
+    netLines[GRID + j].set(i, controls[i][j])
+  }
+}
+netLines.forEach((line) => {
+  line.commit()
+  scene.add(line.object)
+})
+
+// 網の縁に並ぶ 4 点ずつが決める、曲面の境界のベジェ曲線。
+// u = 0・u = 1・v = 0・v = 1 の 4 本で、曲面の 4 辺にそのまま重なる
+const boundaries = Array.from({ length: 4 }, () =>
+  createPolyline(CURVE_SEGMENTS + 1, BOUNDARY_COLOR)
+)
+for (let step = 0; step <= CURVE_SEGMENTS; step++) {
+  const t = step / CURVE_SEGMENTS
+  boundaries[0].set(step, surfacePoint(0, t, sample))
+  boundaries[1].set(step, surfacePoint(1, t, sample))
+  boundaries[2].set(step, surfacePoint(t, 0, sample))
+  boundaries[3].set(step, surfacePoint(t, 1, sample))
+}
+boundaries.forEach((line) => {
+  line.commit()
+  scene.add(line.object)
+})
+
+// 制御点。四隅は曲面の隅と一致する点なので、色と大きさを変えて示す
+const controlGeometry = new SphereGeometry(CONTROL_RADIUS, 16, 12)
+const cornerGeometry = new SphereGeometry(CORNER_RADIUS, 16, 12)
+const controlMaterial = new MeshBasicMaterial({ color: CONTROL_COLOR })
+const cornerMaterial = new MeshBasicMaterial({ color: CORNER_COLOR })
+controls.forEach((row, i) =>
+  row.forEach((control, j) => {
+    const corner = isCorner(i, j)
+    const mesh = new Mesh(
+      corner ? cornerGeometry : controlGeometry,
+      corner ? cornerMaterial : controlMaterial
+    )
+    mesh.position.copy(control)
+    scene.add(mesh)
+  })
+)
+
+// 曲面のふくらみを陰影でも読み取れるようにする光。向きは固定
+const light = new DirectionalLight(LIGHT_COLOR, 2.5)
+light.position.set(4, 5, 3)
+scene.add(light, new AmbientLight(LIGHT_COLOR, 0.5))
+```
+
+:::
+
+曲線で見た性質は、そのまま曲面にも引き継がれます。
+
+- :Anki[端点一致性]：四隅の制御点 $$P_{00}$$・$$P_{0n}$$・$$P_{m0}$$・$$P_{mn}$$ は曲面の四隅に一致する
+- :Anki[凸包性]：曲面は制御点の:Anki[凸包]に収まる
+- :Anki[アフィン不変性]：曲面を動かすには制御点を動かすだけでよい
+
+### ベジェ曲線（曲面）の繋ぎ合わせ
+
+網の縁に並ぶ制御点は、ベジェ曲面の辺（外部との境界線）となるベジェ曲線を定めます。そのため、曲面どうしを繋ぐときには、縁の制御点だけを動かせば済みます。
+
+一方で、細かく作り込もうとして制御点を増やすと、その分次数が上がって計算が重くなり、`1`つの制御点を動かしただけで曲線や曲面の全体が変わってしまいます。そのため実際には、次数を`3`程度に抑えたベジェ曲線・曲面をいくつも繋いで使います。
+
+`1`つの制御点が影響する範囲を局所に限ることで、次数を上げずに多くの制御点を扱えるようにしたものとして、[Bスプライン曲線（曲面）](/cg/modeling/b-spline-curve-surface/)があります。

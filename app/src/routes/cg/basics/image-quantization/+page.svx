@@ -3,44 +3,180 @@ layout: guide-content
 title: 画像の量子化 # ImgP 2-4-2
 
 group: ["CG", "ImgP"]
+visual: true
 ---
 
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import FalseContourDemo from '$lib/demo/threejs/basics/image-quantization/false-contour/FalseContourDemo.svelte'
+  import QuantizationStaircaseDemo from '$lib/demo/threejs/basics/image-quantization/quantization-staircase/QuantizationStaircaseDemo.svelte'
+</script>
+
 [標本化](/cg/basics/image-sampling/)で得られた各格子点の明るさは、まだ連続的にどんな値もとりうるものです。
-ここでは、その明るさを段階的な値に丸める、:Anki[量子化]のステップを見ていきます。
+ここでは、その明るさを段階的な値に丸める、:Anki[量子化]の工程を見ていきます。
 
 ## :WithGroupTag[量子化とは何か]{group="{['CG', 'ImgP']}"}
 
-:Anki[標本化]で読み取った各点の明るさは、連続的な量であり、原理的にはどんな細かい値もとりえます。
-しかしコンピュータは、無限に細かい値をそのまま扱うことはできません。
+:Anki[標本化]で読み取った各点の明るさは、連続的な量であり、原理的にはどんな細かい値もとりえます。しかしコンピュータは、無限に細かい値をそのまま扱うことはできません。
 そこで、読み取った明るさを、あらかじめ決めておいた有限段階の値のどれかに丸め込む操作を:Anki[量子化]といいます。
 
 量子化の結果、それぞれの点に割り当てられる離散的な値が:Anki[画素値]です。
-連続的だった明るさは、量子化を通して「いちばん近い段階の値」に置き換えられ、その段階に対応する数値が画素値として記録されます。
+連続的だった明るさは、量子化を通して一番近い段階の値に置き換えられ、その段階に対応する数値が画素値として記録されます。
 
-標本化と量子化は、デジタル化のなかで役割を分担しています。
+標本化と量子化は、次のような役割分担になっています。
 
-- :Anki[標本化]：明るさを読み取る「位置」を、とびとびの標本点に区切る（空間方向の離散化）
-- :Anki[量子化]：各点で読み取った「値」を、とびとびの段階に区切る（値方向の離散化）
+- :Anki[標本化]：明るさを読み取る:Anki[位置]を、とびとびの標本点に区切る（:Anki[空間]方向の離散化）
+- :Anki[量子化]：各点で読み取った:Anki[値]を、とびとびの段階に区切る（:Anki[値]方向の離散化）
 
 つまり、標本化が:Anki[空間]をとびとびにする操作だったのに対し、量子化は:Anki[値]そのものをとびとびにする操作といえます。
 入力の連続的な明るさに対して、出力の画素値が階段状にとびとびに決まる様子は、:Anki[階段関数]として描くことができます。
 
-<!-- TODO: 量子化特性（階段関数）の図解。横軸=連続的な入力の明るさ、縦軸=離散化された出力の画素値、を表す階段状グラフ -->
+:::Action
+:Mark[段階の数]を増やすと階段の幅（同じ画素値に丸められる明るさの範囲）が狭くなり、:Mark[丸める前の明るさ]と:Mark[量子化後の画素値]のずれが小さくなることを観察しよう
+:::
+
+<CanvasWrapper>
+  <QuantizationStaircaseDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 量子化で用意する段階の数と、丸める前の明るさ
+const LEVEL_COUNT = 4
+const INPUT = 0.55
+
+// 明るさの 0〜1（横軸）と、画素値の 0〜LEVEL_COUNT - 1（縦軸）を、ともにこの幅に対応させる。
+// 縦横が同じ長さなので、丸めが起きない場合が 45 度の直線になる
+const PLOT_SIZE = 2.4
+
+// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z。
+// 正面から見る構図に固定しているため、この厚みは絵には出ない
+const LAYER_AXIS = 0.01
+const LAYER_RISER = 0.02
+const LAYER_SOURCE = 0.03
+const LAYER_TREAD = 0.04
+const LAYER_GUIDE = 0.05
+const LAYER_GAP = 0.06
+const LAYER_DOT = 0.07
+
+// 段階の間隔。段階の数が L なら、明るさの 0〜1 を L - 1 等分した幅になる
+const stepWidth = 1 / (LEVEL_COUNT - 1)
+
+// 一番近い段階に丸める。その段階の番号がそのまま画素値になる
+const pixelValue = Math.round(INPUT * (LEVEL_COUNT - 1))
+const output = pixelValue * stepWidth
+
+// グラフ全体を canvas の中央に寄せる
+const graph = new Group()
+graph.position.set(-PLOT_SIZE / 2, -1.22, 0)
+scene.add(graph)
+
+// 横軸（入力の明るさ）と縦軸（出力の画素値）。横軸の右端には目盛りを付ける
+const axisGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(-0.18, 0, LAYER_AXIS),
+  new Vector3(PLOT_SIZE + 0.18, 0, LAYER_AXIS),
+  new Vector3(0, -0.18, LAYER_AXIS),
+  new Vector3(0, PLOT_SIZE + 0.18, LAYER_AXIS),
+  new Vector3(PLOT_SIZE, 0, LAYER_AXIS),
+  new Vector3(PLOT_SIZE, -0.075, LAYER_AXIS)
+])
+const axisMaterial = new LineBasicMaterial({ color: "#9aa3b0" })
+graph.add(new LineSegments(axisGeometry, axisMaterial))
+
+// 丸める前の明るさ。入力がそのまま出力になる（丸めが起きない）場合を表す 45 度の直線
+const sourceGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(0, 0, LAYER_SOURCE),
+  new Vector3(PLOT_SIZE, PLOT_SIZE, LAYER_SOURCE)
+])
+graph.add(new Line(sourceGeometry, new LineBasicMaterial({ color: "#5ec8f2" })))
+
+// 量子化特性。丸めた結果が横ばいに続く踏み板と、次の段階へ移る立ち上がり、
+// および縦軸の目盛りを、段階ごとに組み立てる
+const treadPoints: Vector3[] = []
+const riserPoints: Vector3[] = []
+const tickPoints: Vector3[] = []
+for (let k = 0; k < LEVEL_COUNT; k++) {
+  const y = k * stepWidth * PLOT_SIZE
+
+  // 踏み板。その段階に丸められる明るさの範囲は、隣の段階との中間までになる
+  const from = Math.max((k - 0.5) * stepWidth, 0) * PLOT_SIZE
+  const to = Math.min((k + 0.5) * stepWidth, 1) * PLOT_SIZE
+  treadPoints.push(new Vector3(from, y, LAYER_TREAD), new Vector3(to, y, LAYER_TREAD))
+
+  tickPoints.push(new Vector3(-0.075, y, LAYER_AXIS), new Vector3(0, y, LAYER_AXIS))
+
+  // 立ち上がり。1 つ前の段階の高さから、この段階の高さまで垂直に飛ぶ
+  if (k > 0) {
+    const previousY = y - stepWidth * PLOT_SIZE
+    riserPoints.push(new Vector3(from, previousY, LAYER_RISER), new Vector3(from, y, LAYER_RISER))
+  }
+}
+graph.add(new LineSegments(new BufferGeometry().setFromPoints(tickPoints), axisMaterial))
+graph.add(
+  new LineSegments(
+    new BufferGeometry().setFromPoints(treadPoints),
+    new LineBasicMaterial({ color: "#ffc857" })
+  )
+)
+// 立ち上がりは、丸めた結果そのものである踏み板より控えめに見せる
+graph.add(
+  new LineSegments(
+    new BufferGeometry().setFromPoints(riserPoints),
+    new LineBasicMaterial({ color: "#ffc857", transparent: true, opacity: 0.45 })
+  )
+)
+
+// 入力の明るさを縦に辿り、丸めた先の画素値を横に読み取るための補助線
+const x = INPUT * PLOT_SIZE
+const outputY = output * PLOT_SIZE
+const guideGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(x, 0, LAYER_GUIDE),
+  new Vector3(x, x, LAYER_GUIDE),
+  new Vector3(x, outputY, LAYER_GUIDE),
+  new Vector3(0, outputY, LAYER_GUIDE)
+])
+const guides = new LineSegments(
+  guideGeometry,
+  new LineDashedMaterial({ color: "#aeb6c2", dashSize: 0.07, gapSize: 0.05 })
+)
+// 破線の刻みは頂点間の距離から決まるので、頂点を置いたら測る
+guides.computeLineDistances()
+graph.add(guides)
+
+// 丸めによって生じるずれ。45 度の直線上の明るさと、丸めた先の画素値との差
+const gapGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(x, x, LAYER_GAP),
+  new Vector3(x, outputY, LAYER_GAP)
+])
+graph.add(new LineSegments(gapGeometry, new LineBasicMaterial({ color: "#f2766a" })))
+
+// 丸める前の明るさ（45 度の直線上）と、丸めた後の画素値（踏み板の上）を指す点
+const dotGeometry = new SphereGeometry(0.045, 12, 8)
+const inputDot = new Mesh(dotGeometry, new MeshBasicMaterial({ color: "#5ec8f2" }))
+inputDot.position.set(x, x, LAYER_DOT)
+graph.add(inputDot)
+
+const outputDot = new Mesh(dotGeometry, new MeshBasicMaterial({ color: "#ffc857" }))
+outputDot.position.set(x, outputY, LAYER_DOT)
+graph.add(outputDot)
+```
+
+:::
 
 ## :WithGroupTag[量子化レベル数とビット数]{group="{['CG', 'ImgP']}"}
 
-では、この段階はいくつ用意すればよいのでしょうか。
+では、この段階はどれくらい細かく設定すればよいのでしょうか。
 
-量子化で用意する段階の数を:Anki[量子化レベル数]といいます。
-レベル数が:Anki[多]いほど、連続的な明るさをより細かい段階で表せます。
+量子化で用意する段階の数を:Anki[量子化レベル数]といい、レベル数が:Anki[多い]ほど、連続的な明るさをより細かい段階で表せます。
 
 このレベル数は、画素値を表すために必要な:Anki[ビット数]と直接結びついています。
 
-- `1`ビットは`0`と`1`の`2`通りの状態を表せるため、`1`ビットで`2`段階を区別できる
-- `2`ビットなら、`00`・`01`・`10`・`11`の`4`通り、すなわち`4`段階
-- `3`ビットなら`8`通り、すなわち`8`段階
+- `1`ビット：`0`と`1`の`2`通りの状態を表せるため、`1`ビットで`2`段階を区別できる
+- `2`ビット：`00`・`01`・`10`・`11`の`4`通り、すなわち`4`段階
+- `3`ビット：`8`通り、すなわち`8`段階
 
-というように、ビットを`1`つ増やすたびに表せる段階は:Anki[2倍]になります。
+というように、ビットを`1`つ増やす度に表せる段階は:Anki[2倍]になります。
 
 この積み上げを一般化すると、`n`ビットで表せる量子化レベル数は $$2^n$$ となります。
 
@@ -82,7 +218,115 @@ $$
 明るさが滑らかに変化するアナログ画像を量子化すると、デジタル画像のある位置で、量子化レベルが1段階変化することになります。
 このとき、量子化レベル数が十分に大きくないと、段階が変化する位置が等高線のように見えてしまうことがあります。本来そこに輪郭がないのに縁取りのような線が見えることから、この線は:Anki[擬似輪郭]または:Anki[擬似エッジ]と呼ばれます。
 
-<!-- TODO: 擬似輪郭の図解。ビット数が少ないグラデーション画像に現れる帯状の縞（擬似輪郭）を示す -->
+:::Action
+:Mark[ビット数]を動かして、次の様子を観察しよう
+
+- :Mark[ビット数]を小さくするほど:Mark[量子化レベル数]が減り、滑らかだった濃淡が帯に分かれる
+- 帯と帯の境目に、:Mark[擬似輪郭]（もとのグラデーションには無い等高線のような線）が浮かび上がる
+- :Mark[ビット数]を大きくしていくと等高線の間隔が細かくなり、やがて擬似輪郭が見えなくなる
+:::
+
+<CanvasWrapper>
+  <FalseContourDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 画素値を表すビット数。ビットを 1 つ増やす度に、表せる段階は 2 倍になる
+const BIT_COUNT = 5
+const LEVEL_COUNT = 2 ** BIT_COUNT
+
+// 画像として扱う正方形の 1 辺と、左右に並べた 2 枚の中心の x 座標
+const IMAGE_SIZE = 2
+const HALF_IMAGE = IMAGE_SIZE / 2
+const OFFSET_X = HALF_IMAGE + 0.225
+
+// 明るさを焼く格子の細かさ。標本化ではなく量子化を見せる図なので、
+// 格子は目に見えない細かさにとる
+const RESOLUTION = 512
+
+// グラデーションの中心。画像の右上のわずかに外側に置き、そこから外へ向かって暗くなるようにする。
+// 明暗の変化が緩やかなので、量子化を粗くすると段の境目が等高線のように現れる
+const GRADIENT_CENTER = 1.12
+
+// 中心からの距離の最小・最大。明るさが 0〜1 をちょうど使い切るように正規化する
+const MIN_DISTANCE = Math.SQRT2 * (GRADIENT_CENTER - 1)
+const MAX_DISTANCE = Math.SQRT2 * GRADIENT_CENTER
+
+// もとの連続的なグラデーション。位置 (x, y)（ともに 0〜1）での明るさ（0〜1）を返す
+const brightnessAt = (x: number, y: number) => {
+  const distance = Math.hypot(x - GRADIENT_CENTER, y - GRADIENT_CENTER)
+  return 1 - (distance - MIN_DISTANCE) / (MAX_DISTANCE - MIN_DISTANCE)
+}
+
+// 明るさ（0〜1）を、一番近い段階に丸める。用意する段階の数が量子化レベル数
+const quantize = (brightness: number) =>
+  Math.round(brightness * (LEVEL_COUNT - 1)) / (LEVEL_COUNT - 1)
+
+// 明るさを 1 テクセルずつ焼く。levelOf に丸め方を渡すことで、
+// 量子化する前とした後を同じ手順で作る
+const createGrayscaleTexture = (levelOf: (brightness: number) => number) => {
+  const data = new Uint8Array(RESOLUTION * RESOLUTION * 4)
+  for (let row = 0; row < RESOLUTION; row++) {
+    for (let column = 0; column < RESOLUTION; column++) {
+      // テクセル 1 つ分の真ん中で明るさを読み取る
+      const x = (column + 0.5) / RESOLUTION
+      const y = (row + 0.5) / RESOLUTION
+      const level = Math.round(levelOf(brightnessAt(x, y)) * 255)
+      data.set([level, level, level, 255], (row * RESOLUTION + column) * 4)
+    }
+  }
+
+  // 明るさをそのままの濃さで貼るテクスチャ。テクセルどうしは滑らかに繋ぐ
+  const texture = new DataTexture(data, RESOLUTION, RESOLUTION)
+  texture.colorSpace = SRGBColorSpace
+  texture.magFilter = LinearFilter
+  texture.minFilter = LinearFilter
+  texture.needsUpdate = true
+  return texture
+}
+
+// 左にもとのグラデーション、右に量子化した結果を並べる。
+// 明るさをそのままの濃さで見せたいので、2 枚とも陰影の付かない材質で貼る
+const imageGeometry = new PlaneGeometry(IMAGE_SIZE, IMAGE_SIZE)
+
+const referenceTexture = createGrayscaleTexture((brightness) => brightness)
+const reference = new Mesh(
+  imageGeometry,
+  new MeshBasicMaterial({ map: referenceTexture, side: DoubleSide })
+)
+reference.position.x = -OFFSET_X
+scene.add(reference)
+
+const quantizedTexture = createGrayscaleTexture(quantize)
+const quantized = new Mesh(
+  imageGeometry,
+  new MeshBasicMaterial({ map: quantizedTexture, side: DoubleSide })
+)
+quantized.position.x = OFFSET_X
+scene.add(quantized)
+
+// 画像の外周。背景と明るさが近い部分でも、画像の範囲が分かるようにする
+const frameGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(-HALF_IMAGE, -HALF_IMAGE, 0.002),
+  new Vector3(HALF_IMAGE, -HALF_IMAGE, 0.002),
+  new Vector3(HALF_IMAGE, -HALF_IMAGE, 0.002),
+  new Vector3(HALF_IMAGE, HALF_IMAGE, 0.002),
+  new Vector3(HALF_IMAGE, HALF_IMAGE, 0.002),
+  new Vector3(-HALF_IMAGE, HALF_IMAGE, 0.002),
+  new Vector3(-HALF_IMAGE, HALF_IMAGE, 0.002),
+  new Vector3(-HALF_IMAGE, -HALF_IMAGE, 0.002)
+])
+const frameMaterial = new LineBasicMaterial({ color: "#c8ccd4" })
+for (const x of [-OFFSET_X, OFFSET_X]) {
+  const frame = new LineSegments(frameGeometry, frameMaterial)
+  frame.position.x = x
+  scene.add(frame)
+}
+```
+
+:::
 
 :Anki[量子化レベル数]を少なくする、すなわちビット数を小さくすると、:Anki[量子化誤差]が大きくなり、擬似輪郭が目立つようになります。
 
@@ -93,5 +337,5 @@ $$
 空の青のグラデーションを`2`ビット（4段階）で量子化すると、滑らかに変わっていたはずの青が4本の帯に分かれて見えます。段と段の境目に:Anki[擬似輪郭]が現れた状態です。
 :::
 
-このように、量子化レベル数をどれだけ確保するかは、画像のなめらかさを左右する重要な選択です。
+このように、量子化レベル数をどれだけ確保するかは、画像の滑らかさを左右する重要な選択です。
 次は、こうして量子化で決まった画素値が、どのように明暗や色を表すのかを見ていきます。

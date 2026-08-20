@@ -18,6 +18,9 @@
     font-size: 0.8rem;
     line-height: 1.7;
   }
+  .add :global(*) {
+    font-size: 0.8rem;
+  }
 
   /* diff のガター相当の `+` を、各段落の行頭にぶら下げる */
   .add :global(p) {

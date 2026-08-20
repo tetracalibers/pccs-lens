@@ -1,0 +1,13 @@
+{
+  "route": "cg/modeling/bezier-curve-properties",
+  "title": "ベジェ曲線の数学的性質",
+  "titleLines": [
+    "ベジェ曲線の",
+    "数学的性質"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "モデリング"
+  ],
+  "figure": "assets/cg/modeling/bezier-curve-properties/figure.png"
+}

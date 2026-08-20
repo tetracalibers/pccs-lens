@@ -315,6 +315,7 @@
 
 - [x] `/cg/basics/image-digitization`
 - [x] `/cg/basics/image-sampling`
+- [draft] `/cg/basics/sampling-theorem-and-interpolation`
 - [x] `/cg/basics/image-quantization`
 - [x] `/cg/basics/grayscale-and-color-images`
 - [x] `/cg/basics/vector-and-raster`
@@ -437,7 +438,7 @@
 
 - [ページ未作成] 周波数フィルタリングの原理
 - [ページ未作成] 空間フィルタリングとの関係
-- [ページ未作成] ローパス・ハイパス・バンドパスフィルタ
+- [draft] `/cg/frequency/lowpass-highpass-bandpass-filters`
 - [ページ未作成] 高域強調フィルタ
 
 ## CGと画像処理 — 歴史／CGと画像処理の歴史（`cg/history.yaml` #history）
@@ -510,7 +511,7 @@
 - [ ] `/cg/modeling/curve-surface-equations`
 - [ ] `/cg/modeling/quadratic-curve`
 - [ ] `/cg/modeling/bezier-curve-surface`
-- [draft] `/cg/modeling/bezier-curve-properties`
+- [ ] `/cg/modeling/bezier-curve-properties`
 - [ページ未作成] ファーガソン曲線
 - [ページ未作成] 双3次クーンズ曲面
 - [draft] `/cg/modeling/b-spline-curve-surface`

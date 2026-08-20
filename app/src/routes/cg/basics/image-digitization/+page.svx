@@ -3,7 +3,14 @@ layout: guide-content
 title: 画像のデジタル化 # CG 1-2-1 / ImgP 2-4
 
 group: ["CG", "ImgP"]
+visual: true
 ---
+
+<script>
+  import BrightnessTerrainDemo from '$lib/demo/threejs/basics/image-digitization/brightness-terrain/BrightnessTerrainDemo.svelte'
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import ImageResolutionDemo from '$lib/demo/threejs/basics/image-digitization/image-resolution/ImageResolutionDemo.svelte'
+</script>
 
 [カメラでの撮影とCG](/cg/basics/camera-capture-and-cg/)では、撮像素子がアナログの光の像を読み取り、コンピュータが扱えるデジタル画像にする、という流れを見ました。
 では、その「デジタル画像にする」とは、具体的にどのようなことなのでしょうか。
@@ -14,29 +21,202 @@ group: ["CG", "ImgP"]
 こうした画像は、拡大鏡で覗いてみても、濃淡が小さな点（ドット）に分かれて見えることはありません。どんなに拡大して見ても、色や濃淡は切れ目なく連続的に表現されています。
 
 このように、どれだけ拡大しても濃淡が連続的に表現される画像が、:Anki[アナログ画像]です。
-アナログ画像には、2つの意味で「切れ目がない」という特徴があります。1つは、どの部分を見ても像が途切れず、すき間なく繋がっていること。もう1つは、明るさが、濃いところから薄いところへと段階を感じさせずなめらかに移り変わっていくことです。
+アナログ画像には、2つの意味で「切れ目がない」という特徴があります。
 
-一方、コンピュータが扱えるのは、とびとびの（離散的な）数値だけです。なめらかに繋がった連続的なものを、そのまま受け取ることはできません。
-そのため、連続的に変化するアナログ画像を、離散的な数値の集まりへと変換する必要があります。
+- どの部分を見ても像が途切れず、すき間なく繋がっていること
+- 明るさが濃いところから薄いところへと、その段階を感じさせず滑らかに移り変わっていくこと
 
-この「連続した濃淡を、とびとびの数値に変換する」ことが、画像の:Anki[デジタル化]です。
+一方、コンピュータが扱えるのは、:Anki[離散]的な（とびとびの）数値だけです。滑らかに繋がった連続的なものを、そのまま受け取ることはできません。
+
+そのため、連続的に変化するアナログ画像を、離散的な数値の集まりへと変換する必要があります。この変換が画像の:Anki[デジタル化]です。
 
 ## :WithGroupTag[画像のデジタル化]{group="{['CG', 'ImgP']}"}
 
 画像のデジタル化は、大きく3つのステップで行われます。
 
-- :Anki[標本化]（:Anki[サンプリング]）：画像を格子状に細かく区切り、各点での明るさを読み取ること
-- :Anki[量子化]：読み取った明るさ（連続的な値）を、あらかじめ決められた段階の値（離散的な値）に丸めること
-- :Anki[符号化]：丸めた値を、2進数（`0`と`1`）で表すこと
+1. :Anki[標本化]（:Anki[サンプリング]）：画像を格子状に細かく区切り、各点での明るさを読み取ること
+2. :Anki[量子化]：読み取った明るさ（連続的な値）を、あらかじめ決められた段階の値（離散的な値）に丸めること
+3. :Anki[符号化]：丸めた値を、:Anki[2進数]（`0`と`1`）で表すこと
 
-まず[標本化](/cg/basics/image-sampling/)によって、連続的に広がっていた像が格子状の点の集まりに置き換わります。次に[量子化](/cg/basics/image-quantization/)によって、各点の明るさが決まった段階の値になります。そして符号化によって、その値がコンピュータの扱える`0`と`1`で表現されます。
+まずは[標本化](/cg/basics/image-sampling/)によって、連続的に広がっていた像が格子状の点の集まりに置き換えられます。次に[量子化](/cg/basics/image-quantization/)によって、各点の明るさが決まった段階の値になります。そして符号化によって、その値がコンピュータの扱える`0`と`1`で表現されます。
 
-これら3つのステップを経ることで、画像は格子状に区切られた小さな単位の集まりになります。この最小単位を:Anki[画素]（:Anki[ピクセル]）といいます。
-画素は、デジタル画像を形づくるいちばん小さな部品です。
+これら`3`つの処理が順に行われた結果、画像は格子状に区切られた小さな単位の集まりになります。この最小単位を:Anki[画素]（:Anki[ピクセル]）といいます。画素は、デジタル画像を形づくる一番小さな部品です。
+
+:::Action
+左のアナログ画像と見比べながら、明るさを高さに置き換えた右の図を観察しよう
+
+- :Mark[格子の分割数]を減らすほど、粗い格子状に区切られていく
+- :Mark[明るさの段階数]を減らすほど、滑らかだった濃淡（棒の高さ）が階段状になる
+- :Mark[連続的な明るさを重ねる]と、もとの明るさと、段階に丸めた後の画素の高さとのずれがわかる
+- ドラッグして真上から見下ろすと、左のアナログ画像と、右の画素の並びを比較できる
+:::
+
+<CanvasWrapper>
+  <BrightnessTerrainDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 明るさ（0〜1）を高さに変換する。曲面と画素で同じ対応を使う
+const heightOf = (brightness: number) => 0.05 + brightness * 1.1
+
+// 環境光と真上寄りの平行光。Lambert の反射では放射照度を π で割った値が明るさになるので、
+// 上を向いた面に届く放射照度がちょうど π になるようにとる。
+// こうすると画素の上面が、その画素の値そのままの灰色で見える
+const keyLight = new DirectionalLight("#ffffff", Math.PI * 0.35)
+keyLight.position.set(2, 6, 3)
+scene.add(new AmbientLight("#ffffff", Math.PI * 0.7), keyLight)
+
+// 左：もとのアナログ画像。連続的な明るさを、そのまま灰色の濃淡として 1 枚の絵に焼く。
+// 上下は、テクスチャの行が増える向きと z 軸の向きが逆になることに合わせる
+const RESOLUTION = 256
+const pictureData = new Uint8Array(RESOLUTION * RESOLUTION * 4)
+for (let row = 0; row < RESOLUTION; row++) {
+  for (let column = 0; column < RESOLUTION; column++) {
+    const x = -1 + (2 * (column + 0.5)) / RESOLUTION
+    const z = 1 - (2 * (row + 0.5)) / RESOLUTION
+    const level = Math.round(brightnessAt(x, z) * 255)
+    pictureData.set([level, level, level, 255], (row * RESOLUTION + column) * 4)
+  }
+}
+const pictureTexture = new DataTexture(pictureData, RESOLUTION, RESOLUTION)
+pictureTexture.colorSpace = SRGBColorSpace
+pictureTexture.magFilter = LinearFilter
+pictureTexture.minFilter = LinearFilter
+pictureTexture.needsUpdate = true
+
+// 明るさをそのままの濃さで見せたいので、陰影の付かない材質で貼る
+const pictureGeometry = new PlaneGeometry(2, 2)
+pictureGeometry.rotateX(-Math.PI / 2)
+const pictureMaterial = new MeshBasicMaterial({ map: pictureTexture, side: DoubleSide })
+const picture = new Mesh(pictureGeometry, pictureMaterial)
+picture.position.set(-1.35, 0, 0)
+scene.add(picture)
+
+// 右：デジタル化した結果。左のアナログ画像と同じ大きさの枠に、同じ向きで並べる
+const terrain = new Group()
+terrain.position.set(1.35, 0, 0)
+scene.add(terrain)
+
+// 連続的な明るさの曲面。細かく分割した平面の頂点を、その位置の明るさのぶんだけ持ち上げる
+const surfaceGeometry = new PlaneGeometry(2, 2, 96, 96)
+surfaceGeometry.rotateX(-Math.PI / 2)
+const surfacePosition = surfaceGeometry.getAttribute("position")
+for (let i = 0; i < surfacePosition.count; i++) {
+  surfacePosition.setY(i, heightOf(brightnessAt(surfacePosition.getX(i), surfacePosition.getZ(i))))
+}
+surfaceGeometry.computeVertexNormals()
+const surfaceMaterial = new MeshLambertMaterial({
+  color: "#5ec8f2",
+  side: DoubleSide,
+  transparent: true,
+  opacity: 0.4
+})
+terrain.add(new Mesh(surfaceGeometry, surfaceMaterial))
+
+// 格子の分割数と、明るさの段階数（量子化レベル数）
+const SAMPLE_COUNT = 16
+const LEVEL_COUNT = 4
+
+// 画素。1 辺 1 の立方体を、底面が y = 0 に来るようずらしておき、
+// 大きさ・位置・色を 1 つずつ与えて格子状に並べる
+const pixelGeometry = new BoxGeometry(1, 1, 1).translate(0, 0.5, 0)
+const pixels = new InstancedMesh(pixelGeometry, new MeshLambertMaterial(), SAMPLE_COUNT ** 2)
+terrain.add(pixels)
+
+const matrix = new Matrix4()
+const color = new Color()
+
+// 標本化間隔。画像の 1 辺を格子の分割数で割ったものが、そのまま 1 画素の大きさになる
+const pitch = 2 / SAMPLE_COUNT
+
+// 量子化レベル数が n なら、明るさは 0 と 1 を含む n 段階、すなわち n - 1 等分に丸める
+const steps = LEVEL_COUNT - 1
+
+for (let row = 0; row < SAMPLE_COUNT; row++) {
+  for (let column = 0; column < SAMPLE_COUNT; column++) {
+    // 標本化：格子の 1 マスごとに、その中心での明るさを読み取る
+    const x = -1 + (column + 0.5) * pitch
+    const z = -1 + (row + 0.5) * pitch
+    const sampled = brightnessAt(x, z)
+
+    // 量子化：読み取った明るさを、決められた段階のうちいちばん近い値に丸める
+    const value = Math.round(sampled * steps) / steps
+
+    // 画素の値を、高さと灰色の濃さの両方で表す
+    const index = row * SAMPLE_COUNT + column
+    matrix.makeScale(pitch * 0.88, heightOf(value), pitch * 0.88)
+    matrix.setPosition(x, 0, z)
+    pixels.setMatrixAt(index, matrix)
+    pixels.setColorAt(index, color.setRGB(value, value, value, SRGBColorSpace))
+  }
+}
+pixels.instanceMatrix.needsUpdate = true
+```
+
+:::
 
 ## :WithGroupTag[画素と解像度]{group="{['CG', 'ImgP']}"}
 
-格子状に区切られた:Anki[画素]が整然と並ぶことで、1枚のデジタル画像が構成されます。
+このように、格子状に区切られた:Anki[画素]が整然と並ぶことで、1枚のデジタル画像が構成されます。
+この:Mark[画素]の細かさ、すなわち画素がどれだけ密に詰まっているかを:Anki[解像度]といいます。
 
-この画素の細かさ、すなわち画素がどれだけ密に詰まっているかを:Anki[解像度]といいます。
-同じ大きさの画像であれば、解像度が高いほど画素が小さく細かく並ぶため、像はなめらかで精細に見えます。逆に解像度が低いと、一つひとつの画素が目立ち、像は粗く見えます。
+同じ大きさの画像であれば、解像度が:Anki[高い]ほど画素が小さくなり細かく並ぶため、像は滑らかで精細に見えます。逆に解像度が低いと、一つひとつの画素が目立ち、像は粗く見えます。
+
+:::Action
+:Mark[解像度]を下げるほど、一つひとつの画素が大きくなり、図形の輪郭が階段状にがたついて見えることを確認しよう
+:::
+
+<CanvasWrapper>
+  <ImageResolutionDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 1 辺あたりの画素数
+const RESOLUTION = 24
+
+// 指定した解像度で絵を標本化し、1 画素 1 テクセルのテクスチャに焼く
+const data = new Uint8Array(RESOLUTION * RESOLUTION * 4)
+for (let row = 0; row < RESOLUTION; row++) {
+  for (let column = 0; column < RESOLUTION; column++) {
+    // 画素 1 つ分の真ん中で明るさを読み取る
+    const x = -1 + (2 * (column + 0.5)) / RESOLUTION
+    const y = -1 + (2 * (row + 0.5)) / RESOLUTION
+    const level = Math.round(patternAt(x, y) * 255)
+    data.set([level, level, level, 255], (row * RESOLUTION + column) * 4)
+  }
+}
+
+// 拡大しても画素どうしが混ざらないよう、補間なし（NearestFilter）で貼る
+const texture = new DataTexture(data, RESOLUTION, RESOLUTION)
+texture.colorSpace = SRGBColorSpace
+texture.magFilter = NearestFilter
+texture.minFilter = NearestFilter
+texture.needsUpdate = true
+
+// 解像度を変えても、画像そのものの大きさは変えない
+const pictureGeometry = new PlaneGeometry(2, 2)
+const pictureMaterial = new MeshBasicMaterial({ map: texture, side: DoubleSide })
+scene.add(new Mesh(pictureGeometry, pictureMaterial))
+
+// 画素どうしの境目。画像の 1 辺を解像度で等分した位置に引く
+const pitch = 2 / RESOLUTION
+const gridPoints: number[] = []
+for (let i = 0; i <= RESOLUTION; i++) {
+  const offset = -1 + i * pitch
+  gridPoints.push(offset, -1, 0, offset, 1, 0)
+  gridPoints.push(-1, offset, 0, 1, offset, 0)
+}
+const gridGeometry = new BufferGeometry().setAttribute(
+  "position",
+  new Float32BufferAttribute(gridPoints, 3)
+)
+const grid = new LineSegments(gridGeometry, new LineBasicMaterial({ color: "#7d8794" }))
+grid.position.z = 0.002
+scene.add(grid)
+```
+
+:::
