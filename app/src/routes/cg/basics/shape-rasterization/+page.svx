@@ -3,7 +3,15 @@ layout: guide-content
 title: ラスタ化による図形の描画 # CG 6-2-1, 1-2-2
 
 group: ["CG"]
+visual: true
+
+draft: true
 ---
+
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import ScanConversionGridDemo from '$lib/demo/threejs/basics/shape-rasterization/scan-conversion-grid/ScanConversionGridDemo.svelte'
+</script>
 
 点や線、図形を数式で表した[ベクタ表現](/cg/basics/vector-and-raster/)を、画素の集まりであるラスタ表現へ変換することを:Anki[ラスタ化]といいます。数式で表された図形を画素の格子に落とし込み、色をつけていくには、どの画素を塗るべきかを具体的に決める必要があります。
 線分・円・ポリゴンを例に、ラスタ化の仕組みを具体的に見ていきましょう。
@@ -24,8 +32,106 @@ group: ["CG"]
 
 走査変換では、図形を構成する連続的な線を、この格子の上の画素で近似することになります。そのため、本来は滑らかな線も、拡大すると階段状のギザギザが見えてしまいます。
 
-:::Todo
-画像座標系と走査変換のデモ（連続な線が画素格子へ近似される様子）
+:::Action{fixme}
+次の点に着目して、デモを観察してみよう
+
+- 直線の傾きを正にすると、直線が右下へ向かうこと（y軸が下向きにとられているため）
+- 横の画素数を変えると、塗られる画素の並びのがたつきがどう変わるか
+- 連続な直線を消したときに残るのが、走査変換の結果そのものであること
+:::
+
+<CanvasWrapper>
+  <ScanConversionGridDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 画素格子の大きさ（横 3 : 縦 2）と、横の画素数。
+// 横の画素数を 3 の倍数にとれば、縦の画素数が整数になり画素が正方形に収まる
+const PLOT_WIDTH = 3.6
+const PLOT_HEIGHT = 2.4
+const COLUMNS = 24
+const ROWS = (COLUMNS * PLOT_HEIGHT) / PLOT_WIDTH
+const PITCH = PLOT_WIDTH / COLUMNS
+
+// 描きたい直線の傾き。x を画素 1 つ分進めたときに、y が何画素分下がるか
+const SLOPE = 0.45
+
+// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z
+const LAYER_PIXEL = 0.01
+const LAYER_GRID = 0.02
+const LAYER_AXIS = 0.04
+const LAYER_LINE = 0.05
+
+// 画素 (column, row) の中心の位置。
+// 画像座標系は画像の左上を原点とし、x 軸を右向き、y 軸を下向きにとる
+const centerXOf = (column: number) => -PLOT_WIDTH / 2 + (column + 0.5) * PITCH
+const centerYOf = (row: number) => PLOT_HEIGHT / 2 - (row + 0.5) * PITCH
+
+// 列 column の中心で、描きたい直線が通る y。画素の行を単位とした小数になる
+const exactRowAt = (column: number) => (ROWS - 1) / 2 + SLOPE * (column - (COLUMNS - 1) / 2)
+
+// 画素どうしの境目。画像の縦横を、画素数で等分した位置に引く
+const gridPoints: Vector3[] = []
+for (let column = 0; column <= COLUMNS; column++) {
+  const x = -PLOT_WIDTH / 2 + column * PITCH
+  gridPoints.push(
+    new Vector3(x, -PLOT_HEIGHT / 2, LAYER_GRID),
+    new Vector3(x, PLOT_HEIGHT / 2, LAYER_GRID)
+  )
+}
+for (let row = 0; row <= ROWS; row++) {
+  const y = PLOT_HEIGHT / 2 - row * PITCH
+  gridPoints.push(
+    new Vector3(-PLOT_WIDTH / 2, y, LAYER_GRID),
+    new Vector3(PLOT_WIDTH / 2, y, LAYER_GRID)
+  )
+}
+const gridGeometry = new BufferGeometry().setFromPoints(gridPoints)
+scene.add(new LineSegments(gridGeometry, new LineBasicMaterial({ color: "#7d8794" })))
+
+// 1 列につき 1 画素、直線に最も近い画素（y を四捨五入した行）を塗る。
+// 塗った色をそのままの濃さで見せたいので、陰影の付かない材質にする
+const pixels = new InstancedMesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#ffc857" }),
+  COLUMNS
+)
+const matrix = new Matrix4()
+let painted = 0
+for (let column = 0; column < COLUMNS; column++) {
+  const row = Math.round(exactRowAt(column))
+  if (row < 0 || row > ROWS - 1) continue
+
+  matrix.makeScale(PITCH, PITCH, 1)
+  matrix.setPosition(centerXOf(column), centerYOf(row), LAYER_PIXEL)
+  pixels.setMatrixAt(painted++, matrix)
+}
+pixels.count = painted
+scene.add(pixels)
+
+// 画像座標系の軸。画像の左上の原点から、x 軸は右へ、y 軸は下へ伸ばす
+const axisGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(-PLOT_WIDTH / 2 - 0.18, PLOT_HEIGHT / 2 + 0.18, LAYER_AXIS),
+  new Vector3(PLOT_WIDTH / 2 + 0.26, PLOT_HEIGHT / 2 + 0.18, LAYER_AXIS),
+  new Vector3(-PLOT_WIDTH / 2 - 0.18, PLOT_HEIGHT / 2 + 0.18, LAYER_AXIS),
+  new Vector3(-PLOT_WIDTH / 2 - 0.18, -PLOT_HEIGHT / 2 - 0.26, LAYER_AXIS)
+])
+scene.add(new LineSegments(axisGeometry, new LineBasicMaterial({ color: "#9aa3b0" })))
+
+// 描きたい連続な直線。格子の中心を通り、x 方向の端と y 方向の端のうち先に達する方で切る。
+// 線材（LineBasicMaterial）の線幅は WebGL では常に 1 ドットに固定されるため、
+// 図の主役である直線は、格子線に埋もれない太さの細長い長方形として描く
+const halfLength = Math.min(PLOT_WIDTH / 2, PLOT_HEIGHT / 2 / Math.abs(SLOPE))
+const line = new Mesh(new PlaneGeometry(1, 1), new MeshBasicMaterial({ color: "#6fd8ff" }))
+// 長方形の長辺を線分の長さに合わせ、傾きの分だけ回す（y 軸が下向きなので回転は逆向き）
+line.scale.set(2 * halfLength * Math.hypot(1, SLOPE), 0.034, 1)
+line.rotation.z = Math.atan(-SLOPE)
+line.position.z = LAYER_LINE
+scene.add(line)
+```
+
 :::
 
 ## :WithGroupTag[線分のラスタ化]{group="{['CG']}"}
