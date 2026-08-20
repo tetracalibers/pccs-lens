@@ -429,7 +429,7 @@
 
 ## CGと画像処理（nested） — 記事：アニメーション（`cg/animation.yaml`）
 
-- [ページ未作成] 仮現運動とコマ撮り
+- [draft] `/cg/animation/apparent-motion-and-stop-motion`
 - [ページ未作成] アニメーション技法
 - [ページ未作成] カメラワーク
 - [ページ未作成] キーフレーム法とスケルトン法
