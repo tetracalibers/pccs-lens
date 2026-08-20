@@ -3,7 +3,15 @@ layout: guide-content
 title: 塗りつぶし処理 # CG 6-2-3
 
 group: ["CG"]
+visual: true
+
+draft: true
 ---
+
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import ScanlineFillDemo from '$lib/demo/threejs/basics/area-filling/scanline-fill/ScanlineFillDemo.svelte'
+</script>
 
 [ラスタ化による図形の描画](/cg/basics/shape-rasterization/)では、ポリゴンの輪郭を画素として描く処理を見てきました。
 続けて、その輪郭の内側を色で埋める塗りつぶし処理について見ていきます。
@@ -26,10 +34,6 @@ group: ["CG"]
 
 塗りつぶしでは、こうして求めた交点をもとに、内側にあたる区間を水平に塗っていきます。
 
-:::Todo
-スキャンラインごとの塗りつぶしを行うデモ
-:::
-
 `1`本のスキャンラインが塗りつぶし対象の閉領域と交わると、交点は普通:Anki[偶数]個できます。
 スキャンラインを左端からたどっていくと、はじめは領域の外側にいて、交点（＝境界との交わり）を越える度に、外から内、内から外へと位置が切り替わります。一度内側に入れば必ずどこかで外側へ出るので、交点は外と内を行き来した回数の分だけ、偶数個で揃うのです。
 
@@ -48,8 +52,184 @@ group: ["CG"]
 
 そこで、交点を左から順に並べ、`1`番目と`2`番目、`3`番目と`4`番目、というように、奇数番目の交点から次の偶数番目の交点までの区間を塗れば、ちょうど内側だけを塗ることができます。スキャンラインごとにこの区間を塗っていけば、ポリゴンの内部全体が塗りつぶされます。
 
-:::Todo
-走査線とポリゴンの交点・塗りつぶしスパン（左右交点間）を示す図
+:::Action{fixme}
+次の点に着目して、デモを観察してみよう
+
+- 走査線の行をどこへ動かしても、交点の個数が偶数個になること
+- 交点が`4`個ある行では、`1`番目から`2`番目までと`3`番目から`4`番目までが塗られ、`2`番目から`3`番目まで（山と山の間）は塗られないこと
+- 走査線を下へ進めるほど、塗り終えた行が上から順に積み上がっていくこと
+:::
+
+<CanvasWrapper>
+  <ScanlineFillDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 画素の格子
+const COLUMNS = 24
+const ROWS = 16
+const PITCH = 0.15
+const PLOT_WIDTH = COLUMNS * PITCH
+const PLOT_HEIGHT = ROWS * PITCH
+
+// 塗りつぶす閉領域。山が 2 つ並んだ形をとる。
+// 走査線は画素の中心（行 + 0.5）を通るので、頂点の y を整数にとっておけば、
+// 走査線が頂点の高さにちょうど重なることがない
+const POLYGON: [number, number][] = [
+  [2.5, 13],
+  [7.5, 2],
+  [11, 8],
+  [14, 8],
+  [17.5, 3],
+  [21.5, 13]
+]
+
+// いま走査している行。この行の 1 つ上の行までは塗り終えた状態を描く
+const SCAN_ROW = 7
+
+// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z
+const LAYER_PIXEL = 0.01
+const LAYER_CURRENT_PIXEL = 0.015
+const LAYER_GRID = 0.02
+const LAYER_SCANLINE = 0.05
+const LAYER_OUTLINE = 0.06
+const LAYER_DOT = 0.08
+
+// 画素を単位とした位置を、ワールド座標へ移す。
+// 画像座標系は画像の左上を原点とし、x 軸を右向き、y 軸を下向きにとる。
+// 整数が画素どうしの境目、+0.5 が画素の中心に当たる
+const worldXOf = (x: number) => -PLOT_WIDTH / 2 + x * PITCH
+const worldYOf = (y: number) => PLOT_HEIGHT / 2 - y * PITCH
+
+// 走査線の高さ y で、ポリゴンの辺と交わる点の x を左から順に並べる。
+// 水平な辺は走査線と交点を作らないので飛ばし、辺の上端を含み下端を含まない
+// 範囲で数えることで、頂点の高さでも交点を二重に数えないようにする
+const crossingsAt = (y: number) => {
+  const xs: number[] = []
+
+  for (let i = 0; i < POLYGON.length; i++) {
+    const [x1, y1] = POLYGON[i]
+    const [x2, y2] = POLYGON[(i + 1) % POLYGON.length]
+    if (y1 === y2) continue
+    if (y < Math.min(y1, y2) || y >= Math.max(y1, y2)) continue
+
+    xs.push(x1 + ((y - y1) * (x2 - x1)) / (y2 - y1))
+  }
+
+  return xs.sort((a, b) => a - b)
+}
+
+// 区間 [left, right) を塗る画素の列。
+// 画素の中心は列 + 0.5 にあるので、中心が区間に入る列だけを塗る
+const columnsIn = (left: number, right: number) => ({
+  first: Math.max(0, Math.ceil(left - 0.5)),
+  last: Math.min(COLUMNS - 1, Math.ceil(right - 0.5) - 1)
+})
+
+// 画素どうしの境目
+const gridPoints: Vector3[] = []
+for (let column = 0; column <= COLUMNS; column++) {
+  const x = worldXOf(column)
+  gridPoints.push(
+    new Vector3(x, -PLOT_HEIGHT / 2, LAYER_GRID),
+    new Vector3(x, PLOT_HEIGHT / 2, LAYER_GRID)
+  )
+}
+for (let row = 0; row <= ROWS; row++) {
+  const y = worldYOf(row)
+  gridPoints.push(
+    new Vector3(-PLOT_WIDTH / 2, y, LAYER_GRID),
+    new Vector3(PLOT_WIDTH / 2, y, LAYER_GRID)
+  )
+}
+const gridGeometry = new BufferGeometry().setFromPoints(gridPoints)
+scene.add(new LineSegments(gridGeometry, new LineBasicMaterial({ color: "#7d8794" })))
+
+const barGeometry = new PlaneGeometry(1, 1)
+const matrix = new Matrix4()
+
+// 行 row の塗る区間を画素で埋め、埋めた画素の数を返す。
+// 交点を左から順に並べ、奇数番目の交点から次の偶数番目の交点までを塗る
+const fillRow = (row: number, pixels: InstancedMesh, offset: number, z: number) => {
+  const crossings = crossingsAt(row + 0.5)
+  let painted = offset
+
+  for (let i = 0; i + 1 < crossings.length; i += 2) {
+    const { first, last } = columnsIn(crossings[i], crossings[i + 1])
+    for (let column = first; column <= last; column++) {
+      matrix.makeScale(PITCH, PITCH, 1)
+      matrix.setPosition(worldXOf(column + 0.5), worldYOf(row + 0.5), z)
+      pixels.setMatrixAt(painted++, matrix)
+    }
+  }
+
+  return painted - offset
+}
+
+// 塗り終えた行の画素。いま塗った区間と見分けるため、控えめな濃さにする。
+// 塗った色をそのままの濃さで見せたいので、陰影の付かない材質にする
+const pastPixels = new InstancedMesh(
+  barGeometry,
+  new MeshBasicMaterial({ color: "#ffc857", transparent: true, opacity: 0.45 }),
+  COLUMNS * ROWS
+)
+let pastCount = 0
+for (let row = 0; row < SCAN_ROW; row++) {
+  pastCount += fillRow(row, pastPixels, pastCount, LAYER_PIXEL)
+}
+pastPixels.count = pastCount
+scene.add(pastPixels)
+
+// いま走査している行で、交点をもとに塗った区間の画素
+const currentPixels = new InstancedMesh(
+  barGeometry,
+  new MeshBasicMaterial({ color: "#ffc857" }),
+  COLUMNS
+)
+currentPixels.count = fillRow(SCAN_ROW, currentPixels, 0, LAYER_CURRENT_PIXEL)
+scene.add(currentPixels)
+
+// 塗りつぶす閉領域の輪郭。格子とは無関係に、切れ目なく閉じた線。
+// 線材（LineBasicMaterial）の線幅は WebGL では常に 1 ドットに固定されるため、
+// 図の主役である輪郭と走査線は細長い長方形として描く
+const outlineMaterial = new MeshBasicMaterial({ color: "#6fd8ff" })
+POLYGON.forEach(([x1, y1], index) => {
+  const [x2, y2] = POLYGON[(index + 1) % POLYGON.length]
+  const ax = worldXOf(x1)
+  const ay = worldYOf(y1)
+  const bx = worldXOf(x2)
+  const by = worldYOf(y2)
+
+  const edge = new Mesh(barGeometry, outlineMaterial)
+  edge.scale.set(Math.hypot(bx - ax, by - ay), 0.03, 1)
+  edge.rotation.z = Math.atan2(by - ay, bx - ax)
+  edge.position.set((ax + bx) / 2, (ay + by) / 2, LAYER_OUTLINE)
+  scene.add(edge)
+})
+
+// 走査線。画像を横切る 1 本の水平な線で、行を 1 つずらすたびに下へ動く
+const scanline = new Mesh(barGeometry, new MeshBasicMaterial({ color: "#f2766a" }))
+scanline.scale.set(PLOT_WIDTH + 0.28, 0.028, 1)
+scanline.position.set(0, worldYOf(SCAN_ROW + 0.5), LAYER_SCANLINE)
+scene.add(scanline)
+
+// 走査線と輪郭の交点。この点の位置から、塗る区間が決まる
+const crossings = crossingsAt(SCAN_ROW + 0.5)
+const crossingDots = new InstancedMesh(
+  new CircleGeometry(0.046, 16),
+  new MeshBasicMaterial({ color: "#f5f8fc" }),
+  crossings.length
+)
+crossings.forEach((x, index) => {
+  matrix.identity()
+  matrix.setPosition(worldXOf(x), worldYOf(SCAN_ROW + 0.5), LAYER_DOT)
+  crossingDots.setMatrixAt(index, matrix)
+})
+scene.add(crossingDots)
+```
+
 :::
 
 スキャンライン塗りつぶしは、行単位でまとめて塗るため効率がよく、ポリゴンのように辺の方程式から交点を計算できる図形に適しています。
@@ -67,7 +247,7 @@ group: ["CG"]
 :Anki[4連結]では斜めに接する画素へは塗りが伝わりませんが、:Anki[8]連結では:Mark[斜め]方向にも塗りが伝わっていきます。そのため、同じ領域でも、斜めに細く繋がった部分まで塗られるかどうかが連結性の選び方によって変わってきます。
 
 :::Todo
-4連結と8連結の近傍画素を示すグリッド図（中心画素と隣接画素を方向別に示す）
+`4`連結と`8`連結の近傍画素を示すグリッド図（中心画素と隣接画素を方向別に示す）
 :::
 
 :::Note

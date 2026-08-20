@@ -108,7 +108,7 @@
 
 - [draft] `/cg/basics/shape-rasterization`
 - [draft] `/cg/basics/anti-aliasing`
-- [x] `/cg/basics/area-filling`
+- [draft] `/cg/basics/area-filling`
 - [x] `/cg/basics/gradient-generation`
 
 ## 2値画像処理／2値化（`cg/binary-image.yaml` #binarization）
