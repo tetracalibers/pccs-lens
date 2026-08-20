@@ -14,6 +14,7 @@ draft: true
   import ErrorIncrementDemo from '$lib/demo/threejs/basics/shape-rasterization/error-increment/ErrorIncrementDemo.svelte'
   import IncrementalMethodDemo from '$lib/demo/threejs/basics/shape-rasterization/incremental-method/IncrementalMethodDemo.svelte'
   import ScanConversionGridDemo from '$lib/demo/threejs/basics/shape-rasterization/scan-conversion-grid/ScanConversionGridDemo.svelte'
+  import ScanlineSpanDemo from '$lib/demo/threejs/basics/shape-rasterization/scanline-span/ScanlineSpanDemo.svelte'
 </script>
 
 点や線、図形を数式で表した[ベクタ表現](/cg/basics/vector-and-raster/)を、画素の集まりであるラスタ表現へ変換することを:Anki[ラスタ化]といいます。数式で表された図形を画素の格子に落とし込み、色をつけていくには、どの画素を塗るべきかを具体的に決める必要があります。
@@ -576,6 +577,134 @@ scene.add(chosenFill)
 こうして求めた左右の交点の間が、塗るべき内部の区間になります。
 交点の内側を実際に塗りつぶす方法については、[塗りつぶし処理](/cg/basics/area-filling/)で扱います。
 
-:::Todo
-スキャンラインで三角形を走査する様子の図解（交点とスパン）
+:::Action{fixme}
+「スキャンラインの行」を上から下へずらして、次の点に着目してみよう
+
+- スキャンラインが辺と交わる`2`点が交点で、その間のスパンに中心が入る画素だけが塗られること
+- `1`行進めるごとに、交点のx座標が辺の傾きの分だけ動くこと（動く量はどの行でも同じ）
+- 上の頂点のx座標を変えると、左右の辺で交点の動く量がどう変わるか
+:::
+
+<CanvasWrapper>
+  <ScanlineSpanDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 画素の格子と画素の大きさ、いま見ているスキャンラインの行
+const COLUMNS = 15
+const ROWS = 10
+const PITCH = 0.24
+const SCAN_ROW = 5
+
+// ラスタ化するポリゴン（三角形）。画素の格子とは無関係に、小数の座標で置く
+const APEX = { x: 6, y: 0.6 }
+const BASE_LEFT = { x: 2.2, y: 8.4 }
+const BASE_RIGHT = { x: 12.6, y: 8.4 }
+
+// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z
+const LAYER_PIXEL = 0.01
+const LAYER_CURRENT_PIXEL = 0.015
+const LAYER_SCANLINE = 0.05
+const LAYER_EDGE = 0.06
+const LAYER_SPAN = 0.07
+
+// x（画素の列）と y（画素の行）の位置。小数を渡してもよい。
+// 画像座標系は画像の左上を原点とし、x 軸を右向き、y 軸を下向きにとる
+const worldXOf = (x: number) => (-COLUMNS / 2 + x + 0.5) * PITCH
+const worldYOf = (y: number) => (ROWS / 2 - y - 0.5) * PITCH
+
+// 2 点を結ぶ線分を、細長い長方形として置く。
+// 線材（LineBasicMaterial）の線幅は WebGL では常に 1 ドットに固定されるため、
+// ポリゴンの輪郭やスパンは長方形として描く
+const createBar = (
+  from: { x: number; y: number },
+  to: { x: number; y: number },
+  thickness: number,
+  color: string,
+  z: number
+) => {
+  const fromX = worldXOf(from.x)
+  const fromY = worldYOf(from.y)
+  const toX = worldXOf(to.x)
+  const toY = worldYOf(to.y)
+
+  const bar = new Mesh(new PlaneGeometry(1, 1), new MeshBasicMaterial({ color }))
+  bar.scale.set(Math.hypot(toX - fromX, toY - fromY), thickness, 1)
+  bar.rotation.z = Math.atan2(toY - fromY, toX - fromX)
+  bar.position.set((fromX + toX) / 2, (fromY + toY) / 2, z)
+  return bar
+}
+
+// ラスタ化するポリゴンの輪郭
+scene.add(createBar(APEX, BASE_LEFT, 0.034, "#6fd8ff", LAYER_EDGE))
+scene.add(createBar(APEX, BASE_RIGHT, 0.034, "#6fd8ff", LAYER_EDGE))
+scene.add(createBar(BASE_LEFT, BASE_RIGHT, 0.034, "#6fd8ff", LAYER_EDGE))
+
+// スキャンライン y が、点 (x1, y1) と (x2, y2) を結ぶ辺と交わる x
+const intersectionXOf = (y: number, x1: number, y1: number, x2: number, y2: number) =>
+  x1 + ((x2 - x1) * (y - y1)) / (y2 - y1)
+
+// 行 row のスキャンラインが三角形と交わる区間。
+// 上の頂点より上、底辺より下では交わらない
+const spanAt = (row: number) => {
+  if (row < APEX.y || row > BASE_RIGHT.y) return null
+
+  return {
+    left: intersectionXOf(row, APEX.x, APEX.y, BASE_LEFT.x, BASE_LEFT.y),
+    right: intersectionXOf(row, APEX.x, APEX.y, BASE_RIGHT.x, BASE_RIGHT.y)
+  }
+}
+
+// 上端から今の行まで、1 行ずつ走査してスパンの内側の画素を塗っていく。
+// 画素は、その中心がスパンに入っていれば内部とみなす
+const pixels = new InstancedMesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#ffc857", transparent: true, opacity: 0.45 }),
+  COLUMNS * ROWS
+)
+scene.add(pixels)
+
+const matrix = new Matrix4()
+let painted = 0
+
+for (let row = 0; row <= SCAN_ROW; row++) {
+  const rowSpan = spanAt(row)
+  if (!rowSpan) continue
+
+  const from = Math.max(Math.ceil(rowSpan.left), 0)
+  const to = Math.min(Math.floor(rowSpan.right), COLUMNS - 1)
+  for (let column = from; column <= to; column++) {
+    matrix.makeScale(PITCH, PITCH, 1)
+    matrix.setPosition(worldXOf(column), worldYOf(row), LAYER_PIXEL)
+    pixels.setMatrixAt(painted++, matrix)
+  }
+}
+pixels.count = painted
+
+// いま見ているスキャンラインと、その行のスパン・両端の交点
+const scanline = new Mesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#aeb6c2" })
+)
+scanline.scale.set(COLUMNS * PITCH, 0.022, 1)
+scanline.position.set(0, worldYOf(SCAN_ROW), LAYER_SCANLINE)
+scene.add(scanline)
+
+const currentSpan = spanAt(SCAN_ROW)
+if (currentSpan) {
+  const { left, right } = currentSpan
+  scene.add(
+    createBar({ x: left, y: SCAN_ROW }, { x: right, y: SCAN_ROW }, 0.05, "#f2766a", LAYER_SPAN)
+  )
+
+  for (const x of [left, right]) {
+    const dot = new Mesh(new CircleGeometry(0.042, 16), new MeshBasicMaterial({ color: "#f2766a" }))
+    dot.position.set(worldXOf(x), worldYOf(SCAN_ROW), LAYER_SPAN)
+    scene.add(dot)
+  }
+}
+```
+
 :::
