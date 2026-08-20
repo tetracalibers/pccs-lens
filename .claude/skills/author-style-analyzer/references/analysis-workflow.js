@@ -20,7 +20,7 @@ export const meta = {
 // | | 根拠モード（既定） | 発見モード（mode: 'discover'） |
 // | --- | --- | --- |
 // | 目的 | 記事が既存ルールを支持するかを記録する | ガイドそのものを見直す |
-// | 書き込み | evidence のみ（スクリプトが機械生成） | 本体・evidence・pending の3層 |
+// | 書き込み | evidence のみ（スクリプトが機械生成） | 本体・evidence・pending・rejected の4層 |
 // | ガイド本体 | エージェントに読ませない | 読んで差分更新する |
 // | 境界レビュー | 実行しない | 統合の後段で実行する |
 // | エージェント数 | 8体（Git履歴なしなら6体） | 10〜13体 |
@@ -58,6 +58,7 @@ export const meta = {
 //                                             // 移行由来の根拠が未展開なだけのルールを機械的に降格させたくない回に使う。
 //   existingGuides: { thinkingFlow, writingStyle, stylisticQuirks, refineStyle }, // ガイド本体の出力先パス
 //   pendingGuides: { ... },                   // 保留プールのパス（任意。省略時は guidesDir/pending/ から導出）
+//   rejectedGuides: { ... },                  // 棄却層のパス（任意。省略時は guidesDir/rejected/ から導出）
 //   evidenceDirs: { ... },                    // 根拠ディレクトリのパス（任意。省略時は guidesDir/evidence/<観点>/ から導出）
 //   refs: { thinkingFlow, writingStyle, stylisticQuirks, refineStyle,
 //           outputContract, contractByAspect: { ... } },  // 参照プロンプトのパス
@@ -269,6 +270,9 @@ const FILE_REPORT_SCHEMA = {
     promoted: { type: 'array', items: { type: 'string' } }, // pending → 本体へ昇格した項目
     pendingPath: { type: 'string' },
     pendingAction: { type: 'string', enum: ['created', 'updated', 'unchanged'] },
+    rejectedPath: { type: 'string' },
+    rejectedAction: { type: 'string', enum: ['created', 'updated', 'unchanged'] },
+    rejectedItems: { type: 'array', items: { type: 'string' } }, // pending → rejected（'<ID>（<区分>）'）
     evidenceDir: { type: 'string' },
     evidenceFiles: { type: 'array', items: { type: 'string' } }, // 追加/書き直した記事ファイル（'/slug (sha)' 形式）
     notes: { type: 'string' },
@@ -418,6 +422,9 @@ if (skipped.length) {
 const pendingOf = (key) =>
   (m.pendingGuides && m.pendingGuides[CAMEL[key]]) ||
   `${m.guidesDir || 'writing-guides'}/pending/${key}.md`
+const rejectedOf = (key) =>
+  (m.rejectedGuides && m.rejectedGuides[CAMEL[key]]) ||
+  `${m.guidesDir || 'writing-guides'}/rejected/${key}.md`
 const evidenceDirOf = (key) =>
   (m.evidenceDirs && m.evidenceDirs[CAMEL[key]]) ||
   `${m.guidesDir || 'writing-guides'}/evidence/${key}/`
@@ -546,7 +553,7 @@ const promotionBlock = (key) => {
   const all = m.promotionCandidates || []
   const mine = all.filter((c) => c.key === key || (c.id || '').startsWith(`${PREFIX[key]}-P`))
   return mine.length
-    ? `## 昇格候補（${key}。支持3記事以上。メインセッションが ${pendingOf(key)} から抽出済み）\n\n${JSON.stringify(mine, null, 2)}\n\n件数の閾値は必要条件にすぎません。単一シリーズに閉じている・一般技法と切り分けられない候補は昇格させず、pending に残してください。`
+    ? `## 昇格候補（${key}。支持3記事以上。メインセッションが ${pendingOf(key)} から抽出済み）\n\n${JSON.stringify(mine, null, 2)}\n\n件数の閾値は必要条件にすぎません。単一シリーズに閉じている・一般技法と切り分けられない候補は昇格させません。**昇格させなかった候補は、そのまま置かずに行き先を決めます。** 記事が増えれば解ける理由（単一シリーズ閉塞・支持記事数の不足）なら ${pendingOf(key)} に残し、記事が増えても解けない理由（媒体規約・一般技法・既存ルール・観点違い・型不収束）なら ${rejectedOf(key)} へ5欄形式で移して ${pendingOf(key)} から消します。据え置きを繰り返すと、次のラウンドが同じ候補を同じ理由で再審査することになります。`
     : `## 昇格候補（${key}）\n\n- なし（メインセッションの抽出結果）。**${pendingOf(key)} の全文を読んで候補を探し直す必要はありません。**`
 }
 
@@ -613,7 +620,8 @@ const perAspect = await pipeline(
   (prev, a) =>
     agent(
       [
-        `あなたは Synthesis Editor（担当観点：${a.key}）です。この観点の3層、ガイド本体 ${guideOf(a.key)}・根拠 ${evidenceDirOf(a.key)}・保留プール ${pendingOf(a.key)} だけを${m.isUpdate ? '差分更新' : '作成/更新'}します。**他観点のファイルには絶対に触れません。**`,
+        `あなたは Synthesis Editor（担当観点：${a.key}）です。この観点の4層、ガイド本体 ${guideOf(a.key)}・根拠 ${evidenceDirOf(a.key)}・保留プール ${pendingOf(a.key)}・棄却層 ${rejectedOf(a.key)} だけを${m.isUpdate ? '差分更新' : '作成/更新'}します。**他観点のファイルには絶対に触れません。**`,
+        `棄却層 ${rejectedOf(a.key)} は「記事が増えても解けない理由で再審査を打ち切った観察」を1項目1行・5欄で置く層です。書式は \`- <ID>｜<区分>｜<特徴：棄却の理由>｜再開: <反証可能な条件>｜支持: <slug>, <slug>\` で、区分は 媒体規約／一般技法／既存ルール／観点違い／型不収束 の5語のみ。**単一シリーズ閉塞・支持記事数の不足は棄却にせず保留に残します**（別シリーズが増えれば解けるため、棄却へ流すと死蔵になります）。棄却へ移した項目は保留プールから削除します（両方に残すとスクリプトが移行漏れとして警告します）。ID は保留IDをそのまま引き継ぎ、採番し直しません。`,
         m.isUpdate
           ? `まず ${guideOf(a.key)}（本体）と ${pendingOf(a.key)}（保留プール）を Read し、有効な既存記述を保持します。変わる箇所だけを Edit で差分更新してください（全文を Write で書き直さない／既存内容の破棄・全面的な書き直しは禁止）。根拠は記事1本1ファイルなので、**触る記事のファイルだけ**を読み書きします（${evidenceDirOf(a.key)} 配下を全部読まないでください）。`
           : `${m.guidesDir || 'writing-guides'}/ に無ければ作成して ${guideOf(a.key)} を新規に Write します。保留プール ${pendingOf(a.key)} は、既にあれば Read して差分更新し、無ければ位置づけの注記（analyzer 専用／writer は読まない旨）を先頭に付けて Write します。根拠は ${evidenceDirOf(a.key)}<slug>.md へ記事単位で Write します。`,
@@ -636,7 +644,7 @@ const perAspect = await pipeline(
           ? `反証の判定（${a.key}）:\n\n${JSON.stringify(prev.verdict.verdicts || [], null, 2)}`
           : '',
         `書き込み後、本体に \`根拠\` 欄・\`反例・例外\` 欄が無いこと、\`確度\` 欄がラベル1語のみであること、記事名・シリーズ名・件数が本体に残っていないことを自分で grep して確認します。`,
-        `本体 ${guideOf(a.key)}・根拠 ${evidenceDirOf(a.key)}・保留プール ${pendingOf(a.key)} を実際に書き込み、path・action（本体）／evidenceDir・evidenceFiles（'/slug (sha)' 形式で追加・書き直したファイル）／pendingPath・pendingAction／主な変更点（changes）／追加したルール名（newRules）／昇格した項目（promoted）／新たに保留にした項目（heldItems）を報告します。`,
+        `本体 ${guideOf(a.key)}・根拠 ${evidenceDirOf(a.key)}・保留プール ${pendingOf(a.key)}・棄却層 ${rejectedOf(a.key)} を実際に書き込み、path・action（本体）／evidenceDir・evidenceFiles（'/slug (sha)' 形式で追加・書き直したファイル）／pendingPath・pendingAction／rejectedPath・rejectedAction／主な変更点（changes）／追加したルール名（newRules）／昇格した項目（promoted）／新たに保留にした項目（heldItems）／棄却へ移した項目（rejectedItems。'<ID>（<区分>）' 形式）を報告します。`,
       ]
         .filter(Boolean)
         .join('\n\n'),

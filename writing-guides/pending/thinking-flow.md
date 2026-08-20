@@ -5,7 +5,9 @@
 `thinking-flow.md`（思考フロー）の保留プール。根拠不足・単一記事偏り・一般技法との切り分け困難などの理由で、まだ主要ルールに採用していない思考・判断の観察を集めた補助記録である。
 
 ここに置かれた項目は **文章生成・推敲時には適用しない**（`author-style-writer` はこのファイルを読まない）。
-`author-style-analyzer` が分析のたびにこのファイルを読み、根拠が増えた項目を `thinking-flow.md` の主要ルールへ**昇格**する／新たな保留を**追記**する／棄却する対象とする。
+`author-style-analyzer` が分析のたびにこのファイルを読み、根拠が増えた項目を `thinking-flow.md` の主要ルールへ**昇格**する／新たな保留を**追記**する対象とする。
+
+**記事が増えても解けない理由で再審査を打ち切った項目は、ここではなく `../rejected/thinking-flow.md` へ移す**（`node scripts/style-pending-promote.mjs` が棄却IDを昇格候補から外す）。棄却にできるのは媒体規約・一般技法・既存ルール・観点違い・型不収束の5区分だけで、**単一シリーズ閉塞・支持記事数の不足はここに残す**（別シリーズの記事が増えれば解けるため。棄却へ流すと再現の機会が来ても見に行かない死蔵になる）。
 
 保留は1項目1行で、`保留ID｜特徴：保留の理由｜支持: <slug>, <slug>` の3欄で書く（`node scripts/style-pending-promote.mjs` が支持記事数から昇格候補を出す）。
 
@@ -13,8 +15,6 @@
 
 ## 保留項目
 
-- TF-P001｜空間関係を図に委ね読者に発見させる：操作可能な図（回転・クリック）はアプリの提供コンポーネントに依存するため、著者の判断か環境要因かを切り分けられない。図の配置順は WS-062、誘い掛けの語尾は SQ-072 の担当｜支持: /color-theory/pccs-color-system, /color-theory/munsell-color-system, /color-theory/color-wheel-and-color-solid
-- TF-P002｜メタに目標・範囲・射程を提示する判断（リードでの宣言を含む）：多くのセクション・記事はメタ宣言なしに本題へ入り、目標提示は一般的な文章技法。除外宣言として機能するのは1例のみで、他は前記事の復習・話題紹介・対象概念の定義の書き換えという別現象。リードを持たない記事もあり、2記事で型が揃わない（対比からの拡張／上位カテゴリからの絞り込み）。リードの有無・内容という構造面は WS-007／WS-013 の担当｜支持: /color-theory/color-three-attributes, /color-fields/landscape-color-approach, /color-fields/interior-design-basics, /color-fields/interior-concept-history, /cg/camera/digital-camera-structure, /color-theory/age-related-vision-changes, /color-theory/color-rendering
 - TF-P003｜記事タイプによる読者モデルの切替（概念解説は一人称を排し、手順解説は一人称・個人的検証・道具推奨を前面に出す）：手順記事が1本のみで検証不足。表現面の現れは SQ-073 の担当｜支持: /color-theory/how-to-draw-pccs-color-wheel
 - TF-P004｜手順を先に列挙してから用語を後で定義する構成：1記事1箇所のみで検証不足｜支持: /color-theory/pccs-color-system
 - TF-P005｜計算・数学の詳細を名前付きブラックボックスに留める：対象2記事はいずれも初学者向け概念導入で、数式回避はこの記事タイプの既定であり著者固有判断と分離できない。実装解説・チュートリアルとの対照が取れるまで保留｜支持: /cg/basics/camera-capture-and-cg, /cg/basics/cg-and-image-processing
@@ -25,7 +25,6 @@
 - TF-P010｜調和論記事の多層的な積み上げ（観察現象→法則の命名→技法→逆の技法→適用外→表色系での体現）：実質1記事に偏り、思考（なぜ深掘りするか）と構成（どの順で並べるか）の切り分けも要検討｜支持: /color-theory/natural-harmony
 - TF-P011｜導入記事で軸概念を先に定義し、後続記事がその語を参照する系列設計：本文のみからは意図的な事前設計と断定できず、記事間の順序も推測に依存する｜支持: /color-theory/unity-and-variety
 - TF-P012｜数式・信号処理に直感的な分解イメージ・比喩を添える：数式を含む uc 記事が1件しかなく、もう一方の比喩は非数学的機構への比喩で条件が異なる｜支持: /color-theory/opponent-color-response
-- TF-P013｜習熟段階（grade）に応じて説明深度を層化する読者モデル：grade 割当はPCCS検定級という媒体の級構造に強く規定されており、著者固有の自由な判断と切り分けられない。構成面の現れは `pending/writing-style.md` と対応｜支持: /color-theory/light-components-and-reflectance, /color-theory/photoreceptor-types-and-distribution, /color-theory/opponent-color-response, /color-theory/color-roles, /color-theory/visual-clarity-and-visibility
 - TF-P014｜本筋から外れる発展・傍論・例外・補助用語を補足枠（`:::Note`・補足見出し・独立小節）へ隔離して読み飛ばしを許す：括弧書きで即時に言い換える処理のほうが圧倒的に多く、いつ外出しするかの判断基準が定まらない。Note を一つも持たない記事もあり、退避が必要そうな補足が本文に書かれる反例もある。器の選択は `writing-style.md` の担当｜支持: /color-theory/rgb-color-system, /color-theory/photometric-and-radiometric-quantities, /color-theory/lamp-types, /color-theory/contrast-phenomena, /color-theory/color-vision-types
 - TF-P015｜派生要素を上位カテゴリへ束ねてまとめる（中間混色への統合）：単一記事に偏り、一般的な整理術との区別がつきにくい｜支持: /color-theory/rgb-color-system
 - TF-P016｜数式・定理の結論を直感的な理由で開いて見せる（2倍条件＝「1周期に山と谷の2点が要る」）：1記事の1箇所に突出し、他記事は言葉への翻訳にとどまる（翻訳自体は TF-038 が扱う）｜支持: /cg/basics/image-sampling
@@ -33,7 +32,6 @@
 - TF-P018｜分類・体系化の前に統一基準と順序原理を立てる（「何を保存するか」で入れ子を作る）：1記事のみで、保存量による階層化は変換分類の数学的な定番でテーマ主導の可能性が高い。構造面は WS-079 の担当｜支持: /cg/transformation/affine-transformation
 - TF-P019｜導出を明示的な段階数で予告して分割する（「2段階に分けて導けます」）：2記事のみで、導出の必然性でも説明できる｜支持: /cg/transformation/coordinate-systems, /cg/transformation/basic-transformations
 - TF-P020｜締めで適用条件・使い分けを明示し、学んだ手法を万能と受け取らせない：実際に記事の締めに位置するのは1記事のみで、他記事の類似記述は節の導入・注記や中盤にある。手法が単一で比較・選択が生じない記事では成立しない｜支持: /cg/basics/area-filling
-- TF-P021｜定義より先に「その概念が必要になる場面・素朴な現象」を置く：概念解説5本中2本が定義先行の反例で拮抗し、色温度と光色も定義先行。本体 TF-001 は「Aだけでは足りない」という不足の名指しを起点にする別型｜支持: /color-theory/illuminance-and-lighting-design, /color-theory/photometric-and-radiometric-quantities, /color-theory/adjacent-color-influence
 - TF-P022｜比較記事で基準となる代表例を先に立て、他項目をそれとの差分で説明する：2記事で同型を確認できるが、Evidence 反証ではこの対比構造は比較記事という記事タイプ自体が与えるもので著者固有とは判断できないと判定された｜支持: /color-theory/lamp-types, /color-fields/interior-concept-history
 - TF-P023｜分類の全体骨格を図で先に示し、各枝の説明ごとに同じ樹形図を継ぎ足して段階開示する：段階拡張が成立するのは1記事のみ（もう1件は一度に全体を提示する単発の完成図）。構造面は `writing-style.md` の担当｜支持: /color-theory/lamp-types
 - TF-P024｜抽象概念に身近な数値スケールで基準点を与え、後の節で再利用する（手元灯100lx／満月0.1lx）：1記事内では強く一貫するが他記事に横断確認できない｜支持: /color-theory/illuminance-and-lighting-design
@@ -45,7 +43,6 @@
 - TF-P030｜全体像を俯瞰図（mermaid の分類ツリー）で示してから扱う範囲を明示的に絞り込む：1記事1箇所のみで、同シリーズのもう1記事は俯瞰図なしに個別現象から入る。昇格する場合も thinking-flow 側は「個別知識を全体地図のどこに位置づけるかを先に与える」という読者モデル上の理由だけを保持し、提示手段は `writing-style.md` に一本化する｜支持: /color-theory/color-contrast
 - TF-P031｜スコープから外す対象は「なぜ外すか」を根拠づけてから除外する：1記事1箇所のみで、同シリーズの継時対比は除外理由の明文なく俯瞰図とスコープ宣言で処理している｜支持: /color-theory/contrast-phenomena
 - TF-P032｜設計対象の範囲を包含／除外で明示的に線引きし、含まれないものをあえて言明する：除外まで言い切る例は1記事に集中し、もう1記事の該当箇所は包含の言明。範囲・制度上の区分を扱う景観というテーマに起因する可能性が高い｜支持: /color-fields/landscape-color-approach
-- TF-P033｜専門用語を必要になる直前で最小限だけ定義する（ジャストインタイムの用語補助、用語1つ＝1節の粒度を含む）：用語を初出位置で最小限だけ定義するのは技術文書一般の標準的な書き方で、Evidence 反証でも著者固有とは判断できないと判定された。短い節も内容上の必然で説明でき、同じ節ペアを級タグで説明する競合仮説もある｜支持: /color-fields/housing-color-design-process, /color-fields/landscape-color-approach, /color-theory/color-vision-characteristics
 - TF-P034｜プロセス記事の冒頭で全工程を番号リストで俯瞰させてから各工程を順に詳述する：1記事のみで、マニュアル・チュートリアル全般の定石。Boundary でも writing-style のロードマップ先行構成と競合・重複と指摘された｜支持: /color-fields/housing-color-design-process
 - TF-P035｜多数派を基準にした相対記述で、欠如ではなく識別の難しさとして書く：アクセシビリティ・インクルーシブライティングの一般規範として広く採用されており（Evidence 反証で著者固有とは判断できないと判定）、テーマが要求する配慮と切り分けられない｜支持: /color-theory/color-vision-characteristics, /color-theory/color-vision-types
 - TF-P036｜統計値をスケールの言い換え（20人に1人）へ変換し、そこから実務的含意へ接続する：1記事に限られ、もう1記事では統計値がカード・定義文に含意への接続なしで置かれる反例。構造的事実は `writing-style.md` に一本化し、thinking-flow 側は判断粒度だけに絞る｜支持: /color-theory/color-vision-types
@@ -56,7 +53,6 @@
 - TF-P041｜説明の終端で店頭・住まい・実務への接地を一文入れる（一般形）：場面への接地と言えるのは1例のみで、他は効能の言い換え。市販品への接地という限定形は本体 TF-027 へ吸収済み｜支持: /color-theory/color-temperature-and-light-color
 - TF-P042｜列挙の直後に「これらは〜」で切り口を言語化し、項目の暗記だけで終わらせない：1記事2箇所のみで、同じ記事の他の箇条書きにはこの言い直しがなく記事内でも一貫しない｜支持: /color-fields/interior-design-basics
 - TF-P044｜用語の由来のうち事物の起源をさかのぼる側（「原型は寝殿造りにさかのぼります」）：歴史記事の主題そのもので、命名を暗記対象にしないための判断と切り分けられない（名称の字義を添える側は本体 TF-013 へ吸収済み）｜支持: /color-fields/interior-concept-history
-- TF-P045｜定義の二段構え（初出は括弧注や短い言い換えで流れを止めず、主役になる位置で単独に読める一文定義を再提示）：二度目の提示先がいずれも用語カード・小見出しという共有コンポーネントで、文章戦略か編集判断かを切り分けられない（Evidence 反証で stylistic-quirks 側の運用習慣として扱う方が実態に近いと判定）｜支持: /color-theory/psychological-scaling-method, /color-theory/optical-illusions, /color-fields/color-universal-design
 - TF-P046｜学術的に未確定な機序には留保を付け、未解決であること自体を書く：確定度の管理として成立するのは1記事のみで、もう一方の根拠は学術的機序への留保ではなく実務上のばらつきの記述という別現象｜支持: /color-theory/optical-illusions
 - TF-P047｜体験に危険がある内容は本文より前に警告を置き、代替の読み方まで指示したうえで図は削除せず掲載する：1記事1箇所のみで、危険性のある題材が他になく反例で検証できない。本体 TF-058 の反転例｜支持: /color-theory/optical-illusions
 - TF-P048｜例示ブロックの用途を「抽象説明の直後に日常で観察できる事例を置く」に限定する：1記事3箇所のみで、他記事には例示ブロックが存在せずブロック記法の運用と切り分けられない｜支持: /cg/image-properties/dynamic-range-and-gradation

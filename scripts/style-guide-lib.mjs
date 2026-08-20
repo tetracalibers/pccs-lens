@@ -6,7 +6,8 @@
  *
  *   - ガイド本体      writing-guides/<観点>.md          … `### [WS-012] ルール名` の見出しがルールの単位
  *   - 根拠インデックス writing-guides/evidence/<観点>/<slug>.md … 1記事1ファイル。支持ルールIDの一覧
- *   - 保留プール      writing-guides/pending/<観点>.md   … 未採用の観察（このモジュールは読み書きしない）
+ *   - 保留プール      writing-guides/pending/<観点>.md   … 未採用の観察（本文はこのモジュールで読まない）
+ *   - 棄却層          writing-guides/rejected/<観点>.md  … 再審査を打ち切った観察（1行5欄）
  *
  * ルールIDは「観点略号2文字＋連番3桁」。ルール名を改名しても ID は変えず、廃止したら欠番にする
  * （採番の再利用はしない）。ID を安定キーにすることで、支持記事数を機械集計できる。
@@ -20,6 +21,7 @@ export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "
 export const GUIDES_DIR = path.join(ROOT, "writing-guides")
 export const EVIDENCE_DIR = path.join(GUIDES_DIR, "evidence")
 export const PENDING_DIR = path.join(GUIDES_DIR, "pending")
+export const REJECTED_DIR = path.join(GUIDES_DIR, "rejected")
 
 /** 4観点。prefix はルールIDの略号、camel は manifest のキー名。 */
 export const ASPECTS = [
@@ -40,6 +42,7 @@ export const aspectOf = (key) => {
 export const guidePath = (key) => path.join(GUIDES_DIR, `${key}.md`)
 export const evidenceDirOf = (key) => path.join(EVIDENCE_DIR, key)
 export const pendingPath = (key) => path.join(PENDING_DIR, `${key}.md`)
+export const rejectedPath = (key) => path.join(REJECTED_DIR, `${key}.md`)
 
 /** slug（`/cg/basics/anti-aliasing`）→ 根拠ファイルの絶対パス */
 export const evidenceFileOf = (key, slug) =>
@@ -251,6 +254,94 @@ export const tallySupport = (index) => {
   }
   for (const [, slugs] of support) slugs.sort()
   return { support, unknownIds, articles }
+}
+
+// ---------------------------------------------------------------------------
+// 棄却層（再審査を打ち切った観察）
+// ---------------------------------------------------------------------------
+
+/**
+ * 棄却の区分。**記事が増えても解けない**理由だけを並べた閉じた語彙。
+ *
+ * 「単一シリーズ閉塞」はここに無い。別シリーズの記事が増えれば解けるので、棄却ではなく
+ * 保留プールに残す（棄却層へ流すと、再現の機会が来ても二度と見に行かない死蔵になる）。
+ */
+export const REJECT_CATEGORIES = [
+  "媒体規約", // syntax-guide.md・math-notation-guide.md・スキル定義に還元できる
+  "一般技法", // 日本語一般・技術文書一般の作法で、著者固有性を主張できない
+  "既存ルール", // 実行可能な部分は本体ルールが既に規定している
+  "観点違い", // 4観点のうち別のファイルの守備範囲
+  "型不収束" // 支持記事の観察が1つのルールに収束しない・数え直すと支持が足りない
+]
+
+/** `- <ID>｜<区分>｜<特徴：棄却理由>｜再開: <条件>｜支持: <slug>, <slug>` */
+const REJECTED_ITEM_RE =
+  /^-\s*([A-Z]{2}-P\d{3})｜([^｜]*)｜([^｜]*)｜\s*再開:\s*([^｜]*)｜\s*支持:\s*(.*)$/
+
+/**
+ * 棄却層を読む。5欄に分かれていない行は `malformed` に落とし、件数だけを報告する
+ * （保留プールの「旧形式の散文」と同じ扱い。黙って捨てない）。
+ *
+ * @returns {{ items: {id, category, reason, reopen, slugs}[], malformed: string[] }}
+ */
+export const parseRejected = (text) => {
+  const items = []
+  const malformed = []
+  for (const raw of text.split("\n")) {
+    const line = raw.trim()
+    if (!line.startsWith("- ")) continue
+    const m = REJECTED_ITEM_RE.exec(line)
+    if (!m) {
+      malformed.push(line)
+      continue
+    }
+    items.push({
+      id: m[1],
+      category: m[2].trim(),
+      reason: m[3].trim(),
+      reopen: m[4].trim(),
+      slugs: m[5]
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
+    })
+  }
+  return { items, malformed }
+}
+
+export const readRejected = (key) => {
+  const file = rejectedPath(key)
+  if (!existsSync(file)) return { items: [], malformed: [] }
+  return parseRejected(readFileSync(file, "utf8"))
+}
+
+/**
+ * 棄却層の整合を検査する。棄却は「二度審査しない」ための記録なので、
+ * 記録が壊れていること自体が観察の取りこぼしになる。
+ *
+ * @returns {{ key, id, problem }[]}
+ */
+export const lintRejected = (key) => {
+  const { items, malformed } = readRejected(key)
+  const problems = malformed.map((line) => ({
+    key,
+    id: null,
+    problem: `5欄に分かれていない: ${line.slice(0, 60)}`
+  }))
+  const seen = new Set()
+  for (const it of items) {
+    if (seen.has(it.id)) problems.push({ key, id: it.id, problem: "棄却層の中でIDが重複" })
+    seen.add(it.id)
+    if (!REJECT_CATEGORIES.includes(it.category))
+      problems.push({
+        key,
+        id: it.id,
+        problem: `区分が語彙外: ${it.category}（許容: ${REJECT_CATEGORIES.join("・")}）`
+      })
+    if (!it.reopen) problems.push({ key, id: it.id, problem: "再開条件が空" })
+    if (!it.slugs.length) problems.push({ key, id: it.id, problem: "支持記事が空" })
+  }
+  return problems
 }
 
 // ---------------------------------------------------------------------------
