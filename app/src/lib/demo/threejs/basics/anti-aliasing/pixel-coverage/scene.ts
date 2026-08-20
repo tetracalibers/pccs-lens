@@ -1,0 +1,358 @@
+import {
+  BufferGeometry,
+  CanvasTexture,
+  DataTexture,
+  Float32BufferAttribute,
+  LineBasicMaterial,
+  LineLoop,
+  LineSegments,
+  Mesh,
+  MeshBasicMaterial,
+  NearestFilter,
+  PlaneGeometry,
+  Scene,
+  SRGBColorSpace
+} from "three"
+
+/** Tweakpane で操作するパラメータ */
+export type PixelCoverageParams = {
+  /** 図形（斜めの帯）の傾き。x を右へ 1 進めたときに、下へどれだけ下がるか */
+  slope: number
+  /** 図形の太さ。画素の大きさとは無関係に、画像の中での太さを決める */
+  thickness: number
+  /** 横の画素数。縦の画素数は画像の縦横比から決まる */
+  columns: number
+  /** 各画素の寄与率を数値で重ねるか */
+  showValues: boolean
+  /** 連続な図形の輪郭を重ねるか */
+  showOutline: boolean
+}
+
+// _shared の ThreeSceneContext と同じ形をローカルに宣言する（_shared を import しないため）
+type SceneContext = {
+  scene: Scene
+  params: PixelCoverageParams
+}
+
+/**
+ * 画像の大きさ。横 3 : 縦 2 にとる。
+ * 横の画素数を 3 の倍数にすれば、縦の画素数が整数になり画素が正方形に収まる
+ */
+const IMAGE_WIDTH = 3.6
+const IMAGE_HEIGHT = 2.4
+const HALF_WIDTH = IMAGE_WIDTH / 2
+const HALF_HEIGHT = IMAGE_HEIGHT / 2
+
+/** 横の画素数の上限。格子線の頂点をこの数に合わせて先に確保しておく */
+const MAX_COLUMNS = 12
+const MAX_ROWS = (MAX_COLUMNS * IMAGE_HEIGHT) / IMAGE_WIDTH
+
+/** 連続な図形の輪郭の頂点数の上限。長方形を直線 2 本で切るので、頂点は最大 8 つ */
+const MAX_OUTLINE_POINTS = 8
+
+/** 寄与率の数値を描き込む canvas の解像度。画像と同じ縦横比にとる */
+const VALUE_CANVAS_WIDTH = 1080
+const VALUE_CANVAS_HEIGHT = (VALUE_CANVAS_WIDTH * IMAGE_HEIGHT) / IMAGE_WIDTH
+
+/** 寄与率の数値の大きさ。画素 1 つ分の大きさに対する比 */
+const VALUE_FONT_SCALE = 0.3
+
+/**
+ * 図形の色と背景の色。寄与率の分だけ図形の色を、残りだけ背景の色を混ぜた色が画素の色になる。
+ * 背景はデモの地色と同じにとり、画像の外周だけを枠線で示す
+ */
+const FIGURE_RGB = [255, 200, 87]
+const BACKGROUND_RGB = [38, 40, 45]
+
+// 背景（暗めのグレー）の上で、格子・図形の輪郭・数値を互いに見分けられる色にする
+const GRID_COLOR = "#7d8794"
+const FRAME_COLOR = "#c8ccd4"
+const OUTLINE_COLOR = "#6fd8ff"
+
+/** 寄与率の数値。塗りの濃い画素の上では暗い色、薄い画素の上では明るい色にする */
+const VALUE_DARK = "#26282d"
+const VALUE_LIGHT = "#c9d2de"
+
+/**
+ * xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z。
+ * 正面から見る構図に固定しているため、この厚みは絵には出ない
+ */
+const LAYER_GRID = 0.02
+const LAYER_FRAME = 0.03
+const LAYER_OUTLINE = 0.04
+const LAYER_VALUE = 0.05
+
+/** 多角形の頂点 */
+type Point = [number, number]
+
+/** 横の画素数から縦の画素数を決める。画像の縦横比に合わせると画素が正方形になる */
+const rowsOf = (columns: number) => (columns * IMAGE_HEIGHT) / IMAGE_WIDTH
+
+/** 左下の角と幅・高さから、長方形の頂点を反時計回りに並べる */
+const rectOf = (x: number, y: number, width: number, height: number): Point[] => [
+  [x, y],
+  [x + width, y],
+  [x + width, y + height],
+  [x, y + height]
+]
+
+/**
+ * 凸多角形を、直線 nx * x + ny * y = offset の片側（値が offset 以下の側）だけに切り取る。
+ * 辺をたどりながら、残す側の頂点と、直線をまたぐ辺の交点を拾っていく
+ */
+const clipHalfPlane = (polygon: Point[], nx: number, ny: number, offset: number): Point[] => {
+  const clipped: Point[] = []
+
+  polygon.forEach(([ax, ay], index) => {
+    const [bx, by] = polygon[(index + 1) % polygon.length]
+    // 直線から見た余裕。正なら残す側にある
+    const marginA = offset - (nx * ax + ny * ay)
+    const marginB = offset - (nx * bx + ny * by)
+    const insideA = marginA >= 0
+    const insideB = marginB >= 0
+
+    if (insideA) clipped.push([ax, ay])
+    // 辺が直線をまたぐなら、その交点を新しい頂点として足す
+    if (insideA !== insideB) {
+      const ratio = marginA / (marginA - marginB)
+      clipped.push([ax + (bx - ax) * ratio, ay + (by - ay) * ratio])
+    }
+  })
+
+  return clipped
+}
+
+/** 多角形の面積。頂点を順にたどって外積を足し合わせる（靴ひも公式） */
+const areaOf = (polygon: Point[]) => {
+  let doubled = 0
+
+  polygon.forEach(([ax, ay], index) => {
+    const [bx, by] = polygon[(index + 1) % polygon.length]
+    doubled += ax * by - bx * ay
+  })
+
+  return Math.abs(doubled) / 2
+}
+
+/**
+ * 画素の寄与率。左下の角が (x, y) で 1 辺が size の画素を、図形がどれだけ覆っているかの面積比。
+ *
+ * 図形は「中心線からの距離が太さの半分以内」の帯なので、
+ * 画素の正方形を中心線の両側で 2 回切り取り、残った多角形の面積を画素の面積で割る
+ */
+const coverageOf = (
+  x: number,
+  y: number,
+  size: number,
+  normalX: number,
+  normalY: number,
+  halfThickness: number
+) => {
+  const overlap = clipHalfPlane(
+    clipHalfPlane(rectOf(x, y, size, size), normalX, normalY, halfThickness),
+    -normalX,
+    -normalY,
+    halfThickness
+  )
+
+  return areaOf(overlap) / (size * size)
+}
+
+/** 寄与率の表示。`0` と `1` はそのまま、間の値は小数第 2 位までにする */
+const formatCoverage = (coverage: number) => {
+  const rounded = Math.round(coverage * 100) / 100
+  return rounded === 0 || rounded === 1 ? `${rounded}` : rounded.toFixed(2)
+}
+
+/** 1 画素 1 テクセルのテクスチャ。拡大しても画素が混ざらないよう、補間なし（NearestFilter）で貼る */
+const createPixelTexture = (data: Uint8Array, columns: number, rows: number) => {
+  const texture = new DataTexture(data, columns, rows)
+  texture.colorSpace = SRGBColorSpace
+  texture.magFilter = NearestFilter
+  texture.minFilter = NearestFilter
+  return texture
+}
+
+export const createPixelCoverageScene = ({ scene, params }: SceneContext) => {
+  // 画素の色。寄与率で混ぜた色を 1 画素 1 テクセルのテクスチャに焼いて貼る。
+  // 混ぜた色をそのままの濃さで見せたいので、陰影の付かない材質にする
+  const imageGeometry = new PlaneGeometry(IMAGE_WIDTH, IMAGE_HEIGHT)
+  const imageMaterial = new MeshBasicMaterial()
+  scene.add(new Mesh(imageGeometry, imageMaterial))
+
+  let pixelData = new Uint8Array(0)
+
+  // 画素どうしの境目。画素数が変わるたびに引き直すので、頂点は上限の数だけ先に確保しておく
+  const gridPosition = new Float32BufferAttribute(
+    new Float32Array((MAX_COLUMNS + 1 + MAX_ROWS + 1) * 2 * 3),
+    3
+  )
+  const gridGeometry = new BufferGeometry().setAttribute("position", gridPosition)
+  const gridMaterial = new LineBasicMaterial({ color: GRID_COLOR })
+  const grid = new LineSegments(gridGeometry, gridMaterial)
+  grid.position.z = LAYER_GRID
+  scene.add(grid)
+
+  // 画像の外周。画素数を変えても、画像そのものの大きさは変わらないことが分かるようにする
+  const frameGeometry = new BufferGeometry().setAttribute(
+    "position",
+    new Float32BufferAttribute(
+      // prettier-ignore
+      [
+        -HALF_WIDTH, -HALF_HEIGHT, 0, HALF_WIDTH, -HALF_HEIGHT, 0,
+        HALF_WIDTH, -HALF_HEIGHT, 0, HALF_WIDTH, HALF_HEIGHT, 0,
+        HALF_WIDTH, HALF_HEIGHT, 0, -HALF_WIDTH, HALF_HEIGHT, 0,
+        -HALF_WIDTH, HALF_HEIGHT, 0, -HALF_WIDTH, -HALF_HEIGHT, 0
+      ],
+      3
+    )
+  )
+  const frameMaterial = new LineBasicMaterial({ color: FRAME_COLOR })
+  const frame = new LineSegments(frameGeometry, frameMaterial)
+  frame.position.z = LAYER_FRAME
+  scene.add(frame)
+
+  // 連続な図形の輪郭。画素の格子とは無関係に決まる、切れ目のない境界
+  const outlinePosition = new Float32BufferAttribute(new Float32Array(MAX_OUTLINE_POINTS * 3), 3)
+  const outlineGeometry = new BufferGeometry().setAttribute("position", outlinePosition)
+  const outlineMaterial = new LineBasicMaterial({ color: OUTLINE_COLOR })
+  const outline = new LineLoop(outlineGeometry, outlineMaterial)
+  outline.position.z = LAYER_OUTLINE
+  scene.add(outline)
+
+  // 寄与率の数値。画素ごとに板を並べるより、1 枚の canvas に描いて画像に重ねる方が軽い
+  const valueCanvas = document.createElement("canvas")
+  valueCanvas.width = VALUE_CANVAS_WIDTH
+  valueCanvas.height = VALUE_CANVAS_HEIGHT
+  const valueContext = valueCanvas.getContext("2d")
+  const valueTexture = new CanvasTexture(valueCanvas)
+  valueTexture.colorSpace = SRGBColorSpace
+  const valueGeometry = new PlaneGeometry(IMAGE_WIDTH, IMAGE_HEIGHT)
+  const valueMaterial = new MeshBasicMaterial({
+    map: valueTexture,
+    transparent: true,
+    // 文字のない透明な余白まで深度を書いてしまうと、あとから描かれる線が板の矩形の形に欠ける
+    depthWrite: false
+  })
+  const valueOverlay = new Mesh(valueGeometry, valueMaterial)
+  valueOverlay.position.z = LAYER_VALUE
+  scene.add(valueOverlay)
+
+  // 画素数が変わったときだけ格子とテクスチャを作り直す（傾きを変えただけでは作り直さない）
+  let builtColumns = NaN
+
+  return {
+    update: () => {
+      const { columns, showValues, showOutline } = params
+      const rows = rowsOf(columns)
+      const pitch = IMAGE_WIDTH / columns
+
+      // 図形（斜めの帯）の中心線に立てた法線と、太さの半分。
+      // 傾きが正のときに右下へ向かうよう、画像座標系にならって回す向きを反転させる
+      const angle = Math.atan(-params.slope)
+      const normalX = -Math.sin(angle)
+      const normalY = Math.cos(angle)
+      const halfThickness = params.thickness / 2
+
+      if (columns !== builtColumns) {
+        builtColumns = columns
+
+        imageMaterial.map?.dispose()
+        pixelData = new Uint8Array(columns * rows * 4)
+        imageMaterial.map = createPixelTexture(pixelData, columns, rows)
+        imageMaterial.needsUpdate = true
+
+        let vertex = 0
+        for (let column = 0; column <= columns; column++) {
+          const x = -HALF_WIDTH + column * pitch
+          gridPosition.setXYZ(vertex++, x, -HALF_HEIGHT, 0)
+          gridPosition.setXYZ(vertex++, x, HALF_HEIGHT, 0)
+        }
+        for (let row = 0; row <= rows; row++) {
+          const y = -HALF_HEIGHT + row * pitch
+          gridPosition.setXYZ(vertex++, -HALF_WIDTH, y, 0)
+          gridPosition.setXYZ(vertex++, HALF_WIDTH, y, 0)
+        }
+        gridPosition.needsUpdate = true
+        gridGeometry.setDrawRange(0, vertex)
+      }
+
+      // 数値は画素の大きさに合わせた字の大きさで、毎回まとめて描き直す
+      const cell = VALUE_CANVAS_WIDTH / columns
+      if (valueContext) {
+        valueContext.clearRect(0, 0, VALUE_CANVAS_WIDTH, VALUE_CANVAS_HEIGHT)
+        valueContext.font = `bold ${Math.round(cell * VALUE_FONT_SCALE)}px sans-serif`
+        valueContext.textAlign = "center"
+        valueContext.textBaseline = "middle"
+      }
+
+      for (let row = 0; row < rows; row++) {
+        for (let column = 0; column < columns; column++) {
+          // 画素の左下の角。テクスチャの行はテクスチャ座標にならって下から数える
+          const x = -HALF_WIDTH + column * pitch
+          const y = -HALF_HEIGHT + row * pitch
+          const coverage = coverageOf(x, y, pitch, normalX, normalY, halfThickness)
+
+          // 寄与率の分だけ図形の色を、残りだけ背景の色を混ぜる
+          const offset = (row * columns + column) * 4
+          for (let channel = 0; channel < 3; channel++) {
+            pixelData[offset + channel] = Math.round(
+              coverage * FIGURE_RGB[channel] + (1 - coverage) * BACKGROUND_RGB[channel]
+            )
+          }
+          pixelData[offset + 3] = 255
+
+          if (valueContext && showValues) {
+            valueContext.fillStyle = coverage > 0.5 ? VALUE_DARK : VALUE_LIGHT
+            // canvas は上から下へ数えるので、テクスチャの行とは上下が逆になる
+            valueContext.fillText(
+              formatCoverage(coverage),
+              (column + 0.5) * cell,
+              VALUE_CANVAS_HEIGHT - (row + 0.5) * cell
+            )
+          }
+        }
+      }
+
+      // 書き込んだ画素の色と数値を GPU へ送る
+      const pixelTexture = imageMaterial.map
+      if (pixelTexture) pixelTexture.needsUpdate = true
+      valueTexture.needsUpdate = true
+      valueOverlay.visible = showValues
+
+      // 連続な図形と画像の重なり。画素の寄与率と同じ切り取りを、画像の外周に対して行う
+      const figure = clipHalfPlane(
+        clipHalfPlane(
+          rectOf(-HALF_WIDTH, -HALF_HEIGHT, IMAGE_WIDTH, IMAGE_HEIGHT),
+          normalX,
+          normalY,
+          halfThickness
+        ),
+        -normalX,
+        -normalY,
+        halfThickness
+      )
+      figure.forEach(([x, y], index) => outlinePosition.setXYZ(index, x, y, 0))
+      outlinePosition.needsUpdate = true
+      outlineGeometry.setDrawRange(0, figure.length)
+      outline.visible = showOutline
+    },
+    dispose: () => {
+      imageMaterial.map?.dispose()
+      valueTexture.dispose()
+      const disposables = [
+        imageGeometry,
+        imageMaterial,
+        gridGeometry,
+        gridMaterial,
+        frameGeometry,
+        frameMaterial,
+        outlineGeometry,
+        outlineMaterial,
+        valueGeometry,
+        valueMaterial
+      ]
+      disposables.forEach((disposable) => disposable.dispose())
+    }
+  }
+}
