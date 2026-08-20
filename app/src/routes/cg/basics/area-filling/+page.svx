@@ -10,7 +10,9 @@ draft: true
 
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import ConnectivitySpreadDemo from '$lib/demo/threejs/basics/area-filling/connectivity-spread/ConnectivitySpreadDemo.svelte'
   import ScanlineFillDemo from '$lib/demo/threejs/basics/area-filling/scanline-fill/ScanlineFillDemo.svelte'
+  import SeedFillDemo from '$lib/demo/threejs/basics/area-filling/seed-fill/SeedFillDemo.svelte'
 </script>
 
 [ラスタ化による図形の描画](/cg/basics/shape-rasterization/)では、ポリゴンの輪郭を画素として描く処理を見てきました。
@@ -246,8 +248,156 @@ scene.add(crossingDots)
 どちらを基準にするかで、塗りの広がり方が変わります。
 :Anki[4連結]では斜めに接する画素へは塗りが伝わりませんが、:Anki[8]連結では:Mark[斜め]方向にも塗りが伝わっていきます。そのため、同じ領域でも、斜めに細く繋がった部分まで塗られるかどうかが連結性の選び方によって変わってきます。
 
-:::Todo
-`4`連結と`8`連結の近傍画素を示すグリッド図（中心画素と隣接画素を方向別に示す）
+:::Action{fixme}
+次の点に着目して、デモを観察してみよう
+
+- たどった歩数を`1`にしたときに隣とみなされる画素が、`4`連結では上下左右の`4`つ、`8`連結では斜めを加えた`8`つになること
+- 歩数を増やすと、`4`連結では菱形に、`8`連結では正方形に広がっていくこと
+- `4`連結では斜めの画素を隣とみなしていないのに、上下左右をまわり込むことで`2`歩あれば届くこと
+:::
+
+<CanvasWrapper>
+  <ConnectivitySpreadDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 画素の格子。中心の画素を 1 つに決められるよう、縦横は奇数個にとる
+const CELLS = 7
+const CENTER = (CELLS - 1) / 2
+const PITCH = 0.33
+const PLOT_SIZE = CELLS * PITCH
+const HALF_SIZE = PLOT_SIZE / 2
+
+// 2 つの格子のあいだの隙間
+const GRID_GAP = 0.42
+
+// 中心の画素から近傍を何歩たどったか
+const STEPS = 2
+
+// 近傍のとらえ方。中心の画素から見て、隣とみなす画素の列と行のずれ
+const NEIGHBORS_4: [number, number][] = [
+  [0, -1],
+  [-1, 0],
+  [1, 0],
+  [0, 1]
+]
+const NEIGHBORS_8: [number, number][] = [
+  ...NEIGHBORS_4,
+  [-1, -1],
+  [1, -1],
+  [-1, 1],
+  [1, 1]
+]
+
+// 左右に並べる 2 つの格子。同じ歩数でも、近傍のとらえ方で広がる形が変わる
+const GRIDS = [
+  { offsetX: -(PLOT_SIZE + GRID_GAP) / 2, neighbors: NEIGHBORS_4 },
+  { offsetX: (PLOT_SIZE + GRID_GAP) / 2, neighbors: NEIGHBORS_8 }
+]
+
+// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z
+const LAYER_PIXEL = 0.01
+const LAYER_CENTER_PIXEL = 0.015
+const LAYER_GRID = 0.02
+
+// 画素を単位とした位置を、格子の中心を原点とするワールド座標へ移す。
+// 画像座標系は y 軸を下向きにとるので、行が増えるほど下へ下がる。
+// 整数が画素どうしの境目、+0.5 が画素の中心に当たる
+const localXOf = (x: number) => -HALF_SIZE + x * PITCH
+const localYOf = (y: number) => HALF_SIZE - y * PITCH
+
+// 中心の画素から近傍をたどって、steps 歩で届く画素を求める。
+// いま届いたばかりの画素（frontier）の近傍へ、1 歩ずつ広げていく
+const reachedWithin = (steps: number, neighbors: [number, number][]) => {
+  const reached = Array.from({ length: CELLS }, () => Array.from({ length: CELLS }, () => false))
+  reached[CENTER][CENTER] = true
+
+  let frontier: [number, number][] = [[CENTER, CENTER]]
+
+  for (let step = 0; step < steps; step++) {
+    const next: [number, number][] = []
+
+    for (const [column, row] of frontier) {
+      for (const [dc, dr] of neighbors) {
+        const c = column + dc
+        const r = row + dr
+        if (c < 0 || c >= CELLS || r < 0 || r >= CELLS) continue
+        if (reached[r][c]) continue
+
+        reached[r][c] = true
+        next.push([c, r])
+      }
+    }
+
+    frontier = next
+  }
+
+  return reached
+}
+
+// 画素どうしの境目。2 つの格子をまとめて 1 本のジオメトリに引く
+const gridPoints: Vector3[] = []
+GRIDS.forEach(({ offsetX }) => {
+  for (let column = 0; column <= CELLS; column++) {
+    const x = offsetX + localXOf(column)
+    gridPoints.push(new Vector3(x, -HALF_SIZE, LAYER_GRID), new Vector3(x, HALF_SIZE, LAYER_GRID))
+  }
+  for (let row = 0; row <= CELLS; row++) {
+    const y = localYOf(row)
+    gridPoints.push(
+      new Vector3(offsetX - HALF_SIZE, y, LAYER_GRID),
+      new Vector3(offsetX + HALF_SIZE, y, LAYER_GRID)
+    )
+  }
+})
+const gridGeometry = new BufferGeometry().setFromPoints(gridPoints)
+scene.add(new LineSegments(gridGeometry, new LineBasicMaterial({ color: "#7d8794" })))
+
+const barGeometry = new PlaneGeometry(1, 1)
+const matrix = new Matrix4()
+
+// 近傍をたどって届いた画素。2 つの格子で色は同じなので、まとめて 1 つに確保しておく。
+// 塗った色をそのままの濃さで見せたいので、陰影の付かない材質にする
+const reachedPixels = new InstancedMesh(
+  barGeometry,
+  new MeshBasicMaterial({ color: "#ffc857" }),
+  CELLS * CELLS * GRIDS.length
+)
+let painted = 0
+GRIDS.forEach(({ offsetX, neighbors }) => {
+  const reached = reachedWithin(STEPS, neighbors)
+
+  for (let row = 0; row < CELLS; row++) {
+    for (let column = 0; column < CELLS; column++) {
+      if (!reached[row][column]) continue
+      // 中心の画素は別の色で描くので、ここでは重ねない
+      if (row === CENTER && column === CENTER) continue
+
+      matrix.makeScale(PITCH, PITCH, 1)
+      matrix.setPosition(offsetX + localXOf(column + 0.5), localYOf(row + 0.5), LAYER_PIXEL)
+      reachedPixels.setMatrixAt(painted++, matrix)
+    }
+  }
+})
+reachedPixels.count = painted
+scene.add(reachedPixels)
+
+// たどり始める中心の画素。届いた画素と見分けるため、別の色で描く
+const centerMaterial = new MeshBasicMaterial({ color: "#f2766a" })
+GRIDS.forEach(({ offsetX }) => {
+  const centerPixel = new Mesh(barGeometry, centerMaterial)
+  centerPixel.scale.set(PITCH, PITCH, 1)
+  centerPixel.position.set(
+    offsetX + localXOf(CENTER + 0.5),
+    localYOf(CENTER + 0.5),
+    LAYER_CENTER_PIXEL
+  )
+  scene.add(centerPixel)
+})
+```
+
 :::
 
 :::Note
@@ -262,9 +412,217 @@ scene.add(crossingDots)
 シードフィルでは、塗りつぶしの出発点となる`1`つの画素を:Anki[シード点]として与えます。
 シード点から始めて、隣接する画素を順に調べ、境界でなければ塗り色で塗り、さらにそこから隣接する画素を調べる、という操作を繰り返します。塗れる画素がなくなるまで続けると、シード点を含む閉領域全体が塗りつぶされます。
 
-:::Todo
-シード点から塗りつぶしが波及（伝播）していく様子のデモ
-境界色基準と内部色基準を切り替えられる
+:::Action{fixme}
+次の点に着目して、デモを観察してみよう
+
+- 波及の歩数を進めると、シード点から隣へ、その隣へと塗りが広がり、境界の画素の手前で止まること
+- 連結性を`8`連結にすると、角どうしが斜めに触れているだけの細い通り道を塗りが通り抜け、右の部屋まで届くこと
+- 判定の基準を切り替えると、内側にある別の色の部分が、塗り替えられるか塗り残されるかで分かれること
+:::
+
+<CanvasWrapper>
+  <SeedFillDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 盤面。B が境界の画素、. が塗る前の内部の色、O が内部にある別の色の部分、- が領域の外。
+// 左の部屋と右の部屋は、角どうしが斜めに触れているだけで繋がっている
+const BOARD = [
+  "----------------",
+  "--BBBBBB--------",
+  "--B....B--------",
+  "--B.OO.B--------",
+  "--B.OO.B--------",
+  "--B....BBBBBBB--",
+  "--BBBBB......B--",
+  "------B......B--",
+  "------B......B--",
+  "------B......B--",
+  "------BBBBBBBB--",
+  "----------------"
+]
+
+// 塗りつぶしの出発点となるシード点（列, 行）
+const SEED: [number, number] = [3, 2]
+
+// 画素の格子
+const ROWS = BOARD.length
+const COLS = BOARD[0].length
+const PITCH = 0.2
+const PLOT_WIDTH = COLS * PITCH
+const PLOT_HEIGHT = ROWS * PITCH
+
+// 近傍のとらえ方。いま見ている画素から見て、隣とみなす画素の列と行のずれ
+const NEIGHBORS_4: [number, number][] = [
+  [0, -1],
+  [-1, 0],
+  [1, 0],
+  [0, 1]
+]
+const NEIGHBORS_8: [number, number][] = [
+  ...NEIGHBORS_4,
+  [-1, -1],
+  [1, -1],
+  [-1, 1],
+  [1, 1]
+]
+
+// 判定の基準（境界色基準）と近傍のとらえ方（4 連結）、シード点からたどった歩数
+const CRITERION = "boundary"
+const NEIGHBORS = NEIGHBORS_4
+const STEPS = 4
+
+// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z
+const LAYER_CELL = 0.01
+const LAYER_FILL = 0.015
+const LAYER_FRONTIER = 0.02
+const LAYER_GRID = 0.025
+const LAYER_SEED = 0.05
+
+// 画素を単位とした位置を、ワールド座標へ移す。
+// 画像座標系は画像の左上を原点とし、x 軸を右向き、y 軸を下向きにとる。
+// 整数が画素どうしの境目、+0.5 が画素の中心に当たる
+const worldXOf = (x: number) => -PLOT_WIDTH / 2 + x * PITCH
+const worldYOf = (y: number) => PLOT_HEIGHT / 2 - y * PITCH
+
+// 画素 (column, row) を塗ってよいか。
+// 境界色基準は境界色でなければ塗り進め、内部色基準は塗り始める前の内部の色と同じ画素だけを塗る
+const canFill = (column: number, row: number) => {
+  const cell = BOARD[row][column]
+  return CRITERION === "boundary" ? cell !== "B" : cell === "."
+}
+
+// シード点から近傍をたどって、steps 歩で塗れた画素と、いま広がった先端を求める。
+// 隣接する画素を順に調べ、塗ってよければ塗り、そこからさらに隣接する画素を調べる
+const spreadFrom = (steps: number) => {
+  const filled = Array.from({ length: ROWS }, () => Array.from({ length: COLS }, () => false))
+  filled[SEED[1]][SEED[0]] = true
+
+  let frontier: [number, number][] = [SEED]
+
+  for (let step = 0; step < steps; step++) {
+    const next: [number, number][] = []
+
+    for (const [column, row] of frontier) {
+      for (const [dc, dr] of NEIGHBORS) {
+        const c = column + dc
+        const r = row + dr
+        if (c < 0 || c >= COLS || r < 0 || r >= ROWS) continue
+        // すでに塗ってあればやり直さない
+        if (filled[r][c]) continue
+        // 境界に達していたら塗らない
+        if (!canFill(c, r)) continue
+
+        filled[r][c] = true
+        next.push([c, r])
+      }
+    }
+
+    frontier = next
+  }
+
+  return { filled, frontier }
+}
+
+const cellGeometry = new PlaneGeometry(1, 1)
+const matrix = new Matrix4()
+
+// 盤面のうち、文字が cell の画素をまとめて置く。
+// 塗った色をそのままの濃さで見せたいので、陰影の付かない材質にする
+const placeCells = (cell: string, color: string) => {
+  const cells = new InstancedMesh(cellGeometry, new MeshBasicMaterial({ color }), COLS * ROWS)
+
+  let placed = 0
+  for (let row = 0; row < ROWS; row++) {
+    for (let column = 0; column < COLS; column++) {
+      if (BOARD[row][column] !== cell) continue
+
+      matrix.makeScale(PITCH, PITCH, 1)
+      matrix.setPosition(worldXOf(column + 0.5), worldYOf(row + 0.5), LAYER_CELL)
+      cells.setMatrixAt(placed++, matrix)
+    }
+  }
+  cells.count = placed
+  scene.add(cells)
+}
+
+placeCells("B", "#6fd8ff")
+placeCells(".", "#4a5160")
+placeCells("O", "#a58bd8")
+
+// 画素どうしの境目
+const gridPoints: Vector3[] = []
+for (let column = 0; column <= COLS; column++) {
+  const x = worldXOf(column)
+  gridPoints.push(
+    new Vector3(x, -PLOT_HEIGHT / 2, LAYER_GRID),
+    new Vector3(x, PLOT_HEIGHT / 2, LAYER_GRID)
+  )
+}
+for (let row = 0; row <= ROWS; row++) {
+  const y = worldYOf(row)
+  gridPoints.push(
+    new Vector3(-PLOT_WIDTH / 2, y, LAYER_GRID),
+    new Vector3(PLOT_WIDTH / 2, y, LAYER_GRID)
+  )
+}
+const gridGeometry = new BufferGeometry().setFromPoints(gridPoints)
+scene.add(new LineSegments(gridGeometry, new LineBasicMaterial({ color: "#7d8794" })))
+
+// 塗った画素と、そのうち直前の 1 歩で広がった先端
+const { filled, frontier } = spreadFrom(STEPS)
+const onFrontier = Array.from({ length: ROWS }, () => Array.from({ length: COLS }, () => false))
+frontier.forEach(([column, row]) => {
+  onFrontier[row][column] = true
+})
+
+const fillPixels = new InstancedMesh(
+  cellGeometry,
+  new MeshBasicMaterial({ color: "#ffc857" }),
+  COLS * ROWS
+)
+const frontierPixels = new InstancedMesh(
+  cellGeometry,
+  new MeshBasicMaterial({ color: "#f2766a" }),
+  COLS * ROWS
+)
+let fillPlaced = 0
+let frontierPlaced = 0
+
+for (let row = 0; row < ROWS; row++) {
+  for (let column = 0; column < COLS; column++) {
+    if (!filled[row][column]) continue
+
+    const isFrontier = onFrontier[row][column]
+    matrix.makeScale(PITCH, PITCH, 1)
+    matrix.setPosition(
+      worldXOf(column + 0.5),
+      worldYOf(row + 0.5),
+      isFrontier ? LAYER_FRONTIER : LAYER_FILL
+    )
+
+    if (isFrontier) {
+      frontierPixels.setMatrixAt(frontierPlaced++, matrix)
+    } else {
+      fillPixels.setMatrixAt(fillPlaced++, matrix)
+    }
+  }
+}
+fillPixels.count = fillPlaced
+frontierPixels.count = frontierPlaced
+scene.add(fillPixels, frontierPixels)
+
+// 塗りつぶしの出発点。塗られたあとも位置が分かるように、点で重ねておく
+const seedDot = new Mesh(
+  new CircleGeometry(0.055, 16),
+  new MeshBasicMaterial({ color: "#f5f8fc" })
+)
+seedDot.position.set(worldXOf(SEED[0] + 0.5), worldYOf(SEED[1] + 0.5), LAYER_SEED)
+scene.add(seedDot)
+```
+
 :::
 
 ここで「その画素を塗ってよいか（境界に達していないか）」をどう判定するかによって、シードフィルには`2`つの方式があります。
