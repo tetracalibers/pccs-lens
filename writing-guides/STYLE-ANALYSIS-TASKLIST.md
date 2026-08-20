@@ -315,6 +315,7 @@
 
 - [x] `/cg/basics/image-digitization`
 - [x] `/cg/basics/image-sampling`
+- [draft] `/cg/basics/sampling-theorem-and-interpolation`
 - [x] `/cg/basics/image-quantization`
 - [x] `/cg/basics/grayscale-and-color-images`
 - [x] `/cg/basics/vector-and-raster`

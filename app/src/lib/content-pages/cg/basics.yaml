@@ -11,6 +11,7 @@ sections:
     links:
       - slug: image-digitization
       - slug: image-sampling
+      - slug: sampling-theorem-and-interpolation
       - slug: image-quantization
       - slug: grayscale-and-color-images
       - slug: vector-and-raster
