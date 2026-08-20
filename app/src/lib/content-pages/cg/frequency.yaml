@@ -15,7 +15,6 @@ sections:
         group: ["ImgP"]
       - title: 空間フィルタリングとの関係 # ImgP 6-2-2
         group: ["ImgP"]
-      - title: ローパス・ハイパス・バンドパスフィルタ # ImgP 6-3
-        group: ["ImgP"]
+      - slug: lowpass-highpass-bandpass-filters
       - title: 高域強調フィルタ # ImgP 6-4
         group: ["ImgP"]

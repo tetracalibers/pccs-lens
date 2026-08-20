@@ -438,7 +438,7 @@
 
 - [ページ未作成] 周波数フィルタリングの原理
 - [ページ未作成] 空間フィルタリングとの関係
-- [ページ未作成] ローパス・ハイパス・バンドパスフィルタ
+- [draft] `/cg/frequency/lowpass-highpass-bandpass-filters`
 - [ページ未作成] 高域強調フィルタ
 
 ## CGと画像処理 — 歴史／CGと画像処理の歴史（`cg/history.yaml` #history）
