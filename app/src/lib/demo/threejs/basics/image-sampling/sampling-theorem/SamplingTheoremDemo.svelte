@@ -3,12 +3,12 @@
   import { createSamplingTheoremScene, type SamplingTheoremParams } from "./scene"
 
   // Tweakpane が直接書き換え、scene.ts が毎フレーム読む。$state ではなくプレーンオブジェクトにする。
-  // 初期値は標本化定理を満たす側（1 周期あたり 4 点）から始める。まず復元された波がもとの波に
-  // 重なる状態を見せておくと、標本化を粗くしたときのずれが読み取りやすい。
+  // 初期値は標本化定理を満たさない側（1 周期あたり 1.29 点）から始める。復元された波がもとの波から
+  // ずれてエイリアスに変わった状態を見せておくと、標本化を細かくしたときに重なる瞬間が読み取りやすい。
   // samplesPerPeriod と reconstruction は scene.ts が計算して書き戻す表示用の値なので、初期値は使われない
   const params: SamplingTheoremParams = {
-    frequency: 6,
-    sampleCount: 24,
+    frequency: 7,
+    sampleCount: 9,
     showSincTerms: false,
     samplesPerPeriod: "",
     reconstruction: ""

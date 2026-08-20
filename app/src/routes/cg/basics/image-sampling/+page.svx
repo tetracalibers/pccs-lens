@@ -202,10 +202,6 @@ sinc関数のグラフと、その波形を各標本値に重ね合わせるイ�
 :Mark[縞の空間周波数]と:Mark[標本化周波数]を動かして、1つの山や谷に`2`点以上の標本点が配置されるようになると、復元された波がもとの波にぴったり重なることを確認しよう
 :::
 
-:::Fix{target="demo"}
-縞の空間周波数は7, 標本化周波数は9を初期値とする
-:::
-
 <CanvasWrapper>
   <SamplingTheoremDemo />
 </CanvasWrapper>
@@ -214,8 +210,8 @@ sinc関数のグラフと、その波形を各標本値に重ね合わせるイ�
 
 ```ts
 // もとの波の空間周波数（描画域の幅あたりに入る縞の本数）と、標本化周波数（標本点の数）
-const FREQUENCY = 6
-const SAMPLE_COUNT = 24
+const FREQUENCY = 7
+const SAMPLE_COUNT = 9
 
 // 位置の 0〜1 を PLOT_WIDTH、明るさのふれの -1〜1 を ±WAVE_HEIGHT に対応させる
 const PLOT_WIDTH = 5.2
