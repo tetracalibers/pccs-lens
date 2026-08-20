@@ -10,6 +10,7 @@ draft: true
 
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import FalseContourDemo from '$lib/demo/threejs/basics/image-quantization/false-contour/FalseContourDemo.svelte'
   import QuantizationStaircaseDemo from '$lib/demo/threejs/basics/image-quantization/quantization-staircase/QuantizationStaircaseDemo.svelte'
 </script>
 
@@ -223,8 +224,114 @@ $$
 明るさが滑らかに変化するアナログ画像を量子化すると、デジタル画像のある位置で、量子化レベルが1段階変化することになります。
 このとき、量子化レベル数が十分に大きくないと、段階が変化する位置が等高線のように見えてしまうことがあります。本来そこに輪郭がないのに縁取りのような線が見えることから、この線は:Anki[擬似輪郭]または:Anki[擬似エッジ]と呼ばれます。
 
-:::Todo
-擬似輪郭の図解。ビット数が少ないグラデーション画像に現れる帯状の縞（擬似輪郭）を示す
+:::Action{fixme}
+ビット数を動かして、次の点に着目して観察してみよう
+
+- ビット数を小さくするほど量子化レベル数が減り、滑らかに変わっていた濃淡が帯に分かれること
+- 帯と帯の境目に、もとのグラデーションには無い等高線のような線（擬似輪郭）が浮かび上がること
+- ビット数を大きくしていくと段の境目が細かくなり、やがて擬似輪郭が見えなくなること
+:::
+
+<CanvasWrapper>
+  <FalseContourDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 画素値を表すビット数。ビットを 1 つ増やす度に、表せる段階は 2 倍になる
+const BIT_COUNT = 5
+const LEVEL_COUNT = 2 ** BIT_COUNT
+
+// 画像として扱う正方形の 1 辺と、左右に並べた 2 枚の中心の x 座標
+const IMAGE_SIZE = 2
+const HALF_IMAGE = IMAGE_SIZE / 2
+const OFFSET_X = HALF_IMAGE + 0.225
+
+// 明るさを焼く格子の細かさ。標本化ではなく量子化を見せる図なので、
+// 格子は目に見えない細かさにとる
+const RESOLUTION = 512
+
+// グラデーションの中心。画像の右上のわずかに外側に置き、そこから外へ向かって暗くなるようにする。
+// 明暗の変化が緩やかなので、量子化を粗くすると段の境目が等高線のように現れる
+const GRADIENT_CENTER = 1.12
+
+// 中心からの距離の最小・最大。明るさが 0〜1 をちょうど使い切るように正規化する
+const MIN_DISTANCE = Math.SQRT2 * (GRADIENT_CENTER - 1)
+const MAX_DISTANCE = Math.SQRT2 * GRADIENT_CENTER
+
+// もとの連続的なグラデーション。位置 (x, y)（ともに 0〜1）での明るさ（0〜1）を返す
+const brightnessAt = (x: number, y: number) => {
+  const distance = Math.hypot(x - GRADIENT_CENTER, y - GRADIENT_CENTER)
+  return 1 - (distance - MIN_DISTANCE) / (MAX_DISTANCE - MIN_DISTANCE)
+}
+
+// 明るさ（0〜1）を、一番近い段階に丸める。用意する段階の数が量子化レベル数
+const quantize = (brightness: number) =>
+  Math.round(brightness * (LEVEL_COUNT - 1)) / (LEVEL_COUNT - 1)
+
+// 明るさを 1 テクセルずつ焼く。levelOf に丸め方を渡すことで、
+// 量子化する前とした後を同じ手順で作る
+const createGrayscaleTexture = (levelOf: (brightness: number) => number) => {
+  const data = new Uint8Array(RESOLUTION * RESOLUTION * 4)
+  for (let row = 0; row < RESOLUTION; row++) {
+    for (let column = 0; column < RESOLUTION; column++) {
+      // テクセル 1 つ分の真ん中で明るさを読み取る
+      const x = (column + 0.5) / RESOLUTION
+      const y = (row + 0.5) / RESOLUTION
+      const level = Math.round(levelOf(brightnessAt(x, y)) * 255)
+      data.set([level, level, level, 255], (row * RESOLUTION + column) * 4)
+    }
+  }
+
+  // 明るさをそのままの濃さで貼るテクスチャ。テクセルどうしは滑らかに繋ぐ
+  const texture = new DataTexture(data, RESOLUTION, RESOLUTION)
+  texture.colorSpace = SRGBColorSpace
+  texture.magFilter = LinearFilter
+  texture.minFilter = LinearFilter
+  texture.needsUpdate = true
+  return texture
+}
+
+// 左にもとのグラデーション、右に量子化した結果を並べる。
+// 明るさをそのままの濃さで見せたいので、2 枚とも陰影の付かない材質で貼る
+const imageGeometry = new PlaneGeometry(IMAGE_SIZE, IMAGE_SIZE)
+
+const referenceTexture = createGrayscaleTexture((brightness) => brightness)
+const reference = new Mesh(
+  imageGeometry,
+  new MeshBasicMaterial({ map: referenceTexture, side: DoubleSide })
+)
+reference.position.x = -OFFSET_X
+scene.add(reference)
+
+const quantizedTexture = createGrayscaleTexture(quantize)
+const quantized = new Mesh(
+  imageGeometry,
+  new MeshBasicMaterial({ map: quantizedTexture, side: DoubleSide })
+)
+quantized.position.x = OFFSET_X
+scene.add(quantized)
+
+// 画像の外周。背景と明るさが近い部分でも、画像の範囲が分かるようにする
+const frameGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(-HALF_IMAGE, -HALF_IMAGE, 0.002),
+  new Vector3(HALF_IMAGE, -HALF_IMAGE, 0.002),
+  new Vector3(HALF_IMAGE, -HALF_IMAGE, 0.002),
+  new Vector3(HALF_IMAGE, HALF_IMAGE, 0.002),
+  new Vector3(HALF_IMAGE, HALF_IMAGE, 0.002),
+  new Vector3(-HALF_IMAGE, HALF_IMAGE, 0.002),
+  new Vector3(-HALF_IMAGE, HALF_IMAGE, 0.002),
+  new Vector3(-HALF_IMAGE, -HALF_IMAGE, 0.002)
+])
+const frameMaterial = new LineBasicMaterial({ color: "#c8ccd4" })
+for (const x of [-OFFSET_X, OFFSET_X]) {
+  const frame = new LineSegments(frameGeometry, frameMaterial)
+  frame.position.x = x
+  scene.add(frame)
+}
+```
+
 :::
 
 :Anki[量子化レベル数]を少なくする、すなわちビット数を小さくすると、:Anki[量子化誤差]が大きくなり、擬似輪郭が目立つようになります。
