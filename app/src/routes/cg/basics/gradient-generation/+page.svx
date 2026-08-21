@@ -10,10 +10,12 @@ draft: true
 
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import SVGWrapper from '$lib/demo/SVGWrapper.svelte'
   import PositionParameterDemo from '$lib/demo/threejs/basics/gradient-generation/position-parameter/PositionParameterDemo.svelte'
   import InterpolationCurveDemo from '$lib/demo/threejs/basics/gradient-generation/interpolation-curve/InterpolationCurveDemo.svelte'
   import PlanarGradientDemo from '$lib/demo/threejs/basics/gradient-generation/planar-gradient/PlanarGradientDemo.svelte'
   import GradientSurfaceDemo from '$lib/demo/threejs/basics/gradient-generation/gradient-surface/GradientSurfaceDemo.svelte'
+  import DiffusionCurveConcept from '$lib/demo/cg/basics/gradient-generation/DiffusionCurveConcept.svelte'
 </script>
 
 [塗りつぶし処理](/cg/basics/area-filling/)は、ある領域の内部をどの点も同じ色に見えるよう「べた塗り」する処理でした。
@@ -689,6 +691,6 @@ scene.add(new LineSegments(riserGeometry, new LineBasicMaterial({ color: "#5ec8f
 従来の単純なグラデーションでは、入り組んだ輪郭の形に沿って色を変化させようとすると、多くの制御が必要になります。
 ディフュージョンカーブでは、色を変化させたい境界となる曲線を引き、その両側の色を指定するだけで、輪郭の形に沿った滑らかな色の広がりが得られます。
 
-:::Todo
-1本の曲線から、その両側へ色がなめらかに拡散していく様子の概念図
-:::
+<SVGWrapper>
+  <DiffusionCurveConcept />
+</SVGWrapper>
