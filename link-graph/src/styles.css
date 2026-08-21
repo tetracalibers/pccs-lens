@@ -10,6 +10,8 @@ html,
 body {
   height: 100%;
   margin: 0;
+  /* OS がダークモードでも、チェックボックスなどのネイティブ部品を明るい側に揃える。 */
+  color-scheme: light;
 }
 
 body {

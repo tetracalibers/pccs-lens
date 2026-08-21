@@ -3,7 +3,17 @@
 import cytoscape from "cytoscape"
 import fcose from "cytoscape-fcose"
 import layoutUtilities from "cytoscape-layout-utilities"
-import { EDGE_COLORS, GHOST_OPACITY, NODE_SIZES, STATE_COLORS, UI_COLORS } from "./theme.js"
+import {
+  EDGE_COLORS,
+  GHOST_OPACITY,
+  LABEL_FONT_SIZE,
+  LABEL_MIN_ZOOMED_FONT_SIZE,
+  NODE_SIZES,
+  STATE_COLORS,
+  UI_COLORS,
+  UNIT_PADDING,
+  UNIT_SHAPE_POINTS
+} from "./theme.js"
 
 cytoscape.use(fcose)
 // 連結成分がばらけたときの詰め込み（fcose の packComponents）に使われる。
@@ -16,30 +26,29 @@ const edgeColor = (ele) => EDGE_COLORS[ele.data("severity")] ?? EDGE_COLORS.none
 /** Cytoscape のスタイル定義。 */
 export const GRAPH_STYLE = [
   {
-    // --- ユニットの囲み ---
+    // --- ユニットの囲み（blob）---
+    // ラベルは出さない。どのユニットかはフィルタとサイドパネルの所属バッジで分かる。
     selector: "node[kind = 'unit']",
     style: {
-      shape: "round-rectangle",
-      "background-color": UI_COLORS.compoundFill,
+      shape: "polygon",
+      "shape-polygon-points": UNIT_SHAPE_POINTS,
+      "background-color": UI_COLORS.unitFill,
       "background-opacity": 1,
       "border-width": 1,
-      "border-color": UI_COLORS.compoundBorder,
-      padding: 22,
-      "min-width": 60,
-      "min-height": 60,
-      label: "data(label)",
-      color: UI_COLORS.compoundLabel,
-      "font-size": 11,
-      "font-weight": 700,
-      "text-valign": "top",
-      "text-halign": "center",
-      "text-margin-y": -6,
-      "text-wrap": "none",
+      "border-color": UI_COLORS.unitBorder,
+      padding: UNIT_PADDING,
+      // 余白を「子ノードの外接矩形の長辺」基準にして、blob の丸みで四隅が欠けるのを吸収する。
+      "padding-relative-to": "max",
+      "min-width": 80,
+      "min-height": 80,
+      label: "",
       events: "no"
     }
   },
   {
     // --- 記事ページ ---
+    // ラベル（記事タイトル）は常時オン。縮小して読めなくなったら
+    // min-zoomed-font-size で Cytoscape 側が落とす。
     selector: "node[kind = 'page']",
     style: {
       shape: "ellipse",
@@ -49,14 +58,14 @@ export const GRAPH_STYLE = [
       "border-width": 0,
       label: "data(label)",
       color: UI_COLORS.text,
-      "font-size": 10,
+      "font-size": LABEL_FONT_SIZE,
+      "min-zoomed-font-size": LABEL_MIN_ZOOMED_FONT_SIZE,
       "text-valign": "center",
       "text-halign": "right",
       "text-margin-x": 5,
       "text-outline-width": 3,
       "text-outline-color": UI_COLORS.background,
-      "text-outline-opacity": 0.85,
-      "text-opacity": 0,
+      "text-outline-opacity": 0.9,
       "text-wrap": "none",
       "z-index": 10
     }
@@ -101,9 +110,9 @@ export const GRAPH_STYLE = [
     }
   },
   {
-    // --- ラベル（常時は出さず、ズームイン時・ホバー時・選択の周辺だけ出す）---
-    selector: "node.zoom-labeled, node.focus-labeled",
-    style: { "text-opacity": 1, "z-index": 40 }
+    // 選択したノードの周辺は、引いた状態でもラベルを読めるようにする。
+    selector: "node.focus-labeled",
+    style: { "min-zoomed-font-size": 0, "z-index": 40 }
   },
   {
     // --- 選択したノードとその周辺 ---
@@ -111,7 +120,7 @@ export const GRAPH_STYLE = [
     style: {
       "border-width": 2.5,
       "border-style": "solid",
-      "border-color": "#ffffff",
+      "border-color": UI_COLORS.selectionRing,
       "border-opacity": 1,
       opacity: 1,
       "text-opacity": 1,
@@ -125,12 +134,12 @@ export const GRAPH_STYLE = [
   {
     // 選択したノードの周辺以外を沈める。囲みは沈めない（位置の手がかりとして残す）。
     selector: ".faded",
-    style: { opacity: 0.08, "text-opacity": 0 }
+    style: { opacity: 0.12, "text-opacity": 0 }
   },
   {
-    // ホバー中のノードは、沈んでいても必ずラベルを出す。
+    // ホバー中のノードは、沈んでいても・引いていても必ずラベルを出す。
     selector: "node.hover-labeled",
-    style: { opacity: 1, "text-opacity": 1, "z-index": 60 }
+    style: { opacity: 1, "text-opacity": 1, "min-zoomed-font-size": 0, "z-index": 60 }
   },
   {
     selector: ".hidden",

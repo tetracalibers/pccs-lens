@@ -11,20 +11,13 @@ import {
 } from "./graph.js"
 import { runLayout } from "./layout.js"
 import { renderPanel } from "./panel.js"
-import {
-  EDGE_COLORS,
-  GHOST_OPACITY,
-  LABEL_ZOOM_THRESHOLD,
-  STATE_COLORS,
-  UI_COLORS
-} from "./theme.js"
+import { GHOST_OPACITY, STATE_COLORS, UI_COLORS } from "./theme.js"
 
 // --- theme.js の値を CSS カスタムプロパティへ流し込む（色の実値は theme.js が唯一の情報源）---
 
 const cssVariables = {
   "--ui-background": UI_COLORS.background,
   "--ui-surface": UI_COLORS.surface,
-  "--ui-surface-raised": UI_COLORS.surfaceRaised,
   "--ui-border": UI_COLORS.border,
   "--ui-text": UI_COLORS.text,
   "--ui-text-muted": UI_COLORS.textMuted,
@@ -33,7 +26,6 @@ const cssVariables = {
   "--state-empty": STATE_COLORS.empty,
   "--state-draft": STATE_COLORS.draft,
   "--state-published": STATE_COLORS.published,
-  "--edge-none": EDGE_COLORS.none,
   "--ghost-opacity": String(GHOST_OPACITY)
 }
 for (const [name, value] of Object.entries(cssVariables)) {
@@ -63,9 +55,6 @@ let selectedPath = null
 
 /** 最初のレイアウトだけビューポートを合わせる（以降は勝手に動かさない）。 */
 let needsFit = true
-
-/** ズームによるラベル表示の現在の状態。 */
-let zoomLabeled = false
 
 /** パス → 走査結果のノード。サイドパネルの引き回しに使う。 */
 let nodeIndex = new Map()
@@ -185,16 +174,7 @@ const applyFilters = () => {
     savedPositions.set(id, { ...cy.$id(id).position() })
   }
 
-  zoomLabeled = false
-  syncZoomLabels()
   updateFocus()
-}
-
-const syncZoomLabels = () => {
-  const shouldLabel = cy.zoom() >= LABEL_ZOOM_THRESHOLD
-  if (shouldLabel === zoomLabeled) return
-  zoomLabeled = shouldLabel
-  cy.batch(() => cy.nodes('[kind = "page"]').toggleClass("zoom-labeled", shouldLabel))
 }
 
 /** 走査結果を受け取って画面全体を更新する。 */
@@ -223,8 +203,6 @@ cy.on("mouseout", 'node[kind = "page"]', (event) => {
   event.target.removeClass("hover-labeled")
   canvas.style.cursor = ""
 })
-
-cy.on("zoom", syncZoomLabels)
 
 // --- 起動と watch ---
 
