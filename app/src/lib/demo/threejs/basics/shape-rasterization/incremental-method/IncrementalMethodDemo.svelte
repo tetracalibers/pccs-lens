@@ -5,7 +5,7 @@
   // Tweakpane が直接書き換え、scene.ts が毎フレーム読む。$state ではなくプレーンオブジェクトにする。
   // incremental と direct は scene.ts が組み立てて書き戻す表示用の値なので、初期値は使われない
   const params: IncrementalMethodParams = {
-    slope: 0.35,
+    slope: 0.6,
     step: 4,
     incremental: "",
     direct: ""

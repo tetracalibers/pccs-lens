@@ -4,10 +4,8 @@ import {
   CircleGeometry,
   ConeGeometry,
   Group,
-  InstancedMesh,
   LineBasicMaterial,
   LineSegments,
-  Matrix4,
   Mesh,
   MeshBasicMaterial,
   PlaneGeometry,
@@ -89,8 +87,6 @@ const LABEL_FONT = "bold 92px sans-serif"
  * xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z。
  * 正面から見る構図に固定しているため、この厚みは絵には出ない
  */
-const LAYER_PIXEL = 0.01
-const LAYER_CURRENT_PIXEL = 0.015
 const LAYER_GRID = 0.02
 const LAYER_FRAME = 0.03
 const LAYER_AXIS = 0.04
@@ -100,17 +96,15 @@ const LAYER_SPAN = 0.07
 const LAYER_DOT = 0.08
 const LAYER_LABEL = 0.1
 
-// 背景（暗めのグレー）の上で、輪郭・スキャンライン・スパン・塗った画素を見分けられる色にする
+// 背景（暗めのグレー）の上で、輪郭・スキャンライン・スパンを互いに見分けられる色にする
 const GRID_COLOR = "#7d8794"
 const FRAME_COLOR = "#c8ccd4"
 const EDGE_COLOR = "#6fd8ff"
-const PIXEL_COLOR = "#ffc857"
-const PAST_PIXEL_OPACITY = 0.45
 const SPAN_COLOR = "#f2766a"
 const SCANLINE_COLOR = "#aeb6c2"
 const AXIS_COLOR = "#9aa3b0"
 
-/** 図全体を canvas の中央に寄せる位置。右のスパンの注記の分だけ左へ寄せる */
+/** 図全体を canvas の中央に寄せる位置。右へ伸ばした x 軸と軸名の分だけ左へ寄せる */
 const GRAPH_OFFSET = new Vector3(-0.14, 0, 0)
 
 /**
@@ -205,22 +199,6 @@ export const createScanlineSpanScene = ({ scene, params }: SceneContext) => {
 
   const barGeometry = new PlaneGeometry(1, 1)
 
-  // すでに走査した行で塗った画素
-  const pastPixelMaterial = new MeshBasicMaterial({
-    color: PIXEL_COLOR,
-    transparent: true,
-    opacity: PAST_PIXEL_OPACITY
-  })
-  const pastPixels = new InstancedMesh(barGeometry, pastPixelMaterial, COLUMNS * ROWS)
-  pastPixels.frustumCulled = false
-  graph.add(pastPixels)
-
-  // いま見ているスキャンラインで塗る画素
-  const currentPixelMaterial = new MeshBasicMaterial({ color: PIXEL_COLOR })
-  const currentPixels = new InstancedMesh(barGeometry, currentPixelMaterial, COLUMNS)
-  currentPixels.frustumCulled = false
-  graph.add(currentPixels)
-
   // 画素どうしの境目
   const gridPoints: Vector3[] = []
   for (let column = 0; column <= COLUMNS; column++) {
@@ -314,12 +292,15 @@ export const createScanlineSpanScene = ({ scene, params }: SceneContext) => {
     return label
   })
 
-  // 交点とスパンの注記。文字は変わらないので作り直さず、位置だけ毎回動かす
-  const intersectionLabel = createLabel("交点", SPAN_COLOR, NOTE_LABEL_HEIGHT)
+  // 交点とスパンの注記。文字は変わらないので作り直さず、位置だけ毎回動かす。
+  // 交点は左右の 2 つとも同じ注記を添える
+  const intersectionLabels = [0, 1].map(() => {
+    const label = createLabel("交点", SPAN_COLOR, NOTE_LABEL_HEIGHT)
+    graph.add(label.sprite)
+    return label
+  })
   const spanLabel = createLabel("スパン", SPAN_COLOR, NOTE_LABEL_HEIGHT)
-  graph.add(intersectionLabel.sprite, spanLabel.sprite)
-
-  const matrix = new Matrix4()
+  graph.add(spanLabel.sprite)
 
   return {
     update: () => {
@@ -337,39 +318,12 @@ export const createScanlineSpanScene = ({ scene, params }: SceneContext) => {
       // スキャンラインは、いま見ている行の画素の中心を通る
       scanline.position.set(0, worldYOf(scanRow), LAYER_SCANLINE)
 
-      // 上端から今の行まで、1 行ずつ走査してスパンの内側の画素を塗っていく。
-      // 画素は、その中心がスパンに入っていれば内部とみなす
-      let painted = 0
-      let current = 0
-      for (let row = 0; row <= scanRow; row++) {
-        const rowSpan = spanAt(row, apexX)
-        if (!rowSpan) continue
-
-        const from = Math.max(Math.ceil(rowSpan.left), 0)
-        const to = Math.min(Math.floor(rowSpan.right), COLUMNS - 1)
-        for (let column = from; column <= to; column++) {
-          matrix.makeScale(PITCH, PITCH, 1)
-
-          if (row === scanRow) {
-            matrix.setPosition(worldXOf(column), worldYOf(row), LAYER_CURRENT_PIXEL)
-            currentPixels.setMatrixAt(current++, matrix)
-          } else {
-            matrix.setPosition(worldXOf(column), worldYOf(row), LAYER_PIXEL)
-            pastPixels.setMatrixAt(painted++, matrix)
-          }
-        }
-      }
-      pastPixels.count = painted
-      pastPixels.instanceMatrix.needsUpdate = true
-      currentPixels.count = current
-      currentPixels.instanceMatrix.needsUpdate = true
-
       // いまの行のスパンと、その両端の交点
       const currentSpan = spanAt(scanRow, apexX)
       const inside = currentSpan !== null
       span.visible = inside
       dots.forEach((dot) => (dot.visible = inside))
-      intersectionLabel.sprite.visible = inside
+      intersectionLabels.forEach(({ sprite }) => (sprite.visible = inside))
       spanLabel.sprite.visible = inside
 
       if (currentSpan) {
@@ -384,16 +338,22 @@ export const createScanlineSpanScene = ({ scene, params }: SceneContext) => {
         dots[0].position.set(worldXOf(left), worldYOf(scanRow), LAYER_DOT)
         dots[1].position.set(worldXOf(right), worldYOf(scanRow), LAYER_DOT)
 
-        // 注記はスパンの外側（塗る画素と輪郭を避ける側）へ逃がし、
-        // さらにスキャンラインの上へ持ち上げて走査線と重ならないようにする
-        intersectionLabel.sprite.position.set(
-          worldXOf(left) - NOTE_MARGIN - intersectionLabel.sprite.scale.x / 2,
+        // 交点の注記はスパンの外側（輪郭を避ける側）へ逃がし、さらにスキャンラインの
+        // 上へ持ち上げて走査線と重ならないようにする
+        intersectionLabels[0].sprite.position.set(
+          worldXOf(left) - NOTE_MARGIN - intersectionLabels[0].sprite.scale.x / 2,
           worldYOf(scanRow) + NOTE_LIFT,
           LAYER_LABEL
         )
-        spanLabel.sprite.position.set(
-          worldXOf(right) + NOTE_MARGIN + spanLabel.sprite.scale.x / 2,
+        intersectionLabels[1].sprite.position.set(
+          worldXOf(right) + NOTE_MARGIN + intersectionLabels[1].sprite.scale.x / 2,
           worldYOf(scanRow) + NOTE_LIFT,
+          LAYER_LABEL
+        )
+        // スパンの注記は、区間の真ん中の下（交点の注記とは反対側）へ置く
+        spanLabel.sprite.position.set(
+          (worldXOf(left) + worldXOf(right)) / 2,
+          worldYOf(scanRow) - NOTE_LIFT,
           LAYER_LABEL
         )
       }
@@ -414,8 +374,6 @@ export const createScanlineSpanScene = ({ scene, params }: SceneContext) => {
     dispose: () => {
       const disposables = [
         barGeometry,
-        pastPixelMaterial,
-        currentPixelMaterial,
         gridGeometry,
         gridMaterial,
         frameGeometry,
@@ -431,9 +389,7 @@ export const createScanlineSpanScene = ({ scene, params }: SceneContext) => {
         dotMaterial
       ]
       disposables.forEach((disposable) => disposable.dispose())
-      pastPixels.dispose()
-      currentPixels.dispose()
-      const labels = [...axisLabels, intersectionLabel, spanLabel]
+      const labels = [...axisLabels, ...intersectionLabels, spanLabel]
       labels.forEach(({ texture, material }) => {
         texture.dispose()
         material.dispose()

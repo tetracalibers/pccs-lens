@@ -68,8 +68,12 @@ const ARROW_RADIUS = 0.06
 const AXIS_LABEL_HEIGHT = 0.24
 const STEP_LABEL_HEIGHT = 0.22
 
-/** 増分の注記を、注記が添う線分から逃がす距離 */
-const STEP_LABEL_MARGIN = 0.19
+/**
+ * 増分の注記を、注記が添う線分から逃がす距離。
+ * +1 は横線の上（下）に載るので、接するくらいまで近づけて、わずかに間を空ける
+ */
+const STEP_LABEL_MARGIN_X = 0.09
+const STEP_LABEL_MARGIN_Y = 0.19
 
 /** ラベルの文字を描く canvas の高さ（テクスチャの解像度）と左右の余白、書体 */
 const LABEL_TEXTURE_HEIGHT = 128
@@ -88,12 +92,14 @@ const LAYER_PATH = 0.05
 const LAYER_DOT = 0.06
 const LAYER_LABEL = 0.1
 
-// 背景（暗めのグレー）の上で、格子・直線・増分の階段を互いに見分けられる色にする
+// 背景（暗めのグレー）の上で、格子・直線・増分の階段を互いに見分けられる色にする。
+// 増分は x 方向へ進む分（+1）と y 方向へ増える分（+a）で色を分ける
 const GRID_COLOR = "#7d8794"
 const FRAME_COLOR = "#c8ccd4"
 const LINE_COLOR = "#6fd8ff"
 const DOT_COLOR = "#ffc857"
-const STEP_COLOR = "#f2766a"
+const STEP_X_COLOR = "#b48cf2"
+const STEP_Y_COLOR = "#f2766a"
 const PAST_STEP_OPACITY = 0.4
 const AXIS_COLOR = "#9aa3b0"
 
@@ -219,20 +225,29 @@ export const createIncrementalMethodScene = ({ scene, params }: SceneContext) =>
   straightLine.position.z = LAYER_LINE
   graph.add(straightLine)
 
-  // 通り過ぎた増分。x 方向へ 1、y 方向へ a の 2 本ずつで階段になる
-  const pastStepMaterial = new MeshBasicMaterial({
-    color: STEP_COLOR,
+  // 通り過ぎた増分。x 方向へ 1、y 方向へ a の 2 本ずつで階段になる。
+  // InstancedMesh はマテリアルを 1 つしか持てないので、向きごとに分けて色を変える
+  const pastStepAlongXMaterial = new MeshBasicMaterial({
+    color: STEP_X_COLOR,
     transparent: true,
     opacity: PAST_STEP_OPACITY
   })
-  const pastSteps = new InstancedMesh(barGeometry, pastStepMaterial, (COLUMNS - 1) * 2)
-  pastSteps.frustumCulled = false
-  graph.add(pastSteps)
+  const pastStepAlongYMaterial = new MeshBasicMaterial({
+    color: STEP_Y_COLOR,
+    transparent: true,
+    opacity: PAST_STEP_OPACITY
+  })
+  const pastStepsAlongX = new InstancedMesh(barGeometry, pastStepAlongXMaterial, COLUMNS - 1)
+  const pastStepsAlongY = new InstancedMesh(barGeometry, pastStepAlongYMaterial, COLUMNS - 1)
+  pastStepsAlongX.frustumCulled = false
+  pastStepsAlongY.frustumCulled = false
+  graph.add(pastStepsAlongX, pastStepsAlongY)
 
   // いま足した増分。x 方向へ 1 進める分と、y 方向へ a 増える分
-  const stepMaterial = new MeshBasicMaterial({ color: STEP_COLOR })
-  const stepAlongX = new Mesh(barGeometry, stepMaterial)
-  const stepAlongY = new Mesh(barGeometry, stepMaterial)
+  const stepAlongXMaterial = new MeshBasicMaterial({ color: STEP_X_COLOR })
+  const stepAlongYMaterial = new MeshBasicMaterial({ color: STEP_Y_COLOR })
+  const stepAlongX = new Mesh(barGeometry, stepAlongXMaterial)
+  const stepAlongY = new Mesh(barGeometry, stepAlongYMaterial)
   graph.add(stepAlongX, stepAlongY)
 
   // 求めた y。小数のまま、直線の上に乗る
@@ -253,8 +268,8 @@ export const createIncrementalMethodScene = ({ scene, params }: SceneContext) =>
   })
 
   // 増分の注記。文字は変わらないので作り直さず、位置だけ毎回動かす
-  const alongXLabel = createLabel("+1", STEP_COLOR, STEP_LABEL_HEIGHT)
-  const alongYLabel = createLabel("+a", STEP_COLOR, STEP_LABEL_HEIGHT)
+  const alongXLabel = createLabel("+1", STEP_X_COLOR, STEP_LABEL_HEIGHT)
+  const alongYLabel = createLabel("+a", STEP_Y_COLOR, STEP_LABEL_HEIGHT)
   graph.add(alongXLabel.sprite, alongYLabel.sprite)
 
   const matrix = new Matrix4()
@@ -276,7 +291,6 @@ export const createIncrementalMethodScene = ({ scene, params }: SceneContext) =>
       matrix.setPosition(worldXOf(0), worldYOf(y), LAYER_DOT)
       dots.setMatrixAt(0, matrix)
 
-      let bar = 0
       for (let x = 1; x <= step; x++) {
         const previousY = y
         y += slope
@@ -284,12 +298,12 @@ export const createIncrementalMethodScene = ({ scene, params }: SceneContext) =>
         // x を 1 進める分。どのステップでも 1 列ぶんの長さになる
         matrix.makeScale(PITCH, PATH_THICKNESS, 1)
         matrix.setPosition((worldXOf(x - 1) + worldXOf(x)) / 2, worldYOf(previousY), LAYER_PATH)
-        pastSteps.setMatrixAt(bar++, matrix)
+        pastStepsAlongX.setMatrixAt(x - 1, matrix)
 
         // y が a だけ増える分。傾きが急なほど長くなる
         matrix.makeScale(PATH_THICKNESS, Math.abs(slope) * PITCH, 1)
         matrix.setPosition(worldXOf(x), (worldYOf(previousY) + worldYOf(y)) / 2, LAYER_PATH)
-        pastSteps.setMatrixAt(bar++, matrix)
+        pastStepsAlongY.setMatrixAt(x - 1, matrix)
 
         // 求めた y。小数のまま、直線の上に乗る
         matrix.identity()
@@ -299,8 +313,10 @@ export const createIncrementalMethodScene = ({ scene, params }: SceneContext) =>
 
       dots.count = step + 1
       dots.instanceMatrix.needsUpdate = true
-      pastSteps.count = bar
-      pastSteps.instanceMatrix.needsUpdate = true
+      pastStepsAlongX.count = step
+      pastStepsAlongX.instanceMatrix.needsUpdate = true
+      pastStepsAlongY.count = step
+      pastStepsAlongY.instanceMatrix.needsUpdate = true
 
       // いま足した増分を、階段の最後の 1 段に重ねて強調する
       const showStep = step > 0
@@ -324,10 +340,10 @@ export const createIncrementalMethodScene = ({ scene, params }: SceneContext) =>
         const labelSide = slope >= 0 ? 1 : -1
         alongXLabel.sprite.position.set(
           midX,
-          worldYOf(previousY) + labelSide * STEP_LABEL_MARGIN,
+          worldYOf(previousY) + labelSide * STEP_LABEL_MARGIN_X,
           LAYER_LABEL
         )
-        alongYLabel.sprite.position.set(worldXOf(step) + STEP_LABEL_MARGIN, midY, LAYER_LABEL)
+        alongYLabel.sprite.position.set(worldXOf(step) + STEP_LABEL_MARGIN_Y, midY, LAYER_LABEL)
       }
 
       // 増分を足した結果と、式から直接求めた場合の対比。
@@ -349,13 +365,16 @@ export const createIncrementalMethodScene = ({ scene, params }: SceneContext) =>
         arrowMaterial,
         barGeometry,
         lineMaterial,
-        pastStepMaterial,
-        stepMaterial,
+        pastStepAlongXMaterial,
+        pastStepAlongYMaterial,
+        stepAlongXMaterial,
+        stepAlongYMaterial,
         dotGeometry,
         dotMaterial
       ]
       disposables.forEach((disposable) => disposable.dispose())
-      pastSteps.dispose()
+      pastStepsAlongX.dispose()
+      pastStepsAlongY.dispose()
       dots.dispose()
       const labels = [...axisLabels, alongXLabel, alongYLabel]
       labels.forEach(({ texture, material }) => {

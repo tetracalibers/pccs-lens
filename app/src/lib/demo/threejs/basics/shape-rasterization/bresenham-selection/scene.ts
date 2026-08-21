@@ -64,10 +64,10 @@ const ARROW_RADIUS = 0.06
 
 /** 軸の名前・候補の注記の文字の高さ（ワールド座標での大きさ） */
 const AXIS_LABEL_HEIGHT = 0.24
-const NOTE_LABEL_HEIGHT = 0.2
+const NOTE_LABEL_HEIGHT = 0.18
 
-/** 候補の注記を、候補の画素から右へ逃がす距離 */
-const NOTE_MARGIN = 0.14
+/** 候補の注記を、候補の枠から右へ逃がす距離。どの枠への注記かは近さで示すので、詰めて置く */
+const NOTE_MARGIN = 0.08
 
 /** ラベルの文字を描く canvas の高さ（テクスチャの解像度）と左右の余白、書体 */
 const LABEL_TEXTURE_HEIGHT = 128
@@ -98,8 +98,8 @@ const CHOSEN_FILL_OPACITY = 0.3
 const REJECTED_COLOR = "#aeb6c2"
 const AXIS_COLOR = "#9aa3b0"
 
-/** 図全体を canvas の中央に寄せる位置。右の候補の注記の分だけ左へ寄せる */
-const GRAPH_OFFSET = new Vector3(-0.1, 0, 0)
+/** 図全体を canvas の中央に寄せる位置。右の候補の注記が張り出す幅だけ左へ寄せる */
+const GRAPH_OFFSET = new Vector3(-0.34, 0, 0)
 
 /**
  * 文字を描いた canvas をテクスチャにして、常にカメラを向く板（Sprite）にする。
@@ -270,12 +270,15 @@ export const createBresenhamSelectionScene = ({ scene, params }: SceneContext) =
     return label
   })
 
-  // 候補の注記。上の候補は d ≦ 0 のとき、下の候補は d > 0 のときに選ばれる
-  const candidateLabels = ["d ≦ 0", "d > 0"].map((text) => {
-    const label = createLabel(text, REJECTED_COLOR, NOTE_LABEL_HEIGHT)
-    graph.add(label.sprite)
-    return label
-  })
+  // 候補の注記。上の候補は d ≦ 0 のとき、下の候補は d > 0 のときに選ばれる。
+  // 条件だけでなく「次にどの行を塗るか」まで書き、どちらの候補の話かは枠との近さで示す。
+  // 文字の色はテクスチャに焼き込まれるので、選ばれた側・選ばれなかった側の
+  // 2 通りを作っておいて表示を切り替える
+  const candidateLabels = ["d ≦ 0 → 同じ行", "d > 0 → 1つ下の行"].map((text) => ({
+    chosen: createLabel(text, PIXEL_COLOR, NOTE_LABEL_HEIGHT),
+    rejected: createLabel(text, REJECTED_COLOR, NOTE_LABEL_HEIGHT)
+  }))
+  candidateLabels.forEach(({ chosen, rejected }) => graph.add(chosen.sprite, rejected.sprite))
 
   const matrix = new Matrix4()
 
@@ -332,13 +335,14 @@ export const createBresenhamSelectionScene = ({ scene, params }: SceneContext) =
         outline.material =
           goesDown === (index === 1) ? chosenOutlineMaterial : rejectedOutlineMaterial
       })
-      candidateLabels.forEach(({ sprite }, index) => {
-        sprite.visible = hasNext
-        sprite.position.set(
-          nextX + PITCH / 2 + NOTE_MARGIN + sprite.scale.x / 2,
-          worldYOf(y + index),
-          LAYER_LABEL
-        )
+      candidateLabels.forEach(({ chosen, rejected }, index) => {
+        // 同じ文字・同じ高さなので、2 通りの注記は幅も等しく、置き場所も共通でよい
+        const isChosen = goesDown === (index === 1)
+        chosen.sprite.visible = hasNext && isChosen
+        rejected.sprite.visible = hasNext && !isChosen
+        const labelX = nextX + PITCH / 2 + NOTE_MARGIN + chosen.sprite.scale.x / 2
+        chosen.sprite.position.set(labelX, worldYOf(y + index), LAYER_LABEL)
+        rejected.sprite.position.set(labelX, worldYOf(y + index), LAYER_LABEL)
       })
       chosenFill.visible = hasNext
       chosenFill.position.set(nextX, worldYOf(goesDown ? y + 1 : y), LAYER_CANDIDATE_FILL)
@@ -375,7 +379,10 @@ export const createBresenhamSelectionScene = ({ scene, params }: SceneContext) =
       ]
       disposables.forEach((disposable) => disposable.dispose())
       pastPixels.dispose()
-      const labels = [...axisLabels, ...candidateLabels]
+      const labels = [
+        ...axisLabels,
+        ...candidateLabels.flatMap(({ chosen, rejected }) => [chosen, rejected])
+      ]
       labels.forEach(({ texture, material }) => {
         texture.dispose()
         material.dispose()

@@ -58,6 +58,9 @@ const THRESHOLD_THICKNESS = 0.03
 /** 誤差を測る基準（画素の中心）を示す点の半径 */
 const DOT_RADIUS = 0.042
 
+/** しきい値の線の両端を示す点の半径。誤差の点より小さくして、主役を取らないようにする */
+const THRESHOLD_DOT_RADIUS = 0.028
+
 /** 座標軸を格子の外へ逃がす距離と、軸を格子より長く伸ばす分 */
 const AXIS_MARGIN = 0.18
 const AXIS_OVERSHOOT = 0.26
@@ -66,12 +69,22 @@ const AXIS_OVERSHOOT = 0.26
 const ARROW_HEIGHT = 0.16
 const ARROW_RADIUS = 0.06
 
-/** 軸の名前・誤差・しきい値の注記の文字の高さ（ワールド座標での大きさ） */
+/** 軸の名前・凡例の文字の高さ（ワールド座標での大きさ） */
 const AXIS_LABEL_HEIGHT = 0.24
 const NOTE_LABEL_HEIGHT = 0.22
 
-/** 注記を、注記が添う線分から逃がす距離 */
-const NOTE_MARGIN = 0.17
+/** しきい値 0.5 の注記の文字の高さと、注記を線から逃がす距離。線に添えて小さく置く */
+const THRESHOLD_LABEL_HEIGHT = 0.18
+const THRESHOLD_LABEL_MARGIN = 0.04
+
+/**
+ * 誤差 e の凡例。図の中では誤差の棒と他の要素が重なって読めないので、
+ * 座標平面の右に出す。色見本は実際の描き方と同じ形（片端に点を置いた縦線）にする
+ */
+const LEGEND_SWATCH_LENGTH = 0.24
+const LEGEND_SWATCH_GAP = 0.09
+const LEGEND_OFFSET_X = 0.58
+const LEGEND_OFFSET_Y = 0.32
 
 /** ラベルの文字を描く canvas の高さ（テクスチャの解像度）と左右の余白、書体 */
 const LABEL_TEXTURE_HEIGHT = 128
@@ -100,7 +113,7 @@ const LINE_COLOR = "#6fd8ff"
 const PIXEL_COLOR = "#ffc857"
 const PAST_PIXEL_OPACITY = 0.45
 const ERROR_COLOR = "#f2766a"
-const THRESHOLD_COLOR = "#aeb6c2"
+const THRESHOLD_COLOR = "#b48cf2"
 const AXIS_COLOR = "#9aa3b0"
 
 /** 図全体を canvas の中央に寄せる位置 */
@@ -233,10 +246,10 @@ export const createErrorIncrementScene = ({ scene, params }: SceneContext) => {
   yArrow.rotation.z = Math.PI
   graph.add(yArrow)
 
-  // 誤差を比べるしきい値 0.5。いま見ている画素の、下側の境目に重なる
+  // 誤差を比べるしきい値 0.5。画素の右辺に、中心から境目まで（画素の半分）の長さで立てる
   const thresholdMaterial = new MeshBasicMaterial({ color: THRESHOLD_COLOR })
   const threshold = new Mesh(barGeometry, thresholdMaterial)
-  threshold.scale.set(PITCH, THRESHOLD_THICKNESS, 1)
+  threshold.scale.set(THRESHOLD_THICKNESS, PITCH / 2, 1)
   graph.add(threshold)
 
   // 描きたい直線。図の主役なので、格子線に埋もれない太さで描く
@@ -255,6 +268,14 @@ export const createErrorIncrementScene = ({ scene, params }: SceneContext) => {
   const baseDot = new Mesh(dotGeometry, dotMaterial)
   graph.add(baseDot)
 
+  // しきい値の線の両端。誤差の点と同じ形で、半径だけ小さくする
+  const thresholdDotGeometry = new CircleGeometry(THRESHOLD_DOT_RADIUS, 16)
+  const thresholdDots = [0, 1].map(() => {
+    const dot = new Mesh(thresholdDotGeometry, thresholdMaterial)
+    graph.add(dot)
+    return dot
+  })
+
   const axisLabels = [
     { text: "x", x: axisRightX + 0.36, y: axisTopY },
     { text: "y", x: axisLeftX - 0.26, y: axisBottomY + 0.3 }
@@ -265,10 +286,28 @@ export const createErrorIncrementScene = ({ scene, params }: SceneContext) => {
     return label
   })
 
-  // 誤差としきい値の注記。文字は変わらないので作り直さず、位置だけ毎回動かす
-  const errorLabel = createLabel("e", ERROR_COLOR, NOTE_LABEL_HEIGHT)
-  const thresholdLabel = createLabel("0.5", THRESHOLD_COLOR, NOTE_LABEL_HEIGHT)
-  graph.add(errorLabel.sprite, thresholdLabel.sprite)
+  // しきい値の注記。文字は変わらないので作り直さず、位置だけ毎回動かす
+  const thresholdLabel = createLabel("0.5", THRESHOLD_COLOR, THRESHOLD_LABEL_HEIGHT)
+  graph.add(thresholdLabel.sprite)
+
+  // 誤差 e の凡例。座標平面の右上に、図の中の誤差と同じ形（片端に点を置いた縦線）で置く。
+  // 位置も文字も変わらないので、ここで一度だけ置く
+  const legendLabel = createLabel("e", ERROR_COLOR, NOTE_LABEL_HEIGHT)
+  const legendBar = new Mesh(barGeometry, errorMaterial)
+  legendBar.scale.set(ERROR_THICKNESS, LEGEND_SWATCH_LENGTH, 1)
+  const legendDot = new Mesh(dotGeometry, dotMaterial)
+  graph.add(legendLabel.sprite, legendBar, legendDot)
+
+  const legendX = HALF_WIDTH + LEGEND_OFFSET_X
+  const legendY = HALF_HEIGHT - LEGEND_OFFSET_Y
+  legendBar.position.set(legendX, legendY, LAYER_ERROR)
+  // 点は、図の中で誤差を測る基準（画素の中心）にあたる側の端に置く
+  legendDot.position.set(legendX, legendY + LEGEND_SWATCH_LENGTH / 2, LAYER_DOT)
+  legendLabel.sprite.position.set(
+    legendX + LEGEND_SWATCH_GAP + legendLabel.sprite.scale.x / 2,
+    legendY,
+    LAYER_LABEL
+  )
 
   const matrix = new Matrix4()
 
@@ -325,8 +364,11 @@ export const createErrorIncrementScene = ({ scene, params }: SceneContext) => {
       errorBar.visible = showError
       baseDot.visible = showError
       threshold.visible = showError
-      errorLabel.sprite.visible = showError
+      thresholdDots.forEach((dot) => (dot.visible = showError))
       thresholdLabel.sprite.visible = showError
+      legendLabel.sprite.visible = showError
+      legendBar.visible = showError
+      legendDot.visible = showError
 
       const errorAfterIncrement = errorBefore + slope
 
@@ -339,13 +381,23 @@ export const createErrorIncrementScene = ({ scene, params }: SceneContext) => {
         errorBar.position.set(columnX, (baseY + tipY) / 2, LAYER_ERROR)
         baseDot.position.set(columnX, baseY, LAYER_DOT)
 
-        // しきい値は、1 つ前に塗った画素の下側の境目（中心から 0.5 だけ離れた位置）
-        threshold.position.set(columnX, worldYOf(previousRow + 0.5), LAYER_THRESHOLD)
+        // しきい値は、誤差を測る基準になった画素（1 つ前に塗った画素）の中に立てる。
+        // 誤差と同じ列に置くと、その列で塗った画素は 1 行下にあるため、
+        // 線が塗った画素の頂点から外へ飛び出しているようにしか見えない。
+        // その画素の右辺に沿わせ、中心から境目まで（画素の半分）の長さで、
+        // 誤差と同じ向きの端（誤差が上向きなら上端、下向きなら下端）へ伸ばして、
+        // 誤差と長さを見比べられるようにする
+        const thresholdX = worldXOf(step - 1) + PITCH / 2
+        const thresholdEdgeY = baseY + (tipY > baseY ? PITCH / 2 : -PITCH / 2)
+        const thresholdMidY = (baseY + thresholdEdgeY) / 2
+        threshold.position.set(thresholdX, thresholdMidY, LAYER_THRESHOLD)
+        thresholdDots[0].position.set(thresholdX, baseY, LAYER_DOT)
+        thresholdDots[1].position.set(thresholdX, thresholdEdgeY, LAYER_DOT)
 
-        errorLabel.sprite.position.set(columnX - NOTE_MARGIN, (baseY + tipY) / 2, LAYER_LABEL)
+        // 注記は線の左側へ。右側は誤差の棒が来るので空けておく
         thresholdLabel.sprite.position.set(
-          columnX + PITCH / 2 + NOTE_MARGIN,
-          worldYOf(previousRow + 0.5),
+          thresholdX - THRESHOLD_LABEL_MARGIN - thresholdLabel.sprite.scale.x / 2,
+          thresholdMidY,
           LAYER_LABEL
         )
       }
@@ -376,11 +428,12 @@ export const createErrorIncrementScene = ({ scene, params }: SceneContext) => {
         lineMaterial,
         errorMaterial,
         dotGeometry,
-        dotMaterial
+        dotMaterial,
+        thresholdDotGeometry
       ]
       disposables.forEach((disposable) => disposable.dispose())
       pastPixels.dispose()
-      const labels = [...axisLabels, errorLabel, thresholdLabel]
+      const labels = [...axisLabels, thresholdLabel, legendLabel]
       labels.forEach(({ texture, material }) => {
         texture.dispose()
         material.dispose()

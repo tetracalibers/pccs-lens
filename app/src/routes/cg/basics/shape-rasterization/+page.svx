@@ -169,11 +169,6 @@ $$
 - 傾きaを変えると、`1`ステップで増えるyの量がどう変わるか
 :::
 
-:::Fix{target="demo"}
-「傾き」の初期値を0.6に
-xが進む量`+1`とそれを表す横線、yが進む量`+a`とそれを表す縦線を、色分けして区別したい
-:::
-
 <CanvasWrapper>
   <IncrementalMethodDemo />
 </CanvasWrapper>
@@ -185,7 +180,7 @@ xが進む量`+1`とそれを表す横線、yが進む量`+a`とそれを表す�
 const COLUMNS = 13
 const ROWS = 9
 const PITCH = 0.28
-const SLOPE = 0.35
+const SLOPE = 0.6
 const STEP = 4
 
 // xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z
@@ -200,18 +195,24 @@ const INTERCEPT = (ROWS - 1) / 2 - (SLOPE * (COLUMNS - 1)) / 2
 const worldXOf = (x: number) => (-COLUMNS / 2 + x + 0.5) * PITCH
 const worldYOf = (y: number) => (ROWS / 2 - y - 0.5) * PITCH
 
-// 増分をたどる階段（x 方向へ 1、y 方向へ a）と、求めた y を示す点
-const bars = new InstancedMesh(
+// 増分をたどる階段と、求めた y を示す点。
+// 階段は x 方向へ進む分（+1）と y 方向へ増える分（+a）で色を分ける
+const barsAlongX = new InstancedMesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#b48cf2" }),
+  COLUMNS - 1
+)
+const barsAlongY = new InstancedMesh(
   new PlaneGeometry(1, 1),
   new MeshBasicMaterial({ color: "#f2766a" }),
-  (COLUMNS - 1) * 2
+  COLUMNS - 1
 )
 const dots = new InstancedMesh(
   new CircleGeometry(0.045, 16),
   new MeshBasicMaterial({ color: "#ffc857" }),
   COLUMNS
 )
-scene.add(bars, dots)
+scene.add(barsAlongX, barsAlongY, dots)
 
 const matrix = new Matrix4()
 
@@ -221,7 +222,6 @@ matrix.identity()
 matrix.setPosition(worldXOf(0), worldYOf(y), LAYER_DOT)
 dots.setMatrixAt(0, matrix)
 
-let bar = 0
 for (let x = 1; x <= STEP; x++) {
   const previousY = y
   y += SLOPE
@@ -229,19 +229,20 @@ for (let x = 1; x <= STEP; x++) {
   // x を 1 進める分。どのステップでも 1 列ぶんの長さになる
   matrix.makeScale(PITCH, 0.026, 1)
   matrix.setPosition((worldXOf(x - 1) + worldXOf(x)) / 2, worldYOf(previousY), LAYER_PATH)
-  bars.setMatrixAt(bar++, matrix)
+  barsAlongX.setMatrixAt(x - 1, matrix)
 
   // y が a だけ増える分。傾きが急なほど長くなる
   matrix.makeScale(0.026, Math.abs(SLOPE) * PITCH, 1)
   matrix.setPosition(worldXOf(x), (worldYOf(previousY) + worldYOf(y)) / 2, LAYER_PATH)
-  bars.setMatrixAt(bar++, matrix)
+  barsAlongY.setMatrixAt(x - 1, matrix)
 
   // 求めた y。小数のまま、直線の上に乗る
   matrix.identity()
   matrix.setPosition(worldXOf(x), worldYOf(y), LAYER_DOT)
   dots.setMatrixAt(x, matrix)
 }
-bars.count = bar
+barsAlongX.count = STEP
+barsAlongY.count = STEP
 dots.count = STEP + 1
 ```
 
@@ -289,14 +290,6 @@ for x = x_start to x_end:
 - e + aが`0.5`を越えた列では塗る画素が`1`行進み、誤差から`1`が引かれてまた小さな値に戻ること
 :::
 
-:::Fix{target="demo"}
-0.5を表す画素の下線を画素の右側に表示したい
-色は灰色だとわかりづらいので、他の色（緑とか？）を使う
-0.5を表す線では、eを表す赤線の端の丸を両端に表示（丸の半径はeと比べて小さめに）
-0.5を表す線の長さは、画素の中央から画素の上端 or 下端まで（eが上向きであれば上端、下向きであれば下端
-`e`ラベルは常に他の要素と重なって見づらいので、線の横ではなく、凡例として載せた方が良さそう
-:::
-
 <CanvasWrapper>
   <ErrorIncrementDemo />
 </CanvasWrapper>
@@ -316,6 +309,7 @@ const LAYER_PIXEL = 0.01
 const LAYER_CURRENT_PIXEL = 0.015
 const LAYER_THRESHOLD = 0.05
 const LAYER_ERROR = 0.07
+const LAYER_DOT = 0.08
 
 // x（画素の列）と y（画素の行を単位とした小数）の位置。
 // 画像座標系は画像の左上を原点とし、x 軸を右向き、y 軸を下向きにとる
@@ -378,14 +372,23 @@ errorBar.scale.set(0.032, Math.abs(baseY - tipY), 1)
 errorBar.position.set(worldXOf(STEP), (baseY + tipY) / 2, LAYER_ERROR)
 scene.add(errorBar)
 
-// 誤差と比べるしきい値 0.5。1 つ前に塗った画素の、下側の境目に重なる
-const threshold = new Mesh(
-  new PlaneGeometry(1, 1),
-  new MeshBasicMaterial({ color: "#aeb6c2" })
-)
-threshold.scale.set(PITCH, 0.03, 1)
-threshold.position.set(worldXOf(STEP), worldYOf(previousRow + 0.5), LAYER_THRESHOLD)
+// 誤差と比べるしきい値 0.5。誤差を測る基準になった画素（1 つ前に塗った画素）の
+// 右辺に沿わせ、中心から境目まで（画素の半分）の長さで立てる。
+// 誤差と同じ向きの端へ伸ばすと、誤差と長さを見比べられる
+const thresholdX = worldXOf(STEP - 1) + PITCH / 2
+const thresholdEdgeY = baseY + (tipY > baseY ? PITCH / 2 : -PITCH / 2)
+const thresholdMaterial = new MeshBasicMaterial({ color: "#b48cf2" })
+const threshold = new Mesh(new PlaneGeometry(1, 1), thresholdMaterial)
+threshold.scale.set(0.03, PITCH / 2, 1)
+threshold.position.set(thresholdX, (baseY + thresholdEdgeY) / 2, LAYER_THRESHOLD)
 scene.add(threshold)
+
+// しきい値の線の両端。誤差の点と同じ形で、半径だけ小さくする
+for (const y of [baseY, thresholdEdgeY]) {
+  const dot = new Mesh(new CircleGeometry(0.028, 16), thresholdMaterial)
+  dot.position.set(thresholdX, y, LAYER_DOT)
+  scene.add(dot)
+}
 ```
 
 :::
@@ -457,10 +460,6 @@ x座標を`1`進めると誤差には傾き`a = dy / dx`が加わりますが、
 - 次の列の候補が、いまと同じ行と`1`つ下の行の`2`つだけであること
 - 判定変数dが正なら下の行、`0`以下なら同じ行が選ばれること
 - dの初期値も更新も、かけ算とわり算の結果ではなく整数の足し算だけで済んでいること
-:::
-
-:::Fix{target="demo"}
-`d > 0`などのラベルが、どこに対するラベルなのかがよくわからない配置になっており、「`d > 0`だったら何なのか」を表現しきれていないので、要相談
 :::
 
 <CanvasWrapper>
@@ -598,15 +597,9 @@ scene.add(chosenFill)
 :::Action{fixme}
 「スキャンラインの行」を上から下へずらして、次の点に着目してみよう
 
-- スキャンラインが辺と交わる`2`点が交点で、その間のスパンに中心が入る画素だけが塗られること
+- スキャンラインが辺と交わる`2`点が交点で、その間がスパンになること
 - `1`行進めるごとに、交点のx座標が辺の傾きの分だけ動くこと（動く量はどの行でも同じ）
 - 上の頂点のx座標を変えると、左右の辺で交点の動く量がどう変わるか
-:::
-
-:::Fix{target="demo"}
-黄色い正方形による塗りつぶし表示はやめる（「塗りつぶし処理」ページで同様のデモがあるため）
-「スパン」ラベルは赤線の下中央に表示する
-右の交点にも「交点」ラベルを表示する
 :::
 
 <CanvasWrapper>
@@ -628,8 +621,6 @@ const BASE_LEFT = { x: 2.2, y: 8.4 }
 const BASE_RIGHT = { x: 12.6, y: 8.4 }
 
 // xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z
-const LAYER_PIXEL = 0.01
-const LAYER_CURRENT_PIXEL = 0.015
 const LAYER_SCANLINE = 0.05
 const LAYER_EDGE = 0.06
 const LAYER_SPAN = 0.07
@@ -680,32 +671,6 @@ const spanAt = (row: number) => {
     right: intersectionXOf(row, APEX.x, APEX.y, BASE_RIGHT.x, BASE_RIGHT.y)
   }
 }
-
-// 上端から今の行まで、1 行ずつ走査してスパンの内側の画素を塗っていく。
-// 画素は、その中心がスパンに入っていれば内部とみなす
-const pixels = new InstancedMesh(
-  new PlaneGeometry(1, 1),
-  new MeshBasicMaterial({ color: "#ffc857", transparent: true, opacity: 0.45 }),
-  COLUMNS * ROWS
-)
-scene.add(pixels)
-
-const matrix = new Matrix4()
-let painted = 0
-
-for (let row = 0; row <= SCAN_ROW; row++) {
-  const rowSpan = spanAt(row)
-  if (!rowSpan) continue
-
-  const from = Math.max(Math.ceil(rowSpan.left), 0)
-  const to = Math.min(Math.floor(rowSpan.right), COLUMNS - 1)
-  for (let column = from; column <= to; column++) {
-    matrix.makeScale(PITCH, PITCH, 1)
-    matrix.setPosition(worldXOf(column), worldYOf(row), LAYER_PIXEL)
-    pixels.setMatrixAt(painted++, matrix)
-  }
-}
-pixels.count = painted
 
 // いま見ているスキャンラインと、その行のスパン・両端の交点
 const scanline = new Mesh(
