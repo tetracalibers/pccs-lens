@@ -44,13 +44,9 @@ draft: true
 
 こうして輪郭付近に中間的な色の画素が並ぶことで、階段の段差がぼかされ、滑らかな輪郭に見えるようになります。
 
-:::Action{fixme}
-次の点に着目して、デモを観察してみよう
-
-- 図形の傾きや太さを変えると、輪郭にかかった画素の寄与率がどう変わるか
-- 図形が完全に覆っている画素は`1`、まったく覆っていない画素は`0`、その間の画素は覆われた面積の割合になっていること
-- 横の画素数を増やすと、中間の値をとる画素が輪郭沿いの細い帯だけに限られていくこと
-- 寄与率を数値で表示するのをやめ、連続な図形の輪郭も消すと、混ざった色だけで輪郭が滑らかに見えること
+:::Action
+混ざった色だけで輪郭がなんとなくわかることを見た上で、:Mark[連続な図形を表示]してみよう
+:Mark[寄与率を数値で表示]し、数字の大きさが図形への収まり具合、画素の色の混ざり具合に対応していることを確認しよう
 :::
 
 <CanvasWrapper>
@@ -242,13 +238,8 @@ $$
 
 このように画素値を決めると、寄与率 $$\alpha$$ が`1`に近い画素ほど図形の色が、`0`に近い画素ほど背景の色が強く出るようになります。
 
-:::Action{fixme}
-次の点に着目して、デモを観察してみよう
-
-- 寄与率 α を下げると図形が薄くなり、背景の色が透けて見えてくること
-- α が`1`に近いほど図形の色が、`0`に近いほど背景の色が強く出ること（下の帯で連続的に見比べられる）
-- 図形の色と背景の色を変えても、混ぜた色`C`が必ず図形の色と背景の色の間に収まること
-- 混ぜた色`C`が、`R`・`G`・`B`のチャンネルごとに同じ割合で混ぜられていること
+:::Action
+:Mark[寄与率]を動かして、図形の色と背景の色のどちらが多く混ざった色に見えるか観察しよう
 :::
 
 <CanvasWrapper>
@@ -382,10 +373,10 @@ scene.add(ramp)
 :::Action{fixme}
 次の点に着目して、デモを観察してみよう
 
-- サンプリング点（縦横）を`1`つに減らすと左の画像の輪郭が階段状になり、増やすと段差が中間色でぼかされていくこと
-- 点を増やすと、拡大した画素の点による推定が面積比（寄与率）に近づいていくこと
 - 点が`1`つのときは、平均した色が図形の色か背景の色のどちらかにしかならず、中間色が現れないこと
-- 拡大した画素の平均した色が、画像の中で枠に囲まれた画素の色と一致していること
+- 点を増やすと、拡大した画素の点による推定が面積比（寄与率）に近づいていくこと
+- 平均した色の画素が、引き出し線の先で枠に囲まれた画素の色と一致していること
+- サンプリング点（縦横）を`1`つに減らすと右の画像の輪郭が階段状になり、増やすと段差が中間色でぼかされていくこと
 - 輪郭の向きや位置を変えると点による推定がずれるが、点を増やせばずれが小さくなること
 :::
 
@@ -403,25 +394,26 @@ const IMAGE_PITCH = 0.175
 const IMAGE_WIDTH = IMAGE_COLUMNS * IMAGE_PITCH
 const IMAGE_HEIGHT = IMAGE_ROWS * IMAGE_PITCH
 
-// 拡大して見せる画素の 1 辺（画像と背の高さを揃える）と、画像の中でのその画素の列・行
+// 拡大して見せる画素の 1 辺（画像と背の高さを揃える）と、求めた色を埋め戻す画像の中の列・行
 const PIXEL = IMAGE_HEIGHT
-const TARGET_COLUMN = 5
+const TARGET_COLUMN = 1
 const TARGET_ROW = 4
 
-// 画像・拡大した 1 画素・平均した色の画素を、横一列に並べる位置
-const CALLOUT_GAP = 0.5
+// 拡大した 1 画素・平均した色の画素・画像を、色を求める順に横一列に並べる位置
 const ARROW_GAP = 0.45
+const CALLOUT_GAP = 0.5
 const PANEL_Y = -0.12
-const CONTENT_WIDTH = IMAGE_WIDTH + CALLOUT_GAP + PIXEL + ARROW_GAP + PIXEL
-const IMAGE_X = -CONTENT_WIDTH / 2 + IMAGE_WIDTH / 2
-const PIXEL_X = IMAGE_X + IMAGE_WIDTH / 2 + CALLOUT_GAP + PIXEL / 2
+const CONTENT_WIDTH = PIXEL + ARROW_GAP + PIXEL + CALLOUT_GAP + IMAGE_WIDTH
+const PIXEL_X = -CONTENT_WIDTH / 2 + PIXEL / 2
 const AVERAGE_X = PIXEL_X + PIXEL / 2 + ARROW_GAP + PIXEL / 2
+const IMAGE_X = AVERAGE_X + PIXEL / 2 + CALLOUT_GAP + IMAGE_WIDTH / 2
 
 // 1 辺あたりのサンプリング点の数と、画素にかかる図形の輪郭。
 // 輪郭の向きは度、位置は画素の 1 辺を 1 として中心からどれだけずれた所を通るか
 const SAMPLES = 3
 const ANGLE = 60
 const OFFSET = 0.12
+const total = SAMPLES * SAMPLES
 
 // 図形の色と背景の色。サンプリング点は、落ちた位置にあるこのどちらかの色を取る
 const FIGURE = { r: 255, g: 200, b: 87 }
@@ -447,10 +439,91 @@ const radians = (ANGLE * Math.PI) / 180
 const normalX = Math.cos(radians)
 const normalY = Math.sin(radians)
 
-// 画像：各画素の色を、その画素に取った SAMPLES × SAMPLES 個の点の色の平均で決める。
-// 座標は拡大する画素の中心を原点、画素の 1 辺を 1 として数えるので、
+// 拡大した画素の地。図形が覆っていない部分は背景の色になる
+const pixelGeometry = new PlaneGeometry(PIXEL, PIXEL)
+const backgroundMaterial = materialOf(BACKGROUND)
+const backgroundPixel = new Mesh(pixelGeometry, backgroundMaterial)
+backgroundPixel.position.set(PIXEL_X, PANEL_Y, 0)
+scene.add(backgroundPixel)
+
+// 画素にかかった図形。画素と同じ大きさの板を輪郭の直線でクリッピングし、図形側だけを残す。
+// クリッピング面はワールド座標で効くので、板の中心を原点とした条件を置き直して渡す
+renderer.localClippingEnabled = true
+const figurePlane = new Plane(
+  new Vector3(-normalX, -normalY, 0),
+  OFFSET * PIXEL + normalX * PIXEL_X + normalY * PANEL_Y
+)
+const figureMaterial = materialOf(FIGURE)
+figureMaterial.clippingPlanes = [figurePlane]
+const figurePixel = new Mesh(pixelGeometry, figureMaterial)
+figurePixel.position.set(PIXEL_X, PANEL_Y, LAYER_FIGURE)
+scene.add(figurePixel)
+
+// 区画の境目。画素の 1 辺を点の数で等分した位置に引く
+const gridPoints: Vector3[] = []
+for (let index = 0; index <= SAMPLES; index++) {
+  const shift = -PIXEL / 2 + (index * PIXEL) / SAMPLES
+  gridPoints.push(
+    new Vector3(PIXEL_X + shift, PANEL_Y - PIXEL / 2, LAYER_GRID),
+    new Vector3(PIXEL_X + shift, PANEL_Y + PIXEL / 2, LAYER_GRID),
+    new Vector3(PIXEL_X - PIXEL / 2, PANEL_Y + shift, LAYER_GRID),
+    new Vector3(PIXEL_X + PIXEL / 2, PANEL_Y + shift, LAYER_GRID)
+  )
+}
+const gridGeometry = new BufferGeometry().setFromPoints(gridPoints)
+scene.add(new LineSegments(gridGeometry, new LineBasicMaterial({ color: "#7d8794" })))
+
+// 拡大した画素を SAMPLES × SAMPLES の区画に分け、それぞれの中心を 1 点として色を求める。
+// 点の色は、図形側なら図形の色、そうでなければ背景の色になる。
+// 点は図形の板と同じ色だが、クリッピングを受けないよう材質を分けて持つ
+const dotRadius = Math.min((PIXEL / SAMPLES) * 0.22, 0.07)
+const dotGeometry = new CircleGeometry(dotRadius, 16)
+const figureDots = new InstancedMesh(dotGeometry, materialOf(FIGURE), total)
+const backgroundDots = new InstancedMesh(dotGeometry, backgroundMaterial, total)
+
+const matrix = new Matrix4()
+let insideCount = 0
+let outsideCount = 0
+let sumRed = 0
+let sumGreen = 0
+let sumBlue = 0
+
+for (let row = 0; row < SAMPLES; row++) {
+  for (let column = 0; column < SAMPLES; column++) {
+    // 画素の中を -0.5 から 0.5 で表した、区画の中心の位置
+    const x = (column + 0.5) / SAMPLES - 0.5
+    const y = (row + 0.5) / SAMPLES - 0.5
+    const inside = normalX * x + normalY * y <= OFFSET
+    const color = inside ? FIGURE : BACKGROUND
+
+    sumRed += color.r
+    sumGreen += color.g
+    sumBlue += color.b
+
+    matrix.setPosition(PIXEL_X + x * PIXEL, PANEL_Y + y * PIXEL, LAYER_DOT)
+    if (inside) figureDots.setMatrixAt(insideCount++, matrix)
+    else backgroundDots.setMatrixAt(outsideCount++, matrix)
+  }
+}
+figureDots.count = insideCount
+backgroundDots.count = outsideCount
+scene.add(figureDots, backgroundDots)
+
+// 平均した色の画素。点の色の平均が、拡大した画素の色になる
+const averagePixel = new Mesh(
+  pixelGeometry,
+  materialOf({
+    r: Math.round(sumRed / total),
+    g: Math.round(sumGreen / total),
+    b: Math.round(sumBlue / total)
+  })
+)
+averagePixel.position.set(AVERAGE_X, PANEL_Y, 0)
+scene.add(averagePixel)
+
+// 画像：同じ手順を全画素に対して行い、求めた色をその画素に埋める。
+// 座標は拡大した画素の中心を原点、画素の 1 辺を 1 として数えるので、
 // 列と行の差がそのまま座標のずれになる
-const total = SAMPLES * SAMPLES
 const imageData = new Uint8Array(IMAGE_COLUMNS * IMAGE_ROWS * 4)
 
 for (let row = 0; row < IMAGE_ROWS; row++) {
@@ -492,88 +565,6 @@ const image = new Mesh(
 )
 image.position.set(IMAGE_X, PANEL_Y, 0)
 scene.add(image)
-
-// 拡大した画素の地。図形が覆っていない部分は背景の色になる
-const pixelGeometry = new PlaneGeometry(PIXEL, PIXEL)
-const backgroundMaterial = materialOf(BACKGROUND)
-const backgroundPixel = new Mesh(pixelGeometry, backgroundMaterial)
-backgroundPixel.position.set(PIXEL_X, PANEL_Y, 0)
-scene.add(backgroundPixel)
-
-// 画素にかかった図形。画素と同じ大きさの板を輪郭の直線でクリッピングし、図形側だけを残す。
-// クリッピング面はワールド座標で効くので、板の中心を原点とした条件を置き直して渡す
-renderer.localClippingEnabled = true
-const figurePlane = new Plane(
-  new Vector3(-normalX, -normalY, 0),
-  OFFSET * PIXEL + normalX * PIXEL_X + normalY * PANEL_Y
-)
-const figureMaterial = materialOf(FIGURE)
-figureMaterial.clippingPlanes = [figurePlane]
-const figurePixel = new Mesh(pixelGeometry, figureMaterial)
-figurePixel.position.set(PIXEL_X, PANEL_Y, LAYER_FIGURE)
-scene.add(figurePixel)
-
-// 区画の境目。画素の 1 辺を点の数で等分した位置に引く
-const gridPoints: Vector3[] = []
-for (let index = 0; index <= SAMPLES; index++) {
-  const shift = -PIXEL / 2 + (index * PIXEL) / SAMPLES
-  gridPoints.push(
-    new Vector3(PIXEL_X + shift, PANEL_Y - PIXEL / 2, LAYER_GRID),
-    new Vector3(PIXEL_X + shift, PANEL_Y + PIXEL / 2, LAYER_GRID),
-    new Vector3(PIXEL_X - PIXEL / 2, PANEL_Y + shift, LAYER_GRID),
-    new Vector3(PIXEL_X + PIXEL / 2, PANEL_Y + shift, LAYER_GRID)
-  )
-}
-const gridGeometry = new BufferGeometry().setFromPoints(gridPoints)
-scene.add(new LineSegments(gridGeometry, new LineBasicMaterial({ color: "#7d8794" })))
-
-// 拡大した画素を SAMPLES × SAMPLES の区画に分け、それぞれの中心を 1 点として色を求める。
-// 点の色は、図形側なら図形の色、そうでなければ背景の色になる。
-// 点は図形の板と同じ色だが、クリッピングを受けないよう材質を分けて持つ
-const dotRadius = Math.min((PIXEL / SAMPLES) * 0.22, 0.07)
-const dotGeometry = new CircleGeometry(dotRadius, 16)
-const figureDots = new InstancedMesh(dotGeometry, materialOf(FIGURE), SAMPLES * SAMPLES)
-const backgroundDots = new InstancedMesh(dotGeometry, backgroundMaterial, SAMPLES * SAMPLES)
-
-const matrix = new Matrix4()
-let insideCount = 0
-let outsideCount = 0
-let sumRed = 0
-let sumGreen = 0
-let sumBlue = 0
-
-for (let row = 0; row < SAMPLES; row++) {
-  for (let column = 0; column < SAMPLES; column++) {
-    // 画素の中を -0.5 から 0.5 で表した、区画の中心の位置
-    const x = (column + 0.5) / SAMPLES - 0.5
-    const y = (row + 0.5) / SAMPLES - 0.5
-    const inside = normalX * x + normalY * y <= OFFSET
-    const color = inside ? FIGURE : BACKGROUND
-
-    sumRed += color.r
-    sumGreen += color.g
-    sumBlue += color.b
-
-    matrix.setPosition(PIXEL_X + x * PIXEL, PANEL_Y + y * PIXEL, LAYER_DOT)
-    if (inside) figureDots.setMatrixAt(insideCount++, matrix)
-    else backgroundDots.setMatrixAt(outsideCount++, matrix)
-  }
-}
-figureDots.count = insideCount
-backgroundDots.count = outsideCount
-scene.add(figureDots, backgroundDots)
-
-// 平均した色の画素。点の色の平均が、拡大した画素の色になる
-const averagePixel = new Mesh(
-  pixelGeometry,
-  materialOf({
-    r: Math.round(sumRed / total),
-    g: Math.round(sumGreen / total),
-    b: Math.round(sumBlue / total)
-  })
-)
-averagePixel.position.set(AVERAGE_X, PANEL_Y, 0)
-scene.add(averagePixel)
 ```
 
 :::

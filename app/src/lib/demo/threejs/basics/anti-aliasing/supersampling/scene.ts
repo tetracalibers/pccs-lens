@@ -56,26 +56,33 @@ const IMAGE_HEIGHT = IMAGE_ROWS * IMAGE_PITCH
 /** 拡大して見せる画素の 1 辺。画像と背の高さを揃える */
 const PIXEL = IMAGE_HEIGHT
 
-/** 画像の中の、拡大して見せる画素（左下を 0 とした列と行） */
-const TARGET_COLUMN = 5
+/**
+ * 求めた色を埋め戻す画素（画像の左下を 0 とした列と行）。
+ * 引き出し線が画像の上を長く横切らないよう、左端に近い列を選ぶ
+ */
+const TARGET_COLUMN = 1
 const TARGET_ROW = 4
 
-/** 画像と拡大図の間（引き出し線）、拡大図と平均した色の間（矢印）の空き */
-const CALLOUT_GAP = 0.5
+/** 拡大図と平均した色の間（矢印）、平均した色と画像の間（引き出し線）の空き */
 const ARROW_GAP = 0.45
+const CALLOUT_GAP = 0.5
 
-/** 3 つのパネルを横一列に並べたときの、中心の x と共通の y */
+/**
+ * 3 つのパネルを横一列に並べたときの、中心の x と共通の y。
+ * 1 画素の色を求める手順（拡大図 → 平均した色）を先に置き、
+ * その色を埋め戻した結果として画像を最後に置く
+ */
 const PANEL_Y = -0.12
-const CONTENT_WIDTH = IMAGE_WIDTH + CALLOUT_GAP + PIXEL + ARROW_GAP + PIXEL
-const IMAGE_X = -CONTENT_WIDTH / 2 + IMAGE_WIDTH / 2
-const PIXEL_X = IMAGE_X + IMAGE_WIDTH / 2 + CALLOUT_GAP + PIXEL / 2
+const CONTENT_WIDTH = PIXEL + ARROW_GAP + PIXEL + CALLOUT_GAP + IMAGE_WIDTH
+const PIXEL_X = -CONTENT_WIDTH / 2 + PIXEL / 2
 const AVERAGE_X = PIXEL_X + PIXEL / 2 + ARROW_GAP + PIXEL / 2
+const IMAGE_X = AVERAGE_X + PIXEL / 2 + CALLOUT_GAP + IMAGE_WIDTH / 2
 
-/** 拡大して見せる画素の中心（画像の中での位置） */
+/** 埋め戻す先の画素の中心（画像の中での位置） */
 const TARGET_X = IMAGE_X - IMAGE_WIDTH / 2 + (TARGET_COLUMN + 0.5) * IMAGE_PITCH
 const TARGET_Y = PANEL_Y - IMAGE_HEIGHT / 2 + (TARGET_ROW + 0.5) * IMAGE_PITCH
 
-/** 画像の中で拡大している画素を囲む枠の太さ。線は太さを変えられないので長方形 4 つで描く */
+/** 画像の中で埋め戻し先の画素を囲む枠の太さ。線は太さを変えられないので長方形 4 つで描く */
 const TARGET_FRAME_WIDTH = 0.022
 
 /** 1 辺あたりのサンプリング点の数の上限。点と区画の境目をこの数に合わせて先に確保しておく */
@@ -262,44 +269,6 @@ export const createSupersamplingScene = ({ scene, renderer, params }: SceneConte
   // これが無いと図形が画素いっぱいに広がってしまうので、記事に載せるコードにも含める
   renderer.localClippingEnabled = true
 
-  // 画像。各画素の色を点の色の平均から求め、1 画素 1 テクセルのテクスチャに焼いて貼る。
-  // 拡大しても画素が混ざらないよう、補間なし（NearestFilter）で貼る
-  const imageData = new Uint8Array(IMAGE_COLUMNS * IMAGE_ROWS * 4)
-  const imageTexture = new DataTexture(imageData, IMAGE_COLUMNS, IMAGE_ROWS)
-  imageTexture.colorSpace = SRGBColorSpace
-  imageTexture.magFilter = NearestFilter
-  imageTexture.minFilter = NearestFilter
-  const imageGeometry = new PlaneGeometry(IMAGE_WIDTH, IMAGE_HEIGHT)
-  const imageMaterial = new MeshBasicMaterial({ map: imageTexture })
-  const image = new Mesh(imageGeometry, imageMaterial)
-  image.position.set(IMAGE_X, PANEL_Y, 0)
-  scene.add(image)
-
-  // 画像の中で、いま拡大している 1 画素を囲む枠。画素とぴったり重ねたいので画像と同じ平面に置き、
-  // 深度テストを切って手前に描く（z で手前に出すと、遠近法で画素からずれてしまう）
-  const targetFrameGeometry = new BufferGeometry().setFromPoints(
-    frameVertices(TARGET_X, TARGET_Y, IMAGE_PITCH, TARGET_FRAME_WIDTH, 0)
-  )
-  const targetFrameMaterial = new MeshBasicMaterial({
-    color: TARGET_COLOR,
-    depthTest: false
-  })
-  const targetFrame = new Mesh(targetFrameGeometry, targetFrameMaterial)
-  targetFrame.renderOrder = OVERLAY_ORDER
-  scene.add(targetFrame)
-
-  // その画素と拡大図を結ぶ引き出し線。画素の右辺の両端から、拡大図の左辺の両端へ引く
-  const calloutGeometry = new BufferGeometry().setFromPoints([
-    new Vector3(TARGET_X + IMAGE_PITCH / 2, TARGET_Y + IMAGE_PITCH / 2, 0),
-    new Vector3(PIXEL_X - PIXEL / 2, PANEL_Y + PIXEL / 2, 0),
-    new Vector3(TARGET_X + IMAGE_PITCH / 2, TARGET_Y - IMAGE_PITCH / 2, 0),
-    new Vector3(PIXEL_X - PIXEL / 2, PANEL_Y - PIXEL / 2, 0)
-  ])
-  const calloutMaterial = new LineBasicMaterial({ color: ARROW_COLOR, depthTest: false })
-  const callout = new LineSegments(calloutGeometry, calloutMaterial)
-  callout.renderOrder = OVERLAY_ORDER
-  scene.add(callout)
-
   // 拡大した画素の地。図形が覆っていない部分は背景の色になる。
   // 指定した色をそのままの濃さで見せたいので、陰影の付かない材質にする
   const pixelGeometry = new PlaneGeometry(PIXEL, PIXEL)
@@ -351,7 +320,7 @@ export const createSupersamplingScene = ({ scene, renderer, params }: SceneConte
   backgroundDots.position.z = LAYER_DOT
   scene.add(backgroundDots)
 
-  // 右の画素。サンプリング点の色を平均した色で塗る
+  // 中央の画素。サンプリング点の色を平均した色で塗る
   const averageMaterial = new MeshBasicMaterial()
   const averagePixel = new Mesh(pixelGeometry, averageMaterial)
   averagePixel.position.set(AVERAGE_X, PANEL_Y, 0)
@@ -372,11 +341,50 @@ export const createSupersamplingScene = ({ scene, renderer, params }: SceneConte
   head.rotation.z = -Math.PI / 2
   scene.add(head)
 
+  // 画像。すべての画素を拡大図と同じ手順で塗った結果で、1 画素 1 テクセルのテクスチャに焼いて貼る。
+  // 拡大しても画素が混ざらないよう、補間なし（NearestFilter）で貼る
+  const imageData = new Uint8Array(IMAGE_COLUMNS * IMAGE_ROWS * 4)
+  const imageTexture = new DataTexture(imageData, IMAGE_COLUMNS, IMAGE_ROWS)
+  imageTexture.colorSpace = SRGBColorSpace
+  imageTexture.magFilter = NearestFilter
+  imageTexture.minFilter = NearestFilter
+  const imageGeometry = new PlaneGeometry(IMAGE_WIDTH, IMAGE_HEIGHT)
+  const imageMaterial = new MeshBasicMaterial({ map: imageTexture })
+  const image = new Mesh(imageGeometry, imageMaterial)
+  image.position.set(IMAGE_X, PANEL_Y, 0)
+  scene.add(image)
+
+  // 画像の中で、いま求めた色が入った 1 画素を囲む枠。画素とぴったり重ねたいので画像と同じ平面に置き、
+  // 深度テストを切って手前に描く（z で手前に出すと、遠近法で画素からずれてしまう）
+  const targetFrameGeometry = new BufferGeometry().setFromPoints(
+    frameVertices(TARGET_X, TARGET_Y, IMAGE_PITCH, TARGET_FRAME_WIDTH, 0)
+  )
+  const targetFrameMaterial = new MeshBasicMaterial({
+    color: TARGET_COLOR,
+    depthTest: false
+  })
+  const targetFrame = new Mesh(targetFrameGeometry, targetFrameMaterial)
+  targetFrame.renderOrder = OVERLAY_ORDER
+  scene.add(targetFrame)
+
+  // 平均した色を埋め戻す先を示す引き出し線。平均した色の画素の右辺の両端から、
+  // 画像の中のその画素の左辺の両端へ、すぼまるように引く
+  const calloutGeometry = new BufferGeometry().setFromPoints([
+    new Vector3(AVERAGE_X + PIXEL / 2, PANEL_Y + PIXEL / 2, 0),
+    new Vector3(TARGET_X - IMAGE_PITCH / 2, TARGET_Y + IMAGE_PITCH / 2, 0),
+    new Vector3(AVERAGE_X + PIXEL / 2, PANEL_Y - PIXEL / 2, 0),
+    new Vector3(TARGET_X - IMAGE_PITCH / 2, TARGET_Y - IMAGE_PITCH / 2, 0)
+  ])
+  const calloutMaterial = new LineBasicMaterial({ color: ARROW_COLOR, depthTest: false })
+  const callout = new LineSegments(calloutGeometry, calloutMaterial)
+  callout.renderOrder = OVERLAY_ORDER
+  scene.add(callout)
+
   const labelY = PANEL_Y + PIXEL / 2 + 0.22
   const labels = [
-    { text: "点の平均で描いた画像", x: IMAGE_X },
     { text: "拡大した1画素", x: PIXEL_X },
-    { text: "平均した色の画素", x: AVERAGE_X }
+    { text: "平均した色の画素", x: AVERAGE_X },
+    { text: "同じ手順で塗った画像", x: IMAGE_X }
   ].map(({ text, x }) => {
     const label = createLabel(text, LABEL_HEIGHT)
     label.sprite.position.set(x, labelY, LAYER_LABEL)
@@ -395,36 +403,6 @@ export const createSupersamplingScene = ({ scene, renderer, params }: SceneConte
       const radians = (params.angle * Math.PI) / 180
       const normalX = Math.cos(radians)
       const normalY = Math.sin(radians)
-
-      // 画像の各画素を、拡大図と同じやり方（区画の中心で色を取り、平均する）で塗る。
-      // 座標は拡大している画素の中心を原点、画素の 1 辺を 1 として数えるので、
-      // 列と行の差がそのまま座標のずれになる
-      for (let row = 0; row < IMAGE_ROWS; row++) {
-        for (let column = 0; column < IMAGE_COLUMNS; column++) {
-          let red = 0
-          let green = 0
-          let blue = 0
-
-          for (let sampleRow = 0; sampleRow < samples; sampleRow++) {
-            for (let sampleColumn = 0; sampleColumn < samples; sampleColumn++) {
-              const x = column - TARGET_COLUMN + (sampleColumn + 0.5) / samples - 0.5
-              const y = row - TARGET_ROW + (sampleRow + 0.5) / samples - 0.5
-              const color = normalX * x + normalY * y <= offset ? FIGURE : BACKGROUND
-              red += color.r
-              green += color.g
-              blue += color.b
-            }
-          }
-
-          // テクスチャの行はテクスチャ座標にならって下から数える
-          const at = (row * IMAGE_COLUMNS + column) * 4
-          imageData[at] = Math.round(red / total)
-          imageData[at + 1] = Math.round(green / total)
-          imageData[at + 2] = Math.round(blue / total)
-          imageData[at + 3] = 255
-        }
-      }
-      imageTexture.needsUpdate = true
 
       // 図形側だけを残すクリッピング面。板の中心を原点とした条件を、ワールド座標に直して渡す
       figurePlane.normal.set(-normalX, -normalY, 0)
@@ -492,6 +470,36 @@ export const createSupersamplingScene = ({ scene, renderer, params }: SceneConte
         g: Math.round(sumGreen / total),
         b: Math.round(sumBlue / total)
       })
+
+      // 同じ手順を画像の全画素に対して行い、求めた色をその画素に埋める。
+      // 座標は拡大している画素の中心を原点、画素の 1 辺を 1 として数えるので、
+      // 列と行の差がそのまま座標のずれになる
+      for (let row = 0; row < IMAGE_ROWS; row++) {
+        for (let column = 0; column < IMAGE_COLUMNS; column++) {
+          let red = 0
+          let green = 0
+          let blue = 0
+
+          for (let sampleRow = 0; sampleRow < samples; sampleRow++) {
+            for (let sampleColumn = 0; sampleColumn < samples; sampleColumn++) {
+              const x = column - TARGET_COLUMN + (sampleColumn + 0.5) / samples - 0.5
+              const y = row - TARGET_ROW + (sampleRow + 0.5) / samples - 0.5
+              const color = normalX * x + normalY * y <= offset ? FIGURE : BACKGROUND
+              red += color.r
+              green += color.g
+              blue += color.b
+            }
+          }
+
+          // テクスチャの行はテクスチャ座標にならって下から数える
+          const at = (row * IMAGE_COLUMNS + column) * 4
+          imageData[at] = Math.round(red / total)
+          imageData[at + 1] = Math.round(green / total)
+          imageData[at + 2] = Math.round(blue / total)
+          imageData[at + 3] = 255
+        }
+      }
+      imageTexture.needsUpdate = true
 
       // 図形が実際に覆っている面積の割合。点による推定がこれに近づくかを見比べられるようにする
       const overlap = clipHalfPlane(UNIT_PIXEL, normalX, normalY, offset)
