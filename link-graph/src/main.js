@@ -13,6 +13,7 @@ import { UPDATE_EVENT } from "../scan/events.mjs"
 import { createFilters } from "./filters.js"
 import { applyVisibility, computeVisibility, createGraph, syncElements } from "./graph.js"
 import { createHulls } from "./hulls.js"
+import { createLabelWidths } from "./labels.js"
 import { renderPanel } from "./panel.js"
 import { createSimulation } from "./simulation.js"
 import { GHOST_COLOR, GHOST_OPACITY, STATE_COLORS, STATE_TEXT_COLORS, UI_COLORS } from "./theme.js"
@@ -51,6 +52,9 @@ const relayoutButton = document.querySelector("#relayout")
 
 const cy = createGraph(canvas)
 const hulls = createHulls(cy)
+
+/** ラベルの実寸を測る（ラベルの縦重なりをほどく後処理に渡す）。 */
+const labelWidths = createLabelWidths()
 
 // --- 状態 ---
 
@@ -106,6 +110,7 @@ const fitVisible = () => {
 
 const simulation = createSimulation({
   onTick: pumpPositions,
+  labelWidth: (id) => labelWidths(nodeIndex.get(id)?.title ?? ""),
   onSettle: () => {
     pumpPositions()
     // 間引かれて描き残っていた囲みを、最後の形で描き直す。

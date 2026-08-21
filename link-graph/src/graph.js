@@ -9,8 +9,11 @@ import {
   EDGE_COLORS,
   GHOST_COLOR,
   GHOST_OPACITY,
+  LABEL_FONT_FAMILY,
   LABEL_FONT_SIZE,
+  LABEL_MARGIN_X,
   LABEL_MIN_ZOOMED_FONT_SIZE,
+  LABEL_OUTLINE_WIDTH,
   NODE_SIZES,
   STATE_COLORS,
   UI_COLORS
@@ -36,11 +39,14 @@ export const GRAPH_STYLE = [
       label: "data(label)",
       color: UI_COLORS.text,
       "font-size": LABEL_FONT_SIZE,
+      // フォントは Cytoscape の既定と同じ値を明示する（ラベルの実寸を測る labels.js と
+      // 同じ指定を使うため。既定に任せると、測る側と描く側でずれても気づけない）。
+      "font-family": LABEL_FONT_FAMILY,
       "min-zoomed-font-size": LABEL_MIN_ZOOMED_FONT_SIZE,
       "text-valign": "center",
       "text-halign": "right",
-      "text-margin-x": 5,
-      "text-outline-width": 3,
+      "text-margin-x": LABEL_MARGIN_X,
+      "text-outline-width": LABEL_OUTLINE_WIDTH,
       "text-outline-color": UI_COLORS.background,
       "text-outline-opacity": 0.9,
       "text-wrap": "none",

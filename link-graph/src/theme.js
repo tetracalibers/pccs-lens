@@ -134,6 +134,25 @@ export const GHOST_OPACITY = 0.4
 export const LABEL_FONT_SIZE = 11
 
 /**
+ * ラベルのフォント。
+ *
+ * 値は Cytoscape の既定と同じもの。**描く側と測る側で同じ指定を使う**ために、既定に任せず
+ * ここに書き出してある（graph.js のスタイルと labels.js の `measureText` の両方が参照する）。
+ */
+export const LABEL_FONT_FAMILY = "Helvetica Neue, Helvetica, sans-serif"
+
+/** ラベルとノードのあいだの隙間（px）。Cytoscape の `text-margin-x` に渡す。 */
+export const LABEL_MARGIN_X = 5
+
+/**
+ * ラベルの縁取りの太さ（px）。
+ *
+ * 背景色で文字の周りを塗って、線や点の上に来ても読めるようにする。Cytoscape は
+ * この値の 2 倍を `lineWidth` にして文字の輪郭を撫でるので、張り出しは片側 3px。
+ */
+export const LABEL_OUTLINE_WIDTH = 3
+
+/**
  * ラベルを出す下限の実表示サイズ（px）。
  *
  * ラベルは常時オンにしておき、「縮小して読めなくなったら Cytoscape 側で落とす」形にする。
@@ -141,6 +160,34 @@ export const LABEL_FONT_SIZE = 11
  * 下げるほど早い段階（引いた状態）でタイトルが見えるようになる。
  */
 export const LABEL_MIN_ZOOMED_FONT_SIZE = 7
+
+/**
+ * ラベルの縦重なりをほどく後処理（declutter.js）のパラメータ。
+ *
+ * ラベルはノードの右横に出る 1 行なので、実体は「幅 100px 前後・高さ 16px」の扁平な箱になる
+ * （169 ページのタイトルは中央値 9 文字・最大 19 文字）。ノード同士の当たり判定
+ * （`SIMULATION.collidePadding` を足した円）は縦横を区別できないので、この箱の重なりは防げない。
+ */
+export const LABEL_SEPARATION = {
+  /**
+   * 箱の半分の高さ（px）。
+   *
+   * 文字の高さの半分（5.5）に縁取りの張り出しの半分（1.5）を足した値。縁取りは片側 3px だが、
+   * 隣り合うラベルの縁取りどうしが重なっても背景色なので見えない。潰れて見えるのは
+   * 「縁取りが隣の文字を食う」ときなので、確保するのは縁取り 1 本分でよい。
+   * これで文字と文字のあいだには 5px（= 16 - 11）残る。
+   */
+  halfHeight: LABEL_FONT_SIZE / 2 + LABEL_OUTLINE_WIDTH / 2,
+  /** 箱と箱のあいだに残す余白（px）。 */
+  padding: 2,
+  /**
+   * 対称にほどく反復回数。
+   *
+   * 上下へ半分ずつ押し合う手順の回数。ここで解け残った分は最後の掃き出しが下へ逃がすので、
+   * 増やしても保証は変わらない（増やすほど「下へ寄る」偏りが減る）。
+   */
+  relaxPasses: 24
+}
 
 /**
  * シミュレーション（d3-force）のパラメータ。

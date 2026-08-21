@@ -10,6 +10,10 @@
 //   center  全体を原点へ寄せる弱い引力（forceX / forceY）
 //   unit    同じユニットを近づけ、ユニットどうしは離す（forceUnitCohesion）
 //
+// 解き切ったあとには**ラベルの縦重なりをほどく後処理**を通す（declutter.js）。当たり判定は円
+// なので、ノードの右横に出る扁平なラベルの箱までは面倒を見られない。x は動かさず y だけを
+// 掃き分ける形で、力の均衡（＝囲みの形）を崩さずにラベルを読めるようにする。
+//
 // **常時シミュレーションにはしない。** 初回ロード・再配置・表示項目の増減は、アニメーションを
 // 見せずに裏で解き切ってから結果だけを渡す（`solve` / `settle`）。時間をかけて動かすのは
 // ドラッグの揺り戻し（`nudge`）だけ。走査やフィルタのたびに全体が泳ぐと「さっき見ていた赤が
@@ -18,6 +22,7 @@
 
 import { forceCollide, forceLink, forceManyBody, forceSimulation, forceX, forceY } from "d3-force"
 
+import { separateLabels } from "./declutter.js"
 import { NODE_SIZES, SIMULATION, SIMULATION_SEED } from "./theme.js"
 
 /** mulberry32。シードから決定的な擬似乱数列を作る。 */
@@ -127,8 +132,9 @@ const forceUnitCohesion = () => {
  * @param {object} handlers
  * @param {() => void} handlers.onTick 毎フレーム。座標を Cytoscape へ流し込む
  * @param {() => void} handlers.onSettle 落ち着いたとき（固定の解除もここで行う）
+ * @param {(id: string) => number} handlers.labelWidth ラベルの実寸（px）。縦重なりの判定に使う
  */
-export const createSimulation = ({ onTick, onSettle }) => {
+export const createSimulation = ({ onTick, onSettle, labelWidth }) => {
   const random = createRandom(SIMULATION_SEED)
 
   /** @type {Map<string, object>} id → シミュレーションのノード。座標はここが持つ。 */
@@ -170,10 +176,21 @@ export const createSimulation = ({ onTick, onSettle }) => {
     }
   }
 
+  /**
+   * ラベルの縦重なりをほどく。落ち着いた形が決まったところで 1 回だけ通す。
+   *
+   * ヘッダーのチップで絞り込まれているノードも対象に含める。絞り込みは配置に触らない決まりなので、
+   * 絞り込みのたびに縦の間隔が変わってしまうと「配置は動かない」が崩れる。
+   */
+  const declutter = () => {
+    separateLabels([...byId.values()], { labelWidth })
+  }
+
   simulation.on("tick", onTick)
   simulation.on("end", () => {
     running = false
     release()
+    declutter()
     onSettle()
   })
 
@@ -361,6 +378,7 @@ export const createSimulation = ({ onTick, onSettle }) => {
   const solve = () => {
     reseed()
     solveQuietly({ alpha: 1, ticks: SIMULATION.solveTicks })
+    declutter()
   }
 
   /**
@@ -370,6 +388,8 @@ export const createSimulation = ({ onTick, onSettle }) => {
    */
   const settle = () => {
     solveQuietly({ alpha: SIMULATION.settleAlpha, ticks: SIMULATION.settleTicks })
+    // 既存のノードは `sync` の `pin` で固定したままなので、ここで動くのも増えた分だけ。
+    declutter()
   }
 
   /** ドラッグを離したあとの揺り戻し。ここだけは動きを見せる。 */
@@ -382,6 +402,8 @@ export const createSimulation = ({ onTick, onSettle }) => {
     running = false
     simulation.stop()
     release()
+    // 止めた瞬間にラベルが戻るので、その形でも重ならないようにしておく。
+    declutter()
     onSettle()
   }
 
