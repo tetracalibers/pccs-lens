@@ -1,7 +1,7 @@
-// サイドパネル。ノードを選んだときに、被リンク元・リンク先・記事へのリンクを出す。
+// サイドパネル。ノードを選んだときに、そのページへのリンク・そのページが含むリンク・記事へのリンクを出す。
 //
 // 赤いノードを見つけたあとに知りたいのは「どの記事から、どんな文脈で必要とされているか」なので、
-// 被リンク元を先に置き、リンク文言（アンカーテキスト）と行番号も添える。
+// 「このページへのリンク」を先に置き、リンク文言（アンカーテキスト）と行番号も添える。
 
 import { APP_DEV_ORIGIN, STATE_COLORS } from "./theme.js"
 
@@ -23,7 +23,7 @@ const badge = (text, modifier) =>
   element("span", `badge${modifier ? ` badge--${modifier}` : ""}`, text)
 
 /**
- * 被リンク元・リンク先の 1 行。クリックでそのノードへ移る。
+ * リンク一覧の 1 行。クリックでそのノードへ移る。
  *
  * @param {{ path: string, occurrences: { text: string, line: number }[] }} entry
  * @param {Map<string, object>} nodeById
@@ -75,7 +75,11 @@ export const renderPanel = (container, { node, nodeById, unitLabels, groupLabels
 
   if (!node) {
     container.append(
-      element("p", "panel__placeholder", "ノードをクリックすると、被リンク元とリンク先が出ます。")
+      element(
+        "p",
+        "panel__placeholder",
+        "ノードをクリックすると、そのページのリンクの出入りが出ます。"
+      )
     )
     return
   }
@@ -101,12 +105,12 @@ export const renderPanel = (container, { node, nodeById, unitLabels, groupLabels
 
   for (const section of [
     {
-      heading: `被リンク元（${node.inDegree}）`,
+      heading: `このページへのリンク（${node.inDegree}）`,
       entries: node.inbound,
       empty: "どこからもリンクされていません。"
     },
     {
-      heading: `リンク先（${node.outDegree}）`,
+      heading: `このページが含むリンク（${node.outDegree}）`,
       entries: node.outbound,
       empty: "どこへもリンクしていません。"
     }
