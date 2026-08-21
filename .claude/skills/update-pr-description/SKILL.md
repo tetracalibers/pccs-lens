@@ -1,6 +1,6 @@
 ---
 name: update-pr-description
-description: 引数でPRのURLを受け取り（省略時は現在チェックアウト中のブランチに紐づくPRを対象に）、そのPRのタイトルと説明文を変更内容に合わせて更新するスキル。svxファイルの差分を確認し、draft（`draft: true`）を外して公開された記事があれば、カテゴリ別に説明文へリストアップし、記事ごとに公開後の人手作業（`visual` フラグ・OGP画像の生成・文体スタイルガイドの更新）のチェックリストを付ける。PRの説明文を整えたい・タイトルを変更内容に合わせたい・そのPRで公開した記事を一覧化したい場合に使用する。
+description: 引数でPRのURLを受け取り（省略時は現在チェックアウト中のブランチに紐づくPRを対象に）、そのPRのタイトルと説明文を変更内容に合わせて更新するスキル。svxファイルの差分を確認し、draft（`draft: true`）を外して公開された記事があれば、カテゴリ別に説明文へリストアップし、記事ごとに公開後の人手作業（`visual` フラグ・OGP画像の生成・文体スタイルガイドの更新・CG記事は数式記法の整備）のチェックリストを付ける。PRの説明文を整えたい・タイトルを変更内容に合わせたい・そのPRで公開した記事を一覧化したい場合に使用する。
 effort: high
 ---
 
@@ -8,7 +8,7 @@ effort: high
 
 引数で受け取った GitHub PR について、**そのPRの変更内容に合わせてタイトルと説明文（本文）を更新する**ためのスキルです。
 
-特に、`+page.svx`（記事ページ）の差分を調べ、**`draft: true` を外して公開された記事**を検出し、説明文にカテゴリ別でリストアップします。さらに、記事ごとに**公開後に人手で行う作業のチェックリスト**（`visual` フラグ・OGP画像の生成・文体スタイルガイドの更新）を付け、判定できたものはチェック済みにします。
+特に、`+page.svx`（記事ページ）の差分を調べ、**`draft: true` を外して公開された記事**を検出し、説明文にカテゴリ別でリストアップします。さらに、記事ごとに**公開後に人手で行う作業のチェックリスト**（`visual` フラグ・OGP画像の生成・文体スタイルガイドの更新、CG記事は数式記法の整備）を付け、判定できたものはチェック済みにします。
 
 ## 入力
 
@@ -47,18 +47,23 @@ effort: high
 
 ### 公開後に人手で行う作業（チェックリストの項目）
 
-記事を公開したら、次の作業を**人手で**行う運用になっている（README「記事の公開（draft を外したとき）」）。この3つを、公開記事ごとのチェックリストとして説明文に載せる。
+記事を公開したら、次の作業を**人手で**行う運用になっている（README「記事の公開（draft を外したとき）」）。これらを、公開記事ごとのチェックリストとして説明文に載せる（記法の整備はCG記事だけ）。
 
 | 項目 | 内容 | 判定方法 |
 | --- | --- | --- |
 | `visual` フラグ | 図解のあるページは frontmatter の `grades:` の次の行に `visual: true` を足す（一覧に「図解」タグが付く） | 現在の `+page.svx` に `visual: true` 行があるか。図解の有無は `$lib/demo/` の import があるか |
 | OGP画像 | `/generate-ogp-image /<route>` で 1200×630 の PNG を生成する（draft のままでは glob 展開の対象外なので公開後に行う） | 記録 `ogimage/data/<route>.json` が存在するか |
 | 文体スタイルガイド | `/author-style-analyzer <slug>` でその記事の「AI草稿 → 人手編集」の差分を `writing-guides/` へ反映する | 文体解析タスクリスト `writing-guides/STYLE-ANALYSIS-TASKLIST.md` に `- [x] \`/<route>\`` の行があるか（analyzer が分析後に更新する記録なので、これが一次情報源）。無い場合の補助として、`writing-guides/**/*.md` に**記事タイトル**（frontmatter の `title`）が現れるかも見る |
+| 数式記法の整備（**CG記事のみ**） | `/format-math-notation <slug>` で数式・インラインコードの記法を整える（自動修正の収束と advisory の指摘の判断） | 記法整備タスクリスト `writing-guides/NOTATION-TASKLIST.md` に `- [x] \`/<route>\`` の行があるか（`format-math-notation` が実行後に書く手記録なので、これが唯一の情報源） |
 
 - `<route>` は `app/src/routes/` を除いたパス（例: `color-theory/pccs-basics`）。`<slug>` はその末尾（例: `pccs-basics`）。
 - ここでいう図解は `$lib/demo/` 配下のコンポーネントを指す。Mermaid 図だけのページに `visual: true` は付けない運用なので、Mermaid の有無は判定に使わない。
 - **文体ガイドの判定は、タスクリストに行があれば強く、無ければ弱い**：タスクリストの `[x]` は analyzer が分析後に付ける記録なので確度が高い。一方、ガイド本文への記事タイトルの記載は手がかりに過ぎない（分析しても新しいルールの根拠にならなければタイトルは載らない）。タスクリストに該当行が無い記事（リスト追加前の記事・掲載漏れ）で未チェックにする場合は、「未分析と断定」せず、実施の要否をユーザーに確認できる形で報告する。
-- PR説明文の更新（このスキル）自体は公開後作業の4つめだが、実行そのものが完了を意味するのでチェックリストには載せない。
+- **記法整備の判定は `writing-guides/NOTATION-TASKLIST.md` の `[x]` だけで行う。** この `[x]` は `format-math-notation` が実行の最後に書く手記録で、他に完了を示す記録は無い。`npm run lint:svx:advisory` が0件でも実行済みの証拠にはならない（数式の無い記事は最初から0件）ので、根拠に使わない。
+- **公開時ゲート（`publish-article` 手順0.5）の `format-math-notation --auto` は実行済みに数えない。** `--auto` は自動修正だけを当てて advisory の判断をしないので、公開しただけの記事は `[ ]` のままが正しい。**つまりこの項目は、公開直後はほぼ未チェックになる**（`visual`・OGP と違い、公開作業の副産物では埋まらない）。
+- **記法整備の行を出すのはCG記事だけ。** 色の理論・色の活用分野は記法強制化のスコープ外でタスクリストにも載らないため、行を出さない（「対象外」としてチェック済みにもしない）。
+- タスクリストに該当ルートの行が無い、または `[draft]` のままだった場合は、**タスクリストが YAML・frontmatter に追随していない**（`node scripts/sync-tasklists.mjs --write` の実行漏れ）。未実行として扱い、手順8でその旨も報告する。
+- PR説明文の更新（このスキル）自体は公開後作業の最後だが、実行そのものが完了を意味するのでチェックリストには載せない。
 
 ## 手順
 
@@ -139,9 +144,24 @@ while IFS= read -r line; do
   else
     style=uncited
   fi
-  printf '%s\t%s\tvisual=%s\tfigure=%s\togp=%s\tstyle=%s\n' "$route" "$title" "$visual" "$figure" "$ogp" "$style"
+  case "$route" in
+    cg/*)
+      if grep -qF -- "- [x] \`/$route\`" writing-guides/NOTATION-TASKLIST.md 2>/dev/null; then
+        notation=done
+      elif grep -qF -- "\`/$route\`" writing-guides/NOTATION-TASKLIST.md 2>/dev/null; then
+        notation=todo
+      else
+        notation=absent
+      fi
+      ;;
+    *) notation=na ;;
+  esac
+  printf '%s\t%s\tvisual=%s\tfigure=%s\togp=%s\tstyle=%s\tnotation=%s\n' \
+    "$route" "$title" "$visual" "$figure" "$ogp" "$style" "$notation"
 done < "$PUBLISHED_TSV"
 ```
+
+- `notation=todo` は「行はあるが `[x]` でない」（`[ ]` と `[draft]` の両方を含む）、`notation=absent` は「タスクリストに行が無い」、`notation=na` は「CG記事以外＝対象外」。`absent` はタスクリストの追随漏れなので、`node scripts/sync-tasklists.mjs --check` の結果を添えて報告する。
 
 このスクリプトを書き換えるときは、次の2点を壊さないこと（いずれも実際に誤判定を起こした）。
 
@@ -182,6 +202,14 @@ gh pr view $PR --json commits --jq '.commits[].messageHeadline'
   - [x] OGP画像を生成済み
   - [x] 文体スタイルガイドへ反映済み
 
+### CGと画像処理
+
+- **<記事タイトル>** — `app/src/routes/cg/<unit>/<slug>/`
+  - [x] `visual: true` を追加済み（図解あり）
+  - [x] OGP画像を生成済み
+  - [ ] 文体スタイルガイドを更新 — `/author-style-analyzer <slug>`
+  - [ ] 数式記法を整備 — `/format-math-notation <slug>`
+
 ### <日本語カテゴリ名（例: 色の活用分野）>
 
 - ...
@@ -199,7 +227,7 @@ gh pr view $PR --json commits --jq '.commits[].messageHeadline'
 
 #### チェックリストの書き分け
 
-手順 3.5 の判定結果に応じて、記事ごとに `visual`・OGP・文体ガイドの行を1本ずつ書く（判定できたものは `[x]` にしておく）。左が判定、右がそのまま書く行。
+手順 3.5 の判定結果に応じて、記事ごとに `visual`・OGP・文体ガイド（・CG記事は記法整備）の行を1本ずつ、**この順で**書く（判定できたものは `[x]` にしておく）。左が判定、右がそのまま書く行。
 
 ```
 figure=yes, visual=set    →  - [x] `visual: true` を追加済み（図解あり）
@@ -213,12 +241,18 @@ style=done                →  - [x] 文体スタイルガイドへ反映済み
 style=cited               →  - [x] 文体スタイルガイドへ反映済み（行は done と同じ。食い違いは手順8で報告する）
 style=uncited             →  - [ ] 文体スタイルガイドを更新 — `/author-style-analyzer <slug>`
 
-UNKNOWN                   →  3項目とも「- [ ] …（未確認）」にし、報告で理由を伝える
+notation=done             →  - [x] 数式記法を整備済み
+notation=todo             →  - [ ] 数式記法を整備 — `/format-math-notation <slug>`
+notation=absent           →  - [ ] 数式記法を整備 — `/format-math-notation <slug>`（タスクリストに行なし）
+notation=na               →  行を書かない（CG記事以外は対象外）
+
+UNKNOWN                   →  対象の項目すべてを「- [ ] …（未確認）」にし、報告で理由を伝える
 ```
 
 - 未チェックの項目が1つでも残る場合は、リストの直後に案内を1行添える: `未チェックの項目は公開後の人手作業です（README「記事の公開（draft を外したとき）」を参照）。`
 - すべてチェック済みなら案内行は不要。
 - 文体ガイドが複数記事とも `style=uncited` なら、案内行に**まとめて実行できる**旨を添えてよい: `文体ガイドはカンマ区切りでまとめて分析できます（/author-style-analyzer <slug1>,<slug2>）。`
+- 記法整備が複数記事とも未チェックのときも同様に添えてよい: `記法整備もまとめて指定できます（/format-math-notation <slug1>,<slug2>）。`
 
 ### 6. タイトルを決める
 
@@ -242,7 +276,8 @@ gh pr edit $PR --title "<新しいタイトル>" --body-file <一時ファイル
 - 検出した「公開された記事」の一覧（タイトル・カテゴリ・パス）。
 - 変更前後の PR タイトル。
 - 説明文に記載した「その他の主な変更」の要点。
-- **未チェックのまま残った公開後タスク**（どの記事の `visual` フラグ／OGP画像／文体ガイドが未対応か）。1件でもあれば、対応するコマンド（`/generate-ogp-image /<route>`・`/author-style-analyzer <slug>` など）を添えて促す。判定不能（`UNKNOWN`）があればその理由も伝える。
+- **未チェックのまま残った公開後タスク**（どの記事の `visual` フラグ／OGP画像／文体ガイド／数式記法が未対応か）。1件でもあれば、対応するコマンド（`/generate-ogp-image /<route>`・`/author-style-analyzer <slug>`・`/format-math-notation <slug>` など）を添えて促す。判定不能（`UNKNOWN`）があればその理由も伝える。
+- 記法整備が `notation=absent`（タスクリストに行が無い）だったものは、**タスクリストの追随漏れ**として記事名を挙げ、`node scripts/sync-tasklists.mjs --check` を案内する。
 - 文体ガイドの項目で `style=uncited`（タスクリストにも `[x]` が無く、ガイド本文にも記事タイトルが無い）だったものは、「未分析と断定」せずその事実として伝え、すでに分析済みかどうかをユーザーに確認する。`style=cited`（ガイドに記載はあるがタスクリストが未チェック）だったものは、**タスクリストの更新漏れの可能性**として記事名を挙げて報告する。
 - タイトルは要約であり、意図に合わせて調整可能である旨を添える。
 
@@ -252,6 +287,7 @@ gh pr edit $PR --title "<新しいタイトル>" --body-file <一時ファイル
 - 公開判定は必ず**svx の差分の `draft: true` 行削除**で行う。YAML（`content-pages/*.yaml`）の `DraftLink`→`PageLink` 置換だけでは、記事本文の公開状態を正しく判定できないので根拠にしない。
 - `gh pr diff` はパス指定不可。全体 diff をパースすること（手順 2・3）。
 - **チェックリストのチェックを後退させない。** 再実行時、既存の説明文で `[x]` になっている項目を、手順 3.5 の判定結果だけを根拠に `[ ]` へ戻さない（人手でチェックした可能性がある）。判定と食い違う場合は、その項目を挙げてユーザーに確認する。
-- **チェックリストの項目を勝手に増やさない。** 載せるのは `visual` フラグ・OGP画像・文体スタイルガイドの3項目のみ。運用手順が変わったときは README「記事の公開（draft を外したとき）」と本スキルの両方を更新する。
+- **チェックリストの項目を勝手に増やさない。** 載せるのは `visual` フラグ・OGP画像・文体スタイルガイドの3項目と、**CG記事だけ**の数式記法の整備。運用手順が変わったときは README「記事の公開（draft を外したとき）」と本スキルの両方を更新する。
+- **記法整備を advisory の件数で判定しない。** 完了の記録は `NOTATION-TASKLIST.md` の `[x]` だけ（`npm run lint:svx:advisory` が0件でも実行済みとは限らない）。公開時ゲートの `--auto` も実行済みには数えない。
 - URL は `gh` の各サブコマンドにそのまま渡せる。**URL を省略した場合は現在チェックアウト中のブランチの PR が対象**になる（手順 1）。フォーク由来の PR ではヘッドが別リポジトリになる点に注意（`gh pr diff/view/edit` は URL 指定でも現在ブランチ経由でも動く）。
 - 本スキルはコード変更を伴わない（PR のメタ情報更新のみ）ため、`npm run check` は不要。

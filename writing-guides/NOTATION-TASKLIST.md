@@ -3,13 +3,15 @@
 各CG記事の数式・インラインコードの記法が `writing-guides/math-notation-guide.md` に沿っているかのチェックリスト。
 整備は `/format-math-notation #<id>`（カンマ区切りで複数指定可。slug との混在も可）で行う。詳細はスキル `format-math-notation` を参照。
 
-- チェック済み `[x]` … `npm run lint:svx:syntax` の検査対象に入っている（`app/.textlintignore` に載っていない）
-- 未チェック `[ ]` … ベースライン（`app/.textlintignore`）に載っていて、記法パスの検査対象外
+- チェック済み `[x]` … `/format-math-notation` を実行済み（自動修正の収束と advisory の指摘の判断まで済んでいる）
+- 未チェック `[ ]` … まだ実行していない
 - `[draft]` … ページは作成済みだが `draft: true`
 - `[ページ未作成]` … まだページが存在しない下書き（YAML の `CgDraftLink`）
-- draft・未作成のものも YAML 上の並び順を保つため一覧に混ぜて掲載する（チェックボックスは付けない）。
-- **`[x]` は `app/.textlintignore` から導出する。** 既存2枚のタスクリスト（OGP・文体解析）と違い、このリストの `[x]` は `node scripts/sync-tasklists.mjs --write` が生成も削除もする。記法整備の完了状態は `.textlintignore` という機械可読な正典が既にあるので、手記録を併置すると二重管理のドリフトが起きるため。**手で書き換えない。**
-- したがって `[x]` の意味は「**`lint:svx:syntax` の検査対象に入っている**」。`npm run lint:svx:advisory` の指摘（囲む範囲の判断・降格候補・`\dfrac` への組み直し）が残っていても `[x]` になる（advisory は非ブロッキングなので公開を止めない）。
+- 未作成のものも YAML 上の並び順を保つため一覧に混ぜて掲載する（チェックボックスは付けない）。
+- **`[x]` は `format-math-notation` が実行の最後に書く手記録。** OGP・文体解析のタスクリストと同じ扱いで、`node scripts/sync-tasklists.mjs --write` は `[x]` を生成も削除もしない（直すのは並び順・行の過不足・`[draft]` の付け替えだけ）。
+- **下書きの段階で実行した記事は `[draft]` ではなく `[x]` にする。** `sync-tasklists.mjs` は「`draft: true` なのに `[x]`」を警告するだけで書き換えないので、記録は残る。
+- **公開時ゲート（`publish-article` 手順0.5）の `format-math-notation --auto` はチェックを付けない。** `--auto` は自動修正だけを当てて advisory の判断をしないため、実行済みには数えない。公開しても `[ ]` のまま残り、あとから手動で回す対象になる。
+- ベースライン（`app/.textlintignore`）は別系統の記録で、CG記事は全件解消済み。`[x]` なのにベースラインに載っている記事は `sync-tasklists.mjs` が矛盾として警告する。
 - 対象はCG記事（`app/src/routes/cg/**`）のみ。色の理論・色の活用分野は記法強制化のスコープ外なので載せない。
 - 対象は解説記事（`layout: guide-content` の `+page.svx`）のみ。ユニット一覧ページは載せない。
 - セクション見出しの `#<id>` が、そのままスキルへ渡せるスコープ指定。YAML の `sections[].id`（セクション）単位。
@@ -92,24 +94,24 @@
 
 ## デジタル画像の基本／デジタルカメラモデル（`cg/basics.yaml` #camera-model）
 
-- [x] `/cg/basics/camera-capture-and-cg`
-- [x] `/cg/basics/cg-and-image-processing`
+- [ ] `/cg/basics/camera-capture-and-cg`
+- [ ] `/cg/basics/cg-and-image-processing`
 
 ## デジタル画像の基本／デジタル画像の表現（`cg/basics.yaml` #digital-image）
 
-- [x] `/cg/basics/image-digitization`
-- [x] `/cg/basics/image-sampling`
+- [ ] `/cg/basics/image-digitization`
+- [ ] `/cg/basics/image-sampling`
 - [draft] `/cg/basics/sampling-theorem-and-interpolation`
-- [x] `/cg/basics/image-quantization`
-- [x] `/cg/basics/grayscale-and-color-images`
-- [x] `/cg/basics/vector-and-raster`
+- [ ] `/cg/basics/image-quantization`
+- [ ] `/cg/basics/grayscale-and-color-images`
+- [ ] `/cg/basics/vector-and-raster`
 
 ## デジタル画像の基本／ラスタ化と描画（`cg/basics.yaml` #rasterization）
 
 - [draft] `/cg/basics/shape-rasterization`
 - [draft] `/cg/basics/anti-aliasing`
 - [draft] `/cg/basics/area-filling`
-- [x] `/cg/basics/gradient-generation`
+- [ ] `/cg/basics/gradient-generation`
 
 ## 2値画像処理／2値化（`cg/binary-image.yaml` #binarization）
 
@@ -135,7 +137,7 @@
 
 ## 撮影とレンズ／カメラの仕組み（`cg/camera.yaml` #camera-structure）
 
-- [x] `/cg/camera/digital-camera-structure`
+- [ ] `/cg/camera/digital-camera-structure`
 
 ## 撮影とレンズ／レンズモデル（`cg/camera.yaml` #lens-model）
 
@@ -258,7 +260,7 @@
 
 ## 画像の性質と色／画像の性質（`cg/image-properties.yaml` #properties）
 
-- [x] `/cg/image-properties/dynamic-range-and-gradation`
+- [ ] `/cg/image-properties/dynamic-range-and-gradation`
 - [draft] `/cg/image-properties/image-statistics`
 - [ページ未作成] 画像のノイズ
 - [ページ未作成] コントラストとシャープネス
@@ -283,7 +285,7 @@
 
 ## モデリング／形状モデル（`cg/modeling.yaml` #shape-models）
 
-- [x] `/cg/modeling/shape-model-overview`
+- [ ] `/cg/modeling/shape-model-overview`
 - [draft] `/cg/modeling/csg-representation`
 - [draft] `/cg/modeling/boundary-representation`
 - [draft] `/cg/modeling/sweep-representation`
@@ -292,10 +294,10 @@
 
 ## モデリング／曲線と曲面（`cg/modeling.yaml` #curves-surfaces）
 
-- [x] `/cg/modeling/curve-surface-equations`
-- [x] `/cg/modeling/quadratic-curve`
-- [x] `/cg/modeling/bezier-curve-surface`
-- [x] `/cg/modeling/bezier-curve-properties`
+- [ ] `/cg/modeling/curve-surface-equations`
+- [ ] `/cg/modeling/quadratic-curve`
+- [ ] `/cg/modeling/bezier-curve-surface`
+- [ ] `/cg/modeling/bezier-curve-properties`
 - [ページ未作成] ファーガソン曲線
 - [ページ未作成] 双3次クーンズ曲面
 - [draft] `/cg/modeling/b-spline-curve-surface`
@@ -405,7 +407,7 @@
 
 ## レンダリング／写実的レンダリング（`cg/rendering.yaml` #photorealistic）
 
-- [x] `/cg/rendering/photorealism-and-reality-elements`
+- [ ] `/cg/rendering/photorealism-and-reality-elements`
 
 ## レンダリング／隠面消去（`cg/rendering.yaml` #hidden-surface）
 
@@ -527,7 +529,7 @@
 - [ページ未作成] CGシステムの応用
 - [ページ未作成] グラフィックス装置
 - [draft] `/cg/systems/graphics-api`
-- [x] `/cg/systems/cg-software`
+- [ ] `/cg/systems/cg-software`
 - [ページ未作成] 3次元モデル記述言語・フォーマット
 
 ## CGシステムとデバイス／リアルタイム3次元CG（`cg/systems.yaml` #real-time-3d）
@@ -594,27 +596,27 @@
 
 ## 変換と投影／図形の幾何学的変換（`cg/transformation.yaml` #coordinate-transform）
 
-- [x] `/cg/transformation/coordinate-systems`
-- [x] `/cg/transformation/basic-transformations`
-- [x] `/cg/transformation/transformation-composition`
-- [x] `/cg/transformation/reflection-and-skew`
-- [x] `/cg/transformation/affine-transformation`
-- [x] `/cg/transformation/projective-transformation`
+- [ ] `/cg/transformation/coordinate-systems`
+- [ ] `/cg/transformation/basic-transformations`
+- [ ] `/cg/transformation/transformation-composition`
+- [ ] `/cg/transformation/reflection-and-skew`
+- [ ] `/cg/transformation/affine-transformation`
+- [ ] `/cg/transformation/projective-transformation`
 
 ## 変換と投影／ビューイングパイプライン（`cg/transformation.yaml` #viewing-pipeline）
 
-- [x] `/cg/transformation/viewing-pipeline-transformations`
+- [ ] `/cg/transformation/viewing-pipeline-transformations`
 - [draft] `/cg/transformation/hierarchical-modeling`
 
 ## 変換と投影／投影とクリッピング（`cg/transformation.yaml` #projection-and-clipping）
 
-- [x] `/cg/transformation/pinhole-camera`
-- [x] `/cg/transformation/perspective-and-parallel-projection`
-- [x] `/cg/transformation/projection-steps`
+- [ ] `/cg/transformation/pinhole-camera`
+- [ ] `/cg/transformation/perspective-and-parallel-projection`
+- [ ] `/cg/transformation/projection-steps`
 - [draft] `/cg/transformation/projection-calculation`
 - [draft] `/cg/transformation/clipping-algorithms`
 - [draft] `/cg/transformation/vanishing-points-and-n-point-perspective`
-- [x] `/cg/transformation/parallel-projection-types`
+- [ ] `/cg/transformation/parallel-projection-types`
 
 ## 変換と投影／画像の幾何学的変換（`cg/transformation.yaml` #image-geometric-transform）
 

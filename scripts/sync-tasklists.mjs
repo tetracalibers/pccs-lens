@@ -18,14 +18,14 @@
  *   - frontmatter の draft と矛盾する `[draft]` / `[ ]` の付け替え（情報が失われない向きのみ）
  *
  * 触らないもの（記録）:
- *   - `[x]`（OGP 生成済み / 分析済み）は絶対に生成しないし、消さない。
+ *   - `[x]`（OGP 生成済み / 分析済み / 記法整備済み）は絶対に生成しないし、消さない。
  *     draft のページが `[x]` になっているなど矛盾する場合は警告するだけで書き換えない。
  *   - 見出しに YAML 参照が無いセクション（トップ・ゲーム・慣用色名マップなど手書きの一覧）
  *   - セクション見出しそのものと、その並び順
  *
- * **記法整備タスクリスト（NOTATION-TASKLIST.md）だけは `[x]` の扱いが例外。** 記法整備の
- * 完了状態は `app/.textlintignore`（記法パスのベースライン）という機械可読な正典が既にあるので、
- * `[x]` はそこから導出する（生成も削除もする）。手記録を併置すると二重管理のドリフトが起きる。
+ * 記法整備タスクリスト（NOTATION-TASKLIST.md）の `[x]` は「`format-math-notation` を実行済み」
+ * を表す手記録で、スキルが実行の最後に書く。ここでは他の2枚と同じく触らず、
+ * `app/.textlintignore`（記法パスのベースライン）に載ったままの `[x]` だけ矛盾として警告する。
  */
 
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs"
@@ -220,17 +220,17 @@ const resolveState = (previous, route, listFile) => {
 }
 
 /**
- * 記法整備タスクリストの状態。`[x]` は `app/.textlintignore` から導出する
- * （＝「`lint:svx:syntax` の検査対象に入っている」）。advisory の指摘が残っていても `[x]` になる。
+ * 記法整備タスクリストの状態。`[x]`（＝ `format-math-notation` を実行済み）は手記録なので
+ * resolveState に委ね、生成も削除もしない。ベースラインに載ったままの `[x]` だけ警告する。
  */
 const notationState = (previous, route, listFile) => {
-  const { exists, draft } = pageInfo(route)
-  if (!exists) {
-    warn(`${listFile}: ${route} は YAML に slug があるが +page.svx が無い`)
-    return previous ?? " "
+  const state = resolveState(previous, route, listFile)
+  if (state === "x" && baseline.has(`src/routes${route}/+page.svx`)) {
+    warn(
+      `${listFile}: ${route} は [x] なのに app/.textlintignore に載っている（記法パスの検査対象外のまま）`
+    )
   }
-  if (draft) return "draft"
-  return baseline.has(`src/routes${route}/+page.svx`) ? " " : "x"
+  return state
 }
 
 // ---------------------------------------------------------------------------

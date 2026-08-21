@@ -1,6 +1,6 @@
 ---
 name: format-math-notation
-description: 引数で受け取った既存記事（`+page.svx`）の本文を、`writing-guides/math-notation-guide.md` の記法（数式・インラインコード）に沿って整えるスキル。機械的に判定できる違反は textlint の記法パス（`lint:svx:fix` の収束ループ）が自動で直すので、このスキルが担うのは advisory パスの指摘（囲む範囲の判断・インライン数式からインラインコードへの降格候補・`\dfrac` への組み直し・`:::Action` の日本語への言い換え）の判断と、`app/.textlintignore` のベースライン解除。記事slug のほかタスクリストのセクションid（`#rasterization`）でまとめて指定でき、公開時ゲートから呼ばれる `--auto` では自動修正だけを当てて advisory は報告のみにする。文章（語順・言い回し・`:Anki[]`・見出し構成）には手を入れず記法だけを直す。既存記事の数式・インラインコードの表記を記法ルールに追随させたい場合に使用する。
+description: 引数で受け取った既存記事（`+page.svx`）の本文を、`writing-guides/math-notation-guide.md` の記法（数式・インラインコード）に沿って整えるスキル。記法整備の全工程を通しで担う——機械的に判定できる違反の自動修正（`npm run lint:svx:fix` の収束ループ）を自分で回し、advisory パスの指摘（囲む範囲の判断・インライン数式からインラインコードへの降格候補・`\dfrac` への組み直し・`:::Action` の日本語への言い換え）を判断し、`app/.textlintignore` のベースライン解除と `writing-guides/NOTATION-TASKLIST.md` の `[x]` の記録まで行う。記事slug・タスクリストのセクションid（`#rasterization`）を、カンマや空白区切りで複数まとめて指定でき（混在も可）、公開時ゲートから呼ばれる `--auto` では自動修正だけを当てて advisory は報告のみにする。文章（語順・言い回し・`:Anki[]`・見出し構成）には手を入れず記法だけを直す。既存記事の数式・インラインコードの表記を記法ルールに追随させたい場合に使用する。
 effort: high
 ---
 
@@ -12,7 +12,9 @@ effort: high
 
 **直すのは記法だけで、文章には手を入れない。** 語順・言い回し・説明の順序・段落構成・見出し・`:Anki[]` / `:Mark[]` は変えない（それは `/author-style-writer` の編集モードの仕事）。表記の置き換えで文が読めなくなる場合は、直さずに報告する。
 
-## このスキルが担うのは advisory の判断だけ
+## このスキルが担う範囲
+
+**記法整備の全工程を通しで担う。** 自動修正（`npm run lint:svx:fix` の収束ループ）は手順2 で自分で回し、advisory の判断・ベースライン解除・タスクリストの記録まで続けて片付ける。**`npm run lint:svx:fix` は記事を更新するたびに単体でも使う道具として残る**（公開時ゲートもこれを使う）。このスキルはそれを内側に取り込んでいるだけで、置き換えるものではない。
 
 機械的に判定できる違反は、すべて textlint の**記法パス（`syntax`）**が持つようになった。以前このスキルが grep と通読でやっていた作業は次のように移管済みで、**もう自分で洗い出さない**。
 
@@ -23,16 +25,17 @@ effort: high
 | 記事全体での統一・文単位の統一・ブロック数式の説明文 | `svx-article-symbol-unify`・`svx-sentence-math-unify`・`svx-block-math-symbol-unify`（自動修正） |
 | 記号インベントリの作成 | 上の3ルールが内部で持つ（`app/textlint/lib/math-scope.js`） |
 | `\dfrac`・プライム記号・ブロック数式の改行・`:Anki[]` 内のインラインコード | `svx-inline-math-dfrac`・`svx-math-prime`・`svx-block-math-linebreak`・`svx-no-code-in-label`（自動修正） |
-| `--fix` を1回当てる | `npm run lint:svx:fix` の収束ループ |
+| `--fix` を1回当てる | `npm run lint:svx:fix` の収束ループ（手順2 でこのスキルが回す） |
 | 修正方針の表と承認 | 自動修正分は不要（決定的なので承認の意味がない）。差分の確認点は `commit-this` のコミット許可プロンプト |
 
-残る役割は次の5つ。
+自分で判断・記録する役割は次の6つ。
 
 1. **advisory の指摘の判断** — 囲む範囲（`svx-code-range-number`・`svx-code-range-function`）と、降格候補（`svx-prefer-inline-code`）。
 2. **昇格の自動修正が踏み込めない箇所の手当て** — `svx-math-unify-manual`（`` `a = dy / dx` `` → `$$a = \dfrac{dy}{dx}$$` のような組み直し）。
 3. **`:::Action` の式を日本語に言い換える** — `svx-action-math-rewrite`。ガイドが「日本語で言い換えます」と定めている創作作業。
 4. **置き換えで文意が崩れる箇所の保留判断と報告** — 「迷ったら直さない」を維持する。
-5. **`app/.textlintignore` の行の削除** — `syntax` が0件になったら対象記事の行を外す。**タスクリストは `.textlintignore` からの導出なので触らない。**
+5. **`app/.textlintignore` の行の削除** — `syntax` が0件になったら対象記事の行を外す。
+6. **`writing-guides/NOTATION-TASKLIST.md` への記録** — 実行し終えた記事の行を `[x]` にする。このリストの `[x]` は「このスキルを実行済み」を表す手記録で、**書くのはこのスキルだけ**（`sync-tasklists.mjs` は生成も削除もしない）。
 
 ## 適用範囲
 
@@ -56,24 +59,37 @@ effort: high
 /format-math-notation [<記事slug>|#<セクションid>|--auto] …
 ```
 
-- **`<記事slug>`** — 対象記事の slug（例: `anti-aliasing`・`basic-transformations`）。カンマ・空白区切りで複数渡せる。
+- **`<記事slug>`** — 対象記事の slug（例: `anti-aliasing`・`basic-transformations`）。ユニット込みのパス（`transformation/basic-transformations`）でもよい。
 - **`#<セクションid>`** — `writing-guides/NOTATION-TASKLIST.md` のセクション見出しに書かれた id（`#rasterization`・`#digital-image` など）。そのセクションの記事をまとめて処理する。`author-style-analyzer` と同じ流儀。**CG のセクション id はユニットをまたいで重複しうるので、指定時はユニット名も添えてもらう**（`#basics`＝画像符号化／パターン認識、`#special-effects`＝空間フィルタリング／画素ごとの濃淡・色変換）。
 - **`--auto`** — 公開時ゲート（`publish-article` 手順0.5）から呼ばれる自動実行モード。**自動修正だけを当て、advisory は報告のみにする**（判断を伴う書き換えを一切しない）。手順3の承認も取らない。
 - **引数なし** — セッションの文脈から対象を特定する。特定できなければ、`NOTATION-TASKLIST.md` の `[ ]` の一覧と、`npm run lint:svx:advisory` の指摘がある記事の一覧を提示して尋ねる。推測でどれかに決めない。
 
+### 複数指定
+
+**slug・セクションid はいくつでも、カンマまたは空白区切りで混ぜて渡せる。**
+
+```
+/format-math-notation anti-aliasing, transformation/basic-transformations, #rasterization
+```
+
+- 解決したパスは**重複を除いて1つの対象リストにする**（セクション指定と slug 指定が重なった場合など）。
+- 対象リストを最初に提示する（何件をどの順で処理するか）。1件でも解決できないものがあれば、そこで確認する。**解決できたものだけで勝手に進めない。**
+- 進め方は「対象ごとに手順2〜5を通す」のではなく、**手順ごとに全対象をまとめて処理する**（→ 各手順の「複数対象のとき」）。textlint の起動回数と承認の往復を増やさないため。
+
 ### 対象の解決
 
 ```bash
-# slug から
-find app/src/routes/cg -maxdepth 2 -type d -name "<記事slug>"
+# slug から（複数まとめて。-name は -o でつなぐ）
+find app/src/routes/cg -maxdepth 2 -type d \( -name "<slug1>" -o -name "<slug2>" \)
 find app/src/routes/color-theory app/src/routes/color-fields -maxdepth 1 -type d -name "<記事slug>"
 
-# セクションid から（タスクリストの見出し配下のルートを拾う）
-awk '/^## .*#<セクションid>）/{f=1;next} /^## /{f=0} f&&/^- \[/' writing-guides/NOTATION-TASKLIST.md
+# セクションid から（タスクリストの見出し配下の未実行の記事を拾う）
+awk '/^## .*#<セクションid>）/{f=1;next} /^## /{f=0} f&&/^- \[ \]/' writing-guides/NOTATION-TASKLIST.md
 ```
 
 - **0件なら該当ページが無い旨を伝えて中止する。複数件なら候補パスを提示して確認する。** 重複する slug は `transformation/basic-transformations` のようにユニット込みで渡してもらう。
 - セクション指定では `[draft]`・`[ページ未作成]` の行は対象外にする（`[draft]` は検査対象だが、公開前の記事を勝手に整備しない。整備するかを尋ねる）。
+- **セクション指定では `[x]`（実行済み）の行も対象外にする。** 再実行を明示的に頼まれたときだけ含める（記事を加筆したあとに回し直したい場合など）。slug で直接指定されたときは `[x]` でも処理する。
 
 ## 前提（検査の仕組み）
 
@@ -108,6 +124,8 @@ awk '/^## .*#<セクションid>）/{f=1;next} /^## /{f=0} f&&/^- \[/' writing-g
   grep -n "<slug>/+page.svx" app/.textlintignore
   ```
 
+- **複数対象のとき**: `git status --porcelain --` と `grep -n` はパスを並べて1回で済ませる。差分がある記事が混じっていたら、**その記事だけ対象から外すか、全体を止めるかを確認する**（勝手にどちらかに決めない）。
+
 - **記事の通読はここでしない。** 洗い出しは textlint がやる。読むのは手順3で判断が必要になった箇所の前後だけにする（通読は差分ゼロの読解作業になりやすい）。
 
 ### 2. 自動修正を収束まで回す
@@ -119,7 +137,13 @@ npm run lint:svx:fix -- --syntax-only --no-baseline src/routes/<...>/+page.svx
 
 - **`--no-baseline`** はベースラインに載っている記事のときだけ付ける（載っていなければ付けても結果は同じ）。
 - **`--syntax-only`** を付けて表記揺れ（prh）を巻き込まない（別系統）。
-- **収束しなかったと報告された場合は止める。** ルール間で振動しているので、差分を戻し、どのルールが競合しているかを報告する（ルール実装の修正はこのスキルの仕事ではない）。
+- **複数対象のときは全パスを1回のコマンドに並べて渡す。** `npm run lint:svx:fix` は渡されたファイル全体の内容で収束を判定するので、まとめて回すのが正しい。
+
+  ```bash
+  npm run lint:svx:fix -- --syntax-only src/routes/cg/<u1>/<s1>/+page.svx src/routes/cg/<u2>/<s2>/+page.svx
+  ```
+
+- **収束しなかったと報告された場合は止める。** ルール間で振動しているので、差分を戻し、どのルールが競合しているかを報告する（ルール実装の修正はこのスキルの仕事ではない）。複数対象なら、**1記事ずつ回し直して振動している記事を特定する**。他の記事は収束しているので、振動する記事だけを対象から外して続けてよいかを確認する。
 - 直後に差分を確認する。
 
   ```bash
@@ -143,6 +167,7 @@ npx textlint --rulesdir textlint/rules-advisory --ignore-path /dev/null src/rout
 | 2 | 269 | `svx-prefer-inline-code` | `$$M$$` | インラインコードに落とす／維持する |
 | 3 | 382 | `svx-math-unify-manual` | `` `a = dy / dx` `` | `$$a = \dfrac{dy}{dx}$$` |
 
+- **複数対象のときは記事ごとに表を分ける**（`### <slug>` の見出しを立てて並べる）。**承認は全記事分をまとめて1回で取る**——記事ごとに承認を求めて往復を増やさない。指摘が0件の記事は「0件」と1行で書く。
 - **`--auto` のときはここで書き換えない。** 表を報告に載せるだけにして手順5へ進む。
 - **判断が分かれるものは候補を併記して確認する。** `3D` をどこまで囲むか、その `$$…$$` を降格するか維持するかなどは勝手に決めない。
 - **迷ったら直さない。** すでに記事内で一貫している表記を好みで反対側へ寄せない。判断がつかない箇所は「保留」として表に残し、手順6で報告する。
@@ -158,22 +183,31 @@ npx textlint --rulesdir textlint/rules-advisory --ignore-path /dev/null src/rout
 
 **文章そのものは変えない。** 助詞の調整・言い換え・語順の入れ替えはしない。ただし `:::Action` の式を日本語に言い換える場合（`svx-action-math-rewrite`）だけは文を書き換えることになるので、**言い換えた文面を承認してもらう**。
 
-### 5. 検査して、ベースラインから外す
+### 5. 検査して、ベースラインから外し、タスクリストに記録する
 
 ```bash
 cd app
 npx textlint --rulesdir textlint/rules --ignore-path /dev/null src/routes/<...>/+page.svx
 ```
 
-- **0件になった場合**、`app/.textlintignore` からその記事の行を削除する。削除するのは**対象記事の1行だけ**で、他の行に触らない。
-- **advisory の残件は、行を外さない理由にならない。** `[x]`／ベースライン解除の意味は「`lint:svx:syntax` の検査対象に入っている」ことで、advisory は非ブロッキングである（→ `NOTATION-TASKLIST.md` 冒頭）。残件は手順6で報告する。
+- **0件になった場合**、`app/.textlintignore` からその記事の行を削除する。削除するのは**対象記事の行だけ**で、他の行に触らない。
+- **advisory の残件は、行を外さない理由にならない。** ベースライン解除の意味は「`lint:svx:syntax` の検査対象に入っている」ことで、advisory は非ブロッキングである。残件は手順6で報告する。
 - 削除したら、ベースラインを効かせた通しの検査で緑になることを確認する。
 
   ```bash
   npm run lint:svx:syntax
   ```
 
-- **タスクリスト（`writing-guides/NOTATION-TASKLIST.md`）は手で書き換えない。** `[x]` は `.textlintignore` からの導出なので、`node scripts/sync-tasklists.mjs --write` が反映する。ベースラインの行を消したらこれを実行し、書き換わったタスクリストも報告に挙げる。
+- **タスクリスト（`writing-guides/NOTATION-TASKLIST.md`）の該当行を `[x]` にする。** このリストの `[x]` は「このスキルを実行済み」を表す手記録で、**書くのはこのスキルだけ**。`sync-tasklists.mjs` は `[x]` を生成も削除もしないので、書かなければ記録は残らない。
+  - 対象は**CG記事だけ**（色の理論・色の活用分野はこのリストに載らないので、記録する先が無い）。
+  - **`[draft]` の記事でも `[x]` に書き換える。** `sync-tasklists.mjs` は「`draft: true` なのに `[x]`」を警告するだけで書き戻さないので、下書き段階で回した記録も残る。
+  - **`--auto` では書かない**（→「注意事項」）。
+  - **手順3の advisory を判断し終えていない記事には書かない。** 承認が得られず保留になった記事、収束せず対象から外した記事は `[ ]` のままにする。判断した結果として「維持」「保留」にした指摘が残っているのは実行済みなので `[x]` にしてよい。
+  - 複数対象なら、書き換えは**最後に1回でまとめて**行う。書いたあとに整合を確認する。
+
+    ```bash
+    node scripts/sync-tasklists.mjs --check
+    ```
 - 表記揺れは別系統なので、対象記事の件数だけ確認して報告に添える（直さない）。
 
   ```bash
@@ -184,9 +218,11 @@ npx textlint --rulesdir textlint/rules --ignore-path /dev/null src/routes/<...>/
 
 - **自動修正**: 収束までのパス数と、ルール別の修正件数。
 - **advisory**: 判断した指摘とその結論、**保留した箇所と理由**（直さなかったものを黙って落とさない）、残した件数。
-- `app/.textlintignore` の行を外したか、外さなかった場合はその理由。タスクリストを追随させたか。
+- `app/.textlintignore` の行を外したか、外さなかった場合はその理由。
+- **タスクリストに `[x]` を付けた記事**と、対象だったのに付けなかった記事＋その理由。
 - 表記揺れの残件（件数のみ。このスキルでは直していないこと）。
 - `git diff --stat` の結果。
+- **複数対象のときは記事ごとの結果を1つの表にまとめる**（自動修正の件数・advisory の判断／保留の件数・ベースライン解除・`[x]`）。処理した記事と、外した記事が一目で分かるようにする。
 - **コミットはしない。** 変更内容を報告して指示を待つ（コミットは `/commit-this`）。`.svx` と `.textlintignore`・タスクリストの変更だけなので `npm run check` は実行しない（CLAUDE.md「品質チェック」）。
 
 ## 注意事項
@@ -197,6 +233,8 @@ npx textlint --rulesdir textlint/rules --ignore-path /dev/null src/routes/<...>/
 - **`npm run lint:svx:fix` に対象パスを渡す。** 引数を省くと全記事に及ぶ。
 - **素の `npx textlint --fix` を使わない。** 1パスでは収束せず、連鎖して生まれた違反が残る。
 - **`--auto` では判断を伴う書き換えを一切しない。** 公開時ゲートから呼ばれるモードなので、advisory は報告だけにする。
+- **`--auto` ではタスクリストに `[x]` を付けない。** advisory を判断していないので実行済みには数えない。公開後も `[ ]` のまま残り、あとから手動で回す対象になる（→ `NOTATION-TASKLIST.md` 冒頭）。
+- **対象が多くても記事を飛ばさない。** 途中で打ち切る場合は、どこまで処理してどこから残したかを明示し、残りの記事はタスクリストの `[ ]` を保つ。
 - **`syntax` が0件でもガイドを満たしたとは限らない。** advisory の指摘は別に残る（そのために2パスに分けている）。
 - **過剰修正しない。** 「なるべくインラインコード」を根拠に、KaTeX でしか書けない記号を含む数式をインラインコードへ落とさない。
 - **1回の実行で複数記事を扱うときも、記事ごとに承認と報告を挟む。** 差分が混ざるとレビューできず、コミットも分けられない。ただし手順2の自動修正はまとめて当ててよい（決定的なので）。

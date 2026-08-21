@@ -249,8 +249,9 @@ npm run lint:svx:fix -- --syntax-only --max-passes 8            # 表記揺れ�
 あとから違反が入ると検出されます）。
 
 **CG記事（`src/routes/cg/**`）はベースラインを解消済みで、1件も載っていません。** 記法の
-強制化はCG記事を対象にしていて、進捗は `writing-guides/NOTATION-TASKLIST.md` が
-`.textlintignore` から導出して示します。残っているのは色の理論・色の活用分野の記事です。
+強制化はCG記事を対象にしていて、残っているのは色の理論・色の活用分野の記事です。
+なお `writing-guides/NOTATION-TASKLIST.md` の `[x]` はこのベースラインとは別の記録で、
+「`format-math-notation` を実行して advisory の指摘まで判断し終えた」ことを表します。
 
 既存記事の記法を直したら、その記事の行を `.textlintignore` から削除してください。
 新しく作る記事は `.textlintignore` に追記せず、検査対象のままにします。

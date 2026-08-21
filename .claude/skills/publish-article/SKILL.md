@@ -127,6 +127,7 @@ npx textlint --rulesdir textlint/rules src/routes/<...>/+page.svx
   ```
 
   囲む範囲の判断（`3DCG` など）・降格候補・`\dfrac` への組み直しが出る。いずれも判断が要るので、`/format-math-notation <slug>`（`--auto` なし）で任意のタイミングに片付ける。
+- **記法整備タスクリスト（`writing-guides/NOTATION-TASKLIST.md`）にチェックは付けない。** `--auto` は自動修正だけを当てて advisory の判断をしないので、実行済みには数えない（`[x]` を書くのは `--auto` なしの `format-math-notation` だけ）。公開後も `[ ]` のまま残るのが正しい。手順3の残タスクの案内に、`/format-math-notation <slug>` で片付けられることを添える。
 
 ### 1. `visual` フラグを追加する（コミット前に済ませる）
 
