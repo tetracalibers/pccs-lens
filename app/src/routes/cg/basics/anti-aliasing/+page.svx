@@ -410,8 +410,8 @@ const IMAGE_X = AVERAGE_X + PIXEL / 2 + CALLOUT_GAP + IMAGE_WIDTH / 2
 
 // 1 辺あたりのサンプリング点の数と、画素にかかる図形の輪郭。
 // 輪郭の向きは度、位置は画素の 1 辺を 1 として中心からどれだけずれた所を通るか
-const SAMPLES = 3
-const ANGLE = 60
+const SAMPLES = 4
+const ANGLE = 135
 const OFFSET = 0.12
 const total = SAMPLES * SAMPLES
 
@@ -475,15 +475,15 @@ scene.add(new LineSegments(gridGeometry, new LineBasicMaterial({ color: "#7d8794
 
 // 拡大した画素を SAMPLES × SAMPLES の区画に分け、それぞれの中心を 1 点として色を求める。
 // 点の色は、図形側なら図形の色、そうでなければ背景の色になる。
-// 点は図形の板と同じ色だが、クリッピングを受けないよう材質を分けて持つ
-const dotRadius = Math.min((PIXEL / SAMPLES) * 0.22, 0.07)
-const dotGeometry = new CircleGeometry(dotRadius, 16)
-const figureDots = new InstancedMesh(dotGeometry, materialOf(FIGURE), total)
-const backgroundDots = new InstancedMesh(dotGeometry, backgroundMaterial, total)
+// 点そのものは、どちらの色に落ちても位置が読めるようグレーの円で描く
+const dotRadius = Math.min((PIXEL / SAMPLES) * 0.165, 0.0525)
+const dots = new InstancedMesh(
+  new CircleGeometry(dotRadius, 16),
+  new MeshBasicMaterial({ color: "#9aa3b0" }),
+  total
+)
 
 const matrix = new Matrix4()
-let insideCount = 0
-let outsideCount = 0
 let sumRed = 0
 let sumGreen = 0
 let sumBlue = 0
@@ -493,21 +493,17 @@ for (let row = 0; row < SAMPLES; row++) {
     // 画素の中を -0.5 から 0.5 で表した、区画の中心の位置
     const x = (column + 0.5) / SAMPLES - 0.5
     const y = (row + 0.5) / SAMPLES - 0.5
-    const inside = normalX * x + normalY * y <= OFFSET
-    const color = inside ? FIGURE : BACKGROUND
+    const color = normalX * x + normalY * y <= OFFSET ? FIGURE : BACKGROUND
 
     sumRed += color.r
     sumGreen += color.g
     sumBlue += color.b
 
     matrix.setPosition(PIXEL_X + x * PIXEL, PANEL_Y + y * PIXEL, LAYER_DOT)
-    if (inside) figureDots.setMatrixAt(insideCount++, matrix)
-    else backgroundDots.setMatrixAt(outsideCount++, matrix)
+    dots.setMatrixAt(row * SAMPLES + column, matrix)
   }
 }
-figureDots.count = insideCount
-backgroundDots.count = outsideCount
-scene.add(figureDots, backgroundDots)
+scene.add(dots)
 
 // 平均した色の画素。点の色の平均が、拡大した画素の色になる
 const averagePixel = new Mesh(

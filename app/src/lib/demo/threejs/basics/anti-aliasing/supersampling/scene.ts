@@ -90,10 +90,8 @@ const MAX_SAMPLES_PER_SIDE = 6
 const MAX_SAMPLES = MAX_SAMPLES_PER_SIDE * MAX_SAMPLES_PER_SIDE
 
 /** サンプリング点の大きさ。区画の大きさに比例させ、点が大きくなりすぎないよう上限を設ける */
-const DOT_SCALE = 0.22
-const DOT_MAX_RADIUS = 0.07
-/** 点の下に敷く縁を、点の半径の何倍にするか */
-const RING_RATIO = 1.5
+const DOT_SCALE = 0.165
+const DOT_MAX_RADIUS = 0.0525
 
 /** 拡大図から平均した色へ向かう矢印。全体の長さと、軸の太さ・矢じりの大きさ */
 const ARROW_SPAN = 0.38
@@ -115,7 +113,7 @@ const BACKGROUND: Rgb = { r: 61, g: 111, b: 168 }
 
 // 背景（暗めのグレー）の上で、区画の境目・点の縁・矢印・文字・画素の枠を互いに見分けられる色にする
 const GRID_COLOR = "#7d8794"
-const RING_COLOR = "#c8ccd4"
+const DOT_COLOR = "#9aa3b0"
 const ARROW_COLOR = "#9aa3b0"
 const LABEL_COLOR = "#c9d2de"
 const TARGET_COLOR = "#f5f7fa"
@@ -130,7 +128,6 @@ const TARGET_COLOR = "#f5f7fa"
  */
 const LAYER_FIGURE = 0.01
 const LAYER_GRID = 0.02
-const LAYER_RING = 0.03
 const LAYER_DOT = 0.04
 const LAYER_EDGE = 0.05
 const LAYER_LABEL = 0.1
@@ -298,27 +295,14 @@ export const createSupersamplingScene = ({ scene, renderer, params }: SceneConte
   grid.position.z = LAYER_GRID
   scene.add(grid)
 
-  // サンプリング点。図形側に落ちた点と背景側に落ちた点を、取った色の材質で描き分ける。
-  // どちらの色の上でも点の位置が分かるよう、少し大きい円を縁として下に敷く
+  // サンプリング点。図形の色・背景の色のどちらに落ちても位置が読めるよう、
+  // 下地と重ならないグレーの円で描く
   const dotGeometry = new CircleGeometry(1, 16)
-  const ringMaterial = new MeshBasicMaterial({ color: RING_COLOR })
-  const rings = new InstancedMesh(dotGeometry, ringMaterial, MAX_SAMPLES)
-  rings.frustumCulled = false
-  rings.position.z = LAYER_RING
-  scene.add(rings)
-
-  // 点は図形の板と同じ色だが、クリッピングを受けないよう材質を分けて持つ
-  const figureDotMaterial = new MeshBasicMaterial()
-  applyColor(figureDotMaterial, FIGURE)
-  const figureDots = new InstancedMesh(dotGeometry, figureDotMaterial, MAX_SAMPLES)
-  figureDots.frustumCulled = false
-  figureDots.position.z = LAYER_DOT
-  scene.add(figureDots)
-
-  const backgroundDots = new InstancedMesh(dotGeometry, backgroundMaterial, MAX_SAMPLES)
-  backgroundDots.frustumCulled = false
-  backgroundDots.position.z = LAYER_DOT
-  scene.add(backgroundDots)
+  const dotMaterial = new MeshBasicMaterial({ color: DOT_COLOR })
+  const dots = new InstancedMesh(dotGeometry, dotMaterial, MAX_SAMPLES)
+  dots.frustumCulled = false
+  dots.position.z = LAYER_DOT
+  scene.add(dots)
 
   // 中央の画素。サンプリング点の色を平均した色で塗る
   const averageMaterial = new MeshBasicMaterial()
@@ -426,7 +410,6 @@ export const createSupersamplingScene = ({ scene, renderer, params }: SceneConte
       const radius = Math.min(pitch * DOT_SCALE, DOT_MAX_RADIUS)
       let sampleIndex = 0
       let insideCount = 0
-      let outsideCount = 0
       let sumRed = 0
       let sumGreen = 0
       let sumBlue = 0
@@ -443,26 +426,16 @@ export const createSupersamplingScene = ({ scene, renderer, params }: SceneConte
           sumGreen += color.g
           sumBlue += color.b
 
-          const dotX = PIXEL_X + x * PIXEL
-          const dotY = PANEL_Y + y * PIXEL
+          if (inside) insideCount++
 
           matrix.makeScale(radius, radius, 1)
-          matrix.setPosition(dotX, dotY, 0)
-          if (inside) figureDots.setMatrixAt(insideCount++, matrix)
-          else backgroundDots.setMatrixAt(outsideCount++, matrix)
-
-          matrix.makeScale(radius * RING_RATIO, radius * RING_RATIO, 1)
-          matrix.setPosition(dotX, dotY, 0)
-          rings.setMatrixAt(sampleIndex++, matrix)
+          matrix.setPosition(PIXEL_X + x * PIXEL, PANEL_Y + y * PIXEL, 0)
+          dots.setMatrixAt(sampleIndex++, matrix)
         }
       }
 
-      figureDots.count = insideCount
-      figureDots.instanceMatrix.needsUpdate = true
-      backgroundDots.count = outsideCount
-      backgroundDots.instanceMatrix.needsUpdate = true
-      rings.count = total
-      rings.instanceMatrix.needsUpdate = true
+      dots.count = total
+      dots.instanceMatrix.needsUpdate = true
 
       // 点の色の平均が、元の画素の色になる
       applyColor(averageMaterial, {
@@ -521,17 +494,14 @@ export const createSupersamplingScene = ({ scene, renderer, params }: SceneConte
         gridGeometry,
         gridMaterial,
         dotGeometry,
-        ringMaterial,
-        figureDotMaterial,
+        dotMaterial,
         averageMaterial,
         shaftGeometry,
         headGeometry,
         arrowMaterial
       ]
       disposables.forEach((disposable) => disposable.dispose())
-      rings.dispose()
-      figureDots.dispose()
-      backgroundDots.dispose()
+      dots.dispose()
       labels.forEach(({ texture, material }) => {
         texture.dispose()
         material.dispose()
