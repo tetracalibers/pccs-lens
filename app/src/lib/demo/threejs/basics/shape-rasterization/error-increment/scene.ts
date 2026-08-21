@@ -455,8 +455,7 @@ export const createErrorIncrementScene = ({ scene, params }: SceneContext) => {
         ? `${error.toFixed(2)}`
         : `${error.toFixed(2)}（開始時。直線は画素の中心を通る）`
       params.judgement = showError
-        ? `${errorBefore.toFixed(2)} + ${slope.toFixed(2)} = ${errorAfterIncrement.toFixed(2)}` +
-          (errorAfterIncrement > 0.5 ? " > 0.5 → yを1増やし、eから1を引く" : " ≦ 0.5 → yはそのまま")
+        ? `${errorAfterIncrement.toFixed(2)} ${errorAfterIncrement > 0.5 ? ">" : "≦"} 0.5`
         : "まだ増分を足していない"
     },
     dispose: () => {

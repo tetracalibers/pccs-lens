@@ -23,6 +23,6 @@
     pane.addBinding(p, "slope", { min: 0, max: 0.6, step: 0.01, label: "傾き a" })
     pane.addBinding(p, "step", { min: 0, max: 8, step: 1, label: "進めたステップ" })
     pane.addBinding(p, "error", { readonly: true, label: "更新後の誤差 e" })
-    pane.addBinding(p, "judgement", { readonly: true, label: "判定：e + a と 0.5" })
+    pane.addBinding(p, "judgement", { readonly: true, label: "判定：e と 0.5の大小" })
   }}
 />
