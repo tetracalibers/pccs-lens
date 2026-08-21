@@ -304,12 +304,14 @@ const PITCH = 0.4
 const SLOPE = 0.35
 const STEP = 2
 
-// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z
+// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z。
+// 透視投影なので z が離れると同じ x・y でも投影される位置がわずかにずれる。
+// 1 つの目印を線と点で組み立てる場合は、パーツの z を隣り合う値にして揃える
 const LAYER_PIXEL = 0.01
 const LAYER_CURRENT_PIXEL = 0.015
 const LAYER_THRESHOLD = 0.05
+const LAYER_THRESHOLD_DOT = 0.051
 const LAYER_ERROR = 0.07
-const LAYER_DOT = 0.08
 
 // x（画素の列）と y（画素の行を単位とした小数）の位置。
 // 画像座標系は画像の左上を原点とし、x 軸を右向き、y 軸を下向きにとる
@@ -386,7 +388,7 @@ scene.add(threshold)
 // しきい値の線の両端。誤差の点と同じ形で、半径だけ小さくする
 for (const y of [baseY, thresholdEdgeY]) {
   const dot = new Mesh(new CircleGeometry(0.028, 16), thresholdMaterial)
-  dot.position.set(thresholdX, y, LAYER_DOT)
+  dot.position.set(thresholdX, y, LAYER_THRESHOLD_DOT)
   scene.add(dot)
 }
 ```

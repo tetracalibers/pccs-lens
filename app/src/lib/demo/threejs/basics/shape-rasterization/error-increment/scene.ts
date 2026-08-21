@@ -93,7 +93,9 @@ const LABEL_FONT = "bold 92px sans-serif"
 
 /**
  * xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z。
- * 正面から見る構図に固定しているため、この厚みは絵には出ない
+ * 正面から見る構図に固定しているため、この厚みは絵には出ない。
+ * ただし透視投影なので、z が離れると同じ x・y でも投影される位置がわずかにずれる。
+ * 1 つの目印を線と点で組み立てる場合は、パーツの z を隣り合う値にして揃える
  */
 const LAYER_PIXEL = 0.01
 const LAYER_CURRENT_PIXEL = 0.015
@@ -101,9 +103,10 @@ const LAYER_GRID = 0.02
 const LAYER_FRAME = 0.03
 const LAYER_AXIS = 0.04
 const LAYER_THRESHOLD = 0.05
+const LAYER_THRESHOLD_DOT = 0.051
 const LAYER_LINE = 0.06
 const LAYER_ERROR = 0.07
-const LAYER_DOT = 0.08
+const LAYER_ERROR_DOT = 0.071
 const LAYER_LABEL = 0.1
 
 // 背景（暗めのグレー）の上で、塗った画素・直線・誤差・しきい値を互いに見分けられる色にする
@@ -302,7 +305,7 @@ export const createErrorIncrementScene = ({ scene, params }: SceneContext) => {
   const legendY = HALF_HEIGHT - LEGEND_OFFSET_Y
   legendBar.position.set(legendX, legendY, LAYER_ERROR)
   // 点は、図の中で誤差を測る基準（画素の中心）にあたる側の端に置く
-  legendDot.position.set(legendX, legendY + LEGEND_SWATCH_LENGTH / 2, LAYER_DOT)
+  legendDot.position.set(legendX, legendY + LEGEND_SWATCH_LENGTH / 2, LAYER_ERROR_DOT)
   legendLabel.sprite.position.set(
     legendX + LEGEND_SWATCH_GAP + legendLabel.sprite.scale.x / 2,
     legendY,
@@ -379,7 +382,7 @@ export const createErrorIncrementScene = ({ scene, params }: SceneContext) => {
 
         errorBar.scale.set(ERROR_THICKNESS, Math.abs(baseY - tipY), 1)
         errorBar.position.set(columnX, (baseY + tipY) / 2, LAYER_ERROR)
-        baseDot.position.set(columnX, baseY, LAYER_DOT)
+        baseDot.position.set(columnX, baseY, LAYER_ERROR_DOT)
 
         // しきい値は、誤差を測る基準になった画素（1 つ前に塗った画素）の中に立てる。
         // 誤差と同じ列に置くと、その列で塗った画素は 1 行下にあるため、
@@ -391,8 +394,8 @@ export const createErrorIncrementScene = ({ scene, params }: SceneContext) => {
         const thresholdEdgeY = baseY + (tipY > baseY ? PITCH / 2 : -PITCH / 2)
         const thresholdMidY = (baseY + thresholdEdgeY) / 2
         threshold.position.set(thresholdX, thresholdMidY, LAYER_THRESHOLD)
-        thresholdDots[0].position.set(thresholdX, baseY, LAYER_DOT)
-        thresholdDots[1].position.set(thresholdX, thresholdEdgeY, LAYER_DOT)
+        thresholdDots[0].position.set(thresholdX, baseY, LAYER_THRESHOLD_DOT)
+        thresholdDots[1].position.set(thresholdX, thresholdEdgeY, LAYER_THRESHOLD_DOT)
 
         // 注記は線の左側へ。右側は誤差の棒が来るので空けておく
         thresholdLabel.sprite.position.set(
