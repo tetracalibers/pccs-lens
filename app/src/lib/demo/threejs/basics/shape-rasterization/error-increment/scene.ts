@@ -80,22 +80,12 @@ const AXIS_OVERSHOOT = 0.26
 const ARROW_HEIGHT = 0.16
 const ARROW_RADIUS = 0.06
 
-/** 軸の名前・凡例の文字の高さ（ワールド座標での大きさ） */
+/** 軸の名前の文字の高さ（ワールド座標での大きさ） */
 const AXIS_LABEL_HEIGHT = 0.24
-const NOTE_LABEL_HEIGHT = 0.22
 
-/** しきい値 0.5 の注記の文字の高さと、注記を線から逃がす距離。線に添えて小さく置く */
-const THRESHOLD_LABEL_HEIGHT = 0.18
-const THRESHOLD_LABEL_MARGIN = 0.04
-
-/**
- * 誤差 e の凡例。図の中では誤差の棒と他の要素が重なって読めないので、
- * 座標平面の右に出す。色見本は実際の描き方と同じ形（片端に点を置いた縦線）にする
- */
-const LEGEND_SWATCH_LENGTH = 0.24
-const LEGEND_SWATCH_GAP = 0.09
-const LEGEND_OFFSET_X = 0.58
-const LEGEND_OFFSET_Y = 0.32
+/** 誤差 e・しきい値 0.5 の注記の文字の高さと、注記を線から逃がす距離。線に添えて小さく置く */
+const NOTE_LABEL_HEIGHT = 0.18
+const NOTE_MARGIN = 0.04
 
 /** ラベルの文字を描く canvas の高さ（テクスチャの解像度）と左右の余白、書体 */
 const LABEL_TEXTURE_HEIGHT = 128
@@ -350,28 +340,10 @@ export const createErrorIncrementScene = ({ scene, params }: SceneContext) => {
     return label
   })
 
-  // しきい値の注記。文字は変わらないので作り直さず、位置だけ毎回動かす
-  const thresholdLabel = createLabel("0.5", THRESHOLD_COLOR, THRESHOLD_LABEL_HEIGHT)
-  graph.add(thresholdLabel.sprite)
-
-  // 誤差 e の凡例。座標平面の右上に、図の中の誤差と同じ形（片端に点を置いた縦線）で置く。
-  // 位置も文字も変わらないので、ここで一度だけ置く
-  const legendLabel = createLabel("e", ERROR_COLOR, NOTE_LABEL_HEIGHT)
-  const legendBar = new Mesh(barGeometry, errorMaterial)
-  legendBar.scale.set(ERROR_THICKNESS, LEGEND_SWATCH_LENGTH, 1)
-  const legendDot = new Mesh(dotGeometry, dotMaterial)
-  graph.add(legendLabel.sprite, legendBar, legendDot)
-
-  const legendX = HALF_WIDTH + LEGEND_OFFSET_X
-  const legendY = HALF_HEIGHT - LEGEND_OFFSET_Y
-  legendBar.position.set(legendX, legendY, LAYER_ERROR)
-  // 点は、図の中で誤差を測る基準（画素の中心）にあたる側の端に置く
-  legendDot.position.set(legendX, legendY + LEGEND_SWATCH_LENGTH / 2, LAYER_ERROR_DOT)
-  legendLabel.sprite.position.set(
-    legendX + LEGEND_SWATCH_GAP + legendLabel.sprite.scale.x / 2,
-    legendY,
-    LAYER_LABEL
-  )
+  // 誤差としきい値の注記。文字は変わらないので作り直さず、位置だけ毎回動かす
+  const errorLabel = createLabel("e", ERROR_COLOR, NOTE_LABEL_HEIGHT)
+  const thresholdLabel = createLabel("0.5", THRESHOLD_COLOR, NOTE_LABEL_HEIGHT)
+  graph.add(errorLabel.sprite, thresholdLabel.sprite)
 
   const matrix = new Matrix4()
 
@@ -436,10 +408,8 @@ export const createErrorIncrementScene = ({ scene, params }: SceneContext) => {
       baseDot.visible = showError
       threshold.visible = showError
       thresholdDots.forEach((dot) => (dot.visible = showError))
+      errorLabel.sprite.visible = showError
       thresholdLabel.sprite.visible = showError
-      legendLabel.sprite.visible = showError
-      legendBar.visible = showError
-      legendDot.visible = showError
 
       const errorAfterIncrement = errorBefore + slope
 
@@ -451,6 +421,13 @@ export const createErrorIncrementScene = ({ scene, params }: SceneContext) => {
         errorBar.scale.set(ERROR_THICKNESS, Math.abs(baseY - tipY), 1)
         errorBar.position.set(columnX, (baseY + tipY) / 2, LAYER_ERROR)
         baseDot.position.set(columnX, baseY, LAYER_ERROR_DOT)
+
+        // 注記は棒のすぐ右へ。左はしきい値の線が来るので空けておく
+        errorLabel.sprite.position.set(
+          columnX + NOTE_MARGIN + errorLabel.sprite.scale.x / 2,
+          (baseY + tipY) / 2,
+          LAYER_LABEL
+        )
 
         // しきい値は、誤差を測る基準になった画素（1 つ前に塗った画素）の中に立てる。
         // 誤差と同じ列に置くと、その列で塗った画素は 1 行下にあるため、
@@ -467,7 +444,7 @@ export const createErrorIncrementScene = ({ scene, params }: SceneContext) => {
 
         // 注記は線の左側へ。右側は誤差の棒が来るので空けておく
         thresholdLabel.sprite.position.set(
-          thresholdX - THRESHOLD_LABEL_MARGIN - thresholdLabel.sprite.scale.x / 2,
+          thresholdX - NOTE_MARGIN - thresholdLabel.sprite.scale.x / 2,
           thresholdMidY,
           LAYER_LABEL
         )
@@ -506,7 +483,7 @@ export const createErrorIncrementScene = ({ scene, params }: SceneContext) => {
       ]
       disposables.forEach((disposable) => disposable.dispose())
       pastPixels.dispose()
-      const labels = [...axisLabels, thresholdLabel, legendLabel]
+      const labels = [...axisLabels, errorLabel, thresholdLabel]
       labels.forEach(({ texture, material }) => {
         texture.dispose()
         material.dispose()
