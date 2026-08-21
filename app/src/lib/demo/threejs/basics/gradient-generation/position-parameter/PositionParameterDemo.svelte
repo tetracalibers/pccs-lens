@@ -15,12 +15,12 @@
 
 <!-- 帯を正面から見る図なので、回り込みは付けずに固定する（拡大縮小だけ残す） -->
 <ThreeDemoCanvas
-  ariaLabel="横一列に並べたN個の画素で描いたグラデーションの帯。左端の画素が色A、右端の画素が色Bで、注目している画素の色を帯の上に拡大して示す。画素数を増やすと隣り合う画素の色の差が小さくなる（ホイールで拡大縮小）"
+  ariaLabel="横一列に並べたN個の画素で描いたグラデーションの帯。左端の画素が色A、右端の画素が色Bで、注目している画素の色を帯の上に拡大して示す。上下には同じ色の並びが薄く重なり、この帯が画像の1行であることを表す。画素数を増やすと隣り合う画素の色の差が小さくなる（ホイールで拡大縮小）"
   createScene={createPositionParameterScene}
   {params}
   aspectRatio="16 / 9"
-  camera={{ position: [0, 0, 2.95] }}
-  orbit={{ enableRotate: false, minDistance: 1.8, maxDistance: 6 }}
+  camera={{ position: [0, 0, 3.55] }}
+  orbit={{ enableRotate: false, minDistance: 2.2, maxDistance: 7 }}
   buildPane={(pane, p) => {
     // 上限は scene.ts があらかじめ作っておく画素の数に合わせる
     pane.addBinding(p, "pixelCount", { min: 3, max: 20, step: 1, label: "画素数 N" })

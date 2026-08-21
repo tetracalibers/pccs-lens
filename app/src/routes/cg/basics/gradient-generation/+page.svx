@@ -86,13 +86,18 @@ const INDEX = 4
 // 帯に使える横幅と、画素 1 つの大きさの上限。
 // 画素は正方形なので、画素数が少ないときは幅いっぱいに広げず、この大きさで止める
 const BAND_MAX_WIDTH = 3.6
-const MAX_CELL_SIZE = 0.46
+const MAX_CELL_SIZE = 0.3
 
 // 隣の画素との境目。画素の大きさに依らない細さにして、1 枚の帯に見えるようにする
 const CELL_GAP = 0.014
 
-// 帯の中心の高さ
-const BAND_Y = -0.36
+// 色を塗る行（記事の帯）の高さ
+const BAND_Y = -0.05
+
+// 色を塗る行の上・下に、画素の格子だけを続ける行数。
+// この帯が画像の 1 行であることを示すためのもので、下側を長くとる（上は色見本に使う）
+const GRID_ROWS_ABOVE = 1
+const GRID_ROWS_BELOW = 4
 
 // 注目画素を囲む枠の太さ（隣の画素との境目と同じ細さに揃える）と、色見本を囲む縁の太さ
 const FOCUS_BORDER = CELL_GAP
@@ -100,14 +105,15 @@ const SWATCH_BORDER = 0.04
 
 // 注目画素の色を拡大して見せる色見本の大きさと、その中心の高さ
 const SWATCH_SIZE = 0.62
-const SWATCH_Y = 0.6
+const SWATCH_Y = 1
 
 // 色見本と注目画素をつなぐ線の太さ
 const CONNECTOR_WIDTH = 0.024
 
 // 重なる要素を、奥から手前へ振り分ける z。正面から見る構図なので厚みは絵に出ない
-const LAYER_CONNECTOR = 0.006
+const LAYER_GRID = 0.005
 const LAYER_CELL = 0.01
+const LAYER_CONNECTOR = 0.015
 const LAYER_BORDER = 0.02
 const LAYER_FRONT = 0.03
 
@@ -122,18 +128,38 @@ const cellSize = pitch - CELL_GAP
 const bandLeft = (-pitch * PIXEL_COUNT) / 2
 const centerOf = (i: number) => bandLeft + (i + 0.5) * pitch
 
-// 画素・色見本・縁・線は、すべて 1 辺 1 の板を大きさと位置を与えて使い回す
+// 画素・色見本・枠・線は、すべて 1 辺 1 の板を大きさと位置を与えて使い回す
 const unitGeometry = new PlaneGeometry(1, 1)
 
-// 画素。番号ごとに大きさ・位置・色を与えて横一列に並べる
+// 画素の格子。画素の境目に沿って、縦の線を画素数 + 1 本、横の線を行数 + 1 本引く
+const gridTop = BAND_Y + (GRID_ROWS_ABOVE + 0.5) * pitch
+const gridBottom = BAND_Y - (GRID_ROWS_BELOW + 0.5) * pitch
+const gridPoints: Vector3[] = []
+for (let k = 0; k <= PIXEL_COUNT; k++) {
+  const x = bandLeft + k * pitch
+  gridPoints.push(new Vector3(x, gridTop, LAYER_GRID), new Vector3(x, gridBottom, LAYER_GRID))
+}
+for (let row = -GRID_ROWS_BELOW - 1; row <= GRID_ROWS_ABOVE; row++) {
+  const y = BAND_Y + (row + 0.5) * pitch
+  gridPoints.push(
+    new Vector3(bandLeft, y, LAYER_GRID),
+    new Vector3(bandLeft + pitch * PIXEL_COUNT, y, LAYER_GRID)
+  )
+}
+const gridGeometry = new BufferGeometry().setFromPoints(gridPoints)
+scene.add(new LineSegments(gridGeometry, new LineBasicMaterial({ color: "#5c6470" })))
+
+// 色を塗るのは注目している行だけ。ほかの行は格子のまま残す。
+// 画素は番号ごとに大きさ・位置・色を与えて横一列に並べる
 const cells = new InstancedMesh(unitGeometry, new MeshBasicMaterial(), PIXEL_COUNT)
 const matrix = new Matrix4()
 const color = new Color()
 for (let i = 0; i < PIXEL_COUNT; i++) {
+  applyColor(color, colorAt(i / (PIXEL_COUNT - 1)))
   matrix.makeScale(cellSize, cellSize, 1)
   matrix.setPosition(centerOf(i), BAND_Y, LAYER_CELL)
   cells.setMatrixAt(i, matrix)
-  cells.setColorAt(i, applyColor(color, colorAt(i / (PIXEL_COUNT - 1))))
+  cells.setColorAt(i, color)
 }
 scene.add(cells)
 
