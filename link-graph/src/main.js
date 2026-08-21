@@ -183,26 +183,21 @@ const renderChip = ({ label, value, modifier, focus, title }) => {
 
 const renderStats = () => {
   const { stats } = data
+  // 並びは「ページ全体 → 状態の内訳（潰す優先度の順）→ リンク → 異常」。
+  // 件数 0 の異常チップ（所属不明・自己リンク）は出さない。
   const chips = [
     { label: "ページ", value: stats.pages },
     { label: "本文なし", value: stats.empty, modifier: "empty", focus: "empty" },
     { label: "draft", value: stats.draft, modifier: "draft", focus: "draft" },
     { label: "公開済", value: stats.published, focus: "published" },
-    { label: "リンク切れ", value: stats.broken, modifier: "broken", focus: "broken" },
     { label: "リンク", value: stats.rawLinks },
-    { label: "エッジ", value: stats.edges }
-  ]
-
-  statsElement.replaceChildren()
-
-  for (const chip of chips) statsElement.append(renderChip(chip))
-
-  for (const warning of [
+    { label: "リンク切れ", value: stats.broken, modifier: "broken", focus: "broken" },
     {
       label: "所属不明",
       value: stats.unresolvedUnits,
       modifier: "warn",
-      title: "YAML に未登録で、所属ユニットが解決できないページ"
+      title: "YAML に未登録で、所属ユニットが解決できないページ",
+      onlyWhenPresent: true
     },
     {
       label: "自己リンク",
@@ -211,11 +206,16 @@ const renderStats = () => {
       focus: "self-link",
       title: `自己リンクのあるページだけを表示する（配置は動かない）\n${stats.selfLinks
         .map((link) => `${link.path} L${link.line}`)
-        .join("\n")}`
+        .join("\n")}`,
+      onlyWhenPresent: true
     }
-  ]) {
-    if (!warning.value) continue
-    statsElement.append(renderChip(warning))
+  ]
+
+  statsElement.replaceChildren()
+
+  for (const chip of chips) {
+    if (chip.onlyWhenPresent && !chip.value) continue
+    statsElement.append(renderChip(chip))
   }
 
   const time = document.createElement("span")
