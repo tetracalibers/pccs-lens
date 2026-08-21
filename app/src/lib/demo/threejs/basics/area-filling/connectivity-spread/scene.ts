@@ -69,9 +69,6 @@ const GRIDS = [
 const TITLE_HEIGHT = 0.24
 const TITLE_MARGIN = 0.22
 
-/** 画素の中に入れる文字の高さ。2 文字（左上・右下など）が画素に収まる大きさにとる */
-const PIXEL_LABEL_HEIGHT = 0.13
-
 /** ラベルの文字を描く canvas の高さ（テクスチャの解像度）と左右の余白、書体 */
 const LABEL_TEXTURE_HEIGHT = 128
 const LABEL_TEXTURE_PADDING = 12
@@ -93,9 +90,6 @@ const FRAME_COLOR = "#c8ccd4"
 const CENTER_COLOR = "#f2766a"
 const REACHED_COLOR = "#ffc857"
 const TITLE_COLOR = "#c9d2de"
-
-/** 画素の上に置く文字の色。塗った画素は明るいので、背景と同じ暗さの文字を載せる */
-const PIXEL_LABEL_COLOR = "#26282d"
 
 /**
  * 文字を描いた canvas をテクスチャにして、常にカメラを向く板（Sprite）にする。
@@ -145,10 +139,6 @@ const createLabel = (text: string, color: string, height: number) => {
  */
 const localXOf = (x: number) => -HALF_SIZE + x * PITCH
 const localYOf = (y: number) => HALF_SIZE - y * PITCH
-
-/** 近傍のずれに対する方向の名前。y 軸が下向きなので、行が -1 なら上になる */
-const directionNameOf = (dc: number, dr: number) =>
-  (dc < 0 ? "左" : dc > 0 ? "右" : "") + (dr < 0 ? "上" : dr > 0 ? "下" : "")
 
 /**
  * 中心の画素から近傍をたどって、steps 歩で届く画素を求める。
@@ -240,35 +230,13 @@ export const createConnectivitySpreadScene = ({ scene, params }: SceneContext) =
     scene.add(centerPixel)
   })
 
-  // 格子の名前と、中心の画素の注記。文字は変わらないので作り直さない
-  const staticLabels = GRIDS.flatMap(({ title, offsetX }) => {
-    const titleLabel = createLabel(title, TITLE_COLOR, TITLE_HEIGHT)
-    titleLabel.sprite.position.set(offsetX, HALF_SIZE + TITLE_MARGIN, LAYER_LABEL)
-
-    const centerLabel = createLabel("中心", PIXEL_LABEL_COLOR, PIXEL_LABEL_HEIGHT)
-    centerLabel.sprite.position.set(
-      offsetX + localXOf(CENTER + 0.5),
-      localYOf(CENTER + 0.5),
-      LAYER_LABEL
-    )
-
-    scene.add(titleLabel.sprite, centerLabel.sprite)
-    return [titleLabel, centerLabel]
+  // 格子の名前。文字は変わらないので作り直さない
+  const titleLabels = GRIDS.map(({ title, offsetX }) => {
+    const label = createLabel(title, TITLE_COLOR, TITLE_HEIGHT)
+    label.sprite.position.set(offsetX, HALF_SIZE + TITLE_MARGIN, LAYER_LABEL)
+    scene.add(label.sprite)
+    return label
   })
-
-  // 隣とみなす画素の方向。近傍のとらえ方の違いが、名前の並びとして読めるようにする
-  const directionLabels = GRIDS.flatMap(({ offsetX, neighbors }) =>
-    neighbors.map(([dc, dr]) => {
-      const label = createLabel(directionNameOf(dc, dr), PIXEL_LABEL_COLOR, PIXEL_LABEL_HEIGHT)
-      label.sprite.position.set(
-        offsetX + localXOf(CENTER + dc + 0.5),
-        localYOf(CENTER + dr + 0.5),
-        LAYER_LABEL
-      )
-      scene.add(label.sprite)
-      return label
-    })
-  )
 
   const matrix = new Matrix4()
 
@@ -305,11 +273,6 @@ export const createConnectivitySpreadScene = ({ scene, params }: SceneContext) =
       reachedPixels.count = painted
       reachedPixels.instanceMatrix.needsUpdate = true
 
-      // 方向の名前は、1 歩でも進めて隣が塗られてから出す
-      directionLabels.forEach(({ sprite }) => {
-        sprite.visible = steps >= 1
-      })
-
       // 同じ歩数でも届く画素の数が違うことを、数でも追えるようにする
       params.reached4 = `${counts[0]}個`
       params.reached8 = `${counts[1]}個`
@@ -326,8 +289,7 @@ export const createConnectivitySpreadScene = ({ scene, params }: SceneContext) =
       ]
       disposables.forEach((disposable) => disposable.dispose())
       reachedPixels.dispose()
-      const labels = [...staticLabels, ...directionLabels]
-      labels.forEach(({ texture, material }) => {
+      titleLabels.forEach(({ texture, material }) => {
         texture.dispose()
         material.dispose()
       })
