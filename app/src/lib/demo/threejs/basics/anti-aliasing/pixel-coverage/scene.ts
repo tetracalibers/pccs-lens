@@ -23,8 +23,8 @@ export type PixelCoverageParams = {
   columns: number
   /** 各画素の寄与率を数値で重ねるか */
   showValues: boolean
-  /** 連続な図形の輪郭を重ねるか */
-  showOutline: boolean
+  /** 連続な図形そのものを重ねるか */
+  showFigure: boolean
 }
 
 // _shared の ThreeSceneContext と同じ形をローカルに宣言する（_shared を import しないため）
@@ -47,16 +47,13 @@ const MAX_COLUMNS = 12
 const MAX_ROWS = Math.round((MAX_COLUMNS * IMAGE_HEIGHT) / IMAGE_WIDTH)
 
 /**
- * 連続な図形の境界線の太さ。線（LineBasicMaterial）は太さを変えられないので、
- * 細長い長方形（三角形 2 つ）として描く
+ * 連続な図形（斜めの帯）を画像の矩形で切り取った多角形の、頂点数の上限。
+ * 長方形（4 頂点）を半平面で 2 回切り取るので、多くとも 6 頂点になる
  */
-const OUTLINE_WIDTH = 0.03
+const MAX_FIGURE_POLYGON_VERTICES = 6
 
-/** 境界線は 2 本で、1 本あたり三角形 2 つ（頂点 6 つ）を使う */
-const OUTLINE_VERTICES = 2 * 6
-
-/** 頂点が直線の上に載っているかの判定に使う許容誤差 */
-const ON_LINE_EPSILON = 1e-6
+/** その多角形を三角形扇に分けたときの頂点数（三角形 4 つ） */
+const FIGURE_VERTICES = (MAX_FIGURE_POLYGON_VERTICES - 2) * 3
 
 /** 寄与率がちょうど 0・1 かの判定に使う許容誤差（面積の計算に丸め誤差が乗る） */
 const COVERAGE_EPSILON = 1e-6
@@ -79,8 +76,8 @@ const BACKGROUND_RGB = [61, 111, 168]
 // 背景（暗めのグレー）の上で、格子・数値を互いに見分けられる色にする
 const GRID_COLOR = "#7d8794"
 
-// 図形の輪郭は図形の色と同じにして、この線が図形そのものの境界であることを示す（= FIGURE_RGB）
-const OUTLINE_COLOR = "#ffc857"
+// 連続な図形は図形の色そのもの（= FIGURE_RGB）で塗る
+const FIGURE_COLOR = "#ffc857"
 
 /** 寄与率の数値。明るい画素の上では暗い色、暗い画素の上では明るい色にする */
 const VALUE_DARK = "#26282d"
@@ -95,17 +92,16 @@ const VALUE_LUMINANCE_THRESHOLD = 140
  *
  * ただし遠近法では手前にあるものが大きく写るので、画面の中心から離れた位置にある要素は
  * z の分だけ外側へずれる。画素の境目のように下地とぴったり重ねたいものは z を持たせず、
- * 深度テストを切って描画順（→ GRID_ORDER）で手前に出す
+ * 深度テストを切って描画順（→ FIGURE_ORDER・GRID_ORDER）で手前に出す
  */
-const LAYER_OUTLINE = 0.04
 const LAYER_VALUE = 0.05
 
 /**
  * 深度テストを切って手前に描く要素の描画順。数が大きいほどあとに描かれる。
- * 格子より図形の境界を手前にしたいので、境界の側にも描画順を与える
+ * 「画素の色 → 連続な図形 → 画素の境目」の順に重ね、格子は図形の上にも残す
  */
-const GRID_ORDER = 1
-const OUTLINE_ORDER = 2
+const FIGURE_ORDER = 1
+const GRID_ORDER = 2
 
 /** 多角形の頂点 */
 type Point = [number, number]
@@ -166,10 +162,25 @@ const areaOf = (polygon: Point[]) => {
 }
 
 /**
+ * 多角形から、図形（斜めの帯）に重なる部分を切り出す。
+ * 図形は「中心線からの距離が太さの半分以内」の帯なので、中心線の両側で 2 回切り取る
+ */
+const clipBand = (
+  polygon: Point[],
+  normalX: number,
+  normalY: number,
+  halfThickness: number
+): Point[] =>
+  clipHalfPlane(
+    clipHalfPlane(polygon, normalX, normalY, halfThickness),
+    -normalX,
+    -normalY,
+    halfThickness
+  )
+
+/**
  * 画素の寄与率。左下の角が (x, y) で 1 辺が size の画素を、図形がどれだけ覆っているかの面積比。
- *
- * 図形は「中心線からの距離が太さの半分以内」の帯なので、
- * 画素の正方形を中心線の両側で 2 回切り取り、残った多角形の面積を画素の面積で割る
+ * 画素の正方形から図形に重なる部分を切り出し、その面積を画素の面積で割る
  */
 const coverageOf = (
   x: number,
@@ -178,16 +189,7 @@ const coverageOf = (
   normalX: number,
   normalY: number,
   halfThickness: number
-) => {
-  const overlap = clipHalfPlane(
-    clipHalfPlane(rectOf(x, y, size, size), normalX, normalY, halfThickness),
-    -normalX,
-    -normalY,
-    halfThickness
-  )
-
-  return areaOf(overlap) / (size * size)
-}
+) => areaOf(clipBand(rectOf(x, y, size, size), normalX, normalY, halfThickness)) / (size * size)
 
 /**
  * 寄与率の表示。図形が覆い切った画素だけが `1`、まったくかかっていない画素だけが `0` になる。
@@ -200,42 +202,17 @@ const formatCoverage = (coverage: number) => {
   return Math.min(Math.max(coverage, 0.01), 0.99).toFixed(2)
 }
 
-/** 直線 nx * x + ny * y = offset が矩形の中に持つ線分。直線が矩形を通らなければ null */
-const segmentInRect = (
-  rect: Point[],
-  nx: number,
-  ny: number,
-  offset: number
-): [Point, Point] | null => {
-  // 矩形を直線の片側で切り取ると、切り口の辺が直線の上に載る
-  const onLine = clipHalfPlane(rect, nx, ny, offset).filter(
-    ([x, y]) => Math.abs(nx * x + ny * y - offset) < ON_LINE_EPSILON
-  )
+/**
+ * 凸多角形を、先頭の頂点から扇状に三角形へ分けて頂点配列へ書き込む。
+ * 書き込んだ頂点数を返す（三角形にならない多角形なら 0）
+ */
+const pushFan = (position: Float32BufferAttribute, polygon: Point[]) => {
+  let vertex = 0
 
-  return onLine.length >= 2 ? [onLine[0], onLine[onLine.length - 1]] : null
-}
-
-/** 線分を、太さ OUTLINE_WIDTH の細長い長方形（三角形 2 つ）として頂点配列へ書き込む */
-const pushThickSegment = (
-  position: Float32BufferAttribute,
-  vertex: number,
-  [[ax, ay], [bx, by]]: [Point, Point]
-) => {
-  const length = Math.hypot(bx - ax, by - ay)
-  if (length === 0) return vertex
-
-  // 線分に立てた法線の向きへ、太さの半分だけ両側へ広げた 4 つの角
-  const offsetX = (-(by - ay) / length) * (OUTLINE_WIDTH / 2)
-  const offsetY = ((bx - ax) / length) * (OUTLINE_WIDTH / 2)
-  const corners: Point[] = [
-    [ax + offsetX, ay + offsetY],
-    [ax - offsetX, ay - offsetY],
-    [bx - offsetX, by - offsetY],
-    [bx + offsetX, by + offsetY]
-  ]
-
-  for (const index of [0, 1, 2, 0, 2, 3]) {
-    position.setXYZ(vertex++, corners[index][0], corners[index][1], 0)
+  for (let index = 1; index + 1 < polygon.length; index++) {
+    for (const [x, y] of [polygon[0], polygon[index], polygon[index + 1]]) {
+      position.setXYZ(vertex++, x, y, 0)
+    }
   }
 
   return vertex
@@ -259,6 +236,15 @@ export const createPixelCoverageScene = ({ scene, params }: SceneContext) => {
 
   let pixelData = new Uint8Array(0)
 
+  // 連続な図形。画素の格子とは無関係に決まる、切れ目のない図形そのもの。
+  // 画素の色とぴったり重ねたいので、格子と同じく画像の平面（z = 0）に置く
+  const figurePosition = new Float32BufferAttribute(new Float32Array(FIGURE_VERTICES * 3), 3)
+  const figureGeometry = new BufferGeometry().setAttribute("position", figurePosition)
+  const figureMaterial = new MeshBasicMaterial({ color: FIGURE_COLOR, depthTest: false })
+  const figure = new Mesh(figureGeometry, figureMaterial)
+  figure.renderOrder = FIGURE_ORDER
+  scene.add(figure)
+
   // 画素どうしの境目。画素数が変わるたびに引き直すので、頂点は上限の数だけ先に確保しておく
   const gridPosition = new Float32BufferAttribute(
     new Float32Array((MAX_COLUMNS + 1 + MAX_ROWS + 1) * 2 * 3),
@@ -269,15 +255,6 @@ export const createPixelCoverageScene = ({ scene, params }: SceneContext) => {
   const grid = new LineSegments(gridGeometry, gridMaterial)
   grid.renderOrder = GRID_ORDER
   scene.add(grid)
-
-  // 連続な図形の境界。画素の格子とは無関係に決まる、切れ目のない境界線
-  const outlinePosition = new Float32BufferAttribute(new Float32Array(OUTLINE_VERTICES * 3), 3)
-  const outlineGeometry = new BufferGeometry().setAttribute("position", outlinePosition)
-  const outlineMaterial = new MeshBasicMaterial({ color: OUTLINE_COLOR })
-  const outline = new Mesh(outlineGeometry, outlineMaterial)
-  outline.position.z = LAYER_OUTLINE
-  outline.renderOrder = OUTLINE_ORDER
-  scene.add(outline)
 
   // 寄与率の数値。画素ごとに板を並べるより、1 枚の canvas に描いて画像に重ねる方が軽い
   const valueCanvas = document.createElement("canvas")
@@ -302,7 +279,7 @@ export const createPixelCoverageScene = ({ scene, params }: SceneContext) => {
 
   return {
     update: () => {
-      const { columns, showValues, showOutline } = params
+      const { columns, showValues, showFigure } = params
       const rows = rowsOf(columns)
       const pitch = IMAGE_WIDTH / columns
 
@@ -385,16 +362,14 @@ export const createPixelCoverageScene = ({ scene, params }: SceneContext) => {
       valueTexture.needsUpdate = true
       valueOverlay.visible = showValues
 
-      // 連続な図形の境界。帯の 2 本の境界線のうち、画像に収まる線分だけを太く描く
+      // 連続な図形。画素に対する寄与率と同じ切り取りを、画素ではなく画像全体へ 1 回かけると、
+      // 画素の格子とは無関係な図形そのもの（画像の左上と右下の角を覆う多角形）が得られる
       const imageRect = rectOf(-HALF_WIDTH, -HALF_HEIGHT, IMAGE_WIDTH, IMAGE_HEIGHT)
-      let outlineVertex = 0
-      for (const offset of [halfThickness, -halfThickness]) {
-        const segment = segmentInRect(imageRect, normalX, normalY, offset)
-        if (segment) outlineVertex = pushThickSegment(outlinePosition, outlineVertex, segment)
-      }
-      outlinePosition.needsUpdate = true
-      outlineGeometry.setDrawRange(0, outlineVertex)
-      outline.visible = showOutline
+      const figurePolygon = clipBand(imageRect, normalX, normalY, halfThickness)
+      const figureVertex = pushFan(figurePosition, figurePolygon)
+      figurePosition.needsUpdate = true
+      figureGeometry.setDrawRange(0, figureVertex)
+      figure.visible = showFigure
     },
     dispose: () => {
       imageMaterial.map?.dispose()
@@ -404,8 +379,8 @@ export const createPixelCoverageScene = ({ scene, params }: SceneContext) => {
         imageMaterial,
         gridGeometry,
         gridMaterial,
-        outlineGeometry,
-        outlineMaterial,
+        figureGeometry,
+        figureMaterial,
         valueGeometry,
         valueMaterial
       ]

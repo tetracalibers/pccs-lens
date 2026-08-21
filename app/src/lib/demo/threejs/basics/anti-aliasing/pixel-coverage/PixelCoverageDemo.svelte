@@ -8,7 +8,7 @@
     thickness: 1.0,
     columns: 9,
     showValues: false,
-    showOutline: false
+    showFigure: false
   }
 </script>
 
@@ -24,6 +24,6 @@
     pane.addBinding(p, "thickness", { min: 0.2, max: 1.5, step: 0.01, label: "図形の太さ" })
     pane.addBinding(p, "columns", { min: 6, max: 12, step: 3, label: "横の画素数" })
     pane.addBinding(p, "showValues", { label: "寄与率を数値で表示" })
-    pane.addBinding(p, "showOutline", { label: "連続な図形の輪郭を表示" })
+    pane.addBinding(p, "showFigure", { label: "連続な図形を表示" })
   }}
 />
