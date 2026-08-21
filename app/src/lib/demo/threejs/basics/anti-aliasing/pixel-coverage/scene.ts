@@ -89,11 +89,21 @@ const VALUE_LUMINANCE_THRESHOLD = 140
 
 /**
  * xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z。
- * 正面から見る構図に固定しているため、この厚みは絵には出ない
+ * 正面から見る構図に固定しているため、この厚みは絵には出ない。
+ *
+ * ただし遠近法では手前にあるものが大きく写るので、画面の中心から離れた位置にある要素は
+ * z の分だけ外側へずれる。画素の境目のように下地とぴったり重ねたいものは z を持たせず、
+ * 深度テストを切って描画順（→ GRID_ORDER）で手前に出す
  */
-const LAYER_GRID = 0.02
 const LAYER_OUTLINE = 0.04
 const LAYER_VALUE = 0.05
+
+/**
+ * 深度テストを切って手前に描く要素の描画順。数が大きいほどあとに描かれる。
+ * 格子より図形の境界を手前にしたいので、境界の側にも描画順を与える
+ */
+const GRID_ORDER = 1
+const OUTLINE_ORDER = 2
 
 /** 多角形の頂点 */
 type Point = [number, number]
@@ -253,9 +263,9 @@ export const createPixelCoverageScene = ({ scene, params }: SceneContext) => {
     3
   )
   const gridGeometry = new BufferGeometry().setAttribute("position", gridPosition)
-  const gridMaterial = new LineBasicMaterial({ color: GRID_COLOR })
+  const gridMaterial = new LineBasicMaterial({ color: GRID_COLOR, depthTest: false })
   const grid = new LineSegments(gridGeometry, gridMaterial)
-  grid.position.z = LAYER_GRID
+  grid.renderOrder = GRID_ORDER
   scene.add(grid)
 
   // 連続な図形の境界。画素の格子とは無関係に決まる、切れ目のない境界線
@@ -264,6 +274,7 @@ export const createPixelCoverageScene = ({ scene, params }: SceneContext) => {
   const outlineMaterial = new MeshBasicMaterial({ color: OUTLINE_COLOR })
   const outline = new Mesh(outlineGeometry, outlineMaterial)
   outline.position.z = LAYER_OUTLINE
+  outline.renderOrder = OUTLINE_ORDER
   scene.add(outline)
 
   // 寄与率の数値。画素ごとに板を並べるより、1 枚の canvas に描いて画像に重ねる方が軽い

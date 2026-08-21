@@ -82,8 +82,9 @@ const BACKGROUND_RGB = [61, 111, 168]
 // 連続な図形の境界線の太さ。線は太さを変えられないので、細長い長方形として描く
 const OUTLINE_WIDTH = 0.03
 
-// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z
-const LAYER_GRID = 0.02
+// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z。
+// ただし遠近法では手前にあるものが大きく写るので、画素の境目のように下地とぴったり
+// 重ねたいものは z を持たせず、深度テストを切って描画順で手前に出す
 const LAYER_OUTLINE = 0.04
 
 // 図形の中心線に立てた法線と、太さの半分。
@@ -187,24 +188,25 @@ const image = new Mesh(
 )
 scene.add(image)
 
-// 画素どうしの境目。画像の縦横を、画素数で等分した位置に引く
+// 画素どうしの境目。画像の縦横を、画素数で等分した位置に引く。
+// 画素の色とぴったり重ねたいので、画像と同じ平面（z = 0）に置き、
+// 深度テストを切って手前に描く
 const gridPoints: Vector3[] = []
 for (let column = 0; column <= COLUMNS; column++) {
   const x = -IMAGE_WIDTH / 2 + column * PITCH
-  gridPoints.push(
-    new Vector3(x, -IMAGE_HEIGHT / 2, LAYER_GRID),
-    new Vector3(x, IMAGE_HEIGHT / 2, LAYER_GRID)
-  )
+  gridPoints.push(new Vector3(x, -IMAGE_HEIGHT / 2, 0), new Vector3(x, IMAGE_HEIGHT / 2, 0))
 }
 for (let row = 0; row <= ROWS; row++) {
   const y = -IMAGE_HEIGHT / 2 + row * PITCH
-  gridPoints.push(
-    new Vector3(-IMAGE_WIDTH / 2, y, LAYER_GRID),
-    new Vector3(IMAGE_WIDTH / 2, y, LAYER_GRID)
-  )
+  gridPoints.push(new Vector3(-IMAGE_WIDTH / 2, y, 0), new Vector3(IMAGE_WIDTH / 2, y, 0))
 }
 const gridGeometry = new BufferGeometry().setFromPoints(gridPoints)
-scene.add(new LineSegments(gridGeometry, new LineBasicMaterial({ color: "#7d8794" })))
+const grid = new LineSegments(
+  gridGeometry,
+  new LineBasicMaterial({ color: "#7d8794", depthTest: false })
+)
+grid.renderOrder = 1
+scene.add(grid)
 
 // 連続な図形の境界。帯の 2 本の境界線のうち、画像の矩形に収まる線分だけを太く描く
 const imageRect = rectOf(-IMAGE_WIDTH / 2, -IMAGE_HEIGHT / 2, IMAGE_WIDTH, IMAGE_HEIGHT)
@@ -234,8 +236,11 @@ for (const offset of [halfThickness, -halfThickness]) {
   for (const index of [0, 1, 2, 0, 2, 3]) outlinePoints.push(corners[index])
 }
 
+// 格子より手前に描きたいので、格子より大きい描画順を与える
 const outlineGeometry = new BufferGeometry().setFromPoints(outlinePoints)
-scene.add(new Mesh(outlineGeometry, new MeshBasicMaterial({ color: "#f5f7fa" })))
+const boundary = new Mesh(outlineGeometry, new MeshBasicMaterial({ color: "#f5f7fa" }))
+boundary.renderOrder = 2
+scene.add(boundary)
 ```
 
 :::
