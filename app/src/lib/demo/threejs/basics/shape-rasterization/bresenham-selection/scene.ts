@@ -24,7 +24,7 @@ export type BresenhamSelectionParams = {
   dy: number
   /** x をいくつ進めたか。この列まで塗り進めた状態を見せる */
   step: number
-  /** 判定変数の符号と、そこから決まる次の画素。scene.ts が書き戻すので初期値は使われない */
+  /** 判定変数の符号の判定。scene.ts が書き戻すので初期値は使われない */
   judgement: string
   /** 判定変数の更新。scene.ts が書き戻すので初期値は使われない */
   update: string
@@ -348,9 +348,8 @@ export const createBresenhamSelectionScene = ({ scene, params }: SceneContext) =
       chosenFill.position.set(nextX, worldYOf(goesDown ? y + 1 : y), LAYER_CANDIDATE_FILL)
 
       // 判定変数の符号と更新を、整数の計算のまま追えるようにする
-      const initial = step === 0 ? `2dy - dx = 2 × ${dy} - ${DX} = ` : ""
       params.judgement = hasNext
-        ? `d = ${initial}${d}` + (goesDown ? " > 0 → yを1増やす" : " ≦ 0 → yはそのまま")
+        ? `${d} ${goesDown ? ">" : "≦"} 0`
         : `終点に到達（これ以上進む列はない）`
       params.update = hasNext
         ? goesDown

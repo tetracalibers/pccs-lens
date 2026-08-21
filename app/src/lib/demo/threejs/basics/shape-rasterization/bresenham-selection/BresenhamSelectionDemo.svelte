@@ -22,7 +22,7 @@
   buildPane={(pane, p) => {
     pane.addBinding(p, "dy", { min: 0, max: 5, step: 1, label: "線分の高さ dy（dx = 8）" })
     pane.addBinding(p, "step", { min: 0, max: 8, step: 1, label: "進めたステップ" })
-    pane.addBinding(p, "judgement", { readonly: true, label: "判定変数dと次の画素" })
+    pane.addBinding(p, "judgement", { readonly: true, label: "判定変数d" })
     pane.addBinding(p, "update", { readonly: true, label: "dの更新" })
   }}
 />
