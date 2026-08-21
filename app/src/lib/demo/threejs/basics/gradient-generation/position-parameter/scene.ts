@@ -90,12 +90,13 @@ const HIGHLIGHT_COLOR = "#e8ecf2"
 /** 格子の線の色。色を塗った行より控えめにする */
 const GRID_COLOR = "#5c6470"
 
-/** A・B のラベルの色。両端の色はどちらも明るいので、濃い色を載せる */
+/** 画素の中に載せるラベルの色。両端の色も中間色もどれも明るいので、濃い色を載せる */
 const LABEL_COLOR = "#2a2d33"
 
-/** A・B のラベルの大きさ（上限と、画素の一辺に対する割合） */
+/** 画素の中に載せるラベルの大きさ（上限と、画素の一辺に対する高さ・幅の割合） */
 const LABEL_HEIGHT = 0.2
 const LABEL_FILL = 0.62
+const LABEL_WIDTH_FILL = 0.86
 
 /** ラベルの文字を描く canvas の高さ（テクスチャの解像度）と左右の余白、書体 */
 const LABEL_TEXTURE_HEIGHT = 128
@@ -196,12 +197,24 @@ export const createPositionParameterScene = ({ scene, params }: SceneContext) =>
   const focusCell = new Mesh(unitGeometry, swatchMaterial)
   scene.add(focusCell)
 
-  // 両端の色が式の A・B であることを示すラベル。両端の画素の中に載せる
-  const labels = ["A", "B"].map((text) => {
+  // 両端の色が式の A・B であることを示すラベルと、注目画素の色が f(t) であることを
+  // 示すラベル。いずれも画素の中に載せる
+  const labels = ["A", "B", "f(t)"].map((text) => {
     const label = createLabel(text)
     scene.add(label.sprite)
     return label
   })
+  const [labelA, labelB, labelFocus] = labels
+
+  /** ラベルを画素の中に収まる大きさに合わせる（縦横どちらもはみ出さない範囲で最大にとる） */
+  const fitLabel = ({ sprite, aspect }: (typeof labels)[number], cellSize: number) => {
+    const height = Math.min(
+      LABEL_HEIGHT,
+      cellSize * LABEL_FILL,
+      (cellSize * LABEL_WIDTH_FILL) / aspect
+    )
+    sprite.scale.set(height * aspect, height, 1)
+  }
 
   const matrix = new Matrix4()
   const color = new Color()
@@ -290,12 +303,14 @@ export const createPositionParameterScene = ({ scene, params }: SceneContext) =>
       // 板の長い辺（ローカルの y 軸）が、結ぶ向きに重なるまで回す
       connector.rotation.z = Math.atan2(spanY, spanX) - Math.PI / 2
 
-      // A・B のラベルは、両端の画素の中に収まる大きさで載せる
-      const labelHeight = Math.min(LABEL_HEIGHT, cellSize * LABEL_FILL)
-      labels.forEach(({ sprite, aspect }, side) => {
-        sprite.scale.set(labelHeight * aspect, labelHeight, 1)
-        sprite.position.set(centerOf(side === 0 ? 0 : pixelCount - 1), BAND_Y, LAYER_LABEL)
-      })
+      // ラベルは画素の中に収まる大きさで載せる。A・B は両端の画素、f(t) は注目画素に置き、
+      // 注目画素が端に来たときは f(t) を優先して、その端のラベルを隠す
+      labels.forEach((label) => fitLabel(label, cellSize))
+      labelA.sprite.position.set(centerOf(0), BAND_Y, LAYER_LABEL)
+      labelB.sprite.position.set(centerOf(pixelCount - 1), BAND_Y, LAYER_LABEL)
+      labelFocus.sprite.position.set(focusX, BAND_Y, LAYER_LABEL)
+      labelA.sprite.visible = index !== 0
+      labelB.sprite.visible = index !== pixelCount - 1
     },
     dispose: () => {
       const disposables = [
