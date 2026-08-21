@@ -64,5 +64,4 @@ sections:
       - slug: particle-system
       - title: ポイントベースドモデリング # CG 3-7-2
         group: ["CG"]
-      - title: フラクタル # CG 3-7-3
-        group: ["CG"]
+      - slug: fractal

@@ -542,7 +542,7 @@
 
 - [draft] `/cg/modeling/particle-system`
 - [ページ未作成] ポイントベースドモデリング
-- [ページ未作成] フラクタル
+- [draft] `/cg/modeling/fractal`
 
 ## CGと画像処理 — NPRと可視化／ノンフォトリアリスティックレンダリング（`cg/npr.yaml` #npr）
 

@@ -386,7 +386,7 @@
 - [draft] `/cg/modeling/isosurface-extraction`
 - [draft] `/cg/modeling/particle-system`
 - [ページ未作成] ポイントベースドモデリング
-- [ページ未作成] フラクタル
+- [draft] `/cg/modeling/fractal`
 
 ## CGと画像処理（nested） — 記事：レンダリング（`cg/rendering.yaml`）
 
