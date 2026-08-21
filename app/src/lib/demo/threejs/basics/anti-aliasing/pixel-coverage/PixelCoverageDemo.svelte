@@ -7,8 +7,8 @@
     slope: 0.45,
     thickness: 1.0,
     columns: 9,
-    showValues: true,
-    showOutline: true
+    showValues: false,
+    showOutline: false
   }
 </script>
 

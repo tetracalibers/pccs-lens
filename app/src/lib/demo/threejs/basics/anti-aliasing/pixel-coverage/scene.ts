@@ -76,9 +76,11 @@ const VALUE_FONT_SCALE = 0.3
 const FIGURE_RGB = [255, 200, 87]
 const BACKGROUND_RGB = [61, 111, 168]
 
-// 背景（暗めのグレー）の上で、格子・図形の輪郭・数値を互いに見分けられる色にする
+// 背景（暗めのグレー）の上で、格子・数値を互いに見分けられる色にする
 const GRID_COLOR = "#7d8794"
-const OUTLINE_COLOR = "#f5f7fa"
+
+// 図形の輪郭は図形の色と同じにして、この線が図形そのものの境界であることを示す（= FIGURE_RGB）
+const OUTLINE_COLOR = "#ffc857"
 
 /** 寄与率の数値。明るい画素の上では暗い色、暗い画素の上では明るい色にする */
 const VALUE_DARK = "#26282d"

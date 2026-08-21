@@ -236,9 +236,10 @@ for (const offset of [halfThickness, -halfThickness]) {
   for (const index of [0, 1, 2, 0, 2, 3]) outlinePoints.push(corners[index])
 }
 
-// 格子より手前に描きたいので、格子より大きい描画順を与える
+// 格子より手前に描きたいので、格子より大きい描画順を与える。
+// 色は図形の色と同じにして、この線が図形そのものの境界であることを示す
 const outlineGeometry = new BufferGeometry().setFromPoints(outlinePoints)
-const boundary = new Mesh(outlineGeometry, new MeshBasicMaterial({ color: "#f5f7fa" }))
+const boundary = new Mesh(outlineGeometry, new MeshBasicMaterial({ color: "#ffc857" }))
 boundary.renderOrder = 2
 scene.add(boundary)
 ```
