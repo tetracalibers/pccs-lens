@@ -11,6 +11,7 @@ draft: true
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import InterpolationCurveDemo from '$lib/demo/threejs/basics/gradient-generation/interpolation-curve/InterpolationCurveDemo.svelte'
+  import PlanarGradientDemo from '$lib/demo/threejs/basics/gradient-generation/planar-gradient/PlanarGradientDemo.svelte'
 </script>
 
 [塗りつぶし処理](/cg/basics/area-filling/)は、ある領域の内部をどの点も同じ色に見えるよう「べた塗り」する処理でした。
@@ -241,8 +242,167 @@ graph.add(dot)
 
 いずれも、平面上の各画素の位置から割合 $$t$$ を求め、その $$t$$ に補間を適用して値を決めるという原理は共通しています。違うのは、$$t$$ をどう定めるか（直線距離か、中心からの距離か、角度か）だけです。
 
-:::Todo
-方向/放射/角度の2次元グラデーション
+:::Action{fixme}
+次の点に着目して、3枚を見比べてみよう
+
+- 向きの角度を動かすと、方向は明暗の向きが回り、角度はtが0に戻る切れ目が回る一方、放射は何も変わらないこと
+- tの等値線を入れると、tが同じ値になる位置が、平行な線・同心円・扇の骨として現れること
+:::
+
+<CanvasWrapper>
+  <PlanarGradientDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 向きの角度。方向グラデーションの向きと、角度グラデーションで t = 0 になる向きを決める
+const ANGLE = (30 * Math.PI) / 180
+
+// 2 次元のグラデーションのパターン
+type Pattern = {
+  // 画像の中心を原点、半辺を 1 とした位置から、割合 t（0〜1）を求める
+  tAt: (x: number, y: number, angle: number) => number
+  // 向きを示す矢を描くか（向きに依らないパターンでは描かない）
+  hasArrow: boolean
+}
+
+const TAU = Math.PI * 2
+
+// 3 つのパターン。違うのは位置から割合 t をどう求めるかだけで、
+// t から画素の値を決める部分（線形補間）はすべて共通
+const PATTERNS: Pattern[] = [
+  {
+    // 方向（線形）：ある向きに沿って進んだ距離。画像の外へ出ないよう、
+    // その向きで測れる最大の長さ（|cos| + |sin|）で 0〜1 に正規化する
+    tAt: (x, y, angle) => {
+      const span = Math.abs(Math.cos(angle)) + Math.abs(Math.sin(angle))
+      return (x * Math.cos(angle) + y * Math.sin(angle) + span) / (2 * span)
+    },
+    hasArrow: true
+  },
+  {
+    // 放射（ラジアル）：中心からの距離。四隅までの距離（√2）で 0〜1 に正規化する
+    tAt: (x, y) => Math.hypot(x, y) / Math.SQRT2,
+    hasArrow: false
+  },
+  {
+    // 角度（コニカル）：中心まわりの角度を一周（360°）で割る。t = 0 になる向きを angle で回す
+    tAt: (x, y, angle) => {
+      const turned = Math.atan2(y, x) - angle
+      return (((turned % TAU) + TAU) % TAU) / TAU
+    },
+    hasArrow: false
+  }
+]
+
+// 1 枚の画像の 1 辺と、3 枚を並べる間隔
+const TILE_SIZE = 1.85
+const TILE_GAP = 0.3
+const HALF_TILE = TILE_SIZE / 2
+
+// 画像を焼く画素数。格子が目に見えない細かさにとる
+const RESOLUTION = 256
+
+// 両端の値。黒（0）から白（255）へ補間する
+const START_VALUE = 0
+const END_VALUE = 255
+
+// 向きを示す矢の寸法と、中心を示す点の大きさ（いずれも画像の半辺に対する割合）。
+// 線（LineBasicMaterial）の太さは環境によらず 1 画素なので、矢は面として組む
+const ARROW_LENGTH = 0.78
+const ARROW_WIDTH = 0.06
+const ARROW_HEAD_LENGTH = 0.2
+const ARROW_HEAD_WIDTH = 0.22
+const CENTER_DOT_RADIUS = 0.04
+
+// 画像に重なる要素を、奥から手前へ振り分ける z
+const LAYER_MARKER = 0.02
+const LAYER_FRAME = 0.03
+
+// 3 枚に共通の外周。暗い部分が背景に溶けても、画像の範囲が分かるようにする
+const frameGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(-HALF_TILE, -HALF_TILE, LAYER_FRAME),
+  new Vector3(HALF_TILE, -HALF_TILE, LAYER_FRAME),
+  new Vector3(HALF_TILE, -HALF_TILE, LAYER_FRAME),
+  new Vector3(HALF_TILE, HALF_TILE, LAYER_FRAME),
+  new Vector3(HALF_TILE, HALF_TILE, LAYER_FRAME),
+  new Vector3(-HALF_TILE, HALF_TILE, LAYER_FRAME),
+  new Vector3(-HALF_TILE, HALF_TILE, LAYER_FRAME),
+  new Vector3(-HALF_TILE, -HALF_TILE, LAYER_FRAME)
+])
+const frameMaterial = new LineBasicMaterial({ color: "#c8ccd4" })
+
+// 3 枚に共通の画像の板と、重ねる印の材質。
+// 画素の濃淡（黒〜白）に混ざらないよう、印は彩度のある色にする
+const tileGeometry = new PlaneGeometry(TILE_SIZE, TILE_SIZE)
+const dotGeometry = new SphereGeometry(CENTER_DOT_RADIUS, 12, 8)
+const markerMaterial = new MeshBasicMaterial({ color: "#f2766a" })
+
+// 向きを示す矢。右向きに組んでおき、角度のぶんだけ回す。
+// 軸の長方形（三角形 2 枚）と、先端の三角形 1 枚を並べた面として作る
+const arrowTip = HALF_TILE * ARROW_LENGTH
+const arrowBase = arrowTip - HALF_TILE * ARROW_HEAD_LENGTH
+const halfShaft = (HALF_TILE * ARROW_WIDTH) / 2
+const halfHead = (HALF_TILE * ARROW_HEAD_WIDTH) / 2
+const arrowGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(0, -halfShaft, LAYER_MARKER),
+  new Vector3(arrowBase, -halfShaft, LAYER_MARKER),
+  new Vector3(arrowBase, halfShaft, LAYER_MARKER),
+  new Vector3(0, -halfShaft, LAYER_MARKER),
+  new Vector3(arrowBase, halfShaft, LAYER_MARKER),
+  new Vector3(0, halfShaft, LAYER_MARKER),
+  new Vector3(arrowBase, -halfHead, LAYER_MARKER),
+  new Vector3(arrowTip, 0, LAYER_MARKER),
+  new Vector3(arrowBase, halfHead, LAYER_MARKER)
+])
+
+PATTERNS.forEach((pattern, index) => {
+  // 3 枚を横に並べる。中央の 1 枚が原点に来るように、両側へ 1 枚ぶんずらす
+  const tile = new Group()
+  tile.position.set((index - 1) * (TILE_SIZE + TILE_GAP), 0.27, 0)
+  scene.add(tile)
+
+  const imageData = new Uint8Array(RESOLUTION * RESOLUTION * 4)
+  for (let row = 0; row < RESOLUTION; row++) {
+    for (let column = 0; column < RESOLUTION; column++) {
+      // 画素 1 つ分の真ん中の位置。画像の中心を原点、半辺を 1 とする。
+      // テクスチャの行が増える向きと y 軸の向きは逆になる
+      const x = -1 + (2 * (column + 0.5)) / RESOLUTION
+      const y = 1 - (2 * (row + 0.5)) / RESOLUTION
+
+      // 位置から割合 t を求め、両端の値（黒と白）を線形補間する
+      const t = pattern.tAt(x, y, ANGLE)
+      const level = Math.round((1 - t) * START_VALUE + t * END_VALUE)
+
+      imageData.set([level, level, level, 255], (row * RESOLUTION + column) * 4)
+    }
+  }
+
+  // 画素の値をそのままの濃さで貼る。テクセルどうしは滑らかに繋ぐ
+  const imageTexture = new DataTexture(imageData, RESOLUTION, RESOLUTION)
+  imageTexture.colorSpace = SRGBColorSpace
+  imageTexture.magFilter = LinearFilter
+  imageTexture.minFilter = LinearFilter
+  imageTexture.needsUpdate = true
+
+  // 値をそのままの濃さで見せたいので、陰影の付かない材質で貼る
+  tile.add(new Mesh(tileGeometry, new MeshBasicMaterial({ map: imageTexture })))
+  tile.add(new LineSegments(frameGeometry, frameMaterial))
+
+  // 方向は矢で向きを示し、中心を基準にするパターンはその中心を点で示す
+  if (pattern.hasArrow) {
+    const arrow = new Mesh(arrowGeometry, markerMaterial)
+    arrow.rotation.z = ANGLE
+    tile.add(arrow)
+  } else {
+    const dot = new Mesh(dotGeometry, markerMaterial)
+    dot.position.z = LAYER_MARKER
+    tile.add(dot)
+  }
+})
+```
+
 :::
 
 ### グラデーションと曲面の陰影
