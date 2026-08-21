@@ -11,6 +11,7 @@ draft: true
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import ConnectivitySpreadDemo from '$lib/demo/threejs/basics/area-filling/connectivity-spread/ConnectivitySpreadDemo.svelte'
+  import CrossingParityDemo from '$lib/demo/threejs/basics/area-filling/crossing-parity/CrossingParityDemo.svelte'
   import ScanlineFillDemo from '$lib/demo/threejs/basics/area-filling/scanline-fill/ScanlineFillDemo.svelte'
   import SeedFillDemo from '$lib/demo/threejs/basics/area-filling/seed-fill/SeedFillDemo.svelte'
 </script>
@@ -28,16 +29,191 @@ draft: true
 
 ## :WithGroupTag[スキャンライン塗りつぶし]{group="{['CG']}"}
 
-塗りつぶしにはいくつかの手法があります。
+塗りつぶしにはいくつかの手法があり、その基本的な手法の`1`つが:Anki[スキャンライン]ごとの塗りつぶしです。これは、行（水平な画素の列）を単位として、その行のうち図形の内側にあたる区間を一気に塗る手法です。
 
-その基本的な手法の`1`つが:Anki[スキャンライン]ごとの塗りつぶしです。これは、行（水平な画素の列）を単位として、その行のうち図形の内側にあたる区間を一気に塗る手法です。
-
-[ポリゴンのスキャンライン処理](/cg/basics/shape-rasterization/)では、スキャンライン（水平な走査線）をポリゴンの上端から下端まで`1`行ずつずらしながら、走査線がポリゴンの辺と交わる点を求めました。
+[ポリゴンのラスタ化](/cg/basics/shape-rasterization/)では、スキャンライン（水平な走査線）をポリゴンの上端から下端まで`1`行ずつずらしながら、走査線がポリゴンの辺と交わる点を求めました。
 
 塗りつぶしでは、こうして求めた交点をもとに、内側にあたる区間を水平に塗っていきます。
 
 `1`本のスキャンラインが塗りつぶし対象の閉領域と交わると、交点は普通:Anki[偶数]個できます。
 スキャンラインを左端からたどっていくと、はじめは領域の外側にいて、交点（＝境界との交わり）を越える度に、外から内、内から外へと位置が切り替わります。一度内側に入れば必ずどこかで外側へ出るので、交点は外と内を行き来した回数の分だけ、偶数個で揃うのです。
+
+:::Action{fixme}
+次の点に着目して、デモを観察してみよう
+
+- たどった位置を右へ動かすと、交点を越えるたびに、たどってきた区間が外側と内側で交互に塗り分けられること
+- 右端までたどると領域の外側に戻り、越えた交点が偶数個になること
+- 走査線の位置をどこへ動かしても、たどった順が「外」で始まり「外」で終わること
+:::
+
+<CanvasWrapper>
+  <CrossingParityDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 画像の広さ
+const COLUMNS = 24
+const ROWS = 16
+const PITCH = 0.15
+const PLOT_WIDTH = COLUMNS * PITCH
+const PLOT_HEIGHT = ROWS * PITCH
+const HALF_WIDTH = PLOT_WIDTH / 2
+const HALF_HEIGHT = PLOT_HEIGHT / 2
+
+// 塗りつぶす閉領域。山が 2 つ並んだ形をとる。
+// 走査線は行の中心（行 + 0.5）を通るので、頂点の y を整数にとっておけば、
+// 走査線が頂点の高さにちょうど重なることがない
+const POLYGON: [number, number][] = [
+  [2.5, 13],
+  [7.5, 2],
+  [11, 8],
+  [14, 8],
+  [17.5, 3],
+  [21.5, 13]
+]
+
+// 走査線を引く位置と、左端からたどってきた位置
+const SCAN_ROW = 7
+const TRAVELED = 12.5
+
+// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z
+const LAYER_FRAME = 0.01
+const LAYER_SCANLINE = 0.02
+const LAYER_TRAIL = 0.03
+const LAYER_OUTLINE = 0.05
+const LAYER_DOT = 0.07
+const LAYER_MARKER = 0.08
+
+// 画素を単位とした位置を、ワールド座標へ移す。
+// 画像座標系は画像の左上を原点とし、x 軸を右向き、y 軸を下向きにとる。
+// 整数が画素どうしの境目、+0.5 が画素の中心に当たる
+const worldXOf = (x: number) => -HALF_WIDTH + x * PITCH
+const worldYOf = (y: number) => HALF_HEIGHT - y * PITCH
+
+// 走査線の高さ y で、ポリゴンの辺と交わる点の x を左から順に並べる。
+// 水平な辺は走査線と交点を作らないので飛ばし、辺の上端を含み下端を含まない
+// 範囲で数えることで、頂点の高さでも交点を二重に数えないようにする
+const crossingsAt = (y: number) => {
+  const xs: number[] = []
+
+  for (let i = 0; i < POLYGON.length; i++) {
+    const [x1, y1] = POLYGON[i]
+    const [x2, y2] = POLYGON[(i + 1) % POLYGON.length]
+    if (y1 === y2) continue
+    if (y < Math.min(y1, y2) || y >= Math.max(y1, y2)) continue
+
+    xs.push(x1 + ((y - y1) * (x2 - x1)) / (y2 - y1))
+  }
+
+  return xs.sort((a, b) => a - b)
+}
+
+const scanY = worldYOf(SCAN_ROW + 0.5)
+const barGeometry = new PlaneGeometry(1, 1)
+const matrix = new Matrix4()
+
+// 画像の外周。走査線がどこから入ってどこへ抜けるかの目印になる
+const frameGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(-HALF_WIDTH, HALF_HEIGHT, LAYER_FRAME),
+  new Vector3(HALF_WIDTH, HALF_HEIGHT, LAYER_FRAME),
+  new Vector3(HALF_WIDTH, HALF_HEIGHT, LAYER_FRAME),
+  new Vector3(HALF_WIDTH, -HALF_HEIGHT, LAYER_FRAME),
+  new Vector3(HALF_WIDTH, -HALF_HEIGHT, LAYER_FRAME),
+  new Vector3(-HALF_WIDTH, -HALF_HEIGHT, LAYER_FRAME),
+  new Vector3(-HALF_WIDTH, -HALF_HEIGHT, LAYER_FRAME),
+  new Vector3(-HALF_WIDTH, HALF_HEIGHT, LAYER_FRAME)
+])
+scene.add(new LineSegments(frameGeometry, new LineBasicMaterial({ color: "#7d8794" })))
+
+// 塗りつぶす閉領域の輪郭。切れ目なく閉じた線。
+// 線材（LineBasicMaterial）の線幅は WebGL では常に 1 ドットに固定されるため、
+// 輪郭・走査線・たどった区間は細長い長方形として描く
+const outlineMaterial = new MeshBasicMaterial({ color: "#6fd8ff" })
+POLYGON.forEach(([x1, y1], index) => {
+  const [x2, y2] = POLYGON[(index + 1) % POLYGON.length]
+  const ax = worldXOf(x1)
+  const ay = worldYOf(y1)
+  const bx = worldXOf(x2)
+  const by = worldYOf(y2)
+
+  const edge = new Mesh(barGeometry, outlineMaterial)
+  edge.scale.set(Math.hypot(bx - ax, by - ay), 0.03, 1)
+  edge.rotation.z = Math.atan2(by - ay, bx - ax)
+  edge.position.set((ax + bx) / 2, (ay + by) / 2, LAYER_OUTLINE)
+  scene.add(edge)
+})
+
+// 走査線そのもの。まだたどっていない部分は控えめな色で置いておく
+const scanline = new Mesh(barGeometry, new MeshBasicMaterial({ color: "#5e6672" }))
+scanline.scale.set(PLOT_WIDTH + 0.28, 0.02, 1)
+scanline.position.set(0, scanY, LAYER_SCANLINE)
+scene.add(scanline)
+
+// 走査線と輪郭の交点。ここを越えるたびに外と内が入れ替わる
+const crossings = crossingsAt(SCAN_ROW + 0.5)
+const crossingDots = new InstancedMesh(
+  new CircleGeometry(0.046, 16),
+  new MeshBasicMaterial({ color: "#f5f8fc" }),
+  crossings.length
+)
+crossings.forEach((x, index) => {
+  matrix.identity()
+  matrix.setPosition(worldXOf(x), scanY, LAYER_DOT)
+  crossingDots.setMatrixAt(index, matrix)
+})
+scene.add(crossingDots)
+
+// 左端からいまいる位置までを、越えてきた交点で区切る
+const passed = crossings.filter((x) => x < TRAVELED)
+const bounds = [0, ...passed, TRAVELED]
+
+// 区切られた区間を、外側と内側で塗り分ける。
+// 内側をたどった区間は、このあと実際に塗られる区間なので、塗った画素と同じ色にする
+const outsideTrail = new InstancedMesh(
+  barGeometry,
+  new MeshBasicMaterial({ color: "#c8ccd4" }),
+  bounds.length
+)
+const insideTrail = new InstancedMesh(
+  barGeometry,
+  new MeshBasicMaterial({ color: "#ffc857" }),
+  bounds.length
+)
+
+// 水平な区間 [left, right] を、走査線の高さに細長い長方形として置く
+const setSpan = (trail: InstancedMesh, index: number, left: number, right: number) => {
+  const ax = worldXOf(left)
+  const bx = worldXOf(right)
+  matrix.makeScale(Math.max(bx - ax, 0), 0.055, 1)
+  matrix.setPosition((ax + bx) / 2, scanY, LAYER_TRAIL)
+  trail.setMatrixAt(index, matrix)
+}
+
+// はじめは領域の外側にいて、交点を越えるたびに外と内が入れ替わる
+let outsideCount = 0
+let insideCount = 0
+for (let i = 0; i + 1 < bounds.length; i++) {
+  // 区切りを越えた回数が偶数なら外側、奇数なら内側
+  if (i % 2 === 0) {
+    setSpan(outsideTrail, outsideCount++, bounds[i], bounds[i + 1])
+  } else {
+    setSpan(insideTrail, insideCount++, bounds[i], bounds[i + 1])
+  }
+}
+outsideTrail.count = outsideCount
+insideTrail.count = insideCount
+scene.add(outsideTrail)
+scene.add(insideTrail)
+
+// 走査線を左からたどっている、いまの位置
+const marker = new Mesh(new CircleGeometry(0.075, 24), new MeshBasicMaterial({ color: "#f2766a" }))
+marker.position.set(worldXOf(TRAVELED), scanY, LAYER_MARKER)
+scene.add(marker)
+```
+
+:::
 
 :::Example
 山が`2`つ並んだ形の領域を思いうかべ、その上に`1`本のスキャンラインを左から右へ引いてみます。
