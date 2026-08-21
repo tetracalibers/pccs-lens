@@ -65,6 +65,17 @@ let nodeIndex = new Map()
 /** id → 走査結果のエッジ。シミュレーションのリンクを作るのに使う。 */
 let edgeIndex = new Map()
 
+/** 自己リンクを持つページのパス。ヘッダーの「自己リンク」での絞り込みに使う。 */
+let selfLinkPaths = new Set()
+
+/**
+ * ヘッダーのチップでの絞り込み（`broken` / `empty` / `draft` / `published` / `self-link`）。
+ *
+ * 空なら絞り込みなし。複数選ぶと OR（どれかに該当すれば残る）。**配置には触らない** —
+ * シミュレーションのノードも囲みもそのままで、該当しないノードとその線だけを隠す。
+ */
+const stateFocus = new Set()
+
 /** ユニット id の並び。初期配置のスロット割り当てに使う（走査結果の順）。 */
 let unitOrder = []
 
@@ -81,8 +92,11 @@ const pumpPositions = () => {
   })
 }
 
+/** 画面に出ているか（フィルタでもチップの絞り込みでも隠れていないか）。 */
+const isShown = (element) => !element.hasClass("hidden") && !element.hasClass("filtered-out")
+
 const fitVisible = () => {
-  const visible = cy.elements().not(".hidden")
+  const visible = cy.elements().filter(isShown)
   if (visible.nonempty()) cy.fit(visible, 60)
 }
 
@@ -117,51 +131,87 @@ const renderRelayoutButton = () => {
     : "ユニットの中心から配置し直す"
 }
 
+/**
+ * ヘッダーのチップを 1 つ作る。
+ *
+ * `focus` を持つチップは絞り込みのトグルにする。**素のチェックボックス + label** で組み、
+ * 見た目だけ CSS でピルにしている（`aria-pressed` を付けたボタンではなく、ネイティブの
+ * トグルとして読み上げ・キーボード操作が効くようにするため）。
+ */
+const renderChip = ({ label, value, modifier, focus, title }) => {
+  const className = `stat${modifier ? ` stat--${modifier}` : ""}`
+
+  const count = document.createElement("span")
+  count.className = "stat__value"
+  count.textContent = String(value)
+
+  if (!focus) {
+    const wrapper = document.createElement("span")
+    wrapper.className = className
+    if (title) wrapper.title = title
+    wrapper.append(document.createTextNode(label), count)
+    return wrapper
+  }
+
+  const wrapper = document.createElement("span")
+  wrapper.className = `${className} stat--toggle`
+
+  const input = document.createElement("input")
+  input.type = "checkbox"
+  input.className = "stat__checkbox"
+  input.id = `stat-focus-${focus}`
+  input.checked = stateFocus.has(focus)
+  input.addEventListener("change", () => {
+    if (input.checked) stateFocus.add(focus)
+    else stateFocus.delete(focus)
+    applyStateFocus()
+  })
+
+  const text = document.createElement("label")
+  text.className = "stat__label"
+  text.htmlFor = input.id
+  text.title = title ?? `${label}のページだけを表示する（配置は動かない）`
+  text.append(document.createTextNode(label), count)
+
+  wrapper.append(input, text)
+  return wrapper
+}
+
 const renderStats = () => {
   const { stats } = data
   const chips = [
     { label: "ページ", value: stats.pages },
-    { label: "本文なし", value: stats.empty, modifier: "empty" },
-    { label: "draft", value: stats.draft, modifier: "draft" },
-    { label: "公開済", value: stats.published },
-    { label: "リンク切れ", value: stats.broken, modifier: "broken" },
+    { label: "本文なし", value: stats.empty, modifier: "empty", focus: "empty" },
+    { label: "draft", value: stats.draft, modifier: "draft", focus: "draft" },
+    { label: "公開済", value: stats.published, focus: "published" },
+    { label: "リンク切れ", value: stats.broken, modifier: "broken", focus: "broken" },
     { label: "リンク", value: stats.rawLinks },
     { label: "エッジ", value: stats.edges }
   ]
 
   statsElement.replaceChildren()
 
-  for (const chip of chips) {
-    const wrapper = document.createElement("span")
-    wrapper.className = `stat${chip.modifier ? ` stat--${chip.modifier}` : ""}`
-    const value = document.createElement("span")
-    value.className = "stat__value"
-    value.textContent = String(chip.value)
-    wrapper.append(document.createTextNode(chip.label), value)
-    statsElement.append(wrapper)
-  }
+  for (const chip of chips) statsElement.append(renderChip(chip))
 
   for (const warning of [
     {
       label: "所属不明",
       value: stats.unresolvedUnits,
+      modifier: "warn",
       title: "YAML に未登録で、所属ユニットが解決できないページ"
     },
     {
       label: "自己リンク",
       value: stats.selfLinks.length,
-      title: stats.selfLinks.map((link) => `${link.path} L${link.line}`).join("\n")
+      modifier: "warn",
+      focus: "self-link",
+      title: `自己リンクのあるページだけを表示する（配置は動かない）\n${stats.selfLinks
+        .map((link) => `${link.path} L${link.line}`)
+        .join("\n")}`
     }
   ]) {
     if (!warning.value) continue
-    const wrapper = document.createElement("span")
-    wrapper.className = "stat stat--warn"
-    wrapper.title = warning.title
-    const value = document.createElement("span")
-    value.className = "stat__value"
-    value.textContent = String(warning.value)
-    wrapper.append(document.createTextNode(warning.label), value)
-    statsElement.append(wrapper)
+    statsElement.append(renderChip(warning))
   }
 
   const time = document.createElement("span")
@@ -180,6 +230,36 @@ const renderSidePanel = () => {
   })
 }
 
+/**
+ * ヘッダーのチップでの絞り込みを反映する。
+ *
+ * 隠すのは表示だけで、シミュレーションのノードからは外さない（座標を保つため）。囲みも
+ * そのまま残す — メンバーが隠れても輪郭は動かないので、「どのユニットのどこに居たか」の
+ * 手がかりになる。
+ */
+const applyStateFocus = () => {
+  const matches = (node) => {
+    if (stateFocus.size === 0) return true
+    if (stateFocus.has(node.data("state"))) return true
+    return stateFocus.has("self-link") && selfLinkPaths.has(node.id())
+  }
+
+  cy.batch(() => {
+    for (const node of cy.nodes().toArray()) {
+      node.toggleClass("filtered-out", !matches(node))
+    }
+    // 端点のどちらかが隠れた線は出さない。
+    for (const edge of cy.edges().toArray()) {
+      edge.toggleClass(
+        "filtered-out",
+        edge.source().hasClass("filtered-out") || edge.target().hasClass("filtered-out")
+      )
+    }
+  })
+
+  updateFocus()
+}
+
 /** 選択中のノードの周辺だけを浮かせる。 */
 const updateFocus = () => {
   cy.batch(() => {
@@ -188,7 +268,7 @@ const updateFocus = () => {
 
     if (!selectedPath) return
     const node = cy.$id(selectedPath)
-    if (node.empty() || node.hasClass("hidden")) return
+    if (node.empty() || !isShown(node)) return
 
     node.select()
     const neighborhood = node.closedNeighborhood()
@@ -205,7 +285,7 @@ const select = (path, { center = false } = {}) => {
 
   if (center && path) {
     const node = cy.$id(path)
-    if (node.nonempty() && !node.hasClass("hidden")) {
+    if (node.nonempty() && isShown(node)) {
       cy.animate({ center: { eles: node } }, { duration: 220 })
     }
   }
@@ -271,7 +351,7 @@ const applyFilters = ({ replace = false } = {}) => {
     isFirstLoad = false
   }
 
-  updateFocus()
+  applyStateFocus()
 }
 
 /** 走査結果を受け取って画面全体を更新する。 */
@@ -279,6 +359,7 @@ const update = (next) => {
   data = next
   nodeIndex = new Map(data.nodes.map((node) => [node.id, node]))
   edgeIndex = new Map(data.edges.map((edge) => [edge.id, edge]))
+  selfLinkPaths = new Set(data.stats.selfLinks.map((link) => link.path))
   unitOrder = data.units.map((unit) => unit.id)
   syncElements(cy, data)
   filters.setData(data)

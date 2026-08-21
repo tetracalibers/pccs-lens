@@ -126,6 +126,17 @@ export const GRAPH_STYLE = [
   {
     selector: ".hidden",
     style: { display: "none" }
+  },
+  {
+    // ヘッダーのチップでの絞り込みから外れたもの。`.hidden`（フィルタ）とは別軸で、
+    // **配置には一切触らず**表示だけを落とす。
+    //
+    // `display: none` にしないのは BubbleSets のため。囲みはメンバーの `boundingBox()` から
+    // 形を決めるが、`display: none` の要素は原点の 0 サイズとして返るので、絞り込むだけで
+    // 囲みが原点へ引き伸ばされてしまう。透明にして当たり判定だけ切る形にすれば、囲みは
+    // 絞り込みの前後で 1 px も動かない。
+    selector: ".filtered-out",
+    style: { opacity: 0, "text-opacity": 0, events: "no" }
   }
 ]
 

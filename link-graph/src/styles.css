@@ -111,6 +111,47 @@ body {
   color: var(--state-draft);
 }
 
+/* --- 絞り込みのトグルになっているチップ --- */
+
+/* チェックボックスは見せずに（見た目はピル）、フォーカスとキーボード操作は残す。 */
+.stat__checkbox {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* 押せることが分かるよう、絞り込んでいなくても枠線を出しておく。 */
+.stat__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 1px 8px;
+  border: 1px solid var(--ui-border);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.stat__label:hover {
+  border-color: var(--ui-text-muted);
+}
+
+.stat__checkbox:focus-visible + .stat__label {
+  outline: 2px solid var(--ui-accent);
+  outline-offset: 1px;
+}
+
+/* 絞り込み中。数字は状態の色を保ち、枠と地色で「効いている」ことを示す。 */
+.stat__checkbox:checked + .stat__label {
+  border-color: var(--ui-accent);
+  background: color-mix(in srgb, var(--ui-accent) 10%, transparent);
+  color: var(--ui-accent);
+}
+
 /* --- サイドバー（フィルタ・凡例） --- */
 
 .sidebar {
