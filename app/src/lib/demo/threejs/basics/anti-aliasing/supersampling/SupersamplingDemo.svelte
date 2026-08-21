@@ -14,12 +14,12 @@
 </script>
 
 <ThreeDemoCanvas
-  ariaLabel="図形の輪郭がかかった画素を格子状の区画に分け、各区画の中心で色を取ったサンプリング点と、その色を平均して塗った画素を並べた図。点の数を増やすと、図形側の点の割合が実際の面積比に近づく（ホイールで拡大縮小）"
+  ariaLabel="サンプリング点の色の平均で描いた画像、その中の1画素を拡大して区画とサンプリング点を示した図、そしてその点の色を平均して塗った画素を、左から順に並べた図。点の数を増やすと画像の輪郭のギザギザが目立たなくなり、図形側の点の割合が実際の面積比に近づく（ホイールで拡大縮小）"
   createScene={createSupersamplingScene}
   {params}
-  aspectRatio="16 / 9"
-  camera={{ position: [0, 0, 3.0] }}
-  orbit={{ enableRotate: false, minDistance: 2, maxDistance: 7 }}
+  aspectRatio="2 / 1"
+  camera={{ position: [0, 0, 3.5] }}
+  orbit={{ enableRotate: false, minDistance: 2.5, maxDistance: 8 }}
   buildPane={(pane, p) => {
     pane.addBinding(p, "samples", { min: 1, max: 6, step: 1, label: "サンプリング点（縦横）" })
     pane.addBinding(p, "angle", { min: 0, max: 180, step: 1, label: "輪郭の向き" })

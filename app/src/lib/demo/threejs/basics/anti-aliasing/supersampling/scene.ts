@@ -3,6 +3,7 @@ import {
   CanvasTexture,
   CircleGeometry,
   ConeGeometry,
+  DataTexture,
   Float32BufferAttribute,
   InstancedMesh,
   LineBasicMaterial,
@@ -11,6 +12,7 @@ import {
   Matrix4,
   Mesh,
   MeshBasicMaterial,
+  NearestFilter,
   Plane,
   PlaneGeometry,
   Scene,
@@ -45,12 +47,37 @@ type SceneContext = {
   params: SupersamplingParams
 }
 
-/** 拡大して見せる画素 1 つの 1 辺と、2 つ並べる間隔・高さ */
-const PIXEL = 1.5
-const PIXEL_GAP = 0.8
-const PIXEL_X = (PIXEL + PIXEL_GAP) / 2
-const PIXEL_Y = -0.15
-const PIXEL_TOP = PIXEL_Y + PIXEL / 2
+/** 画像の画素数と、画素 1 つの大きさ */
+const IMAGE_COLUMNS = 10
+const IMAGE_ROWS = 8
+const IMAGE_PITCH = 0.175
+const IMAGE_WIDTH = IMAGE_COLUMNS * IMAGE_PITCH
+const IMAGE_HEIGHT = IMAGE_ROWS * IMAGE_PITCH
+
+/** 拡大して見せる画素の 1 辺。画像と背の高さを揃える */
+const PIXEL = IMAGE_HEIGHT
+
+/** 画像の中の、拡大して見せる画素（左下を 0 とした列と行） */
+const TARGET_COLUMN = 5
+const TARGET_ROW = 4
+
+/** 画像と拡大図の間（引き出し線）、拡大図と平均した色の間（矢印）の空き */
+const CALLOUT_GAP = 0.5
+const ARROW_GAP = 0.45
+
+/** 3 つのパネルを横一列に並べたときの、中心の x と共通の y */
+const PANEL_Y = -0.12
+const CONTENT_WIDTH = IMAGE_WIDTH + CALLOUT_GAP + PIXEL + ARROW_GAP + PIXEL
+const IMAGE_X = -CONTENT_WIDTH / 2 + IMAGE_WIDTH / 2
+const PIXEL_X = IMAGE_X + IMAGE_WIDTH / 2 + CALLOUT_GAP + PIXEL / 2
+const AVERAGE_X = PIXEL_X + PIXEL / 2 + ARROW_GAP + PIXEL / 2
+
+/** 拡大して見せる画素の中心（画像の中での位置） */
+const TARGET_X = IMAGE_X - IMAGE_WIDTH / 2 + (TARGET_COLUMN + 0.5) * IMAGE_PITCH
+const TARGET_Y = PANEL_Y - IMAGE_HEIGHT / 2 + (TARGET_ROW + 0.5) * IMAGE_PITCH
+
+/** 画像の中で拡大している画素を囲む枠の太さ。線は太さを変えられないので長方形 4 つで描く */
+const TARGET_FRAME_WIDTH = 0.022
 
 /** 1 辺あたりのサンプリング点の数の上限。点と区画の境目をこの数に合わせて先に確保しておく */
 const MAX_SAMPLES_PER_SIDE = 6
@@ -58,18 +85,18 @@ const MAX_SAMPLES = MAX_SAMPLES_PER_SIDE * MAX_SAMPLES_PER_SIDE
 
 /** サンプリング点の大きさ。区画の大きさに比例させ、点が大きくなりすぎないよう上限を設ける */
 const DOT_SCALE = 0.22
-const DOT_MAX_RADIUS = 0.075
+const DOT_MAX_RADIUS = 0.07
 /** 点の下に敷く縁を、点の半径の何倍にするか */
 const RING_RATIO = 1.5
 
-/** 左の画素から右の画素へ向かう矢印。全体の長さと、軸の太さ・矢じりの大きさ */
-const ARROW_SPAN = 0.5
+/** 拡大図から平均した色へ向かう矢印。全体の長さと、軸の太さ・矢じりの大きさ */
+const ARROW_SPAN = 0.38
 const ARROW_THICKNESS = 0.03
-const ARROW_HEAD_HEIGHT = 0.18
-const ARROW_HEAD_RADIUS = 0.075
+const ARROW_HEAD_HEIGHT = 0.15
+const ARROW_HEAD_RADIUS = 0.065
 
 /** 見出しの文字の高さ（ワールド座標での大きさ）。幅は文字数に応じて決まる */
-const LABEL_HEIGHT = 0.18
+const LABEL_HEIGHT = 0.16
 
 /** ラベルの文字を描く canvas の高さ（テクスチャの解像度）と左右の余白、書体 */
 const LABEL_TEXTURE_HEIGHT = 128
@@ -85,6 +112,7 @@ const GRID_COLOR = "#7d8794"
 const FRAME_COLOR = "#c8ccd4"
 const ARROW_COLOR = "#9aa3b0"
 const LABEL_COLOR = "#c9d2de"
+const TARGET_COLOR = "#f5f7fa"
 
 /**
  * xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z。
@@ -155,6 +183,33 @@ const applyColor = (material: MeshBasicMaterial, { r, g, b }: Rgb) => {
   material.color.setRGB(r / 255, g / 255, b / 255, SRGBColorSpace)
 }
 
+/** 中心 (cx, cy)・1 辺 size の正方形の枠を、太さ width の細長い長方形 4 つとして組む */
+const frameVertices = (cx: number, cy: number, size: number, width: number, z: number) => {
+  const outer = size / 2 + width / 2
+  const inner = size / 2 - width / 2
+  // 上・下・左・右の 4 本。角は上下の帯で埋める
+  const bars = [
+    [cx - outer, cy + inner, cx + outer, cy + outer],
+    [cx - outer, cy - outer, cx + outer, cy - inner],
+    [cx - outer, cy - inner, cx - inner, cy + inner],
+    [cx + inner, cy - inner, cx + outer, cy + inner]
+  ]
+
+  const points: Vector3[] = []
+  for (const [x0, y0, x1, y1] of bars) {
+    points.push(
+      new Vector3(x0, y0, z),
+      new Vector3(x1, y0, z),
+      new Vector3(x1, y1, z),
+      new Vector3(x0, y0, z),
+      new Vector3(x1, y1, z),
+      new Vector3(x0, y1, z)
+    )
+  }
+
+  return points
+}
+
 /**
  * 文字を描いた canvas をテクスチャにして、常にカメラを向く板（Sprite）にする。
  * 文字数も書体による字幅も一定でないので、文字の幅を測って板の横幅を決める
@@ -201,13 +256,43 @@ export const createSupersamplingScene = ({ scene, renderer, params }: SceneConte
   // これが無いと図形が画素いっぱいに広がってしまうので、記事に載せるコードにも含める
   renderer.localClippingEnabled = true
 
-  // 左の画素の地。図形が覆っていない部分は背景の色になる。
+  // 画像。各画素の色を点の色の平均から求め、1 画素 1 テクセルのテクスチャに焼いて貼る。
+  // 拡大しても画素が混ざらないよう、補間なし（NearestFilter）で貼る
+  const imageData = new Uint8Array(IMAGE_COLUMNS * IMAGE_ROWS * 4)
+  const imageTexture = new DataTexture(imageData, IMAGE_COLUMNS, IMAGE_ROWS)
+  imageTexture.colorSpace = SRGBColorSpace
+  imageTexture.magFilter = NearestFilter
+  imageTexture.minFilter = NearestFilter
+  const imageGeometry = new PlaneGeometry(IMAGE_WIDTH, IMAGE_HEIGHT)
+  const imageMaterial = new MeshBasicMaterial({ map: imageTexture })
+  const image = new Mesh(imageGeometry, imageMaterial)
+  image.position.set(IMAGE_X, PANEL_Y, 0)
+  scene.add(image)
+
+  // 画像の中で、いま拡大している 1 画素を囲む枠
+  const targetFrameGeometry = new BufferGeometry().setFromPoints(
+    frameVertices(TARGET_X, TARGET_Y, IMAGE_PITCH, TARGET_FRAME_WIDTH, LAYER_EDGE)
+  )
+  const targetFrameMaterial = new MeshBasicMaterial({ color: TARGET_COLOR })
+  scene.add(new Mesh(targetFrameGeometry, targetFrameMaterial))
+
+  // その画素と拡大図を結ぶ引き出し線。画素の右辺の両端から、拡大図の左辺の両端へ引く
+  const calloutGeometry = new BufferGeometry().setFromPoints([
+    new Vector3(TARGET_X + IMAGE_PITCH / 2, TARGET_Y + IMAGE_PITCH / 2, LAYER_EDGE),
+    new Vector3(PIXEL_X - PIXEL / 2, PANEL_Y + PIXEL / 2, LAYER_EDGE),
+    new Vector3(TARGET_X + IMAGE_PITCH / 2, TARGET_Y - IMAGE_PITCH / 2, LAYER_EDGE),
+    new Vector3(PIXEL_X - PIXEL / 2, PANEL_Y - PIXEL / 2, LAYER_EDGE)
+  ])
+  const calloutMaterial = new LineBasicMaterial({ color: ARROW_COLOR })
+  scene.add(new LineSegments(calloutGeometry, calloutMaterial))
+
+  // 拡大した画素の地。図形が覆っていない部分は背景の色になる。
   // 指定した色をそのままの濃さで見せたいので、陰影の付かない材質にする
   const pixelGeometry = new PlaneGeometry(PIXEL, PIXEL)
   const backgroundMaterial = new MeshBasicMaterial()
   applyColor(backgroundMaterial, BACKGROUND)
   const backgroundPixel = new Mesh(pixelGeometry, backgroundMaterial)
-  backgroundPixel.position.set(-PIXEL_X, PIXEL_Y, 0)
+  backgroundPixel.position.set(PIXEL_X, PANEL_Y, 0)
   scene.add(backgroundPixel)
 
   // 画素にかかった図形。画素と同じ大きさの板を輪郭の直線でクリッピングし、図形側だけを残す。
@@ -216,7 +301,7 @@ export const createSupersamplingScene = ({ scene, renderer, params }: SceneConte
   const figureMaterial = new MeshBasicMaterial({ clippingPlanes: [figurePlane] })
   applyColor(figureMaterial, FIGURE)
   const figurePixel = new Mesh(pixelGeometry, figureMaterial)
-  figurePixel.position.set(-PIXEL_X, PIXEL_Y, LAYER_FIGURE)
+  figurePixel.position.set(PIXEL_X, PANEL_Y, LAYER_FIGURE)
   scene.add(figurePixel)
 
   // 画素を分けた区画の境目。点の数が変わるたびに引き直すので、頂点は上限の数だけ確保しておく
@@ -255,10 +340,10 @@ export const createSupersamplingScene = ({ scene, renderer, params }: SceneConte
   // 右の画素。サンプリング点の色を平均した色で塗る
   const averageMaterial = new MeshBasicMaterial()
   const averagePixel = new Mesh(pixelGeometry, averageMaterial)
-  averagePixel.position.set(PIXEL_X, PIXEL_Y, 0)
+  averagePixel.position.set(AVERAGE_X, PANEL_Y, 0)
   scene.add(averagePixel)
 
-  // 画素の枠。1 辺 1 の正方形として作り、置く場所に合わせて伸ばす
+  // 画像と 2 つの画素の枠。1 辺 1 の正方形として作り、置く場所に合わせて伸ばす
   const outlineGeometry = new BufferGeometry().setAttribute(
     "position",
     new Float32BufferAttribute(
@@ -273,34 +358,41 @@ export const createSupersamplingScene = ({ scene, renderer, params }: SceneConte
     )
   )
   const outlineMaterial = new LineBasicMaterial({ color: FRAME_COLOR })
-  const outlinePlacements = [-PIXEL_X, PIXEL_X]
-  outlinePlacements.forEach((x) => {
+  const outlinePlacements = [
+    { x: IMAGE_X, width: IMAGE_WIDTH, height: IMAGE_HEIGHT },
+    { x: PIXEL_X, width: PIXEL, height: PIXEL },
+    { x: AVERAGE_X, width: PIXEL, height: PIXEL }
+  ]
+  outlinePlacements.forEach(({ x, width, height }) => {
     const outline = new LineLoop(outlineGeometry, outlineMaterial)
-    outline.position.set(x, PIXEL_Y, LAYER_EDGE)
-    outline.scale.set(PIXEL, PIXEL, 1)
+    outline.position.set(x, PANEL_Y, LAYER_EDGE)
+    outline.scale.set(width, height, 1)
     scene.add(outline)
   })
 
-  // 左の画素から右の画素へ向かう矢印。軸は細長い長方形、矢じりは円錐で描く
+  // 拡大図から平均した色へ向かう矢印。軸は細長い長方形、矢じりは円錐で描く
+  const arrowCenterX = (PIXEL_X + AVERAGE_X) / 2
   const arrowMaterial = new MeshBasicMaterial({ color: ARROW_COLOR })
   const shaftGeometry = new PlaneGeometry(ARROW_SPAN - ARROW_HEAD_HEIGHT, ARROW_THICKNESS)
   const shaft = new Mesh(shaftGeometry, arrowMaterial)
-  shaft.position.set(-ARROW_HEAD_HEIGHT / 2, PIXEL_Y, LAYER_EDGE)
+  shaft.position.set(arrowCenterX - ARROW_HEAD_HEIGHT / 2, PANEL_Y, LAYER_EDGE)
   scene.add(shaft)
 
   // ConeGeometry は +y 向きに尖っているので、右を向くように回す
   const headGeometry = new ConeGeometry(ARROW_HEAD_RADIUS, ARROW_HEAD_HEIGHT, 12)
   const head = new Mesh(headGeometry, arrowMaterial)
-  head.position.set((ARROW_SPAN - ARROW_HEAD_HEIGHT) / 2, PIXEL_Y, LAYER_EDGE)
+  head.position.set(arrowCenterX + (ARROW_SPAN - ARROW_HEAD_HEIGHT) / 2, PANEL_Y, LAYER_EDGE)
   head.rotation.z = -Math.PI / 2
   scene.add(head)
 
+  const labelY = PANEL_Y + PIXEL / 2 + 0.22
   const labels = [
-    { text: "1画素とサンプリング点", x: -PIXEL_X, y: PIXEL_TOP + 0.22 },
-    { text: "平均した色で塗った画素", x: PIXEL_X, y: PIXEL_TOP + 0.22 }
-  ].map(({ text, x, y }) => {
+    { text: "点の平均で描いた画像", x: IMAGE_X },
+    { text: "拡大した1画素", x: PIXEL_X },
+    { text: "平均した色の画素", x: AVERAGE_X }
+  ].map(({ text, x }) => {
     const label = createLabel(text, LABEL_HEIGHT)
-    label.sprite.position.set(x, y, LAYER_LABEL)
+    label.sprite.position.set(x, labelY, LAYER_LABEL)
     scene.add(label.sprite)
     return label
   })
@@ -317,24 +409,54 @@ export const createSupersamplingScene = ({ scene, renderer, params }: SceneConte
       const normalX = Math.cos(radians)
       const normalY = Math.sin(radians)
 
+      // 画像の各画素を、拡大図と同じやり方（区画の中心で色を取り、平均する）で塗る。
+      // 座標は拡大している画素の中心を原点、画素の 1 辺を 1 として数えるので、
+      // 列と行の差がそのまま座標のずれになる
+      for (let row = 0; row < IMAGE_ROWS; row++) {
+        for (let column = 0; column < IMAGE_COLUMNS; column++) {
+          let red = 0
+          let green = 0
+          let blue = 0
+
+          for (let sampleRow = 0; sampleRow < samples; sampleRow++) {
+            for (let sampleColumn = 0; sampleColumn < samples; sampleColumn++) {
+              const x = column - TARGET_COLUMN + (sampleColumn + 0.5) / samples - 0.5
+              const y = row - TARGET_ROW + (sampleRow + 0.5) / samples - 0.5
+              const color = normalX * x + normalY * y <= offset ? FIGURE : BACKGROUND
+              red += color.r
+              green += color.g
+              blue += color.b
+            }
+          }
+
+          // テクスチャの行はテクスチャ座標にならって下から数える
+          const at = (row * IMAGE_COLUMNS + column) * 4
+          imageData[at] = Math.round(red / total)
+          imageData[at + 1] = Math.round(green / total)
+          imageData[at + 2] = Math.round(blue / total)
+          imageData[at + 3] = 255
+        }
+      }
+      imageTexture.needsUpdate = true
+
       // 図形側だけを残すクリッピング面。板の中心を原点とした条件を、ワールド座標に直して渡す
       figurePlane.normal.set(-normalX, -normalY, 0)
-      figurePlane.constant = offset * PIXEL + normalX * -PIXEL_X + normalY * PIXEL_Y
+      figurePlane.constant = offset * PIXEL + normalX * PIXEL_X + normalY * PANEL_Y
 
       // 区画の境目。画素の 1 辺を点の数で等分した位置に引く
       const pitch = PIXEL / samples
       let vertex = 0
       for (let index = 0; index <= samples; index++) {
         const shift = -PIXEL / 2 + index * pitch
-        gridPosition.setXYZ(vertex++, -PIXEL_X + shift, PIXEL_Y - PIXEL / 2, 0)
-        gridPosition.setXYZ(vertex++, -PIXEL_X + shift, PIXEL_Y + PIXEL / 2, 0)
-        gridPosition.setXYZ(vertex++, -PIXEL_X - PIXEL / 2, PIXEL_Y + shift, 0)
-        gridPosition.setXYZ(vertex++, -PIXEL_X + PIXEL / 2, PIXEL_Y + shift, 0)
+        gridPosition.setXYZ(vertex++, PIXEL_X + shift, PANEL_Y - PIXEL / 2, 0)
+        gridPosition.setXYZ(vertex++, PIXEL_X + shift, PANEL_Y + PIXEL / 2, 0)
+        gridPosition.setXYZ(vertex++, PIXEL_X - PIXEL / 2, PANEL_Y + shift, 0)
+        gridPosition.setXYZ(vertex++, PIXEL_X + PIXEL / 2, PANEL_Y + shift, 0)
       }
       gridPosition.needsUpdate = true
       gridGeometry.setDrawRange(0, vertex)
 
-      // 画素を samples × samples の区画に分け、それぞれの中心を 1 点として色を求める。
+      // 拡大した画素を samples × samples の区画に分け、それぞれの中心を 1 点として色を求める。
       // 点の色は、図形側なら図形の色、そうでなければ背景の色になる
       const radius = Math.min(pitch * DOT_SCALE, DOT_MAX_RADIUS)
       let sampleIndex = 0
@@ -356,8 +478,8 @@ export const createSupersamplingScene = ({ scene, renderer, params }: SceneConte
           sumGreen += color.g
           sumBlue += color.b
 
-          const dotX = -PIXEL_X + x * PIXEL
-          const dotY = PIXEL_Y + y * PIXEL
+          const dotX = PIXEL_X + x * PIXEL
+          const dotY = PANEL_Y + y * PIXEL
 
           matrix.makeScale(radius, radius, 1)
           matrix.setPosition(dotX, dotY, 0)
@@ -390,7 +512,14 @@ export const createSupersamplingScene = ({ scene, renderer, params }: SceneConte
       params.exact = areaOf(overlap).toFixed(2)
     },
     dispose: () => {
+      imageTexture.dispose()
       const disposables = [
+        imageGeometry,
+        imageMaterial,
+        targetFrameGeometry,
+        targetFrameMaterial,
+        calloutGeometry,
+        calloutMaterial,
         pixelGeometry,
         backgroundMaterial,
         figureMaterial,

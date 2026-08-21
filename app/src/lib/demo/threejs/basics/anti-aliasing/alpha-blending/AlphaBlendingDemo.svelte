@@ -6,14 +6,14 @@
   // blended は scene.ts が組み立てて書き戻す表示用の値なので、初期値は使われない
   const params: AlphaBlendingParams = {
     alpha: 0.7,
-    figure: { r: 255, g: 200, b: 87 },
-    background: { r: 61, g: 111, b: 168 },
+    figure: { r: 87, g: 131, b: 255 },
+    background: { r: 163, g: 60, b: 167 },
     blended: ""
   }
 </script>
 
 <ThreeDemoCanvas
-  ariaLabel="寄与率αだけ図形が覆った画素と、その寄与率で図形の色と背景の色を混ぜて塗った画素を並べた図。下の帯には、αを0から1まで動かしたときの画素の色が並ぶ（ホイールで拡大縮小）"
+  ariaLabel="背景の色で塗った画素の中に、図形を不透明度αで重ねた図。αを下げると図形が薄くなり、背景の色が透けて見えてくる。下の帯には、αを0から1まで動かしたときの混ぜた色が並ぶ（ホイールで拡大縮小）"
   createScene={createAlphaBlendingScene}
   {params}
   aspectRatio="16 / 9"
@@ -23,6 +23,6 @@
     pane.addBinding(p, "alpha", { min: 0, max: 1, step: 0.01, label: "寄与率 α" })
     pane.addBinding(p, "figure", { label: "図形の色 C_fg" })
     pane.addBinding(p, "background", { label: "背景の色 C_bg" })
-    pane.addBinding(p, "blended", { readonly: true, label: "画素の色 C" })
+    pane.addBinding(p, "blended", { readonly: true, label: "混ぜた色 C" })
   }}
 />

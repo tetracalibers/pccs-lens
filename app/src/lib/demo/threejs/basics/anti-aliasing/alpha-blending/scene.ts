@@ -1,7 +1,6 @@
 import {
   BufferGeometry,
   CanvasTexture,
-  ConeGeometry,
   DataTexture,
   Float32BufferAttribute,
   Group,
@@ -39,18 +38,10 @@ type SceneContext = {
   params: AlphaBlendingParams
 }
 
-/** 画素 1 つを表す正方形の 1 辺と、2 つ並べる間隔・高さ */
-const SQUARE = 1.1
-const SQUARE_GAP = 1.0
-const SQUARE_X = (SQUARE + SQUARE_GAP) / 2
+/** 画素 1 つを表す正方形の 1 辺と、置く高さ */
+const SQUARE = 1.4
 const SQUARE_Y = 0.34
 const SQUARE_TOP = SQUARE_Y + SQUARE / 2
-
-/** 左の画素から右の画素へ向かう矢印。全体の長さと、軸の太さ・矢じりの大きさ */
-const ARROW_SPAN = 0.5
-const ARROW_THICKNESS = 0.03
-const ARROW_HEAD_HEIGHT = 0.18
-const ARROW_HEAD_RADIUS = 0.075
 
 /** α を 0 から 1 まで動かしたときの色を並べた帯と、並べる色の数 */
 const RAMP_WIDTH = 3.2
@@ -58,8 +49,12 @@ const RAMP_HEIGHT = 0.3
 const RAMP_Y = -0.95
 const RAMP_STEPS = 21
 
-/** 帯の下で現在の α を指す、三角の印の大きさ */
-const MARKER_SIZE = 0.14
+/**
+ * 帯の中で現在の α を指す線の太さ。帯はどんな色にもなりうるので、
+ * 暗い縁の上に明るい芯を重ねて、どちらの色の上でも線として見えるようにする
+ */
+const MARKER_WIDTH = 0.03
+const MARKER_EDGE_WIDTH = 0.07
 
 /** 軸の名前や見出しの文字の高さ（ワールド座標での大きさ）。幅は文字数に応じて決まる */
 const LABEL_HEIGHT = 0.18
@@ -70,21 +65,34 @@ const LABEL_TEXTURE_HEIGHT = 128
 const LABEL_TEXTURE_PADDING = 12
 const LABEL_FONT = "bold 92px sans-serif"
 
-// 背景（暗めのグレー）の上で、枠・矢印・文字を互いに見分けられる色にする
+// 背景（暗めのグレー）の上で、枠・文字・帯の中の線を互いに見分けられる色にする
 const FRAME_COLOR = "#c8ccd4"
 const LABEL_COLOR = "#c9d2de"
-const ARROW_COLOR = "#9aa3b0"
+const MARKER_CORE_COLOR = "#f5f7fa"
+const MARKER_EDGE_COLOR = "#26282d"
 
 /**
  * xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z。
  * 正面から見る構図に固定しているため、この厚みは絵には出ない
  */
-const LAYER_TRIANGLE = 0.01
+const LAYER_FIGURE = 0.01
 const LAYER_EDGE = 0.02
+const LAYER_MARKER_EDGE = 0.03
+const LAYER_MARKER = 0.04
 const LAYER_LABEL = 0.1
 
+/** 多角形の頂点 */
+type Point = [number, number]
+
+/** 画素の中に置く図形の大きさ（画素の 1 辺に対する比）と、角の丸み（図形の 1 辺に対する比） */
+const FIGURE_SIDE_RATIO = 0.72
+const FIGURE_CORNER_RATIO = 0.28
+
+/** 角の丸み 1 つを何本の線分で近似するか */
+const ROUND_SEGMENTS = 12
+
 /** 図全体を canvas の中央に寄せる位置。帯とその下のラベルの分だけ上へ寄せる */
-const LAYOUT_OFFSET = new Vector3(0, 0.15, 0)
+const LAYOUT_OFFSET = new Vector3(0, 0.09, 0)
 
 /**
  * 寄与率 α で図形の色と背景の色を混ぜる（アルファブレンディング）。
@@ -100,6 +108,35 @@ const blendChannel = (figure: number, background: number, alpha: number) =>
  */
 const applyColor = (material: MeshBasicMaterial, { r, g, b }: Rgb) => {
   material.color.setRGB(r / 255, g / 255, b / 255, SRGBColorSpace)
+}
+
+/**
+ * 画素の中央に置く、背景にすっぽり包まれる図形の輪郭。角丸の正方形にとる。
+ * α は図形の不透明度として効くので、形も大きさも α では変わらない
+ */
+const figureOutline = (): Point[] => {
+  const side = SQUARE * FIGURE_SIDE_RATIO
+  const radius = side * FIGURE_CORNER_RATIO
+
+  // 角の丸みの中心（正方形の 4 隅から丸みの分だけ内側）を、反時計回りに並べる
+  const inset = side / 2 - radius
+  const centers: Point[] = [
+    [inset, inset],
+    [-inset, inset],
+    [-inset, -inset],
+    [inset, -inset]
+  ]
+
+  // 4 つの角を、90 度ずつの弧でつないで輪郭にする
+  const points: Point[] = []
+  centers.forEach(([cx, cy], index) => {
+    for (let step = 0; step <= ROUND_SEGMENTS; step++) {
+      const angle = (index * Math.PI) / 2 + (step * Math.PI) / 2 / ROUND_SEGMENTS
+      points.push([cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)])
+    }
+  })
+
+  return points
 }
 
 /**
@@ -148,27 +185,29 @@ export const createAlphaBlendingScene = ({ scene, params }: SceneContext) => {
   layout.position.copy(LAYOUT_OFFSET)
   scene.add(layout)
 
-  // 図形がかかった画素と、混ぜた色で塗った画素。
-  // 指定した色をそのままの濃さで見せたいので、陰影の付かない材質にする
+  // 画素の地。指定した色をそのままの濃さで見せたいので、陰影の付かない材質にする
   const squareGeometry = new PlaneGeometry(SQUARE, SQUARE)
 
   const baseMaterial = new MeshBasicMaterial()
   const base = new Mesh(squareGeometry, baseMaterial)
-  base.position.set(-SQUARE_X, SQUARE_Y, 0)
+  base.position.set(0, SQUARE_Y, 0)
   layout.add(base)
 
-  // 図形の境界。45 度の直線で正方形を分けるので、残る側は直角二等辺三角形になる
-  const trianglePosition = new Float32BufferAttribute(new Float32Array(3 * 3), 3)
-  const triangleGeometry = new BufferGeometry().setAttribute("position", trianglePosition)
-  const triangleMaterial = new MeshBasicMaterial()
-  const triangle = new Mesh(triangleGeometry, triangleMaterial)
-  triangle.position.z = LAYER_TRIANGLE
-  layout.add(triangle)
+  // 画素の中に置いた図形。形は動かさないので、頂点は中心から扇状に三角形へ分けて 1 度だけ組む。
+  // 頂点は画素の中心を原点として持ち、置く位置は mesh 側で与える
+  const outline = figureOutline()
+  const figurePoints: Vector3[] = []
+  outline.forEach(([x, y], index) => {
+    const [nextX, nextY] = outline[(index + 1) % outline.length]
+    figurePoints.push(new Vector3(0, 0, 0), new Vector3(x, y, 0), new Vector3(nextX, nextY, 0))
+  })
 
-  const blendedMaterial = new MeshBasicMaterial()
-  const blended = new Mesh(squareGeometry, blendedMaterial)
-  blended.position.set(SQUARE_X, SQUARE_Y, 0)
-  layout.add(blended)
+  // α を不透明度として効かせるので、混ぜる計算は GPU のアルファブレンディングが行う
+  const figureGeometry = new BufferGeometry().setFromPoints(figurePoints)
+  const figureMaterial = new MeshBasicMaterial({ transparent: true })
+  const figureRegion = new Mesh(figureGeometry, figureMaterial)
+  figureRegion.position.set(0, SQUARE_Y, LAYER_FIGURE)
+  layout.add(figureRegion)
 
   // α を 0 から 1 まで等間隔に刻んだときの画素の色。1 色 1 テクセルのテクスチャにして、
   // 色が混ざらないよう補間なし（NearestFilter）で貼る
@@ -199,8 +238,7 @@ export const createAlphaBlendingScene = ({ scene, params }: SceneContext) => {
   )
   const outlineMaterial = new LineBasicMaterial({ color: FRAME_COLOR })
   const outlinePlacements = [
-    { x: -SQUARE_X, y: SQUARE_Y, width: SQUARE, height: SQUARE },
-    { x: SQUARE_X, y: SQUARE_Y, width: SQUARE, height: SQUARE },
+    { x: 0, y: SQUARE_Y, width: SQUARE, height: SQUARE },
     { x: 0, y: RAMP_Y, width: RAMP_WIDTH, height: RAMP_HEIGHT }
   ]
   outlinePlacements.forEach(({ x, y, width, height }) => {
@@ -210,32 +248,23 @@ export const createAlphaBlendingScene = ({ scene, params }: SceneContext) => {
     layout.add(outline)
   })
 
-  // 左の画素から右の画素へ向かう矢印。軸は細長い長方形、矢じりは円錐で描く
-  const arrowMaterial = new MeshBasicMaterial({ color: ARROW_COLOR })
-  const shaftGeometry = new PlaneGeometry(ARROW_SPAN - ARROW_HEAD_HEIGHT, ARROW_THICKNESS)
-  const shaft = new Mesh(shaftGeometry, arrowMaterial)
-  shaft.position.set(-ARROW_HEAD_HEIGHT / 2, SQUARE_Y, LAYER_EDGE)
-  layout.add(shaft)
+  // 帯の中で現在の α を指す線。帯の高さいっぱいに引き、暗い縁を下に敷く
+  const markerEdgeGeometry = new PlaneGeometry(MARKER_EDGE_WIDTH, RAMP_HEIGHT)
+  const markerEdgeMaterial = new MeshBasicMaterial({ color: MARKER_EDGE_COLOR })
+  const markerEdge = new Mesh(markerEdgeGeometry, markerEdgeMaterial)
+  markerEdge.position.set(0, RAMP_Y, LAYER_MARKER_EDGE)
+  layout.add(markerEdge)
 
-  // ConeGeometry は +y 向きに尖っているので、右を向くように回す
-  const headGeometry = new ConeGeometry(ARROW_HEAD_RADIUS, ARROW_HEAD_HEIGHT, 12)
-  const head = new Mesh(headGeometry, arrowMaterial)
-  head.position.set((ARROW_SPAN - ARROW_HEAD_HEIGHT) / 2, SQUARE_Y, LAYER_EDGE)
-  head.rotation.z = -Math.PI / 2
-  layout.add(head)
-
-  // 帯の下で現在の α を指す印。上を向いた三角にする
-  const markerGeometry = new ConeGeometry(MARKER_SIZE / 2, MARKER_SIZE, 3)
-  const markerMaterial = new MeshBasicMaterial({ color: FRAME_COLOR })
+  const markerGeometry = new PlaneGeometry(MARKER_WIDTH, RAMP_HEIGHT)
+  const markerMaterial = new MeshBasicMaterial({ color: MARKER_CORE_COLOR })
   const marker = new Mesh(markerGeometry, markerMaterial)
-  marker.position.set(0, RAMP_Y - RAMP_HEIGHT / 2 - MARKER_SIZE / 2 - 0.02, LAYER_EDGE)
+  marker.position.set(0, RAMP_Y, LAYER_MARKER)
   layout.add(marker)
 
   const labels = [
-    { text: "図形がかかった画素", height: LABEL_HEIGHT, x: -SQUARE_X, y: SQUARE_TOP + 0.22 },
-    { text: "混ぜた色で塗った画素", height: LABEL_HEIGHT, x: SQUARE_X, y: SQUARE_TOP + 0.22 },
+    { text: "不透明度 α で重ねた図形", height: LABEL_HEIGHT, x: 0, y: SQUARE_TOP + 0.22 },
     {
-      text: "α を動かしたときの画素の色",
+      text: "α を動かしたときの混ぜた色",
       height: LABEL_HEIGHT,
       x: 0,
       y: RAMP_Y + RAMP_HEIGHT / 2 + 0.22
@@ -263,36 +292,15 @@ export const createAlphaBlendingScene = ({ scene, params }: SceneContext) => {
     update: () => {
       const { alpha, figure, background } = params
 
-      // 図形が覆う面積の割合が α になるよう、45 度の境界で正方形を分ける。
-      // α が半分以下なら図形が三角形、半分を超えたら覆われていない背景が三角形になる
-      const coversMost = alpha > 0.5
-      const leg = SQUARE * Math.sqrt(2 * (coversMost ? 1 - alpha : alpha))
+      // 地は背景の色、図形は図形の色。α は図形の不透明度として効かせる
+      applyColor(baseMaterial, background)
+      applyColor(figureMaterial, figure)
+      figureMaterial.opacity = alpha
 
-      applyColor(baseMaterial, coversMost ? figure : background)
-      applyColor(triangleMaterial, coversMost ? background : figure)
-
-      const left = -SQUARE_X - SQUARE / 2
-      const right = -SQUARE_X + SQUARE / 2
-      const bottom = SQUARE_Y - SQUARE / 2
-      const top = SQUARE_Y + SQUARE / 2
-      if (coversMost) {
-        // 覆われていない背景が、右上の角に三角形として残る
-        trianglePosition.setXYZ(0, right, top, 0)
-        trianglePosition.setXYZ(1, right - leg, top, 0)
-        trianglePosition.setXYZ(2, right, top - leg, 0)
-      } else {
-        // 図形が、左下の角から三角形として覆う
-        trianglePosition.setXYZ(0, left, bottom, 0)
-        trianglePosition.setXYZ(1, left + leg, bottom, 0)
-        trianglePosition.setXYZ(2, left, bottom + leg, 0)
-      }
-      trianglePosition.needsUpdate = true
-
-      // 寄与率の分だけ図形の色を、残りだけ背景の色を混ぜた色が、この画素の最終的な色になる
+      // 図形の内側に現れる色。GPU が混ぜた結果と同じものを、式のとおりに計算して読み出しに出す
       const red = blendChannel(figure.r, background.r, alpha)
       const green = blendChannel(figure.g, background.g, alpha)
       const blue = blendChannel(figure.b, background.b, alpha)
-      applyColor(blendedMaterial, { r: red, g: green, b: blue })
       params.blended = `R ${red} / G ${green} / B ${blue}`
 
       // 同じ混ぜ方を、α を 0 から 1 まで刻んだすべての値について行う
@@ -305,24 +313,25 @@ export const createAlphaBlendingScene = ({ scene, params }: SceneContext) => {
       }
       rampTexture.needsUpdate = true
 
-      // 印は帯の左端を α = 0、右端を α = 1 として滑らかに動かす
-      marker.position.x = -RAMP_WIDTH / 2 + alpha * RAMP_WIDTH
+      // 線は帯の左端を α = 0、右端を α = 1 として動かす。
+      // 線の太さの分だけ内側に寄せ、帯から食み出さないようにする
+      const markerSpan = RAMP_WIDTH - MARKER_EDGE_WIDTH
+      marker.position.x = -markerSpan / 2 + alpha * markerSpan
+      markerEdge.position.x = marker.position.x
     },
     dispose: () => {
       rampTexture.dispose()
       const disposables = [
         squareGeometry,
         baseMaterial,
-        triangleGeometry,
-        triangleMaterial,
-        blendedMaterial,
+        figureGeometry,
+        figureMaterial,
         rampGeometry,
         rampMaterial,
         outlineGeometry,
         outlineMaterial,
-        shaftGeometry,
-        headGeometry,
-        arrowMaterial,
+        markerEdgeGeometry,
+        markerEdgeMaterial,
         markerGeometry,
         markerMaterial
       ]

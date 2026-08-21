@@ -4,7 +4,6 @@ import {
   DataTexture,
   Float32BufferAttribute,
   LineBasicMaterial,
-  LineLoop,
   LineSegments,
   Mesh,
   MeshBasicMaterial,
@@ -47,8 +46,20 @@ const HALF_HEIGHT = IMAGE_HEIGHT / 2
 const MAX_COLUMNS = 12
 const MAX_ROWS = (MAX_COLUMNS * IMAGE_HEIGHT) / IMAGE_WIDTH
 
-/** 連続な図形の輪郭の頂点数の上限。長方形を直線 2 本で切るので、頂点は最大 8 つ */
-const MAX_OUTLINE_POINTS = 8
+/**
+ * 連続な図形の境界線の太さ。線（LineBasicMaterial）は太さを変えられないので、
+ * 細長い長方形（三角形 2 つ）として描く
+ */
+const OUTLINE_WIDTH = 0.03
+
+/** 境界線は 2 本で、1 本あたり三角形 2 つ（頂点 6 つ）を使う */
+const OUTLINE_VERTICES = 2 * 6
+
+/** 頂点が直線の上に載っているかの判定に使う許容誤差 */
+const ON_LINE_EPSILON = 1e-6
+
+/** 寄与率がちょうど 0・1 かの判定に使う許容誤差（面積の計算に丸め誤差が乗る） */
+const COVERAGE_EPSILON = 1e-6
 
 /** 寄与率の数値を描き込む canvas の解像度。画像と同じ縦横比にとる */
 const VALUE_CANVAS_WIDTH = 1080
@@ -59,19 +70,23 @@ const VALUE_FONT_SCALE = 0.3
 
 /**
  * 図形の色と背景の色。寄与率の分だけ図形の色を、残りだけ背景の色を混ぜた色が画素の色になる。
- * 背景はデモの地色と同じにとり、画像の外周だけを枠線で示す
+ * 背景はデモの地色と重ならない青にとる。地色と同じ色にすると、中間の寄与率の画素が
+ * 「混ざった色」ではなく「半透明の図形」に見えてしまう
  */
 const FIGURE_RGB = [255, 200, 87]
-const BACKGROUND_RGB = [38, 40, 45]
+const BACKGROUND_RGB = [61, 111, 168]
 
 // 背景（暗めのグレー）の上で、格子・図形の輪郭・数値を互いに見分けられる色にする
 const GRID_COLOR = "#7d8794"
 const FRAME_COLOR = "#c8ccd4"
-const OUTLINE_COLOR = "#6fd8ff"
+const OUTLINE_COLOR = "#f5f7fa"
 
-/** 寄与率の数値。塗りの濃い画素の上では暗い色、薄い画素の上では明るい色にする */
+/** 寄与率の数値。明るい画素の上では暗い色、暗い画素の上では明るい色にする */
 const VALUE_DARK = "#26282d"
 const VALUE_LIGHT = "#c9d2de"
+
+/** 数値の濃淡を切り替える下地の明るさ（0 から 255 の輝度） */
+const VALUE_LUMINANCE_THRESHOLD = 140
 
 /**
  * xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z。
@@ -158,10 +173,56 @@ const coverageOf = (
   return areaOf(overlap) / (size * size)
 }
 
-/** 寄与率の表示。`0` と `1` はそのまま、間の値は小数第 2 位までにする */
+/**
+ * 寄与率の表示。図形が覆い切った画素だけが `1`、まったくかかっていない画素だけが `0` になる。
+ * 小数第 2 位までの丸めで 1 未満の値が `1` に化けないよう、両端は `0.99`・`0.01` で止める
+ */
 const formatCoverage = (coverage: number) => {
-  const rounded = Math.round(coverage * 100) / 100
-  return rounded === 0 || rounded === 1 ? `${rounded}` : rounded.toFixed(2)
+  if (coverage >= 1 - COVERAGE_EPSILON) return "1"
+  if (coverage <= COVERAGE_EPSILON) return "0"
+
+  return Math.min(Math.max(coverage, 0.01), 0.99).toFixed(2)
+}
+
+/** 直線 nx * x + ny * y = offset が矩形の中に持つ線分。直線が矩形を通らなければ null */
+const segmentInRect = (
+  rect: Point[],
+  nx: number,
+  ny: number,
+  offset: number
+): [Point, Point] | null => {
+  // 矩形を直線の片側で切り取ると、切り口の辺が直線の上に載る
+  const onLine = clipHalfPlane(rect, nx, ny, offset).filter(
+    ([x, y]) => Math.abs(nx * x + ny * y - offset) < ON_LINE_EPSILON
+  )
+
+  return onLine.length >= 2 ? [onLine[0], onLine[onLine.length - 1]] : null
+}
+
+/** 線分を、太さ OUTLINE_WIDTH の細長い長方形（三角形 2 つ）として頂点配列へ書き込む */
+const pushThickSegment = (
+  position: Float32BufferAttribute,
+  vertex: number,
+  [[ax, ay], [bx, by]]: [Point, Point]
+) => {
+  const length = Math.hypot(bx - ax, by - ay)
+  if (length === 0) return vertex
+
+  // 線分に立てた法線の向きへ、太さの半分だけ両側へ広げた 4 つの角
+  const offsetX = (-(by - ay) / length) * (OUTLINE_WIDTH / 2)
+  const offsetY = ((bx - ax) / length) * (OUTLINE_WIDTH / 2)
+  const corners: Point[] = [
+    [ax + offsetX, ay + offsetY],
+    [ax - offsetX, ay - offsetY],
+    [bx - offsetX, by - offsetY],
+    [bx + offsetX, by + offsetY]
+  ]
+
+  for (const index of [0, 1, 2, 0, 2, 3]) {
+    position.setXYZ(vertex++, corners[index][0], corners[index][1], 0)
+  }
+
+  return vertex
 }
 
 /** 1 画素 1 テクセルのテクスチャ。拡大しても画素が混ざらないよう、補間なし（NearestFilter）で貼る */
@@ -212,11 +273,11 @@ export const createPixelCoverageScene = ({ scene, params }: SceneContext) => {
   frame.position.z = LAYER_FRAME
   scene.add(frame)
 
-  // 連続な図形の輪郭。画素の格子とは無関係に決まる、切れ目のない境界
-  const outlinePosition = new Float32BufferAttribute(new Float32Array(MAX_OUTLINE_POINTS * 3), 3)
+  // 連続な図形の境界。画素の格子とは無関係に決まる、切れ目のない境界線
+  const outlinePosition = new Float32BufferAttribute(new Float32Array(OUTLINE_VERTICES * 3), 3)
   const outlineGeometry = new BufferGeometry().setAttribute("position", outlinePosition)
-  const outlineMaterial = new LineBasicMaterial({ color: OUTLINE_COLOR })
-  const outline = new LineLoop(outlineGeometry, outlineMaterial)
+  const outlineMaterial = new MeshBasicMaterial({ color: OUTLINE_COLOR })
+  const outline = new Mesh(outlineGeometry, outlineMaterial)
   outline.position.z = LAYER_OUTLINE
   scene.add(outline)
 
@@ -303,7 +364,13 @@ export const createPixelCoverageScene = ({ scene, params }: SceneContext) => {
           pixelData[offset + 3] = 255
 
           if (valueContext && showValues) {
-            valueContext.fillStyle = coverage > 0.5 ? VALUE_DARK : VALUE_LIGHT
+            // 文字の濃淡は下地になった混色の明るさで選ぶ（青の上でも黄の上でも読めるように）
+            const luminance =
+              0.299 * pixelData[offset] +
+              0.587 * pixelData[offset + 1] +
+              0.114 * pixelData[offset + 2]
+            valueContext.fillStyle =
+              luminance > VALUE_LUMINANCE_THRESHOLD ? VALUE_DARK : VALUE_LIGHT
             // canvas は上から下へ数えるので、テクスチャの行とは上下が逆になる
             valueContext.fillText(
               formatCoverage(coverage),
@@ -320,21 +387,15 @@ export const createPixelCoverageScene = ({ scene, params }: SceneContext) => {
       valueTexture.needsUpdate = true
       valueOverlay.visible = showValues
 
-      // 連続な図形と画像の重なり。画素の寄与率と同じ切り取りを、画像の外周に対して行う
-      const figure = clipHalfPlane(
-        clipHalfPlane(
-          rectOf(-HALF_WIDTH, -HALF_HEIGHT, IMAGE_WIDTH, IMAGE_HEIGHT),
-          normalX,
-          normalY,
-          halfThickness
-        ),
-        -normalX,
-        -normalY,
-        halfThickness
-      )
-      figure.forEach(([x, y], index) => outlinePosition.setXYZ(index, x, y, 0))
+      // 連続な図形の境界。帯の 2 本の境界線のうち、画像に収まる線分だけを太く描く
+      const imageRect = rectOf(-HALF_WIDTH, -HALF_HEIGHT, IMAGE_WIDTH, IMAGE_HEIGHT)
+      let outlineVertex = 0
+      for (const offset of [halfThickness, -halfThickness]) {
+        const segment = segmentInRect(imageRect, normalX, normalY, offset)
+        if (segment) outlineVertex = pushThickSegment(outlinePosition, outlineVertex, segment)
+      }
       outlinePosition.needsUpdate = true
-      outlineGeometry.setDrawRange(0, figure.length)
+      outlineGeometry.setDrawRange(0, outlineVertex)
       outline.visible = showOutline
     },
     dispose: () => {

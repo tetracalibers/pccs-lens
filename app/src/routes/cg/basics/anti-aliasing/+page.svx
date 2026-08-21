@@ -50,14 +50,7 @@ draft: true
 - 図形の傾きや太さを変えると、輪郭にかかった画素の寄与率がどう変わるか
 - 図形が完全に覆っている画素は`1`、まったく覆っていない画素は`0`、その間の画素は覆われた面積の割合になっていること
 - 横の画素数を増やすと、中間の値をとる画素が輪郭沿いの細い帯だけに限られていくこと
-- 寄与率を数値で表示するのをやめ、連続な図形の輪郭も消すと、寄与率の濃淡だけで輪郭が滑らかに見えること
-:::
-
-:::Fix{target="demo"}
-図形が完全に覆っている画素がどれかを表現したいなら、その図形をもっとはっきり書くべき
-黄色いマスの不透明度は何を表している？
-`1`と書かれているマスも半分半透明になっているので、結局何を表したいのかがわからない
-以上について、相談しながら再検討
+- 寄与率を数値で表示するのをやめ、連続な図形の輪郭も消すと、混ざった色だけで輪郭が滑らかに見えること
 :::
 
 <CanvasWrapper>
@@ -77,11 +70,15 @@ const PITCH = IMAGE_WIDTH / COLUMNS
 
 // 図形（斜めの帯）の傾きと太さ。太さは画素の大きさとは無関係に決まる
 const SLOPE = 0.45
-const THICKNESS = 0.55
+const THICKNESS = 1.0
 
-// 図形の色と背景の色。寄与率の分だけ図形の色を、残りだけ背景の色を混ぜた色が画素の色になる
+// 図形の色と背景の色。寄与率の分だけ図形の色を、残りだけ背景の色を混ぜた色が画素の色になる。
+// 背景は地色と重ならない青にとる（地色と同じ色にすると、中間の寄与率が半透明に見えてしまう）
 const FIGURE_RGB = [255, 200, 87]
-const BACKGROUND_RGB = [38, 40, 45]
+const BACKGROUND_RGB = [61, 111, 168]
+
+// 連続な図形の境界線の太さ。線は太さを変えられないので、細長い長方形として描く
+const OUTLINE_WIDTH = 0.03
 
 // xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z
 const LAYER_GRID = 0.02
@@ -207,22 +204,36 @@ for (let row = 0; row <= ROWS; row++) {
 const gridGeometry = new BufferGeometry().setFromPoints(gridPoints)
 scene.add(new LineSegments(gridGeometry, new LineBasicMaterial({ color: "#7d8794" })))
 
-// 連続な図形の輪郭。画素の寄与率と同じ切り取りを、画像の外周に対して行う
-const figure = clipHalfPlane(
-  clipHalfPlane(
-    rectOf(-IMAGE_WIDTH / 2, -IMAGE_HEIGHT / 2, IMAGE_WIDTH, IMAGE_HEIGHT),
-    normalX,
-    normalY,
-    halfThickness
-  ),
-  -normalX,
-  -normalY,
-  halfThickness
-)
-const outlineGeometry = new BufferGeometry().setFromPoints(
-  figure.map(([x, y]) => new Vector3(x, y, LAYER_OUTLINE))
-)
-scene.add(new LineLoop(outlineGeometry, new LineBasicMaterial({ color: "#6fd8ff" })))
+// 連続な図形の境界。帯の 2 本の境界線のうち、画像の矩形に収まる線分だけを太く描く
+const imageRect = rectOf(-IMAGE_WIDTH / 2, -IMAGE_HEIGHT / 2, IMAGE_WIDTH, IMAGE_HEIGHT)
+const outlinePoints: Vector3[] = []
+
+for (const offset of [halfThickness, -halfThickness]) {
+  // 矩形を直線の片側で切り取ると、切り口の辺が直線 normalX * x + normalY * y = offset に載る
+  const onLine = clipHalfPlane(imageRect, normalX, normalY, offset).filter(
+    ([x, y]) => Math.abs(normalX * x + normalY * y - offset) < 1e-6
+  )
+  if (onLine.length < 2) continue
+
+  const [ax, ay] = onLine[0]
+  const [bx, by] = onLine[onLine.length - 1]
+
+  // 線分に立てた法線の向きへ、太さの半分だけ両側へ広げた 4 つの角
+  const length = Math.hypot(bx - ax, by - ay)
+  const offsetX = (-(by - ay) / length) * (OUTLINE_WIDTH / 2)
+  const offsetY = ((bx - ax) / length) * (OUTLINE_WIDTH / 2)
+  const corners = [
+    new Vector3(ax + offsetX, ay + offsetY, LAYER_OUTLINE),
+    new Vector3(ax - offsetX, ay - offsetY, LAYER_OUTLINE),
+    new Vector3(bx - offsetX, by - offsetY, LAYER_OUTLINE),
+    new Vector3(bx + offsetX, by + offsetY, LAYER_OUTLINE)
+  ]
+  // 長方形を三角形 2 つに分けて、頂点を並べる
+  for (const index of [0, 1, 2, 0, 2, 3]) outlinePoints.push(corners[index])
+}
+
+const outlineGeometry = new BufferGeometry().setFromPoints(outlinePoints)
+scene.add(new Mesh(outlineGeometry, new MeshBasicMaterial({ color: "#f5f7fa" })))
 ```
 
 :::
@@ -247,15 +258,10 @@ $$
 :::Action{fixme}
 次の点に着目して、デモを観察してみよう
 
-- 寄与率 α を動かすと、左の画素で図形が覆う面積と、右の画素の色が一緒に変わること
+- 寄与率 α を下げると図形が薄くなり、背景の色が透けて見えてくること
 - α が`1`に近いほど図形の色が、`0`に近いほど背景の色が強く出ること（下の帯で連続的に見比べられる）
 - 図形の色と背景の色を変えても、混ぜた色`C`が必ず図形の色と背景の色の間に収まること
-- 画素の色`C`が、`R`・`G`・`B`のチャンネルごとに同じ割合で混ぜられていること
-:::
-
-:::Fix{target="demo"}
-本文に「図形の色と背景の色を混ぜ合わせ」とあるので、背景色で塗られた正方形の中に図形が描かれていた方がわかりやすい
-「alphaを動かしたときの画素の色」帯の下にあるつまみが、ドラッグ操作可能に見えてしまうので、つまみは消し、帯の中に現在値を表す線を入れたほうがわかりやすいかも
+- 混ぜた色`C`が、`R`・`G`・`B`のチャンネルごとに同じ割合で混ぜられていること
 :::
 
 <CanvasWrapper>
@@ -265,21 +271,29 @@ $$
 :::Foldable{title="Three.jsによる実装概要"}
 
 ```ts
-// 画素 1 つを表す正方形の 1 辺と、2 つ並べる位置
-const SQUARE = 1.1
-const SQUARE_X = (SQUARE + 1.0) / 2
+// 画素 1 つを表す正方形の 1 辺と、置く高さ
+const SQUARE = 1.4
 const SQUARE_Y = 0.34
 
 // 寄与率（α 値）と、図形の色・背景の色。色は各チャンネルを 0 から 255 の整数で持つ
 const ALPHA = 0.7
-const FIGURE = { r: 255, g: 200, b: 87 }
-const BACKGROUND = { r: 61, g: 111, b: 168 }
+const FIGURE = { r: 87, g: 131, b: 255 }
+const BACKGROUND = { r: 163, g: 60, b: 167 }
+
+// 画素の中に置く図形の大きさ（画素の 1 辺に対する比）、角の丸み（図形の 1 辺に対する比）、
+// 角の丸み 1 つを近似する線分の数
+const FIGURE_SIDE_RATIO = 0.72
+const FIGURE_CORNER_RATIO = 0.28
+const ROUND_SEGMENTS = 12
 
 // α を 0 から 1 まで動かしたときの色を並べた帯と、並べる色の数
 const RAMP_WIDTH = 3.2
 const RAMP_HEIGHT = 0.3
 const RAMP_Y = -0.95
 const RAMP_STEPS = 21
+
+// 画素の地に重ねる図形を、少し手前へ振り分ける z
+const LAYER_FIGURE = 0.01
 
 type Rgb = { r: number; g: number; b: number }
 
@@ -296,51 +310,54 @@ const materialOf = ({ r, g, b }: Rgb) => {
   return material
 }
 
-// 左の画素：図形が覆う面積の割合が α になるよう、45 度の境界で正方形を分ける。
-// α が半分以下なら図形が三角形、半分を超えたら覆われていない背景が三角形になる
-const coversMost = ALPHA > 0.5
-const leg = SQUARE * Math.sqrt(2 * (coversMost ? 1 - ALPHA : ALPHA))
-
-const squareGeometry = new PlaneGeometry(SQUARE, SQUARE)
-const base = new Mesh(squareGeometry, materialOf(coversMost ? FIGURE : BACKGROUND))
-base.position.set(-SQUARE_X, SQUARE_Y, 0)
+// 画素の地。背景の色で塗る
+const base = new Mesh(new PlaneGeometry(SQUARE, SQUARE), materialOf(BACKGROUND))
+base.position.set(0, SQUARE_Y, 0)
 scene.add(base)
 
-// 境界で残る側の直角二等辺三角形。ALPHA が 0.5 を超えるこの例では、背景が右上の角に残る
-const left = -SQUARE_X - SQUARE / 2
-const right = -SQUARE_X + SQUARE / 2
-const bottom = SQUARE_Y - SQUARE / 2
-const top = SQUARE_Y + SQUARE / 2
-const triangleGeometry = new BufferGeometry().setFromPoints(
-  coversMost
-    ? [
-        new Vector3(right, top, 0),
-        new Vector3(right - leg, top, 0),
-        new Vector3(right, top - leg, 0)
-      ]
-    : [
-        new Vector3(left, bottom, 0),
-        new Vector3(left + leg, bottom, 0),
-        new Vector3(left, bottom + leg, 0)
-      ]
-)
-const triangle = new Mesh(triangleGeometry, materialOf(coversMost ? BACKGROUND : FIGURE))
-triangle.position.z = 0.01
-scene.add(triangle)
+// 画素の中に置く図形は、背景にすっぽり包まれる角丸の正方形にとる。
+// α は図形の不透明度として効かせるので、形も大きさも α では変わらない
+const side = SQUARE * FIGURE_SIDE_RATIO
+const radius = side * FIGURE_CORNER_RATIO
 
-// 右の画素：寄与率の分だけ図形の色を、残りだけ背景の色を混ぜた色で塗る
-const blended = new Mesh(
-  squareGeometry,
-  materialOf({
-    r: blendChannel(FIGURE.r, BACKGROUND.r, ALPHA),
-    g: blendChannel(FIGURE.g, BACKGROUND.g, ALPHA),
-    b: blendChannel(FIGURE.b, BACKGROUND.b, ALPHA)
-  })
-)
-blended.position.set(SQUARE_X, SQUARE_Y, 0)
-scene.add(blended)
+// 角の丸みの中心（正方形の 4 隅から丸みの分だけ内側）を、反時計回りに並べる
+const inset = side / 2 - radius
+const centers = [
+  [inset, inset],
+  [-inset, inset],
+  [-inset, -inset],
+  [inset, -inset]
+]
 
-// 同じ混ぜ方を、α を 0 から 1 まで刻んだすべての値について行い、1 色 1 テクセルのテクスチャに焼く
+// 4 つの角を、90 度ずつの弧でつないで輪郭にする
+const outline: Vector3[] = []
+centers.forEach(([cx, cy], index) => {
+  for (let step = 0; step <= ROUND_SEGMENTS; step++) {
+    const angle = (index * Math.PI) / 2 + (step * Math.PI) / 2 / ROUND_SEGMENTS
+    outline.push(new Vector3(cx + radius * Math.cos(angle), cy + radius * Math.sin(angle), 0))
+  }
+})
+
+// 図形の中心から扇状に三角形へ分ける
+const figurePoints: Vector3[] = []
+outline.forEach((point, index) => {
+  figurePoints.push(new Vector3(0, 0, 0), point, outline[(index + 1) % outline.length])
+})
+
+// 図形を不透明度 α で重ねる。混ぜる計算は GPU のアルファブレンディングが行い、
+// 図形の内側が C = α C_fg + (1 - α) C_bg の色になる。
+// 頂点は画素の中心を原点として持ち、置く位置は mesh 側で与える
+const figureMaterial = materialOf(FIGURE)
+figureMaterial.transparent = true
+figureMaterial.opacity = ALPHA
+
+const figureGeometry = new BufferGeometry().setFromPoints(figurePoints)
+const figureRegion = new Mesh(figureGeometry, figureMaterial)
+figureRegion.position.set(0, SQUARE_Y, LAYER_FIGURE)
+scene.add(figureRegion)
+
+// 同じ混ぜ方を、α を 0 から 1 まで刻んだすべての値について式のとおりに計算し、
+// 1 色 1 テクセルのテクスチャに焼く
 const rampData = new Uint8Array(RAMP_STEPS * 4)
 for (let step = 0; step < RAMP_STEPS; step++) {
   const alpha = step / (RAMP_STEPS - 1)
@@ -378,15 +395,11 @@ scene.add(ramp)
 :::Action{fixme}
 次の点に着目して、デモを観察してみよう
 
-- サンプリング点（縦横）を増やすと、点による推定が面積比（寄与率）に近づいていくこと
-- 点を`1`つに減らすと、平均した色が図形の色か背景の色のどちらかにしかならず、中間色が現れないこと
+- サンプリング点（縦横）を`1`つに減らすと左の画像の輪郭が階段状になり、増やすと段差が中間色でぼかされていくこと
+- 点を増やすと、拡大した画素の点による推定が面積比（寄与率）に近づいていくこと
+- 点が`1`つのときは、平均した色が図形の色か背景の色のどちらかにしかならず、中間色が現れないこと
+- 拡大した画素の平均した色が、画像の中で枠に囲まれた画素の色と一致していること
 - 輪郭の向きや位置を変えると点による推定がずれるが、点を増やせばずれが小さくなること
-- 平均した色が、図形側に落ちた点の割合どおりの中間色になっていること
-:::
-
-:::Fix{target="demo"}
-正方形は1画素であり、左図を分割していることを表しているの？だとしたら、「画像の中の1画素である」ことが視覚的にわかるようにしたい
-また、この処理によってジャギーが軽減されることが伝わらないのも問題
 :::
 
 <CanvasWrapper>
@@ -396,10 +409,26 @@ scene.add(ramp)
 :::Foldable{title="Three.jsによる実装概要"}
 
 ```ts
-// 拡大して見せる画素 1 つの 1 辺と、2 つ並べる位置
-const PIXEL = 1.5
-const PIXEL_X = (PIXEL + 0.8) / 2
-const PIXEL_Y = -0.15
+// 画像の画素数と、画素 1 つの大きさ
+const IMAGE_COLUMNS = 10
+const IMAGE_ROWS = 8
+const IMAGE_PITCH = 0.175
+const IMAGE_WIDTH = IMAGE_COLUMNS * IMAGE_PITCH
+const IMAGE_HEIGHT = IMAGE_ROWS * IMAGE_PITCH
+
+// 拡大して見せる画素の 1 辺（画像と背の高さを揃える）と、画像の中でのその画素の列・行
+const PIXEL = IMAGE_HEIGHT
+const TARGET_COLUMN = 5
+const TARGET_ROW = 4
+
+// 画像・拡大した 1 画素・平均した色の画素を、横一列に並べる位置
+const CALLOUT_GAP = 0.5
+const ARROW_GAP = 0.45
+const PANEL_Y = -0.12
+const CONTENT_WIDTH = IMAGE_WIDTH + CALLOUT_GAP + PIXEL + ARROW_GAP + PIXEL
+const IMAGE_X = -CONTENT_WIDTH / 2 + IMAGE_WIDTH / 2
+const PIXEL_X = IMAGE_X + IMAGE_WIDTH / 2 + CALLOUT_GAP + PIXEL / 2
+const AVERAGE_X = PIXEL_X + PIXEL / 2 + ARROW_GAP + PIXEL / 2
 
 // 1 辺あたりのサンプリング点の数と、画素にかかる図形の輪郭。
 // 輪郭の向きは度、位置は画素の 1 辺を 1 として中心からどれだけずれた所を通るか
@@ -431,11 +460,57 @@ const radians = (ANGLE * Math.PI) / 180
 const normalX = Math.cos(radians)
 const normalY = Math.sin(radians)
 
-// 左の画素の地。図形が覆っていない部分は背景の色になる
+// 画像：各画素の色を、その画素に取った SAMPLES × SAMPLES 個の点の色の平均で決める。
+// 座標は拡大する画素の中心を原点、画素の 1 辺を 1 として数えるので、
+// 列と行の差がそのまま座標のずれになる
+const total = SAMPLES * SAMPLES
+const imageData = new Uint8Array(IMAGE_COLUMNS * IMAGE_ROWS * 4)
+
+for (let row = 0; row < IMAGE_ROWS; row++) {
+  for (let column = 0; column < IMAGE_COLUMNS; column++) {
+    let red = 0
+    let green = 0
+    let blue = 0
+
+    for (let sampleRow = 0; sampleRow < SAMPLES; sampleRow++) {
+      for (let sampleColumn = 0; sampleColumn < SAMPLES; sampleColumn++) {
+        const x = column - TARGET_COLUMN + (sampleColumn + 0.5) / SAMPLES - 0.5
+        const y = row - TARGET_ROW + (sampleRow + 0.5) / SAMPLES - 0.5
+        const color = normalX * x + normalY * y <= OFFSET ? FIGURE : BACKGROUND
+        red += color.r
+        green += color.g
+        blue += color.b
+      }
+    }
+
+    // テクスチャの行はテクスチャ座標にならって下から数える
+    const at = (row * IMAGE_COLUMNS + column) * 4
+    imageData[at] = Math.round(red / total)
+    imageData[at + 1] = Math.round(green / total)
+    imageData[at + 2] = Math.round(blue / total)
+    imageData[at + 3] = 255
+  }
+}
+
+// 拡大しても画素が混ざらないよう、補間なし（NearestFilter）で貼る
+const imageTexture = new DataTexture(imageData, IMAGE_COLUMNS, IMAGE_ROWS)
+imageTexture.colorSpace = SRGBColorSpace
+imageTexture.magFilter = NearestFilter
+imageTexture.minFilter = NearestFilter
+imageTexture.needsUpdate = true
+
+const image = new Mesh(
+  new PlaneGeometry(IMAGE_WIDTH, IMAGE_HEIGHT),
+  new MeshBasicMaterial({ map: imageTexture })
+)
+image.position.set(IMAGE_X, PANEL_Y, 0)
+scene.add(image)
+
+// 拡大した画素の地。図形が覆っていない部分は背景の色になる
 const pixelGeometry = new PlaneGeometry(PIXEL, PIXEL)
 const backgroundMaterial = materialOf(BACKGROUND)
 const backgroundPixel = new Mesh(pixelGeometry, backgroundMaterial)
-backgroundPixel.position.set(-PIXEL_X, PIXEL_Y, 0)
+backgroundPixel.position.set(PIXEL_X, PANEL_Y, 0)
 scene.add(backgroundPixel)
 
 // 画素にかかった図形。画素と同じ大きさの板を輪郭の直線でクリッピングし、図形側だけを残す。
@@ -443,12 +518,12 @@ scene.add(backgroundPixel)
 renderer.localClippingEnabled = true
 const figurePlane = new Plane(
   new Vector3(-normalX, -normalY, 0),
-  OFFSET * PIXEL + normalX * -PIXEL_X + normalY * PIXEL_Y
+  OFFSET * PIXEL + normalX * PIXEL_X + normalY * PANEL_Y
 )
 const figureMaterial = materialOf(FIGURE)
 figureMaterial.clippingPlanes = [figurePlane]
 const figurePixel = new Mesh(pixelGeometry, figureMaterial)
-figurePixel.position.set(-PIXEL_X, PIXEL_Y, LAYER_FIGURE)
+figurePixel.position.set(PIXEL_X, PANEL_Y, LAYER_FIGURE)
 scene.add(figurePixel)
 
 // 区画の境目。画素の 1 辺を点の数で等分した位置に引く
@@ -456,19 +531,19 @@ const gridPoints: Vector3[] = []
 for (let index = 0; index <= SAMPLES; index++) {
   const shift = -PIXEL / 2 + (index * PIXEL) / SAMPLES
   gridPoints.push(
-    new Vector3(-PIXEL_X + shift, PIXEL_Y - PIXEL / 2, LAYER_GRID),
-    new Vector3(-PIXEL_X + shift, PIXEL_Y + PIXEL / 2, LAYER_GRID),
-    new Vector3(-PIXEL_X - PIXEL / 2, PIXEL_Y + shift, LAYER_GRID),
-    new Vector3(-PIXEL_X + PIXEL / 2, PIXEL_Y + shift, LAYER_GRID)
+    new Vector3(PIXEL_X + shift, PANEL_Y - PIXEL / 2, LAYER_GRID),
+    new Vector3(PIXEL_X + shift, PANEL_Y + PIXEL / 2, LAYER_GRID),
+    new Vector3(PIXEL_X - PIXEL / 2, PANEL_Y + shift, LAYER_GRID),
+    new Vector3(PIXEL_X + PIXEL / 2, PANEL_Y + shift, LAYER_GRID)
   )
 }
 const gridGeometry = new BufferGeometry().setFromPoints(gridPoints)
 scene.add(new LineSegments(gridGeometry, new LineBasicMaterial({ color: "#7d8794" })))
 
-// 画素を SAMPLES × SAMPLES の区画に分け、それぞれの中心を 1 点として色を求める。
+// 拡大した画素を SAMPLES × SAMPLES の区画に分け、それぞれの中心を 1 点として色を求める。
 // 点の色は、図形側なら図形の色、そうでなければ背景の色になる。
 // 点は図形の板と同じ色だが、クリッピングを受けないよう材質を分けて持つ
-const dotRadius = Math.min((PIXEL / SAMPLES) * 0.22, 0.075)
+const dotRadius = Math.min((PIXEL / SAMPLES) * 0.22, 0.07)
 const dotGeometry = new CircleGeometry(dotRadius, 16)
 const figureDots = new InstancedMesh(dotGeometry, materialOf(FIGURE), SAMPLES * SAMPLES)
 const backgroundDots = new InstancedMesh(dotGeometry, backgroundMaterial, SAMPLES * SAMPLES)
@@ -492,7 +567,7 @@ for (let row = 0; row < SAMPLES; row++) {
     sumGreen += color.g
     sumBlue += color.b
 
-    matrix.setPosition(-PIXEL_X + x * PIXEL, PIXEL_Y + y * PIXEL, LAYER_DOT)
+    matrix.setPosition(PIXEL_X + x * PIXEL, PANEL_Y + y * PIXEL, LAYER_DOT)
     if (inside) figureDots.setMatrixAt(insideCount++, matrix)
     else backgroundDots.setMatrixAt(outsideCount++, matrix)
   }
@@ -501,8 +576,7 @@ figureDots.count = insideCount
 backgroundDots.count = outsideCount
 scene.add(figureDots, backgroundDots)
 
-// 右の画素。点の色の平均が、元の画素の色になる
-const total = SAMPLES * SAMPLES
+// 平均した色の画素。点の色の平均が、拡大した画素の色になる
 const averagePixel = new Mesh(
   pixelGeometry,
   materialOf({
@@ -511,7 +585,7 @@ const averagePixel = new Mesh(
     b: Math.round(sumBlue / total)
   })
 )
-averagePixel.position.set(PIXEL_X, PIXEL_Y, 0)
+averagePixel.position.set(AVERAGE_X, PANEL_Y, 0)
 scene.add(averagePixel)
 ```
 
