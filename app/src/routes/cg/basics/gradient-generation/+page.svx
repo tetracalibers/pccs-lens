@@ -10,6 +10,7 @@ draft: true
 
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import PositionParameterDemo from '$lib/demo/threejs/basics/gradient-generation/position-parameter/PositionParameterDemo.svelte'
   import InterpolationCurveDemo from '$lib/demo/threejs/basics/gradient-generation/interpolation-curve/InterpolationCurveDemo.svelte'
   import PlanarGradientDemo from '$lib/demo/threejs/basics/gradient-generation/planar-gradient/PlanarGradientDemo.svelte'
   import GradientSurfaceDemo from '$lib/demo/threejs/basics/gradient-generation/gradient-surface/GradientSurfaceDemo.svelte'
@@ -42,10 +43,6 @@ $$
 
 線形補間は、$$A$$ から $$B$$ という範囲と、割合 $$t$$ から、その割合だけ進んだ位置にある値を求めるものです。$$t$$ を等間隔に増やしていくと色 $$f(t)$$ も一定の割合で変化していくため、滑らかなグラデーションが得られます。
 
-:::Todo
-上の文章を説明するデモ（要相談）
-:::
-
 ### 画像上の位置パラメータ
 
 では、各画素における $$t$$ はどのように求めるのでしょうか。
@@ -54,8 +51,135 @@ $$
 たとえば横幅`N`画素の帯にグラデーションを描くなら、左から`i`番目（`i`は`0`から`N-1`の値）の画素の割合は`i / (N - 1)`で求められます。
 こうして画素ごとに $$t$$ を求め、それを式に代入すれば、その画素の色 $$f(t)$$ が一つに定まります。
 
-:::Todo
-上の段落の文章を説明するデモ（要相談）
+:::Action{fixme}
+注目画素`i`を左右に動かして、次の点に着目してみよう
+
+- 割合`t`が`i / (N - 1)`の計算どおりに決まり、その`t`を式に入れた色が上の色見本に出ること
+- `i`を両端に振ると`t`が`0`と`1`になり、色見本が`A`・`B`そのものになること
+- 画素数`N`を増やすと、隣り合う画素の色の差が小さくなること
+:::
+
+<CanvasWrapper>
+  <PositionParameterDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 両端の 2 色（記事の A と B）。8 ビットの成分（0〜255）で持ち、線形補間もこの値のまま行う。
+// 画素に記録される値そのものを混ぜ合わせるので、中間の色が式のとおりに見える
+const COLOR_A = [255, 200, 87]
+const COLOR_B = [94, 200, 242]
+
+// 線形補間 f(t) = (1 - t)A + tB。色の成分ごとに、同じ割合で混ぜ合わせる
+const colorAt = (t: number) =>
+  COLOR_A.map((a, channel) => Math.round((1 - t) * a + t * COLOR_B[channel]))
+
+// 0〜255 の成分で持っている色を、Three.js が扱う 0〜1 に直して流し込む
+const applyColor = (target: Color, level: number[]) =>
+  target.setRGB(level[0] / 255, level[1] / 255, level[2] / 255, SRGBColorSpace)
+
+// 帯を何画素で描くか（記事の N）と、注目している画素の番号（記事の i）
+const PIXEL_COUNT = 12
+const INDEX = 4
+
+// 帯に使える横幅と、画素 1 つの大きさの上限。
+// 画素は正方形なので、画素数が少ないときは幅いっぱいに広げず、この大きさで止める
+const BAND_MAX_WIDTH = 3.6
+const MAX_CELL_SIZE = 0.46
+
+// 隣の画素との境目。画素の大きさに依らない細さにして、1 枚の帯に見えるようにする
+const CELL_GAP = 0.014
+
+// 帯の中心の高さ
+const BAND_Y = -0.36
+
+// 注目画素を囲む枠の太さ（隣の画素との境目と同じ細さに揃える）と、色見本を囲む縁の太さ
+const FOCUS_BORDER = CELL_GAP
+const SWATCH_BORDER = 0.04
+
+// 注目画素の色を拡大して見せる色見本の大きさと、その中心の高さ
+const SWATCH_SIZE = 0.62
+const SWATCH_Y = 0.6
+
+// 色見本と注目画素をつなぐ線の太さ
+const CONNECTOR_WIDTH = 0.024
+
+// 重なる要素を、奥から手前へ振り分ける z。正面から見る構図なので厚みは絵に出ない
+const LAYER_CONNECTOR = 0.006
+const LAYER_CELL = 0.01
+const LAYER_BORDER = 0.02
+const LAYER_FRONT = 0.03
+
+// 位置パラメータ：左から i 番目の画素の割合は i / (N - 1)。
+// 両端がちょうど 0 と 1 になるので、i = 0 は A、i = N - 1 は B そのものになる
+const t = INDEX / (PIXEL_COUNT - 1)
+const level = colorAt(t)
+
+// 1 画素が占める幅。画素は正方形なので、境目を引いた残りがそのまま高さにもなる
+const pitch = Math.min(BAND_MAX_WIDTH / PIXEL_COUNT, MAX_CELL_SIZE)
+const cellSize = pitch - CELL_GAP
+const bandLeft = (-pitch * PIXEL_COUNT) / 2
+const centerOf = (i: number) => bandLeft + (i + 0.5) * pitch
+
+// 画素・色見本・縁・線は、すべて 1 辺 1 の板を大きさと位置を与えて使い回す
+const unitGeometry = new PlaneGeometry(1, 1)
+
+// 画素。番号ごとに大きさ・位置・色を与えて横一列に並べる
+const cells = new InstancedMesh(unitGeometry, new MeshBasicMaterial(), PIXEL_COUNT)
+const matrix = new Matrix4()
+const color = new Color()
+for (let i = 0; i < PIXEL_COUNT; i++) {
+  matrix.makeScale(cellSize, cellSize, 1)
+  matrix.setPosition(centerOf(i), BAND_Y, LAYER_CELL)
+  cells.setMatrixAt(i, matrix)
+  cells.setColorAt(i, applyColor(color, colorAt(i / (PIXEL_COUNT - 1))))
+}
+scene.add(cells)
+
+// 注目画素の枠。画素より一回り大きい板を手前に置き、その上に画素の色を塗り直す。
+// 画素の後ろに置くと、左右は隣の画素に隠れて境目の幅しか見えず、上下だけ太く見えてしまう。
+// 枠・つなぐ線・色見本の縁は、いずれも同じ明るい色で塗る
+const highlightMaterial = new MeshBasicMaterial({ color: "#e8ecf2" })
+const focusX = centerOf(INDEX)
+const cellHighlight = new Mesh(unitGeometry, highlightMaterial)
+cellHighlight.scale.set(cellSize + FOCUS_BORDER * 2, cellSize + FOCUS_BORDER * 2, 1)
+cellHighlight.position.set(focusX, BAND_Y, LAYER_BORDER)
+scene.add(cellHighlight)
+
+// 注目画素の上端と、色見本の下端を結ぶ線。色見本は中央に据えるので、
+// 注目画素が中央から離れるほど線は斜めになる。板を伸ばして向きを合わせる
+const cellTop = BAND_Y + cellSize / 2
+const swatchBottom = SWATCH_Y - SWATCH_SIZE / 2
+const spanX = -focusX
+const spanY = swatchBottom - cellTop
+const connector = new Mesh(unitGeometry, highlightMaterial)
+connector.scale.set(CONNECTOR_WIDTH, Math.hypot(spanX, spanY), 1)
+connector.position.set(focusX + spanX / 2, cellTop + spanY / 2, LAYER_CONNECTOR)
+// 板の長い辺（ローカルの y 軸）が、結ぶ向きに重なるまで回す
+connector.rotation.z = Math.atan2(spanY, spanX) - Math.PI / 2
+scene.add(connector)
+
+// 注目画素の色を拡大して見せる色見本と、その縁
+const swatchBorder = new Mesh(unitGeometry, highlightMaterial)
+swatchBorder.scale.set(SWATCH_SIZE + SWATCH_BORDER * 2, SWATCH_SIZE + SWATCH_BORDER * 2, 1)
+swatchBorder.position.set(0, SWATCH_Y, LAYER_BORDER)
+scene.add(swatchBorder)
+
+const swatchMaterial = new MeshBasicMaterial()
+applyColor(swatchMaterial.color, level)
+const swatch = new Mesh(unitGeometry, swatchMaterial)
+swatch.scale.set(SWATCH_SIZE, SWATCH_SIZE, 1)
+swatch.position.set(0, SWATCH_Y, LAYER_FRONT)
+scene.add(swatch)
+
+// 注目画素の色を、枠の上に塗り直す（色見本と材質を共有する）
+const focusCell = new Mesh(unitGeometry, swatchMaterial)
+focusCell.scale.set(cellSize, cellSize, 1)
+focusCell.position.set(focusX, BAND_Y, LAYER_FRONT)
+scene.add(focusCell)
+```
+
 :::
 
 :::Example
@@ -78,7 +202,7 @@ $$
 補間関数を切り替えて、カーブの形と、その下のグラデーションの変わり方を見比べてみよう
 
 - カーブが立ち上がっている区間では明るさが速く変わり、寝ている区間ではなかなか変わらないこと
-- 両端の色は変わらないまま、中央（t = 0.5）の明るさだけが関数によって動くこと
+- 両端の色は変わらないまま、中央（`t = 0.5`）の明るさだけが関数によって動くこと
 :::
 
 <CanvasWrapper>
@@ -244,10 +368,10 @@ graph.add(dot)
 いずれも、平面上の各画素の位置から割合 $$t$$ を求め、その $$t$$ に補間を適用して値を決めるという原理は共通しています。違うのは、$$t$$ をどう定めるか（直線距離か、中心からの距離か、角度か）だけです。
 
 :::Action{fixme}
-次の点に着目して、3枚を見比べてみよう
+次の点に着目して、`3`枚を見比べてみよう
 
-- 向きの角度を動かすと、方向は明暗の向きが回り、角度はtが0に戻る切れ目が回る一方、放射は何も変わらないこと
-- tの等値線を入れると、tが同じ値になる位置が、平行な線・同心円・扇の骨として現れること
+- 向きの角度を動かすと、方向は明暗の向きが回り、角度は`t`が`0`に戻る切れ目が回る一方、放射は何も変わらないこと
+- `t`の等値線を入れると、`t`が同じ値になる位置が、平行な線・同心円・扇の骨として現れること
 :::
 
 <CanvasWrapper>
@@ -415,9 +539,9 @@ PATTERNS.forEach((pattern, index) => {
 :::Action{fixme}
 ドラッグで回して、次の点に着目してみよう
 
-- 値の高さを0まで下げると曲面が下の画像にぴたりと重なり、上げるほど同じ値が高さとして立ち上がること
+- 値の高さを`0`まで下げると曲面が下の画像にぴたりと重なり、上げるほど同じ値が高さとして立ち上がること
 - パターンを切り替えると、方向は斜めに傾いた平面、放射はすり鉢状の曲面になること
-- 曲面を表示を外すと、下に残るのは2次元の濃淡そのものであること
+- 曲面を表示を外すと、下に残るのは`2`次元の濃淡そのものであること
 :::
 
 <CanvasWrapper>
