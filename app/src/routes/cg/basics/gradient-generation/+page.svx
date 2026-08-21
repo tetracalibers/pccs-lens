@@ -56,7 +56,7 @@ $$
 
 - 割合`t`が`i / (N - 1)`の計算どおりに決まり、その`t`を式に入れた色が上の色見本に出ること
 - `i`を両端に振ると`t`が`0`と`1`になり、色見本が`A`・`B`そのものになること
-- 画素数`N`を増やすと、隣り合う画素の色の差が小さくなること
+- 画素数`N`を増やすと格子が細かくなり、`1`画素が受け取る色の幅が狭くなること
 :::
 
 <CanvasWrapper>
@@ -88,8 +88,8 @@ const INDEX = 4
 const BAND_MAX_WIDTH = 3.6
 const MAX_CELL_SIZE = 0.3
 
-// 隣の画素との境目。画素の大きさに依らない細さにして、1 枚の帯に見えるようにする
-const CELL_GAP = 0.014
+// グラデーションを焼くテクスチャの横の解像度。画素の格子よりずっと細かくとる
+const GRADIENT_RESOLUTION = 512
 
 // 色を塗る行（記事の帯）の高さ
 const BAND_Y = -0.05
@@ -99,8 +99,8 @@ const BAND_Y = -0.05
 const GRID_ROWS_ABOVE = 1
 const GRID_ROWS_BELOW = 4
 
-// 注目画素を囲む枠の太さ（隣の画素との境目と同じ細さに揃える）と、色見本を囲む縁の太さ
-const FOCUS_BORDER = CELL_GAP
+// 注目画素を囲む枠の太さ（格子の線と同じくらいの細さ）と、色見本を囲む縁の太さ
+const FOCUS_BORDER = 0.014
 const SWATCH_BORDER = 0.04
 
 // 注目画素の色を拡大して見せる色見本の大きさと、その中心の高さ
@@ -122,10 +122,10 @@ const LAYER_FRONT = 0.03
 const t = INDEX / (PIXEL_COUNT - 1)
 const level = colorAt(t)
 
-// 1 画素が占める幅。画素は正方形なので、境目を引いた残りがそのまま高さにもなる
+// 1 画素が占める幅。画素は正方形なので、この値がそのまま格子の 1 行の高さにもなる
 const pitch = Math.min(BAND_MAX_WIDTH / PIXEL_COUNT, MAX_CELL_SIZE)
-const cellSize = pitch - CELL_GAP
-const bandLeft = (-pitch * PIXEL_COUNT) / 2
+const bandWidth = pitch * PIXEL_COUNT
+const bandLeft = -bandWidth / 2
 const centerOf = (i: number) => bandLeft + (i + 0.5) * pitch
 
 // 画素・色見本・枠・線は、すべて 1 辺 1 の板を大きさと位置を与えて使い回す
@@ -150,32 +150,37 @@ const gridGeometry = new BufferGeometry().setFromPoints(gridPoints)
 scene.add(new LineSegments(gridGeometry, new LineBasicMaterial({ color: "#5c6470" })))
 
 // 色を塗るのは注目している行だけ。ほかの行は格子のまま残す。
-// 画素は番号ごとに大きさ・位置・色を与えて横一列に並べる
-const cells = new InstancedMesh(unitGeometry, new MeshBasicMaterial(), PIXEL_COUNT)
-const matrix = new Matrix4()
-const color = new Color()
-for (let i = 0; i < PIXEL_COUNT; i++) {
-  applyColor(color, colorAt(i / (PIXEL_COUNT - 1)))
-  matrix.makeScale(cellSize, cellSize, 1)
-  matrix.setPosition(centerOf(i), BAND_Y, LAYER_CELL)
-  cells.setMatrixAt(i, matrix)
-  cells.setColorAt(i, color)
+// 連続的なグラデーションを 1 枚の板に貼るので、画素と画素の境目は出ない
+const gradientData = new Uint8Array(GRADIENT_RESOLUTION * 4)
+for (let column = 0; column < GRADIENT_RESOLUTION; column++) {
+  const value = colorAt((column + 0.5) / GRADIENT_RESOLUTION)
+  gradientData.set([...value, 255], column * 4)
 }
-scene.add(cells)
+const gradientTexture = new DataTexture(gradientData, GRADIENT_RESOLUTION, 1)
+gradientTexture.colorSpace = SRGBColorSpace
+gradientTexture.magFilter = LinearFilter
+gradientTexture.minFilter = LinearFilter
+gradientTexture.needsUpdate = true
 
-// 注目画素の枠。画素より一回り大きい板を手前に置き、その上に画素の色を塗り直す。
-// 画素の後ろに置くと、左右は隣の画素に隠れて境目の幅しか見えず、上下だけ太く見えてしまう。
+// 帯は格子の 1 行にぴたりと重ね、格子の線を隠して連続的な見た目にする
+const gradient = new Mesh(unitGeometry, new MeshBasicMaterial({ map: gradientTexture }))
+gradient.scale.set(bandWidth, pitch, 1)
+gradient.position.set(0, BAND_Y, LAYER_CELL)
+scene.add(gradient)
+
+// 注目画素の枠。格子の 1 マスより一回り大きい板を帯の手前に置き、
+// その上に、その画素の値である f(t) の色を 1 色で塗る。
 // 枠・つなぐ線・色見本の縁は、いずれも同じ明るい色で塗る
 const highlightMaterial = new MeshBasicMaterial({ color: "#e8ecf2" })
 const focusX = centerOf(INDEX)
 const cellHighlight = new Mesh(unitGeometry, highlightMaterial)
-cellHighlight.scale.set(cellSize + FOCUS_BORDER * 2, cellSize + FOCUS_BORDER * 2, 1)
+cellHighlight.scale.set(pitch + FOCUS_BORDER * 2, pitch + FOCUS_BORDER * 2, 1)
 cellHighlight.position.set(focusX, BAND_Y, LAYER_BORDER)
 scene.add(cellHighlight)
 
 // 注目画素の上端と、色見本の下端を結ぶ線。色見本は中央に据えるので、
 // 注目画素が中央から離れるほど線は斜めになる。板を伸ばして向きを合わせる
-const cellTop = BAND_Y + cellSize / 2
+const cellTop = BAND_Y + pitch / 2
 const swatchBottom = SWATCH_Y - SWATCH_SIZE / 2
 const spanX = -focusX
 const spanY = swatchBottom - cellTop
@@ -199,9 +204,9 @@ swatch.scale.set(SWATCH_SIZE, SWATCH_SIZE, 1)
 swatch.position.set(0, SWATCH_Y, LAYER_FRONT)
 scene.add(swatch)
 
-// 注目画素の色を、枠の上に塗り直す（色見本と材質を共有する）
+// 注目画素の色を、枠の上に 1 色で塗る（色見本と材質を共有する）
 const focusCell = new Mesh(unitGeometry, swatchMaterial)
-focusCell.scale.set(cellSize, cellSize, 1)
+focusCell.scale.set(pitch, pitch, 1)
 focusCell.position.set(focusX, BAND_Y, LAYER_FRONT)
 scene.add(focusCell)
 ```

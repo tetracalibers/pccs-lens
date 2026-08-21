@@ -2,11 +2,11 @@ import {
   BufferGeometry,
   CanvasTexture,
   Color,
+  DataTexture,
   Float32BufferAttribute,
-  InstancedMesh,
+  LinearFilter,
   LineBasicMaterial,
   LineSegments,
-  Matrix4,
   Mesh,
   MeshBasicMaterial,
   PlaneGeometry,
@@ -48,8 +48,8 @@ const COLOR_B = [94, 200, 242]
 const BAND_MAX_WIDTH = 3.6
 const MAX_CELL_SIZE = 0.3
 
-/** 隣の画素との境目。画素の大きさに依らない細さにして、1 枚の帯に見えるようにする */
-const CELL_GAP = 0.014
+/** グラデーションを焼くテクスチャの横の解像度。画素の格子よりずっと細かくとる */
+const GRADIENT_RESOLUTION = 512
 
 /** 色を塗る行（記事の帯）の高さ */
 const BAND_Y = -0.05
@@ -68,8 +68,8 @@ const GRID_BOTTOM = -1.42
 /** 格子の線を引くのに使う頂点数の上限（縦 21 本・横 10 本ぶん） */
 const MAX_GRID_VERTICES = 64
 
-/** 注目画素を囲む枠の太さ。隣の画素との境目と同じ細さに揃える */
-const FOCUS_BORDER = CELL_GAP
+/** 注目画素を囲む枠の太さ。格子の線と同じくらいの細さにする */
+const FOCUS_BORDER = 0.014
 
 /** 色見本を囲む縁の太さ */
 const SWATCH_BORDER = 0.04
@@ -80,9 +80,6 @@ const SWATCH_Y = 1
 
 /** 色見本と注目画素をつなぐ線の太さ */
 const CONNECTOR_WIDTH = 0.024
-
-/** 画素数の上限。この数だけ画素をあらかじめ作っておく */
-const MAX_PIXEL_COUNT = 20
 
 /** 枠と線の色。背景の上でも、どの中間色の上でも見える明るい色にする */
 const HIGHLIGHT_COLOR = "#e8ecf2"
@@ -168,10 +165,22 @@ export const createPositionParameterScene = ({ scene, params }: SceneContext) =>
   const gridMaterial = new LineBasicMaterial({ color: GRID_COLOR })
   scene.add(new LineSegments(gridGeometry, gridMaterial))
 
-  // 色を塗る行の画素。番号ごとに大きさ・位置・色を与えて横一列に並べる
-  const cellMaterial = new MeshBasicMaterial()
-  const cells = new InstancedMesh(unitGeometry, cellMaterial, MAX_PIXEL_COUNT)
-  scene.add(cells)
+  // 色を塗る行。連続的なグラデーションを 1 枚の板に貼るので、
+  // 画素と画素の境目は出ない（格子は板の後ろに隠れる）
+  const gradientData = new Uint8Array(GRADIENT_RESOLUTION * 4)
+  for (let column = 0; column < GRADIENT_RESOLUTION; column++) {
+    const level = colorAt((column + 0.5) / GRADIENT_RESOLUTION)
+    gradientData.set([...level, 255], column * 4)
+  }
+  const gradientTexture = new DataTexture(gradientData, GRADIENT_RESOLUTION, 1)
+  gradientTexture.colorSpace = SRGBColorSpace
+  gradientTexture.magFilter = LinearFilter
+  gradientTexture.minFilter = LinearFilter
+  gradientTexture.needsUpdate = true
+
+  const gradientMaterial = new MeshBasicMaterial({ map: gradientTexture })
+  const gradient = new Mesh(unitGeometry, gradientMaterial)
+  scene.add(gradient)
 
   // 注目画素を囲む枠と、色見本の縁・つなぐ線。いずれも同じ明るい色で塗る
   const highlightMaterial = new MeshBasicMaterial({ color: HIGHLIGHT_COLOR })
@@ -216,9 +225,6 @@ export const createPositionParameterScene = ({ scene, params }: SceneContext) =>
     sprite.scale.set(height * aspect, height, 1)
   }
 
-  const matrix = new Matrix4()
-  const color = new Color()
-
   return {
     update: () => {
       const { pixelCount } = params
@@ -233,10 +239,10 @@ export const createPositionParameterScene = ({ scene, params }: SceneContext) =>
       params.ratio = `i / (N - 1) = ${index} / ${pixelCount - 1} = ${t.toFixed(2)}`
       params.color = `${(1 - t).toFixed(2)}A + ${t.toFixed(2)}B = (${level.join(", ")})`
 
-      // 1 画素が占める幅。画素は正方形なので、境目を引いた残りがそのまま高さにもなる
+      // 1 画素が占める幅。画素は正方形なので、この値がそのまま格子の 1 行の高さにもなる
       const pitch = Math.min(BAND_MAX_WIDTH / pixelCount, MAX_CELL_SIZE)
-      const cellSize = pitch - CELL_GAP
-      const bandLeft = (-pitch * pixelCount) / 2
+      const bandWidth = pitch * pixelCount
+      const bandLeft = -bandWidth / 2
       const centerOf = (i: number) => bandLeft + (i + 0.5) * pitch
 
       // 格子として続ける行数。描ける範囲に収まる数までとし、
@@ -270,31 +276,23 @@ export const createPositionParameterScene = ({ scene, params }: SceneContext) =>
       gridGeometry.setDrawRange(0, vertex)
       gridGeometry.computeBoundingSphere()
 
-      // 色を塗るのは注目している行だけ。ほかの行は格子のまま残す
-      cells.count = pixelCount
-      for (let i = 0; i < pixelCount; i++) {
-        applyColor(color, colorAt(i / (pixelCount - 1)))
-        matrix.makeScale(cellSize, cellSize, 1)
-        matrix.setPosition(centerOf(i), BAND_Y, LAYER_CELL)
-        cells.setMatrixAt(i, matrix)
-        cells.setColorAt(i, color)
-      }
-      cells.instanceMatrix.needsUpdate = true
-      if (cells.instanceColor) cells.instanceColor.needsUpdate = true
-      cells.computeBoundingSphere()
+      // 色を塗るのは注目している行だけ。ほかの行は格子のまま残す。
+      // 帯は格子の 1 行にぴたりと重ね、格子の線を隠して連続的な見た目にする
+      gradient.scale.set(bandWidth, pitch, 1)
+      gradient.position.set(0, BAND_Y, LAYER_CELL)
 
-      // 注目画素の枠。画素より一回り大きい板を手前に置き、その上に画素の色を塗り直す。
-      // 画素の後ろに置くと、左右は隣の画素に隠れて境目の幅しか見えず、上下だけ太く見えてしまう
+      // 注目画素の枠。格子の 1 マスより一回り大きい板を帯の手前に置き、
+      // その上に、その画素の値である f(t) の色を 1 色で塗る
       const focusX = centerOf(index)
-      cellHighlight.scale.set(cellSize + FOCUS_BORDER * 2, cellSize + FOCUS_BORDER * 2, 1)
+      cellHighlight.scale.set(pitch + FOCUS_BORDER * 2, pitch + FOCUS_BORDER * 2, 1)
       cellHighlight.position.set(focusX, BAND_Y, LAYER_BORDER)
-      focusCell.scale.set(cellSize, cellSize, 1)
+      focusCell.scale.set(pitch, pitch, 1)
       focusCell.position.set(focusX, BAND_Y, LAYER_FRONT)
 
       // 注目画素の上端と、色見本の下端を線で結ぶ。色見本は中央に据えたままなので、
       // 注目画素が中央から離れるほど線は斜めになる。板を伸ばして向きを合わせる
       applyColor(swatchMaterial.color, level)
-      const cellTop = BAND_Y + cellSize / 2
+      const cellTop = BAND_Y + pitch / 2
       const swatchBottom = SWATCH_Y - SWATCH_SIZE / 2
       const spanX = -focusX
       const spanY = swatchBottom - cellTop
@@ -305,7 +303,7 @@ export const createPositionParameterScene = ({ scene, params }: SceneContext) =>
 
       // ラベルは画素の中に収まる大きさで載せる。A・B は両端の画素、f(t) は注目画素に置き、
       // 注目画素が端に来たときは f(t) を優先して、その端のラベルを隠す
-      labels.forEach((label) => fitLabel(label, cellSize))
+      labels.forEach((label) => fitLabel(label, pitch))
       labelA.sprite.position.set(centerOf(0), BAND_Y, LAYER_LABEL)
       labelB.sprite.position.set(centerOf(pixelCount - 1), BAND_Y, LAYER_LABEL)
       labelFocus.sprite.position.set(focusX, BAND_Y, LAYER_LABEL)
@@ -317,13 +315,13 @@ export const createPositionParameterScene = ({ scene, params }: SceneContext) =>
         unitGeometry,
         gridGeometry,
         gridMaterial,
-        cellMaterial,
+        gradientTexture,
+        gradientMaterial,
         highlightMaterial,
         swatchMaterial,
         ...labels.flatMap((label) => [label.texture, label.material])
       ]
       disposables.forEach((disposable) => disposable.dispose())
-      cells.dispose()
     }
   }
 }
