@@ -1,0 +1,11 @@
+---
+layout: guide-content
+title: 有理ベジェ曲線・曲面 # CG 3-4-3, 3-4-4
+
+group: ["CG"]
+
+draft: true
+---
+
+## TODO
+

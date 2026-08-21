@@ -23,8 +23,7 @@ sections:
       - title: 双3次クーンズ曲面 # CG 3-4-4
         group: ["CG"]
       - slug: b-spline-curve-surface
-      - title: 有理ベジェ曲線・曲面 # CG 3-4-3
-        group: ["CG"]
+      - slug: rational-bezier-curve-surface
       - title: NURBS曲線・曲面 # CG 3-4-3
         group: ["CG"]
       - slug: parametric-curve-surface

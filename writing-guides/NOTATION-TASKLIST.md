@@ -301,7 +301,7 @@
 - [draft] `/cg/modeling/ferguson-curve`
 - [ページ未作成] 双3次クーンズ曲面
 - [draft] `/cg/modeling/b-spline-curve-surface`
-- [ページ未作成] 有理ベジェ曲線・曲面
+- [draft] `/cg/modeling/rational-bezier-curve-surface`
 - [ページ未作成] NURBS曲線・曲面
 - [draft] `/cg/modeling/parametric-curve-surface`
 - [ページ未作成] パラメトリック曲線・曲面の微分幾何
