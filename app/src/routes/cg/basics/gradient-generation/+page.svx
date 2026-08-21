@@ -3,7 +3,15 @@ layout: guide-content
 title: グラデーション生成 # CG 6-2-5
 
 group: ["CG"]
+visual: true
+
+draft: true
 ---
+
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import LinearInterpolationDemo from '$lib/demo/threejs/basics/gradient-generation/linear-interpolation/LinearInterpolationDemo.svelte'
+</script>
 
 [塗りつぶし処理](/cg/basics/area-filling/)は、ある領域の内部をどの点も同じ色に見えるよう「べた塗り」する処理でした。
 ここで扱う:Anki[グラデーション]は、色を緩やかに変化させながら、ある領域の内部や境界を塗る処理です。
@@ -32,10 +40,85 @@ $$
 
 線形補間は、$$A$$ から $$B$$ という範囲と、割合 $$t$$ から、その割合だけ進んだ位置にある値を求めるものです。$$t$$ を等間隔に増やしていくと色 $$f(t)$$ も一定の割合で変化していくため、滑らかなグラデーションが得られます。
 
-:::Todo
-線形補間によるグラデーションのデモ
-`t`を動かすことができ、`f(t)`を点として置く
-両端`A, B`の下には、それぞれその色が何%使われているか（混ぜられているか）を表示する
+:::Action{fixme}
+割合 t を動かして、次の点を観察してみよう
+
+- f(t) の線が指す帯の色が、t = 0 の A から t = 1 の B へまっすぐ移り変わっていくこと
+- A と B の下の % が、それぞれ (1 - t) と t の割合になっていること
+- t = 0.5 では、A と B がちょうど半分ずつ混ざること
+:::
+
+<CanvasWrapper>
+  <LinearInterpolationDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 始点 A から終点 B までの割合
+const T = 0.35
+
+// 両端の 2 色。8 ビットの成分（0〜255）で持ち、線形補間もこの値のまま行う。
+// 画素に記録される値そのものを混ぜ合わせるので、中間の色が式のとおりに見える
+const COLOR_A = [255, 200, 87]
+const COLOR_B = [94, 200, 242]
+
+// グラデーションの帯。横幅がそのまま割合 t の 0〜1 に対応する
+const BAND_WIDTH = 2.8
+const BAND_HEIGHT = 0.6
+const HALF_WIDTH = BAND_WIDTH / 2
+const BAND_Y = 0.2
+
+// 補間の結果 f(t) を指す線の太さと、帯の上下にはみ出させる長さ
+const MARKER_WIDTH = 0.022
+const MARKER_OVERHANG = 0.06
+
+// 帯に重なる要素を、奥から手前へ少しずつ振り分ける z。
+// 正面から見る構図に固定しているため、この厚みは絵には出ない
+const LAYER_BAND = 0.01
+const LAYER_MARKER = 0.02
+
+// 線形補間 f(t) = (1 - t)A + tB。色の成分ごとに、同じ割合で混ぜ合わせる
+const mixOf = (t: number) => COLOR_A.map((a, index) => Math.round((1 - t) * a + t * COLOR_B[index]))
+
+// 割合 t を、帯の上の横位置に対応させる
+const xOf = (t: number) => -HALF_WIDTH + t * BAND_WIDTH
+
+// 図全体を canvas の中央に寄せる
+const figure = new Group()
+figure.position.y = -0.095
+scene.add(figure)
+
+// A から B へのグラデーション。横位置に応じた t を式に代入した色を、1 行のテクスチャに焼く
+const GRADIENT_RESOLUTION = 512
+const gradientData = new Uint8Array(GRADIENT_RESOLUTION * 4)
+for (let i = 0; i < GRADIENT_RESOLUTION; i++) {
+  const [r, g, b] = mixOf(i / (GRADIENT_RESOLUTION - 1))
+  gradientData.set([r, g, b, 255], i * 4)
+}
+const gradientTexture = new DataTexture(gradientData, GRADIENT_RESOLUTION, 1)
+gradientTexture.colorSpace = SRGBColorSpace
+gradientTexture.magFilter = LinearFilter
+gradientTexture.minFilter = LinearFilter
+gradientTexture.needsUpdate = true
+
+// 混ぜ合わせた色をそのままの濃さで見せたいので、陰影の付かない材質で貼る
+const band = new Mesh(
+  new PlaneGeometry(BAND_WIDTH, BAND_HEIGHT),
+  new MeshBasicMaterial({ map: gradientTexture })
+)
+band.position.set(0, BAND_Y, LAYER_BAND)
+figure.add(band)
+
+// 補間の結果 f(t) を指す線。帯のどの色が f(t) なのかを、上下にはみ出した線で示す
+const marker = new Mesh(
+  new PlaneGeometry(MARKER_WIDTH, BAND_HEIGHT + MARKER_OVERHANG * 2),
+  new MeshBasicMaterial({ color: "#e8ecf2" })
+)
+marker.position.set(xOf(T), BAND_Y, LAYER_MARKER)
+figure.add(marker)
+```
+
 :::
 
 ### 画像上の位置パラメータ
