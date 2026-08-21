@@ -12,6 +12,7 @@ draft: true
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import InterpolationCurveDemo from '$lib/demo/threejs/basics/gradient-generation/interpolation-curve/InterpolationCurveDemo.svelte'
   import PlanarGradientDemo from '$lib/demo/threejs/basics/gradient-generation/planar-gradient/PlanarGradientDemo.svelte'
+  import GradientSurfaceDemo from '$lib/demo/threejs/basics/gradient-generation/gradient-surface/GradientSurfaceDemo.svelte'
 </script>
 
 [塗りつぶし処理](/cg/basics/area-filling/)は、ある領域の内部をどの点も同じ色に見えるよう「べた塗り」する処理でした。
@@ -411,8 +412,147 @@ PATTERNS.forEach((pattern, index) => {
 画素の位置を`x`・`y`の`2`軸、画素の値（明るさや色）を`z`軸にとると、グラデーションは`xy`平面の上に広がる曲面として表せます。
 すると、:Anki[方向グラデーション]は斜めに傾いた平面、:Anki[放射グラデーション]はすり鉢状の曲面、というように、グラデーションの形状を曲面の形として理解できます。
 
-:::Todo
-画素の位置を`x`・`y`の`2`軸、画素の値（明るさや色）を`z`軸にとり、グラデーションを`xy`平面の上に広がる曲面として見せるデモ
+:::Action{fixme}
+ドラッグで回して、次の点に着目してみよう
+
+- 値の高さを0まで下げると曲面が下の画像にぴたりと重なり、上げるほど同じ値が高さとして立ち上がること
+- パターンを切り替えると、方向は斜めに傾いた平面、放射はすり鉢状の曲面になること
+- 曲面を表示を外すと、下に残るのは2次元の濃淡そのものであること
+:::
+
+<CanvasWrapper>
+  <GradientSurfaceDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+const TAU = Math.PI * 2
+
+// 方向グラデーションの向き
+const DIRECTION_ANGLE = (30 * Math.PI) / 180
+
+// パターンごとの、位置から割合 t を求める規則。
+// u・v は画像の中心を原点、半辺を 1 とした位置（記事の x・y 軸）
+const PATTERNS = {
+  // 方向（線形）：ある向きに沿って進んだ距離
+  linear: (u: number, v: number) => {
+    const span = Math.abs(Math.cos(DIRECTION_ANGLE)) + Math.abs(Math.sin(DIRECTION_ANGLE))
+    return (u * Math.cos(DIRECTION_ANGLE) + v * Math.sin(DIRECTION_ANGLE) + span) / (2 * span)
+  },
+  // 放射（ラジアル）：中心からの距離
+  radial: (u: number, v: number) => Math.hypot(u, v) / Math.SQRT2,
+  // 角度（コニカル）：中心まわりの角度
+  conical: (u: number, v: number) => (((Math.atan2(v, u) % TAU) + TAU) % TAU) / TAU
+}
+
+// 描くパターン。デモではここを切り替える
+const tAt = PATTERNS.conical
+
+// 画像として扱う正方形の 1 辺
+const IMAGE_SIZE = 2.4
+const HALF_IMAGE = IMAGE_SIZE / 2
+
+// 画像を焼く画素数。格子が目に見えない細かさにとる
+const RESOLUTION = 256
+
+// 曲面を張る格子の分割数。画素より粗いが、折れ線に見えない細かさにとる
+const SURFACE_SEGMENTS = 96
+
+// 画素の値 1（白）を z 軸方向へ持ち上げる高さ（デモでは倍率をスライダーで変える）
+const HEIGHT_SCALE = 1.19
+
+// 画像の面のすぐ上に線を置くための持ち上げ量（面と重なってちらつくのを防ぐ）
+const LIFT = 0.004
+
+// 光の強さ。Lambert の反射では放射照度を π で割った値が明るさになるので、
+// 曲面の傾きの違いが陰影として出る程度にとる
+const keyLight = new DirectionalLight("#ffffff", Math.PI * 0.5)
+keyLight.position.set(2.5, 5, 3)
+scene.add(new AmbientLight("#ffffff", Math.PI * 0.55), keyLight)
+
+// Three.js は y 軸が上なので、記事の x・y 平面を three の xz 平面に、
+// 記事の z 軸（画素の値）を three の y 軸に対応させる
+const imageGeometry = new PlaneGeometry(IMAGE_SIZE, IMAGE_SIZE)
+imageGeometry.rotateX(-Math.PI / 2)
+
+// 画素 1 つずつ、位置から割合 t を求め、両端の値（黒と白）を線形補間する
+const imageData = new Uint8Array(RESOLUTION * RESOLUTION * 4)
+for (let row = 0; row < RESOLUTION; row++) {
+  for (let column = 0; column < RESOLUTION; column++) {
+    const u = -1 + (2 * (column + 0.5)) / RESOLUTION
+    const v = -1 + (2 * (row + 0.5)) / RESOLUTION
+    const level = Math.round(tAt(u, v) * 255)
+    imageData.set([level, level, level, 255], (row * RESOLUTION + column) * 4)
+  }
+}
+
+const imageTexture = new DataTexture(imageData, RESOLUTION, RESOLUTION)
+imageTexture.colorSpace = SRGBColorSpace
+imageTexture.magFilter = LinearFilter
+imageTexture.minFilter = LinearFilter
+imageTexture.needsUpdate = true
+
+// 画素の値をそのままの濃さで見せたいので、陰影の付かない材質で貼る
+const imageMaterial = new MeshBasicMaterial({ map: imageTexture, side: DoubleSide })
+scene.add(new Mesh(imageGeometry, imageMaterial))
+
+// 画像の外周。暗い部分が背景に溶けても、画像の範囲が分かるようにする
+const frameGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(-HALF_IMAGE, LIFT, -HALF_IMAGE),
+  new Vector3(HALF_IMAGE, LIFT, -HALF_IMAGE),
+  new Vector3(HALF_IMAGE, LIFT, -HALF_IMAGE),
+  new Vector3(HALF_IMAGE, LIFT, HALF_IMAGE),
+  new Vector3(HALF_IMAGE, LIFT, HALF_IMAGE),
+  new Vector3(-HALF_IMAGE, LIFT, HALF_IMAGE),
+  new Vector3(-HALF_IMAGE, LIFT, HALF_IMAGE),
+  new Vector3(-HALF_IMAGE, LIFT, -HALF_IMAGE)
+])
+scene.add(new LineSegments(frameGeometry, new LineBasicMaterial({ color: "#c8ccd4" })))
+
+// 曲面。細かく分割した平面の頂点を、その位置の画素の値のぶんだけ持ち上げる
+const surfaceGeometry = new PlaneGeometry(
+  IMAGE_SIZE,
+  IMAGE_SIZE,
+  SURFACE_SEGMENTS,
+  SURFACE_SEGMENTS
+)
+surfaceGeometry.rotateX(-Math.PI / 2)
+const surfacePosition = surfaceGeometry.getAttribute("position")
+for (let index = 0; index < surfacePosition.count; index++) {
+  // 頂点の位置（three の xz）を、記事の x・y 軸での位置に読み替える
+  const u = surfacePosition.getX(index) / HALF_IMAGE
+  const v = -surfacePosition.getZ(index) / HALF_IMAGE
+  surfacePosition.setY(index, tAt(u, v) * HEIGHT_SCALE)
+}
+// 傾きが陰影として出るよう、法線を測り直す
+surfaceGeometry.computeVertexNormals()
+
+// 灰色の濃淡（画素の値）に混ざらないよう、曲面は彩度のある色にする
+const surfaceMaterial = new MeshLambertMaterial({
+  color: "#5ec8f2",
+  side: DoubleSide,
+  transparent: true,
+  opacity: 0.55
+})
+scene.add(new Mesh(surfaceGeometry, surfaceMaterial))
+
+// 四隅の垂線。画像の上の点と、曲面の上の点が同じ位置であることを示す
+const corners = [
+  [-HALF_IMAGE, -HALF_IMAGE],
+  [HALF_IMAGE, -HALF_IMAGE],
+  [HALF_IMAGE, HALF_IMAGE],
+  [-HALF_IMAGE, HALF_IMAGE]
+]
+const riserPoints = corners.flatMap(([x, z]) => [
+  new Vector3(x, 0, z),
+  new Vector3(x, tAt(x / HALF_IMAGE, -z / HALF_IMAGE) * HEIGHT_SCALE, z)
+])
+const riserGeometry = new BufferGeometry().setFromPoints(riserPoints)
+scene.add(new LineSegments(riserGeometry, new LineBasicMaterial({ color: "#5ec8f2" })))
+
+```
+
 :::
 
 ## :WithGroupTag[ディフュージョンカーブ]{group="{['CG']}"}
