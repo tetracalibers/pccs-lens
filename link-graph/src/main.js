@@ -4,10 +4,10 @@
 // 配置は d3-force のシミュレーションが持ち、毎フレームその座標を Cytoscape へ流し込む
 // （`pumpPositions`）。囲みはノードの position イベントを見て BubbleSets が追従する。
 //
-// **初回ロードはアニメーションを見せない。** 裏で解き切ってから結果だけを描く（配置が
-// 決まるまでのチラつきを避けるため）。動かすのは「再配置」ボタン・増えた分の落ち着き・
-// ドラッグの揺り戻しだけ。走査やフィルタのたびに全体が泳ぐと「さっき見ていた赤がどこへ
-// 行ったか」が追えなくなるので、再走査時は既存ノードを固定して増えた分だけを落ち着かせる。
+// **配置のアニメーションは見せない。** 初回ロード・「再配置」・表示項目の増減のいずれも、裏で
+// 解き切ってから結果だけを描く（配置が決まるまでのチラつきを避けるため）。動くのはノードを
+// ドラッグして離したあとの揺り戻しだけ。走査やフィルタのたびに全体が泳ぐと「さっき見ていた赤が
+// どこへ行ったか」が追えなくなるので、再走査時は既存ノードを固定して増えた分だけを落ち着かせる。
 
 import { UPDATE_EVENT } from "../scan/events.mjs"
 import { createFilters } from "./filters.js"
@@ -59,9 +59,6 @@ let selectedPath = null
 /** 初回ロードかどうか。立っている間はアニメーションなしで解き、最後に 1 回だけ fit する。 */
 let isFirstLoad = true
 
-/** シミュレーションが落ち着いたときに fit するか（「再配置」のときだけ立てる）。 */
-let fitOnSettle = false
-
 /** パス → 走査結果のノード。サイドパネルの引き回しに使う。 */
 let nodeIndex = new Map()
 
@@ -96,16 +93,12 @@ const simulation = createSimulation({
     // 間引かれて描き残っていた囲みを、最後の形で描き直す。
     hulls.update()
     cy.nodes().removeClass("no-label")
-    if (fitOnSettle) {
-      fitVisible()
-      fitOnSettle = false
-    }
     renderRelayoutButton()
     updateFocus()
   }
 })
 
-/** シミュレーションを動かす。動いている間はラベルを落とす。 */
+/** シミュレーションを動かす（ドラッグの揺り戻しだけ）。動いている間はラベルを落とす。 */
 const startMotion = (kick) => {
   cy.nodes().addClass("no-label")
   kick()
@@ -120,8 +113,8 @@ const renderRelayoutButton = () => {
   const running = simulation.isRunning()
   relayoutButton.textContent = running ? "停止" : "再配置"
   relayoutButton.title = running
-    ? "シミュレーションを止めて、いまの配置で固定する"
-    : "ユニットの中心から配置し直す（アニメーション）"
+    ? "揺り戻しを止めて、いまの配置で固定する"
+    : "ユニットの中心から配置し直す"
 }
 
 const renderStats = () => {
@@ -261,25 +254,21 @@ const applyFilters = ({ replace = false } = {}) => {
   const fromScratch = replace || isFirstLoad
   const { added } = simulation.sync({ nodes, links, unitOrder, pin: !fromScratch })
 
-  // 初回はアニメーションを見せず、裏で解き切ってから結果だけを描く。
-  if (isFirstLoad && !replace) simulation.solve()
+  // 初回と「再配置」はユニットの中心から解き直し、それ以外は増えた分だけを落ち着かせる。
+  // どちらもアニメーションは見せず、裏で解き切ってから結果だけを描く。
+  if (fromScratch) simulation.solve()
+  else if (added > 0) simulation.settle()
+
+  // 固定は次のドラッグのために外しておく（揺り戻しに周りが反応できるように）。
+  simulation.unpin()
 
   pumpPositions()
   hulls.sync(hullMembers(plan))
+  hulls.update()
 
-  if (replace) {
-    fitOnSettle = true
-    startMotion(() => simulation.restartFromUnits())
-  } else if (isFirstLoad) {
-    hulls.update()
+  if (fromScratch) {
     fitVisible()
     isFirstLoad = false
-  } else if (added > 0) {
-    startMotion(() => simulation.settle())
-  } else {
-    // 減っただけなら動かさない。固定は次のドラッグのために外しておく。
-    simulation.unpin()
-    hulls.update()
   }
 
   updateFocus()

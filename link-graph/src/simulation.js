@@ -10,11 +10,11 @@
 //   center  全体を原点へ寄せる弱い引力（forceX / forceY）
 //   unit    同じユニットを近づけ、ユニットどうしは離す（forceUnitCohesion）
 //
-// **常時シミュレーションにはしない。** 初回ロードは `solve` でアニメーションを見せずに
-// 解き切り、動かすのは明示的な再配置・増えた分の落ち着き・ドラッグの揺り戻しだけにする。
-// 走査やフィルタのたびに全体が泳ぐと「さっき見ていた赤がどこへ行ったか」を追えなくなるため、
-// 再走査時は既存ノードを fx/fy で固定して増えた分だけを落とし、落ち着いたところで固定を外す
-// （fcose の fixedNodeConstraint と同じ役割）。
+// **常時シミュレーションにはしない。** 初回ロード・再配置・表示項目の増減は、アニメーションを
+// 見せずに裏で解き切ってから結果だけを渡す（`solve` / `settle`）。時間をかけて動かすのは
+// ドラッグの揺り戻し（`nudge`）だけ。走査やフィルタのたびに全体が泳ぐと「さっき見ていた赤が
+// どこへ行ったか」を追えなくなるため、再走査時は既存ノードを fx/fy で固定して増えた分だけを
+// 落とし、落ち着いたところで固定を外す（fcose の fixedNodeConstraint と同じ役割）。
 
 import { forceCollide, forceLink, forceManyBody, forceSimulation, forceX, forceY } from "d3-force"
 
@@ -345,33 +345,36 @@ export const createSimulation = ({ onTick, onSettle }) => {
   }
 
   /**
-   * アニメーションを見せずに一気に落ち着かせる。初回ロードはこちら。
+   * アニメーションを見せずに一気に落ち着かせる。
    *
    * d3 の `tick()` は tick イベントを飛ばさないので、途中の状態は Cytoscape へ渡らない
-   * （= 配置が決まるまでのチラつきが出ない）。`solveTicks` 回で alpha が alphaMin まで
-   * 落ちるように減衰を逆算して回す。
+   * （= 配置が決まるまでのチラつきが出ない）。指定した回数で alpha が alphaMin まで落ちる
+   * ように減衰を逆算して回す。
    */
-  const solve = () => {
+  const solveQuietly = ({ alpha, ticks }) => {
     if (byId.size === 0) return
-    reseed()
-    const decay = 1 - Math.pow(simulation.alphaMin(), 1 / SIMULATION.solveTicks)
-    simulation.alpha(1).alphaDecay(decay).alphaTarget(0).tick(SIMULATION.solveTicks)
+    const decay = 1 - Math.pow(simulation.alphaMin() / alpha, 1 / ticks)
+    simulation.alpha(alpha).alphaDecay(decay).alphaTarget(0).tick(ticks)
   }
 
-  /** 明示的な再配置。ユニットの中心から展開する過程を見せる。 */
-  const restartFromUnits = () => {
+  /** 初回ロードと「再配置」。ユニットの中心から解き直す（過程は見せない）。 */
+  const solve = () => {
     reseed()
-    run({ alpha: 1, decay: SIMULATION.openingAlphaDecay })
+    solveQuietly({ alpha: 1, ticks: SIMULATION.solveTicks })
   }
 
-  /** 増減した分だけを落ち着かせる（既存ノードは sync で固定済み）。 */
+  /**
+   * 表示項目が増えたぶんだけを落ち着かせる（過程は見せない）。
+   *
+   * 既存ノードは `sync` の `pin` で現在の座標に固定してあるので、動くのは増えた分だけ。
+   */
   const settle = () => {
-    run({ alpha: SIMULATION.settleAlpha, decay: SIMULATION.settleAlphaDecay })
+    solveQuietly({ alpha: SIMULATION.settleAlpha, ticks: SIMULATION.settleTicks })
   }
 
-  /** ドラッグを離したあとの揺り戻し。 */
+  /** ドラッグを離したあとの揺り戻し。ここだけは動きを見せる。 */
   const nudge = () => {
-    run({ alpha: SIMULATION.dragAlpha, decay: SIMULATION.settleAlphaDecay })
+    run({ alpha: SIMULATION.dragAlpha, decay: SIMULATION.dragAlphaDecay })
   }
 
   const stop = () => {
@@ -403,7 +406,6 @@ export const createSimulation = ({ onTick, onSettle }) => {
   return {
     sync,
     solve,
-    restartFromUnits,
     settle,
     nudge,
     stop,
