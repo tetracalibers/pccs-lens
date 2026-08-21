@@ -1,8 +1,10 @@
 // Cytoscape のセットアップと、走査結果 → グラフ要素の同期・表示制御。
+//
+// ここが持つのは記事ページとエッジだけ。ユニットの囲みは Cytoscape の要素ではなく、
+// BubbleSets の輪郭として別レイヤーに描く（hulls.js）。座標もここでは決めず、
+// d3-force のシミュレーション（simulation.js）が毎フレーム流し込む。
 
 import cytoscape from "cytoscape"
-import fcose from "cytoscape-fcose"
-import layoutUtilities from "cytoscape-layout-utilities"
 import {
   EDGE_COLORS,
   GHOST_OPACITY,
@@ -10,14 +12,8 @@ import {
   LABEL_MIN_ZOOMED_FONT_SIZE,
   NODE_SIZES,
   STATE_COLORS,
-  UI_COLORS,
-  UNIT_PADDING,
-  UNIT_SHAPE_POINTS
+  UI_COLORS
 } from "./theme.js"
-
-cytoscape.use(fcose)
-// 連結成分がばらけたときの詰め込み（fcose の packComponents）に使われる。
-cytoscape.use(layoutUtilities)
 
 const nodeColor = (ele) => STATE_COLORS[ele.data("state")] ?? STATE_COLORS.published
 const nodeSize = (ele) => NODE_SIZES[ele.data("state")] ?? NODE_SIZES.published
@@ -25,24 +21,6 @@ const edgeColor = (ele) => EDGE_COLORS[ele.data("severity")] ?? EDGE_COLORS.none
 
 /** Cytoscape のスタイル定義。 */
 export const GRAPH_STYLE = [
-  {
-    // --- ユニットの囲み（blob）---
-    // ラベルは出さない。どのユニットかはフィルタとサイドパネルの所属バッジで分かる。
-    selector: "node[kind = 'unit']",
-    style: {
-      shape: "polygon",
-      "shape-polygon-points": UNIT_SHAPE_POINTS,
-      "background-color": UI_COLORS.unitFill,
-      "background-opacity": 1,
-      "border-width": 1.5,
-      "border-color": UI_COLORS.unitBorder,
-      padding: UNIT_PADDING,
-      "min-width": 40,
-      "min-height": 40,
-      label: "",
-      events: "no"
-    }
-  },
   {
     // --- 記事ページ ---
     // ラベル（記事タイトル）は常時オン。縮小して読めなくなったら
@@ -130,7 +108,7 @@ export const GRAPH_STYLE = [
     style: { width: 2.6, opacity: 1, "z-index": 20 }
   },
   {
-    // 選択したノードの周辺以外を沈める。囲みは沈めない（位置の手がかりとして残す）。
+    // 選択したノードの周辺以外を沈める。囲みは別レイヤーなので沈まず、位置の手がかりとして残る。
     selector: ".faded",
     style: { opacity: 0.12, "text-opacity": 0 }
   },
@@ -138,6 +116,12 @@ export const GRAPH_STYLE = [
     // ホバー中のノードは、沈んでいても・引いていても必ずラベルを出す。
     selector: "node.hover-labeled",
     style: { opacity: 1, "text-opacity": 1, "min-zoomed-font-size": 0, "z-index": 60 }
+  },
+  {
+    // シミュレーションが動いている間はラベルを消す。流れる文字は読めないうえ、
+    // 169 ノード分のテキスト描画が毎フレーム乗ると素直に重い。
+    selector: ".no-label",
+    style: { label: "" }
   },
   {
     selector: ".hidden",
@@ -182,14 +166,6 @@ export const syncElements = (cy, data) => {
   /** @type {Map<string, object>} */
   const desired = new Map()
 
-  for (const unit of data.units) {
-    desired.set(unit.id, {
-      group: "nodes",
-      data: { id: unit.id, kind: "unit", label: unit.label, groupId: unit.group },
-      selectable: false,
-      grabbable: false
-    })
-  }
   for (const node of data.nodes) {
     desired.set(node.id, { group: "nodes", data: toNodeData(node) })
   }
@@ -212,29 +188,18 @@ export const syncElements = (cy, data) => {
       if (!desired.has(edge.id())) cy.remove(edge)
     }
 
-    // 2) 消えたページ。囲みを消す前に外へ出しておく（親を消すと子も一緒に消えるため）。
-    for (const node of cy.nodes('[kind = "page"]').toArray()) {
+    // 2) 消えたページ
+    for (const node of cy.nodes().toArray()) {
       if (!desired.has(node.id())) cy.remove(node)
     }
-    for (const unit of cy.nodes('[kind = "unit"]').toArray()) {
-      if (!desired.has(unit.id())) {
-        unit.children().move({ parent: null })
-        cy.remove(cy.$id(unit.id()))
-      }
-    }
 
-    // 3) 新しい要素。囲み → ページ → エッジの順（親と端点が先に存在している必要がある）。
+    // 3) 新しい要素。ページ → エッジの順（端点が先に存在している必要がある）。
     const additions = []
     for (const element of desired.values()) {
       if (cy.$id(element.data.id).nonempty()) continue
       additions.push(element)
     }
-    const order = { unit: 0, page: 1 }
-    additions.sort(
-      (a, b) =>
-        (a.group === "edges" ? 2 : order[a.data.kind]) -
-        (b.group === "edges" ? 2 : order[b.data.kind])
-    )
+    additions.sort((a, b) => (a.group === "edges" ? 1 : 0) - (b.group === "edges" ? 1 : 0))
     cy.add(additions)
 
     // 4) 残った要素の data を更新（タイトルや状態が変わっている場合がある）。
@@ -312,45 +277,19 @@ export const computeVisibility = (data, filters) => {
 }
 
 /**
- * 可視性の判定結果から、レイアウトにかける要素のコレクションを作る。
- *
- * Cytoscape の `visible()` / `css("display")` はスタイルのキャッシュ次第で古い値を返すことがあるので、
- * レイアウトには「隠したものを含まないコレクション」を明示的に渡す。
- *
- * @param {import("cytoscape").Core} cy
- * @param {ReturnType<typeof computeVisibility>} plan
- */
-export const visibleCollection = (cy, plan) =>
-  cy.elements().filter((ele) => {
-    const id = ele.id()
-    return plan.visibleNodes.has(id) || plan.visibleUnits.has(id) || plan.visibleEdges.has(id)
-  })
-
-/**
  * 可視性の判定結果をグラフに反映する。
  *
+ * 囲みに入るかどうか（本体かゴーストか）は Cytoscape 側では表現しない。
+ * 囲みの対象は hulls.js が `plan.primary` から、ユニットの引力は simulation.js が
+ * ノードごとの `unit` から決める。
+ *
  * @param {import("cytoscape").Core} cy
  * @param {ReturnType<typeof computeVisibility>} plan
- * @returns {Set<string>} 親（囲み）が変わったノードの id。座標の引き継ぎを打ち切る対象
  */
 export const applyVisibility = (cy, plan) => {
-  const reparented = new Set()
-
   cy.batch(() => {
-    for (const node of cy.nodes('[kind = "unit"]').toArray()) {
-      node.toggleClass("hidden", !plan.visibleUnits.has(node.id()))
-    }
-
-    for (const node of cy.nodes('[kind = "page"]').toArray()) {
+    for (const node of cy.nodes().toArray()) {
       const id = node.id()
-
-      // 囲みの中に入るのは本体だけ。ゴーストとリンク切れは囲みの外に置く。
-      const parent = plan.primary.has(id) ? (node.data("unit") ?? null) : null
-      if ((node.parent().id() ?? null) !== parent) {
-        node.move({ parent })
-        reparented.add(id)
-      }
-
       node.toggleClass("hidden", !plan.visibleNodes.has(id))
       node.toggleClass("ghost", plan.ghosts.has(id))
     }
@@ -359,6 +298,4 @@ export const applyVisibility = (cy, plan) => {
       edge.toggleClass("hidden", !plan.visibleEdges.has(edge.id()))
     }
   })
-
-  return reparented
 }

@@ -65,6 +65,23 @@ body {
   font-size: 12px;
 }
 
+.header__action {
+  margin-left: auto;
+  padding: 4px 12px;
+  border: 1px solid var(--ui-border);
+  border-radius: 999px;
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.header__action:hover {
+  border-color: var(--ui-accent);
+  color: var(--ui-accent);
+}
+
 .stat {
   display: inline-flex;
   align-items: center;
