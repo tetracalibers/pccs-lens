@@ -61,11 +61,13 @@ draft: true
 
 ```ts
 // 画像の大きさ（横 3 : 縦 2）と、横の画素数。
-// 横の画素数を 3 の倍数にとれば、縦の画素数が整数になり画素が正方形に収まる
+// 横の画素数を 3 の倍数にとれば、縦の画素数が整数になり画素が正方形に収まる。
+// 2.4 / 3.6 は二進小数で表せないので商には誤差が乗る（9 画素なら 5.999999999999999）。
+// 丸めずにテクスチャの高さへ渡すと、WebGL 側で整数に切り捨てられて 1 行分ずれる
 const IMAGE_WIDTH = 3.6
 const IMAGE_HEIGHT = 2.4
 const COLUMNS = 9
-const ROWS = (COLUMNS * IMAGE_HEIGHT) / IMAGE_WIDTH
+const ROWS = Math.round((COLUMNS * IMAGE_HEIGHT) / IMAGE_WIDTH)
 const PITCH = IMAGE_WIDTH / COLUMNS
 
 // 図形（斜めの帯）の傾きと太さ。太さは画素の大きさとは無関係に決まる

@@ -44,7 +44,7 @@ const HALF_HEIGHT = IMAGE_HEIGHT / 2
 
 /** 横の画素数の上限。格子線の頂点をこの数に合わせて先に確保しておく */
 const MAX_COLUMNS = 12
-const MAX_ROWS = (MAX_COLUMNS * IMAGE_HEIGHT) / IMAGE_WIDTH
+const MAX_ROWS = Math.round((MAX_COLUMNS * IMAGE_HEIGHT) / IMAGE_WIDTH)
 
 /**
  * 連続な図形の境界線の太さ。線（LineBasicMaterial）は太さを変えられないので、
@@ -63,7 +63,7 @@ const COVERAGE_EPSILON = 1e-6
 
 /** 寄与率の数値を描き込む canvas の解像度。画像と同じ縦横比にとる */
 const VALUE_CANVAS_WIDTH = 1080
-const VALUE_CANVAS_HEIGHT = (VALUE_CANVAS_WIDTH * IMAGE_HEIGHT) / IMAGE_WIDTH
+const VALUE_CANVAS_HEIGHT = Math.round((VALUE_CANVAS_WIDTH * IMAGE_HEIGHT) / IMAGE_WIDTH)
 
 /** 寄与率の数値の大きさ。画素 1 つ分の大きさに対する比 */
 const VALUE_FONT_SCALE = 0.3
@@ -100,8 +100,14 @@ const LAYER_VALUE = 0.05
 /** 多角形の頂点 */
 type Point = [number, number]
 
-/** 横の画素数から縦の画素数を決める。画像の縦横比に合わせると画素が正方形になる */
-const rowsOf = (columns: number) => (columns * IMAGE_HEIGHT) / IMAGE_WIDTH
+/**
+ * 横の画素数から縦の画素数を決める。画像の縦横比に合わせると画素が正方形になる。
+ *
+ * 割り切れる組み合わせしか使わないが、2.4 / 3.6 が二進小数で表せないため
+ * 商には誤差が乗る（9 画素なら 5.999999999999999）。丸めずにテクスチャの高さへ渡すと
+ * WebGL 側で整数に切り捨てられ、6 行分の色が高さ 5 のテクスチャとして貼られてしまう
+ */
+const rowsOf = (columns: number) => Math.round((columns * IMAGE_HEIGHT) / IMAGE_WIDTH)
 
 /** 左下の角と幅・高さから、長方形の頂点を反時計回りに並べる */
 const rectOf = (x: number, y: number, width: number, height: number): Point[] => [
