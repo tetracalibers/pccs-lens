@@ -273,6 +273,10 @@ body {
 }
 
 .legend__swatch--ghost {
+  /* グラフ上のゴーストは状態ごとの直径をそのまま保つ（色と破線だけが変わる）。
+     いちばん数の多い公開済に合わせて、凡例でも同じ直径にする。 */
+  width: 10px;
+  height: 10px;
   background: var(--ghost-color);
   opacity: var(--ghost-opacity);
   outline: 1px dashed var(--ui-border);
