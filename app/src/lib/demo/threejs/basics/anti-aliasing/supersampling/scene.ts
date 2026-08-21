@@ -367,8 +367,8 @@ export const createSupersamplingScene = ({ scene, renderer, params }: SceneConte
   const labelY = PANEL_Y + PIXEL / 2 + 0.22
   const labels = [
     { text: "拡大した1画素", x: PIXEL_X },
-    { text: "平均した色の画素", x: AVERAGE_X },
-    { text: "同じ手順で塗った画像", x: IMAGE_X }
+    { text: "平均した色", x: AVERAGE_X },
+    { text: "画像全体", x: IMAGE_X }
   ].map(({ text, x }) => {
     const label = createLabel(text, LABEL_HEIGHT)
     label.sprite.position.set(x, labelY, LAYER_LABEL)
