@@ -1,4 +1,5 @@
 import {
+  BufferAttribute,
   BufferGeometry,
   CanvasTexture,
   CircleGeometry,
@@ -6,6 +7,7 @@ import {
   Group,
   InstancedMesh,
   LineBasicMaterial,
+  LineDashedMaterial,
   LineSegments,
   Matrix4,
   Mesh,
@@ -58,6 +60,15 @@ const THRESHOLD_THICKNESS = 0.03
 /** 誤差を測る基準（画素の中心）を示す点の半径 */
 const DOT_RADIUS = 0.042
 
+/**
+ * 塗った画素を縦横に 2 等分する破線の、破線と隙間の長さ。
+ * 画素 1 つぶん（PITCH）が周期（破線 + 隙間）のちょうど整数倍になる値をとる。
+ * three の LineSegments は破線の位相を線分をまたいで積算するため、
+ * 整数倍でないとどの画素の破線がどこから始まるかが揃わない
+ */
+const HALVING_DASH_SIZE = 0.045
+const HALVING_GAP_SIZE = 0.035
+
 /** しきい値の線の両端を示す点の半径。誤差の点より小さくして、主役を取らないようにする */
 const THRESHOLD_DOT_RADIUS = 0.028
 
@@ -99,6 +110,7 @@ const LABEL_FONT = "bold 92px sans-serif"
  */
 const LAYER_PIXEL = 0.01
 const LAYER_CURRENT_PIXEL = 0.015
+const LAYER_HALVING = 0.018
 const LAYER_GRID = 0.02
 const LAYER_FRAME = 0.03
 const LAYER_AXIS = 0.04
@@ -170,6 +182,41 @@ const createLabel = (text: string, color: string, height: number) => {
 const worldXOf = (x: number) => -HALF_WIDTH + (x + 0.5) * PITCH
 const worldYOf = (y: number) => HALF_HEIGHT - (y + 0.5) * PITCH
 
+/**
+ * 画素 (column, row) を縦横に 2 等分する破線の頂点を、positions の offset から書き込む。
+ * 画素の中心から辺までが 0.5 であることを、線として目で追えるようにする
+ */
+const writeHalvingLines = (
+  positions: Float32Array,
+  offset: number,
+  column: number,
+  row: number
+) => {
+  const centerX = worldXOf(column)
+  const centerY = worldYOf(row)
+  const half = PITCH / 2
+  positions.set(
+    [
+      // 縦の 2 等分線
+      centerX,
+      centerY - half,
+      LAYER_HALVING,
+      centerX,
+      centerY + half,
+      LAYER_HALVING,
+      // 横の 2 等分線
+      centerX - half,
+      centerY,
+      LAYER_HALVING,
+      centerX + half,
+      centerY,
+      LAYER_HALVING
+    ],
+    offset
+  )
+  return offset + 12
+}
+
 export const createErrorIncrementScene = ({ scene, params }: SceneContext) => {
   const graph = new Group()
   graph.position.copy(GRAPH_OFFSET)
@@ -186,6 +233,20 @@ export const createErrorIncrementScene = ({ scene, params }: SceneContext) => {
   const pastPixels = new InstancedMesh(barGeometry, pastPixelMaterial, COLUMNS)
   pastPixels.frustumCulled = false
   graph.add(pastPixels)
+
+  // 塗った画素を縦横に 2 等分する破線。塗る画素の数は step で変わるので、
+  // 最大数ぶんの頂点を確保しておき、update() で使う本数だけ描く
+  const halvingPositions = new Float32Array(COLUMNS * 12)
+  const halvingGeometry = new BufferGeometry()
+  halvingGeometry.setAttribute("position", new BufferAttribute(halvingPositions, 3))
+  const halvingMaterial = new LineDashedMaterial({
+    color: GRID_COLOR,
+    dashSize: HALVING_DASH_SIZE,
+    gapSize: HALVING_GAP_SIZE
+  })
+  const halvingLines = new LineSegments(halvingGeometry, halvingMaterial)
+  halvingLines.frustumCulled = false
+  graph.add(halvingLines)
 
   // いま誤差の判定で決めた画素
   const currentPixelMaterial = new MeshBasicMaterial({ color: PIXEL_COLOR })
@@ -341,6 +402,7 @@ export const createErrorIncrementScene = ({ scene, params }: SceneContext) => {
       matrix.makeScale(PITCH, PITCH, 1)
       matrix.setPosition(worldXOf(0), worldYOf(0), LAYER_PIXEL)
       pastPixels.setMatrixAt(0, matrix)
+      let halvingOffset = writeHalvingLines(halvingPositions, 0, 0, 0)
 
       for (let x = 1; x <= step; x++) {
         previousRow = row
@@ -355,9 +417,15 @@ export const createErrorIncrementScene = ({ scene, params }: SceneContext) => {
         matrix.makeScale(PITCH, PITCH, 1)
         matrix.setPosition(worldXOf(x), worldYOf(row), LAYER_PIXEL)
         pastPixels.setMatrixAt(x, matrix)
+        halvingOffset = writeHalvingLines(halvingPositions, halvingOffset, x, row)
       }
       pastPixels.count = step + 1
       pastPixels.instanceMatrix.needsUpdate = true
+
+      // 破線は、書き込んだぶんだけ描く。位相を測り直すため線分の長さも計算し直す
+      halvingGeometry.setDrawRange(0, halvingOffset / 3)
+      halvingGeometry.attributes.position.needsUpdate = true
+      halvingLines.computeLineDistances()
 
       // いま決めた画素を、濃い色で重ねる
       currentPixel.position.set(worldXOf(step), worldYOf(row), LAYER_CURRENT_PIXEL)
@@ -417,6 +485,8 @@ export const createErrorIncrementScene = ({ scene, params }: SceneContext) => {
     dispose: () => {
       const disposables = [
         barGeometry,
+        halvingGeometry,
+        halvingMaterial,
         pastPixelMaterial,
         currentPixelMaterial,
         gridGeometry,
