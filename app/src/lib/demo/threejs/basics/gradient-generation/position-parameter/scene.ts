@@ -51,19 +51,15 @@ const MAX_CELL_SIZE = 0.3
 /** グラデーションを焼くテクスチャの横の解像度。画素の格子よりずっと細かくとる */
 const GRADIENT_RESOLUTION = 512
 
-/** 色を塗る行（記事の帯）の高さ */
-const BAND_Y = -0.05
-
 /**
- * 色を塗る行の上・下に、画素の格子だけを続ける行数の上限。
- * この帯が画像の 1 行であることを示すためのもので、下側を長くとる（上は色見本に使う）
+ * 色を塗る行の下に、画素の格子だけを続ける行数の上限。
+ * この帯が画像の 1 行であることを示すためのもので、下へ伸ばす
  */
-const MAX_GRID_ROWS_ABOVE = 2
-const MAX_GRID_ROWS_BELOW = 6
+const MAX_GRID_ROWS_BELOW = 8
 
-/** 格子を描ける範囲。この 2 つの高さの間に収まる行数だけを描く */
-const GRID_TOP = 0.47
-const GRID_BOTTOM = -1.42
+/** 図全体を収める高さと、色を塗る行の上に番号のラベルを置くための余白 */
+const CONTENT_HEIGHT = 2.6
+const LABEL_SPACE = 0.34
 
 /** 格子の線を引くのに使う頂点数の上限（縦 21 本・横 10 本ぶん） */
 const MAX_GRID_VERTICES = 64
@@ -71,29 +67,24 @@ const MAX_GRID_VERTICES = 64
 /** 注目画素を囲む枠の太さ。格子の線と同じくらいの細さにする */
 const FOCUS_BORDER = 0.014
 
-/** 色見本を囲む縁の太さ */
-const SWATCH_BORDER = 0.04
-
-/** 注目画素の色を拡大して見せる色見本の大きさと、その中心の高さ */
-const SWATCH_SIZE = 0.62
-const SWATCH_Y = 1
-
-/** 色見本と注目画素をつなぐ線の太さ */
-const CONNECTOR_WIDTH = 0.024
-
-/** 枠と線の色。背景の上でも、どの中間色の上でも見える明るい色にする */
-const HIGHLIGHT_COLOR = "#e8ecf2"
-
 /** 格子の線の色。色を塗った行より控えめにする */
 const GRID_COLOR = "#5c6470"
 
 /** 画素の中に載せるラベルの色。両端の色も中間色もどれも明るいので、濃い色を載せる */
-const LABEL_COLOR = "#2a2d33"
+const CELL_LABEL_COLOR = "#2a2d33"
+
+/** 画素の外（行の上）に置く番号のラベルの色。背景の上で読める明るい色にする */
+const INDEX_LABEL_COLOR = "#c9d2de"
 
 /** 画素の中に載せるラベルの大きさ（上限と、画素の一辺に対する高さ・幅の割合） */
-const LABEL_HEIGHT = 0.2
-const LABEL_FILL = 0.62
-const LABEL_WIDTH_FILL = 0.86
+const CELL_LABEL_HEIGHT = 0.2
+const CELL_LABEL_FILL = 0.62
+const CELL_LABEL_WIDTH_FILL = 0.86
+
+/** 番号のラベルの大きさ（上限と、画素の一辺に対する割合）と、行の上に逃がす距離 */
+const INDEX_LABEL_HEIGHT = 0.18
+const INDEX_LABEL_FILL = 0.9
+const INDEX_LABEL_GAP = 0.16
 
 /** ラベルの文字を描く canvas の高さ（テクスチャの解像度）と左右の余白、書体 */
 const LABEL_TEXTURE_HEIGHT = 128
@@ -103,7 +94,6 @@ const LABEL_FONT = "bold 92px sans-serif"
 /** 重なる要素を、奥から手前へ振り分ける z。正面から見る構図なので厚みは絵に出ない */
 const LAYER_GRID = 0.005
 const LAYER_CELL = 0.01
-const LAYER_CONNECTOR = 0.015
 const LAYER_BORDER = 0.02
 const LAYER_FRONT = 0.03
 const LAYER_LABEL = 0.04
@@ -112,7 +102,7 @@ const LAYER_LABEL = 0.04
  * 文字を描いた canvas をテクスチャにして、常にカメラを向く板（Sprite）にする。
  * 文字数も書体による字幅も一定でないので、文字の幅を測って板の横幅を決める
  */
-const createLabel = (text: string) => {
+const createLabel = (text: string, color: string) => {
   const canvas = document.createElement("canvas")
   const context = canvas.getContext("2d")
 
@@ -130,7 +120,7 @@ const createLabel = (text: string) => {
     context.font = LABEL_FONT
     context.textAlign = "center"
     context.textBaseline = "middle"
-    context.fillStyle = LABEL_COLOR
+    context.fillStyle = color
     context.fillText(text, canvas.width / 2, canvas.height / 2)
   }
 
@@ -152,7 +142,7 @@ const applyColor = (target: Color, level: number[]) =>
   target.setRGB(level[0] / 255, level[1] / 255, level[2] / 255, SRGBColorSpace)
 
 export const createPositionParameterScene = ({ scene, params }: SceneContext) => {
-  // 画素・色見本・枠・線は、すべて 1 辺 1 の板を大きさと位置を与えて使い回す
+  // 画素・枠・線は、すべて 1 辺 1 の板を大きさと位置を与えて使い回す
   const unitGeometry = new PlaneGeometry(1, 1)
 
   // 画素の格子。画素の境目に沿って縦横の線を引く。
@@ -182,46 +172,32 @@ export const createPositionParameterScene = ({ scene, params }: SceneContext) =>
   const gradient = new Mesh(unitGeometry, gradientMaterial)
   scene.add(gradient)
 
-  // 注目画素を囲む枠と、色見本の縁・つなぐ線。いずれも同じ明るい色で塗る
-  const highlightMaterial = new MeshBasicMaterial({ color: HIGHLIGHT_COLOR })
-  const cellHighlight = new Mesh(unitGeometry, highlightMaterial)
-  scene.add(cellHighlight)
+  // 注目画素を囲む枠
+  const borderMaterial = new MeshBasicMaterial({ color: "#e8ecf2" })
+  const cellBorder = new Mesh(unitGeometry, borderMaterial)
+  scene.add(cellBorder)
 
-  const connector = new Mesh(unitGeometry, highlightMaterial)
-  scene.add(connector)
-
-  const swatchBorder = new Mesh(unitGeometry, highlightMaterial)
-  swatchBorder.scale.set(SWATCH_SIZE + SWATCH_BORDER * 2, SWATCH_SIZE + SWATCH_BORDER * 2, 1)
-  swatchBorder.position.set(0, SWATCH_Y, LAYER_BORDER)
-  scene.add(swatchBorder)
-
-  // 注目画素の色を拡大して見せる色見本
-  const swatchMaterial = new MeshBasicMaterial()
-  const swatch = new Mesh(unitGeometry, swatchMaterial)
-  swatch.scale.set(SWATCH_SIZE, SWATCH_SIZE, 1)
-  swatch.position.set(0, SWATCH_Y, LAYER_FRONT)
-  scene.add(swatch)
-
-  // 注目画素の色。枠の上に同じ色を塗り直すための板（色見本と材質を共有する）
-  const focusCell = new Mesh(unitGeometry, swatchMaterial)
+  // 注目画素の色。枠の上に、その画素の値である f(t) を 1 色で塗る
+  const focusMaterial = new MeshBasicMaterial()
+  const focusCell = new Mesh(unitGeometry, focusMaterial)
   scene.add(focusCell)
 
-  // 両端の色が式の A・B であることを示すラベルと、注目画素の色が f(t) であることを
-  // 示すラベル。いずれも画素の中に載せる
-  const labels = ["A", "B", "f(t)"].map((text) => {
-    const label = createLabel(text)
-    scene.add(label.sprite)
-    return label
-  })
-  const [labelA, labelB, labelFocus] = labels
+  // 画素の中に載せるラベル（両端が式の A・B であること、注目画素の色が f(t) であること）と、
+  // 行の上に置く番号のラベル（左端が 0、注目画素が i、右端が N - 1 であること）
+  const labels = [
+    ...["A", "B", "f(t)"].map((text) => createLabel(text, CELL_LABEL_COLOR)),
+    ...["0", "i", "N - 1"].map((text) => createLabel(text, INDEX_LABEL_COLOR))
+  ]
+  labels.forEach((label) => scene.add(label.sprite))
+  const [labelA, labelB, labelFocus, labelFirst, labelIndex, labelLast] = labels
 
-  /** ラベルを画素の中に収まる大きさに合わせる（縦横どちらもはみ出さない範囲で最大にとる） */
-  const fitLabel = ({ sprite, aspect }: (typeof labels)[number], cellSize: number) => {
-    const height = Math.min(
-      LABEL_HEIGHT,
-      cellSize * LABEL_FILL,
-      (cellSize * LABEL_WIDTH_FILL) / aspect
-    )
+  /** ラベルを、与えた縦・横の枠からはみ出さない範囲で最大の大きさに合わせる */
+  const fitLabel = (
+    { sprite, aspect }: (typeof labels)[number],
+    limitHeight: number,
+    limitWidth: number
+  ) => {
+    const height = Math.min(limitHeight, limitWidth / aspect)
     sprite.scale.set(height * aspect, height, 1)
   }
 
@@ -245,20 +221,22 @@ export const createPositionParameterScene = ({ scene, params }: SceneContext) =>
       const bandLeft = -bandWidth / 2
       const centerOf = (i: number) => bandLeft + (i + 0.5) * pitch
 
-      // 格子として続ける行数。描ける範囲に収まる数までとし、
+      // 格子として下に続ける行数。収まる数までとし、
       // 画像の一部として見えるよう、縦が横より長くならないところで止める
-      const fits = (space: number) => Math.max(0, Math.floor(space / pitch - 0.5))
-      const rowsAbove = Math.min(MAX_GRID_ROWS_ABOVE, fits(GRID_TOP - BAND_Y))
       const rowsBelow = Math.min(
         MAX_GRID_ROWS_BELOW,
-        fits(BAND_Y - GRID_BOTTOM),
-        Math.max(1, pixelCount - 1) - rowsAbove
+        pixelCount - 1,
+        Math.max(0, Math.floor((CONTENT_HEIGHT - LABEL_SPACE) / pitch) - 1)
       )
+
+      // 番号のラベルと格子を合わせた高さが canvas の中央に来るよう、色を塗る行の高さを決める
+      const gridHeight = (1 + rowsBelow) * pitch
+      const bandY = (LABEL_SPACE + gridHeight) / 2 - LABEL_SPACE - pitch / 2
 
       // 格子：画素の境目に沿って、縦の線を画素数 + 1 本、横の線を行数 + 1 本引く
       const gridPosition = gridGeometry.getAttribute("position")
-      const gridTop = BAND_Y + (rowsAbove + 0.5) * pitch
-      const gridBottom = BAND_Y - (rowsBelow + 0.5) * pitch
+      const gridTop = bandY + pitch / 2
+      const gridBottom = gridTop - gridHeight
       let vertex = 0
       const addPoint = (x: number, y: number) => gridPosition.setXYZ(vertex++, x, y, LAYER_GRID)
 
@@ -267,10 +245,10 @@ export const createPositionParameterScene = ({ scene, params }: SceneContext) =>
         addPoint(x, gridTop)
         addPoint(x, gridBottom)
       }
-      for (let row = -rowsBelow - 1; row <= rowsAbove; row++) {
-        const y = BAND_Y + (row + 0.5) * pitch
+      for (let row = 0; row <= rowsBelow + 1; row++) {
+        const y = gridTop - row * pitch
         addPoint(bandLeft, y)
-        addPoint(bandLeft + pitch * pixelCount, y)
+        addPoint(bandLeft + bandWidth, y)
       }
       gridPosition.needsUpdate = true
       gridGeometry.setDrawRange(0, vertex)
@@ -279,36 +257,39 @@ export const createPositionParameterScene = ({ scene, params }: SceneContext) =>
       // 色を塗るのは注目している行だけ。ほかの行は格子のまま残す。
       // 帯は格子の 1 行にぴたりと重ね、格子の線を隠して連続的な見た目にする
       gradient.scale.set(bandWidth, pitch, 1)
-      gradient.position.set(0, BAND_Y, LAYER_CELL)
+      gradient.position.set(0, bandY, LAYER_CELL)
 
       // 注目画素の枠。格子の 1 マスより一回り大きい板を帯の手前に置き、
       // その上に、その画素の値である f(t) の色を 1 色で塗る
       const focusX = centerOf(index)
-      cellHighlight.scale.set(pitch + FOCUS_BORDER * 2, pitch + FOCUS_BORDER * 2, 1)
-      cellHighlight.position.set(focusX, BAND_Y, LAYER_BORDER)
+      cellBorder.scale.set(pitch + FOCUS_BORDER * 2, pitch + FOCUS_BORDER * 2, 1)
+      cellBorder.position.set(focusX, bandY, LAYER_BORDER)
+      applyColor(focusMaterial.color, level)
       focusCell.scale.set(pitch, pitch, 1)
-      focusCell.position.set(focusX, BAND_Y, LAYER_FRONT)
+      focusCell.position.set(focusX, bandY, LAYER_FRONT)
 
-      // 注目画素の上端と、色見本の下端を線で結ぶ。色見本は中央に据えたままなので、
-      // 注目画素が中央から離れるほど線は斜めになる。板を伸ばして向きを合わせる
-      applyColor(swatchMaterial.color, level)
-      const cellTop = BAND_Y + pitch / 2
-      const swatchBottom = SWATCH_Y - SWATCH_SIZE / 2
-      const spanX = -focusX
-      const spanY = swatchBottom - cellTop
-      connector.scale.set(CONNECTOR_WIDTH, Math.hypot(spanX, spanY), 1)
-      connector.position.set(focusX + spanX / 2, cellTop + spanY / 2, LAYER_CONNECTOR)
-      // 板の長い辺（ローカルの y 軸）が、結ぶ向きに重なるまで回す
-      connector.rotation.z = Math.atan2(spanY, spanX) - Math.PI / 2
-
-      // ラベルは画素の中に収まる大きさで載せる。A・B は両端の画素、f(t) は注目画素に置き、
-      // 注目画素が端に来たときは f(t) を優先して、その端のラベルを隠す
-      labels.forEach((label) => fitLabel(label, pitch))
-      labelA.sprite.position.set(centerOf(0), BAND_Y, LAYER_LABEL)
-      labelB.sprite.position.set(centerOf(pixelCount - 1), BAND_Y, LAYER_LABEL)
-      labelFocus.sprite.position.set(focusX, BAND_Y, LAYER_LABEL)
+      // 画素の中のラベルは A・B・f(t)。注目画素が端に来たときは f(t) を優先する
+      const cellLabelHeight = Math.min(CELL_LABEL_HEIGHT, pitch * CELL_LABEL_FILL)
+      for (const label of [labelA, labelB, labelFocus]) {
+        fitLabel(label, cellLabelHeight, pitch * CELL_LABEL_WIDTH_FILL)
+      }
+      labelA.sprite.position.set(centerOf(0), bandY, LAYER_LABEL)
+      labelB.sprite.position.set(centerOf(pixelCount - 1), bandY, LAYER_LABEL)
+      labelFocus.sprite.position.set(focusX, bandY, LAYER_LABEL)
       labelA.sprite.visible = index !== 0
       labelB.sprite.visible = index !== pixelCount - 1
+
+      // 行の上の番号は 0・i・N - 1。i がその位置に重なるときは、0・N - 1 を隠す
+      const indexLabelHeight = Math.min(INDEX_LABEL_HEIGHT, pitch * INDEX_LABEL_FILL)
+      const indexY = gridTop + INDEX_LABEL_GAP
+      for (const label of [labelFirst, labelIndex, labelLast]) {
+        fitLabel(label, indexLabelHeight, Infinity)
+      }
+      labelFirst.sprite.position.set(centerOf(0), indexY, LAYER_LABEL)
+      labelIndex.sprite.position.set(focusX, indexY, LAYER_LABEL)
+      labelLast.sprite.position.set(centerOf(pixelCount - 1), indexY, LAYER_LABEL)
+      labelFirst.sprite.visible = index !== 0
+      labelLast.sprite.visible = index !== pixelCount - 1
     },
     dispose: () => {
       const disposables = [
@@ -317,8 +298,8 @@ export const createPositionParameterScene = ({ scene, params }: SceneContext) =>
         gridMaterial,
         gradientTexture,
         gradientMaterial,
-        highlightMaterial,
-        swatchMaterial,
+        borderMaterial,
+        focusMaterial,
         ...labels.flatMap((label) => [label.texture, label.material])
       ]
       disposables.forEach((disposable) => disposable.dispose())

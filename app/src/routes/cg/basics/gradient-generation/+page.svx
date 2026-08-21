@@ -54,8 +54,8 @@ $$
 :::Action{fixme}
 注目画素`i`を左右に動かして、次の点に着目してみよう
 
-- 割合`t`が`i / (N - 1)`の計算どおりに決まり、その`t`を式に入れた色が上の色見本に出ること
-- `i`を両端に振ると`t`が`0`と`1`になり、色見本が`A`・`B`そのものになること
+- 割合`t`が`i / (N - 1)`の計算どおりに決まり、その`t`を式に入れた色が注目画素の色になること
+- `i`を両端に振ると`t`が`0`と`1`になり、注目画素の色が`A`・`B`そのものになること
 - 画素数`N`を増やすと格子が細かくなり、`1`画素が受け取る色の幅が狭くなること
 :::
 
@@ -91,29 +91,20 @@ const MAX_CELL_SIZE = 0.3
 // グラデーションを焼くテクスチャの横の解像度。画素の格子よりずっと細かくとる
 const GRADIENT_RESOLUTION = 512
 
-// 色を塗る行（記事の帯）の高さ
-const BAND_Y = -0.05
+// 色を塗る行の下に、画素の格子だけを続ける行数。
+// この帯が画像の 1 行であることを示すためのもので、下へ伸ばす
+const GRID_ROWS_BELOW = 6
 
-// 色を塗る行の上・下に、画素の格子だけを続ける行数。
-// この帯が画像の 1 行であることを示すためのもので、下側を長くとる（上は色見本に使う）
-const GRID_ROWS_ABOVE = 1
-const GRID_ROWS_BELOW = 4
+// 図全体を収める高さと、色を塗る行の上に番号のラベルを置くための余白
+const CONTENT_HEIGHT = 2.6
+const LABEL_SPACE = 0.34
 
-// 注目画素を囲む枠の太さ（格子の線と同じくらいの細さ）と、色見本を囲む縁の太さ
+// 注目画素を囲む枠の太さ（格子の線と同じくらいの細さ）
 const FOCUS_BORDER = 0.014
-const SWATCH_BORDER = 0.04
-
-// 注目画素の色を拡大して見せる色見本の大きさと、その中心の高さ
-const SWATCH_SIZE = 0.62
-const SWATCH_Y = 1
-
-// 色見本と注目画素をつなぐ線の太さ
-const CONNECTOR_WIDTH = 0.024
 
 // 重なる要素を、奥から手前へ振り分ける z。正面から見る構図なので厚みは絵に出ない
 const LAYER_GRID = 0.005
 const LAYER_CELL = 0.01
-const LAYER_CONNECTOR = 0.015
 const LAYER_BORDER = 0.02
 const LAYER_FRONT = 0.03
 
@@ -128,22 +119,26 @@ const bandWidth = pitch * PIXEL_COUNT
 const bandLeft = -bandWidth / 2
 const centerOf = (i: number) => bandLeft + (i + 0.5) * pitch
 
-// 画素・色見本・枠・線は、すべて 1 辺 1 の板を大きさと位置を与えて使い回す
+// 番号のラベルと格子を合わせた高さが canvas の中央に来るよう、色を塗る行の高さを決める
+const gridHeight = (1 + GRID_ROWS_BELOW) * pitch
+const bandY = (LABEL_SPACE + gridHeight) / 2 - LABEL_SPACE - pitch / 2
+
+// 画素・枠・線は、すべて 1 辺 1 の板を大きさと位置を与えて使い回す
 const unitGeometry = new PlaneGeometry(1, 1)
 
 // 画素の格子。画素の境目に沿って、縦の線を画素数 + 1 本、横の線を行数 + 1 本引く
-const gridTop = BAND_Y + (GRID_ROWS_ABOVE + 0.5) * pitch
-const gridBottom = BAND_Y - (GRID_ROWS_BELOW + 0.5) * pitch
+const gridTop = bandY + pitch / 2
+const gridBottom = gridTop - gridHeight
 const gridPoints: Vector3[] = []
 for (let k = 0; k <= PIXEL_COUNT; k++) {
   const x = bandLeft + k * pitch
   gridPoints.push(new Vector3(x, gridTop, LAYER_GRID), new Vector3(x, gridBottom, LAYER_GRID))
 }
-for (let row = -GRID_ROWS_BELOW - 1; row <= GRID_ROWS_ABOVE; row++) {
-  const y = BAND_Y + (row + 0.5) * pitch
+for (let row = 0; row <= GRID_ROWS_BELOW + 1; row++) {
+  const y = gridTop - row * pitch
   gridPoints.push(
     new Vector3(bandLeft, y, LAYER_GRID),
-    new Vector3(bandLeft + pitch * PIXEL_COUNT, y, LAYER_GRID)
+    new Vector3(bandLeft + bandWidth, y, LAYER_GRID)
   )
 }
 const gridGeometry = new BufferGeometry().setFromPoints(gridPoints)
@@ -165,49 +160,22 @@ gradientTexture.needsUpdate = true
 // 帯は格子の 1 行にぴたりと重ね、格子の線を隠して連続的な見た目にする
 const gradient = new Mesh(unitGeometry, new MeshBasicMaterial({ map: gradientTexture }))
 gradient.scale.set(bandWidth, pitch, 1)
-gradient.position.set(0, BAND_Y, LAYER_CELL)
+gradient.position.set(0, bandY, LAYER_CELL)
 scene.add(gradient)
 
-// 注目画素の枠。格子の 1 マスより一回り大きい板を帯の手前に置き、
-// その上に、その画素の値である f(t) の色を 1 色で塗る。
-// 枠・つなぐ線・色見本の縁は、いずれも同じ明るい色で塗る
-const highlightMaterial = new MeshBasicMaterial({ color: "#e8ecf2" })
+// 注目画素の枠。格子の 1 マスより一回り大きい板を帯の手前に置く
 const focusX = centerOf(INDEX)
-const cellHighlight = new Mesh(unitGeometry, highlightMaterial)
-cellHighlight.scale.set(pitch + FOCUS_BORDER * 2, pitch + FOCUS_BORDER * 2, 1)
-cellHighlight.position.set(focusX, BAND_Y, LAYER_BORDER)
-scene.add(cellHighlight)
+const cellBorder = new Mesh(unitGeometry, new MeshBasicMaterial({ color: "#e8ecf2" }))
+cellBorder.scale.set(pitch + FOCUS_BORDER * 2, pitch + FOCUS_BORDER * 2, 1)
+cellBorder.position.set(focusX, bandY, LAYER_BORDER)
+scene.add(cellBorder)
 
-// 注目画素の上端と、色見本の下端を結ぶ線。色見本は中央に据えるので、
-// 注目画素が中央から離れるほど線は斜めになる。板を伸ばして向きを合わせる
-const cellTop = BAND_Y + pitch / 2
-const swatchBottom = SWATCH_Y - SWATCH_SIZE / 2
-const spanX = -focusX
-const spanY = swatchBottom - cellTop
-const connector = new Mesh(unitGeometry, highlightMaterial)
-connector.scale.set(CONNECTOR_WIDTH, Math.hypot(spanX, spanY), 1)
-connector.position.set(focusX + spanX / 2, cellTop + spanY / 2, LAYER_CONNECTOR)
-// 板の長い辺（ローカルの y 軸）が、結ぶ向きに重なるまで回す
-connector.rotation.z = Math.atan2(spanY, spanX) - Math.PI / 2
-scene.add(connector)
-
-// 注目画素の色を拡大して見せる色見本と、その縁
-const swatchBorder = new Mesh(unitGeometry, highlightMaterial)
-swatchBorder.scale.set(SWATCH_SIZE + SWATCH_BORDER * 2, SWATCH_SIZE + SWATCH_BORDER * 2, 1)
-swatchBorder.position.set(0, SWATCH_Y, LAYER_BORDER)
-scene.add(swatchBorder)
-
-const swatchMaterial = new MeshBasicMaterial()
-applyColor(swatchMaterial.color, level)
-const swatch = new Mesh(unitGeometry, swatchMaterial)
-swatch.scale.set(SWATCH_SIZE, SWATCH_SIZE, 1)
-swatch.position.set(0, SWATCH_Y, LAYER_FRONT)
-scene.add(swatch)
-
-// 注目画素の色を、枠の上に 1 色で塗る（色見本と材質を共有する）
-const focusCell = new Mesh(unitGeometry, swatchMaterial)
+// 注目画素の色。枠の上に、その画素の値である f(t) を 1 色で塗る
+const focusMaterial = new MeshBasicMaterial()
+applyColor(focusMaterial.color, level)
+const focusCell = new Mesh(unitGeometry, focusMaterial)
 focusCell.scale.set(pitch, pitch, 1)
-focusCell.position.set(focusX, BAND_Y, LAYER_FRONT)
+focusCell.position.set(focusX, bandY, LAYER_FRONT)
 scene.add(focusCell)
 ```
 
