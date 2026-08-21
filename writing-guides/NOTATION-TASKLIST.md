@@ -108,7 +108,7 @@
 
 ## デジタル画像の基本／ラスタ化と描画（`cg/basics.yaml` #rasterization）
 
-- [draft] `/cg/basics/shape-rasterization`
+- [ ] `/cg/basics/shape-rasterization`
 - [draft] `/cg/basics/anti-aliasing`
 - [draft] `/cg/basics/area-filling`
 - [ ] `/cg/basics/gradient-generation`
