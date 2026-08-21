@@ -61,8 +61,7 @@ sections:
   - heading: 特殊な形状表現
     id: special-shapes
     links:
-      - title: パーティクル # CG 3-7-1
-        group: ["CG"]
+      - slug: particle-system
       - title: ポイントベースドモデリング # CG 3-7-2
         group: ["CG"]
       - title: フラクタル # CG 3-7-3

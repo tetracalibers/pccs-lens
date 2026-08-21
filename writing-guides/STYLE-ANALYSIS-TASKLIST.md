@@ -540,7 +540,7 @@
 
 ## CGと画像処理 — モデリング／特殊な形状表現（`cg/modeling.yaml` #special-shapes）
 
-- [ページ未作成] パーティクル
+- [draft] `/cg/modeling/particle-system`
 - [ページ未作成] ポイントベースドモデリング
 - [ページ未作成] フラクタル
 

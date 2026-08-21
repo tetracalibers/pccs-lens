@@ -384,7 +384,7 @@
 - [ページ未作成] 四分木と八分木
 - [ページ未作成] メタボール
 - [draft] `/cg/modeling/isosurface-extraction`
-- [ページ未作成] パーティクル
+- [draft] `/cg/modeling/particle-system`
 - [ページ未作成] ポイントベースドモデリング
 - [ページ未作成] フラクタル
 
