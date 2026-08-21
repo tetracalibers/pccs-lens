@@ -34,13 +34,11 @@ export const GRAPH_STYLE = [
       "shape-polygon-points": UNIT_SHAPE_POINTS,
       "background-color": UI_COLORS.unitFill,
       "background-opacity": 1,
-      "border-width": 1,
+      "border-width": 1.5,
       "border-color": UI_COLORS.unitBorder,
       padding: UNIT_PADDING,
-      // 余白を「子ノードの外接矩形の長辺」基準にして、blob の丸みで四隅が欠けるのを吸収する。
-      "padding-relative-to": "max",
-      "min-width": 80,
-      "min-height": 80,
+      "min-width": 40,
+      "min-height": 40,
       label: "",
       events: "no"
     }
