@@ -66,7 +66,7 @@ const linkRow = (entry, nodeById, onNavigate) => {
  * @param {object} options
  * @param {object | null} options.node 走査結果のノード（未選択なら null）
  * @param {Map<string, object>} options.nodeById
- * @param {Map<string, string>} options.unitLabels 囲み id → 表示名
+ * @param {Map<string, string>} options.unitLabels ユニット id → 表示名
  * @param {Map<string, string>} options.groupLabels 大分類 id → 表示名
  * @param {(path: string) => void} options.onNavigate
  */

@@ -2,7 +2,7 @@
 // という流れを回す。
 //
 // 配置は d3-force のシミュレーションが持ち、毎フレームその座標を Cytoscape へ流し込む
-// （`pumpPositions`）。囲みはノードの position イベントを見て BubbleSets が追従する。
+// （`pumpPositions`）。
 //
 // **配置のアニメーションは見せない。** 初回ロード・「再配置」・表示項目の増減のいずれも、裏で
 // 解き切ってから結果だけを描く（配置が決まるまでのチラつきを避けるため）。動くのはノードを
@@ -12,7 +12,6 @@
 import { UPDATE_EVENT } from "../scan/events.mjs"
 import { createFilters } from "./filters.js"
 import { applyVisibility, computeVisibility, createGraph, syncElements } from "./graph.js"
-import { createHulls } from "./hulls.js"
 import { createLabelWidths } from "./labels.js"
 import { renderPanel } from "./panel.js"
 import { createSimulation } from "./simulation.js"
@@ -51,7 +50,6 @@ const filtersElement = document.querySelector("#filters")
 const relayoutButton = document.querySelector("#relayout")
 
 const cy = createGraph(canvas)
-const hulls = createHulls(cy)
 
 /** ラベルの実寸を測る（ラベルの縦重なりをほどく後処理に渡す）。 */
 const labelWidths = createLabelWidths()
@@ -80,7 +78,7 @@ let selfLinkPaths = new Set()
  * ヘッダーのチップでの絞り込み（`broken` / `empty` / `draft` / `published` / `self-link`）。
  *
  * 空なら絞り込みなし。複数選ぶと OR（どれかに該当すれば残る）。**配置には触らない** —
- * シミュレーションのノードも囲みもそのままで、該当しないノードとその線だけを隠す。
+ * シミュレーションのノードはそのままで、該当しないノードとその線だけを隠す。
  */
 const stateFocus = new Set()
 
@@ -113,8 +111,6 @@ const simulation = createSimulation({
   labelWidth: (id) => labelWidths(nodeIndex.get(id)?.title ?? ""),
   onSettle: () => {
     pumpPositions()
-    // 間引かれて描き残っていた囲みを、最後の形で描き直す。
-    hulls.update()
     cy.nodes().removeClass("no-label")
     renderRelayoutButton()
     updateFocus()
@@ -242,9 +238,8 @@ const renderSidePanel = () => {
 /**
  * ヘッダーのチップでの絞り込みを反映する。
  *
- * 隠すのは表示だけで、シミュレーションのノードからは外さない（座標を保つため）。囲みも
- * そのまま残す — メンバーが隠れても輪郭は動かないので、「どのユニットのどこに居たか」の
- * 手がかりになる。
+ * 隠すのは表示だけで、シミュレーションのノードからは外さない（座標を保つため）。残った点の
+ * 位置がそのままなので、「絞り込んで消えた点がどこに居たか」も周りのかたまりから読める。
  */
 const applyStateFocus = () => {
   const matches = (node) => {
@@ -300,20 +295,6 @@ const select = (path, { center = false } = {}) => {
   }
 }
 
-/** 表示中のユニットごとのメンバー（囲みに入るのは本体だけ）。 */
-const hullMembers = (plan) => {
-  /** @type {Map<string, string[]>} */
-  const members = new Map()
-  for (const unit of unitOrder) {
-    if (plan.visibleUnits.has(unit)) members.set(unit, [])
-  }
-  for (const id of plan.primary) {
-    const unit = nodeIndex.get(id)?.unit
-    if (unit && members.has(unit)) members.get(unit).push(id)
-  }
-  return members
-}
-
 /**
  * 現在のフィルタをグラフへ反映し、増減した分だけを配置し直す。
  *
@@ -329,7 +310,7 @@ const applyFilters = ({ replace = false } = {}) => {
     return {
       id,
       state: node.state,
-      // 囲みに入る本体だけがユニットの引力を受ける。ゴーストとリンク切れは囲みの外。
+      // 本体だけがユニットの引力を受ける。ゴーストとリンク切れはユニットに寄せない。
       unit: plan.primary.has(id) ? (node.unit ?? null) : null
     }
   })
@@ -352,8 +333,6 @@ const applyFilters = ({ replace = false } = {}) => {
   simulation.unpin()
 
   pumpPositions()
-  hulls.sync(hullMembers(plan))
-  hulls.update()
 
   if (fromScratch) {
     fitVisible()

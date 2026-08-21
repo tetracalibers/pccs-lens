@@ -1,8 +1,7 @@
 // Cytoscape のセットアップと、走査結果 → グラフ要素の同期・表示制御。
 //
-// ここが持つのは記事ページとエッジだけ。ユニットの囲みは Cytoscape の要素ではなく、
-// BubbleSets の輪郭として別レイヤーに描く（hulls.js）。座標もここでは決めず、
-// d3-force のシミュレーション（simulation.js）が毎フレーム流し込む。
+// ここが持つのは記事ページとエッジだけ。座標はここでは決めず、d3-force の
+// シミュレーション（simulation.js）が毎フレーム流し込む。
 
 import cytoscape from "cytoscape"
 import {
@@ -117,7 +116,7 @@ export const GRAPH_STYLE = [
     style: { width: 2.6, opacity: 1, "z-index": 20 }
   },
   {
-    // 選択したノードの周辺以外を沈める。囲みは別レイヤーなので沈まず、位置の手がかりとして残る。
+    // 選択したノードの周辺以外を沈める。
     selector: ".faded",
     style: { opacity: 0.12, "text-opacity": 0 }
   },
@@ -138,12 +137,8 @@ export const GRAPH_STYLE = [
   },
   {
     // ヘッダーのチップでの絞り込みから外れたもの。`.hidden`（フィルタ）とは別軸で、
-    // **配置には一切触らず**表示だけを落とす。
-    //
-    // `display: none` にしないのは BubbleSets のため。囲みはメンバーの `boundingBox()` から
-    // 形を決めるが、`display: none` の要素は原点の 0 サイズとして返るので、絞り込むだけで
-    // 囲みが原点へ引き伸ばされてしまう。透明にして当たり判定だけ切る形にすれば、囲みは
-    // 絞り込みの前後で 1 px も動かない。
+    // **配置には一切触らず**表示だけを落とす。要素はそのまま置いたまま透明にして、
+    // 当たり判定だけを切る。
     selector: ".filtered-out",
     style: { opacity: 0, "text-opacity": 0, events: "no" }
   }
@@ -238,7 +233,8 @@ export const syncElements = (cy, data) => {
  * フィルタから「何をどう見せるか」を決める。
  *
  * ゴースト表示: OFF の大分類のページであっても、ON 側のページからリンクが張られている先は
- * 薄く表示して囲みの外に置く。色系 103 ノードで画面を占領されずに、依存先だけが見える状態にする。
+ * 薄く表示する（ユニットには寄せない）。色系 103 ノードで画面を占領されずに、依存先だけが
+ * 見える状態にする。
  *
  * @param {object} data 走査結果
  * @param {{ groups: Set<string>, units: Set<string>, showIsolated: boolean }} filters
@@ -246,12 +242,12 @@ export const syncElements = (cy, data) => {
 export const computeVisibility = (data, filters) => {
   const nodeById = new Map(data.nodes.map((node) => [node.id, node]))
 
-  /** 大分類・ユニットのトグルと孤立フィルタを通ったページ（囲みの中に置く本体）。 */
+  /** 大分類・ユニットのトグルと孤立フィルタを通ったページ（ユニットに属する本体）。 */
   const primary = new Set()
   for (const node of data.nodes) {
     if (node.state === "broken") continue
     if (!filters.groups.has(node.group)) continue
-    // 所属不明（unit なし）のページは、大分類が ON なら囲みの外に出す。
+    // 所属不明（unit なし）のページは、大分類が ON ならそのまま出す（どこにも寄せない）。
     if (node.unit && !filters.units.has(node.unit)) continue
     if (!filters.showIsolated && node.isolated) continue
     primary.add(node.id)
@@ -287,21 +283,14 @@ export const computeVisibility = (data, filters) => {
       .map((edge) => edge.id)
   )
 
-  const visibleUnits = new Set()
-  for (const id of primary) {
-    const unit = nodeById.get(id).unit
-    if (unit) visibleUnits.add(unit)
-  }
-
-  return { primary, ghosts, visibleNodes, visibleEdges, visibleUnits }
+  return { primary, ghosts, visibleNodes, visibleEdges }
 }
 
 /**
  * 可視性の判定結果をグラフに反映する。
  *
- * 囲みに入るかどうか（本体かゴーストか）は Cytoscape 側では表現しない。
- * 囲みの対象は hulls.js が `plan.primary` から、ユニットの引力は simulation.js が
- * ノードごとの `unit` から決める。
+ * ユニットに属するか（本体かゴーストか）は Cytoscape 側では表現しない。ユニットの引力は
+ * simulation.js がノードごとの `unit` から決める。
  *
  * @param {import("cytoscape").Core} cy
  * @param {ReturnType<typeof computeVisibility>} plan
