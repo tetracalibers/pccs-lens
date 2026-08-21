@@ -7,7 +7,6 @@ import {
   Float32BufferAttribute,
   InstancedMesh,
   LineBasicMaterial,
-  LineLoop,
   LineSegments,
   Matrix4,
   Mesh,
@@ -107,16 +106,20 @@ const LABEL_FONT = "bold 92px sans-serif"
 const FIGURE: Rgb = { r: 255, g: 200, b: 87 }
 const BACKGROUND: Rgb = { r: 61, g: 111, b: 168 }
 
-// 背景（暗めのグレー）の上で、区画の境目・枠・点の縁・矢印を互いに見分けられる色にする
+// 背景（暗めのグレー）の上で、区画の境目・点の縁・矢印・文字・画素の枠を互いに見分けられる色にする
 const GRID_COLOR = "#7d8794"
-const FRAME_COLOR = "#c8ccd4"
+const RING_COLOR = "#c8ccd4"
 const ARROW_COLOR = "#9aa3b0"
 const LABEL_COLOR = "#c9d2de"
 const TARGET_COLOR = "#f5f7fa"
 
 /**
  * xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z。
- * 正面から見る構図に固定しているため、この厚みは絵には出ない
+ * 正面から見る構図に固定しているため、この厚みは絵には出ない。
+ *
+ * ただし遠近法では手前にあるものが大きく写るので、画面の中心から離れた位置にある要素は
+ * z の分だけ外側へずれる。画像の中の 1 画素を囲む枠のように、下地とぴったり重ねたい要素は
+ * z を持たせず（画像と同じ平面に置き）、深度テストを切って手前に描く（→ OVERLAY_ORDER）
  */
 const LAYER_FIGURE = 0.01
 const LAYER_GRID = 0.02
@@ -124,6 +127,9 @@ const LAYER_RING = 0.03
 const LAYER_DOT = 0.04
 const LAYER_EDGE = 0.05
 const LAYER_LABEL = 0.1
+
+/** 深度テストを切って手前に描く要素の描画順。数が大きいほどあとに描かれる */
+const OVERLAY_ORDER = 1
 
 /** 多角形の頂点 */
 type Point = [number, number]
@@ -269,22 +275,30 @@ export const createSupersamplingScene = ({ scene, renderer, params }: SceneConte
   image.position.set(IMAGE_X, PANEL_Y, 0)
   scene.add(image)
 
-  // 画像の中で、いま拡大している 1 画素を囲む枠
+  // 画像の中で、いま拡大している 1 画素を囲む枠。画素とぴったり重ねたいので画像と同じ平面に置き、
+  // 深度テストを切って手前に描く（z で手前に出すと、遠近法で画素からずれてしまう）
   const targetFrameGeometry = new BufferGeometry().setFromPoints(
-    frameVertices(TARGET_X, TARGET_Y, IMAGE_PITCH, TARGET_FRAME_WIDTH, LAYER_EDGE)
+    frameVertices(TARGET_X, TARGET_Y, IMAGE_PITCH, TARGET_FRAME_WIDTH, 0)
   )
-  const targetFrameMaterial = new MeshBasicMaterial({ color: TARGET_COLOR })
-  scene.add(new Mesh(targetFrameGeometry, targetFrameMaterial))
+  const targetFrameMaterial = new MeshBasicMaterial({
+    color: TARGET_COLOR,
+    depthTest: false
+  })
+  const targetFrame = new Mesh(targetFrameGeometry, targetFrameMaterial)
+  targetFrame.renderOrder = OVERLAY_ORDER
+  scene.add(targetFrame)
 
   // その画素と拡大図を結ぶ引き出し線。画素の右辺の両端から、拡大図の左辺の両端へ引く
   const calloutGeometry = new BufferGeometry().setFromPoints([
-    new Vector3(TARGET_X + IMAGE_PITCH / 2, TARGET_Y + IMAGE_PITCH / 2, LAYER_EDGE),
-    new Vector3(PIXEL_X - PIXEL / 2, PANEL_Y + PIXEL / 2, LAYER_EDGE),
-    new Vector3(TARGET_X + IMAGE_PITCH / 2, TARGET_Y - IMAGE_PITCH / 2, LAYER_EDGE),
-    new Vector3(PIXEL_X - PIXEL / 2, PANEL_Y - PIXEL / 2, LAYER_EDGE)
+    new Vector3(TARGET_X + IMAGE_PITCH / 2, TARGET_Y + IMAGE_PITCH / 2, 0),
+    new Vector3(PIXEL_X - PIXEL / 2, PANEL_Y + PIXEL / 2, 0),
+    new Vector3(TARGET_X + IMAGE_PITCH / 2, TARGET_Y - IMAGE_PITCH / 2, 0),
+    new Vector3(PIXEL_X - PIXEL / 2, PANEL_Y - PIXEL / 2, 0)
   ])
-  const calloutMaterial = new LineBasicMaterial({ color: ARROW_COLOR })
-  scene.add(new LineSegments(calloutGeometry, calloutMaterial))
+  const calloutMaterial = new LineBasicMaterial({ color: ARROW_COLOR, depthTest: false })
+  const callout = new LineSegments(calloutGeometry, calloutMaterial)
+  callout.renderOrder = OVERLAY_ORDER
+  scene.add(callout)
 
   // 拡大した画素の地。図形が覆っていない部分は背景の色になる。
   // 指定した色をそのままの濃さで見せたいので、陰影の付かない材質にする
@@ -318,7 +332,7 @@ export const createSupersamplingScene = ({ scene, renderer, params }: SceneConte
   // サンプリング点。図形側に落ちた点と背景側に落ちた点を、取った色の材質で描き分ける。
   // どちらの色の上でも点の位置が分かるよう、少し大きい円を縁として下に敷く
   const dotGeometry = new CircleGeometry(1, 16)
-  const ringMaterial = new MeshBasicMaterial({ color: FRAME_COLOR })
+  const ringMaterial = new MeshBasicMaterial({ color: RING_COLOR })
   const rings = new InstancedMesh(dotGeometry, ringMaterial, MAX_SAMPLES)
   rings.frustumCulled = false
   rings.position.z = LAYER_RING
@@ -342,33 +356,6 @@ export const createSupersamplingScene = ({ scene, renderer, params }: SceneConte
   const averagePixel = new Mesh(pixelGeometry, averageMaterial)
   averagePixel.position.set(AVERAGE_X, PANEL_Y, 0)
   scene.add(averagePixel)
-
-  // 画像と 2 つの画素の枠。1 辺 1 の正方形として作り、置く場所に合わせて伸ばす
-  const outlineGeometry = new BufferGeometry().setAttribute(
-    "position",
-    new Float32BufferAttribute(
-      // prettier-ignore
-      [
-        -0.5, -0.5, 0,
-        0.5, -0.5, 0,
-        0.5, 0.5, 0,
-        -0.5, 0.5, 0
-      ],
-      3
-    )
-  )
-  const outlineMaterial = new LineBasicMaterial({ color: FRAME_COLOR })
-  const outlinePlacements = [
-    { x: IMAGE_X, width: IMAGE_WIDTH, height: IMAGE_HEIGHT },
-    { x: PIXEL_X, width: PIXEL, height: PIXEL },
-    { x: AVERAGE_X, width: PIXEL, height: PIXEL }
-  ]
-  outlinePlacements.forEach(({ x, width, height }) => {
-    const outline = new LineLoop(outlineGeometry, outlineMaterial)
-    outline.position.set(x, PANEL_Y, LAYER_EDGE)
-    outline.scale.set(width, height, 1)
-    scene.add(outline)
-  })
 
   // 拡大図から平均した色へ向かう矢印。軸は細長い長方形、矢じりは円錐で描く
   const arrowCenterX = (PIXEL_X + AVERAGE_X) / 2
@@ -529,8 +516,6 @@ export const createSupersamplingScene = ({ scene, renderer, params }: SceneConte
         ringMaterial,
         figureDotMaterial,
         averageMaterial,
-        outlineGeometry,
-        outlineMaterial,
         shaftGeometry,
         headGeometry,
         arrowMaterial

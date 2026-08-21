@@ -78,7 +78,6 @@ const BACKGROUND_RGB = [61, 111, 168]
 
 // 背景（暗めのグレー）の上で、格子・図形の輪郭・数値を互いに見分けられる色にする
 const GRID_COLOR = "#7d8794"
-const FRAME_COLOR = "#c8ccd4"
 const OUTLINE_COLOR = "#f5f7fa"
 
 /** 寄与率の数値。明るい画素の上では暗い色、暗い画素の上では明るい色にする */
@@ -93,7 +92,6 @@ const VALUE_LUMINANCE_THRESHOLD = 140
  * 正面から見る構図に固定しているため、この厚みは絵には出ない
  */
 const LAYER_GRID = 0.02
-const LAYER_FRAME = 0.03
 const LAYER_OUTLINE = 0.04
 const LAYER_VALUE = 0.05
 
@@ -260,25 +258,6 @@ export const createPixelCoverageScene = ({ scene, params }: SceneContext) => {
   grid.position.z = LAYER_GRID
   scene.add(grid)
 
-  // 画像の外周。画素数を変えても、画像そのものの大きさは変わらないことが分かるようにする
-  const frameGeometry = new BufferGeometry().setAttribute(
-    "position",
-    new Float32BufferAttribute(
-      // prettier-ignore
-      [
-        -HALF_WIDTH, -HALF_HEIGHT, 0, HALF_WIDTH, -HALF_HEIGHT, 0,
-        HALF_WIDTH, -HALF_HEIGHT, 0, HALF_WIDTH, HALF_HEIGHT, 0,
-        HALF_WIDTH, HALF_HEIGHT, 0, -HALF_WIDTH, HALF_HEIGHT, 0,
-        -HALF_WIDTH, HALF_HEIGHT, 0, -HALF_WIDTH, -HALF_HEIGHT, 0
-      ],
-      3
-    )
-  )
-  const frameMaterial = new LineBasicMaterial({ color: FRAME_COLOR })
-  const frame = new LineSegments(frameGeometry, frameMaterial)
-  frame.position.z = LAYER_FRAME
-  scene.add(frame)
-
   // 連続な図形の境界。画素の格子とは無関係に決まる、切れ目のない境界線
   const outlinePosition = new Float32BufferAttribute(new Float32Array(OUTLINE_VERTICES * 3), 3)
   const outlineGeometry = new BufferGeometry().setAttribute("position", outlinePosition)
@@ -412,8 +391,6 @@ export const createPixelCoverageScene = ({ scene, params }: SceneContext) => {
         imageMaterial,
         gridGeometry,
         gridMaterial,
-        frameGeometry,
-        frameMaterial,
         outlineGeometry,
         outlineMaterial,
         valueGeometry,
