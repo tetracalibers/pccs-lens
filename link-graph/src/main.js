@@ -15,7 +15,7 @@ import { applyVisibility, computeVisibility, createGraph, syncElements } from ".
 import { createHulls } from "./hulls.js"
 import { renderPanel } from "./panel.js"
 import { createSimulation } from "./simulation.js"
-import { GHOST_OPACITY, STATE_COLORS, UI_COLORS } from "./theme.js"
+import { GHOST_COLOR, GHOST_OPACITY, STATE_COLORS, STATE_TEXT_COLORS, UI_COLORS } from "./theme.js"
 
 // --- theme.js の値を CSS カスタムプロパティへ流し込む（色の実値は theme.js が唯一の情報源）---
 
@@ -30,6 +30,10 @@ const cssVariables = {
   "--state-empty": STATE_COLORS.empty,
   "--state-draft": STATE_COLORS.draft,
   "--state-published": STATE_COLORS.published,
+  "--state-broken-text": STATE_TEXT_COLORS.broken,
+  "--state-empty-text": STATE_TEXT_COLORS.empty,
+  "--state-draft-text": STATE_TEXT_COLORS.draft,
+  "--ghost-color": GHOST_COLOR,
   "--ghost-opacity": String(GHOST_OPACITY)
 }
 for (const [name, value] of Object.entries(cssVariables)) {

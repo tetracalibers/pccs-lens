@@ -7,6 +7,7 @@
 import cytoscape from "cytoscape"
 import {
   EDGE_COLORS,
+  GHOST_COLOR,
   GHOST_OPACITY,
   LABEL_FONT_SIZE,
   LABEL_MIN_ZOOMED_FONT_SIZE,
@@ -76,9 +77,11 @@ export const GRAPH_STYLE = [
     style: { "source-arrow-shape": "triangle" }
   },
   {
-    // --- ゴースト（OFF の大分類にあるリンク先）---
+    // --- ゴースト（非表示ノードへのリンク先）---
+    // 状態の色は使わず、専用のグレーで塗る（画面に出ていない先、という一点だけを伝える）。
     selector: "node.ghost",
     style: {
+      "background-color": GHOST_COLOR,
       opacity: GHOST_OPACITY,
       "border-width": 1,
       "border-style": "dashed",

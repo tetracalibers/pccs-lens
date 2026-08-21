@@ -95,20 +95,21 @@ body {
   font-weight: 700;
 }
 
+/* 数字は 12px なので、点用の色ではなく文字用の濃い版を使う（白地 4.5:1）。 */
 .stat--empty .stat__value {
-  color: var(--state-empty);
+  color: var(--state-empty-text);
 }
 
 .stat--draft .stat__value {
-  color: var(--state-draft);
+  color: var(--state-draft-text);
 }
 
 .stat--broken .stat__value {
-  color: var(--state-broken);
+  color: var(--state-broken-text);
 }
 
 .stat--warn {
-  color: var(--state-draft);
+  color: var(--state-draft-text);
 }
 
 /* --- 絞り込みのトグルになっているチップ --- */
@@ -272,7 +273,7 @@ body {
 }
 
 .legend__swatch--ghost {
-  background: var(--state-published);
+  background: var(--ghost-color);
   opacity: var(--ghost-opacity);
   outline: 1px dashed var(--ui-border);
 }
@@ -355,14 +356,15 @@ body {
   font-size: 11px;
 }
 
+/* 枠は点と同じ色、文字は濃い版（バッジの文字も小さい）。 */
 .badge--empty {
   border-color: var(--state-empty);
-  color: var(--state-empty);
+  color: var(--state-empty-text);
 }
 
 .badge--draft {
   border-color: var(--state-draft);
-  color: var(--state-draft);
+  color: var(--state-draft-text);
 }
 
 .badge--published {
@@ -372,7 +374,7 @@ body {
 
 .badge--broken {
   border-color: var(--state-broken);
-  color: var(--state-broken);
+  color: var(--state-broken-text);
 }
 
 .panel__open {
