@@ -53,7 +53,7 @@ effort: high
 | --- | --- | --- |
 | `visual` フラグ | 図解のあるページは frontmatter の `grades:` の次の行に `visual: true` を足す（一覧に「図解」タグが付く） | 現在の `+page.svx` に `visual: true` 行があるか。図解の有無は `$lib/demo/` の import があるか |
 | OGP画像 | `/generate-ogp-image /<route>` で 1200×630 の PNG を生成する（draft のままでは glob 展開の対象外なので公開後に行う） | 記録 `ogimage/data/<route>.json` が存在するか |
-| 文体スタイルガイド | `/author-style-analyzer <slug>` でその記事の「AI草稿 → 人手編集」の差分を `writing-guides/` へ反映する | 文体解析タスクリスト `writing-guides/STYLE-ANALYSIS-TASKLIST.md` に `- [x] \`/<route>\`` の行があるか（analyzer が分析後に更新する記録なので、これが一次情報源）。無い場合の補助として、`writing-guides/**/*.md` に**記事タイトル**（frontmatter の `title`）が現れるかも見る |
+| 文体スタイルガイド | `/author-style-analyzer <slug>` でその記事の「AI草稿 → 人手編集」の差分を `writing-guides/` へ反映する | 文体解析タスクリスト `writing-guides/STYLE-ANALYSIS-TASKLIST.md` に `- [x] \`/<route>\`` の行があるか（analyzer が分析後に更新する記録なので、これが一次情報源）。`- [~]` なら分析済みだが分析後に本文が改稿された＝再分析待ちなので、未実施として扱う。無い場合の補助として、`writing-guides/**/*.md` に**記事タイトル**（frontmatter の `title`）が現れるかも見る |
 | 数式記法の整備（**CG記事のみ**） | `/format-math-notation <slug>` で数式・インラインコードの記法を整える（自動修正の収束と advisory の指摘の判断） | 記法整備タスクリスト `writing-guides/NOTATION-TASKLIST.md` に `- [x] \`/<route>\`` の行があるか（`format-math-notation` が実行後に書く手記録なので、これが唯一の情報源） |
 
 - `<route>` は `app/src/routes/` を除いたパス（例: `color-theory/pccs-basics`）。`<slug>` はその末尾（例: `pccs-basics`）。
@@ -139,6 +139,8 @@ while IFS= read -r line; do
   [ -f "ogimage/data/$route.json" ] && ogp=done || ogp=todo
   if grep -qF -- "- [x] \`/$route\`" writing-guides/STYLE-ANALYSIS-TASKLIST.md 2>/dev/null; then
     style=done
+  elif grep -qF -- "- [~] \`/$route\`" writing-guides/STYLE-ANALYSIS-TASKLIST.md 2>/dev/null; then
+    style=stale
   elif grep -rqF --include='*.md' -- "$title" writing-guides; then
     style=cited
   else
@@ -239,6 +241,7 @@ ogp=todo                  →  - [ ] OGP画像を生成 — `/generate-ogp-image
 
 style=done                →  - [x] 文体スタイルガイドへ反映済み
 style=cited               →  - [x] 文体スタイルガイドへ反映済み（行は done と同じ。食い違いは手順8で報告する）
+style=stale               →  - [ ] 文体スタイルガイドを再分析 — `/author-style-analyzer <slug>`（分析後に本文が改稿された）
 style=uncited             →  - [ ] 文体スタイルガイドを更新 — `/author-style-analyzer <slug>`
 
 notation=done             →  - [x] 数式記法を整備済み
@@ -278,7 +281,7 @@ gh pr edit $PR --title "<新しいタイトル>" --body-file <一時ファイル
 - 説明文に記載した「その他の主な変更」の要点。
 - **未チェックのまま残った公開後タスク**（どの記事の `visual` フラグ／OGP画像／文体ガイド／数式記法が未対応か）。1件でもあれば、対応するコマンド（`/generate-ogp-image /<route>`・`/author-style-analyzer <slug>`・`/format-math-notation <slug>` など）を添えて促す。判定不能（`UNKNOWN`）があればその理由も伝える。
 - 記法整備が `notation=absent`（タスクリストに行が無い）だったものは、**タスクリストの追随漏れ**として記事名を挙げ、`node scripts/sync-tasklists.mjs --check` を案内する。
-- 文体ガイドの項目で `style=uncited`（タスクリストにも `[x]` が無く、ガイド本文にも記事タイトルが無い）だったものは、「未分析と断定」せずその事実として伝え、すでに分析済みかどうかをユーザーに確認する。`style=cited`（ガイドに記載はあるがタスクリストが未チェック）だったものは、**タスクリストの更新漏れの可能性**として記事名を挙げて報告する。
+- 文体ガイドの項目で `style=uncited`（タスクリストにも `[x]` が無く、ガイド本文にも記事タイトルが無い）だったものは、「未分析と断定」せずその事実として伝え、すでに分析済みかどうかをユーザーに確認する。`style=stale`（タスクリストが `[~]`）だったものは、**一度分析したあとにこの PR で本文が改稿された**ことを添えて報告する（未分析ではない。再分析が要るかどうかは analyzer が本文の差分を見て判断する）。`style=cited`（ガイドに記載はあるがタスクリストが未チェック）だったものは、**タスクリストの更新漏れの可能性**として記事名を挙げて報告する。
 - タイトルは要約であり、意図に合わせて調整可能である旨を添える。
 
 ## 注意事項

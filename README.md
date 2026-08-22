@@ -54,8 +54,9 @@ node scripts/sync-tasklists.mjs --write   # 差分を書き込む
 ```
 
 - 対象は `ogimage/OGP-TASKLIST.md`・`writing-guides/STYLE-ANALYSIS-TASKLIST.md`・`writing-guides/NOTATION-TASKLIST.md`。見出しに `` （`<yaml>` #<id>）`` の参照を持つセクションだけを YAML 順に組み直す。トップ・ゲーム・慣用色名マップなど手書きのセクションには触れない。
-- **`[x]`（生成済み・分析済み・記法整備済み）は作りも消しもしない。** 直すのは並び順・行の過不足・`[ページ未作成]` ↔ ``[draft] `/route` `` の変換まで。`draft: true` なのに `[x]` のような矛盾は警告として出るだけ。
+- **`[x]`（生成済み・分析済み・記法整備済み）と `[~]`（文体解析の再分析待ち）は作りも消しもしない。** 直すのは並び順・行の過不足・`[ページ未作成]` ↔ ``[draft] `/route` `` の変換まで。`draft: true` なのに `[x]` / `[~]` のような矛盾は警告として出るだけ。
 - **記法整備タスクリスト（`NOTATION-TASKLIST.md`）はCG記事のセクションだけを載せる。** `[x]` は `format-math-notation` が付け `commit-this` が外す（非 draft 記事の本文変更時）手記録で、スクリプトは他の2枚と同じく触らない。`[x]` なのに `app/.textlintignore`（記法パスのベースライン）に載っている記事は矛盾として警告する。
+- **文体解析タスクリスト（`STYLE-ANALYSIS-TASKLIST.md`）の `[~]` は「分析済みだが本文が改稿された＝再分析待ち」。** 非 draft 記事の本文が変わったコミットで `commit-this`（手順 1.8）が `[x]` から付け替え、`author-style-analyzer` が再分析の完了時に `[x]` へ戻す。**`[ ]` には落とさない**（`[ ]` は「一度も分析していない」の意味で、落とすと analyzer の再分析確認 — `evidence/` の `分析時点` と本文差分の突き合わせ — を迂回してしまう）。記法整備だけの書き換えでは付けない。
 - YAML に想定外の記述があるとエラーで停止し、**1行も書き込まない**。
 - `/create-color-theory-page`・`/create-color-fields-page`・`/create-cg-page` は雛形作成の最後にこれを実行する。`/prepare-link-targets` も、複数の雛形を起こし終えた最後に1回実行する。`/commit-this` も、コミット対象に YAML や `+page.svx` の frontmatter 変更が含まれていれば `--check` して差分を提示する。
 
@@ -109,7 +110,7 @@ node scripts/sync-tasklists.mjs --write   # 差分を書き込む
 - **推奨 effort は Opus の `high`**（`xhigh` にする必要はない）。分析の質を左右する重い思考（独立分析・反証・境界・統合）は Workflow 内の各エージェントに `effort` が固定されており、**セッションの effort を継承しない**。そのためセッションを `xhigh` へ上げても成果物は良くならず、スコープ解決や報告などメインループ側の処理が重く・遅くなるだけ。`high` で実行するのが費用対効果の面で最適。
 - 制御フローが JS のため**ハングしない**。各エージェントは構造化出力を返して終了し、待機プロセス（idle teammate）が残らない。
 - **引数なしの全記事一括分析は行わない**。分析対象はスキル引数（`#id`／slug をカンマ区切りで複数・混在指定できる）で必ず絞る。全記事を対象にしたい場合はカテゴリ／セクション単位のチャンクに分割して順に実行する。記事を1本も指定しない実行が許されるのは `--discover` 単独（棚卸しのみ）のときだけ。
-- **進捗は文体解析タスクリスト `writing-guides/STYLE-ANALYSIS-TASKLIST.md` で追う**（`ogimage/OGP-TASKLIST.md` と同じ運用）。記事ごとの `[x]`／`[ ]`／`[draft]`／`[ページ未作成]` を、スキルへ渡せるスコープ（`#<id>`）の見出しごとにまとめてある。スキルは実行前にここで未分析かどうかを確認し、実行後に分析した記事の行を `[x]` へ更新する。
+- **進捗は文体解析タスクリスト `writing-guides/STYLE-ANALYSIS-TASKLIST.md` で追う**（`ogimage/OGP-TASKLIST.md` と同じ運用）。記事ごとの `[x]`／`[~]`／`[ ]`／`[draft]`／`[ページ未作成]` を、スキルへ渡せるスコープ（`#<id>`）の見出しごとにまとめてある。スキルは実行前にここで未分析かどうかを確認し、実行後に分析した記事の行を `[x]` へ更新する。**`[x]` と `[~]` の記事がスコープに含まれる場合は、`evidence/` の `分析時点` と本文の差分を示して再分析するかを確認する**（`[~]` ＝ 分析後に本文が改稿された記事）。
 - Workflow を使えない環境では、サブエージェント（`Agent` ツール）を同じ3ステージ構成で順に呼ぶか、単一エージェントの役割切り替えで代替できる。
 
 #### author-style-writer の推奨 effort（モード別）
@@ -172,7 +173,7 @@ npm run data:jis-update
   - `/author-style-analyzer <対象> --discover` — 発見モード。記事を分析したうえで、保留の昇格・新規ルールの採用・確度の見直しまで行う（本体・`evidence/`・`pending/` の3層を更新）
   - `/author-style-analyzer --discover` — 記事を読まず、保留の昇格候補と支持記事数の集計だけで棚卸しする
   - `/author-style-analyzer` — 引数なし。範囲指定を促す（`#id`／slug の指定を求める）
-  - 分析済みの記録は `writing-guides/STYLE-ANALYSIS-TASKLIST.md`。実行後にスキルが該当行を `[x]` に更新する（根拠モードでも付ける。記事の分析は完了しているため）
+  - 分析済みの記録は `writing-guides/STYLE-ANALYSIS-TASKLIST.md`。実行後にスキルが該当行を `[x]` に更新する（根拠モードでも付ける。記事の分析は完了しているため）。分析後に本文が改稿された記事は `[~]`（再分析待ち）になっているので、再分析すれば `[x]` に戻る
 
 ### 記事の編集指示（ディレクティブの一括対応）
 
