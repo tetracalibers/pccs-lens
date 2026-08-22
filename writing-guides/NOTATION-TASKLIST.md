@@ -94,24 +94,24 @@
 
 ## デジタル画像の基本／デジタルカメラモデル（`cg/basics.yaml` #camera-model）
 
-- [ ] `/cg/basics/camera-capture-and-cg`
-- [ ] `/cg/basics/cg-and-image-processing`
+- [x] `/cg/basics/camera-capture-and-cg`
+- [x] `/cg/basics/cg-and-image-processing`
 
 ## デジタル画像の基本／デジタル画像の表現（`cg/basics.yaml` #digital-image）
 
-- [ ] `/cg/basics/image-digitization`
-- [ ] `/cg/basics/image-sampling`
+- [x] `/cg/basics/image-digitization`
+- [x] `/cg/basics/image-sampling`
 - [draft] `/cg/basics/sampling-theorem-and-interpolation`
-- [ ] `/cg/basics/image-quantization`
-- [ ] `/cg/basics/grayscale-and-color-images`
-- [ ] `/cg/basics/vector-and-raster`
+- [x] `/cg/basics/image-quantization`
+- [x] `/cg/basics/grayscale-and-color-images`
+- [x] `/cg/basics/vector-and-raster`
 
 ## デジタル画像の基本／ラスタ化と描画（`cg/basics.yaml` #rasterization）
 
-- [ ] `/cg/basics/shape-rasterization`
-- [ ] `/cg/basics/anti-aliasing`
-- [ ] `/cg/basics/area-filling`
-- [ ] `/cg/basics/gradient-generation`
+- [x] `/cg/basics/shape-rasterization`
+- [x] `/cg/basics/anti-aliasing`
+- [x] `/cg/basics/area-filling`
+- [x] `/cg/basics/gradient-generation`
 
 ## 2値画像処理／2値化（`cg/binary-image.yaml` #binarization）
 
@@ -137,7 +137,7 @@
 
 ## 撮影とレンズ／カメラの仕組み（`cg/camera.yaml` #camera-structure）
 
-- [ ] `/cg/camera/digital-camera-structure`
+- [x] `/cg/camera/digital-camera-structure`
 
 ## 撮影とレンズ／レンズモデル（`cg/camera.yaml` #lens-model）
 
@@ -260,7 +260,7 @@
 
 ## 画像の性質と色／画像の性質（`cg/image-properties.yaml` #properties）
 
-- [ ] `/cg/image-properties/dynamic-range-and-gradation`
+- [x] `/cg/image-properties/dynamic-range-and-gradation`
 - [draft] `/cg/image-properties/image-statistics`
 - [ページ未作成] 画像のノイズ
 - [ページ未作成] コントラストとシャープネス
@@ -285,7 +285,7 @@
 
 ## モデリング／形状モデル（`cg/modeling.yaml` #shape-models）
 
-- [ ] `/cg/modeling/shape-model-overview`
+- [x] `/cg/modeling/shape-model-overview`
 - [draft] `/cg/modeling/csg-representation`
 - [draft] `/cg/modeling/boundary-representation`
 - [draft] `/cg/modeling/sweep-representation`
@@ -295,9 +295,9 @@
 ## モデリング／曲線と曲面（`cg/modeling.yaml` #curves-surfaces）
 
 - [ ] `/cg/modeling/curve-surface-equations`
-- [ ] `/cg/modeling/quadratic-curve`
-- [ ] `/cg/modeling/bezier-curve-surface`
-- [ ] `/cg/modeling/bezier-curve-properties`
+- [x] `/cg/modeling/quadratic-curve`
+- [x] `/cg/modeling/bezier-curve-surface`
+- [x] `/cg/modeling/bezier-curve-properties`
 - [draft] `/cg/modeling/ferguson-curve`
 - [ページ未作成] 双3次クーンズ曲面
 - [draft] `/cg/modeling/b-spline-curve-surface`
@@ -597,10 +597,10 @@
 ## 変換と投影／図形の幾何学的変換（`cg/transformation.yaml` #coordinate-transform）
 
 - [ ] `/cg/transformation/coordinate-systems`
-- [ ] `/cg/transformation/basic-transformations`
-- [ ] `/cg/transformation/transformation-composition`
-- [ ] `/cg/transformation/reflection-and-skew`
-- [ ] `/cg/transformation/affine-transformation`
+- [x] `/cg/transformation/basic-transformations`
+- [x] `/cg/transformation/transformation-composition`
+- [x] `/cg/transformation/reflection-and-skew`
+- [x] `/cg/transformation/affine-transformation`
 - [ ] `/cg/transformation/projective-transformation`
 
 ## 変換と投影／ビューイングパイプライン（`cg/transformation.yaml` #viewing-pipeline）
@@ -610,7 +610,7 @@
 
 ## 変換と投影／投影とクリッピング（`cg/transformation.yaml` #projection-and-clipping）
 
-- [ ] `/cg/transformation/pinhole-camera`
+- [x] `/cg/transformation/pinhole-camera`
 - [ ] `/cg/transformation/perspective-and-parallel-projection`
 - [ ] `/cg/transformation/projection-steps`
 - [draft] `/cg/transformation/projection-calculation`
