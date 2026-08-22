@@ -141,15 +141,15 @@
 :::
 ```
 
-- **すでにできているものへの修正指示は、文章なら `:::Edit`、デモ・図版なら `:::Modify` で書きます**。どちらも行頭に `!`（context diff が変更行に使う記号）が付き、`:::Edit` は琥珀、`:::Modify` は石板色（light slate gray）の帯で表示されます。
+- **すでにできているものへの修正指示は、文章なら `:::Edit`、デモ・図版なら `:::Modify` で書きます**。どちらも琥珀の帯と行頭の `!`（context diff が変更行に使う記号）で表示され、ラベルの有無で見分けます。
 - **`:::Edit` は属性もラベルも取りません**。`:::Add` と同じく、行頭の `!` の隣からすぐ指示文が始まります。
 - **`:::Modify` は `target` で対象を指定し、ラベルに出します**。省略時は `threejs`（Three.jsデモ）です。
 
   | 記法 | ラベル | 担当 |
   | --- | --- | --- |
   | `:::Edit` | （ラベルなし・行頭の `!` のみ） | `/author-style-writer` |
-  | `:::Modify`（`target="threejs"`・既定） | `変更（Three.jsデモ）` | `/add-threejs-demo` |
-  | `:::Modify{target="svg"}` | `変更（SVG図版）` | `/svg-diagram-component` |
+  | `:::Modify`（`target="threejs"`・既定） | `DEMO (THREE.JS)` | `/add-threejs-demo` |
+  | `:::Modify{target="svg"}` | `FIGURE (SVG)` | `/svg-diagram-component` |
 
 - 「まだ無いものを作る・足す」のが `:::Todo`（図版・デモ）と `:::Add`（文章）、「あるものを直す」のが `:::Edit` / `:::Modify` です。デモの初期値・UIラベルの直しや、既存の記述への引っかかりはこちらに書きます。
 - 修正が済んだら、そのブロックを削除します。

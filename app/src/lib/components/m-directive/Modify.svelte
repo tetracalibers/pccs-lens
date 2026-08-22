@@ -27,17 +27,16 @@
 </div>
 
 <style>
-  /* :::Edit と同じ帯のかたち。文章ではなくデモ・図版への指示なので石板色で塗り分ける */
+  /* :::Edit と同じ帯のかたち・色。ラベルで文章への指示と区別する */
   .modify {
     position: relative;
     margin: 1.05rem 0;
     padding: 0.5rem 0.8rem;
     padding-inline-start: calc(0.8rem + 1.25rem);
     border-radius: 0 2px 2px 0;
-    background: light-dark(#eef1f5, rgb(119 136 153 / 0.24));
+    background: light-dark(#fff8c5, rgb(210 153 34 / 0.24));
     font-size: 0.8rem;
     line-height: 1.7;
-    text-transform: uppercase;
   }
   .modify :global(*) {
     font-size: 0.8rem;
@@ -45,9 +44,10 @@
 
   .label {
     font-family: var(--font-mono-base), var(--font-ja-base);
-    color: light-dark(#546679, #a3b3c4);
+    color: light-dark(#9a6700, #d29922);
     font-size: 0.75rem;
     letter-spacing: 0.1em;
+    text-transform: uppercase;
     margin-bottom: 0.25rem;
   }
 
