@@ -56,6 +56,16 @@ node scripts/sync-tasklists.mjs --write   # 差分を書き込む
 - YAML に想定外の記述があるとエラーで停止し、**1行も書き込まない**。
 - `/create-color-theory-page`・`/create-color-fields-page`・`/create-cg-page` は雛形作成の最後にこれを実行する。`/prepare-link-targets` も、複数の雛形を起こし終えた最後に1回実行する。`/commit-this` も、コミット対象に YAML や `+page.svx` の frontmatter 変更が含まれていれば `--check` して差分を提示する。
 
+### 内部リンクの可視化（link-graph）
+
+記事同士の内部リンクをネットワークグラフで見るローカル専用ツール。app 内のコンテンツを読み取ってグラフを生成するが、サイトの公開ビルドには関わらない。詳しくは [`link-graph/README.md`](./link-graph/README.md) を参照。
+
+```sh
+cd link-graph
+npm install     # 初回のみ
+npm run dev     # http://localhost:5174
+```
+
 ### SVG図版の作成
 
 - `/svg-diagram-component`スキルに図の内容を渡して作成する
