@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>内部リンクグラフ | Color Prism</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="header">
+        <h1 class="header__title">内部リンクグラフ</h1>
+        <div class="header__stats" id="stats"></div>
+        <button
+          type="button"
+          class="header__action"
+          id="relayout"
+          title="ユニットの中心から配置し直す"
+        >
+          再配置
+        </button>
+      </header>
+
+      <aside class="sidebar">
+        <section class="sidebar__section">
+          <h2 class="sidebar__heading">表示</h2>
+          <div id="filters"></div>
+        </section>
+
+        <section class="sidebar__section">
+          <h2 class="sidebar__heading">凡例</h2>
+          <ul class="legend">
+            <li class="legend__item">
+              <span class="legend__swatch legend__swatch--broken"></span>リンク切れ
+            </li>
+            <li class="legend__item">
+              <span class="legend__swatch legend__swatch--empty"></span>本文なし
+            </li>
+            <li class="legend__item">
+              <span class="legend__swatch legend__swatch--draft"></span>執筆中
+            </li>
+            <li class="legend__item">
+              <span class="legend__swatch legend__swatch--published"></span>公開済
+            </li>
+            <li class="legend__item">
+              <span class="legend__swatch legend__swatch--ghost"></span>非表示ノードへのリンク
+            </li>
+          </ul>
+          <p class="legend__note">
+            エッジの色はリンク先の状態。相互リンクは双方向の矢印 1
+            本に束ね、両端の強い方の色で描く。
+          </p>
+        </section>
+      </aside>
+
+      <main class="canvas">
+        <div id="cy"></div>
+        <div class="canvas__hint">
+          ドラッグで移動 / スクロールで拡大縮小 / ノードのクリックで詳細
+        </div>
+      </main>
+
+      <aside class="panel" id="panel"></aside>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

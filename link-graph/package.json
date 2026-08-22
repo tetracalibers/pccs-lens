@@ -1,0 +1,21 @@
+{
+  "name": "link-graph",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "description": "記事間の内部リンクをネットワークグラフとして可視化するローカル専用ツール（Vite + Cytoscape.js）。app の実行環境からは独立。",
+  "scripts": {
+    "dev": "vite",
+    "scan": "node scan/cli.mjs",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "cytoscape": "^3.30.4",
+    "d3-force": "^3.0.0",
+    "yaml": "^2.7.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.8.1",
+    "vite": "^7.1.5"
+  }
+}
