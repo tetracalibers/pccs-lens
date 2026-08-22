@@ -6,7 +6,6 @@ export default defineConfig({
   server: {
     // app の dev サーバー（5173）と同時に立ち上げるので、別のポートに固定する。
     port: 5174,
-    strictPort: true,
-    open: true
+    strictPort: true
   }
 })
