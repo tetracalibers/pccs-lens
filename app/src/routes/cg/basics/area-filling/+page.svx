@@ -4,8 +4,6 @@ title: 塗りつぶし処理 # CG 6-2-3
 
 group: ["CG"]
 visual: true
-
-draft: true
 ---
 
 <script>
