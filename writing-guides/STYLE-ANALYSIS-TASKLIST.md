@@ -323,10 +323,10 @@
 
 ## CGと画像処理 — デジタル画像の基本／ラスタ化と描画（`cg/basics.yaml` #rasterization）
 
-- [x] `/cg/basics/shape-rasterization`
-- [x] `/cg/basics/anti-aliasing`
-- [x] `/cg/basics/area-filling`
-- [x] `/cg/basics/gradient-generation`
+- [~] `/cg/basics/shape-rasterization`
+- [~] `/cg/basics/anti-aliasing`
+- [~] `/cg/basics/area-filling`
+- [~] `/cg/basics/gradient-generation`
 
 ## CGと画像処理 — 2値画像処理／2値化（`cg/binary-image.yaml` #binarization）
 
@@ -511,8 +511,8 @@
 
 - [x] `/cg/modeling/curve-surface-equations`
 - [x] `/cg/modeling/quadratic-curve`
-- [x] `/cg/modeling/bezier-curve-surface`
-- [x] `/cg/modeling/bezier-curve-properties`
+- [~] `/cg/modeling/bezier-curve-surface`
+- [~] `/cg/modeling/bezier-curve-properties`
 - [draft] `/cg/modeling/ferguson-curve`
 - [ページ未作成] 双3次クーンズ曲面
 - [draft] `/cg/modeling/b-spline-curve-surface`
