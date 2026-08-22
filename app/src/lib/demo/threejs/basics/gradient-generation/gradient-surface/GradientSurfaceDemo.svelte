@@ -29,7 +29,7 @@
       }
     })
     pane.addBinding(p, "showSurface", { label: "曲面を表示" })
-    pane.addBinding(p, "height", { min: 0.2, max: 1, step: 0.01, label: "値の高さ" })
+    pane.addBinding(p, "height", { min: 0.2, max: 1, step: 0.01, label: "曲面の起伏" })
     pane.addBinding(p, "shape", { readonly: true, label: "曲面の形" })
   }}
 />
