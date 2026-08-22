@@ -159,30 +159,58 @@ const renderChip = ({ label, value, modifier, focus, title }) => {
   return wrapper
 }
 
-const renderStats = () => {
-  const { stats } = data
-  // 並びは「ページ全体 → 状態の内訳（潰す優先度の順）→ リンク → 異常」。
+/**
+ * ヘッダーの件数を、**左サイドバーで選択されているページだけ**から数える。
+ *
+ * 走査結果の全体集計（`data.stats`）は使わない。全体の数を出すと、たとえば「自己リンク 1」と
+ * 表示されているのに CG 系だけを選んでいると該当ノードが 1 つも無い、という食い違いが起きて、
+ * 押しても何も起きないチップになる。
+ *
+ * **ヘッダーのチップでの絞り込み（`stateFocus`）は母集団に入れない。** 入れると「本文なし」を
+ * 押した瞬間に draft と公開済が 0 になって、トグルとして読めなくなる。
+ */
+const countSelected = (plan) => {
+  const counts = { pages: 0, empty: 0, draft: 0, published: 0, unresolved: 0 }
+
+  for (const id of plan.primary) {
+    const node = nodeIndex.get(id)
+    counts.pages += 1
+    // `primary` にリンク切れは入らない（`computeVisibility` が外している）。
+    counts[node.state] += 1
+    if (node.warning === "unit-unresolved") counts.unresolved += 1
+  }
+
+  return {
+    ...counts,
+    // リンク切れは表示中のページから張られている先。数えるのは「選択中のページが踏んでいる」分。
+    broken: plan.broken.size,
+    selfLinks: data.stats.selfLinks.filter((link) => plan.primary.has(link.path))
+  }
+}
+
+const renderStats = (plan) => {
+  const counts = countSelected(plan)
+  // 並びは「ページ全体 → 状態の内訳（潰す優先度の順）→ 異常」。
   // 件数 0 の異常チップ（所属不明・自己リンク）は出さない。
   const chips = [
-    { label: "ページ", value: stats.pages },
-    { label: "本文なし", value: stats.empty, modifier: "empty", focus: "empty" },
-    { label: "draft", value: stats.draft, modifier: "draft", focus: "draft" },
-    { label: "公開済", value: stats.published, focus: "published" },
-    { label: "リンク", value: stats.rawLinks },
-    { label: "リンク切れ", value: stats.broken, modifier: "broken", focus: "broken" },
+    { label: "ページ", value: counts.pages },
+    { label: "本文なし", value: counts.empty, modifier: "empty", focus: "empty" },
+    { label: "draft", value: counts.draft, modifier: "draft", focus: "draft" },
+    { label: "公開済", value: counts.published, focus: "published" },
+    { label: "リンク切れ", value: counts.broken, modifier: "broken", focus: "broken" },
     {
       label: "所属不明",
-      value: stats.unresolvedUnits,
+      value: counts.unresolved,
       modifier: "warn",
       title: "YAML に未登録で、所属ユニットが解決できないページ",
       onlyWhenPresent: true
     },
     {
       label: "自己リンク",
-      value: stats.selfLinks.length,
+      value: counts.selfLinks.length,
       modifier: "warn",
       focus: "self-link",
-      title: `自己リンクのあるページだけを表示する（配置は動かない）\n${stats.selfLinks
+      title: `自己リンクのあるページだけを表示する（配置は動かない）\n${counts.selfLinks
         .map((link) => `${link.path} L${link.line}`)
         .join("\n")}`,
       onlyWhenPresent: true
@@ -281,6 +309,7 @@ const select = (path, { center = false } = {}) => {
 const applyFilters = ({ replace = false } = {}) => {
   const plan = computeVisibility(data, filters.state)
   applyVisibility(cy, plan)
+  renderStats(plan)
 
   const nodes = [...plan.visibleNodes].map((id) => {
     const node = nodeIndex.get(id)
@@ -325,7 +354,6 @@ const update = (next) => {
   unitOrder = data.units.map((unit) => unit.id)
   syncElements(cy, data)
   filters.setData(data)
-  renderStats()
   applyFilters()
   renderSidePanel()
 }

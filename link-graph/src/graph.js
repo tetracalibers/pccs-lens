@@ -233,6 +233,14 @@ export const syncElements = (cy, data) => {
  * 薄く表示する（ユニットには寄せない）。色系 103 ノードで画面を占領されずに、依存先だけが
  * 見える状態にする。
  *
+ * 返す集合の役割:
+ *
+ * - `primary` … 左サイドバーのトグルを通ったページ（囲みは無いが、ユニットの引力を受ける本体）
+ * - `ghosts` … OFF の大分類にあるが、ON 側からリンクされている先
+ * - `broken` … 表示中のページから張られているリンク切れ
+ *
+ * ヘッダーの件数は `primary` と `broken` から数える（→ main.js の `countSelected`）。
+ *
  * @param {object} data 走査結果
  * @param {{ groups: Set<string>, units: Set<string>, showIsolated: boolean }} filters
  */
@@ -280,7 +288,7 @@ export const computeVisibility = (data, filters) => {
       .map((edge) => edge.id)
   )
 
-  return { primary, ghosts, visibleNodes, visibleEdges }
+  return { primary, ghosts, broken: brokenVisible, visibleNodes, visibleEdges }
 }
 
 /**
