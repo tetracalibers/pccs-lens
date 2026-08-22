@@ -235,26 +235,25 @@ export const syncElements = (cy, data) => {
  *
  * 返す集合の役割:
  *
- * - `primary` … 左サイドバーのトグルを通ったページ（囲みは無いが、ユニットの引力を受ける本体）
+ * - `primary` … 左サイドバーのトグル（大分類・ユニット）を通ったページ（ユニットの引力を受ける本体）
  * - `ghosts` … OFF の大分類にあるが、ON 側からリンクされている先
  * - `broken` … 表示中のページから張られているリンク切れ
  *
  * ヘッダーの件数は `primary` と `broken` から数える（→ main.js の `countSelected`）。
  *
  * @param {object} data 走査結果
- * @param {{ groups: Set<string>, units: Set<string>, showIsolated: boolean }} filters
+ * @param {{ groups: Set<string>, units: Set<string> }} filters
  */
 export const computeVisibility = (data, filters) => {
   const nodeById = new Map(data.nodes.map((node) => [node.id, node]))
 
-  /** 大分類・ユニットのトグルと孤立フィルタを通ったページ（ユニットに属する本体）。 */
+  /** 大分類・ユニットのトグルを通ったページ（ユニットに属する本体）。 */
   const primary = new Set()
   for (const node of data.nodes) {
     if (node.state === "broken") continue
     if (!filters.groups.has(node.group)) continue
     // 所属不明（unit なし）のページは、大分類が ON ならそのまま出す（どこにも寄せない）。
     if (node.unit && !filters.units.has(node.unit)) continue
-    if (!filters.showIsolated && node.isolated) continue
     primary.add(node.id)
   }
 

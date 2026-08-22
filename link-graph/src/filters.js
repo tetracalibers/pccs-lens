@@ -1,17 +1,20 @@
-// フィルタ（大分類 → ユニット → 孤立ページ）の UI と状態。
+// フィルタ（大分類 → ユニット）の UI と状態。
 //
 // 2 段構成。上段は大分類 3 つのトグル。
 // 下段は ON になっている大分類のユニット個別トグル。
 //
-// 状態は永続化しない。開くたびにデフォルト（CG系のみ ON・孤立非表示）から始める。
+// 孤立ページ（入次数・出次数がともに 0）はここでは扱わない。常に表示して、絞り込みたいときだけ
+// ヘッダーの「孤立」チップを押す（配置を動かさずに絞り込める方がよいため）。
+//
+// 状態は永続化しない。開くたびにデフォルト（CG系のみ ON）から始める。
 
 /**
  * @param {HTMLElement} container
  * @param {() => void} onChange
  */
 export const createFilters = (container, onChange) => {
-  /** @type {{ groups: Set<string>, units: Set<string>, showIsolated: boolean }} */
-  const state = { groups: new Set(), units: new Set(), showIsolated: false }
+  /** @type {{ groups: Set<string>, units: Set<string> }} */
+  const state = { groups: new Set(), units: new Set() }
 
   /** 初回だけデフォルト（`defaultOn`）を適用し、以降はユーザーの選択を保つ。 */
   let initialized = false
@@ -118,23 +121,6 @@ export const createFilters = (container, onChange) => {
       section.append(unitList)
       container.append(section)
     }
-
-    const divider = document.createElement("hr")
-    divider.className = "filter-divider"
-    container.append(divider)
-
-    container.append(
-      checkbox({
-        id: "show-isolated",
-        label: "孤立ページ",
-        count: data.stats.isolated,
-        checked: state.showIsolated,
-        onToggle: (checked) => {
-          state.showIsolated = checked
-          onChange()
-        }
-      })
-    )
   }
 
   return { state, setData }

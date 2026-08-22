@@ -108,6 +108,10 @@ body {
   color: var(--state-broken-text);
 }
 
+.stat--isolated .stat__value {
+  color: var(--isolated-text);
+}
+
 .stat--warn {
   color: var(--state-draft-text);
 }
@@ -220,12 +224,6 @@ body {
 
 .filter-units[hidden] {
   display: none;
-}
-
-.filter-divider {
-  margin: 16px 0 10px;
-  border: 0;
-  border-top: 1px solid var(--ui-border);
 }
 
 /* --- 凡例 --- */

@@ -16,7 +16,14 @@ import { applyVisibility, computeVisibility, createGraph, syncElements } from ".
 import { createLabelWidths } from "./labels.js"
 import { renderPanel } from "./panel.js"
 import { createSimulation } from "./simulation.js"
-import { GHOST_COLOR, GHOST_OPACITY, STATE_COLORS, STATE_TEXT_COLORS, UI_COLORS } from "./theme.js"
+import {
+  GHOST_COLOR,
+  GHOST_OPACITY,
+  ISOLATED_TEXT_COLOR,
+  STATE_COLORS,
+  STATE_TEXT_COLORS,
+  UI_COLORS
+} from "./theme.js"
 
 // --- theme.js の値を CSS カスタムプロパティへ流し込む（色の実値は theme.js が唯一の情報源）---
 
@@ -34,6 +41,7 @@ const cssVariables = {
   "--state-broken-text": STATE_TEXT_COLORS.broken,
   "--state-empty-text": STATE_TEXT_COLORS.empty,
   "--state-draft-text": STATE_TEXT_COLORS.draft,
+  "--isolated-text": ISOLATED_TEXT_COLOR,
   "--ghost-color": GHOST_COLOR,
   "--ghost-opacity": String(GHOST_OPACITY)
 }
@@ -170,13 +178,14 @@ const renderChip = ({ label, value, modifier, focus, title }) => {
  * 押した瞬間に draft と公開済が 0 になって、トグルとして読めなくなる。
  */
 const countSelected = (plan) => {
-  const counts = { pages: 0, empty: 0, draft: 0, published: 0, unresolved: 0 }
+  const counts = { pages: 0, empty: 0, draft: 0, published: 0, isolated: 0, unresolved: 0 }
 
   for (const id of plan.primary) {
     const node = nodeIndex.get(id)
     counts.pages += 1
     // `primary` にリンク切れは入らない（`computeVisibility` が外している）。
     counts[node.state] += 1
+    if (node.isolated) counts.isolated += 1
     if (node.warning === "unit-unresolved") counts.unresolved += 1
   }
 
@@ -190,13 +199,25 @@ const countSelected = (plan) => {
 
 const renderStats = (plan) => {
   const counts = countSelected(plan)
-  // 並びは「ページ全体 → 状態の内訳（潰す優先度の順）→ 異常」。
-  // 件数 0 の異常チップ（所属不明・自己リンク）は出さない。
+  // 並びは「ページ全体 → 状態の内訳（潰す優先度の順）→ 孤立 → 異常」。
+  //
+  // 0 件のときの扱いは 2 通り。**ページ・状態の内訳・孤立・リンク切れは 0 でも出す** —
+  // 件数は選択中のページから数えているので、0 は「ここには無い」という情報になる。
+  // 一方 **所属不明・自己リンクは 0 なら出さない** — どちらもリポジトリの不備を知らせる
+  // ためのもので、無いのが正常だから、常設するとヘッダーが読みにくくなるだけ。
   const chips = [
     { label: "ページ", value: counts.pages },
     { label: "本文なし", value: counts.empty, modifier: "empty", focus: "empty" },
     { label: "draft", value: counts.draft, modifier: "draft", focus: "draft" },
     { label: "公開済", value: counts.published, focus: "published" },
+    {
+      label: "孤立",
+      value: counts.isolated,
+      modifier: "isolated",
+      focus: "isolated",
+      title:
+        "どのページからもリンクされず、どのページへもリンクしていないページだけを表示する（配置は動かない）"
+    },
     { label: "リンク切れ", value: counts.broken, modifier: "broken", focus: "broken" },
     {
       label: "所属不明",
@@ -250,6 +271,7 @@ const applyStateFocus = () => {
   const matches = (node) => {
     if (stateFocus.size === 0) return true
     if (stateFocus.has(node.data("state"))) return true
+    if (stateFocus.has("isolated") && node.data("isolated")) return true
     return stateFocus.has("self-link") && selfLinkPaths.has(node.id())
   }
 
