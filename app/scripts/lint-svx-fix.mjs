@@ -6,6 +6,7 @@
  *   npm run lint:svx:fix -- src/routes/cg/basics/xxx/+page.svx
  *   npm run lint:svx:fix -- --no-baseline <path>          # ベースラインを無効にする
  *   npm run lint:svx:fix -- --syntax-only                # 表記揺れ（prh）を当てない
+ *   npm run lint:svx:fix -- --rules=math-enum-comma       # そのルールIDだけを直す（表記揺れは当てない）
  *   npm run lint:svx:fix -- --max-passes 8
  *
  * **1パスでは収束しない。** ルールの自動修正が別のルールの違反を新たに生むためである。
@@ -22,19 +23,44 @@ import path from "node:path"
 import { createHash } from "node:crypto"
 import { spawnSync } from "node:child_process"
 import { fileURLToPath } from "node:url"
+import { RULE_IDS, RULE_IDS_ENV, parseRuleIds } from "../textlint/lib/rule-ids.js"
 
 const APP = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
 const DEFAULT_GLOB = "src/routes/**/+page.svx"
 
 const argv = process.argv.slice(2)
-const options = { baseline: true, notation: true, maxPasses: 5 }
+const options = { baseline: true, notation: true, maxPasses: 5, ruleIds: null }
 const targets = []
 for (let index = 0; index < argv.length; index += 1) {
   const argument = argv[index]
   if (argument === "--no-baseline") options.baseline = false
   else if (argument === "--syntax-only") options.notation = false
   else if (argument === "--max-passes") options.maxPasses = Number(argv[(index += 1)])
+  else if (argument === "--rules") options.ruleIds = argv[(index += 1)]
+  else if (argument.startsWith("--rules=")) options.ruleIds = argument.slice("--rules=".length)
   else targets.push(argument)
+}
+
+/**
+ * ガイドのルールIDで対象を絞る（→ textlint/lib/rule-ids.js）。
+ * 指定があるときは**表記揺れ（prh）を当てない**。prh はルールIDの体系の外にあり、
+ * 「このルールだけ直す」と言われて別系統の置き換えまで走らせるのは意図に反するため。
+ */
+if (options.ruleIds !== null) {
+  let selected
+  try {
+    selected = parseRuleIds(options.ruleIds)
+  } catch (error) {
+    console.error(error.message)
+    process.exit(1)
+  }
+  if (selected.size === 0) {
+    console.error(`--rules にルールIDが無い。指定できるルールID: ${RULE_IDS.join(", ")}`)
+    process.exit(1)
+  }
+  options.ruleIds = [...selected].join(",")
+  options.notation = false
+  console.log(`対象のルールID: ${options.ruleIds}（表記揺れは当てない）`)
 }
 const patterns = targets.length > 0 ? targets : [DEFAULT_GLOB]
 
@@ -82,7 +108,12 @@ const digest = () => {
 }
 
 const run = (args) =>
-  spawnSync("npx", ["textlint", ...args, ...patterns], { cwd: APP, encoding: "utf8" })
+  spawnSync("npx", ["textlint", ...args, ...patterns], {
+    cwd: APP,
+    encoding: "utf8",
+    env:
+      options.ruleIds === null ? process.env : { ...process.env, [RULE_IDS_ENV]: options.ruleIds }
+  })
 
 const baselineArgs = options.baseline ? [] : ["--ignore-path", "/dev/null"]
 

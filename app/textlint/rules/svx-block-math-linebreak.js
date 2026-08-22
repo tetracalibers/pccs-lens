@@ -13,6 +13,7 @@
  */
 
 import { maskForMathRule } from "../lib/svx.js"
+import { forRule } from "../lib/rule-ids.js"
 
 /** ブロック数式（段落全体が `$$...$$` のもの） */
 const BLOCK_MATH = /^\$\$[ \t]*\n[\s\S]*?^\$\$[ \t]*$/gm
@@ -20,6 +21,9 @@ const BLOCK_MATH = /^\$\$[ \t]*\n[\s\S]*?^\$\$[ \t]*$/gm
 const TWO = /(?<!\\)\\{2}(?!\\)/g
 /** 行末にあるちょうど4つのバックスラッシュ */
 const FOUR_AT_LINE_END = /(?<!\\)\\{4}(?!\\)[ \t]*(?=\n)/g
+
+/** ガイドのルールID（→ writing-guides/math-notation-guide.md） */
+const RULE_ID = "block-math-linebreak"
 
 const reporter = (context) => {
   const { Syntax, RuleError, report, getSource, fixer } = context
@@ -63,7 +67,9 @@ const reporter = (context) => {
   }
 }
 
+const rule = forRule(RULE_ID, reporter)
+
 export default {
-  linter: reporter,
-  fixer: reporter
+  linter: rule,
+  fixer: rule
 }

@@ -7,9 +7,13 @@
 
 import { maskForProseRules } from "../lib/svx.js"
 import { FUNCTION_NAMES } from "../lib/math-tokens.js"
+import { forRule } from "../lib/rule-ids.js"
 
 const FUNCTION = new RegExp(`\\b(?:${FUNCTION_NAMES.join("|")})\\b`, "g")
 const OPENING_PAREN = /^[(（]/
+
+/** ガイドのルールID（→ writing-guides/math-notation-guide.md） */
+const RULE_ID = "function-names-in-inline-code"
 
 const reporter = (context) => {
   const { Syntax, RuleError, report, getSource } = context
@@ -34,4 +38,4 @@ const reporter = (context) => {
   }
 }
 
-export default { linter: reporter }
+export default { linter: forRule(RULE_ID, reporter) }

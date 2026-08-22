@@ -11,6 +11,10 @@
 
 import { maskForMathRule } from "../lib/svx.js"
 import { collectMathEnumerations } from "../lib/math-enum.js"
+import { forRule } from "../lib/rule-ids.js"
+
+/** ガイドのルールID（→ writing-guides/math-notation-guide.md） */
+const RULE_ID = "math-enum-comma"
 
 const reporter = (context) => {
   const { Syntax, RuleError, report, getSource, fixer } = context
@@ -36,7 +40,9 @@ const reporter = (context) => {
   }
 }
 
+const rule = forRule(RULE_ID, reporter)
+
 export default {
-  linter: reporter,
-  fixer: reporter
+  linter: rule,
+  fixer: rule
 }

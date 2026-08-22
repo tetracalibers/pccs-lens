@@ -9,6 +9,8 @@
 npm run lint:svx            # 検査する（記法＋表記揺れ）
 npm run lint:svx:fix        # 自動修正できるものを、変化が無くなるまで繰り返し直す
 npm run lint:svx:advisory   # 判断が要る指摘を見る（非ブロッキング）
+
+npm run lint:svx:fix -- --rules=math-enum-comma   # ガイドのルールIDで絞って直す
 ```
 
 対象は `src/routes/**/+page.svx`。`.textlintrc.json` で Markdown プラグインの
@@ -48,6 +50,51 @@ npm run lint:svx:fix -- src/routes/cg/basics/anti-aliasing/+page.svx
 npm run lint:svx:fix -- --no-baseline src/routes/cg             # ベースラインを無効にする
 npm run lint:svx:fix -- --syntax-only --max-passes 8            # 表記揺れを当てない
 ```
+
+## ルールID（ガイドのルールとの対応）
+
+ガイド（`writing-guides/math-notation-guide.md`）の各ルールには**ルールID**が振られていて、
+**記事を整備するときの指定単位**になる。1つのルールIDを、自動修正する syntax ルールと
+判断待ちを出す advisory ルールの2本で強制していることがあるので、対応は1対Nになる。
+
+| ルールID | `syntax` | `advisory` |
+| --- | --- | --- |
+| `prefer-inline-code` | — | `svx-prefer-inline-code` |
+| `block-math-format` | — | — |
+| `block-math-linebreak` | `svx-block-math-linebreak` | — |
+| `prime-notation` | `svx-math-prime` | — |
+| `action-no-inline-math` | `svx-action-no-inline-math` | `svx-action-math-rewrite` |
+| `numbers-in-inline-code` | `svx-number-in-code` | `svx-code-range-number` |
+| `function-names-in-inline-code` | `svx-math-function-in-code` | `svx-code-range-function` |
+| `no-inline-code-in-labels` | `svx-no-code-in-label` | — |
+| `no-space-around-inline-code` | `svx-no-space-around-code` | — |
+| `space-around-inline-math` | `svx-inline-math-spacing` | — |
+| `math-enum-comma` | `svx-math-enum-comma` | `svx-math-enum-comma-manual` |
+| `article-symbol-unify` | `svx-article-symbol-unify` | — |
+| `sentence-math-unify` | `svx-sentence-math-unify` | — |
+| `block-math-symbol-unify` | `svx-block-math-symbol-unify` | — |
+| `math-promotion-style` | — | `svx-math-unify-manual` |
+| `inline-math-dfrac` | `svx-inline-math-dfrac` | — |
+
+対応表の実体は `lib/rule-ids.js`（`RULES`）で、各ルールのファイルは自分のルールIDを
+`RULE_ID` として持っている。**`block-math-format`（段落全体を `$$...$$` にする）だけは
+textlint で検査していない**（段落の組み方の判断なので、機械的に直せない）。
+
+### ルールIDで絞る
+
+環境変数 `SVX_RULE_IDS`（カンマ区切りのルールID）を渡すと、**そのルールIDのルールだけ**が
+報告する。未設定なら全ルールが有効。
+
+```bash
+npm run lint:svx:fix -- --rules=math-enum-comma src/routes/cg/basics/anti-aliasing/+page.svx
+SVX_RULE_IDS=math-enum-comma npx textlint --rulesdir textlint/rules-advisory --ignore-path /dev/null "src/routes/**/+page.svx"
+```
+
+- `--rules` を渡すと、**表記揺れ（prh）は当たらない**（ルールIDの体系の外にあるため）。
+- **未知のルールIDは読み込み時に例外**になる（黙って0件にならないようにしている）。
+- 絞って回したときは、`syntax` が0件でも他のルールの違反が残りうる。`.textlintignore` の行を
+  外す・タスクリストに `[x]` を付けるといった「整備済み」の記録には使わない
+  （→ `.claude/skills/format-math-notation/SKILL.md`）。
 
 ## 検査するルール（記法・`syntax` パス）
 

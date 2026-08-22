@@ -29,6 +29,7 @@ import {
   maskPattern
 } from "./svx.js"
 import { baseSymbols, classifyCode, requiresKatex, toUnicode } from "./math-tokens.js"
+import { forRule } from "./rule-ids.js"
 
 /** ブロック数式（段落全体が `$$…$$` のもの） */
 const BLOCK_MATH = /^\$\$[ \t]*\n[\s\S]*?^\$\$[ \t]*$/gm
@@ -273,10 +274,11 @@ const sectionsOf = (text, headers) => {
  * analyze() 側で狭いスコープから順に確定させているので、複数のルールが同じ箇所を
  * 二重に報告することはない。
  *
+ * @param {string} ruleId ガイドのルールID（→ writing-guides/math-notation-guide.md）
  * @param {string} trigger `"sentence"` | `"block"` | `"article"`
  * @param {(promotion: object) => string} describe 指摘のメッセージ
  */
-export const promotionRule = (trigger, describe) => {
+export const promotionRule = (ruleId, trigger, describe) => {
   const reporter = (context) => {
     const { Syntax, RuleError, report, getSource, fixer } = context
     return {
@@ -296,5 +298,6 @@ export const promotionRule = (trigger, describe) => {
       }
     }
   }
-  return { linter: reporter, fixer: reporter }
+  const rule = forRule(ruleId, reporter)
+  return { linter: rule, fixer: rule }
 }

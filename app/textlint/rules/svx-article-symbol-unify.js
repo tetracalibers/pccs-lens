@@ -12,6 +12,7 @@
 import { promotionRule } from "../lib/math-scope.js"
 
 export default promotionRule(
+  "article-symbol-unify",
   "article",
   (promotion) =>
     `この記事では同じ記号をインライン数式で書いているので、\`${promotion.content}\` も揃えてください（$$${promotion.math}$$）。`

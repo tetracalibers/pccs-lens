@@ -8,11 +8,15 @@
  */
 
 import { maskForMathRule } from "../lib/svx.js"
+import { forRule } from "../lib/rule-ids.js"
 
 /** 数式（インライン・ブロックとも） */
 const MATH = /\$\$[\s\S]*?\$\$/g
 /** 記号に続くアポストロフィ（`x'`・`P_1'`・`)'`） */
 const PRIME = /(?<=[A-Za-z0-9})\]])'/g
+
+/** ガイドのルールID（→ writing-guides/math-notation-guide.md） */
+const RULE_ID = "prime-notation"
 
 const reporter = (context) => {
   const { Syntax, RuleError, report, getSource, fixer } = context
@@ -36,7 +40,9 @@ const reporter = (context) => {
   }
 }
 
+const rule = forRule(RULE_ID, reporter)
+
 export default {
-  linter: reporter,
-  fixer: reporter
+  linter: rule,
+  fixer: rule
 }

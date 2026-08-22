@@ -12,6 +12,7 @@
 import { promotionRule } from "../lib/math-scope.js"
 
 export default promotionRule(
+  "block-math-symbol-unify",
   "block",
   (promotion) =>
     `ブロック数式の記号を説明している文なので、\`${promotion.content}\` はインライン数式で書いてください（$$${promotion.math}$$）。`

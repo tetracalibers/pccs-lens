@@ -9,6 +9,10 @@
  */
 
 import { analyze } from "../lib/math-scope.js"
+import { forRule } from "../lib/rule-ids.js"
+
+/** ガイドのルールID（→ writing-guides/math-notation-guide.md） */
+const RULE_ID = "action-no-inline-math"
 
 const reporter = (context) => {
   const { Syntax, RuleError, report, getSource } = context
@@ -29,4 +33,4 @@ const reporter = (context) => {
   }
 }
 
-export default { linter: reporter }
+export default { linter: forRule(RULE_ID, reporter) }

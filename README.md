@@ -15,7 +15,7 @@
 4. **編集・手直し**：`/author-style-writer <slug> <編集指示>` で、すでに本文のあるページに編集を加える（スキルの引数の詳細は後述）。
 5. **書き溜めた編集指示の一括対応**：本文に `:::Add`（加筆したい箇所）・`:::Delete`（消す予定の記述）・`:::Edit`（既存の文章への修正指示）・`:::Modify`（既存のデモ・図版への修正指示）を書き残しておき、`/apply-edit-requests <slug>` でまとめて片付ける。検出した全ブロックを表で提示して方針の承認を取り、`target` ごとに担当スキルの規約で対応し、済んだブロックを本文から取り除く（図版・デモの**新規**プレースホルダ `:::Todo` は対象外）。
 6. **デモの誘導文の書き直し**：デモを入れた記事に残る `:::Action{fixme}`（AIが書いたまま人手が入っていない誘導文）を、`/refine-action-text <記事>` で書き直す。直後のデモの Tweakpane ラベルと直前の説明を読んで、4つの型ごとに2案ずつ計8案を出し、選んだ案でブロックの中身だけを置き換える。Tweakpane のラベルとして使われているパラメータ名は `:Mark[]` で囲む。**`{fixme}` は外れない**ので、文面を確定させるのは著者。
-7. **記法の整備**（既存記事）：`/format-math-notation <slug>` が記法整備の全工程を担う——機械的な違反の自動修正（`npm run lint:svx:fix` の収束ループ）を回し、判断が要る指摘（`npm run lint:svx:advisory`）を片付け、記法パスのベースライン（`app/.textlintignore`）を解除し、タスクリストに `[x]` を記録する。`npm run lint:svx:fix` 自体は記事を更新するたびに単体でも使う。記事slug・タスクリストのセクションid（`/format-math-notation #rasterization`）を、カンマや空白区切りで複数まとめて指定できる。記法だけを直し、文章には手を入れない。**進捗は `writing-guides/NOTATION-TASKLIST.md` の `[x]`（＝このスキルの実行済み記録）が示す。** `[x]` は当時の本文に対する記録なので、**非 draft 記事の本文を変更したコミットでは `commit-this` が `[ ]` に戻す**（加筆・修正のあとは回し直す）。
+7. **記法の整備**（既存記事）：`/format-math-notation <slug>` が記法整備の全工程を担う——機械的な違反の自動修正（`npm run lint:svx:fix` の収束ループ）を回し、判断が要る指摘（`npm run lint:svx:advisory`）を片付け、記法パスのベースライン（`app/.textlintignore`）を解除し、タスクリストに `[x]` を記録する。`npm run lint:svx:fix` 自体は記事を更新するたびに単体でも使う。記事slug・タスクリストのセクションid（`/format-math-notation #rasterization`）を、カンマや空白区切りで複数まとめて指定できる。**特定のルールだけを直したいときは `--rules=<ルールID>` でガイドのルールID（`math-enum-comma` など）を渡す**（省略時は全ルール。絞ったときはベースライン解除と `[x]` の記録を行わない）。記法だけを直し、文章には手を入れない。**進捗は `writing-guides/NOTATION-TASKLIST.md` の `[x]`（＝このスキルの実行済み記録）が示す。** `[x]` は当時の本文に対する記録なので、**非 draft 記事の本文を変更したコミットでは `commit-this` が `[ ]` に戻す**（加筆・修正のあとは回し直す）。
 
 > [!IMPORTANT]
 > 執筆した記事は、次のコミットメッセージ規約に従ってコミットする。`author-style-analyzer` が Git 履歴から「AI草稿 → 人手編集」の差分（`refine-style.md`）を追跡するのに使うため、この規約を守る。
@@ -218,9 +218,11 @@ npm run data:jis-update
   - `/format-math-notation #<セクションid>` — `writing-guides/NOTATION-TASKLIST.md` の見出しの id でまとめて指定（`#rasterization` など。CG のセクション id はユニットをまたいで重複しうるのでユニット名も添える）
   - **slug とセクションid はカンマ・空白区切りで混ぜて何件でも渡せる。** 手順ごとに全対象をまとめて処理する（自動修正は1コマンドに全パスを並べ、advisory の承認は全記事分を1回で取る）
   - `/format-math-notation <slug> --auto` — 公開時ゲートからの自動実行モード。自動修正だけを当て、判断を伴う書き換えをしない
+  - `/format-math-notation <slug> --rules=<ルールID>[,<ルールID>…]` — 直すルールを**ガイドのルールIDで絞る**（`math-enum-comma`・`space-around-inline-math` など。カンマ区切りで複数可。**省略すると全ルール**）。IDの一覧は `writing-guides/math-notation-guide.md` の「ルール一覧」、どの textlint ルールが対応するかは `app/textlint/README.md` の対応表
+  - **ルールIDで絞ったときは「整備済み」にしない。** `app/.textlintignore` の行を外さず、`NOTATION-TASKLIST.md` に `[x]` も付けない（他のルールの違反が残りうるため）。表記揺れ（prh）も当たらない
   - `/format-math-notation` — 引数なし。セッションの文脈から特定し、できなければ `NOTATION-TASKLIST.md` の `[ ]` と advisory の指摘がある記事の一覧を出して尋ねる
-  - **洗い出しは textlint が持つ。** 機械的な違反12ルールは `npm run lint:svx:fix`（収束ループ）が直すので、grep と通読で違反を探し直さない。この収束ループはスキルの手順2 が自分で回す
-  - **判断するのは advisory パス（5ルール）**：囲む範囲（`3DCG` などの英字に隣接する数字・引数が続く関数名）、降格候補（3つの統一ルールに拾われなかった `$$…$$`）、`\dfrac` への組み直し、`:::Action` の式の日本語への言い換え。指摘を表で提示し**承認を得てから**書き換え、迷ったものは直さず保留として報告する
+  - **洗い出しは textlint が持つ。** 機械的な違反13ルールは `npm run lint:svx:fix`（収束ループ）が直すので、grep と通読で違反を探し直さない。この収束ループはスキルの手順2 が自分で回す
+  - **判断するのは advisory パス（6ルール）**：囲む範囲（`3DCG` などの英字に隣接する数字・引数が続く関数名）、降格候補（3つの統一ルールに拾われなかった `$$…$$`）、`\dfrac` への組み直し、`:::Action` の式の日本語への言い換え、中黒で繋いだ数式の並び（記号の並列か語句の並列か）。指摘を表で提示し**承認を得てから**書き換え、迷ったものは直さず保留として報告する
   - **最後に `writing-guides/NOTATION-TASKLIST.md` の該当行を `[x]` にする**（CG記事のみ）。このリストの `[x]` は「このスキルを実行済み」の手記録で、**付けるのはこのスキルだけ・外すのは `commit-this` だけ**（非 draft 記事の本文が変わったコミットで `[ ]` に戻る）。`--auto` では付けない
   - **記法だけを直し、文章・構成・強調（`:Anki[]` / `:Mark[]`）・図版・デモには触らない。** 表記揺れ（`prh.yml`）も対象外で、件数の報告だけにする
   - `lint:svx:syntax` が0件になったら `app/.textlintignore` から**その記事の行だけ**を外し、`sync-tasklists.mjs --write` でタスクリストを追随させる（`[x]` は導出なので手で書き換えない）。**advisory の残件は行を外さない理由にならない**（非ブロッキング）。コミットはしない（`/commit-this`）
