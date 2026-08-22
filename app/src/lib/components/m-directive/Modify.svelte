@@ -10,8 +10,8 @@
   let { target = "threejs", children }: Props = $props()
 
   const TARGET_LABELS: Record<string, string> = {
-    threejs: "Three.jsデモ",
-    svg: "SVG図版"
+    threejs: "demo (Three.js)",
+    svg: "figure (SVG)"
   }
 
   /** ディレクティブの属性値は文字列で渡るため、想定外の値は既定のThree.jsデモに倒す */
@@ -21,7 +21,7 @@
 <div class="modify">
   <div class="label">
     <span class="marker">!</span>
-    変更（{targetLabel}）
+    {targetLabel}
   </div>
   {@render children?.()}
 </div>
@@ -37,6 +37,7 @@
     background: light-dark(#eef1f5, rgb(119 136 153 / 0.24));
     font-size: 0.8rem;
     line-height: 1.7;
+    text-transform: uppercase;
   }
   .modify :global(*) {
     font-size: 0.8rem;
