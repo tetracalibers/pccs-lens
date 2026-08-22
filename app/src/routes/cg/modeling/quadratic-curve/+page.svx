@@ -20,7 +20,7 @@ visual: true
 
 ## :WithGroupTag[2次曲線の一般式]{group="{['CG']}"}
 
-[陰関数形式](/cg/modeling/curve-surface-equations/)では、座標が満たすべき条件を方程式として与え、それを満たす点の集まりを曲線としました。その左辺を`x`と`y`の:Anki[2次多項式]にしたものが:Anki[2次曲線]で、式は次の形になります。
+[陰関数形式](/cg/modeling/curve-surface-equations/)では、座標が満たすべき条件を方程式として与え、それを満たす点の集まりを曲線としました。その左辺を $$x$$ と $$y$$ の:Anki[2次多項式]にしたものが:Anki[2次曲線]で、式は次の形になります。
 
 $$
 ax^2 + bxy + cy^2 + dx + ey + f = 0
@@ -565,7 +565,7 @@ const gap = curveX - footX
 
 ## :WithGroupTag[パラメータ形式]{group="{['CG']}"}
 
-標準形まで簡単にしても、`x`を決めて`y`を求めるには方程式を解くことになり、曲線上の点を順に並べるのは大変です。そこで、[パラメータ形式](/cg/modeling/curve-surface-equations/)で書き直します。
+標準形まで簡単にしても、$$x$$ を決めて $$y$$ を求めるには方程式を解くことになり、曲線上の点を順に並べるのは大変です。そこで、[パラメータ形式](/cg/modeling/curve-surface-equations/)で書き直します。
 
 ### 楕円
 

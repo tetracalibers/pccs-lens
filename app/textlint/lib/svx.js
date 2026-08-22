@@ -13,6 +13,12 @@
 export const MASKED_NODE_TYPES = ["Yaml", "CodeBlock", "Code", "Html", "Header"]
 
 /**
+ * インラインコードを残したまま潰すノード型（スコープ解析が使う）。
+ * インラインコードとインライン数式の位置を知りたいので、この2つだけは残す。
+ */
+export const STRUCTURAL_NODE_TYPES = ["Yaml", "CodeBlock", "Html", "Header"]
+
+/**
  * 地の文ルールでだけ追加でマスクするノード型。
  * リンクはテキストごと対象外にする（リンクのラベルではインラインコードを使わない
  * 規約のため。→ writing-guides/math-notation-guide.md「数字は必ずインラインコードにする」）。
@@ -39,6 +45,15 @@ const TAG = /<\/?[A-Za-z][A-Za-z0-9]*[^<>]*>/g
 /** 順序付きリストのマーカー（段落の途中に現れてリストと解釈されなかったものも含む） */
 const ORDERED_LIST_MARKER = /^[ \t]*\d+\.[ \t]/gm
 
+/** 地の文ルールが正規表現で潰す領域（スコープ解析でも同じものを潰す） */
+export const PROSE_PATTERNS = {
+  TAG,
+  DIRECTIVE,
+  LINK_DESTINATION,
+  BARE_URL,
+  ORDERED_LIST_MARKER
+}
+
 /** 約物。数式の前後にスペースを入れない例外（→ math-notation-guide.md） */
 const PUNCTUATION = /[、。，．・：；！？「」『』（）〔〕［］｛｝〈〉《》【】〜～…‥,.;:!?()[\]{}'"]/
 
@@ -49,9 +64,29 @@ const PUNCTUATION = /[、。，．・：；！？「」『』（）〔〕［］�
  * @param {number} end
  * @returns {string}
  */
-const blankOut = (text, start, end) => {
+export const blankOut = (text, start, end) => {
   const masked = text.slice(start, end).replace(/[^\n]/g, " ")
   return text.slice(0, start) + masked + text.slice(end)
+}
+
+/**
+ * AST を辿って、指定した型のノードが占める範囲を集める（マスクしない）。
+ * @param {object} documentNode Document ノード
+ * @param {string[]} types 集める型
+ * @param {string[]} [stopTypes] 中に入らない型（この型のノードの子は見ない）
+ * @returns {Array<[number, number]>}
+ */
+export const collectRanges = (documentNode, types, stopTypes = []) => {
+  const targets = new Set(types)
+  const stops = new Set(stopTypes)
+  const ranges = []
+  const walk = (node) => {
+    if (targets.has(node.type)) ranges.push(node.range)
+    if (stops.has(node.type)) return
+    for (const child of node.children ?? []) walk(child)
+  }
+  walk(documentNode)
+  return ranges
 }
 
 /**
@@ -61,7 +96,7 @@ const blankOut = (text, start, end) => {
  * @param {string[]} types マスクする型
  * @returns {string}
  */
-const maskNodes = (text, documentNode, types) => {
+export const maskNodes = (text, documentNode, types) => {
   const targets = new Set(types)
   const ranges = []
   const walk = (node) => {
@@ -81,7 +116,7 @@ const maskNodes = (text, documentNode, types) => {
  * @param {RegExp} pattern
  * @returns {string}
  */
-const maskPattern = (text, pattern) =>
+export const maskPattern = (text, pattern) =>
   text.replace(pattern, (matched) => matched.replace(/[^\n]/g, " "))
 
 /**

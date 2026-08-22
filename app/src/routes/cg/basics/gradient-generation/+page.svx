@@ -3,7 +3,18 @@ layout: guide-content
 title: グラデーション生成 # CG 6-2-5
 
 group: ["CG"]
+visual: true
 ---
+
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import SVGWrapper from '$lib/demo/SVGWrapper.svelte'
+  import PositionParameterDemo from '$lib/demo/threejs/basics/gradient-generation/position-parameter/PositionParameterDemo.svelte'
+  import InterpolationCurveDemo from '$lib/demo/threejs/basics/gradient-generation/interpolation-curve/InterpolationCurveDemo.svelte'
+  import PlanarGradientDemo from '$lib/demo/threejs/basics/gradient-generation/planar-gradient/PlanarGradientDemo.svelte'
+  import GradientSurfaceDemo from '$lib/demo/threejs/basics/gradient-generation/gradient-surface/GradientSurfaceDemo.svelte'
+  import DiffusionCurveConcept from '$lib/demo/cg/basics/gradient-generation/DiffusionCurveConcept.svelte'
+</script>
 
 [塗りつぶし処理](/cg/basics/area-filling/)は、ある領域の内部をどの点も同じ色に見えるよう「べた塗り」する処理でした。
 ここで扱う:Anki[グラデーション]は、色を緩やかに変化させながら、ある領域の内部や境界を塗る処理です。
@@ -11,87 +22,636 @@ group: ["CG"]
 グラデーションを生成する処理は、:Anki[濃淡処理]とも呼ばれます。
 隣り合う画素の色を少しずつずらしていくことで、色が滑らかに変化しているように見せます。
 
-では、その「少しずつずらした色」を具体的にどう決めればよいのでしょうか。
-
 ## :WithGroupTag[線形補間によるグラデーション]{group="{['CG']}"}
 
-グラデーションは、両端の色（あるいは明るさ）を決め、その間を埋めるように中間の値を計算することで作られます。このように、`2`点の値の中間の値を求める操作を:Anki[補間]といいます。
+グラデーションは、両端の色（白黒の場合は明るさ）を決め、その間を埋めるように中間の値を計算することで作られます。このように、`2`点の値の中間の値を求める操作を:Anki[補間]といいます。
 
 補間にはいくつかの手法がありますが、最も基本的なものが:Anki[線形補間]です。
 これは`2`点の値を一定の割合で混ぜ合わせる補間で、両端をまっすぐ結ぶように値が変化していきます。
 
-`2`点の値（その画素の色）を`A`、`B`とし、`0`から`1`までの割合を`t`とすると、線形補間された値は次の式で求められます。
+`2`点の値（その画素の色）を $$A$$、$$B$$ とし、`0`から`1`までの割合を $$t$$ とすると、線形補間された値は次の式で求められます。
+
+::::CardGrid
+:::TermCard{title="線形補間の式" ankiTitle="show"}
+:Mark[線形補間]では、$$A$$ から $$B$$ という範囲内で、割合 $$t$$ だけ進んだ位置にある値を求める
 
 $$
 f(t) = (1 - t)A + tB
 $$
+:::
+::::
 
-この式は、`t`を`0`から`1`へ動かしたときに、値が`A`から`B`へまっすぐ移っていく様子を表しています。
-`t`が大きくなるほど`B`の色を多く、`A`の色を少なく混ぜ合わせることになります。
+この式を「色の混ぜ合わせ方」に当てはめたものが、グラデーションの基本的な考え方です。
 
-- `t = 0`のとき、`f = A`となり、始点の値そのもの
-- `t = 1`のとき、`f = B`となり、終点の値そのもの
-- `t = 0.5`のとき、`f`は`A`と`B`のちょうど中間の値
+- $$t = 0$$ のとき、$$A$$ の色そのまま（$$f(t) = A$$）
+- $$t = 0.5$$ のとき、$$A$$ と $$B$$ を`50`%ずつ混ぜ合わせた色（$$f(t) = 0.5A + 0.5B$$）
+- $$t = 1$$ のとき、$$B$$ の色そのまま（$$f(t) = B$$）
 
-線形補間は、`A`から`B`という範囲と、割合`t`から、その割合だけ進んだ位置にある値を求めるものです。`t`を等間隔に増やしていくと色`f(t)`も一定の割合で変化していくため、滑らかなグラデーションが得られます。
+$$t$$ が大きくなるほど $$B$$ の色を多く、$$A$$ の色を少なく混ぜ合わせることになり、混ぜる量を少しずつ変化させていくことで、滑らかなグラデーションが得られます。
 
-では、各画素における`t`はどのように求めるのでしょうか。
-グラデーションは複数の画素にわたって描かれるので、画素の位置そのものを`t`に対応させます。グラデーションの始点を`0`、終点を`1`とみなし、注目している画素が始点からどれだけ進んだ位置にあるかの比率を`t`とするのです。
-
-たとえば横幅`N`画素の帯にグラデーションを描くなら、左から`i`番目（`i`は`0`から`N-1`の値）の画素の割合は`i / (N - 1)`で求められます。
-こうして画素ごとに`t`を求め、それを式に代入すれば、その画素の色`f(t)`が一つに定まります。
-
-:::Example
-白から黒へと変化するグレースケールのグラデーション生成を考えます。
-輝度を`0`（黒）から`255`（白）まで線形に変化させるとすると、始点の輝度を`A = 255`、終点の輝度を`B = 0`として、各画素の位置に応じた`t`から`f(t)`を計算します。
-左端（`t = 0`）では輝度`255`の白、右端（`t = 1`）では輝度`0`の黒、中央（`t = 0.5`）ではその中間の灰色になり、白から黒へ均等に移り変わる帯ができます。
+:::Note
+`2`色の間を滑らかに繋ぐには、$$R$$・$$G$$・$$B$$ 各成分をそれぞれ線形補間します。
+白から黒へと変化する無彩色のグラデーションでは、明るさの値を線形補間するだけで済みます。
 :::
 
-色のグラデーションも考え方は同じで、`R`・`G`・`B`の各成分をそれぞれ線形補間すれば、`2`色の間を滑らかに繋ぐことができます。
+### 画像上の位置パラメータ
 
-<!-- TODO: 2点 A・B の間を割合 t で補間する線形補間の概念図 -->
+画像におけるグラデーションは複数の画素にわたって描かれるので、$$t$$ は画素の位置に対応させた値にする必要があります。グラデーションの始点を`0`、終点を`1`とみなし、注目している画素が始点からどれだけ進んだ位置にあるかの割合を $$t$$ とするのです。
+
+横幅 $$N$$ 画素の帯にグラデーションを描くなら、左から $$i$$ 番目（$$i$$ は`0`から $$N-1$$ の値）の画素における $$t$$ は、次の割合で求めます。
+
+$$
+t = \frac{i}{n-1}
+$$
+
+$$i$$ が取りうる最大値 $$n-1$$ を全体として、全体に対して $$i$$ がどれくらいか、という式です。始点 $$i=0$$ では $$t=0$$ に、終点 $$i = n-1$$ であれば $$t=1$$ となり、画素の位置 $$i$$ に応じて $$t$$ が決まることがわかります。
+
+こうして画素ごとに $$t$$ を求め、それを $$f$$ に代入すれば、その画素の色 $$f(t)$$ を求めることができます。
+
+:::Action
+:Mark[注目画素 i]を左右に動かして、:Mark[割合 t]と:Mark[画素の色]を算出する具体的な数式を見てみよう
+:::
+
+<CanvasWrapper>
+  <PositionParameterDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 両端の 2 色（記事の A と B）。8 ビットの成分（0〜255）で持ち、線形補間もこの値のまま行う。
+// 画素に記録される値そのものを混ぜ合わせるので、中間の色が式のとおりに見える
+const COLOR_A = [255, 200, 87]
+const COLOR_B = [94, 200, 242]
+
+// 線形補間 f(t) = (1 - t)A + tB。色の成分ごとに、同じ割合で混ぜ合わせる
+const colorAt = (t: number) =>
+  COLOR_A.map((a, channel) => Math.round((1 - t) * a + t * COLOR_B[channel]))
+
+// 0〜255 の成分で持っている色を、Three.js が扱う 0〜1 に直して流し込む
+const applyColor = (target: Color, level: number[]) =>
+  target.setRGB(level[0] / 255, level[1] / 255, level[2] / 255, SRGBColorSpace)
+
+// 帯を何画素で描くか（記事の N）と、注目している画素の番号（記事の i）
+const PIXEL_COUNT = 12
+const INDEX = 4
+
+// 画素 1 つの大きさ。画素は正方形なので、この値がそのまま帯の高さにもなる
+const CELL_SIZE = 0.3
+
+// グラデーションを焼くテクスチャの横の解像度。画素の並びよりずっと細かくとる
+const GRADIENT_RESOLUTION = 512
+
+// 帯の上に番号のラベルを置くための余白
+const LABEL_SPACE = 0.34
+
+// 注目画素を囲む枠の太さ（画素の輪郭として細く回す）
+const FOCUS_BORDER = 0.014
+
+// 重なる要素を、奥から手前へ振り分ける z。正面から見る構図なので厚みは絵に出ない
+const LAYER_CELL = 0.01
+const LAYER_BORDER = 0.02
+const LAYER_FRONT = 0.03
+
+// 位置パラメータ：左から i 番目の画素の割合は i / (N - 1)。
+// 両端がちょうど 0 と 1 になるので、i = 0 は A、i = N - 1 は B そのものになる
+const t = INDEX / (PIXEL_COUNT - 1)
+const level = colorAt(t)
+
+// 帯の横幅と、左から i 番目の画素の中心
+const bandWidth = CELL_SIZE * PIXEL_COUNT
+const bandLeft = -bandWidth / 2
+const centerOf = (i: number) => bandLeft + (i + 0.5) * CELL_SIZE
+
+// 番号のラベルの余白と帯を合わせた高さが canvas の中央に来るよう、帯の高さを決める
+const bandY = -LABEL_SPACE / 2
+
+// 画素・枠は、すべて 1 辺 1 の板を大きさと位置を与えて使い回す
+const unitGeometry = new PlaneGeometry(1, 1)
+
+// 帯。連続的なグラデーションを 1 枚の板に貼るので、画素と画素の境目は出ない
+const gradientData = new Uint8Array(GRADIENT_RESOLUTION * 4)
+for (let column = 0; column < GRADIENT_RESOLUTION; column++) {
+  const value = colorAt((column + 0.5) / GRADIENT_RESOLUTION)
+  gradientData.set([...value, 255], column * 4)
+}
+const gradientTexture = new DataTexture(gradientData, GRADIENT_RESOLUTION, 1)
+gradientTexture.colorSpace = SRGBColorSpace
+gradientTexture.magFilter = LinearFilter
+gradientTexture.minFilter = LinearFilter
+gradientTexture.needsUpdate = true
+
+const gradient = new Mesh(unitGeometry, new MeshBasicMaterial({ map: gradientTexture }))
+gradient.scale.set(bandWidth, CELL_SIZE, 1)
+gradient.position.set(0, bandY, LAYER_CELL)
+scene.add(gradient)
+
+// 注目画素を囲む枠。帯の 1 画素より一回り大きい板を帯の手前に置く
+const focusX = centerOf(INDEX)
+const cellBorder = new Mesh(unitGeometry, new MeshBasicMaterial({ color: "#e8ecf2" }))
+cellBorder.scale.set(CELL_SIZE + FOCUS_BORDER * 2, CELL_SIZE + FOCUS_BORDER * 2, 1)
+cellBorder.position.set(focusX, bandY, LAYER_BORDER)
+scene.add(cellBorder)
+
+// 注目画素の色。枠の上に、その画素の値である f(t) を 1 色で塗る
+const focusMaterial = new MeshBasicMaterial()
+applyColor(focusMaterial.color, level)
+const focusCell = new Mesh(unitGeometry, focusMaterial)
+focusCell.scale.set(CELL_SIZE, CELL_SIZE, 1)
+focusCell.position.set(focusX, bandY, LAYER_FRONT)
+scene.add(focusCell)
+```
+
+:::
 
 ## :WithGroupTag[補間関数の種類と見た目への影響]{group="{['CG']}"}
 
 線形補間では、値が両端を結ぶ:Anki[直線]に沿って均等に変化していきます。
-ここで、補間に使う:Anki[関数]（変化の仕方を決めるカーブ）を変えると、同じ`2`点の間でもグラデーションの印象は大きく変わります。
+ここで、変化の仕方を決める:Anki[補間関数]を直線から曲線に変えると、変化の仕方が一定ではなくなり、同じ`2`色の間でもグラデーションの印象は大きく変わります。
 
-たとえば:Anki[2次関数]を使うと、変化の仕方が一定ではなくなります。最初はゆるやかに変化して途中から急に変わる、あるいはその逆に、最初は急で後半はゆるやかになる、といった加速・減速をともなう変化を作ることができます。
-:Anki[対数関数]を使うと、はじめに大きく変化して、終点に近づくほど変化がゆるやかになるような、片側に寄ったグラデーションが得られます。
+:Anki[2次関数]を使うと、最初は緩やかに変化して途中から急に変わる、あるいはその逆に、最初は急で後半は緩やかになる、といった:Mark[加速・減速]をともなう変化を作ることができます。
 
-このように、どの関数を選ぶかによって、どこで色が大きく動き、どこでとどまるかが変わります。
-均等に移り変わるグラデーションがほしいのか、片側に余韻を残したいのかといった、表現したい印象に応じて補間関数を使い分けるのです。
+:Anki[対数関数]を使うと、はじめに大きく変化して、終点に近づくほど変化が緩やかになるような、:Mark[片側]に寄ったグラデーションが得られます。
 
-<!-- TODO: 線形・2次関数・対数関数の補間カーブを比較するグラフ図 -->
+:::Action
+:Mark[補間関数]を切り替えて、カーブの形とグラデーションの色の変化を対応づけて見てみよう
+:::
+
+<CanvasWrapper>
+  <InterpolationCurveDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 補間関数。どれも f(0) = 0・f(1) = 1 を満たすので、
+// 両端の色は変わらず、途中の変化の仕方だけが変わる
+const CURVES = {
+  linear: (t: number) => t,
+  quadraticIn: (t: number) => t * t,
+  quadraticOut: (t: number) => 1 - (1 - t) ** 2,
+  // log(1 + 9t) / log(10)。t = 1 でちょうど 1 になるよう、底が 10 になるように 9 倍する
+  logarithmic: (t: number) => Math.log10(1 + 9 * t)
+}
+
+// 描くカーブ。デモではここを切り替える
+const valueAt = CURVES.linear
+
+// グラフの大きさ。横軸に割合 t の 0〜1、縦軸に補間した値 f(t) の 0〜1 を対応させる
+const PLOT_WIDTH = 4
+const PLOT_HEIGHT = 1.9
+
+// グラフの下に敷くグラデーションの帯と、グラフとの間隔
+const BAND_HEIGHT = 0.5
+const BAND_GAP = 0.36
+const BAND_BOTTOM = -(BAND_GAP + BAND_HEIGHT)
+
+// 帯を焼くときの画素数。1 画素ずつ t を求めて明るさを決める
+const RESOLUTION = 256
+
+// カーブを折れ線で描くときの分割数。曲がりが角張って見えない程度に細かくとる
+const CURVE_SEGMENTS = 128
+
+// 補助線を引く位置。両端ではなく中央を見ることで、変化の偏りが読み取れる
+const MID_T = 0.5
+
+// 軸を目盛りの外側へ少し延ばす長さと、目盛りの長さ
+const AXIS_MARGIN = 0.16
+const TICK_LENGTH = 0.07
+
+// xy 平面に重なる要素を、奥から手前へ振り分ける z。正面から見る構図なので厚みは絵に出ない
+const LAYER_BAND_FRAME = 0.002
+const LAYER_AXIS = 0.01
+const LAYER_REFERENCE = 0.02
+const LAYER_GUIDE = 0.03
+const LAYER_CURVE = 0.04
+const LAYER_DOT = 0.05
+
+// 図はすべて xy 平面に置く。グラフの原点を group の原点にとり、group ごと中央へ寄せる
+const graph = new Group()
+graph.position.set(-2.04, -0.68, 0)
+scene.add(graph)
+
+// 横軸（割合 t）と縦軸（補間した値 f(t)）、および t = 0.5・1 と f = 1 の目盛り
+const axisGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(-AXIS_MARGIN, 0, LAYER_AXIS),
+  new Vector3(PLOT_WIDTH + AXIS_MARGIN, 0, LAYER_AXIS),
+  new Vector3(0, -AXIS_MARGIN, LAYER_AXIS),
+  new Vector3(0, PLOT_HEIGHT + AXIS_MARGIN, LAYER_AXIS),
+  new Vector3(MID_T * PLOT_WIDTH, 0, LAYER_AXIS),
+  new Vector3(MID_T * PLOT_WIDTH, -TICK_LENGTH, LAYER_AXIS),
+  new Vector3(PLOT_WIDTH, 0, LAYER_AXIS),
+  new Vector3(PLOT_WIDTH, -TICK_LENGTH, LAYER_AXIS),
+  new Vector3(-TICK_LENGTH, PLOT_HEIGHT, LAYER_AXIS),
+  new Vector3(0, PLOT_HEIGHT, LAYER_AXIS)
+])
+graph.add(new LineSegments(axisGeometry, new LineBasicMaterial({ color: "#9aa3b0" })))
+
+// 線形補間のカーブ。両端をまっすぐ結んだ基準線として、選んだカーブの下に敷いておく
+const referenceGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(0, 0, LAYER_REFERENCE),
+  new Vector3(PLOT_WIDTH, PLOT_HEIGHT, LAYER_REFERENCE)
+])
+graph.add(new Line(referenceGeometry, new LineBasicMaterial({ color: "#6e7a8a" })))
+
+// 選んだ補間関数のカーブ。割合 t を等間隔に刻み、その位置での f(t) を高さにとる
+const curvePoints: Vector3[] = []
+for (let i = 0; i <= CURVE_SEGMENTS; i++) {
+  const t = i / CURVE_SEGMENTS
+  curvePoints.push(new Vector3(t * PLOT_WIDTH, valueAt(t) * PLOT_HEIGHT, LAYER_CURVE))
+}
+const curveGeometry = new BufferGeometry().setFromPoints(curvePoints)
+graph.add(new Line(curveGeometry, new LineBasicMaterial({ color: "#ffc857" })))
+
+// グラデーションの帯。画素 1 つ分の真ん中で割合 t を求め、f(t) をその画素の明るさとして焼く
+const bandData = new Uint8Array(RESOLUTION * 4)
+for (let column = 0; column < RESOLUTION; column++) {
+  const t = (column + 0.5) / RESOLUTION
+  const level = Math.round(valueAt(t) * 255)
+  bandData.set([level, level, level, 255], column * 4)
+}
+
+// 横 1 列の画素として焼いたものを、横軸を t として共有するように敷く
+const bandTexture = new DataTexture(bandData, RESOLUTION, 1)
+bandTexture.colorSpace = SRGBColorSpace
+bandTexture.magFilter = LinearFilter
+bandTexture.minFilter = LinearFilter
+bandTexture.needsUpdate = true
+
+// 補間した値をそのままの濃さで見せたいので、陰影の付かない材質で貼る
+const bandGeometry = new PlaneGeometry(PLOT_WIDTH, BAND_HEIGHT)
+const band = new Mesh(bandGeometry, new MeshBasicMaterial({ map: bandTexture }))
+band.position.set(PLOT_WIDTH / 2, -(BAND_GAP + BAND_HEIGHT / 2), 0)
+graph.add(band)
+
+// 帯の外周。暗い端が背景に溶けても、帯の範囲が分かるようにする
+const bandFrameGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(0, -BAND_GAP, LAYER_BAND_FRAME),
+  new Vector3(PLOT_WIDTH, -BAND_GAP, LAYER_BAND_FRAME),
+  new Vector3(PLOT_WIDTH, -BAND_GAP, LAYER_BAND_FRAME),
+  new Vector3(PLOT_WIDTH, BAND_BOTTOM, LAYER_BAND_FRAME),
+  new Vector3(PLOT_WIDTH, BAND_BOTTOM, LAYER_BAND_FRAME),
+  new Vector3(0, BAND_BOTTOM, LAYER_BAND_FRAME),
+  new Vector3(0, BAND_BOTTOM, LAYER_BAND_FRAME),
+  new Vector3(0, -BAND_GAP, LAYER_BAND_FRAME)
+])
+graph.add(new LineSegments(bandFrameGeometry, new LineBasicMaterial({ color: "#c8ccd4" })))
+
+// 中央（t = 0.5）の補助線。カーブ上の点から、下へ帯まで、左へ縦軸まで辿る
+const midX = MID_T * PLOT_WIDTH
+const midY = valueAt(MID_T) * PLOT_HEIGHT
+const guideGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(midX, midY, LAYER_GUIDE),
+  new Vector3(midX, BAND_BOTTOM, LAYER_GUIDE),
+  new Vector3(0, midY, LAYER_GUIDE),
+  new Vector3(midX, midY, LAYER_GUIDE)
+])
+const guides = new LineSegments(
+  guideGeometry,
+  new LineDashedMaterial({ color: "#aeb6c2", dashSize: 0.07, gapSize: 0.05 })
+)
+// 破線の刻みは頂点間の距離から決まるので、頂点を置いたら測る
+guides.computeLineDistances()
+graph.add(guides)
+
+// 中央でのカーブ上の点
+const dot = new Mesh(
+  new SphereGeometry(0.05, 12, 8),
+  new MeshBasicMaterial({ color: "#ffc857" })
+)
+dot.position.set(midX, midY, LAYER_DOT)
+graph.add(dot)
+```
+
+:::
+
+均等に移り変わるグラデーションにしたいのか、片側に余韻を残したいのかといった、表現したい印象に応じて補間関数を使い分けていきます。
 
 ## :WithGroupTag[2次元的なグラデーション]{group="{['CG']}"}
 
-ここまでは、`1`本の軸にそって値が変化する`1`次元のグラデーションを考えてきました。この考え方を平面上に広げたものが、:Anki[2次元]的なグラデーションです。
+ここまでは、`1`本の軸に沿って値が変化する`1`次元のグラデーションを考えてきました。この考え方を平面上に広げたものが、:Anki[2次元]的なグラデーションです。
 
-どの方向・どの形で値を変化させるかによって、いくつかのパターンがあり、:Anki[平面]的な広がりを持つグラデーションを作ることができます。
+`2`次元の場合は、どの方向・どの形で値を変化させるかによって、いくつかのパターンが生まれます。
 
-- :Anki[方向]（線形）：ある一方向にそって値を変化させる
-- :Anki[放射]（ラジアル）：ある中心点からの距離に応じて、外側へ向かって値を変化させる
-- :Anki[角度]（コニカル）：ある中心点のまわりの角度に応じて、回転方向に値を変化させる
+- :Anki[方向]（線形）：ある一方向に沿って値を変化させる
+- :Anki[放射]（ラジアル）：ある中心点からの:Anki[距離]に応じて、外側へ向かって値を変化させる
+- :Anki[角度]（コニカル）：ある中心点のまわりの:Anki[角度]に応じて、回転方向に値を変化させる
 
-これらはいずれも、平面上の各画素の位置から割合`t`を求め、その`t`に補間を適用して値を決めている点では共通しています。違うのは、`t`をどう定めるか（直線距離か、中心からの距離か、角度か）だけです。
+いずれも、平面上の各画素の位置から割合 $$t$$ を求め、その $$t$$ に補間を適用して値を決めるという原理は共通しています。違うのは、$$t$$ をどう定めるか（直線距離か、中心からの距離か、角度か）だけです。
 
-`2`次元的なグラデーションは、`3`次元曲面に生じる陰影として捉えると見通しがよくなります。
-画素の位置を`x`・`y`の`2`軸、画素の値（明るさや色）を`z`軸にとると、グラデーションは`xy`平面の上に広がる曲面として表せます。
-すると、方向グラデーションは斜めに傾いた平面、放射グラデーションはすり鉢状の曲面、というように、グラデーションの形状を曲面の形として理解できます。
+:::Action
+:Mark[向きの角度]を動かすと、:Mark[線形]は明暗の向きが回り、:Mark[角度]は`t`が`0`に戻る切れ目が回る一方、:Mark[放射]は何も変わらないことを確認しよう
+:::
 
-<!-- TODO: 方向/放射/角度の2次元グラデーションと、z軸を画素値とした3次元曲面の図 -->
+<CanvasWrapper>
+  <PlanarGradientDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 向きの角度。方向グラデーションの向きと、角度グラデーションで t = 0 になる向きを決める
+const ANGLE = (30 * Math.PI) / 180
+
+// 2 次元のグラデーションのパターン
+type Pattern = {
+  // 画像の中心を原点、半辺を 1 とした位置から、割合 t（0〜1）を求める
+  tAt: (x: number, y: number, angle: number) => number
+  // 向きを示す矢を描くか（向きに依らないパターンでは描かない）
+  hasArrow: boolean
+}
+
+const TAU = Math.PI * 2
+
+// 3 つのパターン。違うのは位置から割合 t をどう求めるかだけで、
+// t から画素の値を決める部分（線形補間）はすべて共通
+const PATTERNS: Pattern[] = [
+  {
+    // 方向（線形）：ある向きに沿って進んだ距離。画像の外へ出ないよう、
+    // その向きで測れる最大の長さ（|cos| + |sin|）で 0〜1 に正規化する
+    tAt: (x, y, angle) => {
+      const span = Math.abs(Math.cos(angle)) + Math.abs(Math.sin(angle))
+      return (x * Math.cos(angle) + y * Math.sin(angle) + span) / (2 * span)
+    },
+    hasArrow: true
+  },
+  {
+    // 放射（ラジアル）：中心からの距離。四隅までの距離（√2）で 0〜1 に正規化する
+    tAt: (x, y) => Math.hypot(x, y) / Math.SQRT2,
+    hasArrow: false
+  },
+  {
+    // 角度（コニカル）：中心まわりの角度を一周（360°）で割る。t = 0 になる向きを angle で回す
+    tAt: (x, y, angle) => {
+      const turned = Math.atan2(y, x) - angle
+      return (((turned % TAU) + TAU) % TAU) / TAU
+    },
+    hasArrow: false
+  }
+]
+
+// 1 枚の画像の 1 辺と、3 枚を並べる間隔
+const TILE_SIZE = 1.85
+const TILE_GAP = 0.3
+const HALF_TILE = TILE_SIZE / 2
+
+// 画像を焼く画素数。格子が目に見えない細かさにとる
+const RESOLUTION = 256
+
+// 両端の値。黒（0）から白（255）へ補間する
+const START_VALUE = 0
+const END_VALUE = 255
+
+// 向きを示す矢の寸法と、中心を示す点の大きさ（いずれも画像の半辺に対する割合）。
+// 線（LineBasicMaterial）の太さは環境によらず 1 画素なので、矢は面として組む
+const ARROW_LENGTH = 0.78
+const ARROW_WIDTH = 0.06
+const ARROW_HEAD_LENGTH = 0.2
+const ARROW_HEAD_WIDTH = 0.22
+const CENTER_DOT_RADIUS = 0.04
+
+// 画像に重なる要素を、奥から手前へ振り分ける z
+const LAYER_MARKER = 0.02
+const LAYER_FRAME = 0.03
+
+// 3 枚に共通の外周。暗い部分が背景に溶けても、画像の範囲が分かるようにする
+const frameGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(-HALF_TILE, -HALF_TILE, LAYER_FRAME),
+  new Vector3(HALF_TILE, -HALF_TILE, LAYER_FRAME),
+  new Vector3(HALF_TILE, -HALF_TILE, LAYER_FRAME),
+  new Vector3(HALF_TILE, HALF_TILE, LAYER_FRAME),
+  new Vector3(HALF_TILE, HALF_TILE, LAYER_FRAME),
+  new Vector3(-HALF_TILE, HALF_TILE, LAYER_FRAME),
+  new Vector3(-HALF_TILE, HALF_TILE, LAYER_FRAME),
+  new Vector3(-HALF_TILE, -HALF_TILE, LAYER_FRAME)
+])
+const frameMaterial = new LineBasicMaterial({ color: "#c8ccd4" })
+
+// 3 枚に共通の画像の板と、重ねる印の材質。
+// 画素の濃淡（黒〜白）に混ざらないよう、印は彩度のある色にする
+const tileGeometry = new PlaneGeometry(TILE_SIZE, TILE_SIZE)
+const dotGeometry = new SphereGeometry(CENTER_DOT_RADIUS, 12, 8)
+const markerMaterial = new MeshBasicMaterial({ color: "#f2766a" })
+
+// 向きを示す矢。右向きに組んでおき、角度のぶんだけ回す。
+// 軸の長方形（三角形 2 枚）と、先端の三角形 1 枚を並べた面として作る
+const arrowTip = HALF_TILE * ARROW_LENGTH
+const arrowBase = arrowTip - HALF_TILE * ARROW_HEAD_LENGTH
+const halfShaft = (HALF_TILE * ARROW_WIDTH) / 2
+const halfHead = (HALF_TILE * ARROW_HEAD_WIDTH) / 2
+const arrowGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(0, -halfShaft, LAYER_MARKER),
+  new Vector3(arrowBase, -halfShaft, LAYER_MARKER),
+  new Vector3(arrowBase, halfShaft, LAYER_MARKER),
+  new Vector3(0, -halfShaft, LAYER_MARKER),
+  new Vector3(arrowBase, halfShaft, LAYER_MARKER),
+  new Vector3(0, halfShaft, LAYER_MARKER),
+  new Vector3(arrowBase, -halfHead, LAYER_MARKER),
+  new Vector3(arrowTip, 0, LAYER_MARKER),
+  new Vector3(arrowBase, halfHead, LAYER_MARKER)
+])
+
+PATTERNS.forEach((pattern, index) => {
+  // 3 枚を横に並べる。中央の 1 枚が原点に来るように、両側へ 1 枚ぶんずらす
+  const tile = new Group()
+  tile.position.set((index - 1) * (TILE_SIZE + TILE_GAP), 0.27, 0)
+  scene.add(tile)
+
+  const imageData = new Uint8Array(RESOLUTION * RESOLUTION * 4)
+  for (let row = 0; row < RESOLUTION; row++) {
+    for (let column = 0; column < RESOLUTION; column++) {
+      // 画素 1 つ分の真ん中の位置。画像の中心を原点、半辺を 1 とする。
+      // テクスチャの行が増える向きと y 軸の向きは逆になる
+      const x = -1 + (2 * (column + 0.5)) / RESOLUTION
+      const y = 1 - (2 * (row + 0.5)) / RESOLUTION
+
+      // 位置から割合 t を求め、両端の値（黒と白）を線形補間する
+      const t = pattern.tAt(x, y, ANGLE)
+      const level = Math.round((1 - t) * START_VALUE + t * END_VALUE)
+
+      imageData.set([level, level, level, 255], (row * RESOLUTION + column) * 4)
+    }
+  }
+
+  // 画素の値をそのままの濃さで貼る。テクセルどうしは滑らかに繋ぐ
+  const imageTexture = new DataTexture(imageData, RESOLUTION, RESOLUTION)
+  imageTexture.colorSpace = SRGBColorSpace
+  imageTexture.magFilter = LinearFilter
+  imageTexture.minFilter = LinearFilter
+  imageTexture.needsUpdate = true
+
+  // 値をそのままの濃さで見せたいので、陰影の付かない材質で貼る
+  tile.add(new Mesh(tileGeometry, new MeshBasicMaterial({ map: imageTexture })))
+  tile.add(new LineSegments(frameGeometry, frameMaterial))
+
+  // 方向は矢で向きを示し、中心を基準にするパターンはその中心を点で示す
+  if (pattern.hasArrow) {
+    const arrow = new Mesh(arrowGeometry, markerMaterial)
+    arrow.rotation.z = ANGLE
+    tile.add(arrow)
+  } else {
+    const dot = new Mesh(dotGeometry, markerMaterial)
+    dot.position.z = LAYER_MARKER
+    tile.add(dot)
+  }
+})
+```
+
+:::
+
+### グラデーションと曲面の陰影
+
+画素の位置を`x`・`y`の`2`軸、画素の値（明るさや色）を`z`軸にとると、`2`次元的なグラデーションの:Anki[陰影]を`xy`平面の上に広がる曲面として表せます。
+
+:Anki[方向グラデーション]は斜めに傾いた平面、:Anki[放射グラデーション]はすり鉢状の曲面、というように、グラデーションの形状を曲面の形として理解できます。
+
+:::Action
+ドラッグ操作で動かしながら、曲面の高い位置ほど白に近く、低い位置ほど黒に近いという対応関係を観察しよう
+:::
+
+<CanvasWrapper>
+  <GradientSurfaceDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+const TAU = Math.PI * 2
+
+// 方向グラデーションの向き
+const DIRECTION_ANGLE = (30 * Math.PI) / 180
+
+// パターンごとの、位置から割合 t を求める規則。
+// u・v は画像の中心を原点、半辺を 1 とした位置（記事の x・y 軸）
+const PATTERNS = {
+  // 方向（線形）：ある向きに沿って進んだ距離
+  linear: (u: number, v: number) => {
+    const span = Math.abs(Math.cos(DIRECTION_ANGLE)) + Math.abs(Math.sin(DIRECTION_ANGLE))
+    return (u * Math.cos(DIRECTION_ANGLE) + v * Math.sin(DIRECTION_ANGLE) + span) / (2 * span)
+  },
+  // 放射（ラジアル）：中心からの距離
+  radial: (u: number, v: number) => Math.hypot(u, v) / Math.SQRT2,
+  // 角度（コニカル）：中心まわりの角度
+  conical: (u: number, v: number) => (((Math.atan2(v, u) % TAU) + TAU) % TAU) / TAU
+}
+
+// 描くパターン。デモではここを切り替える
+const tAt = PATTERNS.conical
+
+// 画像として扱う正方形の 1 辺
+const IMAGE_SIZE = 2.4
+const HALF_IMAGE = IMAGE_SIZE / 2
+
+// 画像を焼く画素数。格子が目に見えない細かさにとる
+const RESOLUTION = 256
+
+// 曲面を張る格子の分割数。画素より粗いが、折れ線に見えない細かさにとる
+const SURFACE_SEGMENTS = 96
+
+// 画素の値 1（白）を z 軸方向へ持ち上げる高さ（デモでは倍率をスライダーで変える）
+const HEIGHT_SCALE = 1.19
+
+// 画像の面のすぐ上に線を置くための持ち上げ量（面と重なってちらつくのを防ぐ）
+const LIFT = 0.004
+
+// 光の強さ。Lambert の反射では放射照度を π で割った値が明るさになるので、
+// 曲面の傾きの違いが陰影として出る程度にとる
+const keyLight = new DirectionalLight("#ffffff", Math.PI * 0.5)
+keyLight.position.set(2.5, 5, 3)
+scene.add(new AmbientLight("#ffffff", Math.PI * 0.55), keyLight)
+
+// Three.js は y 軸が上なので、記事の x・y 平面を three の xz 平面に、
+// 記事の z 軸（画素の値）を three の y 軸に対応させる
+const imageGeometry = new PlaneGeometry(IMAGE_SIZE, IMAGE_SIZE)
+imageGeometry.rotateX(-Math.PI / 2)
+
+// 画素 1 つずつ、位置から割合 t を求め、両端の値（黒と白）を線形補間する
+const imageData = new Uint8Array(RESOLUTION * RESOLUTION * 4)
+for (let row = 0; row < RESOLUTION; row++) {
+  for (let column = 0; column < RESOLUTION; column++) {
+    const u = -1 + (2 * (column + 0.5)) / RESOLUTION
+    const v = -1 + (2 * (row + 0.5)) / RESOLUTION
+    const level = Math.round(tAt(u, v) * 255)
+    imageData.set([level, level, level, 255], (row * RESOLUTION + column) * 4)
+  }
+}
+
+const imageTexture = new DataTexture(imageData, RESOLUTION, RESOLUTION)
+imageTexture.colorSpace = SRGBColorSpace
+imageTexture.magFilter = LinearFilter
+imageTexture.minFilter = LinearFilter
+imageTexture.needsUpdate = true
+
+// 画素の値をそのままの濃さで見せたいので、陰影の付かない材質で貼る
+const imageMaterial = new MeshBasicMaterial({ map: imageTexture, side: DoubleSide })
+scene.add(new Mesh(imageGeometry, imageMaterial))
+
+// 画像の外周。暗い部分が背景に溶けても、画像の範囲が分かるようにする
+const frameGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(-HALF_IMAGE, LIFT, -HALF_IMAGE),
+  new Vector3(HALF_IMAGE, LIFT, -HALF_IMAGE),
+  new Vector3(HALF_IMAGE, LIFT, -HALF_IMAGE),
+  new Vector3(HALF_IMAGE, LIFT, HALF_IMAGE),
+  new Vector3(HALF_IMAGE, LIFT, HALF_IMAGE),
+  new Vector3(-HALF_IMAGE, LIFT, HALF_IMAGE),
+  new Vector3(-HALF_IMAGE, LIFT, HALF_IMAGE),
+  new Vector3(-HALF_IMAGE, LIFT, -HALF_IMAGE)
+])
+scene.add(new LineSegments(frameGeometry, new LineBasicMaterial({ color: "#c8ccd4" })))
+
+// 曲面。細かく分割した平面の頂点を、その位置の画素の値のぶんだけ持ち上げる
+const surfaceGeometry = new PlaneGeometry(
+  IMAGE_SIZE,
+  IMAGE_SIZE,
+  SURFACE_SEGMENTS,
+  SURFACE_SEGMENTS
+)
+surfaceGeometry.rotateX(-Math.PI / 2)
+const surfacePosition = surfaceGeometry.getAttribute("position")
+for (let index = 0; index < surfacePosition.count; index++) {
+  // 頂点の位置（three の xz）を、記事の x・y 軸での位置に読み替える
+  const u = surfacePosition.getX(index) / HALF_IMAGE
+  const v = -surfacePosition.getZ(index) / HALF_IMAGE
+  surfacePosition.setY(index, tAt(u, v) * HEIGHT_SCALE)
+}
+// 傾きが陰影として出るよう、法線を測り直す
+surfaceGeometry.computeVertexNormals()
+
+// 灰色の濃淡（画素の値）に混ざらないよう、曲面は彩度のある色にする
+const surfaceMaterial = new MeshLambertMaterial({
+  color: "#5ec8f2",
+  side: DoubleSide,
+  transparent: true,
+  opacity: 0.55
+})
+scene.add(new Mesh(surfaceGeometry, surfaceMaterial))
+
+// 四隅の垂線。画像の上の点と、曲面の上の点が同じ位置であることを示す
+const corners = [
+  [-HALF_IMAGE, -HALF_IMAGE],
+  [HALF_IMAGE, -HALF_IMAGE],
+  [HALF_IMAGE, HALF_IMAGE],
+  [-HALF_IMAGE, HALF_IMAGE]
+]
+const riserPoints = corners.flatMap(([x, z]) => [
+  new Vector3(x, 0, z),
+  new Vector3(x, tAt(x / HALF_IMAGE, -z / HALF_IMAGE) * HEIGHT_SCALE, z)
+])
+const riserGeometry = new BufferGeometry().setFromPoints(riserPoints)
+scene.add(new LineSegments(riserGeometry, new LineBasicMaterial({ color: "#5ec8f2" })))
+
+```
+
+:::
 
 ## :WithGroupTag[ディフュージョンカーブ]{group="{['CG']}"}
 
-ここまでのグラデーションは、直線や同心円、回転方向といった単純な軸に沿って色を変化させるものでした。しかし、絵画のように複雑な輪郭にそって色を滑らかに広げたい場合、こうした単純な軸だけで表現するのは容易ではありません。
-そこで考え出されたのが:Anki[ディフュージョンカーブ]です。
+ここまで見てきたグラデーションは、直線や回転方向といった単純な図形に沿って色を変化させるものでした。しかし、絵画のように入り組んだ輪郭の形に沿って色を変化させようとすると、多くの制御が必要になります。そこで考え出されたのが:Anki[ディフュージョンカーブ]です。
 
-ディフュージョンカーブは、作り手が指定した曲線の両側にそれぞれ色を設定し、その曲線から離れるにつれて、まわりへ滑らかに色を:Anki[拡散]させていく手法です。
-色を決めるのは曲線とその両側の色だけで、曲線から遠い領域の色は自動的に補われます。
+ディフュージョンカーブでは、色を変化させたい:Mark[境界]となる:Anki[曲線]を引き、その両側の:Anki[色]を指定するだけで、輪郭の形に沿った滑らかな色の広がりが得られます。色を決めるのは曲線とその両側の色だけで、曲線から:Anki[遠い]領域の色は自動的に補われます。
 
-この手法の利点は、少ない指定で複雑な色の広がりを表現できる点にあります。
-従来の単純なグラデーションでは、入り組んだ輪郭の形に沿って色を変化させようとすると、多くの制御が必要になりました。
-ディフュージョンカーブでは、色を変化させたい境界となる曲線を引き、その両側の色を指定するだけで、輪郭の形に沿った滑らかな色の広がりが得られます。
+<SVGWrapper>
+  <DiffusionCurveConcept />
+</SVGWrapper>
 
-<!-- TODO: 1本の曲線から、その両側へ色がなめらかに拡散していく様子の概念図 -->
+ディフュージョンカーブの実装では、曲線から離れるにつれて、まわりへ滑らかに色を:Anki[拡散]させていく計算が行われます。その理論を理解するのは簡単ではありませんが、少ない指定で複雑な色の広がりを表現できることが、この手法の利点です。

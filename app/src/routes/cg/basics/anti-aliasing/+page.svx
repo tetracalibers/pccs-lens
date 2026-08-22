@@ -3,14 +3,22 @@ layout: guide-content
 title: 画像生成時のアンチエイリアシング # CG 6-2-2, 1-2-2
 
 group: ["CG"]
+visual: true
 ---
 
-[ラスタ化](/cg/basics/shape-rasterization/)では、連続的な図形を画素の格子に落とし込むため、本来滑らかな線や輪郭が階段状のギザギザになってしまいます。こうしたギザギザはどうすれば目立たなくできるのでしょうか。
-このギザギザを低減して輪郭を滑らかに見せるための手法がいくつかあります。
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import SupersamplingDemo from '$lib/demo/threejs/basics/anti-aliasing/supersampling/SupersamplingDemo.svelte'
+  import AlphaBlendingDemo from '$lib/demo/threejs/basics/anti-aliasing/alpha-blending/AlphaBlendingDemo.svelte'
+  import PixelCoverageDemo from '$lib/demo/threejs/basics/anti-aliasing/pixel-coverage/PixelCoverageDemo.svelte'
+</script>
+
+[ラスタ化](/cg/basics/shape-rasterization/)では、連続的な図形を画素の格子に落とし込むため、本来滑らかな線や輪郭が階段状のギザギザになってしまいます。
+このギザギザを低減して、輪郭を滑らかに見せるための手法がいくつかあります。
 
 ## :WithGroupTag[アンチエイリアシング]{group="{['CG']}"}
 
-ラスタ化によって、斜めの直線や多角形の境界部分に、階段状のギザギザ、すなわち[ジャギー](/cg/basics/image-sampling/)が生じることがあります。他にも、細い線や細かい物体が寸断されてしまうこともあります。
+:Mark[ラスタ化]によって、斜めの直線や多角形の境界部分に、階段状のギザギザ、すなわち[ジャギー](/cg/basics/image-sampling/)が生じることがあります。他にも、細い線や細かい物体が寸断されてしまうこともあります。
 このような、ラスタ化によって滑らかさが失われたり、ノイズが乗ったりする現象は、[エイリアシング](/cg/basics/image-sampling/)と呼ばれます。
 
 そして、このようなエイリアシングを目立たなくするための処理が:Anki[アンチエイリアシング]です。
@@ -24,13 +32,192 @@ group: ["CG"]
 
 色が変わる境界付近（図形の輪郭など）の画素は、その境界が分ける隣接領域の中間色で塗ることが効果的です。その中間色を決める基準として、図形が各画素をどれだけ覆っているかという割合を使います。これを:Anki[画素の寄与率]といい、`0`から`1`の値で表します。
 
-図形が画素を完全に覆っていれば寄与率は`1`、まったく覆っていなければ`0`、半分だけ覆っていれば`0.5`になります。つまり、画素への寄与率は「図形が画素の面積をどれだけ覆っているか」という:Anki[面積比]です。
+- 図形が画素を完全に覆っていれば寄与率は`1`
+- まったく覆っていなければ`0`
+- 半分だけ覆っていれば`0.5`
+
+つまり、:Mark[画素の寄与率]は「図形が画素の面積をどれだけ覆っているか」という:Anki[面積比]です。
 
 そして、輪郭にかかる画素を`0`か`1`かで割り切るのではなく、寄与率に応じて図形の色と背景の色を混ぜ合わせます。図形が`7`割を覆う画素は図形の色を`7`割、背景の色を`3`割の比率で混ぜた色にする、といった具合です。
 
 こうして輪郭付近に中間的な色の画素が並ぶことで、階段の段差がぼかされ、滑らかな輪郭に見えるようになります。
 
-<!-- TODO: 画素の寄与率の概念図。画素の格子の上に図形（円や斜めの線）が重なり、各画素を図形が何割覆っているか（寄与率）を数値や塗りの濃さで示す。 -->
+:::Action
+混ざった色だけで輪郭がなんとなくわかることを見た上で、:Mark[連続な図形を表示]してみよう
+:Mark[寄与率を数値で表示]し、数字の大きさが図形への収まり具合、画素の色の混ざり具合に対応していることを確認しよう
+:::
+
+<CanvasWrapper>
+  <PixelCoverageDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 画像の大きさ（横 3 : 縦 2）と、横の画素数。
+// 横の画素数を 3 の倍数にとれば、縦の画素数が整数になり画素が正方形に収まる。
+// 2.4 / 3.6 は二進小数で表せないので商には誤差が乗る（9 画素なら 5.999999999999999）。
+// 丸めずにテクスチャの高さへ渡すと、WebGL 側で整数に切り捨てられて 1 行分ずれる
+const IMAGE_WIDTH = 3.6
+const IMAGE_HEIGHT = 2.4
+const COLUMNS = 9
+const ROWS = Math.round((COLUMNS * IMAGE_HEIGHT) / IMAGE_WIDTH)
+const PITCH = IMAGE_WIDTH / COLUMNS
+
+// 図形（斜めの帯）の傾きと太さ。太さは画素の大きさとは無関係に決まる
+const SLOPE = 0.45
+const THICKNESS = 1.0
+
+// 図形の色と背景の色。寄与率の分だけ図形の色を、残りだけ背景の色を混ぜた色が画素の色になる。
+// 背景は地色と重ならない青にとる（地色と同じ色にすると、中間の寄与率が半透明に見えてしまう）
+const FIGURE_RGB = [255, 200, 87]
+const BACKGROUND_RGB = [61, 111, 168]
+
+// 図形の中心線に立てた法線と、太さの半分。
+// 傾きが正のときに右下へ向かうよう、画像座標系にならって回す向きを反転させる
+const angle = Math.atan(-SLOPE)
+const normalX = -Math.sin(angle)
+const normalY = Math.cos(angle)
+const halfThickness = THICKNESS / 2
+
+type Point = [number, number]
+
+// 左下の角と幅・高さから、長方形の頂点を反時計回りに並べる
+const rectOf = (x: number, y: number, width: number, height: number): Point[] => [
+  [x, y],
+  [x + width, y],
+  [x + width, y + height],
+  [x, y + height]
+]
+
+// 凸多角形を、直線 nx * x + ny * y = offset の片側（値が offset 以下の側）だけに切り取る。
+// 辺をたどりながら、残す側の頂点と、直線をまたぐ辺の交点を拾っていく
+const clipHalfPlane = (polygon: Point[], nx: number, ny: number, offset: number): Point[] => {
+  const clipped: Point[] = []
+
+  polygon.forEach(([ax, ay], index) => {
+    const [bx, by] = polygon[(index + 1) % polygon.length]
+    // 直線から見た余裕。正なら残す側にある
+    const marginA = offset - (nx * ax + ny * ay)
+    const marginB = offset - (nx * bx + ny * by)
+    const insideA = marginA >= 0
+    const insideB = marginB >= 0
+
+    if (insideA) clipped.push([ax, ay])
+    // 辺が直線をまたぐなら、その交点を新しい頂点として足す
+    if (insideA !== insideB) {
+      const ratio = marginA / (marginA - marginB)
+      clipped.push([ax + (bx - ax) * ratio, ay + (by - ay) * ratio])
+    }
+  })
+
+  return clipped
+}
+
+// 多角形の面積。頂点を順にたどって外積を足し合わせる（靴ひも公式）
+const areaOf = (polygon: Point[]) => {
+  let doubled = 0
+
+  polygon.forEach(([ax, ay], index) => {
+    const [bx, by] = polygon[(index + 1) % polygon.length]
+    doubled += ax * by - bx * ay
+  })
+
+  return Math.abs(doubled) / 2
+}
+
+// 多角形から、図形（斜めの帯）に重なる部分を切り出す。
+// 図形は「中心線からの距離が太さの半分以内」の帯なので、中心線の両側で 2 回切り取る
+const clipBand = (polygon: Point[]): Point[] =>
+  clipHalfPlane(
+    clipHalfPlane(polygon, normalX, normalY, halfThickness),
+    -normalX,
+    -normalY,
+    halfThickness
+  )
+
+// 画素の寄与率。左下の角が (x, y) で 1 辺が size の画素を、図形がどれだけ覆っているかの面積比。
+// 画素の正方形から図形に重なる部分を切り出し、その面積を画素の面積で割る
+const coverageOf = (x: number, y: number, size: number) =>
+  areaOf(clipBand(rectOf(x, y, size, size))) / (size * size)
+
+// 各画素の色を寄与率から決め、1 画素 1 テクセルのテクスチャに焼く
+const data = new Uint8Array(COLUMNS * ROWS * 4)
+for (let row = 0; row < ROWS; row++) {
+  for (let column = 0; column < COLUMNS; column++) {
+    // 画素の左下の角。テクスチャの行はテクスチャ座標にならって下から数える
+    const x = -IMAGE_WIDTH / 2 + column * PITCH
+    const y = -IMAGE_HEIGHT / 2 + row * PITCH
+    const coverage = coverageOf(x, y, PITCH)
+
+    // 寄与率の分だけ図形の色を、残りだけ背景の色を混ぜる
+    const offset = (row * COLUMNS + column) * 4
+    for (let channel = 0; channel < 3; channel++) {
+      data[offset + channel] = Math.round(
+        coverage * FIGURE_RGB[channel] + (1 - coverage) * BACKGROUND_RGB[channel]
+      )
+    }
+    data[offset + 3] = 255
+  }
+}
+
+// 拡大しても画素が混ざらないよう、補間なし（NearestFilter）で貼る
+const texture = new DataTexture(data, COLUMNS, ROWS)
+texture.colorSpace = SRGBColorSpace
+texture.magFilter = NearestFilter
+texture.minFilter = NearestFilter
+texture.needsUpdate = true
+
+// 混ぜた色をそのままの濃さで見せたいので、陰影の付かない材質で貼る
+const image = new Mesh(
+  new PlaneGeometry(IMAGE_WIDTH, IMAGE_HEIGHT),
+  new MeshBasicMaterial({ map: texture })
+)
+scene.add(image)
+
+// 連続な図形。画素の寄与率と同じ切り取りを、画素ではなく画像全体へ 1 回かけると、
+// 画素の格子とは無関係な図形そのもの（画像の左上と右下の角を覆う多角形）が得られる。
+// 凸多角形なので、先頭の頂点から扇状に三角形へ分ける
+const figurePolygon = clipBand(
+  rectOf(-IMAGE_WIDTH / 2, -IMAGE_HEIGHT / 2, IMAGE_WIDTH, IMAGE_HEIGHT)
+)
+const figurePoints: Vector3[] = []
+for (let index = 1; index + 1 < figurePolygon.length; index++) {
+  for (const [x, y] of [figurePolygon[0], figurePolygon[index], figurePolygon[index + 1]]) {
+    figurePoints.push(new Vector3(x, y, 0))
+  }
+}
+
+// 画素の色とぴったり重ねたいので、画像と同じ平面（z = 0）に置き、深度テストを切って
+// 描画順で手前に出す。色は画素の色と同じにして、これが図形そのものであることを示す
+const figure = new Mesh(
+  new BufferGeometry().setFromPoints(figurePoints),
+  new MeshBasicMaterial({ color: "#ffc857", depthTest: false })
+)
+figure.renderOrder = 1
+scene.add(figure)
+
+// 画素どうしの境目。画像の縦横を、画素数で等分した位置に引く。
+// 図形の上にも格子を残したいので、図形より大きい描画順を与える
+const gridPoints: Vector3[] = []
+for (let column = 0; column <= COLUMNS; column++) {
+  const x = -IMAGE_WIDTH / 2 + column * PITCH
+  gridPoints.push(new Vector3(x, -IMAGE_HEIGHT / 2, 0), new Vector3(x, IMAGE_HEIGHT / 2, 0))
+}
+for (let row = 0; row <= ROWS; row++) {
+  const y = -IMAGE_HEIGHT / 2 + row * PITCH
+  gridPoints.push(new Vector3(-IMAGE_WIDTH / 2, y, 0), new Vector3(IMAGE_WIDTH / 2, y, 0))
+}
+const gridGeometry = new BufferGeometry().setFromPoints(gridPoints)
+const grid = new LineSegments(
+  gridGeometry,
+  new LineBasicMaterial({ color: "#7d8794", depthTest: false })
+)
+grid.renderOrder = 2
+scene.add(grid)
+```
+
+:::
 
 ## :WithGroupTag[アルファブレンディング]{group="{['CG']}"}
 
@@ -40,21 +227,335 @@ group: ["CG"]
 :Anki[フレームバッファ]は、コンピュータでデジタル画像を画素の集まりとしてそのまま記録するメモリです。同じ画素に対して新しくデータを書き込むと、それ以前に書き込まれていたデータは失われるという性質があります。
 :::
 
-このとき、画素の寄与率を透明度（$$\alpha$$値）として扱い、図形の色と背景の色を混ぜ合わせる処理を:Anki[アルファブレンディング]といいます。
-直感的には、寄与率の分だけ図形の色を、残り（`1`から寄与率を引いた分）だけ背景の色を混ぜる、という操作です。画素の最終的な色を`C`、図形の色を`C_fg`、背景の色を`C_bg`、寄与率（$$\alpha$$値）を$$\alpha$$とすると、次のように書けます。
+このとき、画素の寄与率を透明度（$$\alpha$$ 値）として扱い、図形の色と背景の色を混ぜ合わせる処理を:Anki[アルファブレンディング]といいます。
+直感的には、寄与率の分だけ図形の色を、残り（`1`から寄与率を引いた分）だけ背景の色を混ぜる、という操作です。画素の最終的な色を $$C$$、図形の色を $$C_{fg}$$、背景の色を $$C_{bg}$$、寄与率（$$\alpha$$ 値）を $$\alpha$$ とすると、次のように書けます。
 
 $$
 C = \alpha C_{\text{fg}} + (1 - \alpha) C_{\text{bg}}
 $$
 
-このように画素値を決めると、寄与率$$\alpha$$が`1`に近い画素ほど図形の色が、`0`に近い画素ほど背景の色が強く出るようになります。
+このように画素値を決めると、寄与率 $$\alpha$$ が`1`に近い画素ほど図形の色が、`0`に近い画素ほど背景の色が強く出るようになります。
+
+:::Action
+:Mark[寄与率]を動かして、図形の色と背景の色のどちらが多く混ざった色に見えるか観察しよう
+:::
+
+<CanvasWrapper>
+  <AlphaBlendingDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 画素 1 つを表す正方形の 1 辺と、置く高さ
+const SQUARE = 1.4
+const SQUARE_Y = 0.34
+
+// 寄与率（α 値）と、図形の色・背景の色。色は各チャンネルを 0 から 255 の整数で持つ
+const ALPHA = 0.7
+const FIGURE = { r: 87, g: 131, b: 255 }
+const BACKGROUND = { r: 163, g: 60, b: 167 }
+
+// 画素の中に置く図形の大きさ（画素の 1 辺に対する比）、角の丸み（図形の 1 辺に対する比）、
+// 角の丸み 1 つを近似する線分の数
+const FIGURE_SIDE_RATIO = 0.72
+const FIGURE_CORNER_RATIO = 0.28
+const ROUND_SEGMENTS = 12
+
+// α を 0 から 1 まで動かしたときの色を並べた帯と、並べる色の数
+const RAMP_WIDTH = 3.2
+const RAMP_HEIGHT = 0.3
+const RAMP_Y = -0.95
+const RAMP_STEPS = 21
+
+// 画素の地に重ねる図形を、少し手前へ振り分ける z
+const LAYER_FIGURE = 0.01
+
+type Rgb = { r: number; g: number; b: number }
+
+// 寄与率 α で図形の色と背景の色を混ぜる（アルファブレンディング）。
+// C = α C_fg + (1 - α) C_bg を、R・G・B のチャンネルごとに当てる
+const blendChannel = (figure: number, background: number, alpha: number) =>
+  Math.round(alpha * figure + (1 - alpha) * background)
+
+// 0 から 255 の色で材質を作る。指定した色をそのままの濃さで見せたいので、陰影の付かない材質にする。
+// setRGB の第 4 引数を省くと three は値を作業色空間（リニア）として扱うため、sRGB の値であることを明示する
+const materialOf = ({ r, g, b }: Rgb) => {
+  const material = new MeshBasicMaterial()
+  material.color.setRGB(r / 255, g / 255, b / 255, SRGBColorSpace)
+  return material
+}
+
+// 画素の地。背景の色で塗る
+const base = new Mesh(new PlaneGeometry(SQUARE, SQUARE), materialOf(BACKGROUND))
+base.position.set(0, SQUARE_Y, 0)
+scene.add(base)
+
+// 画素の中に置く図形は、背景にすっぽり包まれる角丸の正方形にとる。
+// α は図形の不透明度として効かせるので、形も大きさも α では変わらない
+const side = SQUARE * FIGURE_SIDE_RATIO
+const radius = side * FIGURE_CORNER_RATIO
+
+// 角の丸みの中心（正方形の 4 隅から丸みの分だけ内側）を、反時計回りに並べる
+const inset = side / 2 - radius
+const centers = [
+  [inset, inset],
+  [-inset, inset],
+  [-inset, -inset],
+  [inset, -inset]
+]
+
+// 4 つの角を、90 度ずつの弧でつないで輪郭にする
+const outline: Vector3[] = []
+centers.forEach(([cx, cy], index) => {
+  for (let step = 0; step <= ROUND_SEGMENTS; step++) {
+    const angle = (index * Math.PI) / 2 + (step * Math.PI) / 2 / ROUND_SEGMENTS
+    outline.push(new Vector3(cx + radius * Math.cos(angle), cy + radius * Math.sin(angle), 0))
+  }
+})
+
+// 図形の中心から扇状に三角形へ分ける
+const figurePoints: Vector3[] = []
+outline.forEach((point, index) => {
+  figurePoints.push(new Vector3(0, 0, 0), point, outline[(index + 1) % outline.length])
+})
+
+// 図形を不透明度 α で重ねる。混ぜる計算は GPU のアルファブレンディングが行い、
+// 図形の内側が C = α C_fg + (1 - α) C_bg の色になる。
+// 頂点は画素の中心を原点として持ち、置く位置は mesh 側で与える
+const figureMaterial = materialOf(FIGURE)
+figureMaterial.transparent = true
+figureMaterial.opacity = ALPHA
+
+const figureGeometry = new BufferGeometry().setFromPoints(figurePoints)
+const figureRegion = new Mesh(figureGeometry, figureMaterial)
+figureRegion.position.set(0, SQUARE_Y, LAYER_FIGURE)
+scene.add(figureRegion)
+
+// 同じ混ぜ方を、α を 0 から 1 まで刻んだすべての値について式のとおりに計算し、
+// 1 色 1 テクセルのテクスチャに焼く
+const rampData = new Uint8Array(RAMP_STEPS * 4)
+for (let step = 0; step < RAMP_STEPS; step++) {
+  const alpha = step / (RAMP_STEPS - 1)
+  rampData[step * 4] = blendChannel(FIGURE.r, BACKGROUND.r, alpha)
+  rampData[step * 4 + 1] = blendChannel(FIGURE.g, BACKGROUND.g, alpha)
+  rampData[step * 4 + 2] = blendChannel(FIGURE.b, BACKGROUND.b, alpha)
+  rampData[step * 4 + 3] = 255
+}
+
+// 色が混ざらないよう、補間なし（NearestFilter）で貼る
+const rampTexture = new DataTexture(rampData, RAMP_STEPS, 1)
+rampTexture.colorSpace = SRGBColorSpace
+rampTexture.magFilter = NearestFilter
+rampTexture.minFilter = NearestFilter
+rampTexture.needsUpdate = true
+
+const ramp = new Mesh(
+  new PlaneGeometry(RAMP_WIDTH, RAMP_HEIGHT),
+  new MeshBasicMaterial({ map: rampTexture })
+)
+ramp.position.set(0, RAMP_Y, 0)
+scene.add(ramp)
+```
+
+:::
 
 ## :WithGroupTag[スーパーサンプリング法]{group="{['CG']}"}
 
 単純な輪郭に限らず、複雑な図形やテクスチャを含む画像にもそのまま使えるアンチエイリアシングの手法として、:Anki[スーパーサンプリング法]があります。
 
-スーパーサンプリング法は、まず画面を実際よりも高い解像度でレンダリングし、それを縮小して元の解像度に戻すという手法です。
+スーパーサンプリング法は、まず画像を実際よりも高い:Anki[解像度]でレンダリングし、それを縮小して元の解像度に戻すという手法です。
 
-具体的には、`1`つの画素を細かく分けて複数の点（サンプリング点）を取り、それぞれの点を新たな画素とみなして画像をレンダリング（色を計算）します。そして、元の画素から取ったサンプリング点の色の:Anki[平均値]を、元の画素の色とします。
+具体的には、`1`つの画素を細かく分けて複数の:Anki[サンプリング点]を取り、それぞれの点を新たな画素とみなして画像をレンダリング（各画素の色を計算）します。そして、元の画素から取ったサンプリング点の色の:Anki[平均値]を、元の画素の色とします。
 
-このように、高い解像度で細かく色を求めてから平均することで、輪郭付近には図形と背景の中間色が自然に現れ、ジャギーの目立たない画像が得られます。
+:::Action
+拡大した`1`画素を:Mark[サンプリング点]の数だけ細かく分け、それらの平均色が画像に使われていることを確認しよう
+:Mark[サンプリング点]を`1`にすると、画素は分割されなくなり、もとの色がそのまま使われて画像の斜め線がギザギザが強調されることも見てみよう
+:::
+
+<CanvasWrapper>
+  <SupersamplingDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 画像の画素数と、画素 1 つの大きさ
+const IMAGE_COLUMNS = 10
+const IMAGE_ROWS = 8
+const IMAGE_PITCH = 0.175
+const IMAGE_WIDTH = IMAGE_COLUMNS * IMAGE_PITCH
+const IMAGE_HEIGHT = IMAGE_ROWS * IMAGE_PITCH
+
+// 拡大して見せる画素の 1 辺（画像と背の高さを揃える）と、求めた色を埋め戻す画像の中の列・行
+const PIXEL = IMAGE_HEIGHT
+const TARGET_COLUMN = 1
+const TARGET_ROW = 4
+
+// 拡大した 1 画素・平均した色の画素・画像を、色を求める順に横一列に並べる位置
+const ARROW_GAP = 0.45
+const CALLOUT_GAP = 0.5
+const PANEL_Y = -0.12
+const CONTENT_WIDTH = PIXEL + ARROW_GAP + PIXEL + CALLOUT_GAP + IMAGE_WIDTH
+const PIXEL_X = -CONTENT_WIDTH / 2 + PIXEL / 2
+const AVERAGE_X = PIXEL_X + PIXEL / 2 + ARROW_GAP + PIXEL / 2
+const IMAGE_X = AVERAGE_X + PIXEL / 2 + CALLOUT_GAP + IMAGE_WIDTH / 2
+
+// 1 辺あたりのサンプリング点の数と、画素にかかる図形の輪郭。
+// 輪郭の向きは度、位置は画素の 1 辺を 1 として中心からどれだけずれた所を通るか
+const SAMPLES = 4
+const ANGLE = 135
+const OFFSET = 0.12
+const total = SAMPLES * SAMPLES
+
+// 図形の色と背景の色。サンプリング点は、落ちた位置にあるこのどちらかの色を取る
+const FIGURE = { r: 255, g: 200, b: 87 }
+const BACKGROUND = { r: 61, g: 111, b: 168 }
+
+// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z
+const LAYER_FIGURE = 0.01
+const LAYER_GRID = 0.02
+const LAYER_DOT = 0.04
+
+type Rgb = { r: number; g: number; b: number }
+
+// 0 から 255 の色で材質を作る。指定した色をそのままの濃さで見せたいので、陰影の付かない材質にする。
+// setRGB の第 4 引数を省くと three は値を作業色空間（リニア）として扱うため、sRGB の値であることを明示する
+const materialOf = ({ r, g, b }: Rgb) => {
+  const material = new MeshBasicMaterial()
+  material.color.setRGB(r / 255, g / 255, b / 255, SRGBColorSpace)
+  return material
+}
+
+// 輪郭に立てた法線。図形は「法線方向にはかった座標が OFFSET 以下」の側にある
+const radians = (ANGLE * Math.PI) / 180
+const normalX = Math.cos(radians)
+const normalY = Math.sin(radians)
+
+// 拡大した画素の地。図形が覆っていない部分は背景の色になる
+const pixelGeometry = new PlaneGeometry(PIXEL, PIXEL)
+const backgroundMaterial = materialOf(BACKGROUND)
+const backgroundPixel = new Mesh(pixelGeometry, backgroundMaterial)
+backgroundPixel.position.set(PIXEL_X, PANEL_Y, 0)
+scene.add(backgroundPixel)
+
+// 画素にかかった図形。画素と同じ大きさの板を輪郭の直線でクリッピングし、図形側だけを残す。
+// クリッピング面はワールド座標で効くので、板の中心を原点とした条件を置き直して渡す
+renderer.localClippingEnabled = true
+const figurePlane = new Plane(
+  new Vector3(-normalX, -normalY, 0),
+  OFFSET * PIXEL + normalX * PIXEL_X + normalY * PANEL_Y
+)
+const figureMaterial = materialOf(FIGURE)
+figureMaterial.clippingPlanes = [figurePlane]
+const figurePixel = new Mesh(pixelGeometry, figureMaterial)
+figurePixel.position.set(PIXEL_X, PANEL_Y, LAYER_FIGURE)
+scene.add(figurePixel)
+
+// 区画の境目。画素の 1 辺を点の数で等分した位置に引く
+const gridPoints: Vector3[] = []
+for (let index = 0; index <= SAMPLES; index++) {
+  const shift = -PIXEL / 2 + (index * PIXEL) / SAMPLES
+  gridPoints.push(
+    new Vector3(PIXEL_X + shift, PANEL_Y - PIXEL / 2, LAYER_GRID),
+    new Vector3(PIXEL_X + shift, PANEL_Y + PIXEL / 2, LAYER_GRID),
+    new Vector3(PIXEL_X - PIXEL / 2, PANEL_Y + shift, LAYER_GRID),
+    new Vector3(PIXEL_X + PIXEL / 2, PANEL_Y + shift, LAYER_GRID)
+  )
+}
+const gridGeometry = new BufferGeometry().setFromPoints(gridPoints)
+scene.add(new LineSegments(gridGeometry, new LineBasicMaterial({ color: "#7d8794" })))
+
+// 拡大した画素を SAMPLES × SAMPLES の区画に分け、それぞれの中心を 1 点として色を求める。
+// 点の色は、図形側なら図形の色、そうでなければ背景の色になる。
+// 点そのものは、どちらの色に落ちても位置が読めるようグレーの円で描く
+const dotRadius = Math.min((PIXEL / SAMPLES) * 0.165, 0.0525)
+const dots = new InstancedMesh(
+  new CircleGeometry(dotRadius, 16),
+  new MeshBasicMaterial({ color: "#9aa3b0" }),
+  total
+)
+
+const matrix = new Matrix4()
+let sumRed = 0
+let sumGreen = 0
+let sumBlue = 0
+
+for (let row = 0; row < SAMPLES; row++) {
+  for (let column = 0; column < SAMPLES; column++) {
+    // 画素の中を -0.5 から 0.5 で表した、区画の中心の位置
+    const x = (column + 0.5) / SAMPLES - 0.5
+    const y = (row + 0.5) / SAMPLES - 0.5
+    const color = normalX * x + normalY * y <= OFFSET ? FIGURE : BACKGROUND
+
+    sumRed += color.r
+    sumGreen += color.g
+    sumBlue += color.b
+
+    matrix.setPosition(PIXEL_X + x * PIXEL, PANEL_Y + y * PIXEL, LAYER_DOT)
+    dots.setMatrixAt(row * SAMPLES + column, matrix)
+  }
+}
+scene.add(dots)
+
+// 平均した色の画素。点の色の平均が、拡大した画素の色になる
+const averagePixel = new Mesh(
+  pixelGeometry,
+  materialOf({
+    r: Math.round(sumRed / total),
+    g: Math.round(sumGreen / total),
+    b: Math.round(sumBlue / total)
+  })
+)
+averagePixel.position.set(AVERAGE_X, PANEL_Y, 0)
+scene.add(averagePixel)
+
+// 画像：同じ手順を全画素に対して行い、求めた色をその画素に埋める。
+// 座標は拡大した画素の中心を原点、画素の 1 辺を 1 として数えるので、
+// 列と行の差がそのまま座標のずれになる
+const imageData = new Uint8Array(IMAGE_COLUMNS * IMAGE_ROWS * 4)
+
+for (let row = 0; row < IMAGE_ROWS; row++) {
+  for (let column = 0; column < IMAGE_COLUMNS; column++) {
+    let red = 0
+    let green = 0
+    let blue = 0
+
+    for (let sampleRow = 0; sampleRow < SAMPLES; sampleRow++) {
+      for (let sampleColumn = 0; sampleColumn < SAMPLES; sampleColumn++) {
+        const x = column - TARGET_COLUMN + (sampleColumn + 0.5) / SAMPLES - 0.5
+        const y = row - TARGET_ROW + (sampleRow + 0.5) / SAMPLES - 0.5
+        const color = normalX * x + normalY * y <= OFFSET ? FIGURE : BACKGROUND
+        red += color.r
+        green += color.g
+        blue += color.b
+      }
+    }
+
+    // テクスチャの行はテクスチャ座標にならって下から数える
+    const at = (row * IMAGE_COLUMNS + column) * 4
+    imageData[at] = Math.round(red / total)
+    imageData[at + 1] = Math.round(green / total)
+    imageData[at + 2] = Math.round(blue / total)
+    imageData[at + 3] = 255
+  }
+}
+
+// 拡大しても画素が混ざらないよう、補間なし（NearestFilter）で貼る
+const imageTexture = new DataTexture(imageData, IMAGE_COLUMNS, IMAGE_ROWS)
+imageTexture.colorSpace = SRGBColorSpace
+imageTexture.magFilter = NearestFilter
+imageTexture.minFilter = NearestFilter
+imageTexture.needsUpdate = true
+
+const image = new Mesh(
+  new PlaneGeometry(IMAGE_WIDTH, IMAGE_HEIGHT),
+  new MeshBasicMaterial({ map: imageTexture })
+)
+image.position.set(IMAGE_X, PANEL_Y, 0)
+scene.add(image)
+```
+
+:::
+
+このように、高い解像度で細かく色を求めてから平均することで、輪郭付近には図形と背景の中間色が自然に現れ、:Anki[ジャギー]の目立たない画像が得られます。

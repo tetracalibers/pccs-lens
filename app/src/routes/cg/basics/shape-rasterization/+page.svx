@@ -3,7 +3,17 @@ layout: guide-content
 title: ラスタ化による図形の描画 # CG 6-2-1, 1-2-2
 
 group: ["CG"]
+visual: true
 ---
+
+<script>
+  import BresenhamSelectionDemo from '$lib/demo/threejs/basics/shape-rasterization/bresenham-selection/BresenhamSelectionDemo.svelte'
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import ErrorIncrementDemo from '$lib/demo/threejs/basics/shape-rasterization/error-increment/ErrorIncrementDemo.svelte'
+  import IncrementalMethodDemo from '$lib/demo/threejs/basics/shape-rasterization/incremental-method/IncrementalMethodDemo.svelte'
+  import ScanConversionGridDemo from '$lib/demo/threejs/basics/shape-rasterization/scan-conversion-grid/ScanConversionGridDemo.svelte'
+  import ScanlineSpanDemo from '$lib/demo/threejs/basics/shape-rasterization/scanline-span/ScanlineSpanDemo.svelte'
+</script>
 
 点や線、図形を数式で表した[ベクタ表現](/cg/basics/vector-and-raster/)を、画素の集まりであるラスタ表現へ変換することを:Anki[ラスタ化]といいます。数式で表された図形を画素の格子に落とし込み、色をつけていくには、どの画素を塗るべきかを具体的に決める必要があります。
 線分・円・ポリゴンを例に、ラスタ化の仕組みを具体的に見ていきましょう。
@@ -11,58 +21,249 @@ group: ["CG"]
 ## :WithGroupTag[走査変換と画像座標系]{group="{['CG']}"}
 
 図形を:Mark[ラスタ化]する処理は、図形の上を画素ごとに走査しながら塗るべき画素を決めていくことから、:Anki[走査変換]とも呼ばれます。
-言い換えると、走査変換とは、図形の方程式を「どの画素を塗るか」という整数の問題に置き換える処理です。連続的な数式の世界から、離散的な画素の世界へと橋渡しする工程だといえます。
 
-その舞台となるのが、画素の位置を表す:Anki[画像座標系]です。
-画像座標系は、画像の:Anki[左上]を原点とし、x軸を:Anki[右]向き、y軸を:Anki[下]向きにとった整数の格子です。
-数学で使う座標系とはy軸の向きが逆になっている点に注意が必要です。これは、画像が上の行から下の行へと走査されることに対応しています。
+数式が表す図形は画素の格子とは無関係に引かれるため、図形上の点の座標はぴったり整数になるとは限りません。一方、塗る対象となる画素は決まった位置に並んでいて、その位置は縦横それぞれ何番目かという整数で表されます。
+
+何番目の画素まで塗ったか？を考えるため、走査変換では、画素の位置がそのまま座標に対応する:Anki[画像座標系]が使われます。
+
+::::CardGrid
+:::TermCard{title="画像座標系" ankiTitle="anki"}
+画像の:Anki[左上]を原点とし、x軸を:Anki[右]向き、y軸を:Anki[下]向きにとった整数の格子
+数学で使う座標系とはy軸の向きが逆になっているが、これは画像が上の行から下の行へと走査されることに対応している
+:::
+::::
 
 走査変換では、図形を構成する連続的な線を、この格子の上の画素で近似することになります。そのため、本来は滑らかな線も、拡大すると階段状のギザギザが見えてしまいます。
 
-<!-- TODO: 走査変換の概念図（連続な線が画素格子へ近似され、ジャギーが生まれる様子） -->
+:::Action
+:Mark[連続な直線を表示]のチェックを外し、走査変換の結果を見てみよう
+:::
+
+<CanvasWrapper>
+  <ScanConversionGridDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 画素格子の大きさ（横 3 : 縦 2）と、横の画素数。
+// 横の画素数を 3 の倍数にとれば、縦の画素数が整数になり画素が正方形に収まる
+const PLOT_WIDTH = 3.6
+const PLOT_HEIGHT = 2.4
+const COLUMNS = 24
+const ROWS = (COLUMNS * PLOT_HEIGHT) / PLOT_WIDTH
+const PITCH = PLOT_WIDTH / COLUMNS
+
+// 描きたい直線の傾き。x を画素 1 つ分進めたときに、y が何画素分下がるか
+const SLOPE = 0.45
+
+// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z
+const LAYER_PIXEL = 0.01
+const LAYER_GRID = 0.02
+const LAYER_AXIS = 0.04
+const LAYER_LINE = 0.05
+
+// 画素 (column, row) の中心の位置。
+// 画像座標系は画像の左上を原点とし、x 軸を右向き、y 軸を下向きにとる
+const centerXOf = (column: number) => -PLOT_WIDTH / 2 + (column + 0.5) * PITCH
+const centerYOf = (row: number) => PLOT_HEIGHT / 2 - (row + 0.5) * PITCH
+
+// 列 column の中心で、描きたい直線が通る y。画素の行を単位とした小数になる
+const exactRowAt = (column: number) => (ROWS - 1) / 2 + SLOPE * (column - (COLUMNS - 1) / 2)
+
+// 画素どうしの境目。画像の縦横を、画素数で等分した位置に引く
+const gridPoints: Vector3[] = []
+for (let column = 0; column <= COLUMNS; column++) {
+  const x = -PLOT_WIDTH / 2 + column * PITCH
+  gridPoints.push(
+    new Vector3(x, -PLOT_HEIGHT / 2, LAYER_GRID),
+    new Vector3(x, PLOT_HEIGHT / 2, LAYER_GRID)
+  )
+}
+for (let row = 0; row <= ROWS; row++) {
+  const y = PLOT_HEIGHT / 2 - row * PITCH
+  gridPoints.push(
+    new Vector3(-PLOT_WIDTH / 2, y, LAYER_GRID),
+    new Vector3(PLOT_WIDTH / 2, y, LAYER_GRID)
+  )
+}
+const gridGeometry = new BufferGeometry().setFromPoints(gridPoints)
+scene.add(new LineSegments(gridGeometry, new LineBasicMaterial({ color: "#7d8794" })))
+
+// 1 列につき 1 画素、直線に最も近い画素（y を四捨五入した行）を塗る。
+// 塗った色をそのままの濃さで見せたいので、陰影の付かない材質にする
+const pixels = new InstancedMesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#ffc857" }),
+  COLUMNS
+)
+const matrix = new Matrix4()
+let painted = 0
+for (let column = 0; column < COLUMNS; column++) {
+  const row = Math.round(exactRowAt(column))
+  if (row < 0 || row > ROWS - 1) continue
+
+  matrix.makeScale(PITCH, PITCH, 1)
+  matrix.setPosition(centerXOf(column), centerYOf(row), LAYER_PIXEL)
+  pixels.setMatrixAt(painted++, matrix)
+}
+pixels.count = painted
+scene.add(pixels)
+
+// 画像座標系の軸。画像の左上の原点から、x 軸は右へ、y 軸は下へ伸ばす
+const axisGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(-PLOT_WIDTH / 2 - 0.18, PLOT_HEIGHT / 2 + 0.18, LAYER_AXIS),
+  new Vector3(PLOT_WIDTH / 2 + 0.26, PLOT_HEIGHT / 2 + 0.18, LAYER_AXIS),
+  new Vector3(-PLOT_WIDTH / 2 - 0.18, PLOT_HEIGHT / 2 + 0.18, LAYER_AXIS),
+  new Vector3(-PLOT_WIDTH / 2 - 0.18, -PLOT_HEIGHT / 2 - 0.26, LAYER_AXIS)
+])
+scene.add(new LineSegments(axisGeometry, new LineBasicMaterial({ color: "#9aa3b0" })))
+
+// 描きたい連続な直線。格子の中心を通り、x 方向の端と y 方向の端のうち先に達する方で切る。
+// 線材（LineBasicMaterial）の線幅は WebGL では常に 1 ドットに固定されるため、
+// 図の主役である直線は、格子線に埋もれない太さの細長い長方形として描く
+const halfLength = Math.min(PLOT_WIDTH / 2, PLOT_HEIGHT / 2 / Math.abs(SLOPE))
+const line = new Mesh(new PlaneGeometry(1, 1), new MeshBasicMaterial({ color: "#6fd8ff" }))
+// 長方形の長辺を線分の長さに合わせ、傾きの分だけ回す（y 軸が下向きなので回転は逆向き）
+line.scale.set(2 * halfLength * Math.hypot(1, SLOPE), 0.034, 1)
+line.rotation.z = Math.atan(-SLOPE)
+line.position.z = LAYER_LINE
+scene.add(line)
+```
+
+:::
 
 ## :WithGroupTag[線分のラスタ化]{group="{['CG']}"}
 
-最も基本的な図形である線分から考えてみましょう。
-始点と終点が決まった線分は、次の直線の方程式で表すことができます。$$a$$は直線の傾き、$$b$$は切片（y軸と直線が交わる点のy座標）です。
+具体的なラスタ化の処理について、最も基本的な図形である:Mark[線分]から考えてみましょう。
+始点と終点が決まった線分は、次の直線の方程式で表すことができます。$$a$$ は直線の傾き、$$b$$ は切片（y軸と直線が交わる点のy座標）です。
 
 $$
 y = ax + b
 $$
 
-素朴に考えれば、x座標を`1`ずつ進めながら、そのつど上の式でyを計算し、最も近い画素（yを四捨五入して整数にした座標）を塗っていけばよさそうです。
+単純に考えれば、x座標を`1`ずつ進めながら、その都度yを計算し、最も近い画素（yを四捨五入して整数にした座標）を塗っていけばよさそうにも思えます。
 
-しかし、この方法では、画素ごとに傾き$$a$$との乗算が必要になります。画素は何万、何百万と並ぶため、トータルでの計算時間が膨れ上がってしまいます。
+しかし、この方法では、画素ごとに傾き $$a$$ との乗算が必要になります。画素は何万、何百万と並ぶため、これでは計算時間が膨れ上がってしまいます。
 
 ### 増分法
 
 ここで役立つのが、:Anki[増分法]という考え方です。
-増分法とは、計算を毎回ゼロからやり直すのではなく、1つ前のステップの結果に一定の差分（増分）を加えるだけで次の値を求める方法です。
+増分法では、計算を毎回ゼロからやり直すのではなく、`1`つ前の結果に一定の:Anki[増分]を加えるだけで次の値を求めていきます。
 
-直線の傾きは、x座標が`1`進んだときにy座標がどれだけ変化するかを表すものです。つまり、x座標が`1`増える度に、yの値は傾き$$a$$だけ増えることになります。
+直線の傾きは、x座標が`1`進んだときにy座標がどれだけ変化するかを表すものです。つまり、x座標が`1`増える度に、yの値は傾き $$a$$ だけ増えることになります。
 
 $$
 y_{n+1} = y_n + a
 $$
 
-つまり、前の画素のyの値に$$a$$を足すだけで次のyが求まり、毎回のかけ算を省けます。
+この式により、前の画素のyに $$a$$ を足すだけで次のyを求めることができ、毎回のかけ算が省かれます。
+
+:::Action
+:Mark[進めたステップ]を動かして、xが`1`進むごとにyが傾きaだけ増えていく様子を観察しよう
+:::
+
+<CanvasWrapper>
+  <IncrementalMethodDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 画素の格子と画素の大きさ、描きたい直線の傾き a、x をいくつ進めたか
+const COLUMNS = 13
+const ROWS = 9
+const PITCH = 0.28
+const SLOPE = 0.6
+const STEP = 4
+
+// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z
+const LAYER_PATH = 0.05
+const LAYER_DOT = 0.06
+
+// 切片 b（x = 0 のときの y）。直線は格子の中心を通るようにとる
+const INTERCEPT = (ROWS - 1) / 2 - (SLOPE * (COLUMNS - 1)) / 2
+
+// x（画素の列）と y（画素の行を単位とした小数）の位置。
+// 画像座標系は画像の左上を原点とし、x 軸を右向き、y 軸を下向きにとる
+const worldXOf = (x: number) => (-COLUMNS / 2 + x + 0.5) * PITCH
+const worldYOf = (y: number) => (ROWS / 2 - y - 0.5) * PITCH
+
+// 増分をたどる階段と、求めた y を示す点。
+// 階段は x 方向へ進む分（+1）と y 方向へ増える分（+a）で色を分ける
+const barsAlongX = new InstancedMesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#b48cf2" }),
+  COLUMNS - 1
+)
+const barsAlongY = new InstancedMesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#f2766a" }),
+  COLUMNS - 1
+)
+const dots = new InstancedMesh(
+  new CircleGeometry(0.045, 16),
+  new MeshBasicMaterial({ color: "#ffc857" }),
+  COLUMNS
+)
+scene.add(barsAlongX, barsAlongY, dots)
+
+const matrix = new Matrix4()
+
+// 増分法。はじめに 1 回だけ式から y を求め、あとは前の y に傾き a を足していく
+let y = INTERCEPT
+matrix.identity()
+matrix.setPosition(worldXOf(0), worldYOf(y), LAYER_DOT)
+dots.setMatrixAt(0, matrix)
+
+for (let x = 1; x <= STEP; x++) {
+  const previousY = y
+  y += SLOPE
+
+  // x を 1 進める分。どのステップでも 1 列ぶんの長さになる
+  matrix.makeScale(PITCH, 0.026, 1)
+  matrix.setPosition((worldXOf(x - 1) + worldXOf(x)) / 2, worldYOf(previousY), LAYER_PATH)
+  barsAlongX.setMatrixAt(x - 1, matrix)
+
+  // y が a だけ増える分。傾きが急なほど長くなる
+  matrix.makeScale(0.026, Math.abs(SLOPE) * PITCH, 1)
+  matrix.setPosition(worldXOf(x), (worldYOf(previousY) + worldYOf(y)) / 2, LAYER_PATH)
+  barsAlongY.setMatrixAt(x - 1, matrix)
+
+  // 求めた y。小数のまま、直線の上に乗る
+  matrix.identity()
+  matrix.setPosition(worldXOf(x), worldYOf(y), LAYER_DOT)
+  dots.setMatrixAt(x, matrix)
+}
+barsAlongX.count = STEP
+barsAlongY.count = STEP
+dots.count = STEP + 1
+```
+
+:::
+
 この「前の結果に増分を加える」というアイデアは、線分だけでなく、このあと見る円やポリゴンのラスタ化にも共通して使われる、走査変換の土台となる考え方です。
 
-ただし、こうして求まるyは一般に小数になるため、実際にどの画素を塗るかを決めるには、毎回yの値を四捨五入して整数の画素に対応づける必要があります。
+ただし、こうして求まるyは一般に:Mark[小数]になるため、実際にどの画素を塗るかを決めるには、毎回yの値を四捨五入して:Anki[整数]の画素に対応づける必要があります。
 
 ### 誤差による増分法
 
 線分を画素に当てはめる際に知りたいのは、小数点以下を含めた厳密なyの座標ではありません。次にどの画素へ進むべきか？だけ分かればよいのです。
-そこで、yの値そのものではなく、いま塗っている画素の中心からの「ずれ」だけを追いかける方法を考えます。
 
-画素の中心を基準とし、描きたい直線がそこからy方向にどれだけ離れているかを:Anki[誤差]として持つようにします。x座標を`1`進めるごとに、傾き$$a$$を加えていくことで、誤差を更新していきます。
+そこで、yの値そのものではなく、今塗っている画素の中心からの「ずれ」だけを追いかける方法を考えます。
 
-この誤差を使うと、次の画素を選ぶルールは非常にシンプルになります。
+画素の中心`0.5`を基準とし、描きたい直線がそこからy方向にどれだけ離れているかを:Anki[誤差]として持つようにします。x座標を`1`進めるごとに、傾き $$a$$ を加えていき、誤差を更新します。
 
-- 誤差が`0.5`より小さいうちは、直線はまだ同じ画素の範囲に収まっているため、y座標は更新しない
-- 誤差が`0.5`を超えたら、直線は現在の画素の外（`1`つ上の行）へはみ出したことになるので、塗る画素のy座標を`1`増やし、誤差から`1`を引く
+誤差が`0.5`より小さいうちは、直線はまだ同じ画素の範囲に収まっています。
+誤差が`0.5`を超えた場合は、直線は現在の画素の外（`1`つ下の行）へはみ出したことになります。
 
-このように、誤差と`0.5`との大小だけで、次に塗る画素を決めることができます。この手順を擬似コードで表すと、次のようになります。
+この誤差を使って、次のように計算していけばよいのです。
+
+- 誤差が`0.5`より小さい：y座標は更新しない
+- 誤差が`0.5`を超えた：塗る画素のy座標を`1`増やし、誤差から`1`を引く
+
+誤差と`0.5`との大小だけで、次に塗る画素を決めることができます。
+この手順を擬似コードで表すと、次のようになります。
 
 ```js
 e <- 0  // 画素中心からの誤差
@@ -75,14 +276,123 @@ for x = x_start to x_end:
         e <- e - 1
 ```
 
+:::Action
+:Mark[進めたステップ]を増やしていき、:Mark[更新後の誤差e]（赤線）が`0.5`（紫線）より大きくなると、新たに塗る画素が`1`行下に進む様子を観察しよう
+:::
+
+<CanvasWrapper>
+  <ErrorIncrementDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 画素の格子と画素の大きさ、描きたい直線の傾き a、x をいくつ進めたか
+const COLUMNS = 9
+const ROWS = 6
+const PITCH = 0.4
+const SLOPE = 0.35
+const STEP = 2
+
+// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z。
+// 透視投影なので z が離れると同じ x・y でも投影される位置がわずかにずれる。
+// 1 つの目印を線と点で組み立てる場合は、パーツの z を隣り合う値にして揃える
+const LAYER_PIXEL = 0.01
+const LAYER_CURRENT_PIXEL = 0.015
+const LAYER_THRESHOLD = 0.05
+const LAYER_THRESHOLD_DOT = 0.051
+const LAYER_ERROR = 0.07
+
+// x（画素の列）と y（画素の行を単位とした小数）の位置。
+// 画像座標系は画像の左上を原点とし、x 軸を右向き、y 軸を下向きにとる
+const worldXOf = (x: number) => (-COLUMNS / 2 + x + 0.5) * PITCH
+const worldYOf = (y: number) => (ROWS / 2 - y - 0.5) * PITCH
+
+// 塗った画素。いま決めた画素と見分けられるよう、通り過ぎた画素は控えめな濃さにする
+const pixels = new InstancedMesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#ffc857", transparent: true, opacity: 0.45 }),
+  COLUMNS
+)
+scene.add(pixels)
+
+const matrix = new Matrix4()
+matrix.makeScale(PITCH, PITCH, 1)
+matrix.setPosition(worldXOf(0), worldYOf(0), LAYER_PIXEL)
+pixels.setMatrixAt(0, matrix)
+
+// 誤差による増分法。誤差に傾きを足し、0.5 を超えたら
+// 塗る画素を 1 行進めて誤差から 1 を引く
+let row = 0
+let error = 0
+let previousRow = 0
+let errorBefore = 0
+
+for (let x = 1; x <= STEP; x++) {
+  previousRow = row
+  errorBefore = error
+
+  error += SLOPE
+  if (error > 0.5) {
+    row += 1
+    error -= 1
+  }
+
+  matrix.makeScale(PITCH, PITCH, 1)
+  matrix.setPosition(worldXOf(x), worldYOf(row), LAYER_PIXEL)
+  pixels.setMatrixAt(x, matrix)
+}
+pixels.count = STEP + 1
+
+// いま誤差の判定で決めた画素を、濃い色で重ねる
+const currentPixel = new Mesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#ffc857" })
+)
+currentPixel.scale.set(PITCH, PITCH, 1)
+currentPixel.position.set(worldXOf(STEP), worldYOf(row), LAYER_CURRENT_PIXEL)
+scene.add(currentPixel)
+
+// 誤差。1 つ前に塗った画素の中心から、直線までの y 方向の隔たり
+const baseY = worldYOf(previousRow)
+const tipY = worldYOf(previousRow + errorBefore + SLOPE)
+const errorBar = new Mesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#f2766a" })
+)
+errorBar.scale.set(0.032, Math.abs(baseY - tipY), 1)
+errorBar.position.set(worldXOf(STEP), (baseY + tipY) / 2, LAYER_ERROR)
+scene.add(errorBar)
+
+// 誤差と比べるしきい値 0.5。誤差を測る基準になった画素（1 つ前に塗った画素）の
+// 右辺に沿わせ、中心から境目まで（画素の半分）の長さで立てる。
+// 誤差と同じ向きの端へ伸ばすと、誤差と長さを見比べられる
+const thresholdX = worldXOf(STEP - 1) + PITCH / 2
+const thresholdEdgeY = baseY + (tipY > baseY ? PITCH / 2 : -PITCH / 2)
+const thresholdMaterial = new MeshBasicMaterial({ color: "#b48cf2" })
+const threshold = new Mesh(new PlaneGeometry(1, 1), thresholdMaterial)
+threshold.scale.set(0.03, PITCH / 2, 1)
+threshold.position.set(thresholdX, (baseY + thresholdEdgeY) / 2, LAYER_THRESHOLD)
+scene.add(threshold)
+
+// しきい値の線の両端。誤差の点と同じ形で、半径だけ小さくする
+for (const y of [baseY, thresholdEdgeY]) {
+  const dot = new Mesh(new CircleGeometry(0.028, 16), thresholdMaterial)
+  dot.position.set(thresholdX, y, LAYER_THRESHOLD_DOT)
+  scene.add(dot)
+}
+```
+
+:::
+
 ### ブレゼンハムのアルゴリズム
 
-誤差による増分法は直感的ですが、誤差$$e$$には傾き$$a$$という小数の加算が含まれ、しきい値`0.5`との比較にも小数が登場します。画素ごとに小数の演算が残っている点で、まだ高速化の余地があります。
+誤差による:Mark[増分法]は直感的ですが、誤差 $$e$$ には傾き $$a$$ という小数の加算が含まれ、しきい値`0.5`との比較にも小数が登場します。画素ごとに小数の演算が残っている点で、まだ高速化の余地があります。
 
-この小数演算をすべて整数演算に置き換えたのが:Anki[ブレゼンハムのアルゴリズム]です。
-考え方はシンプルで、画素を`1`つ上げるかどうかの判定式そのものを整数の式に書き換えます。
+この小数計算をすべて整数の計算に置き換えたものが:Anki[ブレゼンハムのアルゴリズム]です。
+このアルゴリズムでは、画素を`1`つ上げるかどうかの判定式そのものを整数の式に書き換えます。
 
-x座標を`1`進めたときの誤差は`e + a`で、これが`0.5 = 1 / 2`を超えたらy座標を上げるのでした。傾き`a = dy / dx`を代入し、両辺に`2dx`をかけると、次のように小数が消えていきます。
+x座標を`1`進めたときの誤差は $$e + a$$ で、これが`0.5 = 1 / 2`を超えたらy座標を上げるのでした。傾き $$a = \dfrac{dy}{dx}$$ を代入し、両辺に`2dx`をかけると、次のように小数が消えていきます。
 
 $$
 \begin{align*}
@@ -92,9 +402,9 @@ e + \frac{dy}{dx} &> \frac{1}{2} \\\\\\\\
 \end{align*}
 $$
 
-最後の式の左辺を:Anki[判定変数]`d`とおけば、画素を上げる条件は`d > 0`という符号の判定だけになります。この判定変数は、誤差が`0.5`を上回っているかどうかを正負だけで表せるよう、誤差を`2dx`倍してずらした整数の量だといえます。
+最後の式の左辺を:Anki[判定変数]$$d$$ とおけば、画素を上げる条件は $$d > 0$$ という符号の判定だけになります。この判定変数は、誤差が`0.5`を上回っているかどうかを正負だけで表せるよう、誤差を`2dx`倍してずらした整数の量だといえます。
 
-描き始めの誤差は`e = 0`なので、判定変数の初期値は整数だけで決まります。
+描き始めの誤差は $$e = 0$$ なので、判定変数の初期値は整数だけで決まります。
 
 $$
 d = 2dy - dx
@@ -107,16 +417,16 @@ d <- 2 * dy - dx  // 判定変数の初期値
 y <- y_start
 for x = x_start to x_end:
     plot(x, y)
-    if d > 0: // 誤差が 0.5 を超えた -> 直線が上の行へ
+    if d > 0: // 誤差が 0.5 を超えた -> 直線が下の行へ
         y <- y + 1
         d <- d + 2 * (dy - dx)
     else:
         d <- d + 2 * dy
 ```
 
-判定変数`d`の更新式は、誤差`e`の動きをそのまま`2dx`倍した世界に置き換えたものです。
+判定変数 $$d$$ の更新式は、誤差 $$e$$ の動きをそのまま`2dx`倍した世界に置き換えたものです。
 
-x座標を`1`進めると誤差には傾き`a = dy / dx`が加わりますが、これは`2dx`倍された世界では`2dx * a = 2dy`を足すことに対応します。この`2dy`の加算は、y座標を動かすかどうかによらず、毎ステップ必ず行われる更新です。
+x座標を`1`進めると誤差には傾き $$a = \dfrac{dy}{dx}$$ が加わりますが、これは`2dx`倍された世界では $$2dx \times a = 2dy$$ を足すことに対応します。
 
 誤差が`0.5`を超えなければ、y座標はそのままなので、`2dy`の加算だけを行います。
 
@@ -125,7 +435,7 @@ x座標を`1`進めると誤差には傾き`a = dy / dx`が加わりますが、
         d <- d + 2 * dy
 ```
 
-誤差が`0.5`を超えてy座標を`1`上げるときも、x座標は同じように`1`進んでいるため、同様に`2dy`の加算が必要です。これに加えて、誤差から`1`を引く操作（`2dx`倍の世界では`2dx`を引く操作）が重なります。そのため、加算する量は`2dy`から`2dx`を引いた`2dy - 2dx`、すなわち`2(dy - dx)`になります。
+誤差が`0.5`を超えてy座標を`1`上げるときも、x座標は同じように`1`進んでいるため、同様に`2dy`の加算が必要です。これに加えて、誤差から`1`を引く操作（`2dx`倍の世界では`2dx`を引く操作）が重なります。そのため、加算する量は`2dy`から`2dx`を引いた $$2dy - 2dx$$、すなわち $$2(dy - dx)$$ になります。
 
 ```js
     if d > 0:
@@ -133,29 +443,131 @@ x座標を`1`進めると誤差には傾き`a = dy / dx`が加わりますが、
         d <- d + 2 * (dy - dx)
 ```
 
-ループの中に現れるのは整数の足し算と、判定変数の符号を見るだけの比較です。
-小数の乗算や四捨五入を完全に排除できるため、ブレゼンハムのアルゴリズムは非常に高速で、線分描画の定番として広く使われています。
+ループの中に現れるのは整数の足し算と、判定変数の値の符号を見るだけの比較です。
+小数の乗算や四捨五入を完全に排除できるため、ブレゼンハムのアルゴリズムは非常に:Anki[高速]で、線分描画の定番として広く使われています。
 
-:::Note
-ブレゼンハムのアルゴリズムは、傾きの絶対値が`1`以下（横に長い線分）の場合を基本とします。
-傾きが急で縦に長い線分には、x軸とy軸の役割を入れ替えて同じ手順を適用します。こうすることで、どんな向きの線分も同じ考え方で扱えます。
+:::Action
+判定変数dが正なら下の行、`0`以下なら同じ行が選ばれる様子を観察しよう
 :::
 
-<!-- TODO: ブレゼンハムの画素選択の図解（判定変数の符号で上下どちらの画素を選ぶか） -->
+<CanvasWrapper>
+  <BresenhamSelectionDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 画素の格子と画素の大きさ。線分の始点と終点は、両端の列の画素の中心にとる
+const COLUMNS = 9
+const ROWS = 6
+const PITCH = 0.4
+const DX = COLUMNS - 1
+const DY = 3
+const STEP = 2
+
+// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z
+const LAYER_PIXEL = 0.01
+const LAYER_CURRENT_PIXEL = 0.015
+const LAYER_CANDIDATE_FILL = 0.045
+const LAYER_CANDIDATE = 0.05
+
+// x（画素の列）と y（画素の行）の位置。
+// 画像座標系は画像の左上を原点とし、x 軸を右向き、y 軸を下向きにとる
+const worldXOf = (x: number) => (-COLUMNS / 2 + x + 0.5) * PITCH
+const worldYOf = (y: number) => (ROWS / 2 - y - 0.5) * PITCH
+
+// 塗った画素。いま塗っている画素と見分けられるよう、通り過ぎた画素は控えめな濃さにする
+const pixels = new InstancedMesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#ffc857", transparent: true, opacity: 0.45 }),
+  COLUMNS
+)
+scene.add(pixels)
+
+const matrix = new Matrix4()
+matrix.makeScale(PITCH, PITCH, 1)
+matrix.setPosition(worldXOf(0), worldYOf(0), LAYER_PIXEL)
+pixels.setMatrixAt(0, matrix)
+
+// ブレゼンハムのアルゴリズム。判定変数 d の符号だけで次の画素を決め、
+// d の更新も整数の加算だけで済む
+let y = 0
+let d = 2 * DY - DX
+
+for (let x = 0; x < STEP; x++) {
+  if (d > 0) {
+    y += 1
+    d += 2 * (DY - DX)
+  } else {
+    d += 2 * DY
+  }
+
+  matrix.makeScale(PITCH, PITCH, 1)
+  matrix.setPosition(worldXOf(x + 1), worldYOf(y), LAYER_PIXEL)
+  pixels.setMatrixAt(x + 1, matrix)
+}
+pixels.count = STEP + 1
+
+// いま塗っている画素を、濃い色で重ねる
+const currentPixel = new Mesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#ffc857" })
+)
+currentPixel.scale.set(PITCH, PITCH, 1)
+currentPixel.position.set(worldXOf(STEP), worldYOf(y), LAYER_CURRENT_PIXEL)
+scene.add(currentPixel)
+
+// 次の列の候補は、いまと同じ行と、その 1 つ下の行の 2 つだけ。
+// 選ばれた側は塗る色で囲み、選ばれなかった側は控えめな色で囲む
+const outlineGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(-0.5, -0.5, 0),
+  new Vector3(0.5, -0.5, 0),
+  new Vector3(0.5, 0.5, 0),
+  new Vector3(-0.5, 0.5, 0),
+  new Vector3(-0.5, -0.5, 0)
+])
+const goesDown = d > 0
+
+for (const index of [0, 1]) {
+  const outline = new Line(
+    outlineGeometry,
+    new LineBasicMaterial({ color: goesDown === (index === 1) ? "#ffc857" : "#aeb6c2" })
+  )
+  outline.scale.set(PITCH, PITCH, 1)
+  outline.position.set(worldXOf(STEP + 1), worldYOf(y + index), LAYER_CANDIDATE)
+  scene.add(outline)
+}
+
+// 判定変数の符号で選ばれた側を、次に塗る画素として薄く塗る
+const chosenFill = new Mesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#ffc857", transparent: true, opacity: 0.3 })
+)
+chosenFill.scale.set(PITCH, PITCH, 1)
+chosenFill.position.set(
+  worldXOf(STEP + 1),
+  worldYOf(goesDown ? y + 1 : y),
+  LAYER_CANDIDATE_FILL
+)
+scene.add(chosenFill)
+```
+
+:::
+
+ブレゼンハムのアルゴリズムは、傾きの絶対値が`1`以下（横に長い線分）の場合を基本とします。
+傾きが急で縦に長い線分には、x軸とy軸の役割を入れ替えて同じ手順を適用します。こうすることで、どんな向きの線分についても同じ考え方で計算できます。
 
 ## :WithGroupTag[円のラスタ化]{group="{['CG']}"}
 
-線分で培った増分法の考え方は、曲線である円にも応用できます。
+線分で学んだ増分法の考え方は、曲線である円にも応用できます。
 
 円を整数演算でラスタ化する代表的な手法が:Anki[ミッチェナーのアルゴリズム]です。
 これは、ブレゼンハムのアルゴリズムと同じく、各ステップで判定変数を更新しながら、円周に最も近い画素を整数演算だけで選んでいく方法です。
 
-円のラスタ化で特に効いてくるのが、円がもつ高い対称性です。
+円のラスタ化で特に効いてくるのが、円がもつ高い:Anki[対称性]です。
 円は中心を通る軸について上下左右に対称なだけでなく、`45`度の対角線についても対称です。そのため、円周のうち`1/8`の弧について塗る画素を計算すれば、残りの`7/8`は座標を符号や順序を入れ替えるだけで求められます。
 
 つまり、実際に判定変数で計算するのは円周のごく一部だけでよく、残りは対称性を使って一気に埋められるのです。これがミッチェナーのアルゴリズムが効率的である理由です。
-
-<!-- TODO: 円の8対称性の図解（円の1/8の弧から残り7/8を対称に復元する様子） -->
 
 ## :WithGroupTag[ポリゴンのラスタ化]{group="{['CG']}"}
 
@@ -164,10 +576,108 @@ x座標を`1`進めると誤差には傾き`a = dy / dx`が加わりますが、
 
 デジタル画像を扱うときは、:Anki[水平]方向の画素の列が処理の基本単位となることが多く、この水平な走査線を:Anki[スキャンライン]と呼びます。
 
-スキャンラインアルゴリズムでは、ポリゴンの上端から下端まで、スキャンラインを1行ずつ下へずらしていき、各スキャンラインがポリゴンの辺と交わる点を求めます。
-この交点のx座標も、スキャンラインを`1`行進めるごとに辺の傾きの分だけ変化するため、線分のラスタ化と同様の手法で効率よく求められます。
+スキャンラインアルゴリズムでは、ポリゴンの上端から下端まで、スキャンラインを`1`行ずつ下へずらしていき、各スキャンラインがポリゴンの辺と交わる点を求めます。
+この交点のx座標も、スキャンラインを`1`行進めるごとに辺の傾きの分だけ変化するため、:Anki[線分]のラスタ化と同様の手法で効率よく求められます。
 
-こうして求めた左右の交点の間が、塗るべき内部の区間になります。
-交点の内側を実際に塗りつぶす方法については、[塗りつぶし処理](/cg/basics/area-filling/)で扱います。
+:::Action
+:Mark[スキャンラインの行]を`1`進めるごとに、交点のx座標が:Mark[前の行から]一定の値（辺の傾きの分）だけ変化することを確認しよう
+:::
 
-<!-- TODO: スキャンラインで三角形を走査する様子の図解（交点とスパン） -->
+<CanvasWrapper>
+  <ScanlineSpanDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 画素の格子と画素の大きさ、いま見ているスキャンラインの行
+const COLUMNS = 15
+const ROWS = 10
+const PITCH = 0.24
+const SCAN_ROW = 5
+
+// ラスタ化するポリゴン（三角形）。画素の格子とは無関係に、小数の座標で置く
+const APEX = { x: 6, y: 0.6 }
+const BASE_LEFT = { x: 2.2, y: 8.4 }
+const BASE_RIGHT = { x: 12.6, y: 8.4 }
+
+// xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z
+const LAYER_SCANLINE = 0.05
+const LAYER_EDGE = 0.06
+const LAYER_SPAN = 0.07
+
+// x（画素の列）と y（画素の行）の位置。小数を渡してもよい。
+// 画像座標系は画像の左上を原点とし、x 軸を右向き、y 軸を下向きにとる
+const worldXOf = (x: number) => (-COLUMNS / 2 + x + 0.5) * PITCH
+const worldYOf = (y: number) => (ROWS / 2 - y - 0.5) * PITCH
+
+// 2 点を結ぶ線分を、細長い長方形として置く。
+// 線材（LineBasicMaterial）の線幅は WebGL では常に 1 ドットに固定されるため、
+// ポリゴンの輪郭やスパンは長方形として描く
+const createBar = (
+  from: { x: number; y: number },
+  to: { x: number; y: number },
+  thickness: number,
+  color: string,
+  z: number
+) => {
+  const fromX = worldXOf(from.x)
+  const fromY = worldYOf(from.y)
+  const toX = worldXOf(to.x)
+  const toY = worldYOf(to.y)
+
+  const bar = new Mesh(new PlaneGeometry(1, 1), new MeshBasicMaterial({ color }))
+  bar.scale.set(Math.hypot(toX - fromX, toY - fromY), thickness, 1)
+  bar.rotation.z = Math.atan2(toY - fromY, toX - fromX)
+  bar.position.set((fromX + toX) / 2, (fromY + toY) / 2, z)
+  return bar
+}
+
+// ラスタ化するポリゴンの輪郭
+scene.add(createBar(APEX, BASE_LEFT, 0.034, "#6fd8ff", LAYER_EDGE))
+scene.add(createBar(APEX, BASE_RIGHT, 0.034, "#6fd8ff", LAYER_EDGE))
+scene.add(createBar(BASE_LEFT, BASE_RIGHT, 0.034, "#6fd8ff", LAYER_EDGE))
+
+// スキャンライン y が、点 (x1, y1) と (x2, y2) を結ぶ辺と交わる x
+const intersectionXOf = (y: number, x1: number, y1: number, x2: number, y2: number) =>
+  x1 + ((x2 - x1) * (y - y1)) / (y2 - y1)
+
+// 行 row のスキャンラインが三角形と交わる区間。
+// 上の頂点より上、底辺より下では交わらない
+const spanAt = (row: number) => {
+  if (row < APEX.y || row > BASE_RIGHT.y) return null
+
+  return {
+    left: intersectionXOf(row, APEX.x, APEX.y, BASE_LEFT.x, BASE_LEFT.y),
+    right: intersectionXOf(row, APEX.x, APEX.y, BASE_RIGHT.x, BASE_RIGHT.y)
+  }
+}
+
+// いま見ているスキャンラインと、その行のスパン・両端の交点
+const scanline = new Mesh(
+  new PlaneGeometry(1, 1),
+  new MeshBasicMaterial({ color: "#aeb6c2" })
+)
+scanline.scale.set(COLUMNS * PITCH, 0.022, 1)
+scanline.position.set(0, worldYOf(SCAN_ROW), LAYER_SCANLINE)
+scene.add(scanline)
+
+const currentSpan = spanAt(SCAN_ROW)
+if (currentSpan) {
+  const { left, right } = currentSpan
+  scene.add(
+    createBar({ x: left, y: SCAN_ROW }, { x: right, y: SCAN_ROW }, 0.05, "#f2766a", LAYER_SPAN)
+  )
+
+  for (const x of [left, right]) {
+    const dot = new Mesh(new CircleGeometry(0.042, 16), new MeshBasicMaterial({ color: "#f2766a" }))
+    dot.position.set(worldXOf(x), worldYOf(SCAN_ROW), LAYER_SPAN)
+    scene.add(dot)
+  }
+}
+```
+
+:::
+
+こうして求めた左右の交点の間が塗るべき区間であり、この区間を:Anki[スパン]といいます。
+交点の内側を実際に塗りつぶす処理の詳細は、[塗りつぶし処理](/cg/basics/area-filling/)で扱います。

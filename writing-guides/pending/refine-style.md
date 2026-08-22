@@ -5,7 +5,9 @@
 `refine-style.md`（推敲・修正傾向）の保留プール。根拠が単一コミット・単一記事に閉じる、修正方向が一定しない、一般的な編集技法に還元される、などの理由で、まだ主要ルールに採用していない（または除外した）修正傾向の観察を集めた補助記録である。
 
 ここに置かれた項目は **文章生成・推敲時には適用しない**（`author-style-writer` はこのファイルを読まない）。
-`author-style-analyzer` が分析のたびにこのファイルを読み、根拠が増えた項目を `refine-style.md` の主要ルールへ**昇格**する／新たな保留を**追記**する／棄却・除外する対象とする。
+`author-style-analyzer` が分析のたびにこのファイルを読み、根拠が増えた項目を `refine-style.md` の主要ルールへ**昇格**する／新たな保留を**追記**する対象とする。
+
+**記事が増えても解けない理由で再審査を打ち切った項目は、ここではなく `../rejected/refine-style.md` へ移す**（`node scripts/style-pending-promote.mjs` が棄却IDを昇格候補から外す）。棄却にできるのは媒体規約・一般技法・既存ルール・観点違い・型不収束の5区分だけで、**単一シリーズ閉塞・支持記事数の不足はここに残す**（別シリーズの記事が増えれば解けるため。棄却へ流すと再現の機会が来ても見に行かない死蔵になる）。
 
 保留は1項目1行で、`保留ID｜特徴：保留の理由｜支持: <slug>, <slug>` の3欄で書く（`node scripts/style-pending-promote.mjs` が支持記事数から昇格候補を出す）。
 
@@ -20,7 +22,6 @@
 - RS-P001｜ページタイトルと重複するH1の削除・小見出しの昇格：1記事のみで、他記事は逆に小見出しを増やす方向。H1を本文で繰り返さない一般慣習とも重なる｜支持: /color-theory/how-to-draw-pccs-color-wheel
 - RS-P002｜用語を使う直前に短い定義を差し込む：推敲差分として明確なのは1記事のみ（もう1件は ComingSoon からの初稿執筆で差し込みではない）。普遍的な文章術と切り分けられない｜支持: /color-theory/pccs-color-system
 - RS-P003｜冗長な前置き・口語的フィラーの削除／中立化：2記事だが操作が削除と言い換えで別物。一般的な推敲技法で、一人称の砕けた前置きは残る｜支持: /color-theory/basic-color-terms, /color-theory/how-to-draw-pccs-color-wheel
-- RS-P004｜段落・改行をどこで割りどこでつなぐかの境界基準：同一記事・同一コミットで分割と結合が同居して方向が定まらず、`.svx` のソフト改行（`\n`→半角空白）による整形の交絡も切り分けられない。連結の向き自体は RS-005 へ昇格済みで、ここに残るのは境界基準と逆向きの分割操作｜支持: /color-theory/color-wheel-and-color-solid, /cg/basics/camera-capture-and-cg, /cg/basics/cg-and-image-processing, /color-theory/color-matching-and-grassmanns-law, /cg/transformation/transformation-composition, /cg/transformation/affine-transformation, /cg/transformation/coordinate-systems, /cg/basics/gradient-generation, /color-fields/landscape-color-approach, /color-fields/housing-color-design-process, /color-fields/interior-concept-history, /color-fields/interior-design-basics, /color-theory/color-vision-types, /color-fields/color-universal-design, /cg/image-properties/dynamic-range-and-gradation, /color-theory/optical-illusions, /color-theory/age-related-vision-changes, /color-theory/color-rendering, /color-theory/color-difference-and-uniform-color-space
 - RS-P005｜AI草稿の未説明用語へ定義・補足（`:::Note`）を足す：1記事に閉じ、同シリーズのもう1記事は逆に定義を圧縮・削除する方向。新語導入時の定義補足は一般的な編集術でもある｜支持: /cg/basics/camera-capture-and-cg
 - RS-P006｜単発の語彙・記法の置き換え（一から→ゼロから／`:::Example`→`:::Note`／括弧併記→定義句／技術→手法）：いずれも各1回で、記法規約・語彙の好みの領域｜支持: /cg/basics/camera-capture-and-cg, /cg/basics/cg-and-image-processing
 - RS-P007｜例え・対応づけを「〜のような役割を果たします」で和らげる緩衝表現の追加：単発1例のみ｜支持: /color-theory/eye-structure
@@ -29,7 +30,6 @@
 - RS-P010｜橋渡しの問い・用語補足を、それが導く説明の直前へ移す：2記事で確認できるが操作の質が異なり（セクション境界を越える遷移問いの移動／補足 Note の例の前への繰り上げ）、単一の並べ替えルールとしては弱い｜支持: /cg/basics/image-quantization, /cg/basics/image-sampling
 - RS-P011｜詳細な数値ワークト例を一般式（変数）へ置換し、公式を節先頭のブロック引用へ前置する：1記事のみで公式中心の短い記事という記事タイプ依存が強い（ワークト例の削除自体は RS-029 と同一根拠、ビット→バイトの単位訂正は技術的訂正として分離）｜支持: /cg/basics/grayscale-and-color-images
 - RS-P012｜漢字とひらがなの開き閉じ：同一記事内で漢字化（じつは→実は／いまは→今は）とかな化（升目→マス目／創られます→つくられます）の両方向が起き、単一方向のルールにならない。表記の好みは SQ-049 の領域｜支持: /cg/basics/vector-and-raster, /color-fields/media-design-concepts
-- RS-P013｜箇条書き項目の文末を圧縮する（体言止め化はその一例）：文末を短くする方向は共通でも、体言止めか動詞止めかは一定せず、各記事1リストずつと薄い。落とした括弧注記が直後の地の文へ再提示される例もあり、既習なら常に落とすのでもない。文末を簡潔な形（体言止め・常体）へそろえる向き自体は本体 RS-003 の「項目の文体」へ反映済みで、ここに残るのは体言止めと動詞止めの選択基準｜支持: /cg/basics/gradient-generation, /cg/basics/area-filling, /color-theory/color-vision-types
 - RS-P014｜対比を接続詞「一方」から逆接「〜が」へ畳んで一文化し、通念→主要情報の順に並べ替える：1例のみで一般化不可｜支持: /color-theory/what-is-lighting
 - RS-P015｜列挙の一項を削る／語を選び直す自己推敲：各1回（n=1）で、conciseness 志向・語の具体化の兆候はあるが単一例では著者固有の傾向と断定できない｜支持: /color-theory/color-association-symbolism, /color-theory/color-roles
 - RS-P016｜定義・分類を専用ブロック（`:::Note`・CardGrid/TermCard）へ切り出す：Note/TermCard/CardGrid はアプリ既存のUIコンポーネントで、一般的な文書設計・記法運用（`syntax-guide.md`）と重なり著者固有の癖と判断できない｜支持: /color-fields/landscape-color-approach, /color-fields/housing-color-design-process
@@ -43,22 +43,18 @@
 - RS-P024｜見出しを本文の用語・正式名称へ揃える：同じ差分でリンク文言は逆に短縮されており、略さない方向と説明的な接尾を落とす方向が同居する。もう1記事は見出しに一切手が入らない（RS-021 の近縁）｜支持: /color-fields/interior-design-basics
 - RS-P025｜口語寄り・素朴な言い切りを持ち込む：各記事1件ずつで、他の文末は草稿と同じ丁寧な書き言葉のまま残る。完成本文の語り口は `stylistic-quirks.md` の担当｜支持: /color-fields/interior-design-basics, /color-fields/interior-concept-history
 - RS-P026｜時制の変更（「意識されてきました」→「意識されています」）：1箇所のみで文体傾向と切り分けられない｜支持: /color-fields/interior-concept-history
-- RS-P027｜リンクテキストをページタイトルから外し、文の流れに合わせて言い換える・位置を移す：同じ差分の他のリンクはページ名のまま温存され、各例が別々の理由（初出への移動・語句の自然化・文の縮約に伴う移動）で説明できる。リンク先ページ名との一致を崩す方向で、一般化すると害がある。導入から外したリンクを初出節へ付け替える操作は本体 RS-020、概念名への短縮は本体 RS-018・RS-019 へ反映済み｜支持: /color-fields/interior-design-basics, /color-fields/color-universal-design, /color-theory/optical-illusions, /color-theory/elderly-vision-characteristics, /color-theory/color-difference-and-uniform-color-space
 - RS-P028｜並列の読点を中黒へ変える：1箇所のみで、リード全体の書き換えに伴う副産物とも読める｜支持: /color-fields/interior-concept-history
 - RS-P029｜「〜のです」の増減：同一記事内で削除と追加が同居し方向が逆。近接して2回出た「〜のです」を節の締めの1回に絞る例もあるが、コミットメッセージにのみ明示され差分上の該当は1箇所｜支持: /color-fields/interior-design-basics, /cg/transformation/projective-transformation
 - RS-P030｜節冒頭の橋渡し文を「〜こともあります」と可能性の提示へ緩める：1記事のみで、他記事では逆に冒頭が断定へ書き換えられる。条件次第で起きたり起きなかったりする現象を扱う記事テーマ固有の事情で説明できる（断定緩和一般は RS-015）｜支持: /color-theory/optical-illusions
 - RS-P031｜実況調・語りかけの前置きを削る：「こんどは、」だけを落とす1例で、同じ記事内の他の実況調はそのまま残る｜支持: /color-theory/optical-illusions
 - RS-P032｜説明の主体を器官名へ寄せる（「私たちの視覚が」→「私たちの脳は」）：1例のみで、どの説明を器官名の主語へ寄せるかの条件を特定できない｜支持: /color-theory/optical-illusions
-- RS-P033｜図版の直前に注記（`:::Note`／`:::Warning`）を置き「次の図はイメージです。」と断る：3記事で同じ向きの並べ替えを確認できるが、どちらも1記事1〜2箇所で、CardGrid 内の小さな図や TermCard の図には注記が付かず、断りを付けない図との線引きを特定できない。「次の図はイメージです。」という断り一文自体は本体 RS-032 へ反映済みで、ここに残るのは注記を置く図の線引き（図の直後の留保付加は RS-015 が担当）｜支持: /color-theory/age-related-eye-diseases, /color-theory/optical-illusions, /color-theory/color-difference-and-uniform-color-space
 - RS-P034｜`:::Note` に切り出された補足を本文へ戻す：1記事1箇所のみで、他記事では `:::Note` が維持され、図の注記としてはむしろ積極的に使われる。本体 RS-013 とは逆方向｜支持: /color-theory/elderly-vision-characteristics
-- RS-P035｜接続表現の置き換え（「そのため、」→「この場合、」「すると、」、口語の「だから」→「そのため、」）：近接する同じ接続語の重複回避とも読めるが、各記事1例ずつで規則化できない。完成本文の接続表現は `stylistic-quirks.md` の担当｜支持: /color-theory/age-related-eye-diseases, /color-theory/elderly-vision-characteristics, /cg/transformation/projective-transformation
 - RS-P036｜既出記事への参照を節の冒頭へ移す並べ替え：1記事1例で、統計→機序→症状という別の並べ替え意図とも解釈できる｜支持: /color-theory/age-related-eye-diseases
 - RS-P037｜検定で問われる用語・結論を `:::Note` から本文の主役へ格上げする：明確なのは1記事1事例で、もう1記事の根拠は同一節内という程度の対応でしかない。同記事の別コミットでは逆に留保を `:::Note` へ置いており一方向の格上げにならない｜支持: /color-theory/color-rendering
 - RS-P038｜対になる2図を CardGrid + TermCard の横並びへ組み替える：1記事1回のみで、もう1記事の図はいずれも単独配置。図が3つ以上の場合の挙動も未検証（RS-007 は数式限定の別根拠）｜支持: /color-theory/color-rendering
 - RS-P039｜覚える数値と参照値で `:Anki` とインラインコードを書き分ける基準：同一文にコードと `:Anki` が混在する例があり、どちらにもならない数値もある。切り分けは推測で、記法規約（`syntax-guide.md`・`math-notation-guide.md`）由来の可能性も排除できない（RS-033 の反例としては記録済み）｜支持: /color-theory/age-related-vision-changes, /color-theory/color-rendering
 - RS-P040｜括弧内の補足を「つまり、〜」の独立文へ出す：同じバッチで逆に独立した説明を括弧へ入れる操作も起きており、方向を決められない｜支持: /color-theory/age-related-vision-changes
 - RS-P041｜草稿が落とした前提用語を括弧併記で本文へ戻し、記事全体の前提語は導入直後の `:::Note` で定義する：前者は草稿のメモに元から含まれておりメモ回帰（RS-011）で説明がつき、後者は1箇所のみ。第2節では逆に術語を避けて平易語へ寄せており、性質の異なる根拠が同居する｜支持: /color-theory/color-difference-and-uniform-color-space
-- RS-P042｜変化をつけるための類義語を排し、記事のキーワード・同語の反復へ寄せる：専門用語の同語反復はテクニカルライティング一般の作法と重なり、支持3記事の差分でも一般技法と区別できない。置換先も一語に収束せず、指示語で受けて語ごと削る箇所もある。前出の具体例を呼び戻す言い方は温存され反復一辺倒でもない（用語統一は RS-014、主語の明示は RS-008 が担当）｜支持: /color-theory/color-difference-and-uniform-color-space, /color-theory/photometric-quantities, /color-fields/media-design-concepts
 - RS-P043｜図の直後の段落を「図の読み方」から始め、意外な結果と意味づけを後段へ回す：1節1事例で、同時に図中要素の説明の圧縮と意味づけの追加が起きており、順序変更だけを切り出した根拠にならない｜支持: /color-theory/color-difference-and-uniform-color-space
 - RS-P044｜事実の直後に意味づけの一文を足し、「つまり」の再要約を削って節末を結論1文で閉じる：追加と削除という逆方向の操作が同居し、「新しい含意か既述の言い直しか」の判断基準を1記事の差分では確定できない（RS-023 と RS-029 の境界事例）｜支持: /color-theory/color-difference-and-uniform-color-space
 - RS-P045｜動詞・語順の微修正：それぞれ1例で、最終稿内に逆順（「見た目の色の違い」）も併存し語順の選好として一般化できない｜支持: /color-theory/color-difference-and-uniform-color-space
@@ -89,11 +85,11 @@
 - RS-P070｜数式で示した導出を、最終形で数式を使わない言葉の説明へ差し戻す（範囲・定義を示す数式ブロックは残す）：1記事1往復のみで、追加側が「数式も載せてほしい」という明示の依頼だったため、差し戻しが著者の好みか記事の到達点の再判断かを切り分けられない｜支持: /cg/transformation/projection-steps
 - RS-P071｜記事末の橋渡し文を、節の並べ替えに合わせて最後に残る節の末尾へ移す：1例のみで、移した先の節自体が公開コミットで削除されており、移動が定着した判断か確認できない｜支持: /cg/transformation/projection-steps
 - RS-P072｜箇条書きのラベル説明に機能の理由を後付けする（「〜外す」→「〜外すために用意」）：1例のみで、理由づけの追加一般は RS-023 と切り分けられない｜支持: /cg/transformation/projection-steps
-- RS-P073｜:::Todo に type を付けて自分への疑問（type="text"）とデモ側の残課題（type="fix"）を該当箇所へ書き残し、後続コミットで本文の書き直し・加筆やデモ修正として解消する：4記事で確認できるが、`:::Todo`／`type="text"` の用法と公開時の確認手順は `syntax-guide.md` のルール4が既に規定しており、記法規約と切り分けられない（残るのは申し送りを残すタイミングと解消の仕方だけで、執筆時に適用できるルールの形にならない）。type を付ける用法が確認できるのは3記事で、残る1記事は無印の `:::Todo` のみ。図版の場所確保に限った用法は本体 RS-032、拡張的な用法は RS-P055 が抱えている｜支持: /cg/transformation/parallel-projection-types, /cg/transformation/viewing-pipeline-transformations, /color-theory/interference-and-diffraction, /color-theory/reflection-and-refraction
-- RS-P074｜未解消の :::Todo ブロックを公開コミットで削除し、図版・デモの残課題を抱えたまま本文だけを整えて公開する：差分を数え直すと、公開コミット自体での削除は2記事のみ（他1記事は公開前の推敲で図を作らないまま外し、残る1記事は公開前に加筆・デモ修正で全て解消している）。「公開コミットで削除する」という手順の形では支持が足りず、本体 RS-001 へ足せない。図を作らないまま外して本文で完結させる向きは本体 RS-032 の注意へ反映済み。公開時に未解消の Todo をどう畳むか（対応するか外すかを著者に確認する）は `syntax-guide.md` のルール4が規定している｜支持: /color-theory/light-scattering, /color-theory/reflection-and-refraction, /color-theory/interference-and-diffraction, /cg/transformation/viewing-pipeline-transformations
-- RS-P075｜人手編集で :Mark を付与・置換して :Anki と使い分ける（Action の操作対象・UIラベルを :Mark で括り、本文では暗記対象でない具体物・場面語を :Mark にする。公開コミットでの一括付与を含む）：7記事で人手編集による付与・置換を確認できるが、`syntax-guide.md` のルール1が「`:Mark[]` は著者（人間）が判断する領域で、AIの側から選ばない・既存の `:Mark[]` は保持する」と定めているため、執筆側で適用できるルールの形にならない。完成本文側の同じ観察は SQ-P082 が抱えている。:Anki の付与対象と範囲は本体 RS-033・RS-034、`:::Action` 内の操作対象の `:Mark[]` 化は本体 RS-038 が担当｜支持: /color-theory/reflection-and-refraction, /color-theory/interference-and-diffraction, /color-theory/light-scattering, /cg/transformation/viewing-pipeline-transformations, /cg/transformation/parallel-projection-types, /cg/modeling/shape-model-overview, /cg/rendering/photorealism-and-reality-elements
 - RS-P076｜機構の詳しい解説をデモの後ろへ移し、デモ直前は短い前置きと :::Action だけにする：2記事のみで、しかも一方は同じ記事内でいったんデモの前へ移してから後の編集で後ろへ戻す往復が起きており着地の向きが安定しない（Action の位置と着眼点の粒度は本体 RS-038、定義文の後置は RS-022 が担当）｜支持: /color-theory/reflection-and-refraction, /color-theory/interference-and-diffraction
-- RS-P077｜人手編集が完成本文側の表現ルールの形（「〜てしまいます」への言い換え・Action 内箇条書きの常体化・全角？の問いかけ追加・破綻による動機づけの追記）へ寄せる方向で入る：4記事で観察できるが、指している型はいずれも完成本文側の SQ-062・SQ-004・SQ-050・TF-061 が担当で、修正傾向としては対応する RS ルールが無い。判定側がこれらを refine-style の支持として挙げたため、観点違いで根拠から外した分をここへ残す｜支持: /cg/transformation/viewing-pipeline-transformations, /cg/transformation/parallel-projection-types, /cg/modeling/shape-model-overview, /cg/rendering/photorealism-and-reality-elements
 - RS-P078｜純粋な列挙になっている散文を箇条書きへ起こし直し、段階・順序があるものは番号付きリストにしたうえで、直前の一文で順序の軸（下に行くほど情報が多い等）を明示する：2記事で一貫するが、対象が「固定個数の工程・段階」に限られ、逆向きの操作を定める本体 RS-003（箇条書き→散文）とどちらへ倒すかの線引きを差分から特定できない｜支持: /cg/modeling/shape-model-overview, /cg/rendering/photorealism-and-reality-elements
 - RS-P079｜:Anki が囲む範囲を最小の術語へ切り詰め、修飾語・接尾語・所有格を外へ出す：1記事の1コミットに集中した観察で、割合の数値と単位記号に限った本体 RS-034 を一般の語へ広げられるかは用例が足りない（付与の有無は本体 RS-033 が担当）｜支持: /cg/rendering/photorealism-and-reality-elements
 - RS-P080｜デモ直前の :::Action を、デモUI上の実際の操作ラベルを :Mark で引用する形へ書き換え、文末を「〜を確認しよう」へそろえる：1記事で2段階の書き換えを確認できるだけで、UIラベルとの一致をどこまで求めるかの基準が復元できない。Action の配置と着眼点の数は本体 RS-038、:Mark の付与判断そのものは RS-P075 が抱えている｜支持: /cg/modeling/shape-model-overview
+- RS-P081｜人手編集は本文に編集指示ディレクティブ（:::Add／:::Fix{target="demo"}／:::Pending／:::Action{fixme}）を書き置くだけのコミットを打ち、次のコミットでまとめて反映する二段構えで推敲する。指示文は「Note形式で補足」「次のデモは削除」のように反映先の形式まで指定する：1記事で実差分を確認できるが、反証では「これは編集の作業工程であって文章表現の癖ではなく、AI協業なら他の著者でも起こりうる」と評価された。図版に限った :::Todo の場所確保は本体 RS-032、拡張的な用法は RS-P055 が抱えている｜支持: /cg/modeling/curve-surface-equations
+- RS-P082｜節が育ちすぎたときは節の再編で収めず記事ごと分割し、残った記事のタイトルも中身に合わせて改名し、他記事からの参照まで直す：1記事のみ。反証でコミットメッセージ本文を確認したところ「依頼を受けての分割」と明記されており、著者が自発的に繰り返す推敲パターンとは言えない。記事内の節の再編と見出し改名は本体 RS-021 が担当｜支持: /cg/modeling/bezier-curve-surface
+- RS-P083｜AI草稿が著者の癖を真似て置いた「〜のです／〜わけです」型の言い切りを、人手編集で平叙の断定文へ戻す：2記事で確認。RS-015（範囲限定・断定緩和・強調語削除）・RS-028（対比・反転のレトリックの平叙化）・RS-016（比喩の平坦化）はいずれも別の対象で、文末の強調構文そのものを平叙へ戻す修正を名指ししたIDが無い。完成本文側で「〜のです」を許容する本体 SQ-059 との線引き（どの位置なら残すのか）を差分から特定できない｜支持: /cg/modeling/bezier-curve-properties, /cg/modeling/curve-surface-equations
+- RS-P084｜複合語の :Anki 範囲を弁別部分だけに絞り、共通の類別語（「ソフトウェア」など）を強調の外へ出す：1記事のみ。RS-033（未マーク語への :Anki 付与）・RS-034（割合の数値と単位記号に限った範囲調整）は扱う対象が違う。同一記事内の8節すべてで統一されており記事内の一貫性は高いが、他記事での再現がない｜支持: /cg/systems/cg-software

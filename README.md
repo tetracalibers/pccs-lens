@@ -14,7 +14,8 @@
 3. **草稿の執筆**：`/author-style-writer <slug>` で、本文の草稿を著者らしい文体で執筆する（スキルの引数の詳細は後述）。
 4. **編集・手直し**：`/author-style-writer <slug> <編集指示>` で、すでに本文のあるページに編集を加える（スキルの引数の詳細は後述）。
 5. **書き溜めた編集指示の一括対応**：本文に `:::Add`（加筆したい箇所）・`:::Delete`（消す予定の記述）・`:::Fix`（既存の図版・デモ・文章への修正指示）を書き残しておき、`/apply-edit-requests <slug>` でまとめて片付ける。検出した全ブロックを表で提示して方針の承認を取り、`target` ごとに担当スキルの規約で対応し、済んだブロックを本文から取り除く（図版・デモの**新規**プレースホルダ `:::Todo` は対象外）。
-6. **記法の整備**（既存記事）：`/format-math-notation <slug>` で、数式・インラインコードの表記を `writing-guides/math-notation-guide.md` に沿って整える。記法パスのベースライン（`app/.textlintignore`）に載っている記事はこれで違反を解消し、その行を外す。記法だけを直し、文章には手を入れない。
+6. **デモの誘導文の書き直し**：デモを入れた記事に残る `:::Action{fixme}`（AIが書いたまま人手が入っていない誘導文）を、`/refine-action-text <記事>` で書き直す。直後のデモの Tweakpane ラベルと直前の説明を読んで、4つの型ごとに2案ずつ計8案を出し、選んだ案でブロックの中身だけを置き換える。Tweakpane のラベルとして使われているパラメータ名は `:Mark[]` で囲む。**`{fixme}` は外れない**ので、文面を確定させるのは著者。
+7. **記法の整備**（既存記事）：`/format-math-notation <slug>` が記法整備の全工程を担う——機械的な違反の自動修正（`npm run lint:svx:fix` の収束ループ）を回し、判断が要る指摘（`npm run lint:svx:advisory`）を片付け、記法パスのベースライン（`app/.textlintignore`）を解除し、タスクリストに `[x]` を記録する。`npm run lint:svx:fix` 自体は記事を更新するたびに単体でも使う。記事slug・タスクリストのセクションid（`/format-math-notation #rasterization`）を、カンマや空白区切りで複数まとめて指定できる。記法だけを直し、文章には手を入れない。**進捗は `writing-guides/NOTATION-TASKLIST.md` の `[x]`（＝このスキルの実行済み記録）が示す。** `[x]` は当時の本文に対する記録なので、**非 draft 記事の本文を変更したコミットでは `commit-this` が `[ ]` に戻す**（加筆・修正のあとは回し直す）。
 
 > [!IMPORTANT]
 > 執筆した記事は、次のコミットメッセージ規約に従ってコミットする。`author-style-analyzer` が Git 履歴から「AI草稿 → 人手編集」の差分（`refine-style.md`）を追跡するのに使うため、この規約を守る。
@@ -29,21 +30,22 @@
 frontmatter から `draft: true`（と直前の空行）を削除して記事を公開状態にしたら、**`/publish-article <slug>` で公開時タスクを回す**。手順の正典はこのスキルで、次の 0〜2 を実行し、3・4 は案内するだけにとどめる。
 
 0. **編集指示ディレクティブの残存チェック（ゲート）**：本文に `:::Todo` / `:::Add` / `:::Delete` / `:::Fix` と、`{fixme}` 付きの `:::Action`（AIが書いたまま人手が入っていないデモ誘導文）が残っていないかを確認する。**1件でも残っていれば公開時タスクへ進まず**、対応に使うスキル呼び出しを**そのままコピペして実行できる形**で案内して止まる（`:::Todo` は `/svg-diagram-component` か `/add-threejs-demo`、`:::Add` / `:::Delete` / `:::Fix` はまとめて `/apply-edit-requests <slug>` の1行）。読者に見える形で公開されるのを防ぐためのゲートで、ブロックを外すか対応するかの判断は著者が行う（`:::Action{fixme}` は文面を直して `{fixme}` を外す。→ `writing-guides/syntax-guide.md` ルール4）。
+0.5. **記法ゲート**：公開する記事に `npm run lint:svx:syntax` を当て、違反があれば **`/format-math-notation <slug> --auto` を自動実行**して収束させる。`syntax` パスには自動修正できるルールしか置かれていないので必ず0件になり、決定的な変換しか起きない（→ `app/textlint/README.md`「組織原則」）。差分は `/commit-this` のコミット許可プロンプトで確認する。ディレクティブのゲートと違い、**案内して止めるのではなくその場で直す**（記法は創作作業ではないため）。判断が要る指摘（`npm run lint:svx:advisory`）は報告するだけで、公開は止めない。
 1. **`visual` フラグの追加**：`$lib/demo/` の図解コンポーネントを使っているページは、frontmatter の `grades:` の次の行に `visual: true` を足す。一覧のリンクに「図解」タグが付く。Mermaid 図だけのページには付けない運用。
 2. **OGP画像の生成**：`/generate-ogp-image <スラッグ>` で生成する。draft ページは glob・自然言語指定の展開から除外されるため、**公開してから**生成する。生成物（`app/static/ogp/**`・`ogimage/data/**`）・マニフェスト（`app/src/lib/meta/og-manifest.json`）・`ogimage/OGP-TASKLIST.md` はコミットに含める（コミットメッセージ規約は `CLAUDE.md` の「Git規約」を参照）。
 3. **文体スタイルガイドの更新**：`/author-style-analyzer <slug>` を実行し、その記事が既存ルールのどれを支持するか（「AI草稿 → 人手編集」の差分を含む）を記録する。人手修正のコミットを済ませてから実行する（Git履歴が根拠になるため）。複数記事を公開したときはカンマ区切りでまとめて1回実行できる（`/author-style-analyzer <slug1>,<slug2>`）。推奨 effort は `high`（後述「文体分析・執筆（author-style スキル）」節）。どの記事を分析済みかは `writing-guides/STYLE-ANALYSIS-TASKLIST.md` に記録され、スキルが実行のたびに更新する（更新後のリストはコミットに含める）。
    - 既定は**根拠モード**で、書き込むのは根拠インデックス `writing-guides/evidence/` だけ。**ガイド本体は変わらない**（確度の降格を除く）。公開直後はこれで足りる。
    - 記事から見つかった新しい特徴は保留プール `writing-guides/pending/` へ1行で積まれ、採用するかどうかの判断は後述の**発見モード**へまとめる。完了報告に昇格候補と未処理の保留の件数が出るので、溜まってきたら発見モードを実行する。
-4. **PR説明文の更新**：ここまでを push したうえで `/update-pr-description` を実行する。公開した記事がカテゴリ別に列挙され、**記事ごとに 1〜3 の実施状況がチェックリストとして載る**（判定できた分は自動でチェック済みになる）。未チェックの項目が残っていれば、それが公開後にやり残した作業。
+4. **PR説明文の更新**：ここまでを push したうえで `/update-pr-description` を実行する。公開した記事がカテゴリ別に列挙され、**記事ごとに 1〜3 の実施状況＋（CG記事のみ）`/format-math-notation` の実行状況がチェックリストとして載る**（判定できた分は自動でチェック済みになる）。未チェックの項目が残っていれば、それが公開後にやり残した作業。記法整備は 0.5 の `--auto` では実行済みに数えないため、公開直後は未チェックで載る。
 
 > [!TIP]
-> 公開のコミットを `/commit-this` で作る場合、差分から `draft: true` の削除を検出して **`/publish-article` を自動で呼ぶ**ので、上のスキルを手で叩く必要はない。コミットを挟んでフェーズを分けて呼ばれる（`--before-commit` で 0〜1 ＋ `writing-guides/STYLE-ANALYSIS-TASKLIST.md` の `[draft]` 解除を記事コミットに含め、コミット後に `--ogp` で 2 を生成して別コミット）。3・4 は自動実行しないので、コミット後に手動で行う。
+> 公開のコミットを `/commit-this` で作る場合、差分から `draft: true` の削除を検出して **`/publish-article` を自動で呼ぶ**ので、上のスキルを手で叩く必要はない。コミットを挟んでフェーズを分けて呼ばれる（`--before-commit` で 0〜1 ＋ `writing-guides/STYLE-ANALYSIS-TASKLIST.md` の `[draft]` 解除を記事コミットに含め、コミット後に `--ogp` で 2 を生成して別コミット）。3・4 は自動実行しないので、コミット後に手動で行う。**記法ゲート（0.5）が記事を書き換えた場合は、その差分だけが「〜：数式・インラインコードの記法を整備」という独立したコミットとして、公開のコミットより先に作られる。**
 >
 > **0 のゲートで止まった場合は、公開時タスク（1・2 とタスクリストの書き換え）は実行されず、コミットだけが進む。** 案内されたスキルでディレクティブに対応したあと、`/publish-article <slug>` を実行して、その変更を別コミットにする。
 
 ### コンテンツ一覧（YAML）を編集したとき
 
-`app/src/lib/content-pages/**/*.yaml`（`color-theory.yaml`・`color-fields.yaml`・`cg/*.yaml`）は、記事の掲載順と掲載先を決める一覧データ。**この並びは2つのタスクリストにそのまま写されている**ため、並べ替え・改名・`DraftLink` → `PageLink` の置き換えをしたら追随させる。
+`app/src/lib/content-pages/**/*.yaml`（`color-theory.yaml`・`color-fields.yaml`・`cg/*.yaml`）は、記事の掲載順と掲載先を決める一覧データ。**この並びは3つのタスクリストにそのまま写されている**ため、並べ替え・改名・`DraftLink` → `PageLink` の置き換えをしたら追随させる。
 
 ```sh
 npm --prefix scripts install              # 初回のみ（YAML パーサを入れる）
@@ -51,8 +53,10 @@ node scripts/sync-tasklists.mjs --check   # 差分を報告するだけ（差分
 node scripts/sync-tasklists.mjs --write   # 差分を書き込む
 ```
 
-- 対象は `ogimage/OGP-TASKLIST.md` と `writing-guides/STYLE-ANALYSIS-TASKLIST.md`。見出しに `` （`<yaml>` #<id>）`` の参照を持つセクションだけを YAML 順に組み直す。トップ・ゲーム・慣用色名マップなど手書きのセクションには触れない。
-- **`[x]`（生成済み・分析済み）は作りも消しもしない。** 直すのは並び順・行の過不足・`[ページ未作成]` ↔ ``[draft] `/route` `` の変換まで。`draft: true` なのに `[x]` のような矛盾は警告として出るだけ。
+- 対象は `ogimage/OGP-TASKLIST.md`・`writing-guides/STYLE-ANALYSIS-TASKLIST.md`・`writing-guides/NOTATION-TASKLIST.md`。見出しに `` （`<yaml>` #<id>）`` の参照を持つセクションだけを YAML 順に組み直す。トップ・ゲーム・慣用色名マップなど手書きのセクションには触れない。
+- **`[x]`（生成済み・分析済み・記法整備済み）と `[~]`（文体解析の再分析待ち）は作りも消しもしない。** 直すのは並び順・行の過不足・`[ページ未作成]` ↔ ``[draft] `/route` `` の変換まで。`draft: true` なのに `[x]` / `[~]` のような矛盾は警告として出るだけ。
+- **記法整備タスクリスト（`NOTATION-TASKLIST.md`）はCG記事のセクションだけを載せる。** `[x]` は `format-math-notation` が付け `commit-this` が外す（非 draft 記事の本文変更時）手記録で、スクリプトは他の2枚と同じく触らない。`[x]` なのに `app/.textlintignore`（記法パスのベースライン）に載っている記事は矛盾として警告する。
+- **文体解析タスクリスト（`STYLE-ANALYSIS-TASKLIST.md`）の `[~]` は「分析済みだが本文が改稿された＝再分析待ち」。** 非 draft 記事の本文が変わったコミットで `commit-this`（手順 1.8）が `[x]` から付け替え、`author-style-analyzer` が再分析の完了時に `[x]` へ戻す。**`[ ]` には落とさない**（`[ ]` は「一度も分析していない」の意味で、落とすと analyzer の再分析確認 — `evidence/` の `分析時点` と本文差分の突き合わせ — を迂回してしまう）。記法整備だけの書き換えでは付けない。
 - YAML に想定外の記述があるとエラーで停止し、**1行も書き込まない**。
 - `/create-color-theory-page`・`/create-color-fields-page`・`/create-cg-page` は雛形作成の最後にこれを実行する。`/prepare-link-targets` も、複数の雛形を起こし終えた最後に1回実行する。`/commit-this` も、コミット対象に YAML や `+page.svx` の frontmatter 変更が含まれていれば `--check` して差分を提示する。
 
@@ -116,7 +120,7 @@ npm run dev     # http://localhost:5174
 - **推奨 effort は Opus の `high`**（`xhigh` にする必要はない）。分析の質を左右する重い思考（独立分析・反証・境界・統合）は Workflow 内の各エージェントに `effort` が固定されており、**セッションの effort を継承しない**。そのためセッションを `xhigh` へ上げても成果物は良くならず、スコープ解決や報告などメインループ側の処理が重く・遅くなるだけ。`high` で実行するのが費用対効果の面で最適。
 - 制御フローが JS のため**ハングしない**。各エージェントは構造化出力を返して終了し、待機プロセス（idle teammate）が残らない。
 - **引数なしの全記事一括分析は行わない**。分析対象はスキル引数（`#id`／slug をカンマ区切りで複数・混在指定できる）で必ず絞る。全記事を対象にしたい場合はカテゴリ／セクション単位のチャンクに分割して順に実行する。記事を1本も指定しない実行が許されるのは `--discover` 単独（棚卸しのみ）のときだけ。
-- **進捗は文体解析タスクリスト `writing-guides/STYLE-ANALYSIS-TASKLIST.md` で追う**（`ogimage/OGP-TASKLIST.md` と同じ運用）。記事ごとの `[x]`／`[ ]`／`[draft]`／`[ページ未作成]` を、スキルへ渡せるスコープ（`#<id>`）の見出しごとにまとめてある。スキルは実行前にここで未分析かどうかを確認し、実行後に分析した記事の行を `[x]` へ更新する。
+- **進捗は文体解析タスクリスト `writing-guides/STYLE-ANALYSIS-TASKLIST.md` で追う**（`ogimage/OGP-TASKLIST.md` と同じ運用）。記事ごとの `[x]`／`[~]`／`[ ]`／`[draft]`／`[ページ未作成]` を、スキルへ渡せるスコープ（`#<id>`）の見出しごとにまとめてある。スキルは実行前にここで未分析かどうかを確認し、実行後に分析した記事の行を `[x]` へ更新する。**`[x]` と `[~]` の記事がスコープに含まれる場合は、`evidence/` の `分析時点` と本文の差分を示して再分析するかを確認する**（`[~]` ＝ 分析後に本文が改稿された記事）。
 - Workflow を使えない環境では、サブエージェント（`Agent` ツール）を同じ3ステージ構成で順に呼ぶか、単一エージェントの役割切り替えで代替できる。
 
 #### author-style-writer の推奨 effort（モード別）
@@ -179,7 +183,7 @@ npm run data:jis-update
   - `/author-style-analyzer <対象> --discover` — 発見モード。記事を分析したうえで、保留の昇格・新規ルールの採用・確度の見直しまで行う（本体・`evidence/`・`pending/` の3層を更新）
   - `/author-style-analyzer --discover` — 記事を読まず、保留の昇格候補と支持記事数の集計だけで棚卸しする
   - `/author-style-analyzer` — 引数なし。範囲指定を促す（`#id`／slug の指定を求める）
-  - 分析済みの記録は `writing-guides/STYLE-ANALYSIS-TASKLIST.md`。実行後にスキルが該当行を `[x]` に更新する（根拠モードでも付ける。記事の分析は完了しているため）
+  - 分析済みの記録は `writing-guides/STYLE-ANALYSIS-TASKLIST.md`。実行後にスキルが該当行を `[x]` に更新する（根拠モードでも付ける。記事の分析は完了しているため）。分析後に本文が改稿された記事は `[~]`（再分析待ち）になっているので、再分析すれば `[x]` に戻る
 
 ### 記事の編集指示（ディレクティブの一括対応）
 
@@ -194,16 +198,32 @@ npm run data:jis-update
   - `author-style-writer` の編集モードと同じく文体ガイドを使って書くため、**推奨 effort は `xhigh`**（→「author-style-writer の推奨 effort」）
   - コミットはしない（`/commit-this` に渡す。著者の指示に基づく修正なので `[ai-draft]` は付かない）
 
+### デモの誘導文（`:::Action{fixme}`）
+
+- **refine-action-text** — AIが書いたまま人手が入っていないデモ誘導文の文面を、簡潔な案に書き直す（1回の実行で1記事）
+  - `/refine-action-text <記事>` — 記事は `.svx` のパス・URL（`/cg/basics/area-filling/`）・slug のいずれでも渡せる（slug は3ルートを横断して解決。0件・複数ヒットは確認して止める）
+  - `/refine-action-text <記事> <絞り込み>` — 行番号・節の見出し・デモのコンポーネント名で対象の Action を1件に絞る
+  - `/refine-action-text` — 引数なし。セッションの文脈から対象を特定（特定できなければ尋ねる）
+  - 直後のデモ（`buildPane` の `label`・`ariaLabel`）と直前の説明を読み、**4つの型（1文集約／箇条書き／見比べ／誘導のみ）ごとに2案ずつ、計8案**を提示する。案の前にはデモが属する**節の見出し**を明記する。番号で選んでもらい、承認された案でブロックの**中身だけ**を置き換える
+  - 同じ型の2案は着眼点・絞り込みの幅・操作の入口のいずれかで分ける（言い換えを並べない）。**疑問形（「〜はどう変わる？」）で閉じる案は出さない**
+  - **Tweakpane の UI ラベルとして使われているパラメータ名は `:Mark[]` で囲む。** 「AIは自分から `:Mark[]` を書かない」という一般則に対する、このスキルに限った例外（用語・現象名は囲まない）
+  - **`{fixme}` は外さない**（文面を確定させるのは著者）。`{fixme}` の付いていない `:::Action`・地の文・デモの実装には触れない
+  - **推奨 effort は `high`**（frontmatter で固定済み）。文体ガイドを使うが、書くのは1ブロックぶんの短い誘導文で、直前の説明とデモの操作に強く縛られる。`author-style-writer` の編集モードと同じ性格で、案を選ばせる反復でもあるため `xhigh` の上積みが小さい（→「author-style-writer の推奨 effort」）
+  - コミットはしない（`/commit-this` に渡す。文面はAIの下書きのままなので `[ai-draft]` を付ける）
+
 ### 記事の記法整備
 
 - **format-math-notation** — 既存記事の本文を `writing-guides/math-notation-guide.md`（数式・インラインコードの記法）に沿って整える
-  - `/format-math-notation <記事slug>[,<記事slug>…]` — 対象記事を指定（3ルートを横断して実体を解決。0件・複数ヒットは確認して止める）。複数渡しても**1記事ずつ**承認・報告する
-  - `/format-math-notation` — 引数なし。セッションの文脈から特定し、できなければベースライン（`app/.textlintignore`）に残っている記事の一覧を出して尋ねる
-  - **既存記事は記法パスのベースラインで対象外**なので、`--ignore-path /dev/null` を付けて対象記事だけを検査する（`npm run lint:svx` では緑に見えてしまう）。`npm run lint:svx:fix` は全記事に及ぶため使わない
-  - textlint が見る4ルール（数字・関数名・インラインコードの前後・インライン数式の前後）は `--fix` で当て、**それ以外**（インライン数式とインラインコードの選択・記事全体での統一・文単位の統一・`\dfrac`・プライム記号 `^{\prime}`・ブロック数式の改行・`:Anki[]` 内の数字）は grep と通読で拾って手作業で直す
-  - 修正方針を表（行・現在・直した後・根拠・自動修正／手作業）で提示し、**承認を得てから**本文を書き換える。判断が分かれるものは候補を併記して確認し、迷ったものは直さず保留として報告する
+  - `/format-math-notation <記事slug>[,<記事slug>…]` — 対象記事を指定（3ルートを横断して実体を解決。0件・複数ヒットは確認して止める）
+  - `/format-math-notation #<セクションid>` — `writing-guides/NOTATION-TASKLIST.md` の見出しの id でまとめて指定（`#rasterization` など。CG のセクション id はユニットをまたいで重複しうるのでユニット名も添える）
+  - **slug とセクションid はカンマ・空白区切りで混ぜて何件でも渡せる。** 手順ごとに全対象をまとめて処理する（自動修正は1コマンドに全パスを並べ、advisory の承認は全記事分を1回で取る）
+  - `/format-math-notation <slug> --auto` — 公開時ゲートからの自動実行モード。自動修正だけを当て、判断を伴う書き換えをしない
+  - `/format-math-notation` — 引数なし。セッションの文脈から特定し、できなければ `NOTATION-TASKLIST.md` の `[ ]` と advisory の指摘がある記事の一覧を出して尋ねる
+  - **洗い出しは textlint が持つ。** 機械的な違反12ルールは `npm run lint:svx:fix`（収束ループ）が直すので、grep と通読で違反を探し直さない。この収束ループはスキルの手順2 が自分で回す
+  - **判断するのは advisory パス（5ルール）**：囲む範囲（`3DCG` などの英字に隣接する数字・引数が続く関数名）、降格候補（3つの統一ルールに拾われなかった `$$…$$`）、`\dfrac` への組み直し、`:::Action` の式の日本語への言い換え。指摘を表で提示し**承認を得てから**書き換え、迷ったものは直さず保留として報告する
+  - **最後に `writing-guides/NOTATION-TASKLIST.md` の該当行を `[x]` にする**（CG記事のみ）。このリストの `[x]` は「このスキルを実行済み」の手記録で、**付けるのはこのスキルだけ・外すのは `commit-this` だけ**（非 draft 記事の本文が変わったコミットで `[ ]` に戻る）。`--auto` では付けない
   - **記法だけを直し、文章・構成・強調（`:Anki[]` / `:Mark[]`）・図版・デモには触らない。** 表記揺れ（`prh.yml`）も対象外で、件数の報告だけにする
-  - 違反0になったら `app/.textlintignore` から**その記事の行だけ**を外す（保留が残る場合は外さない）。コミットはしない（`/commit-this`）
+  - `lint:svx:syntax` が0件になったら `app/.textlintignore` から**その記事の行だけ**を外し、`sync-tasklists.mjs --write` でタスクリストを追随させる（`[x]` は導出なので手で書き換えない）。**advisory の残件は行を外さない理由にならない**（非ブロッキング）。コミットはしない（`/commit-this`）
 
 ### 記事の公開
 
@@ -265,7 +285,7 @@ npm run data:jis-update
   - `/update-pr-description <PRのURL>` — 指定したPRを対象にする
   - `/update-pr-description` — 引数なし。現在チェックアウト中のブランチに紐づくPRが対象（PRが無ければ促す）
   - svxの差分から `draft: true` を外して公開された記事を検出し、カテゴリ別に説明文へリストアップする
-  - 公開した記事ごとに、公開後の人手作業（`visual` フラグ・OGP画像・文体ガイドの更新）のチェックリストを付ける（`visual: true` の有無・`ogimage/data/<route>.json` の有無・`writing-guides/` の根拠への記載から判定してチェック済みにする）
+  - 公開した記事ごとに、公開後の人手作業（`visual` フラグ・OGP画像・文体ガイドの更新、**CG記事は数式記法の整備**）のチェックリストを付ける（`visual: true` の有無・`ogimage/data/<route>.json` の有無・`writing-guides/` の根拠への記載・`NOTATION-TASKLIST.md` の `[x]` から判定してチェック済みにする）
 
 ## ドキュメント構成
 

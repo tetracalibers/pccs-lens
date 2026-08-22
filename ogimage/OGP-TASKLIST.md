@@ -365,10 +365,10 @@
 - [x] `/cg/modeling/quadratic-curve`
 - [x] `/cg/modeling/bezier-curve-surface`
 - [x] `/cg/modeling/bezier-curve-properties`
-- [ページ未作成] ファーガソン曲線
+- [draft] `/cg/modeling/ferguson-curve`
 - [ページ未作成] 双3次クーンズ曲面
 - [draft] `/cg/modeling/b-spline-curve-surface`
-- [ページ未作成] 有理ベジェ曲線・曲面
+- [draft] `/cg/modeling/rational-bezier-curve-surface`
 - [ページ未作成] NURBS曲線・曲面
 - [draft] `/cg/modeling/parametric-curve-surface`
 - [ページ未作成] パラメトリック曲線・曲面の微分幾何
@@ -384,9 +384,9 @@
 - [ページ未作成] 四分木と八分木
 - [ページ未作成] メタボール
 - [draft] `/cg/modeling/isosurface-extraction`
-- [ページ未作成] パーティクル
+- [draft] `/cg/modeling/particle-system`
 - [ページ未作成] ポイントベースドモデリング
-- [ページ未作成] フラクタル
+- [draft] `/cg/modeling/fractal`
 
 ## CGと画像処理（nested） — 記事：レンダリング（`cg/rendering.yaml`）
 
@@ -429,9 +429,9 @@
 
 ## CGと画像処理（nested） — 記事：アニメーション（`cg/animation.yaml`）
 
-- [ページ未作成] 仮現運動とコマ撮り
+- [draft] `/cg/animation/apparent-motion-and-stop-motion`
 - [ページ未作成] アニメーション技法
-- [ページ未作成] カメラワーク
+- [draft] `/cg/animation/camera-work`
 - [ページ未作成] キーフレーム法とスケルトン法
 - [ページ未作成] キーフレームの補間
 - [ページ未作成] 形状変形アニメーション

@@ -19,13 +19,11 @@ sections:
       - slug: quadratic-curve
       - slug: bezier-curve-surface
       - slug: bezier-curve-properties
-      - title: ファーガソン曲線 # CG 3-4-3
-        group: ["CG"]
+      - slug: ferguson-curve
       - title: 双3次クーンズ曲面 # CG 3-4-4
         group: ["CG"]
       - slug: b-spline-curve-surface
-      - title: 有理ベジェ曲線・曲面 # CG 3-4-3
-        group: ["CG"]
+      - slug: rational-bezier-curve-surface
       - title: NURBS曲線・曲面 # CG 3-4-3
         group: ["CG"]
       - slug: parametric-curve-surface
@@ -61,9 +59,7 @@ sections:
   - heading: 特殊な形状表現
     id: special-shapes
     links:
-      - title: パーティクル # CG 3-7-1
-        group: ["CG"]
+      - slug: particle-system
       - title: ポイントベースドモデリング # CG 3-7-2
         group: ["CG"]
-      - title: フラクタル # CG 3-7-3
-        group: ["CG"]
+      - slug: fractal

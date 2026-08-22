@@ -4,14 +4,15 @@
 分析は `/author-style-analyzer #<id>`（カンマ区切りで複数指定可。slug との混在も可）で行う。詳細はスキル `author-style-analyzer` を参照。
 
 - チェック済み `[x]` … 分析済み（結果が `writing-guides/` の4ガイドへ反映済み）
-- 未チェック `[ ]` … 未分析
+- 未チェック `[ ]` … 未分析（一度も分析していない）
+- `[~]` … 分析済みだが、その後に本文が改稿された（再分析待ち）。`commit-this`（手順 1.8）が非 draft 記事の本文が変わったコミットで `[x]` から付け替え、再分析が済んだら analyzer が `[x]` へ戻す。**`[ ]` には落とさない**（未分析と区別できなくなり、再分析の確認とメタデータのみの変更の判定がスキップされるため）。
 - `[draft]` … ページは作成済みだが `draft: true`。分析対象外。
 - `[ページ未作成]` … まだページが存在しない下書き（YAML の `DraftLink`／`CgDraftLink`）。分析対象外。
 - draft・未作成のものも YAML 上の並び順を保つため一覧に混ぜて掲載する（チェックボックスは付けない）。
 - 対象は解説記事（`layout: guide-content` の `+page.svx`）のみ。トップ・一覧ページ、ゲーム、慣用色名マップ、配色シミュレータなど記事以外のページは分析対象ではないので載せない。
 - セクション見出しの `#<id>` が、そのままスキルへ渡せるスコープ指定。色の理論・色の活用分野は YAML のトップレベル大分類（カテゴリ）単位、CGと画像処理は YAML の `sections[].id`（セクション）単位。
 - 各セクション内の並びはコンテンツ YAML の並び順に忠実に従う。
-- **並び順や行の過不足は手で直さない。** `node scripts/sync-tasklists.mjs --write` で YAML に追随させる。`[x]` は書き換えられないので分析済みの記録は失われない。
+- **並び順や行の過不足は手で直さない。** `node scripts/sync-tasklists.mjs --write` で YAML に追随させる。`[x]` と `[~]` は書き換えられないので分析済み・再分析待ちの記録は失われない。
 - CG のセクション id はユニットをまたいで重複することがある（`#basics`＝画像符号化／パターン認識、`#special-effects`＝空間フィルタリング／画素ごとの濃淡・色変換）。指定するときはユニット名も添える。
 
 ---
@@ -258,9 +259,9 @@
 
 ## CGと画像処理 — アニメーション／CGアニメーションの構成要素（`cg/animation.yaml` #components）
 
-- [ページ未作成] 仮現運動とコマ撮り
+- [draft] `/cg/animation/apparent-motion-and-stop-motion`
 - [ページ未作成] アニメーション技法
-- [ページ未作成] カメラワーク
+- [draft] `/cg/animation/camera-work`
 
 ## CGと画像処理 — アニメーション／キーフレームアニメーション（`cg/animation.yaml` #keyframe）
 
@@ -322,10 +323,10 @@
 
 ## CGと画像処理 — デジタル画像の基本／ラスタ化と描画（`cg/basics.yaml` #rasterization）
 
-- [x] `/cg/basics/shape-rasterization`
-- [x] `/cg/basics/anti-aliasing`
-- [x] `/cg/basics/area-filling`
-- [x] `/cg/basics/gradient-generation`
+- [~] `/cg/basics/shape-rasterization`
+- [~] `/cg/basics/anti-aliasing`
+- [~] `/cg/basics/area-filling`
+- [~] `/cg/basics/gradient-generation`
 
 ## CGと画像処理 — 2値画像処理／2値化（`cg/binary-image.yaml` #binarization）
 
@@ -508,14 +509,14 @@
 
 ## CGと画像処理 — モデリング／曲線と曲面（`cg/modeling.yaml` #curves-surfaces）
 
-- [ ] `/cg/modeling/curve-surface-equations`
-- [ ] `/cg/modeling/quadratic-curve`
-- [ ] `/cg/modeling/bezier-curve-surface`
-- [ ] `/cg/modeling/bezier-curve-properties`
-- [ページ未作成] ファーガソン曲線
+- [x] `/cg/modeling/curve-surface-equations`
+- [x] `/cg/modeling/quadratic-curve`
+- [~] `/cg/modeling/bezier-curve-surface`
+- [~] `/cg/modeling/bezier-curve-properties`
+- [draft] `/cg/modeling/ferguson-curve`
 - [ページ未作成] 双3次クーンズ曲面
 - [draft] `/cg/modeling/b-spline-curve-surface`
-- [ページ未作成] 有理ベジェ曲線・曲面
+- [draft] `/cg/modeling/rational-bezier-curve-surface`
 - [ページ未作成] NURBS曲線・曲面
 - [draft] `/cg/modeling/parametric-curve-surface`
 - [ページ未作成] パラメトリック曲線・曲面の微分幾何
@@ -540,9 +541,9 @@
 
 ## CGと画像処理 — モデリング／特殊な形状表現（`cg/modeling.yaml` #special-shapes）
 
-- [ページ未作成] パーティクル
+- [draft] `/cg/modeling/particle-system`
 - [ページ未作成] ポイントベースドモデリング
-- [ページ未作成] フラクタル
+- [draft] `/cg/modeling/fractal`
 
 ## CGと画像処理 — NPRと可視化／ノンフォトリアリスティックレンダリング（`cg/npr.yaml` #npr）
 
@@ -743,7 +744,7 @@
 - [ページ未作成] CGシステムの応用
 - [ページ未作成] グラフィックス装置
 - [draft] `/cg/systems/graphics-api`
-- [ ] `/cg/systems/cg-software`
+- [x] `/cg/systems/cg-software`
 - [ページ未作成] 3次元モデル記述言語・フォーマット
 
 ## CGと画像処理 — CGシステムとデバイス／リアルタイム3次元CG（`cg/systems.yaml` #real-time-3d）

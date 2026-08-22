@@ -4,12 +4,10 @@ sections:
   - heading: CGアニメーションの構成要素
     id: components
     links:
-      - title: 仮現運動とコマ撮り # CG 5-1-2
-        group: ["CG"]
+      - slug: apparent-motion-and-stop-motion
       - title: アニメーション技法 # CG 5-1-4
         group: ["CG"]
-      - title: カメラワーク # CG 5-1-5, 2-4-2
-        group: ["CG"]
+      - slug: camera-work
   - heading: キーフレームアニメーション
     id: keyframe
     links:
