@@ -299,9 +299,9 @@
 ## モデリング／曲線と曲面（`cg/modeling.yaml` #curves-surfaces）
 
 - [ ] `/cg/modeling/curve-surface-equations`
-- [x] `/cg/modeling/quadratic-curve`
+- [ ] `/cg/modeling/quadratic-curve`
 - [x] `/cg/modeling/bezier-curve-surface`
-- [x] `/cg/modeling/bezier-curve-properties`
+- [ ] `/cg/modeling/bezier-curve-properties`
 - [draft] `/cg/modeling/ferguson-curve`
 - [ページ未作成] 双3次クーンズ曲面
 - [draft] `/cg/modeling/b-spline-curve-surface`
