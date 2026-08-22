@@ -24,7 +24,7 @@
     pane.addBinding(p, "curve", {
       label: "補間関数",
       options: {
-        線形: "linear",
+        直線: "linear",
         "2次関数（加速）": "quadraticIn",
         "2次関数（減速）": "quadraticOut",
         対数関数: "logarithmic"

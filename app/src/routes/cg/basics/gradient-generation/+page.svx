@@ -75,14 +75,6 @@ $$i$$が取りうる最大値$$n-1$$を全体として、全体に対して$$i$$
 
 - 割合`t`が`i / (N - 1)`の計算どおりに決まり、その`t`を式に入れた色が注目画素の色になること
 - `i`を両端に振ると`t`が`0`と`1`になり、注目画素の色が`A`・`B`そのものになること
-- 画素数`N`を増やすと格子が細かくなり、`1`画素が受け取る色の幅が狭くなること
-:::
-
-:::Fix{target="demo"}
-「画素数」は12固定で、UI上ではreadonlyにする
-「注目画素」のUIを一番上に配置する
-UI上での「割合」の値から、`i / (N - 1) =`の部分を削除
-デモでは色のついた帯だけ描き、その下の格子は削除
 :::
 
 <CanvasWrapper>
@@ -109,27 +101,19 @@ const applyColor = (target: Color, level: number[]) =>
 const PIXEL_COUNT = 12
 const INDEX = 4
 
-// 帯に使える横幅と、画素 1 つの大きさの上限。
-// 画素は正方形なので、画素数が少ないときは幅いっぱいに広げず、この大きさで止める
-const BAND_MAX_WIDTH = 3.6
-const MAX_CELL_SIZE = 0.3
+// 画素 1 つの大きさ。画素は正方形なので、この値がそのまま帯の高さにもなる
+const CELL_SIZE = 0.3
 
-// グラデーションを焼くテクスチャの横の解像度。画素の格子よりずっと細かくとる
+// グラデーションを焼くテクスチャの横の解像度。画素の並びよりずっと細かくとる
 const GRADIENT_RESOLUTION = 512
 
-// 色を塗る行の下に、画素の格子だけを続ける行数。
-// この帯が画像の 1 行であることを示すためのもので、下へ伸ばす
-const GRID_ROWS_BELOW = 6
-
-// 図全体を収める高さと、色を塗る行の上に番号のラベルを置くための余白
-const CONTENT_HEIGHT = 2.6
+// 帯の上に番号のラベルを置くための余白
 const LABEL_SPACE = 0.34
 
-// 注目画素を囲む枠の太さ（格子の線と同じくらいの細さ）
+// 注目画素を囲む枠の太さ（画素の輪郭として細く回す）
 const FOCUS_BORDER = 0.014
 
 // 重なる要素を、奥から手前へ振り分ける z。正面から見る構図なので厚みは絵に出ない
-const LAYER_GRID = 0.005
 const LAYER_CELL = 0.01
 const LAYER_BORDER = 0.02
 const LAYER_FRONT = 0.03
@@ -139,39 +123,18 @@ const LAYER_FRONT = 0.03
 const t = INDEX / (PIXEL_COUNT - 1)
 const level = colorAt(t)
 
-// 1 画素が占める幅。画素は正方形なので、この値がそのまま格子の 1 行の高さにもなる
-const pitch = Math.min(BAND_MAX_WIDTH / PIXEL_COUNT, MAX_CELL_SIZE)
-const bandWidth = pitch * PIXEL_COUNT
+// 帯の横幅と、左から i 番目の画素の中心
+const bandWidth = CELL_SIZE * PIXEL_COUNT
 const bandLeft = -bandWidth / 2
-const centerOf = (i: number) => bandLeft + (i + 0.5) * pitch
+const centerOf = (i: number) => bandLeft + (i + 0.5) * CELL_SIZE
 
-// 番号のラベルと格子を合わせた高さが canvas の中央に来るよう、色を塗る行の高さを決める
-const gridHeight = (1 + GRID_ROWS_BELOW) * pitch
-const bandY = (LABEL_SPACE + gridHeight) / 2 - LABEL_SPACE - pitch / 2
+// 番号のラベルの余白と帯を合わせた高さが canvas の中央に来るよう、帯の高さを決める
+const bandY = -LABEL_SPACE / 2
 
-// 画素・枠・線は、すべて 1 辺 1 の板を大きさと位置を与えて使い回す
+// 画素・枠は、すべて 1 辺 1 の板を大きさと位置を与えて使い回す
 const unitGeometry = new PlaneGeometry(1, 1)
 
-// 画素の格子。画素の境目に沿って、縦の線を画素数 + 1 本、横の線を行数 + 1 本引く
-const gridTop = bandY + pitch / 2
-const gridBottom = gridTop - gridHeight
-const gridPoints: Vector3[] = []
-for (let k = 0; k <= PIXEL_COUNT; k++) {
-  const x = bandLeft + k * pitch
-  gridPoints.push(new Vector3(x, gridTop, LAYER_GRID), new Vector3(x, gridBottom, LAYER_GRID))
-}
-for (let row = 0; row <= GRID_ROWS_BELOW + 1; row++) {
-  const y = gridTop - row * pitch
-  gridPoints.push(
-    new Vector3(bandLeft, y, LAYER_GRID),
-    new Vector3(bandLeft + bandWidth, y, LAYER_GRID)
-  )
-}
-const gridGeometry = new BufferGeometry().setFromPoints(gridPoints)
-scene.add(new LineSegments(gridGeometry, new LineBasicMaterial({ color: "#5c6470" })))
-
-// 色を塗るのは注目している行だけ。ほかの行は格子のまま残す。
-// 連続的なグラデーションを 1 枚の板に貼るので、画素と画素の境目は出ない
+// 帯。連続的なグラデーションを 1 枚の板に貼るので、画素と画素の境目は出ない
 const gradientData = new Uint8Array(GRADIENT_RESOLUTION * 4)
 for (let column = 0; column < GRADIENT_RESOLUTION; column++) {
   const value = colorAt((column + 0.5) / GRADIENT_RESOLUTION)
@@ -183,16 +146,15 @@ gradientTexture.magFilter = LinearFilter
 gradientTexture.minFilter = LinearFilter
 gradientTexture.needsUpdate = true
 
-// 帯は格子の 1 行にぴたりと重ね、格子の線を隠して連続的な見た目にする
 const gradient = new Mesh(unitGeometry, new MeshBasicMaterial({ map: gradientTexture }))
-gradient.scale.set(bandWidth, pitch, 1)
+gradient.scale.set(bandWidth, CELL_SIZE, 1)
 gradient.position.set(0, bandY, LAYER_CELL)
 scene.add(gradient)
 
-// 注目画素の枠。格子の 1 マスより一回り大きい板を帯の手前に置く
+// 注目画素を囲む枠。帯の 1 画素より一回り大きい板を帯の手前に置く
 const focusX = centerOf(INDEX)
 const cellBorder = new Mesh(unitGeometry, new MeshBasicMaterial({ color: "#e8ecf2" }))
-cellBorder.scale.set(pitch + FOCUS_BORDER * 2, pitch + FOCUS_BORDER * 2, 1)
+cellBorder.scale.set(CELL_SIZE + FOCUS_BORDER * 2, CELL_SIZE + FOCUS_BORDER * 2, 1)
 cellBorder.position.set(focusX, bandY, LAYER_BORDER)
 scene.add(cellBorder)
 
@@ -200,7 +162,7 @@ scene.add(cellBorder)
 const focusMaterial = new MeshBasicMaterial()
 applyColor(focusMaterial.color, level)
 const focusCell = new Mesh(unitGeometry, focusMaterial)
-focusCell.scale.set(pitch, pitch, 1)
+focusCell.scale.set(CELL_SIZE, CELL_SIZE, 1)
 focusCell.position.set(focusX, bandY, LAYER_FRONT)
 scene.add(focusCell)
 ```
@@ -221,10 +183,6 @@ scene.add(focusCell)
 
 - カーブが立ち上がっている区間では明るさが速く変わり、寝ている区間ではなかなか変わらないこと
 - 両端の色は変わらないまま、中央（`t = 0.5`）の明るさだけが関数によって動くこと
-:::
-
-:::Fix{target="demo"}
-補間関数のUIで、「線形」ではなく「直線」と表示する
 :::
 
 <CanvasWrapper>
@@ -560,10 +518,6 @@ PATTERNS.forEach((pattern, index) => {
 
 - パターンを切り替えると、方向は斜めに傾いた平面、放射はすり鉢状の曲面になること
 - 曲面を表示を外すと、下に残るのは`2`次元の濃淡そのものであること
-:::
-
-:::Fix{target="demo"}
-「値の高さ」の最低値を`0.2`に設定（`0`まで下げるとチラつくため）
 :::
 
 <CanvasWrapper>
