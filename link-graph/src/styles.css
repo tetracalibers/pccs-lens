@@ -112,7 +112,13 @@ body {
   color: var(--isolated-text);
 }
 
+/* 押せない警告チップ（所属不明）はラベルごと色を変えて、無いのが正常な項目だと分かるようにする。 */
 .stat--warn {
+  color: var(--state-draft-text);
+}
+
+/* 自己リンクは絞り込みのトグルなので、ラベルは他のトグルと同じグレーのまま数字だけ色を付ける。 */
+.stat--self-link .stat__value {
   color: var(--state-draft-text);
 }
 

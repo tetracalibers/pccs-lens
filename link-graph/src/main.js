@@ -231,7 +231,7 @@ const renderStats = (plan) => {
     {
       label: "自己リンク",
       value: counts.selfLinks.length,
-      modifier: "warn",
+      modifier: "self-link",
       focus: "self-link",
       // 0 件のときは箇条書きを付けず、説明だけを出す。
       title: [
