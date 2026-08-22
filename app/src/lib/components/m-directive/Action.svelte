@@ -62,7 +62,7 @@
     opacity: 0.85;
   }
 
-  /* :::Fix と同じ `!` */
+  /* :::Edit と同じ `!` */
   .marker {
     font-size: 0.8rem;
   }

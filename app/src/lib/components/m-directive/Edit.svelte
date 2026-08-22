@@ -1,35 +1,20 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
 
-  interface Props {
-    /** 修正対象。`svg`: SVG図版 / `demo`: Three.jsデモ / `text`: 文章 */
-    target?: "svg" | "demo" | "text"
-    children?: Snippet
-  }
-
-  let { target = "text", children }: Props = $props()
-
-  const TARGET_LABELS: Record<string, string> = {
-    svg: "図版",
-    demo: "デモ",
-    text: "文章"
-  }
-
-  /** ディレクティブの属性値は文字列で渡るため、想定外の値は既定の文章に倒す */
-  const targetLabel = $derived(TARGET_LABELS[target] ?? TARGET_LABELS.text)
+  let { children }: { children?: Snippet } = $props()
 </script>
 
-<div class="fix">
+<div class="edit">
   <div class="label">
     <span class="marker">!</span>
-    FIX：{targetLabel}
+    変更
   </div>
   {@render children?.()}
 </div>
 
 <style>
   /* :::Add / :::Todo と同じ帯のかたち。「あるものを直す」ので琥珀で塗る */
-  .fix {
+  .edit {
     position: relative;
     margin: 1.05rem 0;
     padding: 0.5rem 0.8rem;
@@ -39,7 +24,7 @@
     font-size: 0.8rem;
     line-height: 1.7;
   }
-  .fix :global(*) {
+  .edit :global(*) {
     font-size: 0.8rem;
   }
 
@@ -60,7 +45,7 @@
     line-height: 1.4;
   }
 
-  .fix :global(p) {
+  .edit :global(p) {
     margin: 0;
     font-size: inherit;
     line-height: inherit;

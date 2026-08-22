@@ -25,8 +25,8 @@ effort: high
 対象外:
 
 - **`{fixme}` の付いていない `:::Action`** — 著者が確定させた文面。読まない・触らない（前後の Action を参考にするのは可）
-- **地の文・他のディレクティブ** — `:::Add` / `:::Delete` / `:::Fix` は `/apply-edit-requests`、本文は `/author-style-writer` の担当
-- **デモそのもの** — Tweakpane のラベル・初期値・見た目を変えるのは `/add-threejs-demo`（`:::Fix{target="demo"}`）の担当。**合わせるのは Action の側**
+- **地の文・他のディレクティブ** — `:::Add` / `:::Delete` / `:::Edit` / `:::Modify` は `/apply-edit-requests`、本文は `/author-style-writer` の担当
+- **デモそのもの** — Tweakpane のラベル・初期値・見た目を変えるのは `/add-threejs-demo`（`:::Modify`）の担当。**合わせるのは Action の側**
 - **1回の実行で扱うのは1記事だけ**
 
 ## 引数
@@ -224,7 +224,7 @@ Tweakpane のラベルが「段階の数」「入力の明るさ」「出力の�
 - `{fixme}` の付いていない `:::Action` を書き直す
 - 地の文を1文字でも変える（Action に合わせて本文を直さない。合わせるのは Action の側）
 - デモの実装（Tweakpane のラベル・初期値・見た目）を変える
-- 他のディレクティブ（`:::Todo` / `:::Add` / `:::Delete` / `:::Fix` / `:::Pending` / `::ComingSoon`）を処理する・消す
+- 他のディレクティブ（`:::Todo` / `:::Add` / `:::Delete` / `:::Edit` / `:::Modify` / `:::Pending` / `::ComingSoon`）を処理する・消す
 - パラメータ名以外の語を `:Mark[]` で囲む／既存の `:Anki[]`・`:Mark[]` を外す
 - 型を欠かす・1つの型で1案しか出さない（4つの型 × 2案の8案を必ず揃える）
 - 同じ型の2案が言い換えになっている（着眼点・絞り込みの幅・操作の入口のいずれかで分ける）

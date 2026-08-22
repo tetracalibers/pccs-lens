@@ -51,12 +51,12 @@ export const GROUP_BY_ID = new Map(GROUPS.map((group) => [group.id, group]))
  * リンクを抽出しないディレクティブ。
  *
  * - `Pending` … 採否を検討中の文章であり、まだ本文ではない
- * - `Add` / `Fix` / `Delete` … 編集指示メモであり本文ではない
+ * - `Add` / `Edit` / `Modify` / `Delete` … 編集指示メモであり本文ではない
  * - `Todo` … 図版・デモの未実装プレースホルダであり本文ではない
  *
  * `apply-edit-requests` スキルが扱う集合と同一。
  */
-export const EXCLUDED_DIRECTIVES = new Set(["Pending", "Add", "Fix", "Delete", "Todo"])
+export const EXCLUDED_DIRECTIVES = new Set(["Pending", "Add", "Edit", "Modify", "Delete", "Todo"])
 
 /** 本文なし（雛形のまま）と判定する本文。空白を除いてこれと一致したら「本文なし」。 */
 export const EMPTY_BODY_SIGNATURE = "##TODO"

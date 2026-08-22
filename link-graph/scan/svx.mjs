@@ -75,8 +75,8 @@ const readFrontmatter = (frontmatter) => {
 /**
  * 本文中のルート相対リンクを抽出する。
  *
- * コードブロックと、本文ではないディレクティブ（`:::Pending` / `:::Add` / `:::Fix` /
- * `:::Delete` / `:::Todo`）の中は、入れ子の深さを問わずすべて除外する。
+ * コードブロックと、本文ではないディレクティブ（`:::Pending` / `:::Add` / `:::Edit` /
+ * `:::Modify` / `:::Delete` / `:::Todo`）の中は、入れ子の深さを問わずすべて除外する。
  *
  * @param {string} body
  * @param {number} bodyStartLine 本文 1 行目のファイル内での行番号

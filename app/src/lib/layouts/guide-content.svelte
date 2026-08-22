@@ -21,7 +21,8 @@
   import Todo from "$lib/components/m-directive/Todo.svelte"
   import Delete from "$lib/components/m-directive/Delete.svelte"
   import Add from "$lib/components/m-directive/Add.svelte"
-  import Fix from "$lib/components/m-directive/Fix.svelte"
+  import Edit from "$lib/components/m-directive/Edit.svelte"
+  import Modify from "$lib/components/m-directive/Modify.svelte"
   import Pending from "$lib/components/m-directive/Pending.svelte"
   import CardGrid from "$lib/components/m-directive/CardGrid.svelte"
   import TermCard from "$lib/components/m-directive/TermCard.svelte"
@@ -51,7 +52,8 @@
     Todo,
     Delete,
     Add,
-    Fix,
+    Edit,
+    Modify,
     Pending,
     CardGrid,
     TermCard,
