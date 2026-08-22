@@ -201,10 +201,12 @@ const renderStats = (plan) => {
   const counts = countSelected(plan)
   // 並びは「ページ全体 → 状態の内訳（潰す優先度の順）→ 孤立 → 異常」。
   //
-  // 0 件のときの扱いは 2 通り。**ページ・状態の内訳・孤立・リンク切れは 0 でも出す** —
-  // 件数は選択中のページから数えているので、0 は「ここには無い」という情報になる。
-  // 一方 **所属不明・自己リンクは 0 なら出さない** — どちらもリポジトリの不備を知らせる
-  // ためのもので、無いのが正常だから、常設するとヘッダーが読みにくくなるだけ。
+  // 0 件のときに消すかどうかは、**押せるかどうか**で分ける。絞り込みのトグルになっている
+  // チップ（本文なし・draft・公開済・孤立・リンク切れ・自己リンク）は 0 でも常設する —
+  // 件数は選択中のページから数えているので 0 は「ここには無い」という情報になるし、
+  // 選択を変えるたびにトグルが現れたり消えたりすると探し直しになる。
+  // 押せない警告チップ（所属不明）だけは 0 なら出さない — 無いのが正常な項目で、
+  // 常設しても読むものが無いため。
   const chips = [
     { label: "ページ", value: counts.pages },
     { label: "本文なし", value: counts.empty, modifier: "empty", focus: "empty" },
@@ -231,10 +233,11 @@ const renderStats = (plan) => {
       value: counts.selfLinks.length,
       modifier: "warn",
       focus: "self-link",
-      title: `自己リンクのあるページだけを表示する（配置は動かない）\n${counts.selfLinks
-        .map((link) => `${link.path} L${link.line}`)
-        .join("\n")}`,
-      onlyWhenPresent: true
+      // 0 件のときは箇条書きを付けず、説明だけを出す。
+      title: [
+        "自己リンクのあるページだけを表示する（配置は動かない）",
+        ...counts.selfLinks.map((link) => `${link.path} L${link.line}`)
+      ].join("\n")
     }
   ]
 
