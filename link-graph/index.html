@@ -11,7 +11,14 @@
       <header class="header">
         <h1 class="header__title">内部リンクグラフ</h1>
         <div class="header__stats" id="stats"></div>
-        <button type="button" class="header__action" id="relayout">再配置</button>
+        <button
+          type="button"
+          class="header__action"
+          id="relayout"
+          title="ユニットの中心から配置し直す"
+        >
+          再配置
+        </button>
       </header>
 
       <aside class="sidebar">
@@ -49,8 +56,7 @@
       <main class="canvas">
         <div id="cy"></div>
         <div class="canvas__hint">
-          ドラッグで移動 / スクロールで拡大縮小 / ノードのクリックで詳細 /
-          ノードのドラッグで配置を動かす
+          ドラッグで移動 / スクロールで拡大縮小 / ノードのクリックで詳細
         </div>
       </main>
 

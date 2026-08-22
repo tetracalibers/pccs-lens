@@ -205,10 +205,7 @@ export const SIMULATION = {
    * `solveTicks` と同じく裏で回し切る。
    */
   settleAlpha: 0.5,
-  settleTicks: 140,
-  /** ドラッグを離したあとの揺り戻し（ここだけは動きを見せる）。 */
-  dragAlpha: 0.3,
-  dragAlphaDecay: 0.05
+  settleTicks: 140
 }
 
 /**

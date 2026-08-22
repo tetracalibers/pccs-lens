@@ -1,5 +1,5 @@
-// d3-force によるレイアウト。fcose の一発計算をやめて、力学シミュレーションそのものを
-// アニメーションとして見せる。
+// d3-force によるレイアウト。fcose の一発計算をやめて、力学シミュレーションで解く
+// （囲みが無くても同じユニットがかたまりに見えるよう、力そのものを設計したいため）。
 //
 // 力の構成は次の 4 つ。前 3 つは d3-force の既製品だが、**ユニットごとの引力**だけは
 // 既製品にないので自前で足している（同じユニットのメンバーを重心へ引き、重心どうしは離す）。
@@ -14,11 +14,10 @@
 // なので、ノードの右横に出る扁平なラベルの箱までは面倒を見られない。x は動かさず y だけを
 // 掃き分ける形で、力の均衡（＝ユニットのかたまりの形）を崩さずにラベルを読めるようにする。
 //
-// **常時シミュレーションにはしない。** 初回ロード・再配置・表示項目の増減は、アニメーションを
-// 見せずに裏で解き切ってから結果だけを渡す（`solve` / `settle`）。時間をかけて動かすのは
-// ドラッグの揺り戻し（`nudge`）だけ。走査やフィルタのたびに全体が泳ぐと「さっき見ていた赤が
+// **アニメーションは一切しない。** 初回ロード・再配置・表示項目の増減のいずれも、裏で解き切って
+// から結果だけを渡す（`solve` / `settle`）。走査やフィルタのたびに全体が泳ぐと「さっき見ていた赤が
 // どこへ行ったか」を追えなくなるため、再走査時は既存ノードを fx/fy で固定して増えた分だけを
-// 落とし、落ち着いたところで固定を外す（fcose の fixedNodeConstraint と同じ役割）。
+// 落とす（fcose の fixedNodeConstraint と同じ役割）。
 
 import { forceCollide, forceLink, forceManyBody, forceSimulation, forceX, forceY } from "d3-force"
 
@@ -130,11 +129,9 @@ const forceUnitCohesion = () => {
  * シミュレーションを作る。
  *
  * @param {object} handlers
- * @param {() => void} handlers.onTick 毎フレーム。座標を Cytoscape へ流し込む
- * @param {() => void} handlers.onSettle 落ち着いたとき（固定の解除もここで行う）
  * @param {(id: string) => number} handlers.labelWidth ラベルの実寸（px）。縦重なりの判定に使う
  */
-export const createSimulation = ({ onTick, onSettle, labelWidth }) => {
+export const createSimulation = ({ labelWidth }) => {
   const random = createRandom(SIMULATION_SEED)
 
   /** @type {Map<string, object>} id → シミュレーションのノード。座標はここが持つ。 */
@@ -142,8 +139,6 @@ export const createSimulation = ({ onTick, onSettle, labelWidth }) => {
 
   /** @type {Map<string, { x: number, y: number }>} ユニットの初期位置（円周上のスロット）。 */
   let unitSlots = new Map()
-
-  let running = false
 
   const linkForce = forceLink([])
     .id((node) => node.id)
@@ -168,14 +163,6 @@ export const createSimulation = ({ onTick, onSettle, labelWidth }) => {
     .force("y", forceY(0).strength(SIMULATION.centerStrength))
     .stop()
 
-  /** 固定（fx/fy）を全て外す。落ち着いたあとは自由にしておき、次の再配置で動けるようにする。 */
-  const release = () => {
-    for (const node of byId.values()) {
-      delete node.fx
-      delete node.fy
-    }
-  }
-
   /**
    * ラベルの縦重なりをほどく。落ち着いた形が決まったところで 1 回だけ通す。
    *
@@ -185,14 +172,6 @@ export const createSimulation = ({ onTick, onSettle, labelWidth }) => {
   const declutter = () => {
     separateLabels([...byId.values()], { labelWidth })
   }
-
-  simulation.on("tick", onTick)
-  simulation.on("end", () => {
-    running = false
-    release()
-    declutter()
-    onSettle()
-  })
 
   const jitter = () => (random() - 0.5) * SIMULATION.jitter
 
@@ -335,7 +314,7 @@ export const createSimulation = ({ onTick, onSettle, labelWidth }) => {
     return { added: fresh.size }
   }
 
-  /** 全ノードをユニットの初期位置へ戻す。初回と明示的な再配置で「ほどける」動きを作る。 */
+  /** 全ノードをユニットの初期位置へ戻す。初回と明示的な再配置は、この配置から解き直す。 */
   const reseed = () => {
     for (const node of byId.values()) {
       const seed = node.unit ? (unitSlots.get(node.unit) ?? { x: 0, y: 0 }) : { x: 0, y: 0 }
@@ -346,19 +325,6 @@ export const createSimulation = ({ onTick, onSettle, labelWidth }) => {
       delete node.fx
       delete node.fy
     }
-  }
-
-  /**
-   * シミュレーションを回す。
-   *
-   * @param {object} options
-   * @param {number} options.alpha 初期エネルギー（1 で全力、小さいほど控えめ）
-   * @param {number} options.decay エネルギーの減衰。小さいほど長く動く
-   */
-  const run = ({ alpha, decay }) => {
-    if (byId.size === 0) return
-    running = true
-    simulation.alpha(alpha).alphaDecay(decay).alphaTarget(0).restart()
   }
 
   /**
@@ -392,50 +358,10 @@ export const createSimulation = ({ onTick, onSettle, labelWidth }) => {
     declutter()
   }
 
-  /** ドラッグを離したあとの揺り戻し。ここだけは動きを見せる。 */
-  const nudge = () => {
-    run({ alpha: SIMULATION.dragAlpha, decay: SIMULATION.dragAlphaDecay })
-  }
-
-  const stop = () => {
-    if (!running) return
-    running = false
-    simulation.stop()
-    release()
-    // 止めた瞬間にラベルが戻るので、その形でも重ならないようにしておく。
-    declutter()
-    onSettle()
-  }
-
-  /** ドラッグ中のノードを掴んだ位置に縛る。 */
-  const hold = (id, position) => {
-    const node = byId.get(id)
-    if (!node) return
-    node.fx = position.x
-    node.fy = position.y
-    node.x = position.x
-    node.y = position.y
-  }
-
-  /** ドラッグを離したノードを自由にする。 */
-  const drop = (id) => {
-    const node = byId.get(id)
-    if (!node) return
-    delete node.fx
-    delete node.fy
-  }
-
   return {
     sync,
     solve,
     settle,
-    nudge,
-    stop,
-    hold,
-    drop,
-    /** 固定を外す。動かさずに済んだときも、次のドラッグで周りが反応できるようにしておく。 */
-    unpin: release,
-    isRunning: () => running,
     nodes: () => [...byId.values()]
   }
 }

@@ -126,12 +126,6 @@ export const GRAPH_STYLE = [
     style: { opacity: 1, "text-opacity": 1, "min-zoomed-font-size": 0, "z-index": 60 }
   },
   {
-    // シミュレーションが動いている間はラベルを消す。流れる文字は読めないうえ、
-    // 169 ノード分のテキスト描画が毎フレーム乗ると素直に重い。
-    selector: ".no-label",
-    style: { label: "" }
-  },
-  {
     selector: ".hidden",
     style: { display: "none" }
   },
@@ -153,6 +147,9 @@ export const GRAPH_STYLE = [
 export const createGraph = (container) =>
   cytoscape({
     container,
+    // ノードは掴めない。配置はシミュレーションが決めるので、手で動かす手段は持たない
+    // （背景のドラッグでのパンとスクロールでのズームはそのまま効く）。
+    autoungrabify: true,
     wheelSensitivity: 0.25,
     minZoom: 0.15,
     maxZoom: 4,

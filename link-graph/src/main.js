@@ -4,10 +4,11 @@
 // 配置は d3-force のシミュレーションが持ち、毎フレームその座標を Cytoscape へ流し込む
 // （`pumpPositions`）。
 //
-// **配置のアニメーションは見せない。** 初回ロード・「再配置」・表示項目の増減のいずれも、裏で
-// 解き切ってから結果だけを描く（配置が決まるまでのチラつきを避けるため）。動くのはノードを
-// ドラッグして離したあとの揺り戻しだけ。走査やフィルタのたびに全体が泳ぐと「さっき見ていた赤が
-// どこへ行ったか」が追えなくなるので、再走査時は既存ノードを固定して増えた分だけを落ち着かせる。
+// **配置は一切アニメーションしない。** 初回ロード・「再配置」・表示項目の増減のいずれも、裏で
+// 解き切ってから結果だけを描く（配置が決まるまでのチラつきを避けるため）。ノードのドラッグでの
+// 手動配置も持たない（配置はシミュレーションが決める）。走査やフィルタのたびに全体が泳ぐと
+// 「さっき見ていた赤がどこへ行ったか」が追えなくなるので、再走査時は既存ノードを固定して
+// 増えた分だけを落ち着かせる。
 
 import { UPDATE_EVENT } from "../scan/events.mjs"
 import { createFilters } from "./filters.js"
@@ -107,34 +108,10 @@ const fitVisible = () => {
 }
 
 const simulation = createSimulation({
-  onTick: pumpPositions,
-  labelWidth: (id) => labelWidths(nodeIndex.get(id)?.title ?? ""),
-  onSettle: () => {
-    pumpPositions()
-    cy.nodes().removeClass("no-label")
-    renderRelayoutButton()
-    updateFocus()
-  }
+  labelWidth: (id) => labelWidths(nodeIndex.get(id)?.title ?? "")
 })
 
-/** シミュレーションを動かす（ドラッグの揺り戻しだけ）。動いている間はラベルを落とす。 */
-const startMotion = (kick) => {
-  cy.nodes().addClass("no-label")
-  kick()
-  renderRelayoutButton()
-  // ノードが 0 件などで動かなかったときは、その場で後片付けまで済ませる。
-  if (!simulation.isRunning()) cy.nodes().removeClass("no-label")
-}
-
 // --- 描画 ---
-
-const renderRelayoutButton = () => {
-  const running = simulation.isRunning()
-  relayoutButton.textContent = running ? "停止" : "再配置"
-  relayoutButton.title = running
-    ? "揺り戻しを止めて、いまの配置で固定する"
-    : "ユニットの中心から配置し直す"
-}
 
 /**
  * ヘッダーのチップを 1 つ作る。
@@ -329,9 +306,6 @@ const applyFilters = ({ replace = false } = {}) => {
   if (fromScratch) simulation.solve()
   else if (added > 0) simulation.settle()
 
-  // 固定は次のドラッグのために外しておく（揺り戻しに周りが反応できるように）。
-  simulation.unpin()
-
   pumpPositions()
 
   if (fromScratch) {
@@ -372,24 +346,7 @@ cy.on("mouseout", 'node[kind = "page"]', (event) => {
   canvas.style.cursor = ""
 })
 
-// ドラッグ中はシミュレーション側でもその座標に縛り、離したら周りが揺り戻す。
-cy.on("grab drag", 'node[kind = "page"]', (event) => {
-  simulation.hold(event.target.id(), event.target.position())
-})
-cy.on("dragfree", 'node[kind = "page"]', (event) => {
-  simulation.drop(event.target.id())
-  startMotion(() => simulation.nudge())
-})
-
-relayoutButton.addEventListener("click", () => {
-  if (simulation.isRunning()) {
-    simulation.stop()
-    return
-  }
-  applyFilters({ replace: true })
-})
-
-renderRelayoutButton()
+relayoutButton.addEventListener("click", () => applyFilters({ replace: true }))
 
 // --- 起動と watch ---
 
