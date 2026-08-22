@@ -175,7 +175,7 @@ const renderChip = ({ label, value, modifier, focus, title }) => {
  * 押しても何も起きないチップになる。
  *
  * **ヘッダーのチップでの絞り込み（`stateFocus`）は母集団に入れない。** 入れると「本文なし」を
- * 押した瞬間に draft と公開済が 0 になって、トグルとして読めなくなる。
+ * 押した瞬間に執筆中と公開済が 0 になって、トグルとして読めなくなる。
  */
 const countSelected = (plan) => {
   const counts = { pages: 0, empty: 0, draft: 0, published: 0, isolated: 0, unresolved: 0 }
@@ -202,7 +202,7 @@ const renderStats = (plan) => {
   // 並びは「ページ全体 → 状態の内訳（潰す優先度の順）→ 孤立 → 異常」。
   //
   // 0 件のときに消すかどうかは、**押せるかどうか**で分ける。絞り込みのトグルになっている
-  // チップ（本文なし・draft・公開済・孤立・リンク切れ・自己リンク）は 0 でも常設する —
+  // チップ（本文なし・執筆中・公開済・孤立・リンク切れ・自己リンク）は 0 でも常設する —
   // 件数は選択中のページから数えているので 0 は「ここには無い」という情報になるし、
   // 選択を変えるたびにトグルが現れたり消えたりすると探し直しになる。
   // 押せない警告チップ（所属不明）だけは 0 なら出さない — 無いのが正常な項目で、
@@ -210,7 +210,7 @@ const renderStats = (plan) => {
   const chips = [
     { label: "ページ", value: counts.pages },
     { label: "本文なし", value: counts.empty, modifier: "empty", focus: "empty" },
-    { label: "draft", value: counts.draft, modifier: "draft", focus: "draft" },
+    { label: "執筆中", value: counts.draft, modifier: "draft", focus: "draft" },
     { label: "公開済", value: counts.published, focus: "published" },
     {
       label: "孤立",

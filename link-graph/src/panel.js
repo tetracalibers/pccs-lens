@@ -7,7 +7,7 @@ import { APP_DEV_ORIGIN, STATE_COLORS } from "./theme.js"
 
 const STATE_LABELS = {
   empty: "本文なし",
-  draft: "draft",
+  draft: "執筆中",
   published: "公開済",
   broken: "リンク切れ"
 }
