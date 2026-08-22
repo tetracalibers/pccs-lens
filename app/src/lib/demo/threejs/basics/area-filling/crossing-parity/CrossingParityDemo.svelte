@@ -23,7 +23,7 @@
   buildPane={(pane, p) => {
     pane.addBinding(p, "row", { min: 0, max: 15, step: 1, label: "走査線の位置" })
     pane.addBinding(p, "traveled", { min: 0, max: 24, step: 0.1, label: "たどった位置" })
-    pane.addBinding(p, "side", { readonly: true, label: "いまの位置" })
+    pane.addBinding(p, "side", { readonly: true, label: "今の位置" })
     pane.addBinding(p, "passed", { readonly: true, label: "越えた交点" })
     pane.addBinding(p, "sequence", { readonly: true, label: "たどった順" })
   }}

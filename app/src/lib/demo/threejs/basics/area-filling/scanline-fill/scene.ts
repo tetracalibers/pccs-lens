@@ -213,7 +213,7 @@ export const createScanlineFillScene = ({ scene, params }: SceneContext) => {
   const barGeometry = new PlaneGeometry(1, 1)
   const dotGeometry = new CircleGeometry(DOT_RADIUS, 16)
 
-  // 塗り終えた行の画素。いま塗った区間と見分けるため、控えめな濃さにする。
+  // 塗り終えた行の画素。今塗った区間と見分けるため、控えめな濃さにする。
   // 塗った色をそのままの濃さで見せたいので、陰影の付かない材質にする
   const pastPixelMaterial = new MeshBasicMaterial({
     color: PIXEL_COLOR,
@@ -294,7 +294,7 @@ export const createScanlineFillScene = ({ scene, params }: SceneContext) => {
     },
     { text: "交点", geometry: dotGeometry, material: crossingMaterial, scale: [1, 1] },
     {
-      text: "いま塗った区間",
+      text: "今塗った区間",
       geometry: barGeometry,
       material: currentPixelMaterial,
       scale: [LEGEND_SWATCH * 0.8, LEGEND_SWATCH * 0.8]

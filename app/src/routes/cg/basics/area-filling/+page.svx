@@ -54,10 +54,6 @@ draft: true
 :Mark[たどった位置]を右端まで動かし、走査線がポリゴンの輪郭を偶数回横切ることを確認しよう
 :::
 
-:::Fix{target="demo"}
-「いまの位置」「いまいる位置」を「今の位置」「今いる位置」に変更
-:::
-
 <CanvasWrapper>
   <CrossingParityDemo />
 </CanvasWrapper>
@@ -177,7 +173,7 @@ crossings.forEach((x, index) => {
 })
 scene.add(crossingDots)
 
-// 左端からいまいる位置までを、越えてきた交点で区切る
+// 左端から今いる位置までを、越えてきた交点で区切る
 const passed = crossings.filter((x) => x < TRAVELED)
 const bounds = [0, ...passed, TRAVELED]
 
@@ -219,7 +215,7 @@ insideTrail.count = insideCount
 scene.add(outsideTrail)
 scene.add(insideTrail)
 
-// 走査線を左からたどっている、いまの位置
+// 走査線を左からたどっている、今の位置
 const marker = new Mesh(new CircleGeometry(0.075, 24), new MeshBasicMaterial({ color: "#f2766a" }))
 marker.position.set(worldXOf(TRAVELED), scanY, LAYER_MARKER)
 scene.add(marker)
@@ -341,7 +337,7 @@ const fillRow = (row: number, pixels: InstancedMesh, offset: number, z: number) 
   return painted - offset
 }
 
-// 塗り終えた行の画素。いま塗った区間と見分けるため、控えめな濃さにする。
+// 塗り終えた行の画素。今塗った区間と見分けるため、控えめな濃さにする。
 // 塗った色をそのままの濃さで見せたいので、陰影の付かない材質にする
 const pastPixels = new InstancedMesh(
   barGeometry,
@@ -445,7 +441,7 @@ const HALF_SIZE = PLOT_SIZE / 2
 const GRID_GAP = 0.42
 
 // 中心の画素から近傍を何歩たどったか
-const STEPS = 2
+const STEPS = 1
 
 // 近傍のとらえ方。中心の画素から見て、隣とみなす画素の列と行のずれ
 const NEIGHBORS_4: [number, number][] = [
@@ -611,10 +607,6 @@ GRIDS.forEach(({ offsetX }) => {
 - :Mark[連結性]を`8`連結にすると、斜めに進むことができるようになり、右下の部屋まで塗りが広がる
 :::
 
-:::Fix{target="demo"}
-「波及の歩数」の初期値は`0`に
-:::
-
 <CanvasWrapper>
   <SeedFillDemo />
 </CanvasWrapper>
@@ -669,7 +661,7 @@ const NEIGHBORS_8: [number, number][] = [
 // 判定の基準（境界色基準）と近傍のとらえ方（4 連結）、シード点からたどった歩数
 const CRITERION = "boundary"
 const NEIGHBORS = NEIGHBORS_4
-const STEPS = 3
+const STEPS = 0
 
 // xy 平面に重なる要素を、奥から手前へ少しずつ振り分ける z
 const LAYER_CELL = 0.01

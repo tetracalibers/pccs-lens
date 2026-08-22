@@ -23,7 +23,7 @@ export type CrossingParityParams = {
   row: number
   /** 左端からたどった位置（画素を単位とした x） */
   traveled: number
-  /** いまいる位置が領域の外か内か。scene.ts が組み立てて書き戻すので、初期値は使われない */
+  /** 今いる位置が領域の外か内か。scene.ts が組み立てて書き戻すので、初期値は使われない */
   side: string
   /** 左端からここまでに越えた交点の個数。scene.ts が組み立てて書き戻すので、初期値は使われない */
   passed: string
@@ -71,7 +71,7 @@ const TRAIL_THICKNESS = 0.055
 /** 走査線を画像の外へ伸ばす分。画像を横切る 1 本の線であることが分かるようにする */
 const SCANLINE_OVERSHOOT = 0.14
 
-/** 交点を示す点と、いまいる位置を示す点の半径 */
+/** 交点を示す点と、今いる位置を示す点の半径 */
 const DOT_RADIUS = 0.046
 const MARKER_RADIUS = 0.075
 
@@ -243,7 +243,7 @@ export const createCrossingParityScene = ({ scene, params }: SceneContext) => {
   scanline.scale.set(PLOT_WIDTH + SCANLINE_OVERSHOOT * 2, SCANLINE_THICKNESS, 1)
   graph.add(scanline)
 
-  // 左端からいまいる位置までを、交点で区切って外と内に塗り分けた区間。
+  // 左端から今いる位置までを、交点で区切って外と内に塗り分けた区間。
   // 交点は辺の数だけしかできないので、区間はその数 + 1 に収まる
   const trailCapacity = POLYGON.length + 1
   const outsideMaterial = new MeshBasicMaterial({ color: OUTSIDE_COLOR })
@@ -271,12 +271,12 @@ export const createCrossingParityScene = ({ scene, params }: SceneContext) => {
     graph.add(sprite)
   })
 
-  // 走査線を左からたどっている、いまの位置
+  // 走査線を左からたどっている、今の位置
   const markerMaterial = new MeshBasicMaterial({ color: MARKER_COLOR })
   const marker = new Mesh(markerGeometry, markerMaterial)
   graph.add(marker)
 
-  // 凡例。色見本は、輪郭とたどった区間は線、交点といまいる位置は点で示す
+  // 凡例。色見本は、輪郭とたどった区間は線、交点と今いる位置は点で示す
   const legendItems = [
     {
       text: "ポリゴンの輪郭",
@@ -297,7 +297,7 @@ export const createCrossingParityScene = ({ scene, params }: SceneContext) => {
       material: insideMaterial,
       scale: [LEGEND_SWATCH, TRAIL_THICKNESS]
     },
-    { text: "いまいる位置", geometry: markerGeometry, material: markerMaterial, scale: [1, 1] }
+    { text: "今いる位置", geometry: markerGeometry, material: markerMaterial, scale: [1, 1] }
   ]
   const legendTop = ((legendItems.length - 1) * LEGEND_GAP) / 2
   const legendLabels = legendItems.map(({ text, geometry, material, scale }, index) => {
@@ -357,7 +357,7 @@ export const createCrossingParityScene = ({ scene, params }: SceneContext) => {
         }
       })
 
-      // 左端からいまいる位置までを、越えてきた交点で区切る。
+      // 左端から今いる位置までを、越えてきた交点で区切る。
       // はじめは領域の外側にいて、交点を越えるたびに外と内が入れ替わる
       const passed = crossings.filter((x) => x < traveled)
       const bounds = [0, ...passed, traveled]

@@ -5,7 +5,7 @@
   // Tweakpane が直接書き換え、scene.ts が毎フレーム読む。$state ではなくプレーンオブジェクトにする。
   // filled は scene.ts が組み立てて書き戻す表示用の値なので、初期値は使われない
   const params: SeedFillParams = {
-    steps: 3,
+    steps: 0,
     criterion: "boundary",
     connectivity: 4,
     filled: ""
