@@ -273,6 +273,8 @@ npm run lint:svx:fix -- --syntax-only --max-passes 8            # 表記揺れ�
 強制化はCG記事を対象にしていて、残っているのは色の理論・色の活用分野の記事です。
 なお `writing-guides/NOTATION-TASKLIST.md` の `[x]` はこのベースラインとは別の記録で、
 「`format-math-notation` を実行して advisory の指摘まで判断し終えた」ことを表します。
+これは**そのときの本文に対する記録**なので、非 draft 記事の本文が書き換わると
+`commit-this`（手順 1.8）が `[ ]` に戻します（記法の統一は本文に依存するため）。
 
 既存記事の記法を直したら、その記事の行を `.textlintignore` から削除してください。
 新しく作る記事は `.textlintignore` に追記せず、検査対象のままにします。
