@@ -10,6 +10,7 @@ draft: true
 
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import OperationOrderDemo from '$lib/demo/threejs/modeling/csg-representation/operation-order/OperationOrderDemo.svelte'
   import SetOperationsDemo from '$lib/demo/threejs/modeling/csg-representation/set-operations/SetOperationsDemo.svelte'
 </script>
 
@@ -156,8 +157,108 @@ scene.add(new AmbientLight(LIGHT_COLOR, 0.55))
 
 球と直方体でいえば、球に直方体を足しても、直方体に球を足しても、できあがる形は同じです。積集合でも、重なっている部分はどちらを先に置いても変わりません。
 
-:::Todo
-上の文章を実感できるデモ
+:::Action{fixme}
+集合演算を切り替えて、左右の形を見比べてみよう。左は球に直方体を、右は直方体に球を組み合わせた結果で、順序だけが違う
+
+- 和集合・積集合：順序を入れ替えても、左右はまったく同じ形になる
+- 差集合：引かれる側が入れ替わるので、左右は別の形になる
+:::
+
+<CanvasWrapper>
+  <OperationOrderDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+/** 左右に離す距離と、真正面から見たときに立体の角が手前を向く回転角（ラジアン） */
+const COPY_OFFSET = 1.75
+const BASE_ROTATION = 0.88
+
+/**
+ * 左右に離して置いた立体は、透視投影では別々の角度から見ることになる。
+ * 見比べられるよう、カメラから見える向きが左右で揃うように回転を補正する
+ */
+const facingRotation = (offsetX) =>
+  BASE_ROTATION + Math.atan2(camera.position.x - offsetX, camera.position.z)
+
+/**
+ * 集合演算ごとの、A ∘ B の規則。first が A の面に、second が B の面に当たる。
+ * first と second が同じ規則なら、A と B を入れ替えても同じ形になる。
+ */
+const OPERATION_RULES = {
+  // 和集合：どちらの面も、相手の外側に出ている部分だけが残る（対称）
+  union: {
+    first: { keepInside: false, flip: false },
+    second: { keepInside: false, flip: false }
+  },
+  // 積集合：どちらの面も、相手の内側に入っている部分だけが残る（対称）
+  intersection: {
+    first: { keepInside: true, flip: false },
+    second: { keepInside: true, flip: false }
+  },
+  // 差集合：引かれる側は相手の外側、引く側は相手の内側が残り、後者が削り口の壁になる（非対称）
+  difference: {
+    first: { keepInside: false, flip: false },
+    second: { keepInside: true, flip: true }
+  }
+}
+
+/** プリミティブごとの、内外判定の式・法線・分割した表面・マテリアル */
+const PRIMITIVES = {
+  sphere: {
+    inside: insideSphere,
+    normalAt: sphereNormalAt,
+    surface: sphereSurface,
+    material: sphereMaterial
+  },
+  box: {
+    inside: insideBox,
+    normalAt: boxNormalAt,
+    surface: boxSurface,
+    material: boxMaterial
+  }
+}
+
+/** 先に置く立体 A と後から組み合わせる立体 B を指定して、A ∘ B を組み立てる */
+const buildResult = (operation, firstName, secondName) => {
+  const rule = OPERATION_RULES[operation]
+  const first = PRIMITIVES[firstName]
+  const second = PRIMITIVES[secondName]
+  // A の面は B の内外で、B の面は A の内外で切り分ける
+  const firstGeometry = center(
+    clipSurface(
+      first.surface,
+      keepValue(second.inside, rule.first.keepInside),
+      first.normalAt,
+      rule.first.flip
+    )
+  )
+  const secondGeometry = center(
+    clipSurface(
+      second.surface,
+      keepValue(first.inside, rule.second.keepInside),
+      second.normalAt,
+      rule.second.flip
+    )
+  )
+  const group = new Group()
+  group.add(new Mesh(firstGeometry, first.material))
+  group.add(new Mesh(secondGeometry, second.material))
+  return group
+}
+
+// 同じ演算を、順序だけ入れ替えて 2 通り組み立てて左右に並べる
+const left = buildResult("difference", "sphere", "box")
+left.position.x = -COPY_OFFSET
+left.rotation.y = facingRotation(-COPY_OFFSET)
+const right = buildResult("difference", "box", "sphere")
+right.position.x = COPY_OFFSET
+right.rotation.y = facingRotation(COPY_OFFSET)
+scene.add(left)
+scene.add(right)
+```
+
 :::
 
 和集合の「少なくとも一方に含まれる」、積集合の「どちらにも含まれる」という条件では、どちらが $$A$$ でどちらが $$B$$ かを区別する必要がありません。

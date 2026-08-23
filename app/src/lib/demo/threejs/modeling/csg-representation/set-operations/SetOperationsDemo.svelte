@@ -19,8 +19,8 @@
       options: {
         和集合: "union",
         積集合: "intersection",
-        "差集合（直方体－球）": "boxMinusSphere",
-        "差集合（球－直方体）": "sphereMinusBox"
+        "差集合（直方体−球）": "boxMinusSphere",
+        "差集合（球−直方体）": "sphereMinusBox"
       }
     })
   }}
