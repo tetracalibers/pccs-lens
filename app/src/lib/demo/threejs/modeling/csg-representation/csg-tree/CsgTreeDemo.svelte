@@ -16,10 +16,10 @@
   orbit={{ target: [0, 0, 0], enableRotate: false, minDistance: 2.4, maxDistance: 6.5 }}
   buildPane={(pane, p) => {
     pane.addBinding(p, "tree", {
-      label: "CSG木",
+      label: "CSG表現",
       options: { 積んでから穴を開ける: "stackFirst", 穴を開けてから積む: "drillFirst" }
     })
     pane.addBinding(p, "step", { min: 0, max: 2, step: 1, label: "演算を進める" })
-    pane.addBinding(p, "current", { readonly: true, label: "今適用した演算" })
+    pane.addBinding(p, "current", { readonly: true, label: "適用されている演算" })
   }}
 />
