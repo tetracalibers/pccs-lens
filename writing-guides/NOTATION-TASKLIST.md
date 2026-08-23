@@ -290,7 +290,7 @@
 ## モデリング／形状モデル（`cg/modeling.yaml` #shape-models）
 
 - [x] `/cg/modeling/shape-model-overview`
-- [ ] `/cg/modeling/csg-representation`
+- [x] `/cg/modeling/csg-representation`
 - [draft] `/cg/modeling/sweep-representation`
 - [draft] `/cg/modeling/boundary-representation`
 - [ページ未作成] 境界表現のデータ構造
