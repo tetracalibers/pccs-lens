@@ -505,7 +505,7 @@
 - [draft] `/cg/modeling/sweep-representation`
 - [draft] `/cg/modeling/boundary-representation`
 - [ページ未作成] 境界表現のデータ構造
-- [ページ未作成] オイラー操作
+- [draft] `/cg/modeling/euler-operations`
 
 ## CGと画像処理 — モデリング／曲線と曲面（`cg/modeling.yaml` #curves-surfaces）
 

@@ -360,7 +360,7 @@
 - [draft] `/cg/modeling/sweep-representation`
 - [draft] `/cg/modeling/boundary-representation`
 - [ページ未作成] 境界表現のデータ構造
-- [ページ未作成] オイラー操作
+- [draft] `/cg/modeling/euler-operations`
 - [x] `/cg/modeling/curve-surface-equations`
 - [x] `/cg/modeling/quadratic-curve`
 - [x] `/cg/modeling/bezier-curve-surface`
