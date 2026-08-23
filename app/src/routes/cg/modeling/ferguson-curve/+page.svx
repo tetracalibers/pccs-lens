@@ -32,10 +32,6 @@ draft: true
 - 終点の接ベクトルの先をドラッグすると、曲線が終点で向いている向きがどう変わるか
 :::
 
-:::Modify
-「位置」「接ベクトル」UIの値から`C(0) =`, `C(1) =`, `C'(0) =`, `C'(1) =`を削除（この記号はまだ登場していないため）
-:::
-
 <CanvasWrapper>
   <EndpointConditionsDemo />
 </CanvasWrapper>

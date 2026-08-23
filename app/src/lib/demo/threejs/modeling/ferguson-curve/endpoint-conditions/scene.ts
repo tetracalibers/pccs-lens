@@ -423,8 +423,8 @@ export const createEndpointConditionsScene = ({
     tangentLabels.forEach((label, i) => placeTangentLabel(label, tips[i], tangents[i]))
 
     // Tweakpane 側に読み取り専用で出す、曲線に与えている 4 つの条件
-    params.endpoints = `C(0) = P₀ = ${format(points[0])}\nC(1) = P₁ = ${format(points[1])}`
-    params.tangents = `C′(0) = V₀ = ${format(tangents[0])}\nC′(1) = V₁ = ${format(tangents[1])}`
+    params.endpoints = `P₀ = ${format(points[0])}\nP₁ = ${format(points[1])}`
+    params.tangents = `V₀ = ${format(tangents[0])}\nV₁ = ${format(tangents[1])}`
   }
 
   refresh()
