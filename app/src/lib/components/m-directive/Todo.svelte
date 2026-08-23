@@ -15,7 +15,7 @@
     margin: 1.05rem 0;
     padding: 0.5rem 0.8rem;
     padding-inline-start: calc(0.8rem + 1.25rem);
-    border-radius: 0 2px 2px 0;
+    border: 1px dashed light-dark(#1a7f37, #3fb950);
     background: light-dark(#e6ffec, rgb(63 185 80 / 0.24));
     font-size: 0.8rem;
     line-height: 1.7;

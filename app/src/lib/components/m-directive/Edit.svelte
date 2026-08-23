@@ -12,7 +12,7 @@
   /* :::Add / :::Delete と同じ帯のかたち。「あるものを直す」ので琥珀で塗る */
   .edit {
     margin: 1.05rem 0;
-    padding: 0.35rem 0.75rem;
+    padding: 0.5rem 0.75rem 0.4rem;
     border-radius: 0 2px 2px 0;
     background: light-dark(#fff8c5, rgb(210 153 34 / 0.24));
     font-size: 0.8rem;
@@ -38,6 +38,7 @@
     inset-inline-start: 0;
     font-family: var(--font-mono-base), var(--font-ja-base);
     color: light-dark(#9a6700, #d29922);
+    line-height: 1.5;
   }
 
   .edit :global(p + p) {
