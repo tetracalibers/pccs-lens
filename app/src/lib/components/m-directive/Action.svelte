@@ -22,18 +22,25 @@
   .action {
     margin: 1.05rem 0;
     margin-inline-start: 0.25rem;
-    padding: 0.2rem 0 0.2rem 1rem;
-    border-left: 2px solid transparent;
+    padding: 0.5rem 0 0.5rem 0.5rem;
+    border-right: 2px solid transparent;
+    border-top: 2px solid transparent;
     border-image: linear-gradient(to top, #ff9a9e, #f953c6) 1;
     position: relative;
-    font-size: 0.88rem;
+    font-size: 0.79rem;
     line-height: 1.7;
+  }
+
+  .action .label::first-letter {
+    font-size: 1.4em;
+    font-weight: normal;
   }
 
   /* AIが書いた下書き。ボーダーのグラデーションは残したまま、点線にして要編集を示す */
   .action.fixme {
     border-image: none;
     border-left-color: transparent;
+    padding: 0.2rem 0 0.2rem 1rem;
   }
   .action.fixme::before {
     content: "";
