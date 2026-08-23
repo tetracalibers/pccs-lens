@@ -11,6 +11,7 @@ draft: true
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
   import EndpointConditionsDemo from '$lib/demo/threejs/modeling/ferguson-curve/endpoint-conditions/EndpointConditionsDemo.svelte'
+  import HermiteFunctionsDemo from '$lib/demo/threejs/modeling/ferguson-curve/hermite-functions/HermiteFunctionsDemo.svelte'
 </script>
 
 [ベジェ曲線](/cg/modeling/bezier-curve-surface/)の形は制御点をどこに置くかだけで決まりましたが、曲線を繋いで長い形状を表す場面では、繋ぎ目の点と、そこで曲線が進む向きを、そのまま条件として与えられる方が扱いやすくなります。
@@ -454,8 +455,132 @@ $$t$$ が`0`から`1`まで動く間に、重み$$H(t)$$の配分が少しずつ
 
 こうして、両端の位置に加えて微分の値まで条件に含めた補間を:Anki[エルミート補間]といい、そこで重みを担う`4`つの関数$$H_0(t),H_1(t), H_2(t),H_3(t)$$を:Anki[エルミート関数]といいます。
 
-:::Todo
-`4`つのエルミート関数のグラフ。横軸に $$t$$（`0`から`1`）、縦軸に関数の値をとり、$$H_0$$ から $$H_3$$ の`4`本を`1`つの座標へ重ねて描く。$$H_0$$ が $$t = 0$$ で`1`、$$H_1$$ が $$t = 1$$ で`1`になること、$$H_2, H_3$$ は両端で`0`でありながら、それぞれ $$t = 0, t = 1$$ での傾きが`1`になっていることが読み取れるようにする。
+:::Action{fixme}
+`t`を`0`と`1`の両端に寄せて、次の点に着目してみよう
+
+- 位置にかかる`2`本の重みは、片方だけが`1`になること
+- 接ベクトルにかかる`2`本の重みはどちらも`0`になる一方、傾きの欄では片方が`1`になること
+:::
+
+<CanvasWrapper>
+  <HermiteFunctionsDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 4 つのエルミート関数。両端の位置 P₀, P₁ と接ベクトル V₀, V₁ にかかる重みで、
+// H₀ = 2t³ − 3t² + 1、H₁ = −2t³ + 3t²、H₂ = t³ − 2t² + t、H₃ = t³ − t²
+const hermite = (t: number) => {
+  const square = t * t
+  const cube = square * t
+
+  return [2 * cube - 3 * square + 1, -2 * cube + 3 * square, cube - 2 * square + t, cube - square]
+}
+
+// グラフの座標（横軸 t・縦軸 重み）を、シーンの座標に移す
+const toScene = (t: number, value: number, z: number, target: Vector3) =>
+  target.set(t * PLOT_WIDTH, value * PLOT_HEIGHT, z)
+
+// グラフ全体を canvas の中央に寄せる
+const graph = new Group()
+graph.position.copy(GRAPH_OFFSET)
+scene.add(graph)
+
+// 軸と目盛り。横軸は t の 0〜1、縦軸は重みを測る
+const axisPoints: Vector3[] = [
+  new Vector3(0, 0, LAYER_AXIS),
+  new Vector3(PLOT_WIDTH + AXIS_OVERSHOOT, 0, LAYER_AXIS),
+  // 縦軸は、H₃ が負の値をとるぶんだけ 0 より下まで伸ばす
+  new Vector3(0, Y_MIN * PLOT_HEIGHT, LAYER_AXIS),
+  new Vector3(0, PLOT_HEIGHT + AXIS_OVERSHOOT, LAYER_AXIS)
+]
+for (const value of [0.5, 1]) {
+  axisPoints.push(
+    new Vector3(value * PLOT_WIDTH, 0, LAYER_AXIS),
+    new Vector3(value * PLOT_WIDTH, -TICK_LENGTH, LAYER_AXIS),
+    new Vector3(0, value * PLOT_HEIGHT, LAYER_AXIS),
+    new Vector3(-TICK_LENGTH, value * PLOT_HEIGHT, LAYER_AXIS)
+  )
+}
+const axisGeometry = new BufferGeometry().setFromPoints(axisPoints)
+graph.add(new LineSegments(axisGeometry, new LineBasicMaterial({ color: AXIS_COLOR })))
+
+// 重みが 1 になる高さの補助線。H₀ が t = 0 で、H₁ が t = 1 でここに届くことを読み取らせる
+const guideGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(0, PLOT_HEIGHT, LAYER_GUIDE),
+  new Vector3(PLOT_WIDTH, PLOT_HEIGHT, LAYER_GUIDE)
+])
+const guideMaterial = new LineBasicMaterial({
+  color: AXIS_COLOR,
+  transparent: true,
+  opacity: GUIDE_OPACITY
+})
+graph.add(new LineSegments(guideGeometry, guideMaterial))
+
+// 4 本のエルミート関数。色は曲線と、今の t での重みを示す点で共有する
+const curveMaterials = CURVE_COLORS.map((color) => new LineBasicMaterial({ color }))
+curveMaterials.forEach((material, i) => {
+  const points: Vector3[] = []
+  for (let step = 0; step <= CURVE_SEGMENTS; step++) {
+    const t = step / CURVE_SEGMENTS
+    points.push(toScene(t, hermite(t)[i], LAYER_CURVE, new Vector3()))
+  }
+  graph.add(new Line(new BufferGeometry().setFromPoints(points), material))
+})
+
+// 傾きが 1 になっている端点の接線。H₂ は t = 0 から前へ、H₃ は t = 1 から後ろへ伸ばす。
+// どちらも「横に進んだぶんだけ縦に動く」線なので、両端で重みが 0 でありながら
+// 曲線が軸から立ち上がる（軸へ落ちる）勢いを持っていることが目で読める
+const TANGENT_GUIDES = [
+  { basis: 2, from: [0, 0], to: [TANGENT_GUIDE_SPAN, TANGENT_GUIDE_SPAN] },
+  { basis: 3, from: [1 - TANGENT_GUIDE_SPAN, -TANGENT_GUIDE_SPAN], to: [1, 0] }
+]
+
+TANGENT_GUIDES.forEach(({ basis, from, to }) => {
+  const geometry = new BufferGeometry().setFromPoints([
+    toScene(from[0], from[1], LAYER_TANGENT, new Vector3()),
+    toScene(to[0], to[1], LAYER_TANGENT, new Vector3())
+  ])
+  // 曲線と混ざらないよう破線にする
+  const material = new LineDashedMaterial({
+    color: CURVE_COLORS[basis],
+    dashSize: DASH_SIZE,
+    gapSize: GAP_SIZE,
+    transparent: true,
+    opacity: TANGENT_GUIDE_OPACITY
+  })
+  const line = new Line(geometry, material)
+  // 破線の刻みは頂点ごとの「線に沿った距離」で決まるので、作ったあとに測る
+  line.computeLineDistances()
+  graph.add(line)
+})
+
+// 今の t を示す縦線。長さは変わらないので、横へ動かすだけでよい
+const t = 0.3
+const readoutGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(0, Y_MIN * PLOT_HEIGHT, LAYER_READOUT),
+  new Vector3(0, PLOT_HEIGHT, LAYER_READOUT)
+])
+const readoutLine = new LineSegments(
+  readoutGeometry,
+  new LineBasicMaterial({ color: READOUT_COLOR })
+)
+readoutLine.position.x = t * PLOT_WIDTH
+graph.add(readoutLine)
+
+// 今の t で各エルミート関数が取る重みを示す点
+const dotGeometry = new SphereGeometry(DOT_RADIUS, 16, 12)
+const values = hermite(t)
+const scratch = new Vector3()
+
+CURVE_COLORS.forEach((color, i) => {
+  const dot = new Mesh(dotGeometry, new MeshBasicMaterial({ color }))
+  dot.position.copy(toScene(t, values[i], LAYER_POINT, scratch))
+  graph.add(dot)
+})
+```
+
 :::
 
 :Mark[ファーガソン曲線]は、`3`次のエルミート補間で表されることから、:Anki[3次エルミート曲線]と呼ばれることもあります。
