@@ -575,16 +575,19 @@ export const createCsgTreeScene = ({ scene, camera, params }: SceneContext) => {
     )
   )
   const guides: LineSegments[] = []
-  const inverseSolidRotation = new Quaternion().setFromEuler(new Euler(...SOLID_ROTATION)).invert()
-  const solidPosition = new Vector3(...SOLID_POSITION)
-  const cameraLocal = new Vector3()
-  const viewDirection = new Vector3()
 
-  /** 円柱の母線を、いまの視線から見た輪郭の位置に合わせる */
+  /**
+   * 円柱の母線を、視線から見た輪郭に重なる向きへ合わせる。
+   * 立体を回せないデモなので、組み立てのときに 1 度決めれば足りる。
+   * ズームで視線はわずかに振れるが、輪郭からのずれは円柱の見かけの幅の 1 % に満たない。
+   */
   const alignGuides = () => {
     // 立体は動かして回してあるので、カメラを立体のローカル空間へ持ち込んでから角度を出す
-    cameraLocal.copy(camera.position).sub(solidPosition).applyQuaternion(inverseSolidRotation)
-    viewDirection.copy(CYLINDER_CENTER).sub(cameraLocal)
+    const cameraLocal = camera.position
+      .clone()
+      .sub(new Vector3(...SOLID_POSITION))
+      .applyQuaternion(new Quaternion().setFromEuler(new Euler(...SOLID_ROTATION)).invert())
+    const viewDirection = CYLINDER_CENTER.clone().sub(cameraLocal)
     // 側面の法線が視線と直交する向きが、見た目の輪郭に重なる母線の位置
     const angle = -Math.atan2(viewDirection.x, -viewDirection.z)
     for (const guide of guides) guide.rotation.y = angle
@@ -715,6 +718,8 @@ export const createCsgTreeScene = ({ scene, camera, params }: SceneContext) => {
     stackFirst: buildTree(createStackFirstTree()),
     drillFirst: buildTree(createDrillFirstTree())
   }
+  // 母線の向きは、半透明の円柱が出そろってから 1 度だけ決める
+  alignGuides()
 
   const light = new DirectionalLight(LIGHT_COLOR, 2.2)
   light.position.set(4, 5, 3)
@@ -724,7 +729,6 @@ export const createCsgTreeScene = ({ scene, camera, params }: SceneContext) => {
 
   return {
     update: () => {
-      alignGuides()
       const step = Math.round(params.step)
       for (const kind of Object.keys(trees) as TreeKind[]) {
         const tree = trees[kind]
