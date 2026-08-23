@@ -96,6 +96,9 @@
     "cg/modeling/bezier-curve-surface": {
       "title": "線形補間とベジェ曲線"
     },
+    "cg/modeling/csg-representation": {
+      "title": "CSG表現"
+    },
     "cg/modeling/curve-surface-equations": {
       "title": "曲線・曲面の数式表現"
     },
