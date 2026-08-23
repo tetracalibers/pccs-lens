@@ -501,7 +501,7 @@
 ## CGと画像処理 — モデリング／形状モデル（`cg/modeling.yaml` #shape-models）
 
 - [x] `/cg/modeling/shape-model-overview`
-- [draft] `/cg/modeling/csg-representation`
+- [ ] `/cg/modeling/csg-representation`
 - [draft] `/cg/modeling/sweep-representation`
 - [draft] `/cg/modeling/boundary-representation`
 - [ページ未作成] 境界表現のデータ構造

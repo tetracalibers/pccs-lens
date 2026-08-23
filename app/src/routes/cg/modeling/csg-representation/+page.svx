@@ -4,8 +4,6 @@ title: CSG表現 # CG 3-2-1
 
 group: ["CG"]
 visual: true
-
-draft: true
 ---
 
 <script>
