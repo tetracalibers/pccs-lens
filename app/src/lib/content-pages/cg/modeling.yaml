@@ -6,8 +6,8 @@ sections:
     links:
       - slug: shape-model-overview
       - slug: csg-representation
-      - slug: boundary-representation
       - slug: sweep-representation
+      - slug: boundary-representation
       - title: 境界表現のデータ構造 # CG 3-3-1
         group: ["CG"]
       - title: オイラー操作 # CG 3-3-2
