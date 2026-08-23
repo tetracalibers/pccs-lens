@@ -10,6 +10,7 @@ draft: true
 
 <script>
   import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import CsgTreeDemo from '$lib/demo/threejs/modeling/csg-representation/csg-tree/CsgTreeDemo.svelte'
   import OperationOrderDemo from '$lib/demo/threejs/modeling/csg-representation/operation-order/OperationOrderDemo.svelte'
   import SetOperationsDemo from '$lib/demo/threejs/modeling/csg-representation/set-operations/SetOperationsDemo.svelte'
 </script>
@@ -273,15 +274,178 @@ scene.add(right)
 木の葉に:Anki[プリミティブ]を置き、中間の節点に:Anki[集合演算]を置きます。根が最終的な形状にあたり、葉から根へ向かって演算を適用していくと目的の立体ができあがります。
 ただし、同じ形状を表現するCSG表現は、`1`通りとは限らないことに注意が必要です。
 
-:::Todo
-次の2つの図を並べる
+:::Action{fixme}
+演算を進めると、左の木の節点が葉の側から順に適用され、右の立体ができあがっていく。まだ演算に使われていないプリミティブは半透明で置いてある
 
-- 葉には立体、節点には集合演算子（もしくは「和」などのラベル）を置き、エッジでつなげた木構造の図
-- 演算結果として得られる立体
+- 積んでから穴をあける：`2`枚の板を積んで階段にしてから、`1`段目に穴をあける
+- 穴をあけてから積む：`1`枚目の板に穴をあけてから、`2`枚目を積んで階段にする
 
-「演算を進める」スライダーを用意し、段階的に演算過程を見られるようにする
-現在適用されている集合演算をUI上にreadonlyテキストで表示する
-同じ形を表すためのCSG木が一通りではないことを示すためのアイデアを相談したい（適用順を変えるチェックボックスとか？）
+CSG木を切り替えて、途中の立体は違うのに、根まで進めると同じ階段になることを確かめよう
+:::
+
+<CanvasWrapper>
+  <CsgTreeDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+/** 点が直方体の内部にあれば正、外部にあれば負を返す（0 がちょうど表面） */
+const insideSlab = (center: Vector3, half: Vector3) => (p: Vector3) =>
+  Math.min(
+    half.x - Math.abs(p.x - center.x),
+    half.y - Math.abs(p.y - center.y),
+    half.z - Math.abs(p.z - center.z)
+  )
+
+/** 点が円柱の内部にあれば正、外部にあれば負を返す */
+const insideCylinder = (p: Vector3) =>
+  Math.min(
+    CYLINDER_RADIUS - Math.hypot(p.x - CYLINDER_CENTER.x, p.z - CYLINDER_CENTER.z),
+    CYLINDER_HEIGHT / 2 - Math.abs(p.y - CYLINDER_CENTER.y)
+  )
+
+/** 木の節点。葉にプリミティブ、節点に集合演算を置く */
+type Operation = "union" | "intersection" | "difference"
+type CsgNode =
+  | { kind: "leaf"; primitive: PrimitiveName }
+  | { kind: "op"; operation: Operation; left: CsgNode; right: CsgNode }
+
+const leaf = (primitive: PrimitiveName): CsgNode => ({ kind: "leaf", primitive })
+const op = (operation: Operation, left: CsgNode, right: CsgNode): CsgNode => ({
+  kind: "op",
+  operation,
+  left,
+  right
+})
+
+/** 先に板を積み上げて階段にしてから、1 段目に穴をあける木 */
+const root = op("difference", op("union", leaf("lower"), leaf("upper")), leaf("cylinder"))
+
+/**
+ * 点が木の表す立体の内部にあれば正、外部にあれば負を返す。
+ *
+ * target を渡すと、その葉の内外判定だけを override に差し替えて評価する。
+ * 面の表裏を調べるときに、その面自身を「すぐ内側」「すぐ外側」に固定するために使う。
+ */
+const signedInside = (node: CsgNode, p: Vector3, target?: PrimitiveName, override = 0): number => {
+  if (node.kind === "leaf")
+    return node.primitive === target ? override : PRIMITIVES[node.primitive].inside(p)
+  const left = signedInside(node.left, p, target, override)
+  const right = signedInside(node.right, p, target, override)
+  // 和集合は「どちらかの内部」、積集合は「どちらの内部でもある」、差集合は「左の内部かつ右の外部」
+  if (node.operation === "union") return Math.max(left, right)
+  if (node.operation === "intersection") return Math.min(left, right)
+  return Math.min(left, -right)
+}
+
+/** 木に含まれる葉を、差集合で引く側にあるか（削り取る側か）とともに集める */
+const collectLeaves = (
+  node: CsgNode,
+  subtracted = false,
+  out: { primitive: PrimitiveName; subtracted: boolean }[] = []
+) => {
+  if (node.kind === "leaf") {
+    out.push({ primitive: node.primitive, subtracted })
+    return out
+  }
+  collectLeaves(node.left, subtracted, out)
+  // 差集合の右側にある葉は、立体の内と外が入れ替わる
+  collectLeaves(node.right, node.operation === "difference" ? !subtracted : subtracted, out)
+  return out
+}
+
+/**
+ * プリミティブの表面のうち、木の表す立体の表面として残る部分を正で返す判定値を作る。
+ *
+ * その面のすぐ内側とすぐ外側で木の内外を調べ、「内側が立体の中・外側が立体の外」に
+ * なっているところだけが結果の表面として残る。削り取る側の葉ではこの内と外が入れ替わる。
+ *
+ * そのプリミティブ自身は判定値を差し替えて内外を表し、ほかのプリミティブは面から
+ * わずかに離した点で評価する。離すのは、積み上げた板の接する面のように、面どうしが
+ * ちょうど重なっている場合に内外を決めるため。
+ */
+const boundaryValue = (
+  node: CsgNode,
+  primitive: PrimitiveName,
+  normalAt: (p: Vector3, faceNormal: Vector3) => Vector3,
+  subtracted: boolean
+) => {
+  const probe = new Vector3()
+  const solidSide = subtracted ? -SURFACE_MARGIN : SURFACE_MARGIN
+  const solidOffset = subtracted ? PROBE_OFFSET : -PROBE_OFFSET
+  return (p: Vector3, faceNormal: Vector3) => {
+    const normal = normalAt(p, faceNormal)
+    const inner = signedInside(
+      node,
+      probe.copy(p).addScaledVector(normal, solidOffset),
+      primitive,
+      solidSide
+    )
+    const outer = signedInside(
+      node,
+      probe.copy(p).addScaledVector(normal, -solidOffset),
+      primitive,
+      -solidSide
+    )
+    return Math.min(inner, -outer)
+  }
+}
+
+/**
+ * 木の表す立体の表面を、葉ごとに切り出して組み立てる。
+ * clipSurface は、判定値の符号が変わる辺で三角形を切り分けて残る側だけを集める
+ */
+const buildSolid = (node: CsgNode) => {
+  const group = new Group()
+  if (node.kind === "leaf") {
+    // まだ演算されていないプリミティブは、半透明の面と輪郭線で置く
+    group.add(new Mesh(surfaces[node.primitive], ghostMaterials[node.primitive]))
+    group.add(new LineSegments(ghostEdges[node.primitive], ghostLineMaterials[node.primitive]))
+    return group
+  }
+  for (const { primitive, subtracted } of collectLeaves(node)) {
+    const geometry = clipSurface(
+      surfaces[primitive],
+      boundaryValue(node, primitive, PRIMITIVES[primitive].normalAt, subtracted),
+      PRIMITIVES[primitive].normalAt,
+      subtracted
+    )
+    group.add(new Mesh(geometry, materials[primitive]))
+  }
+  return group
+}
+
+/** 木に含まれる節点を、葉から根へ適用していく順に並べる */
+const collectOperations = (node: CsgNode, out: CsgNode[] = []) => {
+  if (node.kind === "leaf") return out
+  collectOperations(node.left, out)
+  collectOperations(node.right, out)
+  out.push(node)
+  return out
+}
+
+/** 何段目まで適用したかで決まる、今画面に置かれる立体の集まり */
+const forestAt = (root: CsgNode, order: CsgNode[], step: number) => {
+  const applied = new Set(order.slice(0, step))
+  const roots: CsgNode[] = []
+  const walk = (node: CsgNode) => {
+    // 適用済みの節点は、そこまでを 1 つの立体としてまとめて置く
+    if (node.kind === "leaf" || applied.has(node)) {
+      roots.push(node)
+      return
+    }
+    walk(node.left)
+    walk(node.right)
+  }
+  walk(root)
+  return roots
+}
+
+// まだ 1 つも演算を適用していない状態。2 枚の板と円柱が半透明で置かれる
+for (const node of forestAt(root, collectOperations(root), 0)) scene.add(buildSolid(node))
+```
+
 :::
 
 CSG木が持っているのは、:Anki[プリミティブ]のパラメータと:Mark[集合演算]の種類だけです。そのため、複雑な形であってもデータ量は小さく済みます。
