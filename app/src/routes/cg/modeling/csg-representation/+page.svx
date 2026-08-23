@@ -3,9 +3,15 @@ layout: guide-content
 title: CSG表現 # CG 3-2-1
 
 group: ["CG"]
+visual: true
 
 draft: true
 ---
+
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import SetOperationsDemo from '$lib/demo/threejs/modeling/csg-representation/set-operations/SetOperationsDemo.svelte'
+</script>
 
 [さまざまな形状モデル](/cg/modeling/shape-model-overview/)では、中身の詰まった立体として形を表す:Mark[ソリッドモデル]を解説しました。
 ソリッドモデルの表現の1つとして、単純な立体を組み合わせて目的の形をつくる:Anki[CSG表現]（Constructive Solid Geometry）を見ていきます。
@@ -30,10 +36,118 @@ CSG表現で使う主な集合演算は、次の`3`つです。ここで、`2`�
 
 :Anki[和集合]は`2`つの立体をくっつけた形、:Anki[積集合]は重なっているところだけを残した形、:Anki[差集合]は一方をもう一方で削り取った形にあたります。いずれも結果はまた`1`つの立体になるため、その結果をさらに次の演算の入力として使えます。
 
-:::Todo
-同じ`2`つのプリミティブ（球と直方体）に、和集合・積集合・差集合をUIで選んで適用した結果を示す図
-初期表示は和集合
-差集合は、引く順序を入れ替えた`2`通りを用意する
+:::Action{fixme}
+集合演算を切り替えて、同じ球と直方体から次の形が得られることを見てみよう。面の色は元のプリミティブごとに分けてあるので、削り口の壁がどちらの表面なのかも読み取れる
+
+- 和集合：`2`つがくっついた形
+- 積集合：重なっているところだけが残った形
+- 差集合：一方がもう一方に削り取られた形。引く順序を入れ替えると別の形になる
+:::
+
+<CanvasWrapper>
+  <SetOperationsDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+/** 球のパラメータ。直方体の 1 つの角をくわえこむ位置に置く */
+const SPHERE_CENTER = new Vector3(0.85, 0.85, 0.85)
+const SPHERE_RADIUS = 0.75
+
+/** 直方体のパラメータ（原点を中心とした各辺の半分の長さ） */
+const BOX_HALF = new Vector3(0.8, 0.8, 0.8)
+
+/** 点が球の内部にあれば正、外部にあれば負を返す（0 がちょうど表面） */
+const insideSphere = (p: Vector3) => SPHERE_RADIUS - p.distanceTo(SPHERE_CENTER)
+
+/** 点が直方体の内部にあれば正、外部にあれば負を返す */
+const insideBox = (p: Vector3) =>
+  Math.min(BOX_HALF.x - Math.abs(p.x), BOX_HALF.y - Math.abs(p.y), BOX_HALF.z - Math.abs(p.z))
+
+/**
+ * 集合演算ごとに、球・直方体それぞれの表面のどこが結果の表面として残るか。
+ * keepInside は相手の立体の内側を残すかどうか、flip は削り口の壁になるかどうかを表す。
+ */
+const SURFACE_RULES = {
+  // 和集合：どちらの面も、相手の外側に出ている部分だけが残る
+  union: {
+    sphere: { keepInside: false, flip: false },
+    box: { keepInside: false, flip: false }
+  },
+  // 積集合：どちらの面も、相手の内側に入っている部分だけが残る
+  intersection: {
+    sphere: { keepInside: true, flip: false },
+    box: { keepInside: true, flip: false }
+  },
+  // 差集合：引かれる側は相手の外側、引く側は相手の内側が残り、後者が削り口の壁になる
+  boxMinusSphere: {
+    sphere: { keepInside: true, flip: true },
+    box: { keepInside: false, flip: false }
+  },
+  sphereMinusBox: {
+    sphere: { keepInside: false, flip: false },
+    box: { keepInside: true, flip: true }
+  }
+}
+
+/** 内外判定の式から、「残す側が正」になる判定値を作る */
+const keepValue = (inside: (p: Vector3) => number, keepInside: boolean) =>
+  keepInside ? inside : (p: Vector3) => -inside(p)
+
+/** 球面上の点の法線（中心から外へ向かう向き） */
+const sphereNormalAt = (p: Vector3) => p.clone().sub(SPHERE_CENTER).normalize()
+
+/** 直方体の面の法線。平面なので、元の三角形の法線がそのまま使える */
+const boxNormalAt = (p: Vector3, faceNormal: Vector3) => faceNormal.clone()
+
+// 三角形に分けたプリミティブの表面。ここでの座標がそのままワールド座標になる
+const sphereSurface = new SphereGeometry(SPHERE_RADIUS, 96, 64)
+  .translate(SPHERE_CENTER.x, SPHERE_CENTER.y, SPHERE_CENTER.z)
+  .toNonIndexed()
+const boxSurface = new BoxGeometry(
+  BOX_HALF.x * 2,
+  BOX_HALF.y * 2,
+  BOX_HALF.z * 2,
+  48,
+  48,
+  48
+).toNonIndexed()
+
+// 球の面は直方体の内外で、直方体の面は球の内外で切り分ける。
+// clipSurface は、判定値の符号が変わる辺で三角形を切り分けて残る側だけを集め、
+// 削り口の壁になる面（flip）は法線と表裏を反転させたジオメトリを返す
+const rule = SURFACE_RULES.union
+const sphereGeometry = clipSurface(
+  sphereSurface,
+  keepValue(insideBox, rule.sphere.keepInside),
+  sphereNormalAt,
+  rule.sphere.flip
+)
+const boxGeometry = clipSurface(
+  boxSurface,
+  keepValue(insideSphere, rule.box.keepInside),
+  boxNormalAt,
+  rule.box.flip
+)
+
+// 面がどちらのプリミティブから来たかが分かるよう、色を分けて置く
+const sphereMaterial = new MeshStandardMaterial({
+  color: SPHERE_COLOR,
+  roughness: 0.65,
+  side: DoubleSide
+})
+const boxMaterial = new MeshStandardMaterial({ color: BOX_COLOR, roughness: 0.65, side: DoubleSide })
+scene.add(new Mesh(sphereGeometry, sphereMaterial))
+scene.add(new Mesh(boxGeometry, boxMaterial))
+
+const light = new DirectionalLight(LIGHT_COLOR, 2.2)
+light.position.set(4, 5, 3)
+scene.add(light)
+// 削り口の内側が暗く潰れないよう、環境光はやや強めにする
+scene.add(new AmbientLight(LIGHT_COLOR, 0.55))
+```
+
 :::
 
 ### 集合演算の順序
