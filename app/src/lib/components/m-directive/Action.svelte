@@ -22,7 +22,7 @@
   .action {
     margin: 1.05rem 0;
     margin-inline-start: 0.25rem;
-    padding: 0.5rem 0 0.5rem 0.5rem;
+    padding: 0.5rem;
     border-right: 2px solid transparent;
     border-top: 2px solid transparent;
     border-image: linear-gradient(to top, #ff9a9e, #f953c6) 1;
