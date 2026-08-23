@@ -10,12 +10,16 @@
  */
 
 import { analyze } from "../lib/math-scope.js"
+import { forRule } from "../lib/rule-ids.js"
 
 const TRIGGER_LABEL = {
   sentence: "インライン数式を含む文",
   block: "ブロック数式の記号を説明している文",
   article: "記事全体で数式側に揃っている記号"
 }
+
+/** ガイドのルールID（→ writing-guides/math-notation-guide.md） */
+const RULE_ID = "math-promotion-style"
 
 const reporter = (context) => {
   const { Syntax, RuleError, report, getSource } = context
@@ -36,4 +40,4 @@ const reporter = (context) => {
   }
 }
 
-export default { linter: reporter }
+export default { linter: forRule(RULE_ID, reporter) }

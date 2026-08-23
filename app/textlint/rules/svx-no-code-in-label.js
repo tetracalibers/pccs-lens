@@ -8,11 +8,15 @@
  */
 
 import { maskNodes } from "../lib/svx.js"
+import { forRule } from "../lib/rule-ids.js"
 
 /** バッククォートを含む `:Anki[…]`・`:Mark[…]` のラベル */
 const LABEL = /:(?:Anki|Mark)\[([^\]\n]*`[^\]\n]*)\]/g
 /** バッククォートを含むリンクのテキスト */
 const LINK_TEXT = /\[([^\]\n]*`[^\]\n]*)\]\((?=[^)\n]*\))/g
+
+/** ガイドのルールID（→ writing-guides/math-notation-guide.md） */
+const RULE_ID = "no-inline-code-in-labels"
 
 const reporter = (context) => {
   const { Syntax, RuleError, report, getSource, fixer } = context
@@ -44,7 +48,9 @@ const reporter = (context) => {
   }
 }
 
+const rule = forRule(RULE_ID, reporter)
+
 export default {
-  linter: reporter,
-  fixer: reporter
+  linter: rule,
+  fixer: rule
 }

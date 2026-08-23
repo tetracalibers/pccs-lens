@@ -15,11 +15,15 @@
 
 import { maskForProseRules } from "../lib/svx.js"
 import { FUNCTION_NAMES } from "../lib/math-tokens.js"
+import { forRule } from "../lib/rule-ids.js"
 
 const FUNCTION = new RegExp(`\\b(?:${FUNCTION_NAMES.join("|")})\\b`, "g")
 
 /** 引数が続く形（`sin(x)`）。囲む範囲の判断が要るので advisory パスに回す */
 const OPENING_PAREN = /^[(（]/
+
+/** ガイドのルールID（→ writing-guides/math-notation-guide.md） */
+const RULE_ID = "function-names-in-inline-code"
 
 const reporter = (context) => {
   const { Syntax, RuleError, report, getSource, fixer } = context
@@ -47,7 +51,9 @@ const reporter = (context) => {
   }
 }
 
+const rule = forRule(RULE_ID, reporter)
+
 export default {
-  linter: reporter,
-  fixer: reporter
+  linter: rule,
+  fixer: rule
 }

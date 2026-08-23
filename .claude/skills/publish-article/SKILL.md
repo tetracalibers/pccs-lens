@@ -1,6 +1,6 @@
 ---
 name: publish-article
-description: 記事を公開した（frontmatter から `draft: true` を外した）ときの公開時タスクを実行するスキル。最初に本文へ `:::Todo` / `:::Add` / `:::Delete` / `:::Fix` / `:::Pending` と `{fixme}` 付きの `:::Action` が残っていないかを確認し、残っていれば公開時タスクへ進まず、そのままコピペして実行できるスキル呼び出し（`/svg-diagram-component`・`/add-threejs-demo`・`/apply-edit-requests`）を案内して止まる。あわせて記法ゲート（`npm run lint:svx:syntax`）を当て、違反があれば `format-math-notation` を自動実行して収束させる。残っていなければ `visual` フラグの追加・文体解析タスクリストの `[draft]` 解除・OGP画像の生成を行い、自動実行しない残タスク（文体ガイドの更新・PR説明文の更新）を案内する。`commit-this` が `draft` 削除を検出したときにも呼ばれる。記事を公開したときの作業を回したい場合に使用する。
+description: 記事を公開した（frontmatter から `draft: true` を外した）ときの公開時タスクを実行するスキル。最初に本文へ `:::Todo` / `:::Add` / `:::Delete` / `:::Edit` / `:::Modify` / `:::Pending` と `{fixme}` 付きの `:::Action` が残っていないかを確認し、残っていれば公開時タスクへ進まず、そのままコピペして実行できるスキル呼び出し（`/svg-diagram-component`・`/add-threejs-demo`・`/apply-edit-requests`）を案内して止まる。あわせて記法ゲート（`npm run lint:svx:syntax`）を当て、違反があれば `format-math-notation` を自動実行して収束させる。残っていなければ `visual` フラグの追加・文体解析タスクリストの `[draft]` 解除・OGP画像の生成を行い、自動実行しない残タスク（文体ガイドの更新・PR説明文の更新）を案内する。`commit-this` が `draft` 削除を検出したときにも呼ばれる。記事を公開したときの作業を回したい場合に使用する。
 effort: high
 ---
 
@@ -59,10 +59,10 @@ find app/src/routes/color-theory app/src/routes/color-fields -maxdepth 1 -type d
 
 ### 0. 編集指示ディレクティブの残存チェック（ゲート）
 
-**公開時タスクより先に必ず行う。** `:::Todo` / `:::Add` / `:::Delete` / `:::Fix` / `:::Pending` は読者に見える形で表示されるため、残したまま公開してはいけない（`writing-guides/syntax-guide.md` ルール4）。`{fixme}` の付いた `:::Action`（AIが書いたまま人手が入っていないデモ誘導文）も同じ扱いで止める。
+**公開時タスクより先に必ず行う。** `:::Todo` / `:::Add` / `:::Delete` / `:::Edit` / `:::Modify` / `:::Pending` は読者に見える形で表示されるため、残したまま公開してはいけない（`writing-guides/syntax-guide.md` ルール4）。`{fixme}` の付いた `:::Action`（AIが書いたまま人手が入っていないデモ誘導文）も同じ扱いで止める。
 
 ```sh
-grep -nE '^:{3,}(Todo|Add|Delete|Fix|Pending)' <対象の .svx>
+grep -nE '^:{3,}(Todo|Add|Delete|Edit|Modify|Pending)' <対象の .svx>
 grep -nE '^:{3,}Action\{[^}]*fixme' <対象の .svx>
 ```
 
@@ -79,7 +79,7 @@ grep -nE '^:{3,}Action\{[^}]*fixme' <対象の .svx>
 | --- | --- |
 | `:::Todo`（SVG図解） | `/svg-diagram-component <Todoブロックの中身>` — ブロックごとに1行 |
 | `:::Todo`（Three.jsデモ） | `/add-threejs-demo <記事slug> <Todoブロックの中身>` — ブロックごとに1行 |
-| `:::Add` / `:::Delete` / `:::Fix` | `/apply-edit-requests <記事slug>` — **何件あっても1行**（一括で対応するスキルのため） |
+| `:::Add` / `:::Delete` / `:::Edit` / `:::Modify` | `/apply-edit-requests <記事slug>` — **何件あっても1行**（一括で対応するスキルのため） |
 | `:::Pending` | 案内するコマンドは無い。**採否は著者が決める**ので、該当箇所（行番号と冒頭）を挙げて、採用（ブロックだけ外す）か不採用（囲んだ記述ごと削除）かを確認する |
 | `:::Action{fixme}` | **文面を直すのは著者**なので、該当箇所（行番号と Action の文面全文）を挙げて、直したうえで `{fixme}` を外すよう促す。直す必要が無ければ `{fixme}` だけ外せばよいことも添える。文面の案が欲しい場合の選択肢として `/refine-action-text <記事slug>` も案内するが、**このスキルを通しても `{fixme}` は残る**（ゲートは著者が `{fixme}` を外して初めて通る）ことを添える |
 

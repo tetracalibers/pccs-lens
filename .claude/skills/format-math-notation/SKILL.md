@@ -1,6 +1,6 @@
 ---
 name: format-math-notation
-description: 引数で受け取った既存記事（`+page.svx`）の本文を、`writing-guides/math-notation-guide.md` の記法（数式・インラインコード）に沿って整えるスキル。記法整備の全工程を通しで担う——機械的に判定できる違反の自動修正（`npm run lint:svx:fix` の収束ループ）を自分で回し、advisory パスの指摘（囲む範囲の判断・インライン数式からインラインコードへの降格候補・`\dfrac` への組み直し・`:::Action` の日本語への言い換え）を判断し、`app/.textlintignore` のベースライン解除と `writing-guides/NOTATION-TASKLIST.md` の `[x]` の記録まで行う。記事slug・タスクリストのセクションid（`#rasterization`）を、カンマや空白区切りで複数まとめて指定でき（混在も可）、公開時ゲートから呼ばれる `--auto` では自動修正だけを当てて advisory は報告のみにする。文章（語順・言い回し・`:Anki[]`・見出し構成）には手を入れず記法だけを直す。既存記事の数式・インラインコードの表記を記法ルールに追随させたい場合に使用する。
+description: 引数で受け取った既存記事（`+page.svx`）の本文を、`writing-guides/math-notation-guide.md` の記法（数式・インラインコード）に沿って整えるスキル。記法整備の全工程を通しで担う——機械的に判定できる違反の自動修正（`npm run lint:svx:fix` の収束ループ）を自分で回し、advisory パスの指摘（囲む範囲の判断・インライン数式からインラインコードへの降格候補・`\dfrac` への組み直し・`:::Action` の日本語への言い換え）を判断し、`app/.textlintignore` のベースライン解除と `writing-guides/NOTATION-TASKLIST.md` の `[x]` の記録まで行う。記事slug・タスクリストのセクションid（`#rasterization`）を、カンマや空白区切りで複数まとめて指定でき（混在も可）、`--rules=<ルールID>` でガイドのルールID（`math-enum-comma` など）を指定すればそのルールだけを直せて（省略時は全ルール）、公開時ゲートから呼ばれる `--auto` では自動修正だけを当てて advisory は報告のみにする。文章（語順・言い回し・`:Anki[]`・見出し構成）には手を入れず記法だけを直す。既存記事の数式・インラインコードの表記を記法ルールに追随させたい場合に使用する。
 effort: high
 ---
 
@@ -20,7 +20,7 @@ effort: high
 
 | かつての手作業 | 移管先 |
 | --- | --- |
-| 機械的な違反の洗い出し | `npm run lint:svx:syntax`（12ルール） |
+| 機械的な違反の洗い出し | `npm run lint:svx:syntax`（13ルール） |
 | インライン数式とインラインコードの選択 | `svx-prefer-inline-code`（advisory・残差として出る） |
 | 記事全体での統一・文単位の統一・ブロック数式の説明文 | `svx-article-symbol-unify`・`svx-sentence-math-unify`・`svx-block-math-symbol-unify`（自動修正） |
 | 記号インベントリの作成 | 上の3ルールが内部で持つ（`app/textlint/lib/math-scope.js`） |
@@ -28,14 +28,15 @@ effort: high
 | `--fix` を1回当てる | `npm run lint:svx:fix` の収束ループ（手順2 でこのスキルが回す） |
 | 修正方針の表と承認 | 自動修正分は不要（決定的なので承認の意味がない）。差分の確認点は `commit-this` のコミット許可プロンプト |
 
-自分で判断・記録する役割は次の6つ。
+自分で判断・記録する役割は次の7つ。
 
 1. **advisory の指摘の判断** — 囲む範囲（`svx-code-range-number`・`svx-code-range-function`）と、降格候補（`svx-prefer-inline-code`）。
 2. **昇格の自動修正が踏み込めない箇所の手当て** — `svx-math-unify-manual`（`` `a = dy / dx` `` → `$$a = \dfrac{dy}{dx}$$` のような組み直し）。
-3. **`:::Action` の式を日本語に言い換える** — `svx-action-math-rewrite`。ガイドが「日本語で言い換えます」と定めている創作作業。
-4. **置き換えで文意が崩れる箇所の保留判断と報告** — 「迷ったら直さない」を維持する。
-5. **`app/.textlintignore` の行の削除** — `syntax` が0件になったら対象記事の行を外す。
-6. **`writing-guides/NOTATION-TASKLIST.md` への記録** — 実行し終えた記事の行を `[x]` にする。このリストの `[x]` は「このスキルを実行済み」を表す手記録で、**付けるのはこのスキルだけ**（`sync-tasklists.mjs` は生成も削除もしない）。**外すのは `commit-this`**（非 draft 記事の本文が変わったコミットで `[ ]` に戻す。→ `commit-this` 手順 1.8）。
+3. **中黒で繋いだ数式の並びの判断** — `svx-math-enum-comma-manual`（記号の並列なら1つの数式にまとめてカンマで区切り、語句の並列なら中黒のまま残す）。
+4. **`:::Action` の式を日本語に言い換える** — `svx-action-math-rewrite`。ガイドが「日本語で言い換えます」と定めている創作作業。
+5. **置き換えで文意が崩れる箇所の保留判断と報告** — 「迷ったら直さない」を維持する。
+6. **`app/.textlintignore` の行の削除** — `syntax` が0件になったら対象記事の行を外す。
+7. **`writing-guides/NOTATION-TASKLIST.md` への記録** — 実行し終えた記事の行を `[x]` にする。このリストの `[x]` は「このスキルを実行済み」を表す手記録で、**付けるのはこのスキルだけ**（`sync-tasklists.mjs` は生成も削除もしない）。**外すのは `commit-this`**（非 draft 記事の本文が変わったコミットで `[ ]` に戻す。→ `commit-this` 手順 1.8）。
 
 ## 適用範囲
 
@@ -56,11 +57,12 @@ effort: high
 ## 引数
 
 ```
-/format-math-notation [<記事slug>|#<セクションid>|--auto] …
+/format-math-notation [<記事slug>|#<セクションid>|--auto] [--rules=<ルールID>,…] …
 ```
 
 - **`<記事slug>`** — 対象記事の slug（例: `anti-aliasing`・`basic-transformations`）。ユニット込みのパス（`transformation/basic-transformations`）でもよい。
 - **`#<セクションid>`** — `writing-guides/NOTATION-TASKLIST.md` のセクション見出しに書かれた id（`#rasterization`・`#digital-image` など）。そのセクションの記事をまとめて処理する。`author-style-analyzer` と同じ流儀。**CG のセクション id はユニットをまたいで重複しうるので、指定時はユニット名も添えてもらう**（`#basics`＝画像符号化／パターン認識、`#special-effects`＝空間フィルタリング／画素ごとの濃淡・色変換）。
+- **`--rules=<ルールID>`** — ガイドのルールIDで**直すルールを絞る**（カンマ区切りで複数可）。**省略すると全ルールが対象。** IDの一覧は `writing-guides/math-notation-guide.md` の「ルール一覧」、どの textlint ルールが対応するかは `app/textlint/README.md` の対応表にある。→「ルールIDで絞るとき」
 - **`--auto`** — 公開時ゲート（`publish-article` 手順0.5）から呼ばれる自動実行モード。**自動修正だけを当て、advisory は報告のみにする**（判断を伴う書き換えを一切しない）。手順3の承認も取らない。
 - **引数なし** — セッションの文脈から対象を特定する。特定できなければ、`NOTATION-TASKLIST.md` の `[ ]` の一覧と、`npm run lint:svx:advisory` の指摘がある記事の一覧を提示して尋ねる。推測でどれかに決めない。
 
@@ -75,6 +77,17 @@ effort: high
 - 解決したパスは**重複を除いて1つの対象リストにする**（セクション指定と slug 指定が重なった場合など）。
 - 対象リストを最初に提示する（何件をどの順で処理するか）。1件でも解決できないものがあれば、そこで確認する。**解決できたものだけで勝手に進めない。**
 - 進め方は「対象ごとに手順2〜5を通す」のではなく、**手順ごとに全対象をまとめて処理する**（→ 各手順の「複数対象のとき」）。textlint の起動回数と承認の往復を増やさないため。
+
+### ルールIDで絞るとき
+
+`--rules` が渡されたときは、**選択されたルールIDだけ**を整備する。仕組みは環境変数
+`SVX_RULE_IDS`（→ `app/textlint/lib/rule-ids.js`）で、syntax・advisory の両パスに効く。
+
+- **手順2の自動修正**: `npm run lint:svx:fix -- --rules=<ID>` を使う（`--rules` を渡すと表記揺れは当たらないので `--syntax-only` は不要）。
+- **手順3の advisory**: `SVX_RULE_IDS=<ID> npx textlint --rulesdir textlint/rules-advisory …` で絞る。
+- **手順5のベースライン解除とタスクリストの `[x]` は行わない。** 他のルールの違反が残っている可能性があるので、「記法整備を終えた」記録にはならない。**絞って回したことと、残っているルールを報告する。**
+- **未知のルールIDは textlint が読み込み時に例外を投げる**（黙って0件にならない）。誤ったIDを渡されたら、ガイドの「ルール一覧」を提示して確認する。**似ているIDに勝手に読み替えない。**
+- ルールIDは**ガイドのルール単位**で、textlint ルール名（`svx-…`）とは1対Nの対応。`math-enum-comma` のように syntax と advisory の2本を束ねるIDもある。
 
 ### 対象の解決
 
@@ -97,8 +110,8 @@ awk '/^## .*#<セクションid>）/{f=1;next} /^## /{f=0} f&&/^- \[ \]/' writin
 
 | パス | 中身 | ベースライン |
 | --- | --- | --- |
-| `npm run lint:svx:syntax` | 自動修正できるルールだけ（12件） | 効く |
-| `npm run lint:svx:advisory` | 判断が要る指摘（5件） | 効かない |
+| `npm run lint:svx:syntax` | 自動修正できるルールだけ（13件） | 効く |
+| `npm run lint:svx:advisory` | 判断が要る指摘（6件） | 効かない |
 | `npm run lint:svx:notation` | 表記揺れ | 効かない |
 
 - **組織原則: 自動修正できない指摘は `syntax` パスに置かない。** だから `--fix` を収束させれば `syntax` は必ず0件になる。**0件を「ガイドを満たした証明」と読んではいけない**——advisory の指摘は別に残る。
@@ -137,6 +150,12 @@ npm run lint:svx:fix -- --syntax-only --no-baseline src/routes/<...>/+page.svx
 
 - **`--no-baseline`** はベースラインに載っている記事のときだけ付ける（載っていなければ付けても結果は同じ）。
 - **`--syntax-only`** を付けて表記揺れ（prh）を巻き込まない（別系統）。
+- **ルールIDで絞るときは `--rules` を付ける**（表記揺れは自動的に対象外になる）。
+
+  ```bash
+  npm run lint:svx:fix -- --rules=math-enum-comma,space-around-inline-math src/routes/<...>/+page.svx
+  ```
+
 - **複数対象のときは全パスを1回のコマンドに並べて渡す。** `npm run lint:svx:fix` は渡されたファイル全体の内容で収束を判定するので、まとめて回すのが正しい。
 
   ```bash
@@ -157,6 +176,9 @@ npm run lint:svx:fix -- --syntax-only --no-baseline src/routes/<...>/+page.svx
 ```bash
 cd app
 npx textlint --rulesdir textlint/rules-advisory --ignore-path /dev/null src/routes/<...>/+page.svx
+
+# ルールIDで絞るとき
+SVX_RULE_IDS=math-enum-comma npx textlint --rulesdir textlint/rules-advisory --ignore-path /dev/null src/routes/<...>/+page.svx
 ```
 
 指摘を表にして提示し、**承認を得てから**書き換える。
@@ -166,11 +188,13 @@ npx textlint --rulesdir textlint/rules-advisory --ignore-path /dev/null src/rout
 | 1 | 318 | `svx-code-range-number` | `3Dモデル` | `` `3D` ``モデル（固有名詞なので `3D` までを囲む） |
 | 2 | 269 | `svx-prefer-inline-code` | `$$M$$` | インラインコードに落とす／維持する |
 | 3 | 382 | `svx-math-unify-manual` | `` `a = dy / dx` `` | `$$a = \dfrac{dy}{dx}$$` |
+| 4 | 53 | `svx-math-enum-comma-manual` | `$$R$$・$$G$$・$$B$$` | `$$R, G, B$$` にまとめる／語句の並列なので中黒のまま |
 
 - **複数対象のときは記事ごとに表を分ける**（`### <slug>` の見出しを立てて並べる）。**承認は全記事分をまとめて1回で取る**——記事ごとに承認を求めて往復を増やさない。指摘が0件の記事は「0件」と1行で書く。
 - **`--auto` のときはここで書き換えない。** 表を報告に載せるだけにして手順5へ進む。
 - **判断が分かれるものは候補を併記して確認する。** `3D` をどこまで囲むか、その `$$…$$` を降格するか維持するかなどは勝手に決めない。
 - **迷ったら直さない。** すでに記事内で一貫している表記を好みで反対側へ寄せない。判断がつかない箇所は「保留」として表に残し、手順6で報告する。
+- **中黒で繋いだ数式の並び（`svx-math-enum-comma-manual`）は、記号の並列か語句の並列かで結論が変わる。** `$$R$$・$$G$$・$$B$$ 各成分` のように記号だけが並んでいるなら `$$R, G, B$$` にまとめ、`$$x$$ 方向に $$a$$・$$y$$ 方向に $$b$$ 進む` のように句が並んでいるなら中黒のまま残す（→ ガイド「記号を並べるときは1つのインライン数式にまとめ、カンマで区切る」）。まとめたら前後のスペースの連鎖修正が要る。
 - **降格候補（`svx-prefer-inline-code`）は「維持が正しい」ことがある。** このルールは3つの統一ルールに拾われなかった残差を出しているだけで、ブロック数式の兄弟の座標（`$$y$$`・`$$z$$` に対する `$$x$$` だけがブロックに出てくる、など）は維持が自然になる。降格すると前後のスペースを詰める連鎖修正も要る。
 
 ### 4. 手当てを当てる
@@ -191,6 +215,7 @@ npx textlint --rulesdir textlint/rules --ignore-path /dev/null src/routes/<...>/
 ```
 
 - **0件になった場合**、`app/.textlintignore` からその記事の行を削除する。削除するのは**対象記事の行だけ**で、他の行に触らない。
+- **`--rules` で絞ったときは、行を外さず `[x]` も付けない**（→「ルールIDで絞るとき」）。検査は全ルールで回し、残っている指摘を報告する。
 - **advisory の残件は、行を外さない理由にならない。** ベースライン解除の意味は「`lint:svx:syntax` の検査対象に入っている」ことで、advisory は非ブロッキングである。残件は手順6で報告する。
 - 削除したら、ベースラインを効かせた通しの検査で緑になることを確認する。
 
@@ -217,6 +242,7 @@ npx textlint --rulesdir textlint/rules --ignore-path /dev/null src/routes/<...>/
 
 ### 6. 報告する
 
+- **対象にしたルール**: `--rules` で絞ったならそのルールID（と、絞ったのでベースライン解除・`[x]` を行っていないこと）。絞っていないなら全ルールが対象だった旨は書かなくてよい。
 - **自動修正**: 収束までのパス数と、ルール別の修正件数。
 - **advisory**: 判断した指摘とその結論、**保留した箇所と理由**（直さなかったものを黙って落とさない）、残した件数。
 - `app/.textlintignore` の行を外したか、外さなかった場合はその理由。
@@ -236,6 +262,7 @@ npx textlint --rulesdir textlint/rules --ignore-path /dev/null src/routes/<...>/
 - **`--auto` では判断を伴う書き換えを一切しない。** 公開時ゲートから呼ばれるモードなので、advisory は報告だけにする。
 - **`--auto` ではタスクリストに `[x]` を付けない。** advisory を判断していないので実行済みには数えない。公開後も `[ ]` のまま残り、あとから手動で回す対象になる（→ `NOTATION-TASKLIST.md` 冒頭）。
 - **対象が多くても記事を飛ばさない。** 途中で打ち切る場合は、どこまで処理してどこから残したかを明示し、残りの記事はタスクリストの `[ ]` を保つ。
+- **`--rules` で絞ったときは「整備済み」にしない。** ベースラインの行を外さず、タスクリストにも `[x]` を付けない。絞り込みは部分的な手入れで、記法整備を終えた記録とは別物である。
 - **`syntax` が0件でもガイドを満たしたとは限らない。** advisory の指摘は別に残る（そのために2パスに分けている）。
 - **過剰修正しない。** 「なるべくインラインコード」を根拠に、KaTeX でしか書けない記号を含む数式をインラインコードへ落とさない。
 - **1回の実行で複数記事を扱うときも、記事ごとに承認と報告を挟む。** 差分が混ざるとレビューできず、コミットも分けられない。ただし手順2の自動修正はまとめて当ててよい（決定的なので）。

@@ -20,7 +20,7 @@
     border-left: 2px solid transparent;
     border-image: linear-gradient(180deg, #ffd93d, #ff6b6b) 1;
     position: relative;
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     line-height: 1.7;
   }
 

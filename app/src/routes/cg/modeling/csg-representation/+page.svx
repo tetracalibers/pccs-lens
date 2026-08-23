@@ -3,16 +3,21 @@ layout: guide-content
 title: CSG表現 # CG 3-2-1
 
 group: ["CG"]
-
-draft: true
+visual: true
 ---
 
-[さまざまな形状モデル](/cg/modeling/shape-model-overview/)では、中身の詰まった立体として形を表すソリッドモデルを見ました。ただ、内部と外部を区別してデータを持つといっても、その持ち方が`1`通りに決まるわけではありません。
-ここでは、単純な立体を組み合わせて目的の形をつくるCSG表現（Constructive Solid Geometry）を見ていきます。
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import CsgTreeDemo from '$lib/demo/threejs/modeling/csg-representation/csg-tree/CsgTreeDemo.svelte'
+  import SetOperationsDemo from '$lib/demo/threejs/modeling/csg-representation/set-operations/SetOperationsDemo.svelte'
+</script>
+
+[さまざまな形状モデル](/cg/modeling/shape-model-overview/)では、中身の詰まった立体として形を表す:Mark[ソリッドモデル]を解説しました。
+ソリッドモデルの表現の`1`つとして、単純な立体を組み合わせて目的の形をつくる:Anki[CSG表現]（Constructive Solid Geometry）を見ていきます。
 
 ## :WithGroupTag[プリミティブ]{group="{['CG']}"}
 
-組み合わせのもとになるのは、直方体・円柱・球・円錐といった、形が単純で数式によって厳密に表せる立体です。これらを:Anki[プリミティブ]といいます。
+組み合わせる基本的な立体は、:Mark[直方体]・:Mark[円柱]・:Mark[球]・:Mark[円錐]といった、形が単純で数式によって厳密に表せる立体です。これらの基本立体を:Anki[プリミティブ]といいます。
 
 どのプリミティブも、大きさは半径や辺の長さ、置き場所は位置と向きという数値で決まります。そのため、形を調整したいときは、立体を作り直すのではなく、これらの数値を書き換えるだけで済みます。
 
@@ -20,56 +25,327 @@ draft: true
 
 ## :WithGroupTag[集合演算]{group="{['CG']}"}
 
-プリミティブをいくつも用意しても、並べただけではばらばらの立体が並んでいるにすぎません。立体を、それが空間の中で占める点の集まりと見ると、立体どうしの組み合わせは点の集合に対する演算として表せます。これが:Anki[集合演算]です。
+立体を「点が集まってできたもの」と捉えると、立体どうしを組み合わせることは点の集合に対する:Anki[集合演算]として表せます。
 
-CSG表現で使う集合演算は、次の`3`つです。
+CSG表現で使う主な集合演算は、次の`3`つです。ここで、`2`つの立体を $$A, B$$ と表しています。
 
-- :Anki[和集合]：`2`つの立体のうち、少なくとも一方に含まれる部分
-- :Anki[積集合]：`2`つの立体のどちらにも含まれる部分
-- :Anki[差集合]：一方の立体に含まれ、もう一方には含まれない部分
+- :Anki[和集合]$$A \cup B$$：`2`つの立体のうち、少なくとも一方に含まれる部分
+- :Anki[積集合]$$A \cap B$$：`2`つの立体のどちらにも含まれる部分
+- :Anki[差集合]$$A - B$$：一方の立体に含まれ、もう一方には含まれない部分
 
-和集合は`2`つをくっつけた形、積集合は重なっているところだけを残した形、差集合は一方をもう一方で削り取った形にあたります。いずれも結果はまた`1`つの立体になるため、その結果をさらに次の演算の入力として使えます。
+:Anki[和集合]は`2`つの立体をくっつけた形、:Anki[積集合]は重なっているところだけを残した形、:Anki[差集合]は一方をもう一方で削り取った形にあたります。
 
-和集合と積集合は、`2`つの立体を入れ替えても結果が変わりません。差集合では、どちらからどちらを引くかで結果が変わります。たとえば、直方体から円柱を引けば円い穴のあいた板になり、円柱から直方体を引けば円柱を切り欠いた形になります。
+ここで、:Anki[和集合]と:Anki[積集合]は、`2`つの立体を入れ替えても結果が変わりません。
+球と直方体でいえば、球に直方体を足しても、直方体に球を足しても、できあがる形は同じです。積集合でも、重なっている部分はどちらを先に置いても変わりません。
 
-:::Todo
-同じ`2`つのプリミティブ（球と直方体）に、和集合・積集合・差集合をそれぞれ適用した結果を並べて示す図。差集合は、引く順序を入れ替えた`2`通りを並べる。
-:::
+一方、:Anki[差集合]では、どちらからどちらを引くかで結果が変わります。たとえば、直方体から円柱を引けば円い穴の開いた板になり、円柱から直方体を引けば円柱を切り欠いた形になります。
 
 :::Note
-面どうしがちょうど接する位置で演算すると、厚みのない面のかけらや孤立した点が結果に残ることがあります。これらは立体として扱えないため、CSG表現では、演算の結果から内部だけを取り出し、その境界を含め直した立体を答えとする:Anki[正則集合演算]を用います。
+和集合の「少なくとも一方に含まれる」、積集合の「どちらにも含まれる」という条件では、どちらが $$A$$ でどちらが $$B$$ かを区別する必要がありません。それゆえ、$$A$$ と $$B$$ を入れ替えても同じ結果になります。しかし、差集合の「一方の立体に含まれ、もう一方には含まれない」という条件では、$$A$$ と $$B$$ のどちらに含まれているのかが、はっきりと区別されているのです。
+:::
+
+いずれも演算結果はまた`1`つの立体になるため、その結果をさらに次の演算の入力として使えます。
+
+:::Action
+球と直方体に対する:Mark[集合演算]の結果を見てみよう
+:Mark[差集合]では、引く順序（引かれる立体）を入れ替えると別な形が得られることも確認しよう
+:::
+
+<CanvasWrapper>
+  <SetOperationsDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+/** 球のパラメータ。直方体の 1 つの角をくわえこむ位置に置く */
+const SPHERE_CENTER = new Vector3(0.85, 0.85, 0.85)
+const SPHERE_RADIUS = 0.75
+
+/** 直方体のパラメータ（原点を中心とした各辺の半分の長さ） */
+const BOX_HALF = new Vector3(0.8, 0.8, 0.8)
+
+/** 点が球の内部にあれば正、外部にあれば負を返す（0 がちょうど表面） */
+const insideSphere = (p: Vector3) => SPHERE_RADIUS - p.distanceTo(SPHERE_CENTER)
+
+/** 点が直方体の内部にあれば正、外部にあれば負を返す */
+const insideBox = (p: Vector3) =>
+  Math.min(BOX_HALF.x - Math.abs(p.x), BOX_HALF.y - Math.abs(p.y), BOX_HALF.z - Math.abs(p.z))
+
+/**
+ * 集合演算ごとに、球・直方体それぞれの表面のどこが結果の表面として残るか。
+ * keepInside は相手の立体の内側を残すかどうか、flip は削り口の壁になるかどうかを表す。
+ */
+const SURFACE_RULES = {
+  // 和集合：どちらの面も、相手の外側に出ている部分だけが残る
+  union: {
+    sphere: { keepInside: false, flip: false },
+    box: { keepInside: false, flip: false }
+  },
+  // 積集合：どちらの面も、相手の内側に入っている部分だけが残る
+  intersection: {
+    sphere: { keepInside: true, flip: false },
+    box: { keepInside: true, flip: false }
+  },
+  // 差集合：引かれる側は相手の外側、引く側は相手の内側が残り、後者が削り口の壁になる
+  boxMinusSphere: {
+    sphere: { keepInside: true, flip: true },
+    box: { keepInside: false, flip: false }
+  },
+  sphereMinusBox: {
+    sphere: { keepInside: false, flip: false },
+    box: { keepInside: true, flip: true }
+  }
+}
+
+/** 内外判定の式から、「残す側が正」になる判定値を作る */
+const keepValue = (inside: (p: Vector3) => number, keepInside: boolean) =>
+  keepInside ? inside : (p: Vector3) => -inside(p)
+
+/** 球面上の点の法線（中心から外へ向かう向き） */
+const sphereNormalAt = (p: Vector3) => p.clone().sub(SPHERE_CENTER).normalize()
+
+/** 直方体の面の法線。平面なので、元の三角形の法線がそのまま使える */
+const boxNormalAt = (p: Vector3, faceNormal: Vector3) => faceNormal.clone()
+
+// 三角形に分けたプリミティブの表面。ここでの座標がそのままワールド座標になる
+const sphereSurface = new SphereGeometry(SPHERE_RADIUS, 96, 64)
+  .translate(SPHERE_CENTER.x, SPHERE_CENTER.y, SPHERE_CENTER.z)
+  .toNonIndexed()
+const boxSurface = new BoxGeometry(
+  BOX_HALF.x * 2,
+  BOX_HALF.y * 2,
+  BOX_HALF.z * 2,
+  48,
+  48,
+  48
+).toNonIndexed()
+
+// 球の面は直方体の内外で、直方体の面は球の内外で切り分ける。
+// clipSurface は、判定値の符号が変わる辺で三角形を切り分けて残る側だけを集め、
+// 削り口の壁になる面（flip）は法線と表裏を反転させたジオメトリを返す
+const rule = SURFACE_RULES.union
+const sphereGeometry = clipSurface(
+  sphereSurface,
+  keepValue(insideBox, rule.sphere.keepInside),
+  sphereNormalAt,
+  rule.sphere.flip
+)
+const boxGeometry = clipSurface(
+  boxSurface,
+  keepValue(insideSphere, rule.box.keepInside),
+  boxNormalAt,
+  rule.box.flip
+)
+
+// 面がどちらのプリミティブから来たかが分かるよう、色を分けて置く
+const sphereMaterial = new MeshStandardMaterial({
+  color: SPHERE_COLOR,
+  roughness: 0.65,
+  side: DoubleSide
+})
+const boxMaterial = new MeshStandardMaterial({ color: BOX_COLOR, roughness: 0.65, side: DoubleSide })
+scene.add(new Mesh(sphereGeometry, sphereMaterial))
+scene.add(new Mesh(boxGeometry, boxMaterial))
+
+const light = new DirectionalLight(LIGHT_COLOR, 2.2)
+light.position.set(4, 5, 3)
+scene.add(light)
+// 削り口の内側が暗く潰れないよう、環境光はやや強めにする
+scene.add(new AmbientLight(LIGHT_COLOR, 0.55))
+```
+
 :::
 
 ## :WithGroupTag[CSG木]{group="{['CG']}"}
 
-演算の結果を次の演算へ渡していけるということは、複雑な形も、どのプリミティブにどの演算をどの順で適用したかという手順として表せるということです。この手順は:Anki[木構造]で表せます。
+演算の結果を次の演算へ渡していけるということは、複雑な形も、どのプリミティブにどの演算をどの順で適用したかという手順として表せるということです。CSG表現では、この手順を:Anki[木構造]で表し、この木を:Anki[CSG木]といいます。
 
-木の葉にプリミティブを置き、それ以外の節点に集合演算を置きます。根が最終的な形状にあたり、葉から根へ向かって演算を適用していくと目的の立体ができあがります。この木を:Anki[CSG木]といいます。
+木の葉に:Anki[プリミティブ]を置き、中間の節点に:Anki[集合演算]を置きます。根が最終的な形状にあたり、葉から根へ向かって演算を適用していくと目的の立体ができあがります。
+ただし、同じ形状を表現するCSG表現は、`1`通りとは限らないことに注意が必要です。
 
-直方体から円柱を引いて穴をあけ、そこへ球を足した形なら、次のような木になります。
+:::Action
+:Mark[演算を進める]ことで、作られる木構造と立体の変化を見てみよう
+:Mark[CSG表現]を変えてみて、CSG木は異なるのに、最終的に同じ形状が得られることも確めよう
+:::
 
-```mermaid
-graph TD
-    Root["和集合"] --- A["差集合"]
-    Root --- B["球"]
-    A --- A1["直方体"]
-    A --- A2["円柱"]
+<CanvasWrapper>
+  <CsgTreeDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+/** 点が直方体の内部にあれば正、外部にあれば負を返す（0 がちょうど表面） */
+const insideSlab = (center: Vector3, half: Vector3) => (p: Vector3) =>
+  Math.min(
+    half.x - Math.abs(p.x - center.x),
+    half.y - Math.abs(p.y - center.y),
+    half.z - Math.abs(p.z - center.z)
+  )
+
+/** 点が円柱の内部にあれば正、外部にあれば負を返す */
+const insideCylinder = (p: Vector3) =>
+  Math.min(
+    CYLINDER_RADIUS - Math.hypot(p.x - CYLINDER_CENTER.x, p.z - CYLINDER_CENTER.z),
+    CYLINDER_HEIGHT / 2 - Math.abs(p.y - CYLINDER_CENTER.y)
+  )
+
+/** 木の節点。葉にプリミティブ、節点に集合演算を置く */
+type Operation = "union" | "intersection" | "difference"
+type CsgNode =
+  | { kind: "leaf"; primitive: PrimitiveName }
+  | { kind: "op"; operation: Operation; left: CsgNode; right: CsgNode }
+
+const leaf = (primitive: PrimitiveName): CsgNode => ({ kind: "leaf", primitive })
+const op = (operation: Operation, left: CsgNode, right: CsgNode): CsgNode => ({
+  kind: "op",
+  operation,
+  left,
+  right
+})
+
+/** 先に板を積み上げて階段にしてから、1 段目に穴を開ける木 */
+const root = op("difference", op("union", leaf("lower"), leaf("upper")), leaf("cylinder"))
+
+/**
+ * 点が木の表す立体の内部にあれば正、外部にあれば負を返す。
+ *
+ * target を渡すと、その葉の内外判定だけを override に差し替えて評価する。
+ * 面の表裏を調べるときに、その面自身を「すぐ内側」「すぐ外側」に固定するために使う。
+ */
+const signedInside = (node: CsgNode, p: Vector3, target?: PrimitiveName, override = 0): number => {
+  if (node.kind === "leaf")
+    return node.primitive === target ? override : PRIMITIVES[node.primitive].inside(p)
+  const left = signedInside(node.left, p, target, override)
+  const right = signedInside(node.right, p, target, override)
+  // 和集合は「どちらかの内部」、積集合は「どちらの内部でもある」、差集合は「左の内部かつ右の外部」
+  if (node.operation === "union") return Math.max(left, right)
+  if (node.operation === "intersection") return Math.min(left, right)
+  return Math.min(left, -right)
+}
+
+/** 木に含まれる葉を、差集合で引く側にあるか（削り取る側か）とともに集める */
+const collectLeaves = (
+  node: CsgNode,
+  subtracted = false,
+  out: { primitive: PrimitiveName; subtracted: boolean }[] = []
+) => {
+  if (node.kind === "leaf") {
+    out.push({ primitive: node.primitive, subtracted })
+    return out
+  }
+  collectLeaves(node.left, subtracted, out)
+  // 差集合の右側にある葉は、立体の内と外が入れ替わる
+  collectLeaves(node.right, node.operation === "difference" ? !subtracted : subtracted, out)
+  return out
+}
+
+/**
+ * プリミティブの表面のうち、木の表す立体の表面として残る部分を正で返す判定値を作る。
+ *
+ * その面のすぐ内側とすぐ外側で木の内外を調べ、「内側が立体の中・外側が立体の外」に
+ * なっているところだけが結果の表面として残る。削り取る側の葉ではこの内と外が入れ替わる。
+ *
+ * そのプリミティブ自身は判定値を差し替えて内外を表し、ほかのプリミティブは面から
+ * わずかに離した点で評価する。離すのは、積み上げた板の接する面のように、面どうしが
+ * ちょうど重なっている場合に内外を決めるため。
+ */
+const boundaryValue = (
+  node: CsgNode,
+  primitive: PrimitiveName,
+  normalAt: (p: Vector3, faceNormal: Vector3) => Vector3,
+  subtracted: boolean
+) => {
+  const probe = new Vector3()
+  const solidSide = subtracted ? -SURFACE_MARGIN : SURFACE_MARGIN
+  const solidOffset = subtracted ? PROBE_OFFSET : -PROBE_OFFSET
+  return (p: Vector3, faceNormal: Vector3) => {
+    const normal = normalAt(p, faceNormal)
+    const inner = signedInside(
+      node,
+      probe.copy(p).addScaledVector(normal, solidOffset),
+      primitive,
+      solidSide
+    )
+    const outer = signedInside(
+      node,
+      probe.copy(p).addScaledVector(normal, -solidOffset),
+      primitive,
+      -solidSide
+    )
+    return Math.min(inner, -outer)
+  }
+}
+
+/**
+ * 木の表す立体の表面を、葉ごとに切り出して組み立てる。
+ * clipSurface は、判定値の符号が変わる辺で三角形を切り分けて残る側だけを集める
+ */
+const buildSolid = (node: CsgNode) => {
+  const group = new Group()
+  if (node.kind === "leaf") {
+    // まだ演算されていないプリミティブは、半透明の面と輪郭線で置く
+    group.add(new Mesh(surfaces[node.primitive], ghostMaterials[node.primitive]))
+    group.add(new LineSegments(ghostEdges[node.primitive], ghostLineMaterials[node.primitive]))
+    return group
+  }
+  for (const { primitive, subtracted } of collectLeaves(node)) {
+    const geometry = clipSurface(
+      surfaces[primitive],
+      boundaryValue(node, primitive, PRIMITIVES[primitive].normalAt, subtracted),
+      PRIMITIVES[primitive].normalAt,
+      subtracted
+    )
+    group.add(new Mesh(geometry, materials[primitive]))
+  }
+  return group
+}
+
+/** 木に含まれる節点を、葉から根へ適用していく順に並べる */
+const collectOperations = (node: CsgNode, out: CsgNode[] = []) => {
+  if (node.kind === "leaf") return out
+  collectOperations(node.left, out)
+  collectOperations(node.right, out)
+  out.push(node)
+  return out
+}
+
+/** 何段目まで適用したかで決まる、今画面に置かれる立体の集まり */
+const forestAt = (root: CsgNode, order: CsgNode[], step: number) => {
+  const applied = new Set(order.slice(0, step))
+  const roots: CsgNode[] = []
+  const walk = (node: CsgNode) => {
+    // 適用済みの節点は、そこまでを 1 つの立体としてまとめて置く
+    if (node.kind === "leaf" || applied.has(node)) {
+      roots.push(node)
+      return
+    }
+    walk(node.left)
+    walk(node.right)
+  }
+  walk(root)
+  return roots
+}
+
+// まだ 1 つも演算を適用していない状態。2 枚の板と円柱が半透明で置かれる
+for (const node of forestAt(root, collectOperations(root), 0)) scene.add(buildSolid(node))
 ```
 
-直方体と円柱の差集合でできた立体に、さらに球を足しているという手順が、そのまま木の形として残っていることがわかります。
+:::
 
-CSG木が持っているのは、プリミティブのパラメータと集合演算の種類だけです。そのため、複雑な形であってもデータ量は小さく済みます。
+CSG木が持っているのは、:Anki[プリミティブ]のパラメータと:Mark[集合演算]の種類だけです。そのため、複雑な形であってもデータ量は小さく済みます。
 
-形をつくった手順が残っていることは、修正のしやすさにも繋がります。穴の直径を変えたいなら、引き算に使った円柱の半径を書き換えるだけで、穴だけが変わった形が得られます。寸法を見直しながら設計を進めるCADのような場面では、この性質が効いてきます。
+:::Note
+プリミティブの:Anki[パラメータ]（プリミティブが持つ数値）は、直方体なら`3`辺の長さ、円柱なら底面の半径と高さ、球なら半径などがあります。
+:::
 
-## :WithGroupTag[境界の計算]{group="{['CG']}"}
+## :WithGroupTag[CSG表現の適用範囲]{group="{['CG']}"}
 
-CSG木は、形のつくり方を小さなデータで持てる表現でした。ただし、木に書かれているのはあくまで手順であり、できあがった立体の表面がどこにあるのかは含まれていません。
+CSG表現は、:Mark[機械部品]のように、単純な立体の足し引きで形の成り立ちを説明できる対象とは相性がよく、設計の意図がそのままデータの構造として残ります。
 
-画面への描画のように、面を前提とした処理へ渡すには、木をたどって面どうしの交わりを求め、実際に残る面を計算する必要があります。組み合わせた演算の数が増えるほど、この計算は重くなります。
+形をつくった手順をCSG木として残せることは、修正のしやすさにも繋がります。穴の直径を変えたいなら、引き算に使った円柱の半径を書き換えるだけで、穴だけが変わった形が得られます。寸法を見直しながら設計を進める:Mark[CAD]のような場面では、この性質が効いてきます。
 
-## :WithGroupTag[表せる形の範囲]{group="{['CG']}"}
+しかし、画面への描画のように、:Mark[面]を前提とした処理へ渡すには、木をたどって面どうしの交わりを求め、実際に残る面を計算する必要があります。組み合わせた演算の数が増えるほど、この計算は重くなるため、立体の表面そのものを面の集まりとしてデータに持つ他の表現方法が向いている場合もあります。
 
-CSG表現でつくれるのは、プリミティブと集合演算の組み合わせで到達できる形だけです。人や動物の表面のような、滑らかで自由な曲面は、この表現では扱いにくくなります。
-
-逆に、機械部品のように、単純な立体の足し引きで形の成り立ちを説明できる対象とは相性がよく、設計の意図がそのままデータの構造として残ります。滑らかな曲面を含む形をそのまま扱いたい場合には、立体の表面そのものを面の集まりとしてデータに持つ表現方法の方が向きます。
+また、CSG表現で扱えるのは、プリミティブと集合演算の組み合わせで到達できる形だけであり、滑らかな曲面を含む形の表現には向いていません。

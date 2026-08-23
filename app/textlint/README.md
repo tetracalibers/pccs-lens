@@ -9,6 +9,8 @@
 npm run lint:svx            # 検査する（記法＋表記揺れ）
 npm run lint:svx:fix        # 自動修正できるものを、変化が無くなるまで繰り返し直す
 npm run lint:svx:advisory   # 判断が要る指摘を見る（非ブロッキング）
+
+npm run lint:svx:fix -- --rules=math-enum-comma   # ガイドのルールIDで絞って直す
 ```
 
 対象は `src/routes/**/+page.svx`。`.textlintrc.json` で Markdown プラグインの
@@ -18,8 +20,8 @@ npm run lint:svx:advisory   # 判断が要る指摘を見る（非ブロッキ�
 
 | スクリプト | 内容 | 性質 | ベースライン |
 | --- | --- | --- | --- |
-| `npm run lint:svx:syntax` | 記法ルール（自作・12件） | **ブロッキング**（公開時ゲートが見る） | 効く |
-| `npm run lint:svx:advisory` | 判断が要る指摘（自作・5件） | 非ブロッキング | 効かない（全記事） |
+| `npm run lint:svx:syntax` | 記法ルール（自作・13件） | **ブロッキング**（公開時ゲートが見る） | 効く |
+| `npm run lint:svx:advisory` | 判断が要る指摘（自作・6件） | 非ブロッキング | 効かない（全記事） |
 | `npm run lint:svx:notation` | 表記揺れ（`textlint-rule-prh`） | 非ブロッキング | 効かない（全記事） |
 
 **組織原則: 自動修正できない指摘は `syntax` パスに置かない。** 囲む範囲の判断が要るもの・
@@ -49,6 +51,51 @@ npm run lint:svx:fix -- --no-baseline src/routes/cg             # ベースラ�
 npm run lint:svx:fix -- --syntax-only --max-passes 8            # 表記揺れを当てない
 ```
 
+## ルールID（ガイドのルールとの対応）
+
+ガイド（`writing-guides/math-notation-guide.md`）の各ルールには**ルールID**が振られていて、
+**記事を整備するときの指定単位**になる。1つのルールIDを、自動修正する syntax ルールと
+判断待ちを出す advisory ルールの2本で強制していることがあるので、対応は1対Nになる。
+
+| ルールID | `syntax` | `advisory` |
+| --- | --- | --- |
+| `prefer-inline-code` | — | `svx-prefer-inline-code` |
+| `block-math-format` | — | — |
+| `block-math-linebreak` | `svx-block-math-linebreak` | — |
+| `prime-notation` | `svx-math-prime` | — |
+| `action-no-inline-math` | `svx-action-no-inline-math` | `svx-action-math-rewrite` |
+| `numbers-in-inline-code` | `svx-number-in-code` | `svx-code-range-number` |
+| `function-names-in-inline-code` | `svx-math-function-in-code` | `svx-code-range-function` |
+| `no-inline-code-in-labels` | `svx-no-code-in-label` | — |
+| `no-space-around-inline-code` | `svx-no-space-around-code` | — |
+| `space-around-inline-math` | `svx-inline-math-spacing` | — |
+| `math-enum-comma` | `svx-math-enum-comma` | `svx-math-enum-comma-manual` |
+| `article-symbol-unify` | `svx-article-symbol-unify` | — |
+| `sentence-math-unify` | `svx-sentence-math-unify` | — |
+| `block-math-symbol-unify` | `svx-block-math-symbol-unify` | — |
+| `math-promotion-style` | — | `svx-math-unify-manual` |
+| `inline-math-dfrac` | `svx-inline-math-dfrac` | — |
+
+対応表の実体は `lib/rule-ids.js`（`RULES`）で、各ルールのファイルは自分のルールIDを
+`RULE_ID` として持っている。**`block-math-format`（段落全体を `$$...$$` にする）だけは
+textlint で検査していない**（段落の組み方の判断なので、機械的に直せない）。
+
+### ルールIDで絞る
+
+環境変数 `SVX_RULE_IDS`（カンマ区切りのルールID）を渡すと、**そのルールIDのルールだけ**が
+報告する。未設定なら全ルールが有効。
+
+```bash
+npm run lint:svx:fix -- --rules=math-enum-comma src/routes/cg/basics/anti-aliasing/+page.svx
+SVX_RULE_IDS=math-enum-comma npx textlint --rulesdir textlint/rules-advisory --ignore-path /dev/null "src/routes/**/+page.svx"
+```
+
+- `--rules` を渡すと、**表記揺れ（prh）は当たらない**（ルールIDの体系の外にあるため）。
+- **未知のルールIDは読み込み時に例外**になる（黙って0件にならないようにしている）。
+- 絞って回したときは、`syntax` が0件でも他のルールの違反が残りうる。`.textlintignore` の行を
+  外す・タスクリストに `[x]` を付けるといった「整備済み」の記録には使わない
+  （→ `.claude/skills/format-math-notation/SKILL.md`）。
+
 ## 検査するルール（記法・`syntax` パス）
 
 すべて `--fix` で直ります。
@@ -64,6 +111,7 @@ npm run lint:svx:fix -- --syntax-only --max-passes 8            # 表記揺れ�
 | `svx-block-math-linebreak` | ブロック数式の改行を `\\\\`（4つ）に、`\frac` を含むブロックの行末を `\\\\\\\\`（8つ）にする |
 | `svx-no-code-in-label` | `:Anki[]`・`:Mark[]` のラベルとリンクのテキストからインラインコードを外す |
 | `svx-action-no-inline-math` | `:::Action` のインライン数式を、Unicode で書ける範囲でインラインコードにする |
+| `svx-math-enum-comma` | 記号を並べるときは1つのインライン数式にまとめ、カンマで区切る（`$$P_0$$・$$P_1$$` → `$$P_0, P_1$$`） |
 | `svx-block-math-symbol-unify` | ブロック数式を説明する文では、その式の記号をインライン数式で書く |
 | `svx-sentence-math-unify` | インライン数式を含む文では、数式・変数・関数名をインライン数式に統一する |
 | `svx-article-symbol-unify` | 同じ対象を表す記号は記事全体でどちらか一方（数式側）に統一する |
@@ -108,6 +156,26 @@ npm run lint:svx:fix -- --syntax-only --max-passes 8            # 表記揺れ�
   `sRGB`）は、関数名でなければ式と見なしません。ここを緩めると `` `RGB` `` を `$$RGB$$` に
   昇格させてしまいます。
 
+### 中黒で繋いだ数式の並び（記号の並列か、語句の並列か）
+
+`svx-math-enum-comma` は `$$P_0$$・$$P_1$$` を `$$P_0, P_1$$` にまとめます。字面がまったく
+同じでも、**語句の並列はまとめてはいけません**（ガイドの例外）。
+
+- 記号の並列: `両端の点 $$P_0$$・$$P_1$$ と、` → `両端の点 $$P_0, P_1$$ と、`
+- 語句の並列: `$$x$$ 方向に $$a$$・$$y$$ 方向に $$b$$ 進む` → **そのまま**（`$$a, y$$` にしてはいけない）
+
+振り分けは**並びの直後**を見ます（判定は `lib/math-enum.js`）。
+
+- **助詞（`は`・`が`・`を`・`の`・`に`・`へ`・`と`・`で`・`も`・`や`・`か`・`よ`）・約物・行末が
+  続くものだけを自動修正します。** 並び全体が1つの句として扱われている印なので、記号の並列と
+  見なせます。
+- **自立語が続くものは自動修正せず、advisory の `svx-math-enum-comma-manual` が判断待ちとして
+  出します。** 語句の並列は、中黒のあとの記号に「方向に」のような自立語が続く形になるためです。
+- **取りこぼす側に倒しています。** `$$R$$・$$G$$・$$B$$ 各成分` は記号の並列ですが、自立語
+  （`各成分`）が続くので advisory に回ります。本文を壊すより取りこぼすほうを選んでいます。
+- 項にすでにカンマが入っているもの（`$$(r, \theta)$$・$$(x, y)$$`）も、まとめ方の判断が要るので
+  advisory に回します。
+
 ## 検査するルール（`advisory` パス）
 
 **どれも自動修正しません。** 判断は `/format-math-notation` が引き受けます。
@@ -119,6 +187,7 @@ npm run lint:svx:fix -- --syntax-only --max-passes 8            # 表記揺れ�
 | `svx-math-unify-manual` | 昇格の対象だが組み直しに判断が要るもの（`` `a = dy / dx` `` → `\dfrac`） |
 | `svx-action-math-rewrite` | `:::Action` の、Unicode では書けない式。日本語への言い換えが要る |
 | `svx-prefer-inline-code` | 降格候補（3つの統一ルールに拾われなかった `$$…$$`） |
+| `svx-math-enum-comma-manual` | 中黒で繋いだ数式の並びのうち、記号の並列か語句の並列かの判断が要るもの |
 
 ### 対象外にしているもの
 

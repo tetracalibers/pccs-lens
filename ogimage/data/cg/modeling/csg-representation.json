@@ -1,0 +1,12 @@
+{
+  "route": "cg/modeling/csg-representation",
+  "title": "CSG表現",
+  "titleLines": [
+    "CSG表現"
+  ],
+  "crumbs": [
+    "CGと画像処理",
+    "モデリング"
+  ],
+  "figure": "assets/cg/modeling/csg-representation/figure.png"
+}

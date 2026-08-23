@@ -3,43 +3,356 @@ layout: guide-content
 title: ファーガソン曲線 # CG 3-4-3
 
 group: ["CG"]
+visual: true
 
 draft: true
 ---
 
-ベジェ曲線の形は、制御点をどこに置くかで決まりました。曲線を繋いで長い形を作る場面では、繋ぎ目の点と、そこで曲線が進む向きを、そのまま条件として与えられる方が扱いやすくなります。
+<script>
+  import CanvasWrapper from '$lib/demo/CanvasWrapper.svelte'
+  import EndpointConditionsDemo from '$lib/demo/threejs/modeling/ferguson-curve/endpoint-conditions/EndpointConditionsDemo.svelte'
+  import HermiteFunctionsDemo from '$lib/demo/threejs/modeling/ferguson-curve/hermite-functions/HermiteFunctionsDemo.svelte'
+  import TangentChoiceDemo from '$lib/demo/threejs/modeling/ferguson-curve/tangent-choice/TangentChoiceDemo.svelte'
+  import TangentMagnitudeDemo from '$lib/demo/threejs/modeling/ferguson-curve/tangent-magnitude/TangentMagnitudeDemo.svelte'
+</script>
+
+[ベジェ曲線](/cg/modeling/bezier-curve-surface/)の形は制御点をどこに置くかだけで決まりましたが、曲線を繋いで長い形状を表す場面では、繋ぎ目の点と、そこで曲線が進む向きを、そのまま条件として与えられる方が扱いやすくなります。
 
 ## :WithGroupTag[端点で与える条件]{group="{['CG']}"}
 
-曲線が端点でどちらへ進むかを表しているのは、[接ベクトル](/cg/modeling/bezier-curve-properties/)の向きです。ベジェ曲線ではこの接ベクトルが制御点の配置から決まるため、向きも大きさも、制御点の置き方を通してしか指定できません。そこで、端点の位置と接ベクトルを条件として直接与え、それを満たす曲線を求めます。
+曲線が端点でどちらへ進むかを表しているのは、[端点の接ベクトル](/cg/modeling/bezier-curve-properties/)の向きです。ベジェ曲線ではこの接ベクトルが制御点の配置から決まるため、向きも大きさも、制御点の置き方を通して指定することしかできません。そこで、端点の:Anki[位置]と:Anki[接ベクトル]を条件として直接与え、それを満たす曲線を求めることを考えます。
 
-両端の:Anki[位置ベクトル]（原点から端点へ向かうベクトル）を $$P_0$$・$$P_1$$、それぞれの端点での接ベクトルを $$V_0$$・$$V_1$$ とします。この`4`つを条件として与えて決まる`3`次の[多項式曲線](/cg/modeling/parametric-curve-surface/)が:Anki[ファーガソン曲線]です。
+両端の端点の:Anki[位置ベクトル]（原点からその点へ向かうベクトル）を $$P_0, P_1$$、それぞれの端点での接ベクトルを $$V_0, V_1$$ とします。
 
-パラメータ $$t$$ は`0`から`1`までを動き、$$t = 0$$ が始点、$$t = 1$$ が終点にあたります。
+:::Action{fixme}
+次の点に着目して、デモを観察してみよう
 
-`4`つの条件を図の上に置くと、両端の点と、そこから伸びる`2`本の矢印になります。
-
-:::Todo
-ファーガソン曲線の`4`つの条件を示す図。両端の点 $$P_0$$・$$P_1$$ と、そこから伸びる接ベクトル $$V_0$$・$$V_1$$ を矢印で描き、その`4`つを満たす`3`次曲線を`1`本重ねる。$$V_0$$ は始点から曲線が出ていく向き、$$V_1$$ は終点に達したときに曲線が向いている向きにあたることが読み取れるようにする。
+- 両端の点をドラッグしても、曲線が必ずその`2`点を通ること
+- 始点の接ベクトルの先をドラッグすると、曲線が始点から出ていく向きがどう変わるか
+- 終点の接ベクトルの先をドラッグすると、曲線が終点で向いている向きがどう変わるか
 :::
 
-## :WithGroupTag[係数の求め方]{group="{['CG']}"}
+<CanvasWrapper>
+  <EndpointConditionsDemo />
+</CanvasWrapper>
 
-`3`次の多項式曲線は、パラメータの`0`乗から`3`乗までにかかる`4`つの係数で表せます。
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 両端の点の初期位置。左下から右上へ向かう配置にして、
+// 始点で上へ出ていき終点で下を向いて着く形が、初期表示から読み取れるようにする
+const INITIAL_POINTS: [number, number][] = [
+  [-2.7, -1],
+  [2, 0.7]
+]
+
+// 両端の接ベクトルの初期値。V₀ は始点から右上へ立ち上がる向き、
+// V₁ は終点から右下へ抜けていく向きにとる
+const INITIAL_TANGENTS: [number, number][] = [
+  [1.9, 2.4],
+  [1.5, -1.5]
+]
+
+// 4 つのエルミート関数。両端の位置 P₀, P₁ と接ベクトル V₀, V₁ にかかる重みで、
+// H₀ = 2t³ − 3t² + 1、H₁ = −2t³ + 3t²、H₂ = t³ − 2t² + t、H₃ = t³ − t²
+const hermite = (t: number) => {
+  const square = t * t
+  const cube = square * t
+
+  return [2 * cube - 3 * square + 1, -2 * cube + 3 * square, cube - 2 * square + t, cube - square]
+}
+
+// それぞれを t で微分したもの。曲線が進む向きを求めるのに使う
+const hermiteDerivative = (t: number) => {
+  const square = t * t
+
+  return [6 * square - 6 * t, -6 * square + 6 * t, 3 * square - 4 * t + 1, 3 * square - 2 * t]
+}
+
+// ファーガソン曲線上の点 C(t) = H₀(t)P₀ + H₁(t)P₁ + H₂(t)V₀ + H₃(t)V₁。
+// 与える条件は両端の位置と接ベクトルの 4 つだけで、制御点は現れない
+const fergusonPoint = (conditions: Vector3[], t: number, target: Vector3) => {
+  const weights = hermite(t)
+  target.set(0, 0, 0)
+  conditions.forEach((condition, i) => target.addScaledVector(condition, weights[i]))
+
+  return target
+}
+
+// 曲線がその点で進む向き C′(t)。エルミート関数を微分したものを重みに使う
+const fergusonTangent = (conditions: Vector3[], t: number, target: Vector3) => {
+  const weights = hermiteDerivative(t)
+  target.set(0, 0, 0)
+  conditions.forEach((condition, i) => target.addScaledVector(condition, weights[i]))
+
+  return target
+}
+
+// 頂点が動く折れ線。頂点を作り直さず、座標だけ書き換える
+const createPolyline = (count: number, z: number) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(count * 3), 3)
+  geometry.setAttribute("position", positions)
+
+  return {
+    geometry,
+    set: (index: number, point: Vector3) => positions.setXYZ(index, point.x, point.y, z),
+    commit: () => {
+      positions.needsUpdate = true
+      geometry.computeBoundingSphere()
+    }
+  }
+}
+
+// 始点から終点へ向かう矢印。両端が動くので、線と円錐の位置を毎回書き換える
+const createArrow = (color: string) => {
+  const shaftPositions = new Float32BufferAttribute(new Float32Array(6), 3)
+  const shaftGeometry = new BufferGeometry().setAttribute("position", shaftPositions)
+  const shaft = new LineSegments(shaftGeometry, new LineBasicMaterial({ color }))
+
+  const headGeometry = new ConeGeometry(ARROW_RADIUS, ARROW_HEIGHT, 16)
+  const head = new Mesh(headGeometry, new MeshBasicMaterial({ color }))
+
+  const group = new Group()
+  group.add(shaft, head)
+
+  const direction = new Vector3()
+  const shaftEnd = new Vector3()
+
+  return {
+    object: group,
+    setEnds: (from: Vector3, to: Vector3) => {
+      const length = direction.subVectors(to, from).length()
+      // 接ベクトルの先が端点に重なると向きが決まらないので、そのときは矢印を出さない
+      group.visible = length > ARROW_HEIGHT
+      if (!group.visible) return
+      direction.divideScalar(length)
+
+      // 円錐の底面が線の先端に来るよう、矢印の頭の高さのぶん手前で線を止める
+      shaftEnd.copy(to).addScaledVector(direction, -ARROW_HEIGHT)
+      shaftPositions.setXYZ(0, from.x, from.y, LAYER_TANGENT)
+      shaftPositions.setXYZ(1, shaftEnd.x, shaftEnd.y, LAYER_TANGENT)
+      shaftPositions.needsUpdate = true
+
+      // ConeGeometry の原点は円錐の中心なので、半分ぶん戻した位置に置く
+      head.position.set(to.x, to.y, LAYER_TANGENT).addScaledVector(direction, -ARROW_HEIGHT / 2)
+      head.quaternion.setFromUnitVectors(CONE_UP, direction)
+    }
+  }
+}
+
+// 曲線の上に置く、進む向きを示す矢印の頭だけの印
+const createFlowMarker = (color: string) => {
+  const geometry = new ConeGeometry(FLOW_RADIUS, FLOW_HEIGHT, 16)
+  const mesh = new Mesh(geometry, new MeshBasicMaterial({ color }))
+
+  return {
+    object: mesh,
+    // direction は長さ 1 に揃えた向きを渡す
+    setAt: (position: Vector3, direction: Vector3) => {
+      mesh.position.set(position.x, position.y, LAYER_FLOW)
+      mesh.quaternion.setFromUnitVectors(CONE_UP, direction)
+    }
+  }
+}
+
+const points = INITIAL_POINTS.map(([x, y]) => new Vector3(x, y, 0))
+const tangents = INITIAL_TANGENTS.map(([x, y]) => new Vector3(x, y, 0))
+
+// 接ベクトルの先。P + V の位置にあり、掴むと接ベクトルの向きと大きさが変わる
+const tips = points.map(() => new Vector3())
+
+// 曲線を決める 4 つの条件。この順で H₀ 〜 H₃ の重みがかかる
+const conditions = [points[0], points[1], tangents[0], tangents[1]]
+
+// 4 つの条件から求めた曲線。矢印より手前に置き、接している様子が隠れないようにする
+const curve = createPolyline(CURVE_SEGMENTS + 1, LAYER_CURVE)
+scene.add(new Line(curve.geometry, new LineBasicMaterial({ color: CURVE_COLOR })))
+
+// 両端の接ベクトル。始点では曲線が出ていく向き、終点では曲線が向いている向きにあたる
+const arrows = tangents.map(() => {
+  const arrow = createArrow(TANGENT_COLOR)
+  scene.add(arrow.object)
+
+  return arrow
+})
+
+// 曲線の上に置く、t が増える向き（始点から終点へ）を示す印
+const flowMarkers = FLOW_MARKER_T.map(() => {
+  const marker = createFlowMarker(CURVE_COLOR)
+  scene.add(marker.object)
+
+  return marker
+})
+
+// 両端の点と接ベクトルの先。どちらもドラッグで動かせる
+const pointGeometry = new SphereGeometry(POINT_RADIUS, 16, 12)
+const tipGeometry = new SphereGeometry(TIP_RADIUS, 16, 12)
+const pointMaterial = new MeshBasicMaterial({ color: POINT_COLOR })
+const tipMaterial = new MeshBasicMaterial({ color: TANGENT_COLOR })
+
+const pointMeshes = points.map(() => {
+  const mesh = new Mesh(pointGeometry, pointMaterial)
+  scene.add(mesh)
+
+  return mesh
+})
+const tipMeshes = tips.map(() => {
+  const mesh = new Mesh(tipGeometry, tipMaterial)
+  scene.add(mesh)
+
+  return mesh
+})
+
+// 掴める点は 4 つ。前半が両端の点、後半が接ベクトルの先
+const handles = [...points, ...tips]
+
+const sample = new Vector3()
+const direction = new Vector3()
+
+// 両端の点と接ベクトルの今の値から、曲線・矢印を引き直す
+const refresh = () => {
+  points.forEach((point, i) => {
+    tips[i].addVectors(point, tangents[i])
+    pointMeshes[i].position.set(point.x, point.y, LAYER_POINT)
+    tipMeshes[i].position.set(tips[i].x, tips[i].y, LAYER_POINT)
+    // 接ベクトルは、始点では P₀ から、終点では P₁ から生やす
+    arrows[i].setEnds(point, tips[i])
+  })
+
+  for (let i = 0; i <= CURVE_SEGMENTS; i++) {
+    curve.set(i, fergusonPoint(conditions, i / CURVE_SEGMENTS, sample))
+  }
+  curve.commit()
+
+  FLOW_MARKER_T.forEach((t, i) => {
+    fergusonPoint(conditions, t, sample)
+    const length = fergusonTangent(conditions, t, direction).length()
+    // 接ベクトルが打ち消し合って向きが決まらない位置では、印を出さない
+    flowMarkers[i].object.visible = length > EPSILON
+    if (flowMarkers[i].object.visible) {
+      flowMarkers[i].setAt(sample, direction.divideScalar(length))
+    }
+  })
+}
+
+refresh()
+
+// 両端の点と接ベクトルの先はドラッグで動かす。
+// ポインタの位置は、図がすべて載っている z = 0 の平面との交点として求める
+const canvas = renderer.domElement
+const raycaster = new Raycaster()
+const pointer = new Vector2()
+const dragPlane = new Plane(new Vector3(0, 0, 1), 0)
+const hit = new Vector3()
+
+const toScenePoint = (event: PointerEvent) => {
+  const bounds = canvas.getBoundingClientRect()
+  pointer.x = ((event.clientX - bounds.left) / bounds.width) * 2 - 1
+  pointer.y = -((event.clientY - bounds.top) / bounds.height) * 2 + 1
+  raycaster.setFromCamera(pointer, camera)
+
+  return raycaster.ray.intersectPlane(dragPlane, hit)
+}
+
+// ポインタに最も近い掴める点の番号。掴める距離に無ければ null
+const pick = (world: Vector3) => {
+  let target: number | null = null
+  let nearest = PICK_RADIUS
+
+  for (let index = 0; index < handles.length; index++) {
+    const handle = handles[index]
+    const distance = Math.hypot(world.x - handle.x, world.y - handle.y)
+    if (distance < nearest) {
+      nearest = distance
+      target = index
+    }
+  }
+
+  return target
+}
+
+let dragging: number | null = null
+
+canvas.addEventListener("pointerdown", (event) => {
+  const world = toScenePoint(event)
+  if (!world) return
+  dragging = pick(world)
+  if (dragging === null) return
+
+  // canvas の外まで指が出ても動かし続けられるようにする（pointerup で自動的に解ける）
+  canvas.setPointerCapture(event.pointerId)
+  invalidate()
+})
+
+canvas.addEventListener("pointermove", (event) => {
+  if (dragging === null) return
+  const world = toScenePoint(event)
+  if (!world) return
+
+  // 動かせる範囲に収めて置き直す
+  const x = Math.min(Math.max(world.x, DRAG_MIN_X), DRAG_MAX_X)
+  const y = Math.min(Math.max(world.y, DRAG_MIN_Y), DRAG_MAX_Y)
+  if (dragging < points.length) {
+    // 端点を動かす。接ベクトルはそのままなので、矢印は端点に付いて動く
+    points[dragging].set(x, y, 0)
+  } else {
+    // 接ベクトルの先を動かす。接ベクトルは、先の位置から端点の位置を引いたもの
+    const i = dragging - points.length
+    tangents[i].set(x - points[i].x, y - points[i].y, 0)
+  }
+  refresh()
+  // 描画は要求されたときだけ走る。Tweakpane や OrbitControls を経由しない操作なので、
+  // ここで次のフレームを頼む
+  invalidate()
+})
+
+canvas.addEventListener("pointerup", () => {
+  dragging = null
+})
+```
+
+:::
+
+置いた制御点の間を[補間](/cg/modeling/bezier-curve-surface/)して曲線にするのがベジェ曲線でしたが、ここで補間したいのは、両端の:Anki[位置ベクトル]と、そこでの:Anki[接ベクトル]です。
+
+両端の位置ベクトルの補間とは、`2`つの点の間を埋めて曲線にすることです。接ベクトルの補間は、曲線上を進むにつれて接ベクトルが、始点の $$V_0$$ から終点の $$V_1$$ へ連続的に移り変わっていくことを指します。どちらも、[ベジェ曲線](/cg/modeling/bezier-curve-surface/)のときと同様に、0から1へと動くパラメータ$$t$$を使って補間を行います。
+
+このような端点の情報を使って、パラメータ$$t$$の:Anki[3]次多項式で表される曲線が:Anki[ファーガソン曲線]です。
+
+## :WithGroupTag[曲線の多項式の係数]{group="{['CG']}"}
+
+`3`次多項式曲線上の点の座標は、パラメータ$$t$$の`0`乗から`3`乗までにかかる`4`つの係数で表せます。
 
 $$
 C(t) = a_0 + a_1 t + a_2 t^2 + a_3 t^3
 $$
 
-$$a_0$$ から $$a_3$$ は座標の成分をまとめて持つベクトルで、以降の計算は成分ごとに同じ形で成り立ちます。与える条件が`4`つ、決めるべき係数も`4`つあるため、条件の側から係数が一通りに決まります。
+:::Note
+$$a_0, a_1, a_2, a_3$$ は座標の値を組として持ちます。`3`次元空間内で描かれる曲線であれば、$$x, y, z$$ の`3`つずつです。
 
-接ベクトルは、曲線上の点の位置を $$t$$ について微分したものでした。
+$$
+a_0 = \begin{pmatrix} a_{0x} \\\\ a_{0y} \\\\ a_{0z} \end{pmatrix}, \quad
+a_1 = \begin{pmatrix} a_{1x} \\\\ a_{1y} \\\\ a_{1z} \end{pmatrix}, \quad
+a_2 = \begin{pmatrix} a_{2x} \\\\ a_{2y} \\\\ a_{2z} \end{pmatrix}, \quad
+a_3 = \begin{pmatrix} a_{3x} \\\\ a_{3y} \\\\ a_{3z} \end{pmatrix}
+$$
+
+それぞれ、上から1番目の数字が$$x$$座標、2番目の数字が$$y$$座標、3番目の数字が$$z$$座標です。
+曲線上の点の $$x$$ 座標を求めるときは、1番上の行にある $$a_{0x}, a_{1x}, a_{2x}, a_{3x}$$ だけを使います。$$y, z$$座標も同様に、行として横に並ぶ数値を使って求められます。
+:::
+
+### 端点の情報の数式化
+
+端点の接ベクトルどうしを補間するには、まず接ベクトルを数式で表す必要があります。
+[ベジェ曲線・曲面の数学的性質](/cg/modeling/bezier-curve-properties/)で解説したように、接ベクトルは、曲線上の点の位置$$C(t)$$を $$t$$ について:Anki[微分]したものでした。
 
 $$
 C^{\prime}(t) = a_1 + 2a_2 t + 3a_3 t^2
 $$
 
-$$t = 0$$ と $$t = 1$$ を代入すると、`4`つの条件はそれぞれ係数についての式になります。
+目的は、:Mark[両端]での位置と接ベクトルを条件として与え、それを満たす曲線を求めることです。
+そこで、位置を表す$$C(t)$$と接ベクトルを表す$$C^{\prime}(t)$$に、端点に一致するときの$$t$$の値$$t = 0$$ と $$t = 1$$ を代入します。
 
 $$
 \begin{align*}
@@ -50,7 +363,17 @@ C^{\prime}(1) &= a_1 + 2a_2 + 3a_3 = V_1
 \end{align*}
 $$
 
-$$a_0$$ と $$a_1$$ は、この時点で $$P_0$$ と $$V_0$$ に決まります。残る $$a_2$$ と $$a_3$$ は、`2`番目と`4`番目の式へ $$a_0$$・$$a_1$$ を入れて整理すると、次の`2`つの式で結ばれます。
+$$C(0)$$と$$C^{\prime}(0)$$の計算結果から、$$a_0$$ と $$a_1$$ はこの時点で $$P_0$$ と $$V_0$$ に決まりました。
+残る $$a_2$$ と $$a_3$$ は、`2`番目と`4`番目の式へ $$a_0 = P_0, a_1 = V_0$$ を代入して求めます。
+
+$$
+\begin{align*}
+P_0 + V_0 + a_2 + a_3 &= P_1 \\\\
+V_0 + 2a_2 + 3a_3 &= V_1
+\end{align*}
+$$
+
+整理すると、次の`2`つの式が得られます。
 
 $$
 \begin{align*}
@@ -59,7 +382,7 @@ a_2 + a_3 &= P_1 - P_0 - V_0 \\\\
 \end{align*}
 $$
 
-これを解くと、`4`つの係数がすべて端点の条件だけで書けます。
+この連立方程式を解くと、`4`つの係数はすべて:Anki[端点]の情報だけを使った式で書くことができます。
 
 $$
 \begin{align*}
@@ -70,21 +393,41 @@ a_3 &= 2P_0 - 2P_1 + V_0 + V_1
 \end{align*}
 $$
 
-## :WithGroupTag[エルミート関数]{group="{['CG']}"}
+:::Foldable{title="連立方程式を解く過程"}
+連立方程式に含まれる未知の項は $$a_2, a_3$$ の`2`つなので、片方を消せばもう片方が求まります。まず、$$a_2$$ の係数を揃えるため、`1`番目の式 $$a_2 + a_3 = P_1 - P_0 - V_0$$ の両辺を`2`倍します。
 
-係数の式には $$P_0$$・$$P_1$$・$$V_0$$・$$V_1$$ が繰り返し現れます。そこで係数を曲線の式へ代入し、この`4`つのベクトルごとにまとめ直します。
+$$
+\begin{align*}
+2a_2 + 2a_3 &= 2P_1 - 2P_0 - 2V_0 \\\\
+2a_2 + 3a_3 &= V_1 - V_0
+\end{align*}
+$$
+
+下の式から上の式を引くと、$$a_2$$ が消えて $$a_3$$ だけが残ります。
+
+$$
+a_3 = 2P_0 - 2P_1 + V_0 + V_1
+$$
+
+求まった $$a_3$$ を`1`番目の式へ戻すと、$$a_2$$ も端点の情報だけで書けます。
+
+$$
+\begin{align*}
+a_2 &= (P_1 - P_0 - V_0) - (2P_0 - 2P_1 + V_0 + V_1) \\\\
+&= -3P_0 + 3P_1 - 2V_0 - V_1
+\end{align*}
+$$
+:::
+
+## :WithGroupTag[エルミート関数と端点の補間]{group="{['CG']}"}
+
+こうして得られた係数を曲線を表す多項式へ代入し、ベクトル$$P_0,P_1,V_0,V_1$$ごとにまとめ直します。
 
 $$
 C(t) = (2t^3 - 3t^2 + 1)P_0 + (-2t^3 + 3t^2)P_1 + (t^3 - 2t^2 + t)V_0 + (t^3 - t^2)V_1
 $$
 
-`4`つのベクトルにかかっているのは、どれも $$t$$ の`3`次式です。これらを $$H_0(t)$$ から $$H_3(t)$$ と書くと、曲線は条件のベクトルを重み付きで足し合わせた形になります。
-
-$$
-C(t) = H_0(t)P_0 + H_1(t)P_1 + H_2(t)V_0 + H_3(t)V_1
-$$
-
-重みにあたる`4`つの関数は、次の通りです。
+`4`つのベクトル$$P_0,P_1,V_0,V_1$$にかかっているのは、どれも $$t$$ の`3`次式です。これらを $$H_0(t),H_1(t), H_2(t),H_3(t)$$ と書くことにします。
 
 $$
 \begin{align*}
@@ -95,49 +438,430 @@ H_3(t) &= t^3 - t^2
 \end{align*}
 $$
 
-点の間を補って曲線にする操作が[補間](/cg/modeling/bezier-curve-surface/)でした。両端の位置に加えて微分の値まで条件に含めた補間をエルミート補間といい、そこで重みを担うこの`4`つの関数を:Anki[エルミート関数]といいます。
+これで、曲線上の点$$C(t)$$は、ベクトル$$P_0,P_1,V_0,V_1$$を重み付きで足し合わせた形で表せます。
+
+$$
+C(t) = H_0(t)P_0 + H_1(t)P_1 + H_2(t)V_0 + H_3(t)V_1
+$$
+
+始点となる端点を表す情報が$$P_0,V_0$$、終点となる端点を表す情報が$$P_1,V_1$$なので、この式はそのどちらに重み$$H(t)$$を偏らせるかを表しています。
+$$t$$ が`0`から`1`まで動く間に、重み$$H(t)$$の配分が少しずつ移り変わり、それにつれて点が始点から終点へ動いていくため、これは曲線の中間の点を求めることができる:Anki[補間]の式です。
 
 :::Note
-ファーガソン曲線という名前は航空機の形状設計にこの曲線を用いたファーガソンに、エルミート関数はこの形の補間を扱った数学者エルミートにちなんでいます。`3`次のエルミート補間で表されることから、`3`次エルミート曲線とも呼ばれます。
+この「重み」という考え方は、[高次ベジェ曲線](/cg/modeling/bezier-curve-surface/)のセクションでも解説しています。
 :::
 
-$$t = 0$$ を代入すると、$$H_0(0)$$ だけが`1`で残りの`3`つは`0`になり、$$t = 1$$ では $$H_1(1)$$ だけが`1`になります。微分の側も同じで、$$H_2^{\prime}(0)$$ と $$H_3^{\prime}(1)$$ だけが`1`で、それ以外は`0`です。
+こうして、両端の位置に加えて微分の値まで条件に含めた補間を:Anki[エルミート補間]といい、そこで重みを担う`4`つの関数$$H_0(t),H_1(t), H_2(t),H_3(t)$$を:Anki[エルミート関数]といいます。
 
-`4`つの関数は、対応する条件が効く端点でだけ`1`になり、他の`3`つの条件のところでは`0`になります。この作りのおかげで、条件は互いを崩さずに曲線へ反映されます。$$V_0$$ だけを取り替えても、両端の位置と終点の接ベクトルは与えたままに保たれます。
+:::Action{fixme}
+`t`を`0`と`1`の両端に寄せて、次の点に着目してみよう
 
-:::Todo
-`4`つのエルミート関数のグラフ。横軸に $$t$$（`0`から`1`）、縦軸に関数の値をとり、$$H_0$$ から $$H_3$$ の`4`本を`1`つの座標へ重ねて描く。$$H_0$$ が $$t = 0$$ で`1`、$$H_1$$ が $$t = 1$$ で`1`になること、$$H_2$$・$$H_3$$ は両端で`0`でありながら、それぞれ $$t = 0$$・$$t = 1$$ での傾きが`1`になっていることが読み取れるようにする。
+- 位置にかかる`2`本の重みは、片方だけが`1`になること
+- 接ベクトルにかかる`2`本の重みはどちらも`0`になる一方、傾きの欄では片方が`1`になること
 :::
 
-### 行列による表し方
+<CanvasWrapper>
+  <HermiteFunctionsDemo />
+</CanvasWrapper>
 
-`4`つの関数の係数を並べると、曲線の式は`1`つの行列を挟んだ形に書けます。
+:::Foldable{title="Three.jsによる実装概要"}
 
-$$
-C(t) =
-\begin{pmatrix} 1 & t & t^2 & t^3 \end{pmatrix}
-\begin{pmatrix}
-1 & 0 & 0 & 0 \\\\
-0 & 0 & 1 & 0 \\\\
--3 & 3 & -2 & -1 \\\\
-2 & -2 & 1 & 1
-\end{pmatrix}
-\begin{pmatrix} P_0 \\\\ P_1 \\\\ V_0 \\\\ V_1 \end{pmatrix}
-$$
+```ts
+// 4 つのエルミート関数。両端の位置 P₀, P₁ と接ベクトル V₀, V₁ にかかる重みで、
+// H₀ = 2t³ − 3t² + 1、H₁ = −2t³ + 3t²、H₂ = t³ − 2t² + t、H₃ = t³ − t²
+const hermite = (t: number) => {
+  const square = t * t
+  const cube = square * t
 
-行列の中身は定数だけで、端点の条件も $$t$$ も入っていません。`4`つの条件をこの順に並べて用意すれば、どの曲線に対しても同じ行列をかけて曲線上の点を求められます。
+  return [2 * cube - 3 * square + 1, -2 * cube + 3 * square, cube - 2 * square + t, cube - square]
+}
+
+// グラフの座標（横軸 t・縦軸 重み）を、シーンの座標に移す
+const toScene = (t: number, value: number, z: number, target: Vector3) =>
+  target.set(t * PLOT_WIDTH, value * PLOT_HEIGHT, z)
+
+// グラフ全体を canvas の中央に寄せる
+const graph = new Group()
+graph.position.copy(GRAPH_OFFSET)
+scene.add(graph)
+
+// 軸と目盛り。横軸は t の 0〜1、縦軸は重みを測る
+const axisPoints: Vector3[] = [
+  new Vector3(0, 0, LAYER_AXIS),
+  new Vector3(PLOT_WIDTH + AXIS_OVERSHOOT, 0, LAYER_AXIS),
+  // 縦軸は、H₃ が負の値をとるぶんだけ 0 より下まで伸ばす
+  new Vector3(0, Y_MIN * PLOT_HEIGHT, LAYER_AXIS),
+  new Vector3(0, PLOT_HEIGHT + AXIS_OVERSHOOT, LAYER_AXIS)
+]
+for (const value of [0.5, 1]) {
+  axisPoints.push(
+    new Vector3(value * PLOT_WIDTH, 0, LAYER_AXIS),
+    new Vector3(value * PLOT_WIDTH, -TICK_LENGTH, LAYER_AXIS),
+    new Vector3(0, value * PLOT_HEIGHT, LAYER_AXIS),
+    new Vector3(-TICK_LENGTH, value * PLOT_HEIGHT, LAYER_AXIS)
+  )
+}
+const axisGeometry = new BufferGeometry().setFromPoints(axisPoints)
+graph.add(new LineSegments(axisGeometry, new LineBasicMaterial({ color: AXIS_COLOR })))
+
+// 重みが 1 になる高さの補助線。H₀ が t = 0 で、H₁ が t = 1 でここに届くことを読み取らせる
+const guideGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(0, PLOT_HEIGHT, LAYER_GUIDE),
+  new Vector3(PLOT_WIDTH, PLOT_HEIGHT, LAYER_GUIDE)
+])
+const guideMaterial = new LineBasicMaterial({
+  color: AXIS_COLOR,
+  transparent: true,
+  opacity: GUIDE_OPACITY
+})
+graph.add(new LineSegments(guideGeometry, guideMaterial))
+
+// 4 本のエルミート関数。色は曲線と、今の t での重みを示す点で共有する
+const curveMaterials = CURVE_COLORS.map((color) => new LineBasicMaterial({ color }))
+curveMaterials.forEach((material, i) => {
+  const points: Vector3[] = []
+  for (let step = 0; step <= CURVE_SEGMENTS; step++) {
+    const t = step / CURVE_SEGMENTS
+    points.push(toScene(t, hermite(t)[i], LAYER_CURVE, new Vector3()))
+  }
+  graph.add(new Line(new BufferGeometry().setFromPoints(points), material))
+})
+
+// 傾きが 1 になっている端点の接線。H₂ は t = 0 から前へ、H₃ は t = 1 から後ろへ伸ばす。
+// どちらも「横に進んだぶんだけ縦に動く」線なので、両端で重みが 0 でありながら
+// 曲線が軸から立ち上がる（軸へ落ちる）勢いを持っていることが目で読める
+const TANGENT_GUIDES = [
+  { basis: 2, from: [0, 0], to: [TANGENT_GUIDE_SPAN, TANGENT_GUIDE_SPAN] },
+  { basis: 3, from: [1 - TANGENT_GUIDE_SPAN, -TANGENT_GUIDE_SPAN], to: [1, 0] }
+]
+
+TANGENT_GUIDES.forEach(({ basis, from, to }) => {
+  const geometry = new BufferGeometry().setFromPoints([
+    toScene(from[0], from[1], LAYER_TANGENT, new Vector3()),
+    toScene(to[0], to[1], LAYER_TANGENT, new Vector3())
+  ])
+  // 曲線と混ざらないよう破線にする
+  const material = new LineDashedMaterial({
+    color: CURVE_COLORS[basis],
+    dashSize: DASH_SIZE,
+    gapSize: GAP_SIZE,
+    transparent: true,
+    opacity: TANGENT_GUIDE_OPACITY
+  })
+  const line = new Line(geometry, material)
+  // 破線の刻みは頂点ごとの「線に沿った距離」で決まるので、作ったあとに測る
+  line.computeLineDistances()
+  graph.add(line)
+})
+
+// 今の t を示す縦線。長さは変わらないので、横へ動かすだけでよい
+const t = 0.3
+const readoutGeometry = new BufferGeometry().setFromPoints([
+  new Vector3(0, Y_MIN * PLOT_HEIGHT, LAYER_READOUT),
+  new Vector3(0, PLOT_HEIGHT, LAYER_READOUT)
+])
+const readoutLine = new LineSegments(
+  readoutGeometry,
+  new LineBasicMaterial({ color: READOUT_COLOR })
+)
+readoutLine.position.x = t * PLOT_WIDTH
+graph.add(readoutLine)
+
+// 今の t で各エルミート関数が取る重みを示す点
+const dotGeometry = new SphereGeometry(DOT_RADIUS, 16, 12)
+const values = hermite(t)
+const scratch = new Vector3()
+
+CURVE_COLORS.forEach((color, i) => {
+  const dot = new Mesh(dotGeometry, new MeshBasicMaterial({ color }))
+  dot.position.copy(toScene(t, values[i], LAYER_POINT, scratch))
+  graph.add(dot)
+})
+```
+
+:::
+
+:Mark[ファーガソン曲線]は、`3`次のエルミート補間で表されることから、:Anki[3次エルミート曲線]と呼ばれることもあります。
 
 ## :WithGroupTag[曲線の接続]{group="{['CG']}"}
 
-`1`つのファーガソン曲線が受け持つのは、`2`つの端点の間だけです。長い形は、こうした`1`本ずつの曲線（セグメント）を繋いだ[複合曲線](/cg/modeling/parametric-curve-surface/)として作ります。繋ぎ目に折れ目を残さないために揃えるのは、端点の位置と:Anki[接ベクトル]の`2`つです。
+`1`本のファーガソン曲線は、`2`つの端点の間を補間するものです。
+複雑な長い曲線の場合は、こうした`1`本ずつの曲線（セグメント）を繋いだ:Anki[複合曲線]として作ります。
 
-ファーガソン曲線では、この`2`つがそのまま条件です。前のセグメントの終点で使った値を、次のセグメントの始点の条件へ渡すだけで済みます。制御点で形を与える場合、端点の接ベクトルは制御点の並びから決まります。そのため、繋ぎ目を挟む`3`つの制御点を一直線に並べる必要があります。
+制御点で形を与えるベジェ曲線では、端点の接ベクトルは制御点の並びから決まり、直接は指定できません。繋ぎ目で位置と接ベクトルを揃えるには、繋ぎ目の制御点を両側のセグメントで共有し、その両隣を含む`3`つの制御点を一直線に並べることになります。
 
-ただし、渡すべき接ベクトルそのものは自分で決めることになります。通したい点の並びが決まっていても、各点で曲線をどちらへどれだけ向けるかを与えなければ、曲線は`1`本に定まりません。
+ファーガソン曲線では、端点の位置と接ベクトルがそのまま条件です。繋ぎ目で揃えるには、前のセグメントの終点で使った値を、次のセグメントの始点の値として使うだけで済みます。
+
+ただし、条件として与える接ベクトルそのものは、自分で決めることになります。通したい点の並びが決まっていても、各点で曲線をどちらへどれだけ向けるかを与えなければ、曲線は`1`本に定まりません。
+
+:::Action{fixme}
+接ベクトルの先をドラッグして、次の点に着目してみよう
+
+- 曲線の形が変わっても、`3`つの点は通り続けること
+- 薄く描いた曲線は、同じ`3`点に別の接ベクトルを与えたもので、形だけが違うこと
+:::
+
+<CanvasWrapper>
+  <TangentChoiceDemo />
+</CanvasWrapper>
+
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 通したい点の並び。この 3 点は動かせない（曲線が 1 本に定まらないのは
+// 点が決まっていても接ベクトルが決まらないから、という筋を保つため）
+const VIA_POINTS: [number, number][] = [
+  [-2.4, -0.7],
+  [0, 0.8],
+  [2.4, -0.5]
+]
+
+// 操作できる曲線の接ベクトルの初期値。
+// 点の並びに素直に沿った、山も谷も浅い形になる選び方にしておく
+const INITIAL_TANGENTS: [number, number][] = [
+  [1.6, 1],
+  [1.9, 0.1],
+  [1.4, -0.9]
+]
+
+// 薄く重ねる、もう 1 本の曲線の接ベクトル。
+// 繋ぎ目の接ベクトルだけを大きく下へ、両端を上へ振った選び方にしている
+const ALTERNATIVE_TANGENTS: [number, number][] = [
+  [1.6, 3.1],
+  [1.9, -3.4],
+  [1.4, 1.2]
+]
+
+// 4 つのエルミート関数。両端の位置 P₀, P₁ と接ベクトル V₀, V₁ にかかる重みで、
+// H₀ = 2t³ − 3t² + 1、H₁ = −2t³ + 3t²、H₂ = t³ − 2t² + t、H₃ = t³ − t²
+const hermite = (t: number) => {
+  const square = t * t
+  const cube = square * t
+
+  return [2 * cube - 3 * square + 1, -2 * cube + 3 * square, cube - 2 * square + t, cube - square]
+}
+
+// ファーガソン曲線上の点 C(t) = H₀(t)P₀ + H₁(t)P₁ + H₂(t)V₀ + H₃(t)V₁
+const fergusonPoint = (conditions: Vector3[], t: number, target: Vector3) => {
+  const weights = hermite(t)
+  target.set(0, 0, 0)
+  conditions.forEach((condition, i) => target.addScaledVector(condition, weights[i]))
+
+  return target
+}
+
+// 頂点が動く折れ線。頂点を作り直さず、座標だけ書き換える
+const createPolyline = (count: number, z: number) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(count * 3), 3)
+  geometry.setAttribute("position", positions)
+
+  return {
+    geometry,
+    set: (index: number, point: Vector3) => positions.setXYZ(index, point.x, point.y, z),
+    commit: () => {
+      positions.needsUpdate = true
+      geometry.computeBoundingSphere()
+    }
+  }
+}
+
+// 始点から終点へ向かう矢印。両端が動くので、線と円錐の位置を毎回書き換える
+const createArrow = (color: string) => {
+  const shaftPositions = new Float32BufferAttribute(new Float32Array(6), 3)
+  const shaftGeometry = new BufferGeometry().setAttribute("position", shaftPositions)
+  const shaft = new LineSegments(shaftGeometry, new LineBasicMaterial({ color }))
+
+  const headGeometry = new ConeGeometry(ARROW_RADIUS, ARROW_HEIGHT, 16)
+  const head = new Mesh(headGeometry, new MeshBasicMaterial({ color }))
+
+  const group = new Group()
+  group.add(shaft, head)
+
+  const direction = new Vector3()
+  const shaftEnd = new Vector3()
+
+  return {
+    object: group,
+    setEnds: (from: Vector3, to: Vector3) => {
+      const length = direction.subVectors(to, from).length()
+      // 接ベクトルの先が点に重なると向きが決まらないので、そのときは矢印を出さない
+      group.visible = length > ARROW_HEIGHT
+      if (!group.visible) return
+      direction.divideScalar(length)
+
+      // 円錐の底面が線の先端に来るよう、矢印の頭の高さのぶん手前で線を止める
+      shaftEnd.copy(to).addScaledVector(direction, -ARROW_HEIGHT)
+      shaftPositions.setXYZ(0, from.x, from.y, LAYER_TANGENT)
+      shaftPositions.setXYZ(1, shaftEnd.x, shaftEnd.y, LAYER_TANGENT)
+      shaftPositions.needsUpdate = true
+
+      // ConeGeometry の原点は円錐の中心なので、半分ぶん戻した位置に置く
+      head.position.set(to.x, to.y, LAYER_TANGENT).addScaledVector(direction, -ARROW_HEIGHT / 2)
+      head.quaternion.setFromUnitVectors(CONE_UP, direction)
+    }
+  }
+}
+
+const points = VIA_POINTS.map(([x, y]) => new Vector3(x, y, 0))
+const tangents = INITIAL_TANGENTS.map(([x, y]) => new Vector3(x, y, 0))
+
+// 接ベクトルの先。P + V の位置にあり、掴むと接ベクトルの向きと大きさが変わる
+const tips = points.map(() => new Vector3())
+
+// セグメントごとの 4 つの条件。繋ぎ目の接ベクトルは前後のセグメントで同じものを使うので、
+// 繋ぎ目では位置も接ベクトルも揃い、角のない繋がりになる
+const segmentConditions = points
+  .slice(0, -1)
+  .map((_, i) => [points[i], points[i + 1], tangents[i], tangents[i + 1]])
+
+// 同じ点の並びに別の接ベクトルを与えた曲線。操作しないので作った時点で描き切る
+const alternativeTangents = ALTERNATIVE_TANGENTS.map(([x, y]) => new Vector3(x, y, 0))
+const alternativeMaterial = new LineBasicMaterial({
+  color: ALTERNATIVE_COLOR,
+  transparent: true,
+  opacity: ALTERNATIVE_OPACITY
+})
+segmentConditions.forEach((_, i) => {
+  const sampled: Vector3[] = []
+  const conditions = [points[i], points[i + 1], alternativeTangents[i], alternativeTangents[i + 1]]
+  for (let step = 0; step <= CURVE_SEGMENTS; step++) {
+    const point = fergusonPoint(conditions, step / CURVE_SEGMENTS, new Vector3())
+    sampled.push(point.setZ(LAYER_ALTERNATIVE))
+  }
+  scene.add(new Line(new BufferGeometry().setFromPoints(sampled), alternativeMaterial))
+})
+
+// 操作できる曲線。セグメントごとに 1 本の折れ線として引き直す
+const curveMaterial = new LineBasicMaterial({ color: CURVE_COLOR })
+const segments = segmentConditions.map(() => {
+  const polyline = createPolyline(CURVE_SEGMENTS + 1, LAYER_CURVE)
+  scene.add(new Line(polyline.geometry, curveMaterial))
+
+  return polyline
+})
+
+// 各点で与えている接ベクトル。繋ぎ目の 1 本は前後のセグメントが共有している
+const arrows = tangents.map(() => {
+  const arrow = createArrow(TANGENT_COLOR)
+  scene.add(arrow.object)
+
+  return arrow
+})
+
+// 通したい点。与えられた条件なので動かせない
+const pointGeometry = new SphereGeometry(POINT_RADIUS, 16, 12)
+const pointMaterial = new MeshBasicMaterial({ color: POINT_COLOR })
+points.forEach((point) => {
+  const mesh = new Mesh(pointGeometry, pointMaterial)
+  mesh.position.set(point.x, point.y, LAYER_POINT)
+  scene.add(mesh)
+})
+
+// 接ベクトルの先。ドラッグで動かせる
+const tipGeometry = new SphereGeometry(TIP_RADIUS, 16, 12)
+const tipMaterial = new MeshBasicMaterial({ color: TANGENT_COLOR })
+const tipMeshes = tips.map(() => {
+  const mesh = new Mesh(tipGeometry, tipMaterial)
+  scene.add(mesh)
+
+  return mesh
+})
+
+const sample = new Vector3()
+
+// 各点と接ベクトルの今の値から、操作できる曲線と矢印を引き直す
+const refresh = () => {
+  points.forEach((point, i) => {
+    tips[i].addVectors(point, tangents[i])
+    tipMeshes[i].position.set(tips[i].x, tips[i].y, LAYER_POINT)
+    arrows[i].setEnds(point, tips[i])
+  })
+
+  segments.forEach((segment, i) => {
+    for (let step = 0; step <= CURVE_SEGMENTS; step++) {
+      segment.set(step, fergusonPoint(segmentConditions[i], step / CURVE_SEGMENTS, sample))
+    }
+    segment.commit()
+  })
+}
+
+refresh()
+
+// 接ベクトルの先はドラッグで動かす。
+// ポインタの位置は、図がすべて載っている z = 0 の平面との交点として求める
+const canvas = renderer.domElement
+const raycaster = new Raycaster()
+const pointer = new Vector2()
+const dragPlane = new Plane(new Vector3(0, 0, 1), 0)
+const hit = new Vector3()
+
+const toScenePoint = (event: PointerEvent) => {
+  const bounds = canvas.getBoundingClientRect()
+  pointer.x = ((event.clientX - bounds.left) / bounds.width) * 2 - 1
+  pointer.y = -((event.clientY - bounds.top) / bounds.height) * 2 + 1
+  raycaster.setFromCamera(pointer, camera)
+
+  return raycaster.ray.intersectPlane(dragPlane, hit)
+}
+
+// ポインタに最も近い接ベクトルの先の番号。掴める距離に無ければ null
+const pick = (world: Vector3) => {
+  let target: number | null = null
+  let nearest = PICK_RADIUS
+
+  for (let index = 0; index < tips.length; index++) {
+    const distance = Math.hypot(world.x - tips[index].x, world.y - tips[index].y)
+    if (distance < nearest) {
+      nearest = distance
+      target = index
+    }
+  }
+
+  return target
+}
+
+let dragging: number | null = null
+
+canvas.addEventListener("pointerdown", (event) => {
+  const world = toScenePoint(event)
+  if (!world) return
+  dragging = pick(world)
+  if (dragging === null) return
+
+  // canvas の外まで指が出ても動かし続けられるようにする（pointerup で自動的に解ける）
+  canvas.setPointerCapture(event.pointerId)
+  invalidate()
+})
+
+canvas.addEventListener("pointermove", (event) => {
+  if (dragging === null) return
+  const world = toScenePoint(event)
+  if (!world) return
+
+  // 動かせる範囲に収めて置き直す。接ベクトルは、先の位置から点の位置を引いたもので、
+  // 点そのものは動かさない
+  const x = Math.min(Math.max(world.x, DRAG_MIN_X), DRAG_MAX_X)
+  const y = Math.min(Math.max(world.y, DRAG_MIN_Y), DRAG_MAX_Y)
+  tangents[dragging].set(x - points[dragging].x, y - points[dragging].y, 0)
+  refresh()
+  // 描画は要求されたときだけ走る。Tweakpane や OrbitControls を経由しない操作なので、
+  // ここで次のフレームを頼む
+  invalidate()
+})
+
+canvas.addEventListener("pointerup", () => {
+  dragging = null
+})
+```
+
+:::
 
 ## :WithGroupTag[ベジェ曲線との対応]{group="{['CG']}"}
 
-[ベジェ曲線・曲面の数学的性質](/cg/modeling/bezier-curve-properties/)で学んだように、ベジェ曲線の端点での接ベクトルは、端の制御点とその隣の制御点を結んだベクトルを次数倍したものでした。`3`次ベジェ曲線の制御点を $$Q_0$$ から $$Q_3$$ と書くと、両端の接ベクトルは次のようになります。
+次に決めるべきは、その接ベクトルの向きと大きさです。手がかりになるのが、`3`次ベジェ曲線の制御点との対応です。
+
+[ベジェ曲線・曲面の数学的性質](/cg/modeling/bezier-curve-properties/)で学んだように、ベジェ曲線の端点での接ベクトルは、端の制御点とその隣の制御点を結んだベクトルを次数倍したものでした。`3`次ベジェ曲線の制御点を $$Q_0, Q_1, Q_2, Q_3$$ と書くと、両端の接ベクトルは次のようになります。
 
 $$
 \begin{align*}
@@ -146,7 +870,18 @@ C^{\prime}(1) &= 3(Q_3 - Q_2)
 \end{align*}
 $$
 
-ファーガソン曲線の条件と見比べると、$$C^{\prime}(0)$$ が $$V_0$$、$$C^{\prime}(1)$$ が $$V_1$$ にあたります。両端の位置は $$Q_0$$・$$Q_3$$ がそのまま受け持ちます。この対応から、`4`つの条件を`4`つの制御点へ書き換えられます。
+ファーガソン曲線では、$$C^{\prime}(0)$$ が $$V_0$$、$$C^{\prime}(1)$$ が $$V_1$$ を表しているのでした。
+
+$$
+\begin{align*}
+V_0 &= 3(Q_1 - Q_0) \\\\
+V_1 &= 3(Q_3 - Q_2)
+\end{align*}
+$$
+
+そして、ベジェ曲線の両端の制御点 $$Q_0, Q_3$$ は、そのままファーガソン曲線の両端の点$$P_0, P_1$$として設定することができます。
+
+これらの対応から、ファーガソン曲線の端点の情報$$P_0,P_1,V_0,V_1$$を使って、ベジェ曲線の4つの制御点$$Q_0, Q_1, Q_2, Q_3$$を書き換えられます。
 
 $$
 \begin{align*}
@@ -157,16 +892,213 @@ Q_3 &= P_1
 \end{align*}
 $$
 
-逆に、制御点が分かっているときは $$V_0 = 3(Q_1 - Q_0)$$、$$V_1 = 3(Q_3 - Q_2)$$ として接ベクトルが求まります。つまり、ファーガソン曲線と`3`次ベジェ曲線が表す曲線は同じで、違うのは形を決めるために何を与えるかだけです。
+この式は、端点の位置 $$P_0, P_1$$ と接ベクトル $$V_0, V_1$$ が分かっているときに、対応するベジェ曲線の制御点を求めるためのものです。
 
-:::Note
-同じ曲線を表しているため、ベジェ曲線について見た[凸包性](/cg/modeling/bezier-curve-properties/)やアフィン不変性も、対応する制御点を求め直せばそのまま当てはまります。
+逆に、制御点が分かっているときは $$V_0 = 3(Q_1 - Q_0)$$、$$V_1 = 3(Q_3 - Q_2)$$ として接ベクトルが求まります。
+
+端点の情報と制御点は、どちらからでも互いを計算できます。つまり、ファーガソン曲線で描ける曲線には必ず同じ形のベジェ曲線があり、その逆も成り立ちます。表せる曲線の範囲は同じで、違うのは形を決めるために何を与えるか（端点の位置と接ベクトルか、`4`つの制御点か）だけです。
+
+同じ曲線を表しているため、ベジェ曲線で成り立つ[凸包性やアフィン不変性](/cg/modeling/bezier-curve-properties/)も、対応する制御点を求め直せばそのまま当てはまります。
+
+### 接ベクトルによる形状のコントロール
+
+先ほどの式を振り返ると、始点に近い制御点$$Q_1$$は $$P_0$$ から $$V_0$$ の`3`分の`1`だけ進んだ位置、終点に近い制御点$$Q_2$$は $$P_1$$ から $$V_1$$ の`3`分の`1`だけ戻った位置にあります。
+
+$$
+\begin{align*}
+Q_1 &= P_0 + \frac{1}{3}V_0 \\\\\\\\
+Q_2 &= P_1 - \frac{1}{3}V_1
+\end{align*}
+$$
+
+つまり、接ベクトル$$V_0,V_1$$を大きくするほど制御点は端点から遠ざかり、曲線は端点で向いた方向へ長く引っ張られます。大きさを極端にとると、曲線が自分自身と交わることもあります。
+
+:::Action{fixme}
+接ベクトルの大きさを動かして、次の点に着目してみよう
+
+- 制御点が端点から離れていくこと。離れる距離はいつも大きさの`3`分の`1`であること
+- 曲線が端点で向いた方向へ長く引っ張られ、外側へ膨らんでいくこと
+- 大きさを上げきると曲線が自分自身と交わり、パネルの「自己交差」が「あり」に変わること
 :::
 
-始点側の制御点は $$P_0$$ から $$V_0$$ の`3`分の`1`だけ進んだ位置、終点側の制御点は $$P_1$$ から $$V_1$$ の`3`分の`1`だけ戻った位置にあります。接ベクトルを大きくするほど制御点は端点から遠ざかり、曲線は端点で向いた方向へ長く引っ張られます。大きさを極端にとると、曲線が自分自身と交わることもあります。
+<CanvasWrapper>
+  <TangentMagnitudeDemo />
+</CanvasWrapper>
 
-:::Todo
-接ベクトルの大きさによる形の違いを示す図。両端の点と接ベクトルの向きを固定し、大きさを`3`段階（小・中・大）変えた`3`本のファーガソン曲線を並べる。各曲線には対応するベジェ曲線の制御点 $$Q_1$$・$$Q_2$$ を重ねて描き、接ベクトルが大きいほど制御点が端点から離れ、曲線が外側へ膨らむことが読み取れるようにする。
+:::Foldable{title="Three.jsによる実装概要"}
+
+```ts
+// 両端の点。大きさだけを比べる図なので、横に並べて動かさない
+const ENDPOINTS: [number, number][] = [
+  [-1, -0.4],
+  [1, -0.4]
+]
+
+// 両端の接ベクトルの向き。長さは大きさとして別に与えるので、ここでは向きだけを決める。
+// 縦 1 に対して横 √3（弦から 30 度）で、始点では右上へ出ていき、終点では右下へ抜けていく。
+// この角度だと、大きさが弦の 3.5 倍（およそ 6.9）を超えたところで曲線が自分自身と交わる
+const DIRECTIONS: [number, number][] = [
+  [1.732, 1],
+  [1.732, -1]
+]
+
+// 4 つのエルミート関数。両端の位置 P₀, P₁ と接ベクトル V₀, V₁ にかかる重みで、
+// H₀ = 2t³ − 3t² + 1、H₁ = −2t³ + 3t²、H₂ = t³ − 2t² + t、H₃ = t³ − t²
+const hermite = (t: number) => {
+  const square = t * t
+  const cube = square * t
+
+  return [2 * cube - 3 * square + 1, -2 * cube + 3 * square, cube - 2 * square + t, cube - square]
+}
+
+// ファーガソン曲線上の点 C(t) = H₀(t)P₀ + H₁(t)P₁ + H₂(t)V₀ + H₃(t)V₁
+const fergusonPoint = (conditions: Vector3[], t: number, target: Vector3) => {
+  const weights = hermite(t)
+  target.set(0, 0, 0)
+  conditions.forEach((condition, i) => target.addScaledVector(condition, weights[i]))
+
+  return target
+}
+
+// 頂点が動く折れ線。頂点を作り直さず、座標だけ書き換える
+const createPolyline = (count: number, z: number) => {
+  const geometry = new BufferGeometry()
+  const positions = new Float32BufferAttribute(new Float32Array(count * 3), 3)
+  geometry.setAttribute("position", positions)
+
+  return {
+    geometry,
+    set: (index: number, point: Vector3) => positions.setXYZ(index, point.x, point.y, z),
+    commit: () => {
+      positions.needsUpdate = true
+      geometry.computeBoundingSphere()
+    }
+  }
+}
+
+// 始点から終点へ向かう矢印。長さが変わるので、線と円錐の位置を毎回書き換える
+const createArrow = (color: string) => {
+  const shaftPositions = new Float32BufferAttribute(new Float32Array(6), 3)
+  const shaftGeometry = new BufferGeometry().setAttribute("position", shaftPositions)
+  const shaft = new LineSegments(shaftGeometry, new LineBasicMaterial({ color }))
+
+  const headGeometry = new ConeGeometry(ARROW_RADIUS, ARROW_HEIGHT, 16)
+  const head = new Mesh(headGeometry, new MeshBasicMaterial({ color }))
+
+  const group = new Group()
+  group.add(shaft, head)
+
+  const direction = new Vector3()
+  const shaftEnd = new Vector3()
+
+  return {
+    object: group,
+    setEnds: (from: Vector3, to: Vector3) => {
+      const length = direction.subVectors(to, from).length()
+      // 大きさを絞りきると矢印の頭が入らないので、そのときは矢印を出さない
+      group.visible = length > ARROW_HEIGHT
+      if (!group.visible) return
+      direction.divideScalar(length)
+
+      // 円錐の底面が線の先端に来るよう、矢印の頭の高さのぶん手前で線を止める
+      shaftEnd.copy(to).addScaledVector(direction, -ARROW_HEIGHT)
+      shaftPositions.setXYZ(0, from.x, from.y, LAYER_TANGENT)
+      shaftPositions.setXYZ(1, shaftEnd.x, shaftEnd.y, LAYER_TANGENT)
+      shaftPositions.needsUpdate = true
+
+      // ConeGeometry の原点は円錐の中心なので、半分ぶん戻した位置に置く
+      head.position.set(to.x, to.y, LAYER_TANGENT).addScaledVector(direction, -ARROW_HEIGHT / 2)
+      head.quaternion.setFromUnitVectors(CONE_UP, direction)
+    }
+  }
+}
+
+const endpoints = ENDPOINTS.map(([x, y]) => new Vector3(x, y, 0))
+
+// 接ベクトルの向き（長さ 1）。大きさをかけて接ベクトルにする
+const directions = DIRECTIONS.map(([x, y]) => new Vector3(x, y, 0).normalize())
+
+const tangents = directions.map(() => new Vector3())
+const tips = directions.map(() => new Vector3())
+
+// 対応するベジェ曲線の制御点。Q₁ = P₀ + V₀/3、Q₂ = P₁ − V₁/3 なので、
+// 端点から接ベクトルの 3 分の 1 だけ進んだ（戻った）位置になる
+const controls = directions.map(() => new Vector3())
+
+// 曲線を決める 4 つの条件。接ベクトルは大きさを変えるたびに書き換わる
+const conditions = [endpoints[0], endpoints[1], tangents[0], tangents[1]]
+
+// 制御多角形。P₀ → Q₁ → Q₂ → P₁ の順に結び、曲線と描き分けるため破線にする
+const polygon = createPolyline(4, LAYER_POLYGON)
+const polygonMaterial = new LineDashedMaterial({
+  color: POLYGON_COLOR,
+  dashSize: DASH_SIZE,
+  gapSize: GAP_SIZE
+})
+const polygonLine = new Line(polygon.geometry, polygonMaterial)
+scene.add(polygonLine)
+
+// 4 つの条件から求めた曲線
+const curve = createPolyline(CURVE_SEGMENTS + 1, LAYER_CURVE)
+scene.add(new Line(curve.geometry, new LineBasicMaterial({ color: CURVE_COLOR })))
+
+// 両端の接ベクトル。向きは固定で、大きさだけが変わる
+const arrows = directions.map(() => {
+  const arrow = createArrow(TANGENT_COLOR)
+  scene.add(arrow.object)
+
+  return arrow
+})
+
+// 両端の点。大きさを比べる図なので動かさない
+const endpointGeometry = new SphereGeometry(ENDPOINT_RADIUS, 16, 12)
+const endpointMaterial = new MeshBasicMaterial({ color: ENDPOINT_COLOR })
+endpoints.forEach((endpoint) => {
+  const mesh = new Mesh(endpointGeometry, endpointMaterial)
+  mesh.position.set(endpoint.x, endpoint.y, LAYER_POINT)
+  scene.add(mesh)
+})
+
+// 対応するベジェ曲線の制御点。大きさに応じて端点から離れていく
+const controlGeometry = new SphereGeometry(CONTROL_RADIUS, 16, 12)
+const controlMaterial = new MeshBasicMaterial({ color: CONTROL_COLOR })
+const controlMeshes = controls.map(() => {
+  const mesh = new Mesh(controlGeometry, controlMaterial)
+  scene.add(mesh)
+
+  return mesh
+})
+
+// いまの大きさから、接ベクトル・矢印・制御点・制御多角形・曲線を引き直す
+const magnitude = 2
+const samples = Array.from({ length: CURVE_SEGMENTS + 1 }, () => new Vector3())
+
+directions.forEach((direction, i) => {
+  tangents[i].copy(direction).multiplyScalar(magnitude)
+  tips[i].addVectors(endpoints[i], tangents[i])
+  arrows[i].setEnds(endpoints[i], tips[i])
+
+  // Q₁ は P₀ から V₀ の 3 分の 1 だけ進んだ位置、Q₂ は P₁ から V₁ の 3 分の 1 だけ戻った位置。
+  // 始点側は足し、終点側は引くので、向きを 1 本目だけ正にとる
+  const sign = i === 0 ? 1 : -1
+  controls[i].copy(endpoints[i]).addScaledVector(tangents[i], sign / 3)
+  controlMeshes[i].position.set(controls[i].x, controls[i].y, LAYER_POINT)
+})
+
+polygon.set(0, endpoints[0])
+polygon.set(1, controls[0])
+polygon.set(2, controls[1])
+polygon.set(3, endpoints[1])
+polygon.commit()
+// 破線の刻みは頂点ごとの「線に沿った距離」で決まるため、頂点を動かすたびに測り直す
+polygonLine.computeLineDistances()
+
+for (let step = 0; step <= CURVE_SEGMENTS; step++) {
+  curve.set(step, fergusonPoint(conditions, step / CURVE_SEGMENTS, samples[step]))
+}
+curve.commit()
+```
+
 :::
 
-繋ぎ目が滑らかに見えるかどうかに効くのは、接ベクトルの向きです。大きさの方は、対応する制御点の位置として見ながら、形に合わせて決められます。
+曲線の接続で残っていたのは、条件として与える接ベクトルを自分で決めなければならないという点でした。繋ぎ目では、両側のセグメントで接ベクトルの向きを揃えれば、滑らかに見えます。大きさまで揃える必要はなく、対応する制御点の位置として見ながら、形に合わせて決められます。

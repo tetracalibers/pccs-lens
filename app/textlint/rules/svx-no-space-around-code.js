@@ -13,9 +13,13 @@
  */
 
 import { isSpace } from "../lib/svx.js"
+import { forRule } from "../lib/rule-ids.js"
 
 /** 行頭からコードまでがマークアップ（リスト・引用・インデント）だけか */
 const isMarkupPrefix = (prefix) => /^\s*(?:[-*+]|\d+\.|>)?\s*$/.test(prefix)
+
+/** ガイドのルールID（→ writing-guides/math-notation-guide.md） */
+const RULE_ID = "no-space-around-inline-code"
 
 const reporter = (context) => {
   const { Syntax, RuleError, report, getSource, fixer } = context
@@ -61,7 +65,9 @@ const reporter = (context) => {
   }
 }
 
+const rule = forRule(RULE_ID, reporter)
+
 export default {
-  linter: reporter,
-  fixer: reporter
+  linter: rule,
+  fixer: rule
 }

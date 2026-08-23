@@ -12,6 +12,7 @@
 import { promotionRule } from "../lib/math-scope.js"
 
 export default promotionRule(
+  "sentence-math-unify",
   "sentence",
   (promotion) =>
     `インライン数式を含む文なので、\`${promotion.content}\` もインライン数式で書いてください（$$${promotion.math}$$）。`

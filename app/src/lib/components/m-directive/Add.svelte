@@ -12,7 +12,7 @@
   /* GitHub の diff の追加行に倣い、緑の帯と行頭の `+` で「これから加筆する記述」を示す */
   .add {
     margin: 1.05rem 0;
-    padding: 0.35rem 0.75rem;
+    padding: 0.5rem 0.75rem 0.4rem;
     border-radius: 0 2px 2px 0;
     background: light-dark(#e6ffec, rgb(63 185 80 / 0.24));
     font-size: 0.8rem;
@@ -22,22 +22,26 @@
     font-size: 0.8rem;
   }
 
-  /* diff のガター相当の `+` を、各段落の行頭にぶら下げる */
-  .add :global(p) {
+  .add :global(> *) {
     position: relative;
-    margin: 0;
     padding-inline-start: 1.25rem;
     font-size: inherit;
     line-height: inherit;
     color: var(--color-body);
   }
 
-  .add :global(p)::before {
+  .add :global(p) {
+    margin: 0;
+  }
+
+  /* diff のガター相当の `+` を、各段落の行頭にぶら下げる */
+  .add :global(p:first-child)::before {
     content: "+";
     position: absolute;
     inset-inline-start: 0;
     font-family: var(--font-mono-base), var(--font-ja-base);
     color: light-dark(#1a7f37, #3fb950);
+    line-height: 1.5;
   }
 
   .add :global(p + p) {

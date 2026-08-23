@@ -20,10 +20,14 @@
 
 import { maskForProseRules } from "../lib/svx.js"
 import { unitAt } from "../lib/math-tokens.js"
+import { forRule } from "../lib/rule-ids.js"
 
 /** 数値（整数・小数） */
 const NUMBER = /[0-9０-９]+(?:[.．][0-9０-９]+)*/g
 const LATIN = /[A-Za-z]/
+
+/** ガイドのルールID（→ writing-guides/math-notation-guide.md） */
+const RULE_ID = "numbers-in-inline-code"
 
 const reporter = (context) => {
   const { Syntax, RuleError, report, getSource, fixer } = context
@@ -55,7 +59,9 @@ const reporter = (context) => {
   }
 }
 
+const rule = forRule(RULE_ID, reporter)
+
 export default {
-  linter: reporter,
-  fixer: reporter
+  linter: rule,
+  fixer: rule
 }

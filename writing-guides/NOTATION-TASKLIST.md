@@ -290,18 +290,18 @@
 ## モデリング／形状モデル（`cg/modeling.yaml` #shape-models）
 
 - [x] `/cg/modeling/shape-model-overview`
-- [draft] `/cg/modeling/csg-representation`
-- [draft] `/cg/modeling/boundary-representation`
+- [x] `/cg/modeling/csg-representation`
 - [draft] `/cg/modeling/sweep-representation`
+- [draft] `/cg/modeling/boundary-representation`
 - [ページ未作成] 境界表現のデータ構造
-- [ページ未作成] オイラー表現
+- [draft] `/cg/modeling/euler-operations`
 
 ## モデリング／曲線と曲面（`cg/modeling.yaml` #curves-surfaces）
 
 - [ ] `/cg/modeling/curve-surface-equations`
-- [x] `/cg/modeling/quadratic-curve`
+- [ ] `/cg/modeling/quadratic-curve`
 - [x] `/cg/modeling/bezier-curve-surface`
-- [x] `/cg/modeling/bezier-curve-properties`
+- [ ] `/cg/modeling/bezier-curve-properties`
 - [draft] `/cg/modeling/ferguson-curve`
 - [ページ未作成] 双3次クーンズ曲面
 - [draft] `/cg/modeling/b-spline-curve-surface`

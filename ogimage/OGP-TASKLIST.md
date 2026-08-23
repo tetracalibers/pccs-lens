@@ -356,11 +356,11 @@
 ## CGと画像処理（nested） — 記事：モデリング（`cg/modeling.yaml`）
 
 - [x] `/cg/modeling/shape-model-overview`
-- [draft] `/cg/modeling/csg-representation`
-- [draft] `/cg/modeling/boundary-representation`
+- [x] `/cg/modeling/csg-representation`
 - [draft] `/cg/modeling/sweep-representation`
+- [draft] `/cg/modeling/boundary-representation`
 - [ページ未作成] 境界表現のデータ構造
-- [ページ未作成] オイラー表現
+- [draft] `/cg/modeling/euler-operations`
 - [x] `/cg/modeling/curve-surface-equations`
 - [x] `/cg/modeling/quadratic-curve`
 - [x] `/cg/modeling/bezier-curve-surface`

@@ -501,11 +501,11 @@
 ## CGと画像処理 — モデリング／形状モデル（`cg/modeling.yaml` #shape-models）
 
 - [x] `/cg/modeling/shape-model-overview`
-- [draft] `/cg/modeling/csg-representation`
-- [draft] `/cg/modeling/boundary-representation`
+- [ ] `/cg/modeling/csg-representation`
 - [draft] `/cg/modeling/sweep-representation`
+- [draft] `/cg/modeling/boundary-representation`
 - [ページ未作成] 境界表現のデータ構造
-- [ページ未作成] オイラー表現
+- [draft] `/cg/modeling/euler-operations`
 
 ## CGと画像処理 — モデリング／曲線と曲面（`cg/modeling.yaml` #curves-surfaces）
 
