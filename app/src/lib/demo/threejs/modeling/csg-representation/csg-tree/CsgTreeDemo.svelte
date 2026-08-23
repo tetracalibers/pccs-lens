@@ -8,7 +8,7 @@
 </script>
 
 <ThreeDemoCanvas
-  ariaLabel="CSG木と、その木が表す立体を並べた3次元表示。左は葉に大小2枚の板と円柱、節点に集合演算の記号を置いた木構造の図で、右はそこまでの演算を適用した立体。まだ演算されていないプリミティブは半透明で置かれる。木を切り替えると途中の形は変わるが、最後はどちらも1段目に穴のあいた2段の階段になる"
+  ariaLabel="CSG木と、その木が表す立体を並べた3次元表示。左は葉に大小2枚の板と円柱、節点に集合演算の記号を置いた木構造の図で、右はそこまでの演算を適用した立体。まだ演算されていないプリミティブは半透明で置かれる。木を切り替えると途中の形は変わるが、最後はどちらも1段目に穴の開いた2段の階段になる"
   createScene={createCsgTreeScene}
   {params}
   aspectRatio="16 / 9"
@@ -17,7 +17,7 @@
   buildPane={(pane, p) => {
     pane.addBinding(p, "tree", {
       label: "CSG木",
-      options: { 積んでから穴をあける: "stackFirst", 穴をあけてから積む: "drillFirst" }
+      options: { 積んでから穴を開ける: "stackFirst", 穴を開けてから積む: "drillFirst" }
     })
     pane.addBinding(p, "step", { min: 0, max: 2, step: 1, label: "演算を進める" })
     pane.addBinding(p, "current", { readonly: true, label: "今適用した演算" })

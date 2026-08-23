@@ -7,6 +7,7 @@ import {
   DirectionalLight,
   DoubleSide,
   EdgesGeometry,
+  Euler,
   Float32BufferAttribute,
   Group,
   LineBasicMaterial,
@@ -16,6 +17,7 @@ import {
   MeshStandardMaterial,
   PerspectiveCamera,
   PlaneGeometry,
+  Quaternion,
   Scene,
   Vector3
 } from "three"
@@ -49,7 +51,7 @@ const LOWER_HALF = new Vector3(1, 0.175, 0.6)
 const UPPER_CENTER = new Vector3(0.5, 0.175, 0)
 const UPPER_HALF = new Vector3(0.5, 0.175, 0.6)
 
-/** 穴をあける円柱。上の板が載っていない左半分を貫き、上下に大きく突き出す */
+/** 穴を開ける円柱。上の板が載っていない左半分を貫き、上下に大きく突き出す */
 const CYLINDER_CENTER = new Vector3(-0.5, -0.175, 0)
 const CYLINDER_RADIUS = 0.28
 const CYLINDER_HEIGHT = 1.3
@@ -90,6 +92,13 @@ const PRIMITIVE_COLORS: Record<PrimitiveName, string> = {
   cylinder: "#f57fc4"
 }
 const GHOST_OPACITY = 0.16
+
+/**
+ * 半透明のプリミティブに輪郭線を描く稜線の、隣り合う面のなす角のしきい値（度）。
+ * 円柱の側面のように分割の継ぎ目でしかない稜線を線にすると、面ではなく網に見えてしまう。
+ * 直方体の稜線や円柱の縁だけが残るように、分割の細かさより十分大きく取る。
+ */
+const GHOST_EDGE_ANGLE = 30
 const LIGHT_COLOR = "#ffffff"
 
 /** CSG木の図の色。適用済み・今適用した演算・未適用で塗り分ける */
@@ -233,7 +242,7 @@ const collectOperations = (node: CsgNode, out: CsgNode[] = []) => {
 }
 
 /**
- * 先に板を積み上げて階段にしてから、1 段目に穴をあける木。
+ * 先に板を積み上げて階段にしてから、1 段目に穴を開ける木。
  * (下の板 ∪ 上の板) − 円柱
  */
 const createStackFirstTree = () =>
@@ -246,7 +255,7 @@ const createStackFirstTree = () =>
   )
 
 /**
- * 先に 1 枚目の板へ穴をあけてから、2 枚目を積み上げて階段にする木。
+ * 先に 1 枚目の板へ穴を開けてから、2 枚目を積み上げて階段にする木。
  * (下の板 − 円柱) ∪ 上の板
  */
 const createDrillFirstTree = () =>
@@ -466,7 +475,7 @@ const createBadgeTexture = (symbol: string) => {
 
 type NodeState = "done" | "current" | "pending"
 
-export const createCsgTreeScene = ({ scene, params }: SceneContext) => {
+export const createCsgTreeScene = ({ scene, camera, params }: SceneContext) => {
   const created: { dispose: () => void }[] = []
   const track = <T extends { dispose: () => void }>(item: T) => {
     created.push(item)
@@ -536,8 +545,49 @@ export const createCsgTreeScene = ({ scene, params }: SceneContext) => {
         depthWrite: false
       })
     )
-    ghostEdges[name] = track(new EdgesGeometry(surfaces[name], 1))
+    ghostEdges[name] = track(new EdgesGeometry(surfaces[name], GHOST_EDGE_ANGLE))
     ghostLineMaterials[name] = track(new LineBasicMaterial({ color: PRIMITIVE_COLORS[name] }))
+  }
+
+  // 半透明の円柱に残す、側面の母線 2 本。縁の円だけでは柱がどこまで伸びているのか
+  // 読み取りにくいので、見た目の輪郭に重なる位置にだけ線を置く。
+  // 円柱の中心を原点にして作り、軸まわりの向きは update() で視線に合わせる
+  const guideGeometry = track(
+    new BufferGeometry().setAttribute(
+      "position",
+      new Float32BufferAttribute(
+        [
+          CYLINDER_RADIUS,
+          -CYLINDER_HEIGHT / 2,
+          0,
+          CYLINDER_RADIUS,
+          CYLINDER_HEIGHT / 2,
+          0,
+          -CYLINDER_RADIUS,
+          -CYLINDER_HEIGHT / 2,
+          0,
+          -CYLINDER_RADIUS,
+          CYLINDER_HEIGHT / 2,
+          0
+        ],
+        3
+      )
+    )
+  )
+  const guides: LineSegments[] = []
+  const inverseSolidRotation = new Quaternion().setFromEuler(new Euler(...SOLID_ROTATION)).invert()
+  const solidPosition = new Vector3(...SOLID_POSITION)
+  const cameraLocal = new Vector3()
+  const viewDirection = new Vector3()
+
+  /** 円柱の母線を、いまの視線から見た輪郭の位置に合わせる */
+  const alignGuides = () => {
+    // 立体は動かして回してあるので、カメラを立体のローカル空間へ持ち込んでから角度を出す
+    cameraLocal.copy(camera.position).sub(solidPosition).applyQuaternion(inverseSolidRotation)
+    viewDirection.copy(CYLINDER_CENTER).sub(cameraLocal)
+    // 側面の法線が視線と直交する向きが、見た目の輪郭に重なる母線の位置
+    const angle = -Math.atan2(viewDirection.x, -viewDirection.z)
+    for (const guide of guides) guide.rotation.y = angle
   }
 
   /** 木の表す立体の表面を、葉ごとに切り出して組み立てる */
@@ -547,6 +597,12 @@ export const createCsgTreeScene = ({ scene, params }: SceneContext) => {
       // まだ演算されていないプリミティブは、半透明の面と輪郭線で置く
       group.add(new Mesh(surfaces[node.primitive], ghostMaterials[node.primitive]))
       group.add(new LineSegments(ghostEdges[node.primitive], ghostLineMaterials[node.primitive]))
+      if (node.primitive === "cylinder") {
+        const guide = new LineSegments(guideGeometry, ghostLineMaterials.cylinder)
+        guide.position.copy(CYLINDER_CENTER)
+        guides.push(guide)
+        group.add(guide)
+      }
       return group
     }
     for (const { primitive, subtracted } of collectLeaves(node)) {
@@ -668,6 +724,7 @@ export const createCsgTreeScene = ({ scene, params }: SceneContext) => {
 
   return {
     update: () => {
+      alignGuides()
       const step = Math.round(params.step)
       for (const kind of Object.keys(trees) as TreeKind[]) {
         const tree = trees[kind]
