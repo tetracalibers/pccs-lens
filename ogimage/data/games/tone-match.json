@@ -4,5 +4,9 @@
   "titleLines": [
     "PCCSのトーンを",
     "見分ける"
-  ]
+  ],
+  "crumbs": [
+    "色を見分けるゲーム"
+  ],
+  "figure": "assets/games/tone-match/figure.png"
 }

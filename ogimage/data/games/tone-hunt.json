@@ -4,5 +4,9 @@
   "titleLines": [
     "PCCSの清色・濁色を",
     "見分ける"
-  ]
+  ],
+  "crumbs": [
+    "色を見分けるゲーム"
+  ],
+  "figure": "assets/games/tone-hunt/figure.png"
 }

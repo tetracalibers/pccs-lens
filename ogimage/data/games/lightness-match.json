@@ -3,5 +3,9 @@
   "title": "明度を見分ける",
   "titleLines": [
     "明度を見分ける"
-  ]
+  ],
+  "crumbs": [
+    "色を見分けるゲーム"
+  ],
+  "figure": "assets/games/lightness-match/figure.png"
 }

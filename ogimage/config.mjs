@@ -54,7 +54,6 @@ export const OG_RULES = [
   { glob: "/cg", variation: "title-only", figure: "none", theme: "dark" },
   { glob: "/patterns", variation: "title-only", figure: "none" },
   { glob: "/jis-color-map/all", variation: "title-only", figure: "none" },
-  { glob: "/games/*", variation: "title-only", figure: "none" },
   { glob: "/approximate", variation: "title-only", figure: "none" },
   { glob: "/analyze", variation: "title-only", figure: "none" },
 
@@ -72,7 +71,8 @@ export const OG_RULES = [
 
   // --- 定型プレビュー（nested-fig。当面は手渡し PNG）---
   { glob: "/jis-color-map/*", variation: "nested-fig", figure: "required" }, // 色系統ごとの慣用色名マップ
-  { glob: "/patterns/*", variation: "nested-fig", figure: "required" } // 配色シミュレータ（バウハウス風プレビュー）
+  { glob: "/patterns/*", variation: "nested-fig", figure: "required" }, // 配色シミュレータ（バウハウス風プレビュー）
+  { glob: "/games/*", variation: "nested-fig", figure: "required" } // 色を見分けるクイズ（出題カードのプレビュー）
 ]
 
 /**
