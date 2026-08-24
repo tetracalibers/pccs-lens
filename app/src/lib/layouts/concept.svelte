@@ -16,6 +16,7 @@
   import Mark from "$lib/components/m-directive/Mark.svelte"
   import CardGrid from "$lib/components/m-directive/CardGrid.svelte"
   import TermCard from "$lib/components/m-directive/TermCard.svelte"
+  import EnhancedImage from "$lib/components/m-directive/EnhancedImage.svelte"
 
   /* eslint-disable no-import-assign */
   export {
@@ -35,7 +36,8 @@
     Mark,
     CardGrid,
     TermCard,
-    Heading2
+    Heading2,
+    EnhancedImage as EImage
   }
   /* eslint-enable no-import-assign */
 </script>

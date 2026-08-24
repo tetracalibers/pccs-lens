@@ -12,7 +12,7 @@ import { Resvg } from "@resvg/resvg-js"
 import { fillTemplate, resolvePalette, THEMES } from "./build-svg.mjs"
 import { isValidMagickFuzz, knockoutWhiteAll, knockoutWhiteBackground } from "./knockout.mjs"
 import { copyFigureIntoData, writeRecord } from "./record.mjs"
-import { resolveTheme, routeKey } from "../config.mjs"
+import { resolveTagline, resolveTheme, routeKey } from "../config.mjs"
 
 // knockoutWhite の magickFuzz 省略時の既定値（モード別）。all は画像全体の near-white に一律で
 // 効くため、淡色を巻き込みにくいよう background より控えめにする。明示指定があればそれが優先。
@@ -41,7 +41,7 @@ export const resolveFromCwd = (p) => (isAbsolute(p) ? p : resolve(process.cwd(),
  * 1 件の確定値を検証し、描画に必要な値へ整形する。不正なら例外を投げる（呼び出し側で握る）。
  * figure は絶対パス or cwd 基準の相対パスで受け取る（regenerate は data 基準の相対を絶対に解決してから渡す）。
  * @param {object} item
- * @returns {{ variation: string, theme: string, themeOverride: string | undefined, key: string, out: string, title: string, titleLines: string[], crumbs: string[], figure: string | undefined, knockoutWhite: boolean, knockoutMode: "background" | "all", magickFuzz: string }}
+ * @returns {{ variation: string, theme: string, themeOverride: string | undefined, tagline: boolean, key: string, out: string, title: string, titleLines: string[], crumbs: string[], figure: string | undefined, knockoutWhite: boolean, knockoutMode: "background" | "all", magickFuzz: string }}
  */
 export const prepareItem = (item) => {
   const variation = item.variation
@@ -66,6 +66,11 @@ export const prepareItem = (item) => {
   // （一括再生成が既定へ戻してしまわないように）。既定と同じなら記録に書かず、
   // 規則を変えたときに全ページへ一貫して効く状態を保つ。
   const themeOverride = theme !== configTheme ? theme : undefined
+
+  // サイト共通のタグラインを敷くかも variation と同じく「ルートの属性」。config.mjs だけが決める
+  // （記録に持たせず毎回引き直すので、規則を変えれば一括再生成で一貫して効く）。
+  // default は variation 自体がタグラインを含むので、この値は見ない。
+  const tagline = item.route != null ? resolveTagline(item.route) : false
 
   // 出力先
   let out
@@ -152,6 +157,7 @@ export const prepareItem = (item) => {
     variation,
     theme,
     themeOverride,
+    tagline,
     key,
     out,
     title,
@@ -194,7 +200,8 @@ export const renderPrepared = (prepared, ctx) => {
       {
         titleLines: prepared.titleLines,
         crumbs: prepared.crumbs,
-        figure
+        figure,
+        tagline: prepared.tagline
       },
       prepared.theme
     )

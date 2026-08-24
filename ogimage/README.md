@@ -95,9 +95,17 @@ node ogimage/regenerate.mjs '/color-theory/*'
 - `light`（既定）… 白地。
 - `dark` … 暗地。現在は **CG 配下（`/cg`・`/cg/**`）**に適用。地色 `#26282d` は Three.js デモの背景（`app/src/lib/demo/threejs/_shared/constants.ts` の `DEMO_BACKGROUND`）と同値で、デモのスクリーンショットを図版にしても継ぎ目が出ない。
 
-実際の配色（地色・タイトル・crumb・ロゴ・装飾のぼかし円の不透明度）は `lib/build-svg.mjs` の `THEMES` に集約する。テンプレート SVG 側は配色を直書きせず、`{{BG}}` / `{{LOGO_FILL}}` / `{{TAGLINE_FILL}}` / `{{BLOB_ALPHA}}` のプレースホルダで受ける。テーマを増やすときは `THEMES` にパレットを足し、`OG_RULES` の該当ルートに `theme` を付ける（テンプレートは触らない）。
+実際の配色（地色・タイトル・crumb・ロゴ・タグライン・装飾のぼかし円の不透明度）は `lib/build-svg.mjs` の `THEMES` に集約する。テンプレート SVG 側は配色を直書きせず、静的要素は `{{BG}}` / `{{LOGO_FILL}}` / `{{BLOB_ALPHA}}` のプレースホルダで受け、スクリプトが組み立てる要素（タイトル・crumb・タグライン）は `fill` を直に埋める。テーマを増やすときは `THEMES` にパレットを足し、`OG_RULES` の該当ルートに `theme` を付ける（テンプレートは触らない）。
 
 ぼかし円はバリエーション別に上書きできる（`blobAlphaByVariation`）。`0` を指定するとグループごと描画しない。**dark の nested-fig は `0`**：図版が地色と同じ暗地でぼかし円が乗らないため、周囲だけが光ると図版の矩形の輪郭が浮いてしまう。装飾を消して地色を一様にすると継ぎ目が完全に消える。
+
+#### タグライン
+
+`variation` / `theme` と同じく**ルートの属性**で、`config.mjs` の `OG_RULES` の `tagline` が決める（省略時は敷かない）。JSON に書く項目は無い（＝単発の上書きもできない）。
+
+- `tagline: true` のルートは、タイトルの下にサイト共通のタグライン「見て・触って学ぶ 色と視覚表現」を **default 画像と同じ文字色（`THEMES.tagline`）・文字サイズ（34）**で敷く。現在は **`/concept`**（「このサイトの歩き方」）のみ。
+- タグライン 1 行ぶん背が伸びるので、`LAYOUT["title-only"].tagline` の `titleBaseline`（タイトルを上げる）と `footerDy`（フッターを下げる）で、タグライン無しのときと同じ視覚中心に収める。タイトルが 2 行のときは、タグラインもフッターも下がり幅に追随する。
+- タグラインの文字列は `lib/build-svg.mjs` の `SITE_TAGLINE` に一元化してある（テンプレートには直書きしない）。**変えるときはアプリ側の `SITE_DESCRIPTION`（`app/src/lib/meta/og-resolve.js`）とトップページの表示もそろえる。**
 
 > **図版との相性**: `dark` のルートで**白背景の図版**を使うと暗地に白い箱が浮く。`knockoutWhite` は白を抜くので、線画が暗色だと今度は図版が読めなくなる。dark では**図版側も暗地（できれば同じ `#26282d`）**で用意する。
 
@@ -130,7 +138,7 @@ node ogimage/regenerate.mjs '/color-theory/*'
 
 ```
 ogimage/
-  config.mjs              正典設定（ルート → バリエーション/図版可否/テーマ）。スキルも参照する単一の情報源
+  config.mjs              正典設定（ルート → バリエーション/図版可否/テーマ/タグライン）。スキルも参照する単一の情報源
   render.mjs              描画スクリプト（CLI エントリ。単発/部分・fail-fast）
   regenerate.mjs         一括再生成スクリプト（CLI エントリ。記録のある全ページ・robust）
   lib/
@@ -142,7 +150,7 @@ ogimage/
     fonts.mjs            fonts/ のフォント収集
     manifest.mjs         マニフェストの読み書き（upsert / rebuild・冪等・キー昇順）
     rename-font.mjs      TTF の name テーブルのファミリー名を正規化（フォント取得時に使用）
-  template/*.svg         4 バリエーションのテンプレート（<!--TITLE--> / <!--CRUMBS--> / <!--FIGURE--> と配色トークン {{BG}} など）
+  template/*.svg         4 バリエーションのテンプレート（<!--TITLE--> / <!--CRUMBS--> / <!--TAGLINE--> / <!--FIGURE--> と配色トークン {{BG}} など）
   scripts/download-fonts.mjs   フォント取得（npm run fonts）
   data/                  記録（正）。<route>.json と assets/<route>/figure.<ext>（コミット対象）
   fonts/                 フォント実体（コミット対象）
@@ -164,7 +172,7 @@ ogimage/
 | `app/src/lib/meta/og-manifest.json`        | 派生（記録から導出）   | コミット |
 | `app/static/ogp/<route>.png`               | 生成物（出力画像）     | コミット |
 
-- 記録の `figure` は `ogimage/data/` 基準の相対パス。バリエーション・テーマは記録に持たず、route から `config.mjs` の `resolveVariation` / `resolveTheme` で引き直す（`figure` の有無で `optional → nested-fig` を昇格）。規則を変えれば一括再生成でそのまま全体に効く。
+- 記録の `figure` は `ogimage/data/` 基準の相対パス。バリエーション・テーマ・タグラインの有無は記録に持たず、route から `config.mjs` の `resolveVariation` / `resolveTheme` / `resolveTagline` で引き直す（`figure` の有無で `optional → nested-fig` を昇格）。規則を変えれば一括再生成でそのまま全体に効く。
 
 ## 制約
 

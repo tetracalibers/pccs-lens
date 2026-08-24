@@ -85,10 +85,11 @@ cd ogimage && npm install && npm run fonts && cd ..
 
 ### 2. バリエーションを判定する（正典設定）
 
-- **`ogimage/config.mjs` が唯一の情報源**。ルート → バリエーション種別・図版の可否・テーマをここで定義している。
+- **`ogimage/config.mjs` が唯一の情報源**。ルート → バリエーション種別・図版の可否・テーマ・タグラインの有無をここで定義している。
 - 各対象ルートについて、`config.mjs` の `OG_RULES`（上から最初にマッチした規則を採用）で
   `variation`（`default` / `title-only` / `nested` / `nested-fig`）と `figure`（`none` / `optional` / `required`）を得る。
 - `theme`（`light` / `dark`・省略時 `light`）も規則が持つ。描画スクリプトが route から自動で引くので、**通常は JSON に書かない**。CG 配下（`/cg`・`/cg/**`）は `dark`（地色 `#26282d`）。
+- `tagline`（`true` / 省略）も規則が持つ。`true` のルートはタイトルの下にサイト共通のタグライン「見て・触って学ぶ 色と視覚表現」を敷く（default 画像と同じ文字色・文字サイズ）。route から自動で引くので **JSON に書く項目は無く、上書きもできない**（現在は `/concept` だけ）。
 - **例外：Three.js デモの図版しか無いページは `light` のルートでも `dark` で生成する**（下記）。
 - 規則に該当しないルートは**明確なエラーで停止**し、勝手に生成しない。
 
@@ -130,7 +131,7 @@ cd ogimage && npm install && npm run fonts && cd ..
   - **svx ページなら、`<script>` 内で import している図版候補（`$lib/demo/**` のコンポーネント）を一覧提示**し、どれを入れたいか尋ねる。
     Svelte デモの自動 SVG 化は行わない方針のため、**ユーザーが用意した図版 PNG のパスを受け取る**（自己完結した手渡し画像）。
   - **図版候補が無い場合（`<script>` が無い／`$lib/demo/**` の import が無い svx）は、要否を確認せず図版なし（`nested`）で生成する。** 手渡しの図版パスが無ければ入れようがないため、この場合は対話を省く。ユーザーが明示的に図版を求めたときだけ、手渡し PNG のパスを受け取って `nested-fig` にする。
-- `figure: "required"`（`/jis-color-map/<family>`, `/patterns/<theme>`）: 定型プレビュー。当面は**ユーザーが用意した手渡し PNG のパスを受け取る**。
+- `figure: "required"`（`/jis-color-map/<family>`, `/patterns/<theme>`, `/games/<slug>`）: 定型プレビュー。当面は**ユーザーが用意した手渡し PNG のパスを受け取る**。
 - 一括処理中でも、図版の要否は**ページごとに確認**する（改行案の一括承認とは別）。
 
 > **ダーク（`theme: "dark"`）のルートの図版**: CG 配下は地色 `#26282d` のダークなので、**白背景の図版は暗地に白い箱として浮く**。`knockoutWhite` で白を抜いても線画が暗色だと今度は読めなくなるため、透過では解決しない。ダークのルートでは**図版側も暗地（できれば同じ `#26282d`）**で用意してもらう。Three.js デモのスクリーンショットはそのまま条件を満たす。
@@ -265,18 +266,19 @@ render.mjs は nested-fig の図版を `ogimage/data/assets/<route>/figure.<ext>
 | ルート | variation | title の取得元 | crumbs（トップ区分＋中間カテゴリ） |
 | --- | --- | --- | --- |
 | `/` | default | （不要。メイン=サイト名） | — |
-| `/concept` | title-only | 「このサイトの歩き方」（`app/src/lib/layouts/concept.svelte`） | — |
-| `/color-theory`, `/color-fields`, `/jis-color-map`, `/cg` | title-only | `app/src/lib/meta/site-nav.ts` の該当 NAV アイテム label（色の理論 / 色の活用分野 / 慣用色名マップ / CGと画像処理） | — |
-| `/patterns` | title-only | 「配色シミュレータ」（`app/src/routes/patterns/+page.svelte` の `<title>`） | — |
+| `/concept` | title-only | 「このサイトの歩き方」（`app/src/lib/layouts/concept.svelte`） | —（`config.mjs` の `tagline: true` でタイトル下にタグラインが入る） |
+| `/color-theory`, `/jis-color-map` | title-only | `app/src/lib/meta/site-nav.ts` の該当 NAV アイテム label に **「一覧」を付ける**（色の理論一覧 / 慣用色名マップ一覧） | — |
+| `/color-fields`, `/cg` | title-only | `app/src/lib/meta/site-nav.ts` の該当 NAV アイテム label（色の活用分野 / CGと画像処理） | — |
 | `/jis-color-map/all` | title-only | 「すべての慣用色名一覧」（`+page.svelte` の `<title>`） | — |
-| `/games/<slug>` | title-only | `app/src/routes/games/<slug>/+page.svelte` の `<title>` からサフィックス除去 | — |
-| `/approximate`, `/analyze` | title-only | 各 `+page.svelte` の `<title>` からサフィックス除去 | — |
+| `/approximate`, `/analyze` | nested | 各 `+page.svelte` の `<title>` からサフィックス除去 | `["色分析ツール"]`（一覧ページを持たない単体ツールなので総称を充てる） |
+| `/patterns` | nested | 「配色シミュレータ」（`app/src/routes/patterns/+page.svelte` の `<title>`） | `["イメージ別の配色"]`（一覧ページだが、扱っている題材をパンくずに出す） |
 | `/color-theory/<slug>` | nested / nested-fig | `+page.svx` フロントマターの `title` | `["色の理論", <category>]`。category は `app/src/lib/content-pages/color-theory.yaml` の該当カテゴリ `title`（`colorTheoryCategoryBySlug` と同じ対応）。該当なしなら `["色の理論"]` |
 | `/color-fields/<slug>` | nested / nested-fig | `+page.svx` フロントマターの `title` | `["色の活用分野", <category>]`（`color-fields.yaml` / `colorFieldsCategoryBySlug`）。該当なしなら `["色の活用分野"]` |
 | `/cg/<unit>` | nested | `app/src/lib/content-pages/cg/<unit>.yaml` の先頭 `title` | `["CGと画像処理"]` |
 | `/cg/<unit>/<article>` | nested / nested-fig | `+page.svx` フロントマターの `title` | `["CGと画像処理", <unit title>]`（unit title は `cg/<unit>.yaml` の先頭 `title`） |
 | `/jis-color-map/<family>` | nested-fig | `app/src/lib/data/jis-colors` の `JIS_COLOR_FAMILIES` から id 一致の `name`（例:「<name>の慣用色名マップ」） | `["慣用色名マップ"]` |
 | `/patterns/<theme>` | nested-fig | patterns のテーマ定義（`/patterns/[theme]/+page.ts` が読む labelJa） | `["配色シミュレータ"]` |
+| `/games/<slug>` | nested-fig | `app/src/routes/games/<slug>/+page.svelte` の `<title>` からサフィックス除去 | `["色を見分けるゲーム"]`（一覧ページを持たないので総称を充てる） |
 
 - サフィックス除去: `<title>` から末尾の `— Color Prism` / `- Color Prism` を取り除く。
 - crumbs のトップ区分は一覧ページ名（`色の理論` など）で、オンページのパンくず（カテゴリのみ）に**トップ区分を足したもの**。

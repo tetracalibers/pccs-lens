@@ -36,7 +36,7 @@
 
     <text font-family="SUSE Mono" x="600" y="300" text-anchor="middle" font-size="132" font-weight="500" letter-spacing="-5" fill="{{LOGO_FILL}}">Color <tspan fill="url(#prism)">Prism</tspan></text>
 
-    <text font-family="Zen Kaku Gothic New" x="600" y="378" text-anchor="middle" font-size="34" font-weight="500" letter-spacing="1.3" fill="{{TAGLINE_FILL}}">見て・触って学ぶ 色彩の暗記帳</text>
+    <!--TAGLINE-->
 
     <g>
       <circle cx="540" cy="438" r="8" fill="#ff6b6b"></circle><circle cx="570" cy="438" r="8" fill="#ffd93d"></circle>

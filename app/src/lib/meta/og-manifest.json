@@ -214,7 +214,7 @@
       "title": "ビジュアルデザインの分野"
     },
     "color-theory": {
-      "title": "色の理論"
+      "title": "色の理論一覧"
     },
     "color-theory/additive-color-mixing-types": {
       "title": "さまざまな加法混色"
@@ -421,7 +421,7 @@
       "title": "PCCSのトーンを見分ける"
     },
     "jis-color-map": {
-      "title": "慣用色名マップ"
+      "title": "慣用色名マップ一覧"
     },
     "jis-color-map/all": {
       "title": "すべての慣用色名一覧"

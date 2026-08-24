@@ -18,6 +18,10 @@
 // theme（配色）:
 //   - "light"（省略時の既定） … 白地
 //   - "dark"                  … 暗地。実際の配色は lib/build-svg.mjs の THEMES に定義する
+//
+// tagline（サイト共通のタグライン）:
+//   - true  … タイトルの下にタグラインを敷く（default 画像と同じ文字色・文字サイズ）
+//   - 省略  … 敷かない（既定）
 
 import picomatch from "picomatch"
 
@@ -25,7 +29,7 @@ import picomatch from "picomatch"
  * @typedef {"default" | "title-only" | "nested" | "nested-fig"} Variation
  * @typedef {"none" | "optional" | "required"} FigurePolicy
  * @typedef {"light" | "dark"} Theme
- * @typedef {{ glob: string, variation: Variation, figure: FigurePolicy, theme?: Theme }} OgRule
+ * @typedef {{ glob: string, variation: Variation, figure: FigurePolicy, theme?: Theme, tagline?: boolean }} OgRule
  */
 
 /**
@@ -41,16 +45,24 @@ export const OG_RULES = [
   { glob: "/", variation: "default", figure: "none" },
 
   // --- 単体ページ / 一覧ページ（title-only）---
-  { glob: "/concept", variation: "title-only", figure: "none" },
+  // /concept は「このサイトの歩き方」＝サイト全体の案内なので、タイトルの下にトップと同じ
+  // タグラインを敷いて、サイトの性格まで伝える。
+  { glob: "/concept", variation: "title-only", figure: "none", tagline: true },
   { glob: "/color-theory", variation: "title-only", figure: "none" },
   { glob: "/color-fields", variation: "title-only", figure: "none" },
   { glob: "/jis-color-map", variation: "title-only", figure: "none" },
   { glob: "/cg", variation: "title-only", figure: "none", theme: "dark" },
-  { glob: "/patterns", variation: "title-only", figure: "none" },
   { glob: "/jis-color-map/all", variation: "title-only", figure: "none" },
-  { glob: "/games/*", variation: "title-only", figure: "none" },
-  { glob: "/approximate", variation: "title-only", figure: "none" },
-  { glob: "/analyze", variation: "title-only", figure: "none" },
+
+  // --- 色分析ツール（nested。図版なし）---
+  //   一覧ページを持たない単体ツールなので、パンくずは総称の「色分析ツール」を充てる。
+  { glob: "/approximate", variation: "nested", figure: "none" },
+  { glob: "/analyze", variation: "nested", figure: "none" },
+
+  // --- 配色シミュレータ（nested。図版なし）---
+  //   /patterns 自体は一覧ページだが、パンくずには扱っている題材（イメージ別の配色）を出す。
+  //   配下の /patterns/<theme> は定型プレビュー（nested-fig）なので下の節に置く。
+  { glob: "/patterns", variation: "nested", figure: "none" },
 
   // --- コンテンツページ（nested。図版は任意）---
   { glob: "/color-theory/*", variation: "nested", figure: "optional" },
@@ -66,7 +78,8 @@ export const OG_RULES = [
 
   // --- 定型プレビュー（nested-fig。当面は手渡し PNG）---
   { glob: "/jis-color-map/*", variation: "nested-fig", figure: "required" }, // 色系統ごとの慣用色名マップ
-  { glob: "/patterns/*", variation: "nested-fig", figure: "required" } // 配色シミュレータ（バウハウス風プレビュー）
+  { glob: "/patterns/*", variation: "nested-fig", figure: "required" }, // 配色シミュレータ（バウハウス風プレビュー）
+  { glob: "/games/*", variation: "nested-fig", figure: "required" } // 色を見分けるクイズ（出題カードのプレビュー）
 ]
 
 /**
@@ -109,6 +122,13 @@ export const resolveRule = (route) => {
  * @returns {Theme}
  */
 export const resolveTheme = (route) => resolveRule(route)?.theme ?? "light"
+
+/**
+ * ルートにサイト共通のタグラインを敷くかを返す。規則に `tagline` が無い／規則自体が無い場合は false。
+ * @param {string} route
+ * @returns {boolean}
+ */
+export const resolveTagline = (route) => resolveRule(route)?.tagline === true
 
 /**
  * ルートに対応するバリエーションを返す（該当なしは null）。
