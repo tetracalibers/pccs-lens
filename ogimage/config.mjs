@@ -52,13 +52,17 @@ export const OG_RULES = [
   { glob: "/color-fields", variation: "title-only", figure: "none" },
   { glob: "/jis-color-map", variation: "title-only", figure: "none" },
   { glob: "/cg", variation: "title-only", figure: "none", theme: "dark" },
-  { glob: "/patterns", variation: "title-only", figure: "none" },
   { glob: "/jis-color-map/all", variation: "title-only", figure: "none" },
 
   // --- 色分析ツール（nested。図版なし）---
   //   一覧ページを持たない単体ツールなので、パンくずは総称の「色分析ツール」を充てる。
   { glob: "/approximate", variation: "nested", figure: "none" },
   { glob: "/analyze", variation: "nested", figure: "none" },
+
+  // --- 配色シミュレータ（nested。図版なし）---
+  //   /patterns 自体は一覧ページだが、パンくずには扱っている題材（イメージ別の配色）を出す。
+  //   配下の /patterns/<theme> は定型プレビュー（nested-fig）なので下の節に置く。
+  { glob: "/patterns", variation: "nested", figure: "none" },
 
   // --- コンテンツページ（nested。図版は任意）---
   { glob: "/color-theory/*", variation: "nested", figure: "optional" },

@@ -268,9 +268,9 @@ render.mjs は nested-fig の図版を `ogimage/data/assets/<route>/figure.<ext>
 | `/` | default | （不要。メイン=サイト名） | — |
 | `/concept` | title-only | 「このサイトの歩き方」（`app/src/lib/layouts/concept.svelte`） | —（`config.mjs` の `tagline: true` でタイトル下にタグラインが入る） |
 | `/color-theory`, `/color-fields`, `/jis-color-map`, `/cg` | title-only | `app/src/lib/meta/site-nav.ts` の該当 NAV アイテム label（色の理論 / 色の活用分野 / 慣用色名マップ / CGと画像処理） | — |
-| `/patterns` | title-only | 「配色シミュレータ」（`app/src/routes/patterns/+page.svelte` の `<title>`） | — |
 | `/jis-color-map/all` | title-only | 「すべての慣用色名一覧」（`+page.svelte` の `<title>`） | — |
 | `/approximate`, `/analyze` | nested | 各 `+page.svelte` の `<title>` からサフィックス除去 | `["色分析ツール"]`（一覧ページを持たない単体ツールなので総称を充てる） |
+| `/patterns` | nested | 「配色シミュレータ」（`app/src/routes/patterns/+page.svelte` の `<title>`） | `["イメージ別の配色"]`（一覧ページだが、扱っている題材をパンくずに出す） |
 | `/color-theory/<slug>` | nested / nested-fig | `+page.svx` フロントマターの `title` | `["色の理論", <category>]`。category は `app/src/lib/content-pages/color-theory.yaml` の該当カテゴリ `title`（`colorTheoryCategoryBySlug` と同じ対応）。該当なしなら `["色の理論"]` |
 | `/color-fields/<slug>` | nested / nested-fig | `+page.svx` フロントマターの `title` | `["色の活用分野", <category>]`（`color-fields.yaml` / `colorFieldsCategoryBySlug`）。該当なしなら `["色の活用分野"]` |
 | `/cg/<unit>` | nested | `app/src/lib/content-pages/cg/<unit>.yaml` の先頭 `title` | `["CGと画像処理"]` |
