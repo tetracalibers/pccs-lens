@@ -267,7 +267,8 @@ render.mjs は nested-fig の図版を `ogimage/data/assets/<route>/figure.<ext>
 | --- | --- | --- | --- |
 | `/` | default | （不要。メイン=サイト名） | — |
 | `/concept` | title-only | 「このサイトの歩き方」（`app/src/lib/layouts/concept.svelte`） | —（`config.mjs` の `tagline: true` でタイトル下にタグラインが入る） |
-| `/color-theory`, `/color-fields`, `/jis-color-map`, `/cg` | title-only | `app/src/lib/meta/site-nav.ts` の該当 NAV アイテム label（色の理論 / 色の活用分野 / 慣用色名マップ / CGと画像処理） | — |
+| `/color-theory`, `/jis-color-map` | title-only | `app/src/lib/meta/site-nav.ts` の該当 NAV アイテム label に **「一覧」を付ける**（色の理論一覧 / 慣用色名マップ一覧） | — |
+| `/color-fields`, `/cg` | title-only | `app/src/lib/meta/site-nav.ts` の該当 NAV アイテム label（色の活用分野 / CGと画像処理） | — |
 | `/jis-color-map/all` | title-only | 「すべての慣用色名一覧」（`+page.svelte` の `<title>`） | — |
 | `/approximate`, `/analyze` | nested | 各 `+page.svelte` の `<title>` からサフィックス除去 | `["色分析ツール"]`（一覧ページを持たない単体ツールなので総称を充てる） |
 | `/patterns` | nested | 「配色シミュレータ」（`app/src/routes/patterns/+page.svelte` の `<title>`） | `["イメージ別の配色"]`（一覧ページだが、扱っている題材をパンくずに出す） |
