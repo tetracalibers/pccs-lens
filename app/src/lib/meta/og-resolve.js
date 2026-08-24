@@ -15,7 +15,7 @@
 export const SITE_ORIGIN = "https://color-prism.net"
 export const SITE_NAME = "Color Prism"
 /** サイト共通の og:description（全ページ共通）。 */
-export const SITE_DESCRIPTION = "見て・触って学ぶ 色彩の暗記帳"
+export const SITE_DESCRIPTION = "見て・触って学ぶ 色と視覚表現"
 /** 既定 og:image のルートキー（app/static/ogp/default.png ＝ default バリエーション）。 */
 export const DEFAULT_IMAGE_KEY = "default"
 
