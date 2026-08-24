@@ -54,8 +54,11 @@ export const OG_RULES = [
   { glob: "/cg", variation: "title-only", figure: "none", theme: "dark" },
   { glob: "/patterns", variation: "title-only", figure: "none" },
   { glob: "/jis-color-map/all", variation: "title-only", figure: "none" },
-  { glob: "/approximate", variation: "title-only", figure: "none" },
-  { glob: "/analyze", variation: "title-only", figure: "none" },
+
+  // --- 色分析ツール（nested。図版なし）---
+  //   一覧ページを持たない単体ツールなので、パンくずは総称の「色分析ツール」を充てる。
+  { glob: "/approximate", variation: "nested", figure: "none" },
+  { glob: "/analyze", variation: "nested", figure: "none" },
 
   // --- コンテンツページ（nested。図版は任意）---
   { glob: "/color-theory/*", variation: "nested", figure: "optional" },
