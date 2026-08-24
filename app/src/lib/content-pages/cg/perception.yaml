@@ -4,7 +4,9 @@ sections:
   - heading: 視覚と知覚
     id: perception
     links:
-      - title: 眼の構造と視野 # CG a-1-1
+      - title: 視野と眼球運動 # CG a-1-1
+        group: ["CG"]
+      - title: 受容野の構造 # CG a-1-1
         group: ["CG"]
       - title: 形の見え # CG a-1-3
         group: ["CG"]
