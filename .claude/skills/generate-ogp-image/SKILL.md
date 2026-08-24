@@ -85,10 +85,11 @@ cd ogimage && npm install && npm run fonts && cd ..
 
 ### 2. バリエーションを判定する（正典設定）
 
-- **`ogimage/config.mjs` が唯一の情報源**。ルート → バリエーション種別・図版の可否・テーマをここで定義している。
+- **`ogimage/config.mjs` が唯一の情報源**。ルート → バリエーション種別・図版の可否・テーマ・タグラインの有無をここで定義している。
 - 各対象ルートについて、`config.mjs` の `OG_RULES`（上から最初にマッチした規則を採用）で
   `variation`（`default` / `title-only` / `nested` / `nested-fig`）と `figure`（`none` / `optional` / `required`）を得る。
 - `theme`（`light` / `dark`・省略時 `light`）も規則が持つ。描画スクリプトが route から自動で引くので、**通常は JSON に書かない**。CG 配下（`/cg`・`/cg/**`）は `dark`（地色 `#26282d`）。
+- `tagline`（`true` / 省略）も規則が持つ。`true` のルートはタイトルの下にサイト共通のタグライン「見て・触って学ぶ 色と視覚表現」を敷く（default 画像と同じ文字色・文字サイズ）。route から自動で引くので **JSON に書く項目は無く、上書きもできない**（現在は `/concept` だけ）。
 - **例外：Three.js デモの図版しか無いページは `light` のルートでも `dark` で生成する**（下記）。
 - 規則に該当しないルートは**明確なエラーで停止**し、勝手に生成しない。
 
@@ -265,7 +266,7 @@ render.mjs は nested-fig の図版を `ogimage/data/assets/<route>/figure.<ext>
 | ルート | variation | title の取得元 | crumbs（トップ区分＋中間カテゴリ） |
 | --- | --- | --- | --- |
 | `/` | default | （不要。メイン=サイト名） | — |
-| `/concept` | title-only | 「このサイトの歩き方」（`app/src/lib/layouts/concept.svelte`） | — |
+| `/concept` | title-only | 「このサイトの歩き方」（`app/src/lib/layouts/concept.svelte`） | —（`config.mjs` の `tagline: true` でタイトル下にタグラインが入る） |
 | `/color-theory`, `/color-fields`, `/jis-color-map`, `/cg` | title-only | `app/src/lib/meta/site-nav.ts` の該当 NAV アイテム label（色の理論 / 色の活用分野 / 慣用色名マップ / CGと画像処理） | — |
 | `/patterns` | title-only | 「配色シミュレータ」（`app/src/routes/patterns/+page.svelte` の `<title>`） | — |
 | `/jis-color-map/all` | title-only | 「すべての慣用色名一覧」（`+page.svelte` の `<title>`） | — |

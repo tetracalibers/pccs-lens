@@ -1,4 +1,4 @@
-// テンプレート SVG のプレースホルダ（<!--TITLE--> / <!--CRUMBS--> / <!--FIGURE--> と
+// テンプレート SVG のプレースホルダ（<!--TITLE--> / <!--CRUMBS--> / <!--TAGLINE--> / <!--FIGURE--> と
 // {{BG}} などの配色トークン）を、確定値から組み立てた要素・値で置換する。
 // バリエーションごとの座標・サイズは LAYOUT に、配色は THEMES に集約する。
 
@@ -6,14 +6,21 @@ import { readFileSync } from "node:fs"
 import { extname } from "node:path"
 import { escapeXml, layoutLines, round } from "./text.mjs"
 
-// タイトル・crumb に使う日本語/等幅フォント。テンプレート内の静的テキスト（ロゴ・タグライン）は
+// タイトル・crumb・タグラインに使う日本語/等幅フォント。テンプレート内の静的テキスト（ロゴ）は
 // テンプレート側で font-family を持たせている。
 const FONT_JA = "Zen Kaku Gothic New"
 const FONT_MONO = "Reddit Mono"
 
 /**
+ * サイト共通のタグライン。default（既定画像）と、`config.mjs` で `tagline: true` の
+ * ルートで同じ一文を敷くので、ここに一元化する。
+ * アプリ側の `SITE_DESCRIPTION`（app/src/lib/meta/og-resolve.js）と同じ文にそろえること。
+ */
+export const SITE_TAGLINE = "見て・触って学ぶ 色と視覚表現"
+
+/**
  * テーマ（配色）の定義。テンプレート側の静的要素はプレースホルダ（{{BG}} / {{LOGO_FILL}} /
- * {{TAGLINE_FILL}} / {{BLOB_ALPHA}}）経由で、ここで組み立てるテキストは fill 直指定で参照する。
+ * {{BLOB_ALPHA}}）経由で、ここで組み立てるテキストは fill 直指定で参照する。
  * どのルートがどのテーマかは config.mjs の OG_RULES（`theme`）が決める。
  *
  * `blobAlphaByVariation` はバリエーション別の上書き（0 なら装飾そのものを描かない）。
@@ -89,6 +96,10 @@ const removeBlobGroup = (svg) => {
  * title.baseline は「1 行時のベースライン y」。複数行時はここを中心に再センタリングする。
  */
 export const LAYOUT = {
+  // default はタグラインだけ（ロゴ・ドットはテンプレートに静的に置いてある）。
+  default: {
+    tagline: { x: 600, baseline: 378, fontSize: 34, letterSpacing: 1.3 }
+  },
   "title-only": {
     title: {
       x: 600,
@@ -99,7 +110,12 @@ export const LAYOUT = {
       lineHeightRatio: 1.22,
       letterSpacing: -1.1,
       minFontSize: 52
-    }
+    },
+    // config.mjs で `tagline: true` のルートだけタイトルの下にタグラインを敷く。
+    // 文字色・文字サイズは default と同じ（THEMES.tagline / fontSize 34）。
+    // 1 行ぶん背が伸びるので、タイトルを上げ（titleBaseline）フッターを下げ（footerDy）、
+    // タグライン無しのときと同じ視覚中心を保つ。gap はタイトル最終行のベースラインからの距離。
+    tagline: { x: 600, fontSize: 34, letterSpacing: 1.3, titleBaseline: 256, gap: 70, footerDy: 22 }
   },
   nested: {
     crumbs: { x: 96, y: 112, fontSize: 32, gap: 14 },
@@ -174,6 +190,18 @@ const buildCrumbs = (crumbs, cfg, palette) => {
 }
 
 /**
+ * サイト共通のタグライン要素を組み立てる。default も title-only も同じ文字色・文字サイズで、
+ * ベースラインだけ呼び出し側が決める。
+ * @param {{ x: number, fontSize: number, letterSpacing: number }} cfg
+ * @param {number} baseline
+ * @param {Palette} palette
+ */
+const buildTagline = (cfg, baseline, palette) =>
+  `<text font-family="${FONT_JA}" x="${cfg.x}" y="${round(baseline)}" text-anchor="middle"` +
+  ` font-size="${cfg.fontSize}" font-weight="500" letter-spacing="${cfg.letterSpacing}"` +
+  ` fill="${palette.tagline}">${escapeXml(SITE_TAGLINE)}</text>`
+
+/**
  * 図版（手渡し画像）を data URI 化した <image> 要素を組み立てる。
  * @param {string} figurePath
  * @param {typeof LAYOUT["nested-fig"]["figure"]} cfg
@@ -200,7 +228,8 @@ const buildFigure = (figurePath, cfg) => {
  * 確定値からテンプレートを埋めて完成 SVG 文字列を返す。
  * @param {string} template テンプレート SVG の中身
  * @param {"default"|"title-only"|"nested"|"nested-fig"} variation
- * @param {{ titleLines?: string[], crumbs?: string[], figure?: string }} content
+ * @param {{ titleLines?: string[], crumbs?: string[], figure?: string, tagline?: boolean }} content
+ *   `tagline` はサイト共通のタグラインを敷くか（ルートの属性。config.mjs が決める）。
  * @param {"light"|"dark"} [theme] 配色（省略時 light）
  */
 export const fillTemplate = (template, variation, content, theme = "light") => {
@@ -211,16 +240,25 @@ export const fillTemplate = (template, variation, content, theme = "light") => {
   let svg = (blobAlpha > 0 ? template : removeBlobGroup(template))
     .replaceAll("{{BG}}", palette.background)
     .replaceAll("{{LOGO_FILL}}", palette.logo)
-    .replaceAll("{{TAGLINE_FILL}}", palette.tagline)
     .replaceAll("{{BLOB_ALPHA}}", String(blobAlpha))
 
-  if (variation === "default") return svg
+  if (variation === "default") {
+    // 既定画像はサイト名の下に常にタグラインを敷く（ルートの属性ではなくレイアウトそのもの）。
+    const cfg = LAYOUT.default.tagline
+    return svg.replace("<!--TAGLINE-->", buildTagline(cfg, cfg.baseline, palette))
+  }
 
   const layout = LAYOUT[variation]
+  const lines = content.titleLines ?? []
+
+  // タグラインを敷くルートは、1 行ぶんの高さを確保するためタイトルのベースラインを上げる。
+  const taglineCfg = content.tagline ? (layout.tagline ?? null) : null
+  const titleCfg = taglineCfg
+    ? { ...layout.title, baseline: taglineCfg.titleBaseline }
+    : layout.title
 
   if (svg.includes("<!--TITLE-->")) {
-    const lines = content.titleLines ?? []
-    svg = svg.replace("<!--TITLE-->", buildTitle(lines, layout.title, palette))
+    svg = svg.replace("<!--TITLE-->", buildTitle(lines, titleCfg, palette))
   }
 
   if (svg.includes("<!--CRUMBS-->")) {
@@ -235,14 +273,23 @@ export const fillTemplate = (template, variation, content, theme = "light") => {
     )
   }
 
-  // title-only: タイトルが複数行のとき、フッター（ドット＋ロゴ）を最終行の下がり幅ぶん平行移動する。
-  // タイトルは中央揃えのままなので、最終行は baseline より (baselines[last]-baseline) だけ下がる。
-  // その同量ぶんフッターも下げると、文字下端↔ドットの間隔が 1 行時と一致し、全体の縦バランスも保てる。
+  // タイトル最終行のベースライン。タイトルは中央揃えのままなので、複数行時は 1 行時の baseline より
+  // (baselines[last] - baseline) だけ下がる。タグライン・フッターはこの下がり幅に追随させる。
+  const { baselines } = layoutLines(lines, titleCfg)
+  const lastBaseline = baselines.length > 0 ? baselines[baselines.length - 1] : titleCfg.baseline
+  const multilineDy = lastBaseline - titleCfg.baseline
+
+  if (svg.includes("<!--TAGLINE-->")) {
+    svg = svg.replace(
+      "<!--TAGLINE-->",
+      taglineCfg ? buildTagline(taglineCfg, lastBaseline + taglineCfg.gap, palette) : ""
+    )
+  }
+
+  // title-only: フッター（ドット＋ロゴ）を、タイトルの複数行ぶん＋タグライン 1 行ぶん下げる。
+  // 文字下端↔ドット・ドット↔ロゴの間隔が 1 行・タグライン無しのときと一致し、縦バランスも保てる。
   if (svg.includes("{{FOOTER_DY}}")) {
-    const lines = content.titleLines ?? []
-    const { baselines } = layoutLines(lines, layout.title)
-    const dy =
-      baselines.length > 0 ? round(baselines[baselines.length - 1] - layout.title.baseline) : 0
+    const dy = round(multilineDy + (taglineCfg?.footerDy ?? 0))
     svg = svg.replaceAll("{{FOOTER_DY}}", String(dy))
   }
 

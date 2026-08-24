@@ -18,6 +18,10 @@
 // theme（配色）:
 //   - "light"（省略時の既定） … 白地
 //   - "dark"                  … 暗地。実際の配色は lib/build-svg.mjs の THEMES に定義する
+//
+// tagline（サイト共通のタグライン）:
+//   - true  … タイトルの下にタグラインを敷く（default 画像と同じ文字色・文字サイズ）
+//   - 省略  … 敷かない（既定）
 
 import picomatch from "picomatch"
 
@@ -25,7 +29,7 @@ import picomatch from "picomatch"
  * @typedef {"default" | "title-only" | "nested" | "nested-fig"} Variation
  * @typedef {"none" | "optional" | "required"} FigurePolicy
  * @typedef {"light" | "dark"} Theme
- * @typedef {{ glob: string, variation: Variation, figure: FigurePolicy, theme?: Theme }} OgRule
+ * @typedef {{ glob: string, variation: Variation, figure: FigurePolicy, theme?: Theme, tagline?: boolean }} OgRule
  */
 
 /**
@@ -41,7 +45,9 @@ export const OG_RULES = [
   { glob: "/", variation: "default", figure: "none" },
 
   // --- 単体ページ / 一覧ページ（title-only）---
-  { glob: "/concept", variation: "title-only", figure: "none" },
+  // /concept は「このサイトの歩き方」＝サイト全体の案内なので、タイトルの下にトップと同じ
+  // タグラインを敷いて、サイトの性格まで伝える。
+  { glob: "/concept", variation: "title-only", figure: "none", tagline: true },
   { glob: "/color-theory", variation: "title-only", figure: "none" },
   { glob: "/color-fields", variation: "title-only", figure: "none" },
   { glob: "/jis-color-map", variation: "title-only", figure: "none" },
@@ -109,6 +115,13 @@ export const resolveRule = (route) => {
  * @returns {Theme}
  */
 export const resolveTheme = (route) => resolveRule(route)?.theme ?? "light"
+
+/**
+ * ルートにサイト共通のタグラインを敷くかを返す。規則に `tagline` が無い／規則自体が無い場合は false。
+ * @param {string} route
+ * @returns {boolean}
+ */
+export const resolveTagline = (route) => resolveRule(route)?.tagline === true
 
 /**
  * ルートに対応するバリエーションを返す（該当なしは null）。
