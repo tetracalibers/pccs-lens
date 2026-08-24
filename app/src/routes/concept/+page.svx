@@ -2,6 +2,22 @@
 layout: concept
 ---
 
+<script>
+  import imgPrism from "$lib/assets/prism.png?enhanced"
+  import imgCG from "$lib/assets/cg_transformation_pinhole-camera.png?enhanced"
+  import imgColorTheory from "$lib/assets/color-theory_color-mixing-basics.png?enhanced"
+  import imgJisColorMap from "$lib/assets/jis-color-map_green.png?enhanced"
+  import imgJisColorAll from "$lib/assets/jis-color-map_all.png?enhanced"
+  import imgAnkiMode from "$lib/assets/color-theory_pccs-color-system.png?enhanced"
+  import imgValueCompareGame from "$lib/assets/games_lightness-match.png?enhanced"
+  import imgToneHuntGame from "$lib/assets/games_tone-hunt.png?enhanced"
+  import imgToneMatchGame from "$lib/assets/games_tone-match.png?enhanced"
+  import imgPatterns from "$lib/assets/patterns_modern.png?enhanced"
+  import imgApproximate from "$lib/assets/approximate.png?enhanced"
+  import imgPaletteAnalyze from "$lib/assets/analyze.png?enhanced"
+  import imgCgDemo from "$lib/assets/cg-demo.png?enhanced"
+</script>
+
 :Anki[光と色]を学ぶ総合サイトを目指し、遊びながら学べるコンテンツを公開しています。
 
 - 身近な [色彩を学びたい人へ](#color)
@@ -15,6 +31,8 @@ layout: concept
 :::TermCard
 :Anki[Prism]（プリズム）は、光を分解して虹色のスペクトルを作り出すものです。
 このプリズムを使った実験で、光にはさまざまな色の成分が混ざり合っていることが解明されました。
+
+::EImage{src="{imgPrism}" alt=""}
 :::
 ::::
 
@@ -27,6 +45,8 @@ layout: concept
 ::::CardGrid
 :::TermCard
 CGや画像処理では、:Anki[光]や:Anki[色]について科学的に掘り下げ、計算することで:Anki[視覚]や:Anki[カメラ]を模倣します。
+
+::EImage{src="{imgCG}" alt=""}
 :::
 ::::
 
@@ -47,6 +67,8 @@ CGや画像処理を学ぶとき、光や色についても基礎から学んで
 ::::CardGrid{cols=1}
 :::TermCard{title="色の理論" link="/color-theory/"}
 光・色・視覚（色覚）について、基礎から学びます。
+
+::EImage{src="{imgColorTheory}" alt=""}
 :::
 :::TermCard{title="色の活用分野" link="/color-fields/"}
 デザイン・ビジネス・マーケティング・ファッション・インテリア・景観（街の風景づくり）の分野において、色がどのように活用されているかを学びます。
@@ -69,9 +91,13 @@ CGや画像処理を学ぶとき、光や色についても基礎から学んで
 ::::CardGrid{cols=1}
 :::TermCard{title="慣用色名マップ" link="/jis-color-map/"}
 :Anki[色相と明度の位置関係]で配置した独自の図で、「この色の方が明るい」「この色の方が赤みが強い」といった関係をひと目で捉えることができます。
+
+::EImage{src="{imgJisColorMap}" alt=""}
 :::
 :::TermCard{title="すべての慣用色名一覧" link="/jis-color-map/all/"}
 色相の変化の流れに沿って慣用色を学習できます。慣用色名の由来やPCCS近似値も掲載しており、:Anki[色彩検定1級]を見据えた学習にも有効です。
+
+::EImage{src="{imgJisColorAll}" alt=""}
 :::
 ::::
 
@@ -83,6 +109,8 @@ CGや画像処理を学ぶとき、光や色についても基礎から学んで
 :::TermCard{title="穴埋め問題集"}
 :Anki[暗記モード]にすると重要な語やヒントとなる見出しなどが隠れます。
 コンテンツや慣用色名マップが:Anki[穴埋め問題集]に早替わり！
+
+::EImage{src="{imgAnkiMode}" alt=""}
 :::
 ::::
 
@@ -93,12 +121,18 @@ CGや画像処理を学ぶとき、光や色についても基礎から学んで
 ::::CardGrid{cols=1}
 :::TermCard{title="明度比較クイズ" link="/games/lightness-match/"}
 彩度の印象に惑わされず、同じ明度のカードを選びましょう。
+
+::EImage{src="{imgValueCompareGame}" alt=""}
 :::
 :::TermCard{title="清色・濁色の見極め" link="/games/tone-hunt/"}
 白・黒・灰色、どれが混ざった色でしょうか？
+
+::EImage{src="{imgToneHuntGame}" alt=""}
 :::
 :::TermCard{title="トーン当てクイズ" link="/games/tone-match/"}
 似た色相に絞って難易度を上げたり、特訓したいトーンを選んで練習することもできます。
+
+::EImage{src="{imgToneMatchGame}" alt=""}
 :::
 ::::
 
@@ -110,6 +144,8 @@ CGや画像処理を学ぶとき、光や色についても基礎から学んで
 ::::CardGrid{cols=1}
 :::TermCard{title="配色シミュレータ" link="/patterns/"}
 色彩検定2級で学ぶ:Anki[イメージ別の配色]を実際に作ってみることができます。
+
+::EImage{src="{imgPatterns}" alt=""}
 :::
 ::::
 
@@ -120,10 +156,14 @@ Webでの色指定に慣れている人向けに、「この色をPCCSで表す�
 ::::CardGrid{cols=1}
 :::TermCard{title="色の近似" link="/approximate/"}
 入力した色に近い:Anki[PCCS値]と:Anki[慣用色名]を調べます。
+
+::EImage{src="{imgApproximate}" alt=""}
 :::
 :::TermCard{title="配色の分析" link="/analyze/"}
 配色をPCCSの:Anki[色相・トーンの関係]で分析し、:Anki[配色技法]を確認できます。
 配色に使う色は6色まで入力できます。
+
+::EImage{src="{imgPaletteAnalyze}" alt=""}
 :::
 ::::
 
@@ -167,6 +207,8 @@ CGや画像処理は、紙面で学ぶだけではなかなかイメージが掴
 :::TermCard{title="触って動かせるデモ"}
 キャンバスの上部にあるUIで、パラメータを動かしてみましょう。
 「この値を大きくしたら、表示はこうなるのか！」など、実際の体験で得られた気づきは根強い土台になってくれます。
+
+::EImage{src="{imgCgDemo}" alt=""}
 :::
 ::::
 
