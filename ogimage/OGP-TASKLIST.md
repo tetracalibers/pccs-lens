@@ -718,7 +718,7 @@
 
 ## CGと画像処理（nested） — 記事：知覚（`cg/perception.yaml`）
 
-- [ページ未作成] 視野と眼球運動
+- [draft] `/cg/perception/visual-field-and-eye-movements`
 - [ページ未作成] 受容野の構造
 - [ページ未作成] 形の見え
 - [ページ未作成] 大きさの恒常性
