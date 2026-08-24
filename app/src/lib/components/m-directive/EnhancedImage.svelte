@@ -11,3 +11,11 @@
 </script>
 
 <enhanced:img {src} {alt} style={maxWidth ? `max-width: ${maxWidth};` : undefined} />
+
+<style>
+  enhanced\:img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+</style>
